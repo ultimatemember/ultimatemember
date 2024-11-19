@@ -23,10 +23,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 		 * Admin_Navmenu constructor.
 		 */
 		public function __construct() {
-			self::$fields = array(
-				'um_nav_public' => __( 'Display Mode', 'ultimate-member' ),
-				'um_nav_roles'  => __( 'By Role', 'ultimate-member' ),
-			);
+			add_action( 'init', array( &$this, 'set_variables' ) );
 
 			add_action( 'customize_controls_print_footer_scripts', array( &$this, '_wp_template' ) );
 			add_action( 'wp_update_nav_menu_item', array( &$this, '_save' ), 10, 3 );
@@ -36,6 +33,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 			// add_action( 'wp_nav_menu_item_custom_fields_customize_template', array( $this, 'wp_nav_menu_item_custom_fields_customize_template' ), 20, 5 );
 		}
 
+		public function set_variables() {
+			self::$fields = array(
+				'um_nav_public' => __( 'Display Mode', 'ultimate-member' ),
+				'um_nav_roles'  => __( 'By Role', 'ultimate-member' ),
+			);
+		}
 
 		/**
 		 * Fires just before the move buttons of a nav menu item in the menu editor.

@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.7
-Stable tag: 2.9.0
+Stable tag: 2.9.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -182,10 +182,17 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Filter hook 'um_allowed_image_types' use filter hook 'um_allowed_default_image_types' instead.
 * Filter hook 'um_allowed_file_types' use filter hook 'um_allowed_default_file_types' instead.
 
-= 2.9.1 xx-xx-xx =
+= 2.9.1 2024-11-15 =
+
+**Enhancements**
+
+* Added: `um_image_upload_validation` hook for 3rd-party validation during upload images
 
 **Bugfixes**
 
+* Fixed: "Load textdomain just in time" issue
+* Fixed: Capabilities checking in the wp-admin > Users list table
+* Fixed: File/image upload on the role specific profile form
 * Fixed: Issues when the form's custom fields meta has a wrong format
 * Fixed: Validation of the "Registration Default Role" slug
 * Fixed: Allowed query variables via registered REST API class only when REST_REQUEST is defined

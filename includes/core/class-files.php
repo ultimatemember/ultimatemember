@@ -377,6 +377,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					wp_send_json_error( esc_js( __( 'You have no permission to edit this user through this form', 'ultimate-member' ) ) );
 				}
 
+				$post_data['role'] = maybe_unserialize( $post_data['role'] );
+
 				if ( is_array( $post_data['role'] ) ) {
 					if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {
 						wp_send_json_error( esc_js( __( 'You have no permission to edit this user through this form', 'ultimate-member' ) ) );
@@ -449,140 +451,171 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			$ret['error'] = null;
 			$ret          = array();
 
-			/**
-			 * Filters image upload checking nonce.
-			 *
-			 * @param {bool} $verify_nonce Verify nonce marker. Default true.
-			 *
-			 * @return {bool} Verify nonce marker.
-			 *
-			 * @since 1.3.x
-			 * @hook um_image_upload_nonce
-			 *
-			 * @example <caption>Disable checking nonce on image upload.</caption>
-			 * function my_image_upload_nonce( $verify_nonce ) {
-			 *     // your code here
-			 *     $verify_nonce = false;
-			 *     return $verify_nonce;
-			 * }
-			 * add_filter( 'um_image_upload_nonce', 'my_image_upload_nonce' );
-			 */
-			$um_image_upload_nonce = apply_filters( 'um_image_upload_nonce', true );
-			if ( $um_image_upload_nonce ) {
-				$timestamp = absint( $_POST['timestamp'] );
-				$nonce     = sanitize_text_field( $_POST['_wpnonce'] );
-				if ( ! wp_verify_nonce( $nonce, "um_upload_nonce-{$timestamp}" ) && is_user_logged_in() ) {
-					// This nonce is not valid.
-					$ret['error'] = esc_html__( 'Invalid nonce', 'ultimate-member' );
-					wp_send_json_error( $ret );
-				}
+			if ( empty( $_POST['key'] ) ) {
+				$ret['error'] = esc_html__( 'Invalid image key', 'ultimate-member' );
+				wp_send_json_error( $ret );
 			}
 
+			$id      = sanitize_text_field( $_POST['key'] );
 			$user_id = empty( $_POST['user_id'] ) ? null : absint( $_POST['user_id'] );
-			if ( $user_id && is_user_logged_in() && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-				$ret['error'] = esc_html__( 'You have no permission to edit this user', 'ultimate-member' );
-				wp_send_json_error( $ret );
-			}
 
-			if ( $user_id && ! is_user_logged_in() ) {
-				$ret['error'] = esc_html__( 'Please login to edit this user', 'ultimate-member' );
-				wp_send_json_error( $ret );
-			}
+			/**
+			 * Filters the custom validation marker for 3rd-party uploader.
+			 *
+			 * @param {bool}   $custom_validation Custom validation marker. Is null by default. Keep null for UM core validation.
+			 * @param {string} $id                Uploader field key.
+			 * @param {int}    $user_id           User ID.
+			 *
+			 * @return {bool} Custom validation marker.
+			 *
+			 * @since 2.9.1
+			 * @hook um_image_upload_validation
+			 *
+			 * @example <caption>Custom validation.</caption>
+			 * function my_um_image_upload_validation( $custom_validation, $id, $user_id ) {
+			 *     // your code here
+			 *     $ret['error'] = esc_html__( 'Error code', 'ultimate-member' );
+			 *     wp_send_json_error( $ret );
+			 *     return true;
+			 * }
+			 * add_filter( 'um_image_upload_validation', 'my_um_image_upload_validation', 10, 3 );
+			 */
+			$custom_validation = apply_filters( 'um_image_upload_validation', null, $id, $user_id );
+			if ( is_null( $custom_validation ) ) {
+				/**
+				 * Filters image upload checking nonce.
+				 *
+				 * @param {bool} $verify_nonce Verify nonce marker. Default true.
+				 *
+				 * @return {bool} Verify nonce marker.
+				 *
+				 * @since 1.3.x
+				 * @hook um_image_upload_nonce
+				 *
+				 * @example <caption>Disable checking nonce on image upload.</caption>
+				 * function my_image_upload_nonce( $verify_nonce ) {
+				 *     // your code here
+				 *     $verify_nonce = false;
+				 *     return $verify_nonce;
+				 * }
+				 * add_filter( 'um_image_upload_nonce', 'my_image_upload_nonce' );
+				 */
+				$um_image_upload_nonce = apply_filters( 'um_image_upload_nonce', true );
+				if ( $um_image_upload_nonce ) {
+					$timestamp = absint( $_POST['timestamp'] );
+					$nonce     = sanitize_text_field( $_POST['_wpnonce'] );
+					if ( ! wp_verify_nonce( $nonce, "um_upload_nonce-{$timestamp}" ) && is_user_logged_in() ) {
+						// This nonce is not valid.
+						$ret['error'] = esc_html__( 'Invalid nonce', 'ultimate-member' );
+						wp_send_json_error( $ret );
+					}
+				}
 
-			$form_id = absint( $_POST['set_id'] );
-			$mode    = sanitize_key( $_POST['set_mode'] );
-
-			UM()->fields()->set_id   = $form_id;
-			UM()->fields()->set_mode = $mode;
-
-			if ( ! is_user_logged_in() && 'profile' === $mode ) {
-				$ret['error'] = esc_html__( 'You have no permission to edit user profile', 'ultimate-member' );
-				wp_send_json_error( $ret );
-			}
-
-			if ( null !== $user_id && 'register' === $mode ) {
-				$ret['error'] = esc_html__( 'User has to be empty on registration', 'ultimate-member' );
-				wp_send_json_error( $ret );
-			}
-
-			$form_post = get_post( $form_id );
-			// Invalid post ID. Maybe post doesn't exist.
-			if ( empty( $form_post ) ) {
-				$ret['error'] = esc_html__( 'Invalid form ID', 'ultimate-member' );
-				wp_send_json_error( $ret );
-			}
-
-			if ( 'um_form' !== $form_post->post_type ) {
-				$ret['error'] = esc_html__( 'Invalid form post type', 'ultimate-member' );
-				wp_send_json_error( $ret );
-			}
-
-			$form_status = get_post_status( $form_id );
-			if ( 'publish' !== $form_status ) {
-				$ret['error'] = esc_html__( 'Invalid form status', 'ultimate-member' );
-				wp_send_json_error( $ret );
-			}
-
-			$post_data = UM()->query()->post_data( $form_id );
-			if ( ! array_key_exists( 'mode', $post_data ) || $mode !== $post_data['mode'] ) {
-				$ret['error'] = esc_html__( 'Invalid form type', 'ultimate-member' );
-				wp_send_json_error( $ret );
-			}
-
-			// For profiles only.
-			if ( 'profile' === $mode && ! empty( $post_data['use_custom_settings'] ) && ! empty( $post_data['role'] ) ) {
-				// Option "Apply custom settings to this form". Option "Make this profile form role-specific".
-				// Show the first Profile Form with role selected, don't show profile forms below the page with other role-specific setting.
-				$current_user_roles = UM()->roles()->get_all_user_roles( $user_id );
-				if ( empty( $current_user_roles ) ) {
-					$ret['error'] = esc_html__( 'You have no permission to edit this user through this form', 'ultimate-member' );
+				if ( $user_id && is_user_logged_in() && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+					$ret['error'] = esc_html__( 'You have no permission to edit this user', 'ultimate-member' );
 					wp_send_json_error( $ret );
 				}
 
-				if ( is_array( $post_data['role'] ) ) {
-					if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {
+				if ( $user_id && ! is_user_logged_in() ) {
+					$ret['error'] = esc_html__( 'Please login to edit this user', 'ultimate-member' );
+					wp_send_json_error( $ret );
+				}
+
+				$form_id = absint( $_POST['set_id'] );
+				$mode    = sanitize_key( $_POST['set_mode'] );
+
+				UM()->fields()->set_id   = $form_id;
+				UM()->fields()->set_mode = $mode;
+
+				if ( ! is_user_logged_in() && 'profile' === $mode ) {
+					$ret['error'] = esc_html__( 'You have no permission to edit user profile', 'ultimate-member' );
+					wp_send_json_error( $ret );
+				}
+
+				if ( null !== $user_id && 'register' === $mode ) {
+					$ret['error'] = esc_html__( 'User has to be empty on registration', 'ultimate-member' );
+					wp_send_json_error( $ret );
+				}
+
+				$form_post = get_post( $form_id );
+				// Invalid post ID. Maybe post doesn't exist.
+				if ( empty( $form_post ) ) {
+					$ret['error'] = esc_html__( 'Invalid form ID', 'ultimate-member' );
+					wp_send_json_error( $ret );
+				}
+
+				if ( 'um_form' !== $form_post->post_type ) {
+					$ret['error'] = esc_html__( 'Invalid form post type', 'ultimate-member' );
+					wp_send_json_error( $ret );
+				}
+
+				$form_status = get_post_status( $form_id );
+				if ( 'publish' !== $form_status ) {
+					$ret['error'] = esc_html__( 'Invalid form status', 'ultimate-member' );
+					wp_send_json_error( $ret );
+				}
+
+				$post_data = UM()->query()->post_data( $form_id );
+				if ( ! array_key_exists( 'mode', $post_data ) || $mode !== $post_data['mode'] ) {
+					$ret['error'] = esc_html__( 'Invalid form type', 'ultimate-member' );
+					wp_send_json_error( $ret );
+				}
+
+				// For profiles only.
+				if ( 'profile' === $mode && ! empty( $post_data['use_custom_settings'] ) && ! empty( $post_data['role'] ) ) {
+					// Option "Apply custom settings to this form". Option "Make this profile form role-specific".
+					// Show the first Profile Form with role selected, don't show profile forms below the page with other role-specific setting.
+					$current_user_roles = UM()->roles()->get_all_user_roles( $user_id );
+					if ( empty( $current_user_roles ) ) {
 						$ret['error'] = esc_html__( 'You have no permission to edit this user through this form', 'ultimate-member' );
 						wp_send_json_error( $ret );
 					}
-				} elseif ( ! in_array( $post_data['role'], $current_user_roles, true ) ) {
-					$ret['error'] = esc_html__( 'You have no permission to edit this user through this form', 'ultimate-member' );
-					wp_send_json_error( $ret );
-				}
-			}
 
-			$id = sanitize_text_field( $_POST['key'] );
+					$post_data['role'] = maybe_unserialize( $post_data['role'] );
 
-			if ( ! array_key_exists( 'custom_fields', $post_data ) || empty( $post_data['custom_fields'] ) ) {
-				$ret['error'] = esc_html__( 'Invalid form fields', 'ultimate-member' );
-				wp_send_json_error( $ret );
-			}
-
-			$custom_fields = maybe_unserialize( $post_data['custom_fields'] );
-			if ( ! is_array( $custom_fields ) || ! array_key_exists( $id, $custom_fields ) ) {
-				if ( ! ( 'profile' === $mode && in_array( $id, array( 'cover_photo', 'profile_photo' ), true ) ) ) {
-					$ret['error'] = esc_html__( 'Invalid field metakey', 'ultimate-member' );
-					wp_send_json_error( $ret );
-				}
-			}
-
-			if ( 'profile' === $mode ) {
-				if ( in_array( $id, array( 'cover_photo', 'profile_photo' ), true ) ) {
-					if ( 'profile_photo' === $id ) {
-						$disable_photo_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'disable_profile_photo_upload' ) : $post_data['disable_photo_upload'];
-						if ( $disable_photo_uploader ) {
-							$ret['error'] = esc_html__( 'You have no permission to edit this field', 'ultimate-member' );
+					if ( is_array( $post_data['role'] ) ) {
+						if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {
+							$ret['error'] = esc_html__( 'You have no permission to edit this user through this form', 'ultimate-member' );
 							wp_send_json_error( $ret );
 						}
-					} else {
-						$cover_enabled_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'profile_cover_enabled' ) : $post_data['cover_enabled'];
-						if ( ! $cover_enabled_uploader ) {
-							$ret['error'] = esc_html__( 'You have no permission to edit this field', 'ultimate-member' );
-							wp_send_json_error( $ret );
-						}
+					} elseif ( ! in_array( $post_data['role'], $current_user_roles, true ) ) {
+						$ret['error'] = esc_html__( 'You have no permission to edit this user through this form', 'ultimate-member' );
+						wp_send_json_error( $ret );
 					}
-				} elseif ( ! um_can_edit_field( $custom_fields[ $id ] ) ) {
-					$ret['error'] = esc_html__( 'You have no permission to edit this field', 'ultimate-member' );
+				}
+
+				if ( ! array_key_exists( 'custom_fields', $post_data ) || empty( $post_data['custom_fields'] ) ) {
+					$ret['error'] = esc_html__( 'Invalid form fields', 'ultimate-member' );
 					wp_send_json_error( $ret );
+				}
+
+				$custom_fields = maybe_unserialize( $post_data['custom_fields'] );
+				if ( ! is_array( $custom_fields ) || ! array_key_exists( $id, $custom_fields ) ) {
+					if ( ! ( 'profile' === $mode && in_array( $id, array( 'cover_photo', 'profile_photo' ), true ) ) ) {
+						$ret['error'] = esc_html__( 'Invalid field metakey', 'ultimate-member' );
+						wp_send_json_error( $ret );
+					}
+				}
+
+				if ( 'profile' === $mode ) {
+					if ( in_array( $id, array( 'cover_photo', 'profile_photo' ), true ) ) {
+						if ( 'profile_photo' === $id ) {
+							$disable_photo_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'disable_profile_photo_upload' ) : $post_data['disable_photo_upload'];
+							if ( $disable_photo_uploader ) {
+								$ret['error'] = esc_html__( 'You have no permission to edit this field', 'ultimate-member' );
+								wp_send_json_error( $ret );
+							}
+						} else {
+							$cover_enabled_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'profile_cover_enabled' ) : $post_data['cover_enabled'];
+							if ( ! $cover_enabled_uploader ) {
+								$ret['error'] = esc_html__( 'You have no permission to edit this field', 'ultimate-member' );
+								wp_send_json_error( $ret );
+							}
+						}
+					} elseif ( ! um_can_edit_field( $custom_fields[ $id ] ) ) {
+						$ret['error'] = esc_html__( 'You have no permission to edit this field', 'ultimate-member' );
+						wp_send_json_error( $ret );
+					}
 				}
 			}
 
@@ -706,6 +739,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					$ret['error'] = esc_html__( 'You have no permission to edit this user through this form', 'ultimate-member' );
 					wp_send_json_error( $ret );
 				}
+
+				$post_data['role'] = maybe_unserialize( $post_data['role'] );
 
 				if ( is_array( $post_data['role'] ) ) {
 					if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {

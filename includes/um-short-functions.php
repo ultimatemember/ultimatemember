@@ -2179,7 +2179,10 @@ function um_get_default_avatar_uri() {
 function um_get_user_avatar_data( $user_id = '', $size = '96' ) {
 	if ( empty( $user_id ) ) {
 		$user_id = um_user( 'ID' );
-	} else {
+	}
+
+	if ( $user_id !== um_user( 'ID' ) ) {
+		$temp_id = um_user( 'ID' );
 		um_fetch_user( $user_id );
 	}
 
@@ -2208,12 +2211,12 @@ function um_get_user_avatar_data( $user_id = '', $size = '96' ) {
 		}
 
 		$gravatar_type = UM()->options()->get( 'use_um_gravatar_default_builtin_image' );
-		if ( $gravatar_type == 'default' ) {
+		if ( 'default' === $gravatar_type ) {
 			if ( UM()->options()->get( 'use_um_gravatar_default_image' ) ) {
 				$data['url'] = add_query_arg( 'd', $data['default'], $data['url'] );
 			} else {
 				$default = get_option( 'avatar_default', 'mystery' );
-				if ( $default == 'gravatar_default' ) {
+				if ( 'gravatar_default' === $default ) {
 					$default = '';
 				}
 				$data['url'] = add_query_arg( 'd', $default, $data['url'] );
@@ -2222,62 +2225,62 @@ function um_get_user_avatar_data( $user_id = '', $size = '96' ) {
 			$data['url'] = add_query_arg( 'd', $gravatar_type, $data['url'] );
 		}
 
-		$data['type'] = 'gravatar';
+		$data['type']   = 'gravatar';
 		$data['class'] .= ' um-avatar-gravatar';
 	} else {
-		$data['url'] = $data['default'];
-		$data['type'] = 'default';
+		$data['url']    = $data['default'];
+		$data['type']   = 'default';
 		$data['class'] .= ' um-avatar-default';
 	}
 
-
 	/**
-	 * UM hook
+	 * Filters the user avatar URL.
 	 *
-	 * @type filter
-	 * @title um_user_avatar_url_filter
-	 * @description Change user avatar URL
-	 * @input_vars
-	 * [{"var":"$avatar_uri","type":"string","desc":"Avatar URL"},
-	 * {"var":"$user_id","type":"int","desc":"User ID"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_filter( 'um_user_avatar_url_filter', 'function_name', 10, 2 );
-	 * @example
-	 * <?php
-	 * add_filter( 'um_user_avatar_url_filter', 'my_user_avatar_url', 10, 2 );
-	 * function my_user_avatar_url( $avatar_uri ) {
+	 * @since 1.3.x
+	 * @hook  um_user_avatar_url_filter
+	 *
+	 * @param {string} $url     Avatar URL.
+	 * @param {int}    $user_id User ID.
+	 * @param {array}  $data    Avatar data.
+	 *
+	 * @return {string} Avatar URL.
+	 *
+	 * @example <caption>Change the user avatar URL.</caption>
+	 * function my_um_user_avatar_url_filter( $url, $user_id, $data ) {
 	 *     // your code here
-	 *     return $avatar_uri;
+	 *     $url = 'some_url';
+	 *     return $url;
 	 * }
-	 * ?>
+	 * add_filter( 'um_user_avatar_url_filter', 'my_um_user_avatar_url_filter', 10, 3 );
 	 */
 	$data['url'] = apply_filters( 'um_user_avatar_url_filter', $data['url'], $user_id, $data );
 	/**
-	 * UM hook
+	 * Filters the user avatar image `alt` argument.
 	 *
-	 * @type filter
-	 * @title um_avatar_image_alternate_text
-	 * @description Change user display name on um_user function profile photo
-	 * @input_vars
-	 * [{"var":"$display_name","type":"string","desc":"User Display Name"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_filter( 'um_avatar_image_alternate_text', 'function_name', 10, 1 );
-	 * @example
-	 * <?php
-	 * add_filter( 'um_avatar_image_alternate_text', 'my_avatar_image_alternate_text', 10, 1 );
-	 * function my_avatar_image_alternate_text( $display_name ) {
+	 * @since 1.3.x
+	 * @hook  um_avatar_image_alternate_text
+	 *
+	 * @param {string} $alt  Avatar `alt` text.
+	 * @param {array}  $data Avatar data.
+	 *
+	 * @return {string} Avatar URL.
+	 *
+	 * @example <caption>Change the user avatar URL.</caption>
+	 * function my_um_avatar_image_alternate_text( $alt, $data ) {
 	 *     // your code here
-	 *     return $display_name;
+	 *     $alt = 'some_alt';
+	 *     return $alt;
 	 * }
-	 * ?>
+	 * add_filter( 'um_avatar_image_alternate_text', 'my_um_avatar_image_alternate_text', 10, 2 );
 	 */
-	$data['alt'] = apply_filters( "um_avatar_image_alternate_text", um_user( "display_name" ), $data );
+	$data['alt'] = apply_filters( 'um_avatar_image_alternate_text', um_user( 'display_name' ), $data );
+
+	if ( ! empty( $temp_id ) ) {
+		um_fetch_user( $temp_id );
+	}
 
 	return $data;
 }
-
 
 /**
  * get user avatar url
@@ -2291,7 +2294,6 @@ function um_get_user_avatar_url( $user_id = '', $size = '96' ) {
 	$data = um_get_user_avatar_data( $user_id, $size );
 	return $data['url'];
 }
-
 
 /**
  * default cover

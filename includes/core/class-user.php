@@ -158,9 +158,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			add_action( 'init', array( &$this, 'check_membership' ), 10 );
 
 			if ( is_multisite() ) {
-				add_action( 'wpmu_delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
+				add_action( 'wpmu_delete_user', array( &$this, 'delete_user_handler' ) );
 			} else {
-				add_action( 'delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
+				add_action( 'delete_user', array( &$this, 'delete_user_handler' ) );
 			}
 
 			add_action( 'updated_user_meta', array( &$this, 'on_update_usermeta' ), 10, 4 );
@@ -630,14 +630,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			// send email notifications
 			if ( $this->send_mail_on_delete ) {
 				$user_email = um_user( 'user_email' );
-				$template   = 'deletion_email';
 
-				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $user_email, $template ) );
+				// Sending without Action Scheduler, because in the scheduled event the user is already deleted.
+				UM()->mail()->send( $user_email, 'deletion_email' );
 
 				$emails = um_multi_admin_email();
 				if ( ! empty( $emails ) ) {
 					foreach ( $emails as $email ) {
-						UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $email, 'notification_deletion', array( 'admin' => true ) ) );
+						// Sending without Action Scheduler, because in the scheduled event the user is already deleted.
+						UM()->mail()->send( $email, 'notification_deletion', array( 'admin' => true ) );
 					}
 				}
 			}
@@ -1591,10 +1592,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$this->maybe_generate_password_reset_key( $userdata );
 
-			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ), 10, 1 );
-			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ), 10, 1 );
+			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ) );
+			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ) );
 
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'resetpw_email' ) );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'resetpw_email', array( 'fetch_user_id' => um_user( 'ID' ) ) ) );
 		}
 
 
@@ -1608,7 +1609,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				um_fetch_user( $user_id );
 			}
 
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( um_user( 'user_email' ), 'changedpw_email' ) );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( um_user( 'user_email' ), 'changedpw_email', array( 'fetch_user_id' => $user_id ) ) );
 
 			if ( ! empty( $user_id ) ) {
 				um_reset_user();
