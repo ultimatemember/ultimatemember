@@ -31,7 +31,8 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 
 			add_action( 'init',  array( &$this, 'check_for_querystrings' ), 1 );
 
-			add_action( 'init',  array( &$this, 'activate_account_via_email_link' ), 1 );
+			// don't use lower than 2 priority because there is sending email inside, but Action Scheduler is init on 1st priority.
+			add_action( 'init',  array( &$this, 'activate_account_via_email_link' ), 2 );
 		}
 
 		/**
