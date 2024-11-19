@@ -1458,6 +1458,15 @@ if ( ! class_exists( 'UM' ) ) {
 		}
 
 		/**
+		 * Checks if the new design is enabled.
+		 *
+		 * @return bool
+		 */
+		public function is_new_ui() {
+			return defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && $this->options()->get( 'enable_new_ui' );
+		}
+
+		/**
 		 * Include files with hooked filters/actions
 		 *
 		 * @since 2.0
