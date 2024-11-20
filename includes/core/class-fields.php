@@ -4028,6 +4028,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
 								}
 							}
+						} else {
+							$options = call_user_func( $data['custom_dropdown_options_source'] );
 						}
 					}
 

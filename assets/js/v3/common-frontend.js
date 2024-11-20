@@ -652,47 +652,37 @@ UM.frontend = {
 					let parentOption = me.data('um-parent');
 					let childCallback = me.data('um-ajax-source');
 					let nonce = me.data('nonce');
-					let member_directory = '';
 
 					jQuery(document.body).on('change','select[name="' + parentOption + '"]',function() {
 						let parent  = jQuery(this);
 						let form_id = parent.closest( 'form' ).find( 'input[type="hidden"][name="form_id"]' ).val();
 
-						let arr_key;
-						if ( me.parents('.um-directory').length ) {
-							member_directory = 'yes';
-							arr_key = [];
-							jQuery(this).find('option:selected').each( function() {
-								arr_key.push(jQuery(this).val());
-							});
+						//let arr_key;
+						let arr_key = parent.val();
+						arr_key = wp.hooks.applyFilters( 'um_frontend_child_dropdown_loop_parent_value', arr_key, me, parent );
 
-							if ( typeof arr_key === 'undefined' ) {
-								arr_key = '';
-							}
-						} else {
-							arr_key = parent.val();
-						}
-
-						if ( typeof arr_key != 'undefined' && arr_key !== '' && typeof UM.frontend.choices.optionsCache[ arr_key ] !== 'object' ) {
+						if ( typeof arr_key !== 'undefined' && arr_key !== '' && typeof UM.frontend.choices.optionsCache[ arr_key ] !== 'object' ) {
 							if ( typeof( me.um_wait ) === 'undefined' || me.um_wait === false ) {
 								me.um_wait = true;
 							} else {
 								return;
 							}
 
+							let optionsRequestData = {
+								action: 'um_select_options',
+								parent_option_name: parentOption,
+								parent_option: arr_key,
+								child_callback: childCallback,
+								child_name: me.attr('name'),
+								form_id: form_id,
+								nonce: nonce
+							};
+							optionsRequestData = wp.hooks.applyFilters( 'um_frontend_child_dropdown_child_options_request', optionsRequestData, me, parent );
+
 							wp.ajax.send(
 								'um_select_options',
 								{
-									data: {
-										action: 'um_select_options',
-										parent_option_name: parentOption,
-										parent_option: arr_key,
-										child_callback: childCallback,
-										child_name: me.attr('name'),
-										members_directory: member_directory,
-										form_id: form_id,
-										nonce: nonce
-									},
+									data: optionsRequestData,
 									success: function( data ) {
 										if ( data.status === 'success' && arr_key !== '' ) {
 											UM.frontend.choices.optionsCache[ arr_key ] = data;
@@ -727,8 +717,8 @@ UM.frontend = {
 		},
 		updateOptions: function (selector, newOptions, reset = false) {
 			const element = jQuery('#' + selector);
-			if (element && this.choicesInstances[selector]) {
-				const choices = this.choicesInstances[selector];
+			if (element && this.choicesInstances[ selector ]) {
+				const choices = this.choicesInstances[ selector ];
 				if ( true === reset ) {
 					choices.removeActiveItems();
 				} else {
@@ -753,24 +743,18 @@ UM.frontend = {
 		 */
 		populateChildOptions: function ( selector, data, arr_key ) {
 			let me = jQuery( '#' + selector );
-			let $directory = me.parents('.um-directory');
-			let childName = me.attr('name');
 			me.find('option[value!=""]').remove();
 
 			if ( ! me.hasClass('um-child-option-disabled') ) {
 				me.prop('disabled', false);
 			}
 
-			var arr_items = [],
+			let arr_items = [],
 				search_get = '';
 			if ( me.attr('data-um-original-value') ) {
 				search_get = me.attr('data-um-original-value');
 			}
 
-			// @todo member directory filters and populate options
-			if ( typeof data !== 'undefined' && data.post.members_directory === 'yes' ) {
-				// arr_items.push({id: '', text: '', selected: 1});
-			}
 			if ( typeof data !== 'undefined' && data.items ) {
 				jQuery.each(data.items, function (k, v) {
 					if ( 0 !== parseInt( k ) ) {
@@ -781,39 +765,19 @@ UM.frontend = {
 
 			UM.frontend.choices.updateOptions(selector, arr_items);
 
-			if ( typeof data !== 'undefined' && data.post.members_directory === 'yes' ) {
-				me.find('option').each( function() {
-					if ( '' !== jQuery(this).html() ) {
-						jQuery(this).data( 'value_label', jQuery(this).html() ).attr( 'data-value_label', jQuery(this).html() );
+			let actionInFilter = wp.hooks.applyFilters( 'um_populate_child_options', null, me, selector, data, arr_items );
+			if ( null === actionInFilter ) {
+				if ( typeof data !== 'undefined' ) {
+					if ( typeof data.field.default !== 'undefined' && ! me.data('um-original-value') ) {
+						me.val( data.field.default ).trigger('change');
+					} else if ( me.data('um-original-value') !== '' ) {
+						me.val( me.data('um-original-value') ).trigger('change');
 					}
-				});
 
-				let hash = UM.frontend.directories.getHash( $directory );
-				let directoryObj = UM.frontend.directories.list[ hash ];
-				let current_filter_val = directoryObj.getDataFromURL( 'filter_' + childName );
-				if ( typeof current_filter_val !== 'undefined' ) {
-					current_filter_val = current_filter_val.split('||');
-
-					arr_items.forEach(item => {
-						if (current_filter_val.includes(item.id)) {
-							item.selected = true;
-						}
-					});
-
-					UM.frontend.choices.updateOptions(selector, arr_items);
-				}
-			}
-
-			if ( typeof data !== 'undefined' && data.post.members_directory !== 'yes' ) {
-				if ( typeof data.field.default !== 'undefined' && ! me.data('um-original-value') ) {
-					me.val( data.field.default ).trigger('change');
-				} else if ( me.data('um-original-value') !== '' ) {
-					me.val( me.data('um-original-value') ).trigger('change');
-				}
-
-				if ( data.field.editable == 0 ) {
-					me.addClass('um-child-option-disabled');
-					me.attr('disabled','disabled');
+					if ( data.field.editable == 0 ) {
+						me.addClass('um-child-option-disabled');
+						me.attr('disabled','disabled');
+					}
 				}
 			}
 		}

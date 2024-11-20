@@ -1106,3 +1106,59 @@ wp.hooks.addFilter( 'um_toggle_block', 'um_member_directory', function( $toggleB
 
 	return $toggleBlock;
 });
+
+wp.hooks.addFilter( 'um_frontend_child_dropdown_loop_parent_value', 'um_member_directory', function( arr_key, $child, $parent ) {
+	if ( $child.parents('.um-directory').length ) {
+		arr_key = [];
+		$parent.find('option:selected').each( function() {
+			arr_key.push(jQuery(this).val());
+		});
+
+		if ( typeof arr_key === 'undefined' ) {
+			arr_key = '';
+		}
+	}
+
+	return arr_key;
+});
+
+wp.hooks.addFilter( 'um_frontend_child_dropdown_child_options_request', 'um_member_directory', function( optionsRequestData, $child, $parent ) {
+	if ( $child.parents('.um-directory').length ) {
+		optionsRequestData.member_directory = true;
+	}
+
+	return optionsRequestData;
+});
+
+wp.hooks.addFilter( 'um_populate_child_options', 'um_member_directory', function( actionInFilter, $child, selector, data, arr_items ) {
+	if ( $child.parents('.um-directory').length ) {
+		if ( typeof data !== 'undefined' ) {
+			let $directory = $child.parents('.um-directory');
+			let childName = $child.attr('name');
+
+			$child.find('option').each( function() {
+				if ( '' !== jQuery(this).html() ) {
+					jQuery(this).data( 'value_label', jQuery(this).html() ).attr( 'data-value_label', jQuery(this).html() );
+				}
+			});
+
+			let hash = UM.frontend.directories.getHash( $directory );
+			let directoryObj = UM.frontend.directories.list[ hash ];
+			let current_filter_val = directoryObj.getDataFromURL( 'filter_' + childName );
+			if ( typeof current_filter_val !== 'undefined' ) {
+				current_filter_val = current_filter_val.split('||');
+
+				arr_items.forEach(item => {
+					if (current_filter_val.includes(item.id)) {
+						item.selected = true;
+					}
+				});
+
+				UM.frontend.choices.updateOptions(selector, arr_items);
+			}
+		}
+		actionInFilter = true;
+	}
+
+	return actionInFilter;
+});
