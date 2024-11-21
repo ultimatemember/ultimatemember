@@ -56,13 +56,7 @@ class Fields {
 
 		$arr_options = array();
 
-		if ( isset( $_POST['form_id'] ) ) {
-			UM()->fields()->set_id = absint( $_POST['form_id'] );
-		}
-		UM()->fields()->set_mode = 'profile';
-		$form_fields             = UM()->fields()->get_fields();
-
-		if ( isset( $_POST['members_directory'] ) && 'yes' === $_POST['members_directory'] ) {
+		if ( ! empty( $_POST['member_directory'] ) ) {
 			global $wpdb;
 			$values_array = $wpdb->get_col(
 				$wpdb->prepare(
@@ -76,7 +70,11 @@ class Fields {
 
 			if ( ! empty( $values_array ) ) {
 				if ( ! empty( $_POST['parent_option'] ) ) {
-					$parent_dropdown      = isset( $_POST['parent_option_name'] ) ? sanitize_text_field( $_POST['parent_option_name'] ) : '';
+					if ( is_array( $_POST['parent_option'] ) ) {
+						$parent_dropdown = array_map( 'sanitize_text_field', $_POST['parent_option'] );
+					} else {
+						$parent_dropdown = sanitize_text_field( $_POST['parent_option'] );
+					}
 					$arr_options['items'] = $ajax_source_func( $parent_dropdown );
 				} else {
 					$arr_options['items'] = array();
@@ -94,51 +92,57 @@ class Fields {
 			}
 
 			wp_send_json_success( $arr_options );
-		}
-
-		/**
-		 * Filters debug mode marker in the custom callback handler for dropdowns.
-		 *
-		 * @param {bool} $debug Debug mode marker.
-		 *
-		 * @return {bool}
-		 *
-		 * @since 1.3.x
-		 * @hook um_ajax_select_options__debug_mode
-		 *
-		 * @example <caption>Enable debug mode in the custom callback handler for dropdowns.</caption>
-		 * add_filter( 'um_ajax_select_options__debug_mode', '__return_true' );
-		 */
-		$debug = apply_filters( 'um_ajax_select_options__debug_mode', false );
-		if ( $debug ) {
-			$arr_options['debug'] = array( $_POST, $form_fields );
-		}
-
-		if ( array_key_exists( $child_name, $form_fields ) ) {
-			$choices_callback = ! empty( $form_fields[ $child_name ]['custom_dropdown_options_source'] ) ? $form_fields[ $child_name ]['custom_dropdown_options_source'] : '';
-			/** This filter is documented in includes/core/class-fields.php */
-			$choices_callback = apply_filters( "um_custom_dropdown_options_source__$child_name", $choices_callback, $form_fields[ $child_name ] );
-
-			// If the requested callback function is added in the form or added in the field option, execute it with call_user_func.
-			if ( ! empty( $choices_callback ) && function_exists( $choices_callback ) && ! UM()->fields()->is_source_blacklisted( $choices_callback ) && $choices_callback === $ajax_source_func ) {
-				$arr_options['field'] = $form_fields[ $child_name ];
-			//	$arr_options['items'] = $ajax_source_func( $form_fields[ $child_name ]['parent_dropdown_relationship'] );
-
-				// Adds placeholder id needed.
-				if ( ! ( isset( $form_fields[ $child_name ]['allowclear'] ) && 0 === $form_fields[ $child_name ]['allowclear'] ) ) {
-					$arr_options['items'] = array( '' => __( 'None', 'ultimate-member' ) );
-				}
-				$callback_result = $ajax_source_func( $form_fields[ $child_name ]['parent_dropdown_relationship'] );
-				if ( ! empty( $callback_result ) && isset( $arr_options['items'] ) ) {
-					$arr_options['items'] = array_merge( $arr_options['items'], $callback_result );
-				} else {
-					$arr_options['items'] = $callback_result;
-				}
-			} else {
-				wp_send_json_error( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
+		} else {
+			if ( isset( $_POST['form_id'] ) ) {
+				UM()->fields()->set_id = absint( $_POST['form_id'] );
 			}
-		}
+			UM()->fields()->set_mode = 'profile';
+			$form_fields             = UM()->fields()->get_fields();
 
-		wp_send_json_success( $arr_options );
+			/**
+			 * Filters debug mode marker in the custom callback handler for dropdowns.
+			 *
+			 * @param {bool} $debug Debug mode marker.
+			 *
+			 * @return {bool}
+			 *
+			 * @since 1.3.x
+			 * @hook um_ajax_select_options__debug_mode
+			 *
+			 * @example <caption>Enable debug mode in the custom callback handler for dropdowns.</caption>
+			 * add_filter( 'um_ajax_select_options__debug_mode', '__return_true' );
+			 */
+			$debug = apply_filters( 'um_ajax_select_options__debug_mode', false );
+			if ( $debug ) {
+				$arr_options['debug'] = array( $_POST, $form_fields );
+			}
+
+			if ( array_key_exists( $child_name, $form_fields ) ) {
+				$choices_callback = ! empty( $form_fields[ $child_name ]['custom_dropdown_options_source'] ) ? $form_fields[ $child_name ]['custom_dropdown_options_source'] : '';
+				/** This filter is documented in includes/core/class-fields.php */
+				$choices_callback = apply_filters( "um_custom_dropdown_options_source__$child_name", $choices_callback, $form_fields[ $child_name ] );
+
+				// If the requested callback function is added in the form or added in the field option, execute it with call_user_func.
+				if ( ! empty( $choices_callback ) && function_exists( $choices_callback ) && ! UM()->fields()->is_source_blacklisted( $choices_callback ) && $choices_callback === $ajax_source_func ) {
+					$arr_options['field'] = $form_fields[ $child_name ];
+					//	$arr_options['items'] = $ajax_source_func( $form_fields[ $child_name ]['parent_dropdown_relationship'] );
+
+					// Adds placeholder id needed.
+					if ( ! ( isset( $form_fields[ $child_name ]['allowclear'] ) && 0 === $form_fields[ $child_name ]['allowclear'] ) ) {
+						$arr_options['items'] = array( '' => __( 'None', 'ultimate-member' ) );
+					}
+					$callback_result = $ajax_source_func( $form_fields[ $child_name ]['parent_dropdown_relationship'] );
+					if ( ! empty( $callback_result ) && isset( $arr_options['items'] ) ) {
+						$arr_options['items'] = array_merge( $arr_options['items'], $callback_result );
+					} else {
+						$arr_options['items'] = $callback_result;
+					}
+				} else {
+					wp_send_json_error( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
+				}
+			}
+
+			wp_send_json_success( $arr_options );
+		}
 	}
 }

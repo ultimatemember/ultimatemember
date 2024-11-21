@@ -345,13 +345,20 @@ class Directory extends \um\common\Directory {
 				} elseif ( ! isset( $attrs['label'] ) && isset( $attrs['title'] ) ) {
 					$label = $attrs['title'];
 				}
+
+				$multiple         = '';
+				$choices_callback = ! empty( $attrs['custom_dropdown_options_source'] ) ? $attrs['custom_dropdown_options_source'] : '';
+				/** This filter is documented in includes/core/class-fields.php */
+				$choices_callback = apply_filters( "um_custom_dropdown_options_source__$filter", $choices_callback, $attrs );
+				if ( count( $attrs['options'] ) > 1 || ( ! empty( $choices_callback ) && function_exists( $choices_callback ) && ! UM()->fields()->is_source_blacklisted( $choices_callback ) ) ) {
+					$multiple = ' multiple ';
+				}
 				?>
 				<div class="um-field-wrapper">
 					<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( stripslashes( $label ) ); ?></label>
 					<select class="js-choice um-search-filter-field" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
-							data-placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
 							aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
-							<?php if ( count( $attrs['options'] ) > 1 || '' !== $attrs['custom_dropdown_options_source'] ) { ?>multiple<?php } ?>
+							<?php echo $multiple; ?>
 						<?php echo $custom_dropdown; ?>>
 
 						<option></option>
