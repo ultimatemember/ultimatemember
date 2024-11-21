@@ -4360,12 +4360,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					// Selections count settings.
 					$max_selections = isset( $data['max_selections'] ) ? absint( $data['max_selections'] ) : 0;
-
+					$options        = array();
 					if ( UM()->is_new_ui() ) {
 						// Selections count settings.
 						$min_selections = isset( $data['min_selections'] ) ? absint( $data['min_selections'] ) : 0;
 
-						$options          = array();
 						$atts_ajax        = '';
 						$choices_callback = $this->get_custom_dropdown_options_source( $field_id, $data );
 						if ( ! empty( $choices_callback ) ) {
@@ -4520,12 +4519,19 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$output .= '<select  ' . $disabled . ' multiple="multiple" name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-maxsize="' . esc_attr( $max_selections ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>';
 
-						if ( isset( $options ) && 'builtin' === $options ) {
-							$options = UM()->builtin()->get( $data['filter'] );
+						// Get options from field settings.
+						if ( array_key_exists( 'options', $data ) ) {
+							if ( is_array( $data['options'] ) ) {
+								$options = $data['options'];
+							} elseif ( 'builtin' === $data['options'] && array_key_exists( 'filter', $data ) ) {
+								// @todo maybe remove this condition because options can have only `array` type.
+								$options = UM()->builtin()->get( $data['filter'] );
+							}
 						}
 
-						if ( ! isset( $options ) ) {
-							$options = UM()->builtin()->get( 'countries' );
+						if ( ( 'country' === $key || 'languages' === $key ) && empty( $options ) ) {
+							// Fallback for fields 'country' or 'languages' when options are empty.
+							$options = UM()->builtin()->get( $key );
 						}
 
 						if ( isset( $options ) ) {
