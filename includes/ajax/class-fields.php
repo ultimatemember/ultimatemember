@@ -71,11 +71,11 @@ class Fields {
 			if ( ! empty( $values_array ) ) {
 				if ( ! empty( $_POST['parent_option'] ) ) {
 					if ( is_array( $_POST['parent_option'] ) ) {
-						$parent_dropdown = array_map( 'sanitize_text_field', $_POST['parent_option'] );
+						$parent_options = array_map( 'sanitize_text_field', array_map( 'wp_unslash', $_POST['parent_option'] ) );
 					} else {
-						$parent_dropdown = sanitize_text_field( $_POST['parent_option'] );
+						$parent_options = sanitize_text_field( wp_unslash( $_POST['parent_option'] ) );
 					}
-					$arr_options['items'] = $ajax_source_func( $parent_dropdown );
+					$arr_options['items'] = $ajax_source_func( $parent_options, sanitize_text_field( $_POST['parent_option_name'] ) );
 				} else {
 					$arr_options['items'] = array();
 				}
@@ -118,20 +118,23 @@ class Fields {
 			}
 
 			if ( array_key_exists( $child_name, $form_fields ) ) {
-				$choices_callback = ! empty( $form_fields[ $child_name ]['custom_dropdown_options_source'] ) ? $form_fields[ $child_name ]['custom_dropdown_options_source'] : '';
-				/** This filter is documented in includes/core/class-fields.php */
-				$choices_callback = apply_filters( "um_custom_dropdown_options_source__$child_name", $choices_callback, $form_fields[ $child_name ] );
-
+				$choices_callback = UM()->fields()->get_custom_dropdown_options_source( $child_name, $form_fields[ $child_name ] );
 				// If the requested callback function is added in the form or added in the field option, execute it with call_user_func.
-				if ( ! empty( $choices_callback ) && function_exists( $choices_callback ) && ! UM()->fields()->is_source_blacklisted( $choices_callback ) && $choices_callback === $ajax_source_func ) {
+				if ( $choices_callback === $ajax_source_func ) {
 					$arr_options['field'] = $form_fields[ $child_name ];
-					//	$arr_options['items'] = $ajax_source_func( $form_fields[ $child_name ]['parent_dropdown_relationship'] );
 
 					// Adds placeholder id needed.
 					if ( ! ( isset( $form_fields[ $child_name ]['allowclear'] ) && 0 === $form_fields[ $child_name ]['allowclear'] ) ) {
 						$arr_options['items'] = array( '' => __( 'None', 'ultimate-member' ) );
 					}
-					$callback_result = $ajax_source_func( $form_fields[ $child_name ]['parent_dropdown_relationship'] );
+
+					$parent_options = isset( $_POST['parent_option'] ) ? $_POST['parent_option'] : array();
+					if ( ! is_array( $parent_options ) ) {
+						$parent_options = array( $parent_options );
+					}
+					$parent_options = array_map( 'sanitize_text_field', array_map( 'wp_unslash', $parent_options ) );
+
+					$callback_result = $choices_callback( $parent_options, $form_fields[ $child_name ]['parent_dropdown_relationship'] );
 					if ( ! empty( $callback_result ) && isset( $arr_options['items'] ) ) {
 						$arr_options['items'] = array_merge( $arr_options['items'], $callback_result );
 					} else {

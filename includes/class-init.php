@@ -563,7 +563,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->gdpr();
 			$this->member_directory();
 			$this->blocks();
-			$this->secure();
+			$this->validation();
 
 			// If multisite networks active
 			if ( is_multisite() ) {
@@ -1297,20 +1297,18 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['uploader'];
 		}
 
-
 		/**
 		 * @since 2.0
 		 *
 		 * @return um\core\Validation
 		 */
-		function validation() {
+		public function validation() {
 			if ( empty( $this->classes['validation'] ) ) {
 				$this->classes['validation'] = new um\core\Validation();
 			}
 
 			return $this->classes['validation'];
 		}
-
 
 		/**
 		 * @since 2.0

@@ -1464,45 +1464,93 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				return $value;
 			}
 
-			if ( empty( $data['custom_dropdown_options_source'] ) ) {
-				return $value;
-			}
-
-			if ( $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
-				return $value;
-			}
-
 			$key         = $data['metakey'];
 			$arr_options = array();
+			if ( UM()->is_new_ui() ) {
+				$choices_callback = $this->get_custom_dropdown_options_source( $key, $data );
+				if ( empty( $choices_callback ) ) {
+					return $value;
+				}
+				/**
+				 * Filters a marker for enable way to populate field options via the filter hook `um_get_field__$key`.
+				 *
+				 * @param {bool} $has_custom_source Marker for using the hook. Default `false`.
+				 *
+				 * @return {bool} Populate via hook marker.
+				 *
+				 * @since 2.0.50
+				 * @hook um_has_dropdown_options_source__$key
+				 *
+				 * @example <caption>Marker for populate options for the field with key `my_key` via hook `um_get_field__my_key`.</caption>
+				 * add_filter( 'um_has_dropdown_options_source__my_key', '__return_true' );
+				 */
+				$has_custom_source = apply_filters( "um_has_dropdown_options_source__$key", false );
+				if ( $has_custom_source ) {
 
-			/**
-			 * Filters a marker for enable way to populate field options via the filter hook `um_get_field__$key`.
-			 *
-			 * @param {bool} $has_custom_source Marker for using the hook. Default `false`.
-			 *
-			 * @return {bool} Populate via hook marker.
-			 *
-			 * @since 2.0.50
-			 * @hook um_has_dropdown_options_source__$key
-			 *
-			 * @example <caption>Marker for populate options for the field with key `my_key` via hook `um_get_field__my_key`.</caption>
-			 * add_filter( 'um_has_dropdown_options_source__my_key', '__return_true' );
-			 */
-			$has_custom_source = apply_filters( "um_has_dropdown_options_source__$key", false );
-			if ( $has_custom_source ) {
+					/** This filter is documented in includes/core/class-fields.php */
+					$opts        = apply_filters( "um_get_field__$key", array() );
+					$arr_options = array_key_exists( 'options', $opts ) ? $opts['options'] : array();
 
-				/** This filter is documented in includes/core/class-fields.php */
-				$opts        = apply_filters( "um_get_field__$key", array() );
-				$arr_options = array_key_exists( 'options', $opts ) ? $opts['options'] : array();
+				} elseif ( ! empty( $data['parent_dropdown_relationship'] ) ) {
+					$parent_dropdown_relationship = $data['parent_dropdown_relationship'];
 
-			} elseif ( function_exists( $data['custom_dropdown_options_source'] ) ) {
-				if ( ! empty( $data['parent_dropdown_relationship'] ) ) {
-					$_POST['parent_option_name'] = $data['parent_dropdown_relationship'];
-					$_POST['parent_option']      = um_user( $data['parent_dropdown_relationship'] );
+					$parent_options = array();
+					if ( isset( UM()->form()->post_form[ $parent_dropdown_relationship ] ) ) {
+						if ( ! is_array( UM()->form()->post_form[ $parent_dropdown_relationship ] ) ) {
+							$parent_options = array( UM()->form()->post_form[ $parent_dropdown_relationship ] );
+						} else {
+							$parent_options = UM()->form()->post_form[ $parent_dropdown_relationship ];
+						}
+					} elseif ( um_user( $parent_dropdown_relationship ) ) {
+						if ( ! is_array( um_user( $parent_dropdown_relationship ) ) ) {
+							$parent_options = array( um_user( $parent_dropdown_relationship ) );
+						} else {
+							$parent_options = um_user( $parent_dropdown_relationship );
+						}
+					}
 
-					$arr_options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+					$arr_options = $choices_callback( $parent_options, $data['parent_dropdown_relationship'] );
 				} else {
-					$arr_options = call_user_func( $data['custom_dropdown_options_source'] );
+					$arr_options = $choices_callback();
+				}
+			} else {
+				if ( empty( $data['custom_dropdown_options_source'] ) ) {
+					return $value;
+				}
+
+				if ( $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
+					return $value;
+				}
+
+				/**
+				 * Filters a marker for enable way to populate field options via the filter hook `um_get_field__$key`.
+				 *
+				 * @param {bool} $has_custom_source Marker for using the hook. Default `false`.
+				 *
+				 * @return {bool} Populate via hook marker.
+				 *
+				 * @since 2.0.50
+				 * @hook um_has_dropdown_options_source__$key
+				 *
+				 * @example <caption>Marker for populate options for the field with key `my_key` via hook `um_get_field__my_key`.</caption>
+				 * add_filter( 'um_has_dropdown_options_source__my_key', '__return_true' );
+				 */
+				$has_custom_source = apply_filters( "um_has_dropdown_options_source__$key", false );
+				if ( $has_custom_source ) {
+
+					/** This filter is documented in includes/core/class-fields.php */
+					$opts        = apply_filters( "um_get_field__$key", array() );
+					$arr_options = array_key_exists( 'options', $opts ) ? $opts['options'] : array();
+
+				} elseif ( function_exists( $data['custom_dropdown_options_source'] ) ) {
+					if ( ! empty( $data['parent_dropdown_relationship'] ) ) {
+						$_POST['parent_option_name'] = $data['parent_dropdown_relationship'];
+						$_POST['parent_option']      = um_user( $data['parent_dropdown_relationship'] );
+
+						$arr_options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+					} else {
+						$arr_options = call_user_func( $data['custom_dropdown_options_source'] );
+					}
 				}
 			}
 
@@ -1542,7 +1590,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 		/**
 		 * Get select options from a callback function
-		 *
+		 * @todo maybe deprecate or rewrite for filters in member directory and groups
 		 * @param  array  $data
 		 * @param  string $type
 		 *
@@ -3930,10 +3978,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 * add_filter( 'um_select_options_pair', 'my_um_select_options_pair', 10, 2 );
 					 */
 					$options_pair = apply_filters( 'um_select_options_pair', null, $data );
-					// Switch options pair for custom options from a callback function.
-					if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
-						$options_pair = true;
-					}
 
 					if ( UM()->is_new_ui() ) {
 						$options = array();
@@ -3941,28 +3985,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$disabled_by_parent_option = '';
 
 						$atts_ajax        = '';
-						$choices_callback = ! empty( $data['custom_dropdown_options_source'] ) ? $data['custom_dropdown_options_source'] : '';
-						/**
-						 * Filters a custom dropdown options source by $field_id.
-						 *
-						 * @since 1.3.x
-						 * @hook  um_custom_dropdown_options_source__{$field_id}
-						 *
-						 * @param {string} $source Dropdown options source.
-						 * @param {array}  $data   Field Data.
-						 *
-						 * @return {string} Dropdown options source.
-						 *
-						 * @example <caption>Change custom dropdown options source.</caption>
-						 * function function_name( $source, $data ) {
-						 *     // your code here
-						 *     return $source;
-						 * }
-						 * add_filter( 'um_custom_dropdown_options_source__{$field_id}', 'function_name', 10, 2 );
-						 */
-						$choices_callback = apply_filters( "um_custom_dropdown_options_source__$field_id", $choices_callback, $data );
-						if ( ! empty( $choices_callback ) && function_exists( $choices_callback ) && ! $this->is_source_blacklisted( $choices_callback ) ) {
-							$atts_ajax .= ' data-um-ajax-source="' . esc_attr( $choices_callback ) . '" ';
+						$choices_callback = $this->get_custom_dropdown_options_source( $field_id, $data );
+						if ( ! empty( $choices_callback ) ) {
+							$options_pair = true; // Switch options pair for custom options from a callback function.
+							$atts_ajax   .= ' data-um-ajax-source="' . esc_attr( $choices_callback ) . '" ';
 							// @todo check on form preview
 							if ( ! empty( $data['parent_dropdown_relationship'] ) && ! UM()->user()->preview ) {
 								/**
@@ -3992,7 +4018,23 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								}
 
 								if ( um_user( $parent_dropdown_relationship ) || isset( UM()->form()->post_form[ $form_key ] ) ) {
-									$options = $choices_callback( $parent_dropdown_relationship );
+									// Get parent values from the form's $_POST data or userdata
+									$parent_options = array();
+									if ( isset( UM()->form()->post_form[ $parent_dropdown_relationship ] ) ) {
+										if ( ! is_array( UM()->form()->post_form[ $parent_dropdown_relationship ] ) ) {
+											$parent_options = array( UM()->form()->post_form[ $parent_dropdown_relationship ] );
+										} else {
+											$parent_options = UM()->form()->post_form[ $parent_dropdown_relationship ];
+										}
+									} elseif ( um_user( $parent_dropdown_relationship ) ) {
+										if ( ! is_array( um_user( $parent_dropdown_relationship ) ) ) {
+											$parent_options = array( um_user( $parent_dropdown_relationship ) );
+										} else {
+											$parent_options = um_user( $parent_dropdown_relationship );
+										}
+									}
+
+									$options = $choices_callback( $parent_options, $parent_dropdown_relationship );
 
 									if ( array_key_exists( '', $options ) ) {
 										// There is native placeholder. Fallback if there is empty value.
@@ -4154,6 +4196,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
 						}
 					} else {
+						// Switch options pair for custom options from a callback function.
+						if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
+							$options_pair = true;
+						}
+
 						$class = 'um-s1';
 						if ( isset( $data['allowclear'] ) && 0 === $data['allowclear'] ) {
 							$class = 'um-s2';
@@ -4310,10 +4357,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					/** This filter is documented in includes/core/class-fields.php */
 					$options_pair = apply_filters( 'um_select_options_pair', null, $data );
-					// Switch options pair for custom options from a callback function.
-					if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
-						$options_pair = true;
-					}
 
 					// Selections count settings.
 					$max_selections = isset( $data['max_selections'] ) ? absint( $data['max_selections'] ) : 0;
@@ -4324,10 +4367,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$options          = array();
 						$atts_ajax        = '';
-						$choices_callback = ! empty( $data['custom_dropdown_options_source'] ) ? $data['custom_dropdown_options_source'] : '';
-						/** This filter is documented in includes/core/class-fields.php */
-						$choices_callback = apply_filters( "um_custom_dropdown_options_source__$field_id", $choices_callback, $data );
-						if ( ! empty( $choices_callback ) && function_exists( $choices_callback ) && ! $this->is_source_blacklisted( $choices_callback ) ) {
+						$choices_callback = $this->get_custom_dropdown_options_source( $field_id, $data );
+						if ( ! empty( $choices_callback ) ) {
+							$options_pair = true; // Switch options pair for custom options from a callback function.
 							$atts_ajax .= ' data-um-ajax-source="' . esc_attr( $choices_callback ) . '" ';
 							$options    = $choices_callback();
 						} else {
@@ -4455,6 +4497,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
 						}
 					} else {
+						// Switch options pair for custom options from a callback function.
+						if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
+							$options_pair = true;
+						}
+
 						$class = 'um-s1';
 						if ( isset( $data['allowclear'] ) && 0 === $data['allowclear'] ) {
 							$class = 'um-s2';
@@ -4490,14 +4537,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$options = apply_filters( "um_multiselect_options_{$type}", $options, $data );
 						}
 
-						/** This filter is documented in includes/core/class-fields.php */
-						$use_keyword = apply_filters( 'um_select_options_pair', null, $data );
-
-						// Switch options pair for custom options from a callback function.
-						if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
-							$use_keyword = true;
-						}
-
 						// Add an empty option!
 						$output .= '<option value=""></option>';
 
@@ -4511,7 +4550,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$um_field_checkbox_item_title = $v;
 								$opt_value                    = $v;
 
-								if ( $use_keyword ) {
+								if ( $options_pair ) {
 									$opt_value = $k;
 								}
 
@@ -5080,6 +5119,50 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			return $output;
+		}
+
+		/**
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param string $field_id Field metakey.
+		 * @param array  $data     Field data.
+		 *
+		 * @return string|false
+		 */
+		public function get_custom_dropdown_options_source( $field_id, $data ) {
+			$choices_callback = ! empty( $data['custom_dropdown_options_source'] ) ? $data['custom_dropdown_options_source'] : '';
+			/**
+			 * Filters a custom dropdown options source by $field_id.
+			 *
+			 * @since 1.3.x
+			 * @hook  um_custom_dropdown_options_source__{$field_id}
+			 *
+			 * @param {string} $source Dropdown options source.
+			 * @param {array}  $data   Field Data.
+			 *
+			 * @return {string} Dropdown options source.
+			 *
+			 * @example <caption>Change custom dropdown options source.</caption>
+			 * function function_name( $source, $data ) {
+			 *     // your code here
+			 *     return $source;
+			 * }
+			 * add_filter( 'um_custom_dropdown_options_source__{$field_id}', 'function_name', 10, 2 );
+			 */
+			$choices_callback = apply_filters( "um_custom_dropdown_options_source__$field_id", $choices_callback, $data );
+			if ( ! empty( $choices_callback ) && function_exists( $choices_callback ) && ! $this->is_source_blacklisted( $choices_callback ) ) {
+				$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
+
+				if ( ! empty( $allowed_callbacks ) ) {
+					$allowed_callbacks = array_map( 'rtrim', explode( "\n", wp_unslash( $allowed_callbacks ) ) );
+					if ( in_array( $choices_callback, $allowed_callbacks, true ) ) {
+						return $choices_callback;
+					}
+				}
+			}
+
+			return false;
 		}
 
 		/**

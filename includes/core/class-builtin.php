@@ -86,11 +86,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 
 			$fields = $this->all_user_fields;
 
-			if ( isset( $fields[ $field ]['options'] ) || ! empty( $fields[ $field ]['custom_dropdown_options_source'] ) ) {
-				return true;
-			}
-
-			return false;
+			return isset( $fields[ $field ]['options'] ) || ! empty( $fields[ $field ]['custom_dropdown_options_source'] );
 		}
 
 

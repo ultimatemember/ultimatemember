@@ -783,11 +783,11 @@ add_filter( 'um_field_non_utf8_value', 'um_field_non_utf8_value' );
 if ( ! UM()->is_new_ui() ) {
 	/**
 	 * Returns dropdown/multi-select options from a callback function.
+	 * Old UI. Don't handle new UI.
 	 *
 	 * @param  $options array
 	 * @param  $data array
 	 * @return array
-	 * @uses   hook filter: um_select_dropdown_dynamic_options, um_multiselect_options
 	 */
 	function um_select_dropdown_dynamic_callback_options( $options, $data ) {
 		if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) ) {
@@ -795,11 +795,7 @@ if ( ! UM()->is_new_ui() ) {
 				return $options;
 			}
 
-			if ( isset( $data['parent_dropdown_relationship'] ) ) {
-				$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
-			} else {
-				$options = call_user_func( $data['custom_dropdown_options_source'] );
-			}
+			$options = call_user_func( $data['custom_dropdown_options_source'] );
 		}
 
 		return $options;
@@ -810,13 +806,18 @@ if ( ! UM()->is_new_ui() ) {
 
 /**
  * Pair dropdown/multi-select options from a callback function.
+ * It does not handle registration form displaying and submission.
+ * Is triggered on profile form view
+ *
+ * @todo check on view profile and member directory card.
  *
  * @param  $value string
  * @param  $data  array
  * @return string
  */
 function um_option_match_callback_view_field( $value, $data ) {
-	if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
+	$choices_callback = UM()->fields()->get_custom_dropdown_options_source( $data['metakey'], $data );
+	if ( ! empty( $choices_callback ) ) {
 		return UM()->fields()->get_option_value_from_callback( $value, $data, $data['type'] );
 	}
 
