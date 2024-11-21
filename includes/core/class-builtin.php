@@ -67,29 +67,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return apply_filters( 'um_builtin_all_user_fields', $this->all_user_fields );
 		}
 
-
-		/**
-		 * Regular or multi-select/options
-		 *
-		 * @todo Maybe deprecate since 3.0 because redundant
-		 *
-		 * @param $field
-		 * @param $attrs
-		 *
-		 * @return bool
-		 */
-		function is_dropdown_field( $field, $attrs ) {
-
-			if ( isset( $attrs['options'] ) ) {
-				return true;
-			}
-
-			$fields = $this->all_user_fields;
-
-			return isset( $fields[ $field ]['options'] ) || ! empty( $fields[ $field ]['custom_dropdown_options_source'] );
-		}
-
-
 		/**
 		 * Get a field
 		 *
@@ -2153,6 +2130,28 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			 * ?>
 			 */
 			return apply_filters( "um_{$data}_predefined_field_options", $array );
+		}
+
+		/**
+		 * Regular or multi-select/options
+		 * @todo fully remove since 3.1.0
+		 * @deprecated 3.0.0
+		 *
+		 * @param $field
+		 * @param $attrs
+		 *
+		 * @return bool
+		 */
+		public function is_dropdown_field( $field, $attrs ) {
+			_deprecated_function( __METHOD__, '3.0.0' );
+
+			if ( isset( $attrs['options'] ) ) {
+				return true;
+			}
+
+			$fields = $this->all_user_fields;
+
+			return isset( $fields[ $field ]['options'] ) || ! empty( $fields[ $field ]['custom_dropdown_options_source'] );
 		}
 	}
 }

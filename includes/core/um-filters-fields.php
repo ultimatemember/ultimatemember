@@ -807,9 +807,7 @@ if ( ! UM()->is_new_ui() ) {
 /**
  * Pair dropdown/multi-select options from a callback function.
  * It does not handle registration form displaying and submission.
- * Is triggered on profile form view
- *
- * @todo check on view profile and member directory card.
+ * Is triggered on profile form view or on the members directory user card
  *
  * @param  $value string
  * @param  $data  array

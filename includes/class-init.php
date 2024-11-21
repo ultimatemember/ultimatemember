@@ -1095,17 +1095,6 @@ if ( ! class_exists( 'UM' ) ) {
 		}
 
 		/**
-		 * @since 2.0
-		 * @todo Make it deprecated and review extensions.
-		 *
-		 * @return um\frontend\Enqueue
-		 */
-		public function enqueue() {
-			_deprecated_function( __METHOD__, '2.7.0', 'UM()->frontend()->enqueue()' );
-			return $this->frontend()->enqueue();
-		}
-
-		/**
 		 * @return um\common\Shortcodes
 		 * @since 2.0
 		 * @todo deprecate and use UM()->common()->shortcodes() instead
@@ -1198,7 +1187,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['roles'];
 		}
 
-
 		/**
 		 * @since 2.0
 		 *
@@ -1206,14 +1194,13 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @return um\core\User_posts
 		 */
-		function user_posts() {
+		public function user_posts() {
 			if ( empty( $this->classes['user_posts'] ) ) {
 				$this->classes['user_posts'] = new um\core\User_posts();
 			}
 
 			return $this->classes['user_posts'];
 		}
-
 
 		/**
 		 * @since 2.0
