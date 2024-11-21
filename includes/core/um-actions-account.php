@@ -343,9 +343,7 @@ function um_submit_account_details( $args ) {
 		$changes[ $k ] = $v;
 	}
 
-	if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-
-	} else {
+	if ( ! UM()->is_new_ui() ) {
 		if ( isset( $changes['hide_in_members'] ) ) {
 			if ( UM()->member_directory()->get_hide_in_members_default() ) {
 				if ( __( 'Yes', 'ultimate-member' ) === $changes['hide_in_members'] || 'Yes' === $changes['hide_in_members'] || array_intersect( array( 'Yes', __( 'Yes', 'ultimate-member' ) ), $changes['hide_in_members'] ) ) {
@@ -536,7 +534,7 @@ function um_account_page_hidden_fields( $args, $tab_id = null ) {
 	?>
 	<input type="hidden" name="_um_account" id="_um_account" value="1" />
 	<?php
-	if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+	if ( UM()->is_new_ui() ) {
 		?>
 		<input type="hidden" name="_um_account_tab" id="_um_account_tab" value="<?php echo esc_attr( $tab_id ); ?>" />
 		<?php
@@ -549,9 +547,7 @@ function um_account_page_hidden_fields( $args, $tab_id = null ) {
 add_action( 'um_account_page_hidden_fields', 'um_account_page_hidden_fields', 10, 2 );
 
 
-if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-
-} else {
+if ( ! UM()->is_new_ui() ) {
 	/**
 	 * Before delete account tab content
 	 */
@@ -631,7 +627,7 @@ function um_disable_native_email_notificatiion( $changed, $user_id ) {
 add_action( 'um_account_pre_update_profile', 'um_disable_native_email_notificatiion', 10, 2 );
 
 
-if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+if ( UM()->is_new_ui() ) {
 	function um_custom_redirect_personal_data_confirmed( $request_id ) {
 		$um_request = get_post_meta( $request_id, 'um_account_request', true );
 		if ( ! empty( $um_request ) ) {

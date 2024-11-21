@@ -331,7 +331,7 @@ add_action( 'um_submit_form_login', 'um_submit_form_login', 10, 2 );
 
 
 
-if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+if ( UM()->is_new_ui() ) {
 	/**
 	 * Show the submit button
 	 *

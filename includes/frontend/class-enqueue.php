@@ -111,7 +111,7 @@ final class Enqueue extends \um\common\Enqueue {
 		$js_url   = self::get_url( 'js' );
 		$css_url  = self::get_url( 'css' );
 
-		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+		if ( UM()->is_new_ui() ) {
 			// New one.
 			wp_register_script( 'um_dropdown', $libs_url . 'dropdown/dropdown' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
 			wp_register_style( 'um_dropdown', $libs_url . 'dropdown/dropdown' . $suffix . '.css', array(), UM_VERSION );
@@ -359,7 +359,7 @@ final class Enqueue extends \um\common\Enqueue {
 		$libs_url = self::get_url( 'libs' );
 		$css_url  = self::get_url( 'css' );
 
-		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+		if ( UM()->is_new_ui() ) {
 			wp_register_style( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.css', array(), '1.0' );
 
 			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array( 'um_common', 'um_tipsy', 'um_dropdown', 'um_crop', 'um_modal', 'um_choices', 'um_confirm' ), UM_VERSION );
@@ -426,9 +426,7 @@ final class Enqueue extends \um\common\Enqueue {
 		$this->register_scripts();
 		$this->register_styles();
 
-		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-
-		} else {
+		if ( ! UM()->is_new_ui() ) {
 			$this->load_original();
 		}
 
@@ -454,7 +452,7 @@ final class Enqueue extends \um\common\Enqueue {
 	 * @since 2.8.4
 	 */
 	public function add_to_global_styles() {
-		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+		if ( UM()->is_new_ui() ) {
 			$styles = apply_filters(
 				'um_inline_styles_variables',
 				array(
@@ -577,7 +575,7 @@ final class Enqueue extends \um\common\Enqueue {
 	 * @since 2.8.4
 	 */
 	public function add_style_variables( $um_common_variables ) {
-		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+		if ( UM()->is_new_ui() ) {
 			$um_common_variables['colors'] = array(
 				'gray25'  => '#fcfcfd',
 				'gray50'  => '#f9fafb',

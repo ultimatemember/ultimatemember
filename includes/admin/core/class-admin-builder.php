@@ -1149,6 +1149,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 */
 		public function skip_field_validation( $skip, $post_input, $array ) {
 			if ( $post_input === '_options' && isset( $array['post']['_custom_dropdown_options_source'] ) ) {
+				// Don't check is_blacklisted here, because we put it to whitelist after field save.
 				$skip = function_exists( wp_unslash( $array['post']['_custom_dropdown_options_source'] ) );
 			}
 

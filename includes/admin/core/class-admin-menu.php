@@ -180,7 +180,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		 * Setup admin menu
 		 */
 		function primary_admin_menu() {
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				add_menu_page( __( 'UM Design BETA', 'ultimate-member' ), __( 'UM Design BETA', 'ultimate-member' ), 'manage_options', 'um-admin-design', array( &$this, 'admin_design_page' ), 'dashicons-admin-customizer' );
 			}
 

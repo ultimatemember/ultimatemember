@@ -174,7 +174,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			/** This action is documented in includes/common/class-shortcodes.php */
 			do_action( "um_before_{$args['mode']}_form_is_loaded", $args );
 
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				wp_enqueue_style( 'um_new_design' );
 				wp_enqueue_script( 'um_new_design' );
 			}

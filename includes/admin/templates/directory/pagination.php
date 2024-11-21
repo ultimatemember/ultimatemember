@@ -39,7 +39,7 @@ $fields = array(
 		'size'    => 'small',
 	),
 );
-if ( ! ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) ) {
+if ( ! UM()->is_new_ui() ) {
 	$fields = array_merge(
 		$fields,
 		array(

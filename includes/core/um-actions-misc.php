@@ -185,7 +185,7 @@ function um_add_update_notice( $args ) {
 		}
 	}
 	// phpcs:enable WordPress.Security.NonceVerification -- used for echo and already verified here.
-	if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+	if ( UM()->is_new_ui() ) {
 		if ( ! empty( $err ) ) {
 			$output = UM()->frontend()::layouts()::alert(
 				$err,

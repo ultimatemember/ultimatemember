@@ -100,13 +100,28 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 				}
 
 				// Dropdown options source from callback function
-				if ( in_array( $fields[ $key ]['type'], array( 'select','multiselect' ), true ) &&
-					isset( $fields[ $key ]['custom_dropdown_options_source'] ) &&
-					! empty( $fields[ $key ]['custom_dropdown_options_source'] ) &&
-					function_exists( $fields[ $key ]['custom_dropdown_options_source'] ) ) {
-					if ( ! UM()->fields()->is_source_blacklisted( $fields[ $key ]['custom_dropdown_options_source'] ) ) {
+				if ( UM()->is_new_ui() ) {
+					if ( in_array( $fields[ $key ]['type'], array( 'select', 'multiselect' ), true ) &&
+						! empty( $fields[ $key ]['custom_dropdown_options_source'] ) &&
+						function_exists( $fields[ $key ]['custom_dropdown_options_source'] ) &&
+						! UM()->fields()->is_source_blacklisted( $fields[ $key ]['custom_dropdown_options_source'] ) ) {
 						$arr_options = call_user_func( $fields[ $key ]['custom_dropdown_options_source'] );
-						$fields[ $key ]['options'] = array_keys( $arr_options );
+
+						if ( is_array( $arr_options ) ) {
+							$fields[ $key ]['options'] = array_keys( $arr_options );
+						} else {
+							$fields[ $key ]['options'] = array();
+						}
+					}
+				} else {
+					if ( in_array( $fields[ $key ]['type'], array( 'select','multiselect' ), true ) &&
+					     isset( $fields[ $key ]['custom_dropdown_options_source'] ) &&
+					     ! empty( $fields[ $key ]['custom_dropdown_options_source'] ) &&
+					     function_exists( $fields[ $key ]['custom_dropdown_options_source'] ) ) {
+						if ( ! UM()->fields()->is_source_blacklisted( $fields[ $key ]['custom_dropdown_options_source'] ) ) {
+							$arr_options = call_user_func( $fields[ $key ]['custom_dropdown_options_source'] );
+							$fields[ $key ]['options'] = array_keys( $arr_options );
+						}
 					}
 				}
 

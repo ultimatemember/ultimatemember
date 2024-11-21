@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param $args
  */
 function um_add_form_identifier( $args ) {
-	if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+	if ( UM()->is_new_ui() ) {
 		if ( ! array_key_exists( 'form_id', $args ) ) {
 			return;
 		}
@@ -37,7 +37,7 @@ function um_add_security_checks( $args ) {
 	if ( ! array_key_exists( 'form_id', $args ) ) {
 		return;
 	}
-	if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+	if ( UM()->is_new_ui() ) {
 		if ( array_key_exists( 'mode', $args ) && 'profile' === $args['mode'] && ! um_is_on_edit_profile() ) {
 			// If profile form then display only when edit mode.
 			return;
@@ -53,9 +53,7 @@ function um_add_security_checks( $args ) {
 add_action( 'um_after_form_fields', 'um_add_security_checks' );
 add_action( 'um_account_page_hidden_fields', 'um_add_security_checks' );
 
-if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-
-} else {
+if ( ! UM()->is_new_ui() ) {
 	/**
 	 * Makes the honeypot invisible
 	 */

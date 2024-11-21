@@ -947,12 +947,16 @@ jQuery( document ).ready( function() {
 						arr_opts.push( response.data[ key ] );
 					}
 
-					_options.val( arr_opts.join('\n') );
-
+					_options.val( arr_opts.join('\n') ).prop( 'disabled', true ).prop( 'readonly', true );
+					jQuery('#_parent_dropdown_relationship').parents( 'p' ).show();
+				},
+				error: function( data ) {
+					_options.prop( 'disabled', false ).prop( 'readonly', false );
+					jQuery('#_parent_dropdown_relationship').parents( 'p' ).hide();
 				}
 			});
-			jQuery('#_parent_dropdown_relationship').parents( 'p' ).show();
 		} else {
+			_options.prop( 'disabled', false ).prop( 'readonly', false );
 			jQuery('#_parent_dropdown_relationship').parents( 'p' ).hide();
 		}
 	});

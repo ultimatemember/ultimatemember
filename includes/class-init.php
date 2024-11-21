@@ -538,9 +538,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->frontend()->includes();
 				$this->login();
 				$this->register();
-				if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-
-				} else {
+				if ( ! $this->is_new_ui() ) {
 					$this->user_posts();
 				}
 				$this->logout();

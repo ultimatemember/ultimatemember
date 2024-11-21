@@ -2314,7 +2314,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 						?>
 						<p class="um"><label for="_default"><?php esc_html_e( 'Default Date', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'You may use all PHP compatible date formats such as: 2020-02-02, 02/02/2020, yesterday, today, tomorrow, next monday, first day of next month, +3 day', 'ultimate-member' ) ); ?></label>
 							<?php
-							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+							if ( UM()->is_new_ui() ) {
 								// Maybe convert to proper date format of native input type="date".
 								if ( ! empty( $this->edit_mode_value ) && false === strpos( $this->edit_mode_value, '-' ) ) {
 									$this->edit_mode_value = wp_date( 'Y-m-d', strtotime( $this->edit_mode_value ), new DateTimeZone( 'UTC' ) );
@@ -2333,7 +2333,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					} elseif ( 'time' === $this->set_field_type ) {
 						?>
 						<p class="um"><label for="_default"><?php esc_html_e( 'Default Time', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'You may use all PHP compatible date formats such as: 2020-02-02, 02/02/2020, yesterday, today, tomorrow, next monday, first day of next month, +3 day', 'ultimate-member' ) ); ?></label>
-							<?php if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) { ?>
+							<?php if ( UM()->is_new_ui() ) { ?>
 								<input type="time" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" />
 							<?php } else { ?>
 								<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" class="um-timepicker" data-format="HH:i" />
@@ -2497,7 +2497,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_custom_dropdown_options_source':
 					?>
 
-					<p><label for="_custom_dropdown_options_source"><?php esc_html_e( 'Choices Callback', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Add a callback source to retrieve choices.', 'ultimate-member' ) ); ?></label>
+					<p><label for="_custom_dropdown_options_source"><?php esc_html_e( 'Choices Callback', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Add a callback source to retrieve choices.', 'ultimate-member' ) ); ?></label>
 						<input type="text" name="_custom_dropdown_options_source" id="_custom_dropdown_options_source" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 

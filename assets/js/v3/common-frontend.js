@@ -657,7 +657,6 @@ UM.frontend = {
 						let parent  = jQuery(this);
 						let form_id = parent.closest( 'form' ).find( 'input[type="hidden"][name="form_id"]' ).val();
 
-						//let arr_key;
 						let arr_key = parent.val();
 						arr_key = wp.hooks.applyFilters( 'um_frontend_child_dropdown_loop_parent_value', arr_key, me, parent );
 
@@ -669,7 +668,6 @@ UM.frontend = {
 							}
 
 							let optionsRequestData = {
-								action: 'um_select_options',
 								parent_option_name: parentOption,
 								parent_option: arr_key,
 								child_callback: childCallback,
@@ -684,10 +682,8 @@ UM.frontend = {
 								{
 									data: optionsRequestData,
 									success: function( data ) {
-										if ( data.status === 'success' && arr_key !== '' ) {
-											UM.frontend.choices.optionsCache[ arr_key ] = data;
-											UM.frontend.choices.populateChildOptions( me.attr('id'), data, arr_key );
-										}
+										UM.frontend.choices.optionsCache[ arr_key ] = data;
+										UM.frontend.choices.populateChildOptions( me.attr('id'), data );
 
 										if ( typeof data.debug !== 'undefined' ) {
 											console.log( data );
@@ -702,16 +698,23 @@ UM.frontend = {
 								}
 							);
 						} else {
-							setTimeout( UM.frontend.choices.populateChildOptions, 10, me.attr('id'), UM.frontend.choices.optionsCache[ arr_key ], arr_key );
+							setTimeout( UM.frontend.choices.populateChildOptions, 10, me.attr('id'), UM.frontend.choices.optionsCache[ arr_key ] );
 						}
 
-						if ( typeof arr_key != 'undefined' || arr_key === '' ) {
-							me.find('option[value!=""]').remove();
-							me.val('').trigger('change');
-						}
+						// console.log( arr_key );
+						//
+						// if ( typeof arr_key !== 'undefined' || arr_key === '' ) {
+						// 	me.find('option[value!=""]').remove();
+						// 	me.val('').trigger('change');
+						//
+						// 	if ( arr_key === '' ) {
+						// 		me.disable();
+						// 	}
+						// }
 					});
 
-					jQuery('select[name="' + parentOption + '"]').trigger('change');
+					wp.hooks.doAction( 'um_after_init_child_loop', parentOption, me );
+					// jQuery('select[name="' + parentOption + '"]').trigger('change');
 				});
 			}
 		},
@@ -725,11 +728,14 @@ UM.frontend = {
 					choices.clearStore();
 					choices.clearChoices();
 					choices.removeActiveItems();
-					choices.enable();
 					if (newOptions.length === 0) {
 						choices.removeActiveItems();
+						// fallback when empty items
+						choices.setChoices([{id: '', label: wp.i18n.__( 'None', 'ultimate-member' ), placeholder: true, selected: true}], 'id', 'label', true);
+						choices.disable();
 					} else {
 						choices.setChoices(newOptions, 'id', 'label', true);
+						choices.enable();
 					}
 				}
 			}
@@ -739,9 +745,8 @@ UM.frontend = {
 		 *
 		 * @param selector
 		 * @param data
-		 * @param arr_key
 		 */
-		populateChildOptions: function ( selector, data, arr_key ) {
+		populateChildOptions: function ( selector, data ) {
 			let me = jQuery( '#' + selector );
 			me.find('option[value!=""]').remove();
 
@@ -749,17 +754,26 @@ UM.frontend = {
 				me.prop('disabled', false);
 			}
 
-			let arr_items = [],
-				search_get = '';
-			if ( me.attr('data-um-original-value') ) {
-				search_get = me.attr('data-um-original-value');
-			}
+			let arr_items = [];
+			// let arr_items = [],
+			// 	search_get = '';
+			// if ( me.attr('data-um-original-value') ) {
+			// 	search_get = me.attr('data-um-original-value');
+			// }
 
 			if ( typeof data !== 'undefined' && data.items ) {
 				jQuery.each(data.items, function (k, v) {
-					if ( 0 !== parseInt( k ) ) {
-						arr_items.push({id: k, text: v, selected: (v === search_get)});
+					// arr_items.push({id: k, label: v, selected: false});
+					if ( '' !== k ) {
+						arr_items.push({id: k, label: v, selected: false});
+					} else {
+						// placeholder
+						arr_items.push({id: '', label: v, placeholder: true, selected: true});
 					}
+
+					// if ( 0 !== parseInt( k ) ) {
+						// arr_items.push({id: k, text: v, selected: (v === search_get)});
+					// }
 				});
 			}
 
@@ -768,12 +782,18 @@ UM.frontend = {
 			let actionInFilter = wp.hooks.applyFilters( 'um_populate_child_options', null, me, selector, data, arr_items );
 			if ( null === actionInFilter ) {
 				if ( typeof data !== 'undefined' ) {
-					if ( typeof data.field.default !== 'undefined' && ! me.data('um-original-value') ) {
+					// if ( typeof data.field.default !== 'undefined' && ! me.data('um-original-value') ) {
+					// 	me.val( data.field.default ).trigger('change');
+					// } else if ( me.data('um-original-value') !== '' ) {
+					// 	me.val( me.data('um-original-value') ).trigger('change');
+					// }
+
+					// @todo We need to close a lack of logic when child default value isn't situated in the diapason for default parent value.
+					if ( typeof data.field.default !== 'undefined' ) {
 						me.val( data.field.default ).trigger('change');
-					} else if ( me.data('um-original-value') !== '' ) {
-						me.val( me.data('um-original-value') ).trigger('change');
 					}
 
+					// @todo maybe not editable field cannot be changed from callback. And probably we need to close a lack of logic when parent is editable, but child isn't.
 					if ( data.field.editable == 0 ) {
 						me.addClass('um-child-option-disabled');
 						me.attr('disabled','disabled');

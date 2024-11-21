@@ -93,7 +93,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 */
 			$checked = isset( $_REQUEST[ $id ] ) ? (bool) $_REQUEST[ $id ] : $checked;
 
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				?>
 				<div id="um_field_0_<?php echo esc_attr( $id ); ?>" class="um-field um-field-bool um-field-<?php echo esc_attr( $id ); ?> um-field-bool um-field-type_bool" data-key="<?php echo esc_attr( $id ); ?>">
 					<input type="hidden" name="<?php echo esc_attr( $id ); ?>" value="0" />
@@ -208,7 +208,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( ! $this->is_source_blacklisted( $args['custom_dropdown_options_source'] ) ) {
 						$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
 						if ( ! empty( $allowed_callbacks ) ) {
-							$allowed_callbacks = array_map( 'rtrim', explode( "\n", $allowed_callbacks ) );
+							$allowed_callbacks   = array_map( 'rtrim', explode( "\n", $allowed_callbacks ) );
 							$allowed_callbacks[] = $args['custom_dropdown_options_source'];
 						} else {
 							$allowed_callbacks = array( $args['custom_dropdown_options_source'] );
@@ -265,7 +265,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( ! $this->is_source_blacklisted( $args['custom_dropdown_options_source'] ) ) {
 						$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
 						if ( ! empty( $allowed_callbacks ) ) {
-							$allowed_callbacks = array_map( 'rtrim', explode( "\n", $allowed_callbacks ) );
+							$allowed_callbacks   = array_map( 'rtrim', explode( "\n", $allowed_callbacks ) );
 							$allowed_callbacks[] = $args['custom_dropdown_options_source'];
 						} else {
 							$allowed_callbacks = array( $args['custom_dropdown_options_source'] );
@@ -556,7 +556,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			$error_id = 'um-error-for-' . $input_id;
 
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				if ( $force_show ) {
 					return '<p class="um-field-hint um-field-error"  id="' . esc_attr( $error_id ) . '">' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</p>';
 				}
@@ -608,7 +608,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			$notice_id = 'um-notice-for-' . $input_id;
 
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				if ( $force_show ) {
 					return '<p class="um-field-hint um-field-notice"  id="' . esc_attr( $notice_id ) . '">' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</p>';
 				}
@@ -780,7 +780,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$for_attr = ' for="' . esc_attr( $key . UM()->form()->form_suffix ) . '"';
 			}
 
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				$output .= '<label' . $for_attr . '>' . wp_kses_post( $label ) . '</label>';
 			} else {
 				$output .= '<div class="um-field-label">';
@@ -2474,7 +2474,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$field_name  = $key . $form_suffix;
 					$field_value = $this->field_value( $key, $default, $data );
 
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						$output .= '<input ' . $disabled . ' class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
 						if ( ! empty( $disabled ) ) {
 							$output .= $this->disabled_hidden_field( $field_name, $field_value );
@@ -2522,7 +2522,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$field_name  = $key . $form_suffix;
 					$field_value = $this->field_value( $key, $default, $data );
 
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
 						if ( ! empty( $disabled ) ) {
 							$output .= $this->disabled_hidden_field( $field_name, $field_value );
@@ -2569,7 +2569,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
 						if ( ! empty( $disabled ) ) {
 							$output .= $this->disabled_hidden_field( $field_name, $field_value );
@@ -2625,7 +2625,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="number" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $number_limit . ' ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
 						if ( ! empty( $disabled ) ) {
 							$output .= $this->disabled_hidden_field( $field_name, $field_value );
@@ -2663,7 +2663,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				case 'password':
 					$original_key = $key;
 
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						if ( 'single_user_password' === $key ) {
 							$key = $original_key;
 
@@ -3001,7 +3001,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="url" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
 						if ( ! empty( $disabled ) ) {
 							$output .= $this->disabled_hidden_field( $field_name, $field_value );
@@ -3046,7 +3046,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						if ( ! empty( $field_value ) && false === strpos( $field_value, '-' ) ) {
 							$field_value = wp_date( 'Y-m-d', strtotime( $field_value ), new DateTimeZone( 'UTC' ) );
 						}
@@ -3111,7 +3111,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						$output .= '<input ' . $disabled . ' class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="time" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
 						if ( ! empty( $disabled ) ) {
 							$output .= $this->disabled_hidden_field( $field_name, $field_value );
@@ -3162,7 +3162,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$bio_key = UM()->profile()->get_show_bio_key( $this->global_args );
 
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						if ( ! empty( $data['html'] ) && $bio_key !== $key ) {
 							$textarea_settings = array(
 								'media_buttons' => false,
@@ -3382,7 +3382,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$field_name  = $key . $form_suffix;
 					$field_value = $this->field_value( $key, $default, $data );
 
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						if ( ! empty( $disabled ) ) {
 							$output .= '<div class="um-rating-readonly um-raty ' . esc_attr( $this->get_class( $key, $data ) ) . '" id="' . esc_attr( $field_name ) . '" data-key="' . esc_attr( $key ) . '" data-number="' . esc_attr( $data['number'] ) . '" data-score="' . esc_attr( $field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '></div>';
 							$output .= $this->disabled_hidden_field( $field_name, $field_value );
@@ -3458,7 +3458,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						if ( ! isset( $data['allowed_types'] ) ) {
 							$allowed_types = UM()->common()->filesystem()::image_mimes();
 						} elseif ( ! is_array( $data['allowed_types'] ) ) {
@@ -3665,7 +3665,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						if ( ! isset( $data['allowed_types'] ) ) {
 							$allowed_types = UM()->common()->filesystem()::file_mimes();
 						} elseif ( ! is_array( $data['allowed_types'] ) ) {
@@ -3935,29 +3935,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$options_pair = true;
 					}
 
-					// Get options from field settings.
-					$options = array();
-					if ( array_key_exists( 'options', $data ) ) {
-						if ( is_array( $data['options'] ) ) {
-							$options = $data['options'];
-						} elseif ( 'builtin' === $data['options'] && array_key_exists( 'filter', $data ) ) {
-							// @todo maybe remove this condition because options can have only `array` type.
-							$options = UM()->builtin()->get( $data['filter'] );
-						}
-					}
+					if ( UM()->is_new_ui() ) {
+						$options = array();
 
-					if ( ( 'country' === $key || 'languages' === $key ) && empty( $options ) ) {
-						// Fallback for fields 'country' or 'languages' when options are empty.
-						$options = UM()->builtin()->get( $key );
-					}
+						$disabled_by_parent_option = '';
 
-					$has_parent_option            = false;
-					$disabled_by_parent_option    = '';
-					$select_original_option_value = '';
-
-					$atts_ajax        = '';
-					$choices_callback = ! empty( $data['custom_dropdown_options_source'] ) ? $data['custom_dropdown_options_source'] : '';
-					if ( ! empty( $choices_callback ) && function_exists( $choices_callback ) && ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
+						$atts_ajax        = '';
+						$choices_callback = ! empty( $data['custom_dropdown_options_source'] ) ? $data['custom_dropdown_options_source'] : '';
 						/**
 						 * Filters a custom dropdown options source by $field_id.
 						 *
@@ -3977,138 +3961,150 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						 * add_filter( 'um_custom_dropdown_options_source__{$field_id}', 'function_name', 10, 2 );
 						 */
 						$choices_callback = apply_filters( "um_custom_dropdown_options_source__$field_id", $choices_callback, $data );
-						$atts_ajax       .= ' data-um-ajax-source="' . esc_attr( $choices_callback ) . '" ';
+						if ( ! empty( $choices_callback ) && function_exists( $choices_callback ) && ! $this->is_source_blacklisted( $choices_callback ) ) {
+							$atts_ajax .= ' data-um-ajax-source="' . esc_attr( $choices_callback ) . '" ';
+							// @todo check on form preview
+							if ( ! empty( $data['parent_dropdown_relationship'] ) && ! UM()->user()->preview ) {
+								/**
+								 * Filters parent dropdown relationship by $field_id.
+								 *
+								 * @since 1.3.x
+								 * @hook  um_custom_dropdown_options_parent__{$field_id}
+								 *
+								 * @param {string}  $parent  Parent dropdown relationship.
+								 * @param {array}   $data    Field Data.
+								 *
+								 * @return {string} Parent dropdown relationship.
+								 *
+								 * @example <caption>Change parent dropdown relationship.</caption>
+								 * function function_name( $parent, $data ) {
+								 *     // your code here
+								 *     return $parent;
+								 * }
+								 * add_filter( 'um_custom_dropdown_options_parent__{$field_id}', 'function_name', 10, 2 );
+								 */
+								$parent_dropdown_relationship = apply_filters( "um_custom_dropdown_options_parent__$field_id", $data['parent_dropdown_relationship'], $data );
+								$atts_ajax                   .= ' data-um-parent="' . esc_attr( $parent_dropdown_relationship ) . '" data-nonce="' . esc_attr( wp_create_nonce( 'um_dropdown_parent_nonce' . $data['metakey'] ) ) . '" ';
 
-						if ( ! empty( $data['parent_dropdown_relationship'] ) && ! UM()->user()->preview ) {
-							$has_parent_option         = true;
-							$disabled_by_parent_option = ' disabled="disabled" ';
-
-							/**
-							 * Filters parent dropdown relationship by $field_id.
-							 *
-							 * @since 1.3.x
-							 * @hook  um_custom_dropdown_options_parent__{$field_id}
-							 *
-							 * @param {string}  $parent  Parent dropdown relationship.
-							 * @param {array}   $data    Field Data.
-							 *
-							 * @return {string} Parent dropdown relationship.
-							 *
-							 * @example <caption>Change parent dropdown relationship.</caption>
-							 * function function_name( $parent, $data ) {
-							 *     // your code here
-							 *     return $parent;
-							 * }
-							 * add_filter( 'um_custom_dropdown_options_parent__{$field_id}', 'function_name', 10, 2 );
-							 */
-							$parent_dropdown_relationship = apply_filters( "um_custom_dropdown_options_parent__$field_id", $data['parent_dropdown_relationship'], $data );
-							$atts_ajax                   .= ' data-um-parent="' . esc_attr( $parent_dropdown_relationship ) . '" data-nonce="' . esc_attr( wp_create_nonce( 'um_dropdown_parent_nonce' . $data['metakey'] ) ) . '" ';
-
-							if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) && um_user( $parent_dropdown_relationship ) ) {
-								if ( ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
-									$options = call_user_func( $data['custom_dropdown_options_source'], $parent_dropdown_relationship );
+								// Don't use double disabled if already disabled.
+								if ( empty( $disabled ) ) {
+									$disabled_by_parent_option = ' disabled="disabled" ';
 								}
 
-								$disabled_by_parent_option = '';
-								if ( um_user( $form_key ) ) {
-									$select_original_option_value = ' data-um-original-value="' . esc_attr( um_user( $form_key ) ) . '" ';
-								}
-							}
-						}
+								if ( um_user( $parent_dropdown_relationship ) || isset( UM()->form()->post_form[ $form_key ] ) ) {
+									$options = $choices_callback( $parent_dropdown_relationship );
 
-						// Child dropdown option selected
-						if ( isset( UM()->form()->post_form[ $form_key ] ) ) {
-							$select_original_option_value = " data-um-original-value='" . esc_attr( UM()->form()->post_form[ $form_key ] ) . "' ";
-						}
+									if ( array_key_exists( '', $options ) ) {
+										// There is native placeholder. Fallback if there is empty value.
+										unset( $options[''] );
+									}
 
-						// Child dropdown
-						if ( $has_parent_option ) {
-							if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) && isset( UM()->form()->post_form[ $form_key ] ) ) {
-								if ( ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
-									$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+									// Don't use double disabled if already disabled.
+									if ( empty( $disabled ) && count( $options ) ) {
+										$disabled_by_parent_option = '';
+									}
 								}
+							} else {
+								$options = $choices_callback();
 							}
 						} else {
-							$options = call_user_func( $data['custom_dropdown_options_source'] );
+							// Get options from field settings.
+							if ( array_key_exists( 'options', $data ) ) {
+								if ( is_array( $data['options'] ) ) {
+									$options = $data['options'];
+								} elseif ( 'builtin' === $data['options'] && array_key_exists( 'filter', $data ) ) {
+									// @todo maybe remove this condition because options can have only `array` type.
+									$options = UM()->builtin()->get( $data['filter'] );
+								}
+							}
+
+							if ( ( 'country' === $key || 'languages' === $key ) && empty( $options ) ) {
+								// Fallback for fields 'country' or 'languages' when options are empty.
+								$options = UM()->builtin()->get( $key );
+							}
 						}
-					}
 
-					if ( ! $has_parent_option ) {
-						if ( ! empty( $options ) ) {
-							/**
-							 * Filters dropdown options.
-							 *
-							 * @since 2.0
-							 * @hook  um_selectbox_options
-							 *
-							 * @param {array}  $options Field options.
-							 * @param {string} $key     Field metakey.
-							 *
-							 * @return {array} Field options.
-							 *
-							 * @example <caption>Extend dropdown options.</caption>
-							 * function my_um_selectbox_options( $options, $key ) {
-							 *     // your code here
-							 *     return $options;
-							 * }
-							 * add_filter( 'um_selectbox_options', 'my_um_selectbox_options', 10, 2 );
-							 */
-							$options = apply_filters( 'um_selectbox_options', $options, $key );
-							/**
-							 * Filters dropdown dynamic options.
-							 *
-							 * @since 1.3.x
-							 * @hook  um_select_dropdown_dynamic_options
-							 *
-							 * @param {array} $options Dynamic options.
-							 * @param {array} $data    Field Data.
-							 *
-							 * @return {array} Dynamic options.
-							 *
-							 * @example <caption>Extend dropdown dynamic options.</caption>
-							 * function my_select_dropdown_dynamic_options( $options, $data ) {
-							 *     // your code here
-							 *     return $options;
-							 * }
-							 * add_filter( 'um_select_dropdown_dynamic_options', 'my_select_dropdown_dynamic_options', 10, 2 );
-							 */
-							$options = apply_filters( 'um_select_dropdown_dynamic_options', $options, $data );
-							/**
-							 * Filters dropdown dynamic options by field $key.
-							 *
-							 * @since 1.3.x
-							 * @hook  um_select_dropdown_dynamic_options_{$key}
-							 *
-							 * @param {array} $options Dynamic options.
-							 *
-							 * @return {array} Dynamic options.
-							 *
-							 * @example <caption>Extend dropdown dynamic options by field $key.</caption>
-							 * function my_select_dropdown_dynamic_options( $options ) {
-							 *     // your code here
-							 *     return $options;
-							 * }
-							 * add_filter( 'um_select_dropdown_dynamic_options_{$key}', 'my_select_dropdown_dynamic_options', 10, 1 );
-							 */
-							$options = apply_filters( "um_select_dropdown_dynamic_options_{$key}", $options );
+						/**
+						 * Filters dropdown options.
+						 *
+						 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+						 * 10 - `um_woocommerce_selectbox_options()` UM:Woocommerce billing and shipping fields.
+						 *
+						 * @param {array}  $options Field options.
+						 * @param {string} $key     Field metakey.
+						 *
+						 * @return {array} Field options.
+						 *
+						 * @since 2.0
+						 * @hook  um_selectbox_options
+						 *
+						 * @example <caption>Extend dropdown options.</caption>
+						 * function my_um_selectbox_options( $options, $key ) {
+						 *     // your code here
+						 *     return $options;
+						 * }
+						 * add_filter( 'um_selectbox_options', 'my_um_selectbox_options', 10, 2 );
+						 */
+						$options = apply_filters( 'um_selectbox_options', $options, $key );
+						/**
+						 * Filters dropdown dynamic options.
+						 *
+						 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+						 * 10 - `um_select_dropdown_dynamic_options_to_utf8()` Filter select dropdown to use UTF-8 encoding
+						 * 10 - `um_select_dropdown_dynamic_callback_options()` Returns dropdown options from a callback function.
+						 *
+						 * @param {array} $options Dynamic options.
+						 * @param {array} $data    Field Data.
+						 *
+						 * @return {array} Dynamic options.
+						 *
+						 * @since 1.3.x
+						 * @hook  um_select_dropdown_dynamic_options
+						 *
+						 * @example <caption>Extend dropdown dynamic options.</caption>
+						 * function my_select_dropdown_dynamic_options( $options, $data ) {
+						 *     // your code here
+						 *     return $options;
+						 * }
+						 * add_filter( 'um_select_dropdown_dynamic_options', 'my_select_dropdown_dynamic_options', 10, 2 );
+						 */
+						$options = apply_filters( 'um_select_dropdown_dynamic_options', $options, $data );
+						/**
+						 * Filters dropdown dynamic options by field $key.
+						 *
+						 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+						 * 20 - Static anonymous function for getting alphabetical order for states in UM:Woocommerce
+						 *
+						 * @param {array} $options Dynamic options.
+						 *
+						 * @return {array} Dynamic options.
+						 *
+						 * @since 1.3.x
+						 * @hook  um_select_dropdown_dynamic_options_{$key}
+						 *
+						 * @example <caption>Extend dropdown dynamic options by field $key.</caption>
+						 * function my_select_dropdown_dynamic_options( $options ) {
+						 *     // your code here
+						 *     return $options;
+						 * }
+						 * add_filter( 'um_select_dropdown_dynamic_options_{$key}', 'my_select_dropdown_dynamic_options', 10, 1 );
+						 */
+						$options = apply_filters( "um_select_dropdown_dynamic_options_{$key}", $options );
+
+						// Filter roles here for getting only available in the options.
+						if ( 'role' === $form_key ) {
+							$options = $this->get_available_roles( $form_key, $options );
 						}
-					}
 
-					// Filter roles here for getting only available in the options.
-					if ( 'role' === $form_key ) {
-						$options = $this->get_available_roles( $form_key, $options );
-					}
+						$field_value = ''; // required to disable hidden fields below.
 
-					$field_value = ''; // required to disable hidden fields below.
+						if ( isset( $data['label'] ) ) {
+							$output .= $this->field_label( $data['label'], $key, $data );
+						}
 
-					if ( isset( $data['label'] ) ) {
-						$output .= $this->field_label( $data['label'], $key, $data );
-					}
-
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 						$class = 'js-choice um-no-search';
 
-						$output .= '<select data-default="' . esc_attr( $default ) . '" ' . $disabled . ' ' . $select_original_option_value . ' ' . $disabled_by_parent_option . '  name="' . esc_attr( $form_key ) . '" id="' . esc_attr( $field_id ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . esc_attr( $this->get_class( $key, $data, $class ) ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $atts_ajax . ' ' . $this->aria_valid_attributes( $this->is_error( $form_key ), $form_key ) . '>';
+						$output .= '<select data-default="' . esc_attr( $default ) . '" ' . $disabled . ' ' . $disabled_by_parent_option . '  name="' . esc_attr( $form_key ) . '" id="' . esc_attr( $field_id ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . esc_attr( $this->get_class( $key, $data, $class ) ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $atts_ajax . ' ' . $this->aria_valid_attributes( $this->is_error( $form_key ), $form_key ) . '>';
 						if ( ! ( isset( $data['allowclear'] ) && 0 === $data['allowclear'] ) ) {
 							$output .= '<option value="">' . esc_html__( 'None', 'ultimate-member' ) . '</option>';
 						}
@@ -4116,11 +4112,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						// add options
 						if ( ! empty( $options ) ) {
 							foreach ( $options as $k => $v ) {
-
 								$v = rtrim( $v );
 
-								$option_value                 = $v;
-								$um_field_checkbox_item_title = $v;
+								$option_value = $v;
 
 								if ( ( ! is_numeric( $k ) && 'role' === $form_key ) || ( 'account' === $this->set_mode || um_is_core_page( 'account' ) ) ) {
 									$option_value = $k;
@@ -4142,7 +4136,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									$field_value = $v;
 								}
 
-								$output .= '>' . esc_html__( $um_field_checkbox_item_title, 'ultimate-member' ) . '</option>';
+								$output .= '>' . esc_html( $v ) . '</option>';
 							}
 						}
 
@@ -4153,9 +4147,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 
 						if ( $this->is_error( $key ) ) {
-							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+							$output .= $this->field_error( $this->show_error( $key ), $form_key );
 						} elseif ( $this->is_notice( $key ) ) {
-							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+							$output .= $this->field_notice( $this->show_notice( $key ), $form_key );
 						} elseif ( ! empty( $data['help'] ) ) {
 							$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
 						}
@@ -4165,12 +4159,94 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$class = 'um-s2';
 						}
 
+						if ( isset( $data['label'] ) ) {
+							$output .= $this->field_label( $data['label'], $key, $data );
+						}
+
 						$has_icon = ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons;
 
 						$output .= '<div class="um-field-area ' . ( $has_icon ? 'um-field-area-has-icon' : '' ) . ' ">';
 						if ( $has_icon ) {
 							$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
 						}
+
+						$options                      = array();
+						$has_parent_option            = false;
+						$disabled_by_parent_option    = '';
+						$atts_ajax                    = '';
+						$select_original_option_value = '';
+
+						if ( isset( $data['options'] ) && is_array( $data['options'] ) ) {
+							$options = $data['options'];
+						}
+
+						if ( ! empty( $data['parent_dropdown_relationship'] ) && ! UM()->user()->preview ) {
+							$has_parent_option         = true;
+							$disabled_by_parent_option = ' disabled="disabled" ';
+
+							/** This filter is documented in includes/core/class-fields.php */
+							$parent_dropdown_relationship = apply_filters( "um_custom_dropdown_options_parent__{$form_key}", $data['parent_dropdown_relationship'], $data );
+							$atts_ajax                   .= ' data-um-parent="' . esc_attr( $parent_dropdown_relationship ) . '" ';
+
+							if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) && um_user( $data['parent_dropdown_relationship'] ) ) {
+								if ( ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
+									$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+								}
+
+								$disabled_by_parent_option = '';
+								if ( um_user( $form_key ) ) {
+									$select_original_option_value = ' data-um-original-value="' . esc_attr( um_user( $form_key ) ) . '" ';
+								}
+							}
+						}
+
+						// Child dropdown option selected
+						if ( isset( UM()->form()->post_form[ $form_key ] ) ) {
+							$select_original_option_value = " data-um-original-value='" . esc_attr( UM()->form()->post_form[ $form_key ] ) . "' ";
+						}
+
+						// Child dropdown
+						if ( $has_parent_option ) {
+							if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) && isset( UM()->form()->post_form[ $form_key ] ) ) {
+								if ( ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
+									$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+								}
+							}
+						}
+
+						if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
+							/** This filter is documented in includes/core/class-fields.php */
+							$ajax_source = apply_filters( "um_custom_dropdown_options_source__{$form_key}", $data['custom_dropdown_options_source'], $data );
+							$atts_ajax  .= ' data-um-ajax-source="' . esc_attr( $ajax_source ) . '" ';
+						}
+
+						if ( ! $has_parent_option ) {
+							if ( isset( $options ) && 'builtin' === $options ) {
+								$options = UM()->builtin()->get( $data['filter'] );
+							}
+
+							// 'country'
+							if ( 'country' === $key && empty( $options ) ) {
+								$options = UM()->builtin()->get( 'countries' );
+							} elseif ( empty( $options ) && isset( $data['options'] ) ) {
+								$options = $data['options'];
+							}
+
+							/** This filter is documented in includes/core/class-fields.php */
+							$options = apply_filters( 'um_selectbox_options', $options, $key );
+							if ( isset( $options ) ) {
+								/** This filter is documented in includes/core/class-fields.php */
+								$options = apply_filters( 'um_select_dropdown_dynamic_options', $options, $data );
+								/** This filter is documented in includes/core/class-fields.php */
+								$options = apply_filters( "um_select_dropdown_dynamic_options_{$key}", $options );
+							}
+						}
+
+						if ( 'role' === $form_key ) {
+							$options = $this->get_available_roles( $form_key, $options );
+						}
+
+						$field_value = '';
 
 						$output .= '<select data-default="' . esc_attr( $default ) . '" ' . $disabled . ' ' . $select_original_option_value . ' ' . $disabled_by_parent_option . '  name="' . esc_attr( $form_key ) . '" id="' . esc_attr( $field_id ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . esc_attr( $this->get_class( $key, $data, $class ) ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $atts_ajax . ' ' . $this->aria_valid_attributes( $this->is_error( $form_key ), $form_key ) . '>';
 						$output .= '<option value=""></option>';
@@ -4232,10 +4308,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$field_id   = $key;
 					$field_name = $key;
 
-					// Selections count settings.
-					$max_selections = isset( $data['max_selections'] ) ? absint( $data['max_selections'] ) : 0;
-					$min_selections = isset( $data['min_selections'] ) ? absint( $data['min_selections'] ) : 0;
-
 					/** This filter is documented in includes/core/class-fields.php */
 					$options_pair = apply_filters( 'um_select_options_pair', null, $data );
 					// Switch options pair for custom options from a callback function.
@@ -4243,31 +4315,38 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$options_pair = true;
 					}
 
-					// Get options from field settings.
-					$options = array();
-					if ( array_key_exists( 'options', $data ) ) {
-						if ( is_array( $data['options'] ) ) {
-							$options = $data['options'];
-						} elseif ( 'builtin' === $data['options'] && array_key_exists( 'filter', $data ) ) {
-							// @todo maybe remove this condition because options can have only `array` type.
-							$options = UM()->builtin()->get( $data['filter'] );
-						}
-					}
+					// Selections count settings.
+					$max_selections = isset( $data['max_selections'] ) ? absint( $data['max_selections'] ) : 0;
 
-					if ( ( 'country' === $key || 'languages' === $key ) && empty( $options ) ) {
-						// Fallback for fields 'country' or 'languages' when options are empty.
-						$options = UM()->builtin()->get( $key );
-					}
+					if ( UM()->is_new_ui() ) {
+						// Selections count settings.
+						$min_selections = isset( $data['min_selections'] ) ? absint( $data['min_selections'] ) : 0;
 
-					$atts_ajax        = '';
-					$choices_callback = ! empty( $data['custom_dropdown_options_source'] ) ? $data['custom_dropdown_options_source'] : '';
-					if ( ! empty( $choices_callback ) && function_exists( $choices_callback ) && ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
+						$options          = array();
+						$atts_ajax        = '';
+						$choices_callback = ! empty( $data['custom_dropdown_options_source'] ) ? $data['custom_dropdown_options_source'] : '';
 						/** This filter is documented in includes/core/class-fields.php */
 						$choices_callback = apply_filters( "um_custom_dropdown_options_source__$field_id", $choices_callback, $data );
-						$atts_ajax       .= ' data-um-ajax-source="' . esc_attr( $choices_callback ) . '" ';
-					}
+						if ( ! empty( $choices_callback ) && function_exists( $choices_callback ) && ! $this->is_source_blacklisted( $choices_callback ) ) {
+							$atts_ajax .= ' data-um-ajax-source="' . esc_attr( $choices_callback ) . '" ';
+							$options    = $choices_callback();
+						} else {
+							// Get options from field settings.
+							if ( array_key_exists( 'options', $data ) ) {
+								if ( is_array( $data['options'] ) ) {
+									$options = $data['options'];
+								} elseif ( 'builtin' === $data['options'] && array_key_exists( 'filter', $data ) ) {
+									// @todo maybe remove this condition because options can have only `array` type.
+									$options = UM()->builtin()->get( $data['filter'] );
+								}
+							}
 
-					if ( ! empty( $options ) ) {
+							if ( ( 'country' === $key || 'languages' === $key ) && empty( $options ) ) {
+								// Fallback for fields 'country' or 'languages' when options are empty.
+								$options = UM()->builtin()->get( $key );
+							}
+						}
+
 						/**
 						 * Filters multiselect options.
 						 *
@@ -4324,21 +4403,16 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						 * add_filter( 'um_multiselect_options_{$type}', 'my_multiselect_options', 10, 2 );
 						 */
 						$options = apply_filters( "um_multiselect_options_{$type}", $options, $data );
-					}
 
-					$arr_selected = array(); // required to disable hidden fields below.
+						$arr_selected = array(); // required to disable hidden fields below.
 
-					if ( isset( $data['label'] ) ) {
-						$output .= $this->field_label( $data['label'], $key, $data );
-					}
+						if ( isset( $data['label'] ) ) {
+							$output .= $this->field_label( $data['label'], $key, $data );
+						}
 
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 						$class = 'js-choice';
 
 						$output .= '<select multiple data-default="' . esc_attr( $default ) . '" ' . $disabled . '  name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-validate="' . esc_attr( $validate ) . '" data-max_selections="' . esc_attr( $max_selections ) . '" data-min_selections="' . esc_attr( $min_selections ) . '" data-key="' . esc_attr( $key ) . '" class="' . esc_attr( $this->get_class( $key, $data, $class ) ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $atts_ajax . ' ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>';
-						// if ( ! ( isset( $data['allowclear'] ) && 0 === $data['allowclear'] ) ) {
-						// @todo maybe add clear all button here.
-						// }
 
 						// add options
 						if ( ! empty( $options ) && is_array( $options ) ) {
@@ -4386,6 +4460,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$class = 'um-s2';
 						}
 
+						if ( isset( $data['label'] ) ) {
+							$output .= $this->field_label( $data['label'], $key, $data );
+						}
+
 						$has_icon = ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons;
 
 						$output .= '<div class="um-field-area ' . ( $has_icon ? 'um-field-area-has-icon' : '' ) . ' ">';
@@ -4393,20 +4471,47 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
 						}
 
-						$output .= '<select  ' . $disabled . ' multiple="multiple" name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-maxsize="' . esc_attr( $max_selections ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $atts_ajax . ' ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>';
+						$output .= '<select  ' . $disabled . ' multiple="multiple" name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-maxsize="' . esc_attr( $max_selections ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>';
+
+						if ( isset( $options ) && 'builtin' === $options ) {
+							$options = UM()->builtin()->get( $data['filter'] );
+						}
+
+						if ( ! isset( $options ) ) {
+							$options = UM()->builtin()->get( 'countries' );
+						}
+
+						if ( isset( $options ) ) {
+							/** This filter is documented in includes/core/class-fields.php */
+							$options = apply_filters( 'um_multiselect_options', $options, $data );
+							/** This filter is documented in includes/core/class-fields.php */
+							$options = apply_filters( "um_multiselect_options_{$key}", $options );
+							/** This filter is documented in includes/core/class-fields.php */
+							$options = apply_filters( "um_multiselect_options_{$type}", $options, $data );
+						}
+
+						/** This filter is documented in includes/core/class-fields.php */
+						$use_keyword = apply_filters( 'um_select_options_pair', null, $data );
+
+						// Switch options pair for custom options from a callback function.
+						if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
+							$use_keyword = true;
+						}
 
 						// Add an empty option!
 						$output .= '<option value=""></option>';
 
+						$arr_selected = array();
 						// add options
 						if ( ! empty( $options ) && is_array( $options ) ) {
 							foreach ( $options as $k => $v ) {
+
 								$v = rtrim( $v );
 
 								$um_field_checkbox_item_title = $v;
 								$opt_value                    = $v;
 
-								if ( $options_pair ) {
+								if ( $use_keyword ) {
 									$opt_value = $k;
 								}
 
@@ -4420,6 +4525,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								}
 
 								$output .= '>' . esc_html__( $um_field_checkbox_item_title, 'ultimate-member' ) . '</option>';
+
 							}
 						}
 
@@ -4520,7 +4626,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 */
 					$options_pair = apply_filters( "um_radio_options_pair__{$key}", false, $data );
 
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						$output .= '<div class="um-field-radio-area"><div class="um-field-radio-column">';
 
 						if ( ! empty( $options ) ) {
@@ -4729,7 +4835,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 */
 					$options_pair = apply_filters( "um_checkbox_options_pair__{$key}", false, $data );
 
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						$output .= '<div class="um-field-checkbox-area"><div class="um-field-checkbox-column">';
 
 						if ( ! empty( $options ) ) {
@@ -5194,7 +5300,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$sub_rows = ( isset( $row_array['sub_rows'] ) ) ? $row_array['sub_rows'] : 1;
 					for ( $c = 0; $c < $sub_rows; $c++ ) {
-						if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						if ( UM()->is_new_ui() ) {
 							$output .= '<div class="um-form-row">';
 						}
 						// cols
@@ -5217,13 +5323,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							$subrow_fields = $this->array_sort_by_column( $subrow_fields, 'position' );
 
-							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+							if ( UM()->is_new_ui() ) {
 								$output .= '<div class="um-form-cols um-form-cols-' . esc_attr( $cols_num ) . '">';
 							}
 
 							if ( $cols_num == 1 ) {
 
-								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								if ( UM()->is_new_ui() ) {
 									$output .= '<div class="um-form-col um-form-col-1">';
 								} else {
 									$output .= '<div class="um-col-1">';
@@ -5241,7 +5347,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							} else if ($cols_num == 2) {
 
-								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								if ( UM()->is_new_ui() ) {
 									$output .= '<div class="um-form-col um-form-col-1">';
 								} else {
 									$output .= '<div class="um-col-121">';
@@ -5258,7 +5364,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								}
 								$output .= '</div>';
 
-								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								if ( UM()->is_new_ui() ) {
 									$output .= '<div class="um-form-col um-form-col-2">';
 								} else {
 									$output .= '<div class="um-col-122">';
@@ -5273,13 +5379,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 										$output .= $this->edit_field( $key, $data );
 									}
 								}
-								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								if ( UM()->is_new_ui() ) {
 									$output .= '</div>';
 								} else {
 									$output .= '</div><div class="um-clear"></div>';
 								}
 							} else {
-								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								if ( UM()->is_new_ui() ) {
 									$output .= '<div class="um-form-col um-form-col-1">';
 								} else {
 									$output .= '<div class="um-col-131">';
@@ -5292,7 +5398,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									}
 								}
 								$output .= '</div>';
-								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								if ( UM()->is_new_ui() ) {
 									$output .= '<div class="um-form-col um-form-col-2">';
 								} else {
 									$output .= '<div class="um-col-132">';
@@ -5304,7 +5410,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									}
 								}
 								$output .= '</div>';
-								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								if ( UM()->is_new_ui() ) {
 									$output .= '<div class="um-form-col um-form-col-3">';
 								} else {
 									$output .= '<div class="um-col-133">';
@@ -5315,19 +5421,19 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 										$output .= $this->edit_field( $key, $data );
 									}
 								}
-								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								if ( UM()->is_new_ui() ) {
 									$output .= '</div>';
 								} else {
 									$output .= '</div><div class="um-clear"></div>';
 								}
 							}
 
-							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+							if ( UM()->is_new_ui() ) {
 								$output .= '</div>';
 							}
 						}
 
-						if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						if ( UM()->is_new_ui() ) {
 							$output .= '</div>';
 						}
 					}
@@ -5727,9 +5833,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			// start output here
 			$this->get_fields = $this->get_fields();
 
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-
-			} else {
+			if ( ! UM()->is_new_ui() ) {
 				if ( UM()->options()->get( 'profile_empty_text' ) ) {
 					$emo = UM()->options()->get( 'profile_empty_text_emo' );
 					if ( $emo ) {
@@ -5795,7 +5899,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$sub_rows = array_key_exists( 'sub_rows', $row_array ) ? $row_array['sub_rows'] : 1;
 
 				for ( $c = 0; $c < $sub_rows; $c++ ) {
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						$output .= '<div class="um-profile-row">';
 					}
 					// cols
@@ -5817,13 +5921,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( is_array( $subrow_fields ) ) {
 						$subrow_fields = $this->array_sort_by_column( $subrow_fields, 'position' );
 
-						if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						if ( UM()->is_new_ui() ) {
 							$output .= '<div class="um-profile-cols um-profile-cols-' . esc_attr( $cols_num ) . '">';
 						}
 
 						if ( 1 === $cols_num ) {
 
-							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+							if ( UM()->is_new_ui() ) {
 								$output .= '<div class="um-profile-col um-profile-col-1">';
 							} else {
 								$output .= '<div class="um-col-1">';
@@ -5839,7 +5943,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						} elseif ( 2 === $cols_num ) {
 
-							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+							if ( UM()->is_new_ui() ) {
 								$output .= '<div class="um-profile-col um-profile-col-1">';
 							} else {
 								$output .= '<div class="um-col-121">';
@@ -5854,7 +5958,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							}
 							$output .= '</div>';
 
-							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+							if ( UM()->is_new_ui() ) {
 								$output .= '<div class="um-profile-col um-profile-col-2">';
 							} else {
 								$output .= '<div class="um-col-122">';
@@ -5867,13 +5971,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									$output .= $this->view_field( $key, $data );
 								}
 							}
-							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+							if ( UM()->is_new_ui() ) {
 								$output .= '</div>';
 							} else {
 								$output .= '</div><div class="um-clear"></div>';
 							}
 						} else {
-							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+							if ( UM()->is_new_ui() ) {
 								$output .= '<div class="um-profile-col um-profile-col-1">';
 							} else {
 								$output .= '<div class="um-col-131">';
@@ -5888,7 +5992,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							}
 							$output .= '</div>';
 
-							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+							if ( UM()->is_new_ui() ) {
 								$output .= '<div class="um-profile-col um-profile-col-2">';
 							} else {
 								$output .= '<div class="um-col-132">';
@@ -5902,7 +6006,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							}
 							$output .= '</div>';
 
-							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+							if ( UM()->is_new_ui() ) {
 								$output .= '<div class="um-profile-col um-profile-col-3">';
 							} else {
 								$output .= '<div class="um-col-133">';
@@ -5914,19 +6018,19 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									$output .= $this->view_field( $key, $data );
 								}
 							}
-							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+							if ( UM()->is_new_ui() ) {
 								$output .= '</div>';
 							} else {
 								$output .= '</div><div class="um-clear"></div>';
 							}
 						}
 
-						if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						if ( UM()->is_new_ui() ) {
 							$output .= '</div>';
 						}
 					}
 
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						$output .= '</div>';
 					}
 				}
@@ -6017,7 +6121,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$css_heading_margin       = $css_margin . 'margin-bottom: 0px;';
 				$css_heading_text_color   = ! empty( $row_array['heading_text_color'] ) ? 'color: ' . esc_attr( $row_array['heading_text_color'] ) . ';' : '';
 
-				if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				if ( UM()->is_new_ui() ) {
 					$header .= '<div class="um-row-heading" style="' . esc_attr( $css_heading_margin . $css_heading_padding . $css_heading_border . $css_heading_background_color . $css_heading_text_color ) . '">';
 
 					if ( ! empty( $row_array['icon'] ) ) {
@@ -6052,7 +6156,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$css_borderradius = 'border-radius: ' . esc_attr( $borderradius ) . ';';
 			}
 
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				if ( true === $this->viewing ) {
 					$output .= '<div class="um-profile-rows ' . esc_attr( $row_id . ' ' . $css_class ) . '" style="' . esc_attr( $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . $css_text_color ) . '">' . $header;
 				} else {

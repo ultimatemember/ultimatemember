@@ -291,9 +291,7 @@ class Enqueue {
 
 		$common_js_deps  = array( 'jquery', 'wp-util', 'wp-hooks', 'wp-i18n', 'um_tipsy', 'um_raty' );
 		$common_css_deps = array_merge( array( 'um_tipsy', 'um_raty' ), self::$fonticons_handlers );
-		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-
-		} else {
+		if ( ! UM()->is_new_ui() ) {
 			// Date-time picker (Pickadate.JS)
 			wp_register_script( 'um_datetime', $libs_url . 'pickadate/picker' . $suffix . '.js', array( 'jquery' ), '3.6.2', true );
 			wp_register_script( 'um_datetime_date', $libs_url . 'pickadate/picker.date' . $suffix . '.js', array( 'um_datetime' ), '3.6.2', true );
@@ -320,7 +318,7 @@ class Enqueue {
 			$common_css_deps = array_merge( $common_css_deps, array( 'um_datetime_date', 'um_datetime_time' ) );
 		}
 
-		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+		if ( UM()->is_new_ui() ) {
 			$src = $js_url . 'v3/common' . $suffix . '.js';
 		} else {
 			$src = $js_url . 'common' . $suffix . '.js';

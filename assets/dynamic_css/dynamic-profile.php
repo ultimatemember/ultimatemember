@@ -18,7 +18,7 @@ $meta_padding = ( $args['photosize'] + 60 ) . 'px';
 			max-width: <?php echo esc_attr( $args['area_max_width'] ); ?>;
 		}
 
-		<?php if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) { ?>
+		<?php if ( UM()->is_new_ui() ) { ?>
 			.um-<?php echo esc_attr( $args['form_id'] ); ?>.um .um-profile-body .um-form-new {
 				width: <?php echo esc_attr( $args['area_max_width'] ); ?>;
 			}

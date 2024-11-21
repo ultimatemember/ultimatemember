@@ -71,6 +71,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		/**
 		 * Regular or multi-select/options
 		 *
+		 * @todo Maybe deprecate since 3.0 because redundant
+		 *
 		 * @param $field
 		 * @param $attrs
 		 *
@@ -1396,7 +1398,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 			);
 
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				$this->predefined_fields['username_b']['label'] = __( 'Username or Email Address', 'ultimate-member' );
 
 				$this->predefined_fields['profile_noindex'] = array(

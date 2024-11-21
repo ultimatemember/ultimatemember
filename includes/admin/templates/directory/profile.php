@@ -19,7 +19,7 @@ $cover_photos_field = array(
 	'tooltip' => __( 'If turned on, the users cover photo will appear in the directory', 'ultimate-member' ),
 	'value'   => (bool) get_post_meta( $post_id, '_um_cover_photos', true ),
 );
-if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+if ( UM()->is_new_ui() ) {
 	$cover_photos_field = array(
 		'id'             => '_um_cover_photos',
 		'type'           => 'checkbox',

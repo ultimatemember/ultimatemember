@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function um_profile_content_main( $args ) {
 	// Disabled for now in new UI.
-	if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+	if ( UM()->is_new_ui() ) {
 		return;
 	}
 
@@ -296,11 +296,26 @@ function um_user_edit_profile( $args, $form_data ) {
 			$has_custom_source = apply_filters( "um_has_dropdown_options_source__$key", false );
 			if ( isset( $array['options'] ) && in_array( $array['type'], array( 'select', 'multiselect' ), true ) ) {
 				$options = $array['options'];
-				if ( ! empty( $array['custom_dropdown_options_source'] ) && function_exists( $array['custom_dropdown_options_source'] ) && ! $has_custom_source ) {
-					if ( ! UM()->fields()->is_source_blacklisted( $array['custom_dropdown_options_source'] ) ) {
-						$callback_result = call_user_func( $array['custom_dropdown_options_source'], $array['options'] );
-						if ( is_array( $callback_result ) ) {
-							$options = array_keys( $callback_result );
+				if ( UM()->is_new_ui() ) {
+					if ( ! empty( $array['custom_dropdown_options_source'] ) && function_exists( $array['custom_dropdown_options_source'] ) && ! $has_custom_source ) {
+						if ( ! UM()->fields()->is_source_blacklisted( $array['custom_dropdown_options_source'] ) ) {
+							if ( ! empty( $array['parent_dropdown_relationship'] ) ) {
+								$callback_result = call_user_func( $array['custom_dropdown_options_source'], $array['parent_dropdown_relationship'] );
+							} else {
+								$callback_result = call_user_func( $array['custom_dropdown_options_source'] );
+							}
+							if ( is_array( $callback_result ) ) {
+								$options = array_keys( $callback_result );
+							}
+						}
+					}
+				} else {
+					if ( ! empty( $array['custom_dropdown_options_source'] ) && function_exists( $array['custom_dropdown_options_source'] ) && ! $has_custom_source ) {
+						if ( ! UM()->fields()->is_source_blacklisted( $array['custom_dropdown_options_source'] ) ) {
+							$callback_result = call_user_func( $array['custom_dropdown_options_source'], $array['options'] );
+							if ( is_array( $callback_result ) ) {
+								$options = array_keys( $callback_result );
+							}
 						}
 					}
 				}
@@ -314,7 +329,7 @@ function um_user_edit_profile( $args, $form_data ) {
 			}
 
 			if ( 'select' === $array['type'] ) {
-				if ( ! empty( $array['options'] ) && ! empty( $stripslashes ) && ! in_array( $stripslashes, array_map( 'trim', $array['options'] ) ) && ! $has_custom_source  ) {
+				if ( ! empty( $array['options'] ) && ! empty( $stripslashes ) && ! in_array( $stripslashes, array_map( 'trim', $array['options'] ) ) && ! $has_custom_source ) {
 					continue;
 				}
 
@@ -825,7 +840,7 @@ add_action( 'wp_head', 'um_profile_dynamic_meta_desc', 20 );
 function um_profile_header_cover_area( $args ) {
 	// Disabled for now in new UI.
 	// @todo enable for new UI soon.
-	if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+	if ( UM()->is_new_ui() ) {
 		return;
 	}
 
@@ -976,7 +991,7 @@ add_action( 'um_profile_header_cover_area', 'um_profile_header_cover_area', 9 );
  */
 function um_social_links_icons( $args = null ) {
 	// Displayed directly in header in new UI template.
-	if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+	if ( UM()->is_new_ui() ) {
 		return;
 	}
 
@@ -995,7 +1010,7 @@ add_action( 'um_after_profile_header_name', 'um_social_links_icons', 50 );
  */
 function um_profile_header( $args ) {
 	// Disabled for now in new UI.
-	if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+	if ( UM()->is_new_ui() ) {
 		return;
 	}
 
@@ -1315,7 +1330,7 @@ add_action( 'um_pre_profile_shortcode', 'um_pre_profile_shortcode' );
  */
 function um_add_edit_icon( $args ) {
 	// Disabled for now in new UI.
-	if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+	if ( UM()->is_new_ui() ) {
 		return;
 	}
 
@@ -1495,7 +1510,7 @@ function um_submit_form_profile( $args, $form_data ) {
 }
 add_action( 'um_submit_form_profile', 'um_submit_form_profile', 10, 2 );
 
-if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+if ( UM()->is_new_ui() ) {
 	/**
 	 * Show the submit button (highest priority)
 	 *
@@ -1592,7 +1607,7 @@ if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_ne
  * @param array $args
  */
 function um_profile_menu( $args ) {
-	if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+	if ( UM()->is_new_ui() ) {
 		return;
 	}
 

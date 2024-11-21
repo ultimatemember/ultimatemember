@@ -32,7 +32,7 @@ if ( ! class_exists( 'um\core\GDPR' ) ) {
 		 */
 		public function display_option( $args ) {
 			if ( ! empty( $args['use_gdpr'] ) ) {
-				if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				if ( UM()->is_new_ui() ) {
 					UM()->get_template( 'v3/gdpr-register.php', '', array( 'args' => $args ), true );
 				} else {
 					UM()->get_template( 'gdpr-register.php', '', array( 'args' => $args ), true );

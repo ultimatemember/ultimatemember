@@ -377,7 +377,7 @@ function um_profile_field_filter_hook__file( $value, $data ) {
 			$value = $file_info['original_name'];
 		}
 
-		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+		if ( UM()->is_new_ui() ) {
 			$icon  = UM()->frontend()::layouts()::get_file_extension_icon( $file_type['ext'] );
 			$value = '<div class="um-field-single-file">
 				' . $icon . '
@@ -432,7 +432,7 @@ function um_profile_field_filter_hook__image( $value, $data ) {
 		}
 	}
 
-	if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+	if ( UM()->is_new_ui() ) {
 		// if value is an image tag
 		if ( preg_match( '/\<img.*src=\"([^"]+).*/', $value, $matches ) ) {
 			$uri = $matches[1];
@@ -780,31 +780,33 @@ function um_field_non_utf8_value( $value ) {
 }
 add_filter( 'um_field_non_utf8_value', 'um_field_non_utf8_value' );
 
-/**
- * Returns dropdown/multi-select options from a callback function.
- *
- * @param  $options array
- * @param  $data array
- * @return array
- * @uses   hook filter: um_select_dropdown_dynamic_options, um_multiselect_options
- */
-function um_select_dropdown_dynamic_callback_options( $options, $data ) {
-	if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) ) {
-		if ( UM()->fields()->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
-			return $options;
+if ( ! UM()->is_new_ui() ) {
+	/**
+	 * Returns dropdown/multi-select options from a callback function.
+	 *
+	 * @param  $options array
+	 * @param  $data array
+	 * @return array
+	 * @uses   hook filter: um_select_dropdown_dynamic_options, um_multiselect_options
+	 */
+	function um_select_dropdown_dynamic_callback_options( $options, $data ) {
+		if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) ) {
+			if ( UM()->fields()->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
+				return $options;
+			}
+
+			if ( isset( $data['parent_dropdown_relationship'] ) ) {
+				$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+			} else {
+				$options = call_user_func( $data['custom_dropdown_options_source'] );
+			}
 		}
 
-		if ( isset( $data['parent_dropdown_relationship'] ) ) {
-			$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
-		} else {
-			$options = call_user_func( $data['custom_dropdown_options_source'] );
-		}
+		return $options;
 	}
-
-	return $options;
+	add_filter( 'um_select_dropdown_dynamic_options', 'um_select_dropdown_dynamic_callback_options', 10, 2 );
+	add_filter( 'um_multiselect_options', 'um_select_dropdown_dynamic_callback_options', 10, 2 );
 }
-add_filter( 'um_select_dropdown_dynamic_options', 'um_select_dropdown_dynamic_callback_options', 10, 2 );
-add_filter( 'um_multiselect_options', 'um_select_dropdown_dynamic_callback_options', 10, 2 );
 
 /**
  * Pair dropdown/multi-select options from a callback function.

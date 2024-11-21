@@ -741,10 +741,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'secure_allowed_redirect_hosts'         => '',
 				'delete_comments'                       => false,
 				'enable_action_scheduler'               => false,
-        'primary_color'                         => '#7f56d9',
+				'primary_color'                         => '#7f56d9',
 			);
 
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				$this->settings_defaults['account_tab_personal-data'] = true;
 			}
 

@@ -2832,7 +2832,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * Main Query function for getting members via AJAX
 		 */
 		function ajax_get_members() {
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'um_member_directory' ) ) {
 					wp_send_json_error( __( 'Wrong nonce.', 'ultimate-member' ) );
 				}

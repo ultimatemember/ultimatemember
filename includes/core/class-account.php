@@ -115,7 +115,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			// If user cannot delete profile hide delete tab.
 			if ( um_user( 'can_delete_profile' ) || um_user( 'can_delete_everyone' ) ) {
 
-				if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				if ( UM()->is_new_ui() ) {
 					$tabs[99998]['personal-data'] = array(
 						'icon'        => 'um-faicon-lock',
 						'title'       => __( 'Personal Data', 'ultimate-member' ),
@@ -232,7 +232,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				return '';
 			}
 
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				//wp_enqueue_style( 'um_new_design' );
 				wp_enqueue_script( 'um_new_design' );
 				wp_enqueue_style( 'um_account' );
@@ -666,7 +666,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					break;
 
 				case 'notifications':
-					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					if ( UM()->is_new_ui() ) {
 						$args = '';
 						/**
 						 * UM hook
@@ -916,7 +916,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				return;
 			}
 
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				?>
 				<div class="um-section-header">
 					<p class="um-section-title"><?php echo esc_html( $tab_data['title'] ); ?></p>
@@ -933,7 +933,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				}
 			}
 
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				/** This action is documented in includes/core/um-actions-profile.php */
 				do_action( 'um_before_form', $args );
 			}
@@ -959,7 +959,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			 */
 			do_action( "um_before_account_{$tab_id}", $args );
 
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				if ( ! empty( $tab_data['custom'] ) ) {
 					echo $output;
 

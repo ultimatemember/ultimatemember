@@ -83,7 +83,7 @@ class Shortcodes {
 		add_shortcode( 'ultimatemember_register', array( &$this, 'ultimatemember_register' ) );
 		add_shortcode( 'ultimatemember_profile', array( &$this, 'ultimatemember_profile' ) );
 
-		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+		if ( UM()->is_new_ui() ) {
 			add_shortcode( 'ultimatemember_design_scheme', array( &$this, 'design_scheme' ) );
 		}
 	}
@@ -1493,7 +1493,7 @@ class Shortcodes {
 			extract( $args, EXTR_SKIP );
 		}
 
-		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+		if ( UM()->is_new_ui() ) {
 			if ( 'members' === $tpl ) {
 				$tpl = 'v3/directory/wrapper';
 			} else {
@@ -1810,7 +1810,7 @@ class Shortcodes {
 		$post_data = UM()->query()->post_data( $this->form_id );
 		$args      = array_merge( $args, $post_data );
 
-		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+		if ( UM()->is_new_ui() ) {
 			wp_enqueue_style( 'um_new_design' );
 			wp_enqueue_script( 'um_new_design' );
 
@@ -1861,9 +1861,7 @@ class Shortcodes {
 		}
 
 		if ( 'directory' === $args['mode'] ) {
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-
-			} else {
+			if ( ! UM()->is_new_ui() ) {
 				wp_enqueue_script( 'um_members' );
 				wp_enqueue_style( 'um_members' );
 			}
@@ -2040,7 +2038,7 @@ class Shortcodes {
 		 */
 		do_action( "um_before_{$mode}_form_is_loaded", $args );
 
-		if ( 'directory' === $mode && defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+		if ( 'directory' === $mode && UM()->is_new_ui() ) {
 			// Get default and real arguments
 			$config_args = array();
 			foreach ( UM()->config()->core_directory_meta['members'] as $config_k => $config_v ) {

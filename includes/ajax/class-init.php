@@ -21,7 +21,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		 */
 		public function includes() {
 			$this->account();
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				$this->dev();
 				$this->directory();
 				$this->fields();
@@ -30,7 +30,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 			$this->files();
 			$this->forms();
 			$this->pages();
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				$this->profile();
 			}
 			$this->secure();

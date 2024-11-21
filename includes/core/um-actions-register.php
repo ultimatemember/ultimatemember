@@ -544,7 +544,7 @@ function um_submit_form_register( $args, $form_data ) {
 }
 add_action( 'um_submit_form_register', 'um_submit_form_register', 10, 2 );
 
-if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+if ( UM()->is_new_ui() ) {
 	/**
 	 * Show the submit button
 	 *

@@ -23,7 +23,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			$this->actions_listener();
 			$this->directory();
 			$this->enqueue();
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( UM()->is_new_ui() ) {
 				$this->profile();
 			} else {
 				$this->modal();

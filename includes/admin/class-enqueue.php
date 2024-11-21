@@ -432,7 +432,7 @@ final class Enqueue extends \um\common\Enqueue {
 		$js_url  = self::get_url( 'js' );
 		$css_url = self::get_url( 'css' );
 
-		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+		if ( UM()->is_new_ui() ) {
 			$src = $js_url . 'v3/admin/builder' . $suffix . '.js';
 		} else {
 			$src = $js_url . 'admin/builder' . $suffix . '.js';

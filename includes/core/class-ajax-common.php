@@ -37,18 +37,6 @@ if ( ! class_exists( 'um\core\AJAX_Common' ) ) {
 
 			add_action( 'wp_ajax_um_ajax_paginate', array( UM()->query(), 'ajax_paginate' ) );
 
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-
-			} else {
-				add_action( 'wp_ajax_um_select_options', array( UM()->form(), 'ajax_select_options' ) );
-				add_action( 'wp_ajax_nopriv_um_select_options', array( UM()->form(), 'ajax_select_options' ) );
-
-				add_action( 'wp_ajax_um_ajax_paginate_posts', array( UM()->user_posts(), 'load_posts' ) );
-				add_action( 'wp_ajax_um_ajax_paginate_comments', array( UM()->user_posts(), 'load_comments' ) );
-				add_action( 'wp_ajax_nopriv_um_ajax_paginate_posts', array( UM()->user_posts(), 'load_posts' ) );
-				add_action( 'wp_ajax_nopriv_um_ajax_paginate_comments', array( UM()->user_posts(), 'load_comments' ) );
-			}
-
 			add_action( 'wp_ajax_um_muted_action', array( UM()->form(), 'ajax_muted_action' ) );
 
 			add_action( 'wp_ajax_um_remove_file', array( UM()->files(), 'ajax_remove_file' ) );
@@ -63,9 +51,15 @@ if ( ! class_exists( 'um\core\AJAX_Common' ) ) {
 			add_action( 'wp_ajax_nopriv_um_resize_image', array( UM()->files(), 'ajax_resize_image' ) ); // Enabled image resize on registration form.
 			add_action( 'wp_ajax_um_resize_image', array( UM()->files(), 'ajax_resize_image' ) );
 
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			if ( ! UM()->is_new_ui() ) {
+				add_action( 'wp_ajax_um_select_options', array( UM()->form(), 'ajax_select_options' ) );
+				add_action( 'wp_ajax_nopriv_um_select_options', array( UM()->form(), 'ajax_select_options' ) );
 
-			} else {
+				add_action( 'wp_ajax_um_ajax_paginate_posts', array( UM()->user_posts(), 'load_posts' ) );
+				add_action( 'wp_ajax_um_ajax_paginate_comments', array( UM()->user_posts(), 'load_comments' ) );
+				add_action( 'wp_ajax_nopriv_um_ajax_paginate_posts', array( UM()->user_posts(), 'load_posts' ) );
+				add_action( 'wp_ajax_nopriv_um_ajax_paginate_comments', array( UM()->user_posts(), 'load_comments' ) );
+
 				add_action( 'wp_ajax_nopriv_um_get_members', array( UM()->member_directory(), 'ajax_get_members' ) );
 				add_action( 'wp_ajax_um_get_members', array( UM()->member_directory(), 'ajax_get_members' ) );
 			}
