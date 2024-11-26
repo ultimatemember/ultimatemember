@@ -241,7 +241,11 @@ class Users {
 			//$args['um_uploaded']  = true;
 			$args['found_avatar'] = true;
 			if ( ! empty( $args['class'] ) ) {
-				$args['class'][] = 'um-avatar-uploaded';
+				if ( is_array( $args['class'] ) ) {
+					$args['class'][] = 'um-avatar-uploaded';
+				} else {
+					$args['class'] .= ' um-avatar-uploaded';
+				}
 			} else {
 				$args['class'] = array( 'um-avatar-uploaded' );
 			}
