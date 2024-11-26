@@ -4232,7 +4232,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$disabled_by_parent_option = ' disabled="disabled" ';
 
 							/** This filter is documented in includes/core/class-fields.php */
-							$parent_dropdown_relationship = apply_filters( "um_custom_dropdown_options_parent__{$form_key}", $data['parent_dropdown_relationship'], $data );
+							$parent_dropdown_relationship = apply_filters( "um_custom_dropdown_options_parent__$form_key", $data['parent_dropdown_relationship'], $data );
 							$atts_ajax                   .= ' data-um-parent="' . esc_attr( $parent_dropdown_relationship ) . '" ';
 
 							if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) && um_user( $data['parent_dropdown_relationship'] ) ) {

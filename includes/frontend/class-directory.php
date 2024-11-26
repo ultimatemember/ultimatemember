@@ -12,6 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Directory extends \um\common\Directory {
 
+	/**
+	 * @param $filter
+	 * @param $directory_data
+	 * @param $default_value
+	 *
+	 * @return void
+	 */
 	public function get_filter_data( $filter, $directory_data, $default_value = false ) {
 		$filter_content = $this->show_filter( $filter, $directory_data );
 		$type           = $this->filter_types[ $filter ];
@@ -223,7 +230,7 @@ class Directory extends \um\common\Directory {
 				// new
 				global $wpdb;
 
-				if ( $attrs['metakey'] !== 'role_select' ) {
+				if ( 'role_select' !== $attrs['metakey'] ) {
 					$values_array = $wpdb->get_col(
 						$wpdb->prepare(
 							"SELECT DISTINCT meta_value
@@ -234,7 +241,7 @@ class Directory extends \um\common\Directory {
 						)
 					);
 				} else {
-					$users_roles = count_users();
+					$users_roles  = count_users();
 					$values_array = ( ! empty( $users_roles['avail_roles'] ) && is_array( $users_roles['avail_roles'] ) ) ? array_keys( array_filter( $users_roles['avail_roles'] ) ) : array();
 				}
 
@@ -258,13 +265,13 @@ class Directory extends \um\common\Directory {
 
 				if ( isset( $attrs['metakey'] ) && strstr( $attrs['metakey'], 'role_' ) ) {
 					$shortcode_roles = get_post_meta( $directory_data['form_id'], '_um_roles', true );
-					$um_roles = UM()->roles()->get_roles( false );
+					$um_roles        = UM()->roles()->get_roles( false );
 
 					if ( ! empty( $shortcode_roles ) && is_array( $shortcode_roles ) ) {
 						$attrs['options'] = array();
 
 						foreach ( $um_roles as $key => $value ) {
-							if ( in_array( $key, $shortcode_roles ) ) {
+							if ( in_array( $key, $shortcode_roles, true ) ) {
 								$attrs['options'][ $key ] = $value;
 							}
 						}
@@ -277,37 +284,35 @@ class Directory extends \um\common\Directory {
 					}
 				}
 
+				/** This filter is documented in includes/core/class-fields.php */
+				$option_pairs = apply_filters( 'um_select_options_pair', null, $attrs );
+
 				$custom_dropdown = '';
-				if ( ! empty( $attrs['custom_dropdown_options_source'] ) ) {
-					$attrs['custom'] = true;
 
+				$choices_callback = UM()->fields()->get_custom_dropdown_options_source( $filter, $attrs );
+				if ( ! empty( $choices_callback ) ) {
+					$option_pairs     = true;
+					$custom_dropdown .= ' data-um-ajax-source="' . esc_attr( $choices_callback ) . '" data-nonce="' . wp_create_nonce( 'um_dropdown_parent_nonce' . $attrs['metakey'] ) . '" ';
 					if ( ! empty( $attrs['parent_dropdown_relationship'] ) ) {
+						/** This filter is documented in includes/core/class-fields.php */
+						$parent_dropdown_relationship = apply_filters( "um_custom_dropdown_options_parent__$filter", $attrs['parent_dropdown_relationship'], $attrs );
 
-						$custom_dropdown .= ' data-member-directory="yes"';
-						$custom_dropdown .= ' data-um-parent="' . esc_attr( $attrs['parent_dropdown_relationship'] ) . '"';
+						$custom_dropdown .= ' data-um-parent="' . esc_attr( $parent_dropdown_relationship ) . '"';
+						$filter_value_key = 'filter_' . $parent_dropdown_relationship . '_' . $unique_hash;
 
-						if ( isset( $_GET[ 'filter_' . $attrs['parent_dropdown_relationship'] . '_' . $unique_hash ] ) ) {
-							$_POST['parent_option_name'] = $attrs['parent_dropdown_relationship'];
-
-							$parent_option_value    = sanitize_text_field( $_GET[ 'filter_' . $attrs['parent_dropdown_relationship'] . '_' . $unique_hash ] );
-							$_POST['parent_option'] = explode( '||', $parent_option_value );
+						$parent_option = array();
+						if ( isset( $_GET[ $filter_value_key ] ) ) {
+							$parent_option_value = sanitize_text_field( $_GET[ $filter_value_key ] );
+							$parent_option       = explode( '||', $parent_option_value );
 						}
+						$attrs['options'] = $choices_callback( $parent_option, $parent_dropdown_relationship );
+					} else {
+						$attrs['options'] = $choices_callback();
 					}
-
-					$attrs['custom_dropdown_options_source'] = wp_unslash( $attrs['custom_dropdown_options_source'] );
-
-					$ajax_source = apply_filters( "um_custom_dropdown_options_source__{$filter}", $attrs['custom_dropdown_options_source'], $attrs );
-
-					$custom_dropdown .= ' data-um-ajax-source="' . esc_attr( $ajax_source ) . '" data-nonce="' . wp_create_nonce( 'um_dropdown_parent_nonce' . $attrs['metakey'] ) . '" ';
-
-					$attrs['options'] = UM()->fields()->get_options_from_callback( $attrs, $attrs['type'] );
-				} else {
-					/** This filter is documented in includes/core/class-fields.php */
-					$option_pairs = apply_filters( 'um_select_options_pair', null, $attrs );
 				}
 
-				if ( $attrs['metakey'] != 'online_status' ) {
-					if ( $attrs['metakey'] != 'role_select' && $attrs['metakey'] != 'mycred_rank' && empty( $custom_dropdown ) && empty( $option_pairs ) ) {
+				if ( 'online_status' !== $attrs['metakey'] ) {
+					if ( 'role_select' !== $attrs['metakey'] && 'mycred_rank' !== $attrs['metakey'] && empty( $custom_dropdown ) && empty( $option_pairs ) ) {
 						$attrs['options'] = array_intersect( array_map( 'stripslashes', array_map( 'trim', $attrs['options'] ) ), $values_array );
 					} elseif ( ! empty( $custom_dropdown ) ) {
 						$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
@@ -318,13 +323,9 @@ class Directory extends \um\common\Directory {
 
 				$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options', $attrs['options'], $values_array, $attrs );
 
-				if ( ( empty( $attrs['options'] ) || ! is_array( $attrs['options'] ) ) && ! ( ! empty( $attrs['custom_dropdown_options_source'] ) && ! empty( $attrs['parent_dropdown_relationship'] ) ) ) {
+				if ( empty( $attrs['options'] ) || ! is_array( $attrs['options'] ) ) {
 					ob_get_clean();
 					return '';
-				}
-
-				if ( ! empty( $attrs['custom_dropdown_options_source'] ) && ! empty( $attrs['parent_dropdown_relationship'] ) ) {
-					$attrs['options'] = array();
 				}
 
 				if ( isset( $attrs['label'] ) ) {
@@ -345,26 +346,15 @@ class Directory extends \um\common\Directory {
 				} elseif ( ! isset( $attrs['label'] ) && isset( $attrs['title'] ) ) {
 					$label = $attrs['title'];
 				}
-
-				$multiple         = '';
-				$choices_callback = ! empty( $attrs['custom_dropdown_options_source'] ) ? $attrs['custom_dropdown_options_source'] : '';
-				/** This filter is documented in includes/core/class-fields.php */
-				$choices_callback = apply_filters( "um_custom_dropdown_options_source__$filter", $choices_callback, $attrs );
-				if ( count( $attrs['options'] ) > 1 || ( ! empty( $choices_callback ) && function_exists( $choices_callback ) && ! UM()->fields()->is_source_blacklisted( $choices_callback ) ) ) {
-					$multiple = ' multiple ';
-				}
 				?>
 				<div class="um-field-wrapper">
 					<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( stripslashes( $label ) ); ?></label>
-					<select class="js-choice um-search-filter-field" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
+					<select multiple class="js-choice um-search-filter-field" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
 							aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
-							<?php echo $multiple; ?>
 						<?php echo $custom_dropdown; ?>>
-
-						<option></option>
-
 						<?php
 						if ( ! empty( $attrs['options'] ) ) {
+
 							foreach ( $attrs['options'] as $k => $v ) {
 
 								$v = stripslashes( $v );
@@ -372,10 +362,6 @@ class Directory extends \um\common\Directory {
 								$opt = $v;
 
 								if ( strstr( $filter, 'role_' ) || 'role' === $filter ) {
-									$opt = $k;
-								}
-
-								if ( isset( $attrs['custom'] ) ) {
 									$opt = $k;
 								}
 

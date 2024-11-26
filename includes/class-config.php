@@ -178,6 +178,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_roles_can_filter'          => array(),
 				'_um_search_fields'             => array(),
 				'_um_filters_expanded'          => 0,
+				'_um_disable_filters_pre_query' => 0,
 				'_um_filters_is_collapsible'    => 1,
 				'_um_search_filters'            => array(),
 

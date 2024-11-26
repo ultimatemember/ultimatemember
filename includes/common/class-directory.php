@@ -10,238 +10,177 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package um\common
  */
-class Directory {
-
-	/**
-	 * Member Directory Views
-	 *
-	 * @var array
-	 */
-	public $view_types = array();
-
-	/**
-	 * Fields used for searching from wp_users table.
-	 *
-	 * @var string[]
-	 */
-	public $core_search_fields = array(
-		'user_login',
-		'user_url',
-		'display_name',
-		'user_email',
-		'user_nicename',
-	);
-
-	/**
-	 * @var array
-	 */
-	public $filter_types = array();
-
-	/**
-	 * @var array
-	 */
-	public $filter_fields = array();
-
-	/**
-	 * @var array
-	 */
-	public $searching_fields = array();
-
-	/**
-	 * @var array
-	 */
-	public $filter_supported_fields = array();
-
-	public $cover_size;
-
-	public $avatar_size;
-
-	/**
-	 * @var array
-	 */
-	public $sort_fields = array();
+class Directory extends Directory_Config {
 
 	/**
 	 * Directory constructor.
 	 */
 	public function __construct() {
-		add_filter( 'init', array( &$this, 'init_variables' ) );
+		parent::__construct();
+
+		add_action( 'updated_user_meta', array( &$this, 'on_update_usermeta' ), 10, 4 );
+		add_action( 'added_user_meta', array( &$this, 'on_update_usermeta' ), 10, 4 );
+		add_action( 'deleted_user_meta', array( &$this, 'on_delete_usermeta' ), 10, 4 );
+
+		add_action( 'um_add_new_field', array( &$this, 'on_new_field_added' ), 10, 2 );
+		add_action( 'um_delete_custom_field', array( &$this, 'on_delete_custom_field' ), 10, 2 );
 	}
 
 	/**
+	 * When you add/update usermeta - add/update row from um_metadata
 	 *
+	 * @param int $meta_id
+	 * @param int $object_id
+	 * @param string $meta_key
+	 * @param mixed $_meta_value
 	 */
-	public function init_variables() {
-		$this->view_types = array(
-			'grid' => __( 'Grid', 'ultimate-member' ),
-			'list' => __( 'List', 'ultimate-member' ),
-		);
-		$this->view_types = apply_filters( 'um_member_directory_views', $this->view_types );
-
-		// Filters
-		$this->filter_fields = array(
-			'country'              => __( 'Country', 'ultimate-member' ),
-			'gender'               => __( 'Gender', 'ultimate-member' ),
-			'languages'            => __( 'Languages', 'ultimate-member' ),
-			'role'                 => __( 'Roles', 'ultimate-member' ),
-			'birth_date'           => __( 'Age', 'ultimate-member' ),
-			'last_login'           => __( 'Last Login', 'ultimate-member' ),
-			'user_registered'      => __( 'User Registered', 'ultimate-member' ),
-			'first_name'           => __( 'First Name', 'ultimate-member' ),
-			'last_name'            => __( 'Last Name', 'ultimate-member' ),
-			'nickname'             => __( 'Nickname', 'ultimate-member' ),
-			'secondary_user_email' => __( 'Secondary Email Address', 'ultimate-member' ),
-			'description'          => __( 'Biography', 'ultimate-member' ),
-			'phone_number'         => __( 'Phone Number', 'ultimate-member' ),
-			'mobile_number'        => __( 'Mobile Number', 'ultimate-member' ),
-		);
-
-		$this->filter_supported_fields = apply_filters( 'um_members_directory_custom_field_types_supported_filter', array( 'date', 'time', 'select', 'multiselect', 'radio', 'checkbox', 'rating', 'text', 'textarea', 'number' ) );
-
-		$core_search_keys = $this->get_core_search_fields();
-
-		$this->searching_fields = array();
-		if ( ! empty( UM()->builtin()->all_user_fields() ) ) {
-			foreach ( UM()->builtin()->all_user_fields() as $key => $data ) {
-				if ( in_array( $key, $core_search_keys, true ) ) {
-					if ( isset( $data['title'] ) && array_search( $data['title'], $this->searching_fields, true ) !== false ) {
-						$data['title'] = $data['title'] . ' (' . $key . ')';
-					}
-
-					$title = isset( $data['title'] ) ? $data['title'] : ( isset( $data['label'] ) ? $data['label'] : '' );
-					if ( empty( $title ) ) {
-						continue;
-					}
-
-					$this->searching_fields[ $key ] = $title;
-				}
-			}
-		}
-		if ( ! empty( UM()->builtin()->saved_fields ) ) {
-			foreach ( UM()->builtin()->saved_fields as $key => $data ) {
-
-				if ( '_um_last_login' === $key ) {
-					continue;
-				}
-
-				if ( isset( $data['type'] ) && in_array( $data['type'], $this->filter_supported_fields ) ) {
-					if ( isset( $data['title'] ) && array_search( $data['title'], $this->filter_fields ) !== false ) {
-						$data['title'] = $data['title'] . ' (' . $key . ')';
-					}
-
-					$title = isset( $data['title'] ) ? $data['title'] : ( isset( $data['label'] ) ? $data['label'] : '' );
-					if ( empty( $title ) ) {
-						continue;
-					}
-
-					$this->filter_fields[ $key ] = $title;
-				}
-			}
+	public function on_update_usermeta( $meta_id, $object_id, $meta_key, $_meta_value ) {
+		$search_in_table = UM()->options()->get( 'member_directory_own_table' );
+		if ( empty( $search_in_table ) ) {
+			return;
 		}
 
-		$this->filter_fields = apply_filters( 'um_members_directory_filter_fields', $this->filter_fields );
-
-		ksort( $this->filter_fields );
-
-		$this->searching_fields = array_merge( $this->searching_fields, $this->filter_fields );
-		asort( $this->searching_fields );
-
-		$this->filter_types = apply_filters( 'um_members_directory_filter_types', array(
-			'country'               => 'select',
-			'gender'                => 'select',
-			'languages'             => 'select',
-			'role'                  => 'select',
-			'birth_date'            => 'slider',
-			'last_login'            => 'datepicker',
-			'user_registered'       => 'datepicker',
-			'first_name'            => 'text',
-			'last_name'             => 'text',
-			'nickname'              => 'text',
-			'secondary_user_email'  => 'text',
-			'description'           => 'text',
-			'phone_number'          => 'text',
-			'mobile_number'         => 'text',
-		) );
-
-		$fields = UM()->builtin()->all_user_fields;
-
-		$custom_fields_types = array_flip( array_keys( $this->filter_fields ) );
-		foreach ( $custom_fields_types as $key => &$value ) {
-			if ( ! isset( $fields[ $key ] ) ) {
-				unset( $custom_fields_types[ $key ] );
-			} else {
-				switch ( $fields[ $key ]['type'] ) {
-					default:
-						$value = apply_filters( 'um_custom_field_filter_type', 'select', $fields[ $key ] );
-						break;
-					case 'text':
-					case 'textarea':
-						$value = 'text';
-						break;
-					case 'date':
-						$value = 'datepicker';
-						break;
-					case 'time':
-						$value = 'timepicker';
-						break;
-					case 'select':
-					case 'multiselect':
-					case 'radio':
-					case 'checkbox':
-						$value = 'select';
-						break;
-					case 'number':
-					case 'rating':
-						$value = 'slider';
-						break;
-				}
-			}
+		$metakeys = get_option( 'um_usermeta_fields', array() );
+		if ( ! in_array( $meta_key, $metakeys, true ) ) {
+			return;
 		}
-		unset( $value );
 
-		$this->filter_types = array_merge( $custom_fields_types, $this->filter_types );
+		global $wpdb;
 
-		// Sort
-		$this->sort_fields = array(
-			'user_registered_desc' => __( 'New users first', 'ultimate-member' ),
-			'user_registered_asc'  => __( 'Old users first', 'ultimate-member' ),
-			'username'             => __( 'Username', 'ultimate-member' ),
-			'nickname'             => __( 'Nickname', 'ultimate-member' ),
-			'first_name'           => __( 'First name', 'ultimate-member' ),
-			'last_name'            => __( 'Last name', 'ultimate-member' ),
-			'display_name'         => __( 'Display name', 'ultimate-member' ),
-			'last_first_name'      => __( 'Last & First name', 'ultimate-member' ),
-			'last_login'           => __( 'Last login', 'ultimate-member' ),
+		$result = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT umeta_id
+					FROM {$wpdb->prefix}um_metadata
+					WHERE user_id = %d AND
+					      um_key = %s
+					LIMIT 1",
+				$object_id,
+				$meta_key
+			)
 		);
 
-		$this->sort_fields = apply_filters( 'um_members_directory_sort_fields', $this->sort_fields );
+		if ( empty( $result ) ) {
+			$wpdb->insert(
+				"{$wpdb->prefix}um_metadata",
+				array(
+					'user_id'  => $object_id,
+					'um_key'   => $meta_key,
+					'um_value' => maybe_serialize( $_meta_value ),
+				),
+				array(
+					'%d',
+					'%s',
+					'%s',
+				)
+			);
+		} else {
+			$wpdb->update(
+				"{$wpdb->prefix}um_metadata",
+				array(
+					'um_value' => maybe_serialize( $_meta_value ),
+				),
+				array(
+					'umeta_id' => $result,
+				),
+				array(
+					'%s',
+				),
+				array(
+					'%d',
+				)
+			);
+		}
 	}
 
 	/**
-	 * Get the WordPress core searching fields in wp_users query.
-	 * @return array
+	 * When you delete usermeta - remove row from um_metadata
+	 *
+	 * @param int|array $meta_ids
+	 * @param int $object_id
+	 * @param string $meta_key
+	 * @param mixed $_meta_value
 	 */
-	protected function get_core_search_fields() {
-		/**
-		 * Filters the WordPress core searching fields in wp_users query for UM Member directory query.
-		 *
-		 * @param {array} $core_search_fields Core search fields in wp_users query.
-		 *
-		 * @return {array} Core search fields in wp_users query.
-		 *
-		 * @since 2.6.10
-		 * @hook um_member_directory_core_search_fields
-		 *
-		 * @example <caption>Extends or remove wp_users core search fields.</caption>
-		 * function my_um_member_directory_core_search_fields( $core_search_fields ) {
-		 *     $core_search_fields = array_flip( $core_search_fields );
-		 *     unset( $core_search_fields['user_email'] );
-		 *     $core_search_fields = array_flip( $core_search_fields );
-		 *     return $core_search_fields;
-		 * }
-		 * add_filter( 'um_member_directory_core_search_fields', 'my_um_member_directory_core_search_fields' );
-		 */
-		return apply_filters( 'um_member_directory_core_search_fields', $this->core_search_fields );
+	public function on_delete_usermeta( $meta_ids, $object_id, $meta_key, $_meta_value ) {
+		$search_in_table = UM()->options()->get( 'member_directory_own_table' );
+		if ( empty( $search_in_table ) ) {
+			return;
+		}
+
+		$metakeys = get_option( 'um_usermeta_fields', array() );
+		if ( ! in_array( $meta_key, $metakeys, true ) ) {
+			return;
+		}
+
+		global $wpdb;
+
+		$wpdb->delete(
+			"{$wpdb->prefix}um_metadata",
+			array(
+				'user_id' => $object_id,
+				'um_key'  => $meta_key,
+			),
+			array(
+				'%d',
+				'%s',
+			)
+		);
+	}
+
+	/**
+	 * Add metakey to usermeta fields
+	 *
+	 * @param $metakey
+	 * @param $args
+	 */
+	public function on_new_field_added( $metakey, $args ) {
+		$search_in_table = UM()->options()->get( 'member_directory_own_table' );
+		if ( empty( $search_in_table ) ) {
+			return;
+		}
+
+		$metakeys = get_option( 'um_usermeta_fields', array() );
+
+		if ( ! in_array( $metakey, $metakeys, true ) ) {
+			$metakeys[] = $metakey;
+			update_option( 'um_usermeta_fields', array_values( $metakeys ) );
+		}
+
+		do_action( 'um_metadata_on_new_field_added', $metakeys, $metakey, $args );
+	}
+
+	/**
+	 * Delete custom field and metakey from UM usermeta table
+	 *
+	 * @param $metakey
+	 * @param $args
+	 */
+	public function on_delete_custom_field( $metakey, $args ) {
+		$search_in_table = UM()->options()->get( 'member_directory_own_table' );
+		if ( empty( $search_in_table ) ) {
+			return;
+		}
+
+		$metakeys = get_option( 'um_usermeta_fields', array() );
+
+		if ( in_array( $metakey, $metakeys, true ) ) {
+			unset( $metakeys[ array_search( $metakey, $metakeys, true ) ] );
+
+			global $wpdb;
+
+			$wpdb->delete(
+				"{$wpdb->prefix}um_metadata",
+				array(
+					'um_key' => $metakey,
+				),
+				array(
+					'%s',
+				)
+			);
+
+			update_option( 'um_usermeta_fields', array_values( $metakeys ) );
+		}
+
+		do_action( 'um_metadata_on_delete_custom_field', $metakeys, $metakey, $args );
 	}
 
 	/**
@@ -264,8 +203,36 @@ class Directory {
 		return (int) $directory_id;
 	}
 
+	/**
+	 * @param $form_id
+	 *
+	 * @return bool|string
+	 */
 	public function get_directory_hash( $form_id ) {
 		return substr( md5( $form_id ), 10, 5 );
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function get_hide_in_members_default() {
+		$default = false;
+		$option  = UM()->options()->get( 'account_hide_in_directory_default' );
+		if ( 'Yes' === $option ) {
+			$default = true;
+		}
+
+		return apply_filters( 'um_member_directory_hide_in_members_default', $default );
+	}
+
+	/**
+	 * Get view Type template
+	 * @param string $type
+	 *
+	 * @return string
+	 */
+	public function get_type_basename( $type ) {
+		return apply_filters( "um_member_directory_{$type}_type_template_basename", '' );
 	}
 
 	/**
@@ -275,12 +242,13 @@ class Directory {
 	 * @return array
 	 */
 	public function build_user_card_data( $user_id, $directory_data ) {
-
 		um_fetch_user( $user_id );
 
 		$dropdown_actions = UM()->frontend()->users()->get_dropdown_items( $user_id, 'directory' );
 
 		$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id );
+
+		$this->init_image_sizing( $directory_data );
 
 		// Replace hook 'um_members_just_after_name'
 		ob_start();
@@ -310,7 +278,6 @@ class Directory {
 		);
 
 		if ( ! empty( $directory_data['show_tagline'] ) ) {
-
 			if ( ! empty( $directory_data['tagline_fields'] ) ) {
 				$directory_data['tagline_fields'] = maybe_unserialize( $directory_data['tagline_fields'] );
 

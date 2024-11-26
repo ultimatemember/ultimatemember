@@ -69,16 +69,16 @@ class Fields {
 			);
 
 			if ( ! empty( $values_array ) ) {
+				$parent_options = array();
 				if ( ! empty( $_POST['parent_option'] ) ) {
 					if ( is_array( $_POST['parent_option'] ) ) {
 						$parent_options = array_map( 'sanitize_text_field', array_map( 'wp_unslash', $_POST['parent_option'] ) );
 					} else {
 						$parent_options = sanitize_text_field( wp_unslash( $_POST['parent_option'] ) );
 					}
-					$arr_options['items'] = $ajax_source_func( $parent_options, sanitize_text_field( $_POST['parent_option_name'] ) );
-				} else {
-					$arr_options['items'] = array();
 				}
+
+				$arr_options['items'] = $ajax_source_func( $parent_options, sanitize_text_field( $_POST['parent_option_name'] ) );
 
 				if ( array_keys( $arr_options['items'] ) !== range( 0, count( $arr_options['items'] ) - 1 ) ) {
 					// array with dropdown items is associative

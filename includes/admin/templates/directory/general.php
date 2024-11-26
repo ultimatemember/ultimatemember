@@ -20,12 +20,16 @@ if ( $exclude_these_users ) {
 $_um_view_types_value = get_post_meta( $post_id, '_um_view_types', true );
 $_um_view_types_value = empty( $_um_view_types_value ) ? array( 'grid', 'list' ) : $_um_view_types_value;
 
-$view_types_options = array_map(
-	function( $item ) {
-		return $item['title'];
-	},
-	UM()->member_directory()->view_types
-);
+if ( UM()->is_new_ui() ) {
+	$view_types_options = UM()->member_directory()->view_types;
+} else {
+	$view_types_options = array_map(
+		static function ( $item ) {
+			return $item['title'];
+		},
+		UM()->member_directory()->view_types
+	);
+}
 
 $conditional = array();
 foreach ( $view_types_options as $key => $value ) {

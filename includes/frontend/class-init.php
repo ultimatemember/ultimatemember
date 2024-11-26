@@ -21,9 +21,9 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		 */
 		public function includes() {
 			$this->actions_listener();
-			$this->directory();
 			$this->enqueue();
 			if ( UM()->is_new_ui() ) {
+				$this->directory();
 				$this->profile();
 			} else {
 				$this->modal();

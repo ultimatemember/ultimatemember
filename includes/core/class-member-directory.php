@@ -1,6 +1,8 @@
 <?php
 namespace um\core;
 
+use um\common\Directory;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -11,202 +13,31 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 	 * Class Member_Directory
 	 * @package um\core
 	 */
-	class Member_Directory {
-
-		/**
-		 * Member Directory Views
-		 *
-		 * @var array
-		 */
-		var $view_types = array();
-
+	class Member_Directory extends Directory {
 
 		/**
 		 * @var array
 		 */
-		var $sort_fields = array();
-
-		/**
-		 * @var array
-		 */
-		var $sort_data_types = array();
-
-		/**
-		 * @var array
-		 */
-		var $default_sorting = array();
-
-
-		/**
-		 * @var array
-		 */
-		var $filter_fields = array();
-
-		/**
-		 * @var array
-		 */
-		public $searching_fields = array();
-
-
-		/**
-		 * @var array
-		 */
-		var $custom_filters_in_query = array();
-
-
-
-		var $filter_supported_fields = array();
-
-
-		var $sorting_supported_fields = array();
-
-
-		var $filter_types = array();
-
-		/**
-		 * Fields used for searching from wp_users table.
-		 *
-		 * @var string[]
-		 */
-		var $core_search_fields = array(
-			'user_login',
-			'user_url',
-			'display_name',
-			'user_email',
-			'user_nicename',
-		);
-
-		/**
-		 * Fields used for sorting from wp_users table.
-		 *
-		 * @var string[]
-		 */
-		var $core_users_fields = array(
-			'user_login',
-			'user_url',
-			'display_name',
-			'user_email',
-			'user_nicename',
-			'user_registered',
-		);
+		public $custom_filters_in_query = array();
 
 		/**
 		 * @var
 		 */
-		var $query_args;
-
-
-		/**
-		 * @var User Card cover size
-		 */
-		var $cover_size;
-
-
-		/**
-		 * @var User Avatar size
-		 */
-		var $avatar_size;
-
+		public $query_args;
 
 		/**
 		 * @var bool Searching marker
 		 */
-		var $is_search = false;
-
+		public $is_search = false;
 
 		/**
 		 * Member_Directory constructor.
 		 */
 		public function __construct() {
-			add_filter( 'init', array( &$this, 'init_variables' ) );
-
-			add_action( 'template_redirect', array( &$this, 'access_members' ), 555 );
+			parent::__construct();
+			add_action( 'wp_ajax_nopriv_um_get_members', array( $this, 'ajax_get_members' ) );
+			add_action( 'wp_ajax_um_get_members', array( $this, 'ajax_get_members' ) );
 		}
-
-		/**
-		 * Get the WordPress core searching fields in wp_users query.
-		 * @return array
-		 */
-		protected function get_core_search_fields() {
-			/**
-			 * Filters the WordPress core searching fields in wp_users query for UM Member directory query.
-			 *
-			 * @param {array} $core_search_fields Core search fields in wp_users query.
-			 *
-			 * @return {array} Core search fields in wp_users query.
-			 *
-			 * @since 2.6.10
-			 * @hook um_member_directory_core_search_fields
-			 *
-			 * @example <caption>Extends or remove wp_users core search fields.</caption>
-			 * function my_um_member_directory_core_search_fields( $core_search_fields ) {
-			 *     $core_search_fields = array_flip( $core_search_fields );
-			 *     unset( $core_search_fields['user_email'] );
-			 *     $core_search_fields = array_flip( $core_search_fields );
-			 *     return $core_search_fields;
-			 * }
-			 * add_filter( 'um_member_directory_core_search_fields', 'my_um_member_directory_core_search_fields' );
-			 */
-			return apply_filters( 'um_member_directory_core_search_fields', $this->core_search_fields );
-		}
-
-		/**
-		 * @return bool
-		 */
-		function get_hide_in_members_default() {
-			$default = false;
-			$option = UM()->options()->get( 'account_hide_in_directory_default' );
-			if ( $option == 'Yes' ) {
-				$default = true;
-			}
-
-			$default = apply_filters( 'um_member_directory_hide_in_members_default', $default );
-			return $default;
-		}
-
-
-		/**
-		 * Getting member directory post ID via hash
-		 * Hash is unique attr, which we use visible at frontend
-		 *
-		 * @param string $hash
-		 *
-		 * @return bool|int
-		 */
-		function get_directory_by_hash( $hash ) {
-			global $wpdb;
-
-			$directory_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE SUBSTRING( MD5( ID ), 11, 5 ) = %s", $hash ) );
-
-			if ( empty( $directory_id ) ) {
-				return false;
-			}
-
-			return (int) $directory_id;
-		}
-
-
-		/**
-		 * @param $id
-		 *
-		 * @return bool|string
-		 */
-		function get_directory_hash( $id ) {
-			$hash = substr( md5( $id ), 10, 5 );
-			return $hash;
-		}
-
-
-		/**
-		 * Get view Type template
-		 * @param string $type
-		 *
-		 * @return string
-		 */
-		function get_type_basename( $type ) {
-			return apply_filters( "um_member_directory_{$type}_type_template_basename", '' );
-		}
-
 
 		/**
 		 * Tag conversion for member directory
@@ -216,8 +47,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 * @return string
 		 */
-		function convert_tags( $string, $array ) {
-
+		protected function convert_tags( $string, $array ) {
 			$search = array(
 				'{total_users}',
 			);
@@ -226,331 +56,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				$array['total_users'],
 			);
 
-			$string = str_replace( $search, $replace, $string );
-			return $string;
+			return str_replace( $search, $replace, $string );
 		}
-
-
-		/**
-		 * Members page allowed?
-		 *
-		 * can be disabled by "Enable Members Directory" option
-		 *
-		 */
-		public function access_members() {
-			if ( um_is_predefined_page( 'members' ) && ! UM()->options()->get( 'members_page' ) ) {
-				um_redirect_home();
-			}
-		}
-
-
-		/**
-		 * @param $value
-		 * @param $key
-		 * @param $post_id
-		 *
-		 * @return array
-		 */
-		public function before_save_data( $value, $key, $post_id ) {
-			$post = get_post( $post_id );
-
-			if ( 'um_directory' !== $post->post_type ) {
-				return $value;
-			}
-
-			if ( ! empty( $value ) && in_array( $key, array( '_um_view_types', '_um_roles', '_um_roles_can_search', '_um_roles_can_filter' ), true ) ) {
-				$value = array_keys( $value );
-			} elseif ( '_um_search_filters' === $key ) {
-				$temp_value = array();
-
-				// phpcs:disable WordPress.Security.NonceVerification -- already verified here
-				if ( ! empty( $value ) ) {
-					foreach ( $value as $k ) {
-						$filter_type = $this->filter_types[ $k ];
-						if ( ! empty( $filter_type ) ) {
-							if ( 'slider' === $filter_type ) {
-								if ( ! empty( $_POST[ $k ] ) ) {
-									if ( count( $_POST[ $k ] ) > 1 ) {
-										$temp_value[ $k ] = array_map( 'intval', $_POST[ $k ] );
-									} else {
-										$temp_value[ $k ] = (int) $_POST[ $k ];
-									}
-								}
-							} elseif ( 'datepicker' === $filter_type ) {
-								if ( ! empty( $_POST[ $k . '_from' ] ) ) {
-									$temp_value[ $k ][0] = sanitize_text_field( $_POST[ $k . '_from' ] );
-								}
-								if ( ! empty( $_POST[ $k . '_to' ] ) ) {
-									$temp_value[ $k ][1] = sanitize_text_field( $_POST[ $k . '_to' ] );
-								}
-							} elseif ( 'timepicker' === $filter_type ) {
-								if ( ! empty( $_POST[ $k . '_from' ] ) ) {
-									$temp_value[ $k ][0] = sanitize_text_field( $_POST[ $k . '_from' ] );
-								}
-								if ( ! empty( $_POST[ $k . '_to' ] ) ) {
-									$temp_value[ $k ][1] = sanitize_text_field( $_POST[ $k . '_to' ] );
-								}
-							} elseif ( 'select' === $filter_type ) {
-								if ( ! empty( $_POST[ $k ] ) ) {
-									if ( is_array( $_POST[ $k ] ) ) {
-										$temp_value[ $k ] = array_map( 'trim', $_POST[ $k ] );
-									} else {
-										$temp_value[ $k ] = array( trim( $_POST[ $k ] ) );
-									}
-
-									$temp_value[ $k ] = array_map( 'sanitize_text_field', $temp_value[ $k ] );
-								}
-							} else {
-								if ( ! empty( $_POST[ $k ] ) ) {
-									$temp_value[ $k ] = trim( sanitize_text_field( $_POST[ $k ] ) );
-								}
-							}
-						}
-					}
-				}
-
-				$value = $temp_value;
-
-				// phpcs:enable WordPress.Security.NonceVerification -- already verified here
-			} elseif ( '_um_sorting_fields' === $key ) {
-				if ( ! empty( $value['other_data'] ) ) {
-					$other_data = $value['other_data'];
-					unset( $value['other_data'] );
-
-					foreach ( $value as $k => &$row ) {
-						if ( ! empty( $other_data[ $k ]['meta_key'] ) ) {
-							$metakey = sanitize_text_field( $other_data[ $k ]['meta_key'] );
-							if ( ! empty( $metakey ) ) {
-								if ( ! empty( $other_data[ $k ]['label'] ) ) {
-									$metalabel = wp_strip_all_tags( $other_data[ $k ]['label'] );
-								}
-								if ( ! empty( $other_data[ $k ]['data_type'] ) ) {
-									$data_type = sanitize_text_field( $other_data[ $k ]['data_type'] );
-								}
-								if ( ! empty( $other_data[ $k ]['order'] ) ) {
-									$order = sanitize_text_field( $other_data[ $k ]['order'] );
-								}
-								$row = array(
-									$metakey => $metakey,
-									'label'  => ! empty( $metalabel ) ? $metalabel : $metakey,
-									'type'   => ! empty( $data_type ) ? $data_type : '',
-									'order'  => ! empty( $order ) ? $order : '',
-								);
-							}
-						}
-					}
-					unset( $row );
-				}
-			} elseif ( '_um_sortby_custom' === $key ) {
-				$value = sanitize_text_field( $value );
-			} elseif ( '_um_sortby_custom_label' === $key ) {
-				$value = wp_strip_all_tags( $value );
-			} elseif ( '_um_sortby_custom_type' === $key ) {
-				$value = sanitize_text_field( $value );
-			} elseif ( '_um_sortby_custom_order' === $key ) {
-				$value = sanitize_text_field( $value );
-			}
-
-			return $value;
-		}
-
-		/**
-		 *
-		 */
-		function init_variables() {
-
-			// Types
-			$this->view_types = apply_filters( 'um_member_directory_views', array(
-				'grid'  => array( 'title' => __( 'Grid', 'ultimate-member' ), 'icon' => 'um-faicon-th' ),
-				'list'  => array( 'title' => __( 'List', 'ultimate-member' ), 'icon' => 'um-faicon-list' ),
-			) );
-
-			// Sort
-			$this->sort_fields = apply_filters( 'um_members_directory_sort_fields', array(
-				'user_registered_desc'  => __( 'New users first', 'ultimate-member' ),
-				'user_registered_asc'   => __( 'Old users first', 'ultimate-member' ),
-				'username'              => __( 'Username', 'ultimate-member' ),
-				'nickname'              => __( 'Nickname', 'ultimate-member' ),
-				'first_name'            => __( 'First name', 'ultimate-member' ),
-				'last_name'             => __( 'Last name', 'ultimate-member' ),
-				'display_name'          => __( 'Display name', 'ultimate-member' ),
-				'last_first_name'       => __( 'Last & First name', 'ultimate-member' ),
-				'last_login'            => __( 'Last login', 'ultimate-member' ),
-			) );
-
-			$this->sorting_supported_fields = apply_filters( 'um_members_directory_custom_field_types_supported_sorting', array( 'number' ) );
-
-			$this->sort_data_types = array(
-				'CHAR'     => __( 'CHAR', 'ultimate-member' ),
-				'NUMERIC'  => __( 'NUMERIC', 'ultimate-member' ),
-				'BINARY'   => __( 'BINARY', 'ultimate-member' ),
-				'DATE'     => __( 'DATE', 'ultimate-member' ),
-				'DATETIME' => __( 'DATETIME', 'ultimate-member' ),
-				'DECIMAL'  => __( 'DECIMAL', 'ultimate-member' ),
-				'SIGNED'   => __( 'SIGNED', 'ultimate-member' ),
-				'TIME'     => __( 'TIME', 'ultimate-member' ),
-				'UNSIGNED' => __( 'UNSIGNED', 'ultimate-member' ),
-			);
-
-			$this->sort_data_types = apply_filters( 'um_members_directory_sort_data_types', $this->sort_data_types );
-
-			if ( ! empty( UM()->builtin()->saved_fields ) ) {
-				foreach ( UM()->builtin()->saved_fields as $key => $data ) {
-					if ( '_um_last_login' === $key ) {
-						continue;
-					}
-
-					if ( isset( $data['type'] ) && in_array( $data['type'], $this->sorting_supported_fields ) ) {
-						// translators: %s: title.
-						if ( isset( $data['title'] ) && array_search( sprintf( __( '%s DESC', 'ultimate-member' ), $data['title'] ), $this->sort_fields ) !== false ) {
-							$data['title'] = $data['title'] . ' (' . $key . ')';
-						}
-
-						$title = isset( $data['title'] ) ? $data['title'] : ( isset( $data['label'] ) ? $data['label'] : '' );
-						if ( empty( $title ) ) {
-							continue;
-						}
-
-						// translators: %s: title.
-						$this->sort_fields[ $key . '_desc' ] = sprintf( __( '%s DESC', 'ultimate-member' ), $title );
-						// translators: %s: title.
-						$this->sort_fields[ $key . '_asc' ] = sprintf( __( '%s ASC', 'ultimate-member' ), $title );
-					}
-				}
-			}
-
-			asort( $this->sort_fields );
-
-			$this->default_sorting = apply_filters( 'um_members_directory_default_sort', array_merge( $this->sort_fields, array(
-				'random'    => __( 'Random', 'ultimate-member' ),
-				'other'     => __( 'Other (Custom Field)', 'ultimate-member' ),
-			) ) );
-
-			asort( $this->default_sorting );
-
-			// Filters
-			$this->filter_fields = array(
-				'country'               => __( 'Country', 'ultimate-member' ),
-				'gender'                => __( 'Gender', 'ultimate-member' ),
-				'languages'             => __( 'Languages', 'ultimate-member' ),
-				'role'                  => __( 'Roles', 'ultimate-member' ),
-				'birth_date'            => __( 'Age', 'ultimate-member' ),
-				'last_login'            => __( 'Last Login', 'ultimate-member' ),
-				'user_registered'       => __( 'User Registered', 'ultimate-member' ),
-				'first_name'            => __( 'First Name', 'ultimate-member' ),
-				'last_name'             => __( 'Last Name', 'ultimate-member' ),
-				'nickname'              => __( 'Nickname', 'ultimate-member' ),
-				'secondary_user_email'  => __( 'Secondary Email Address', 'ultimate-member' ),
-				'description'           => __( 'Biography', 'ultimate-member' ),
-				'phone_number'          => __( 'Phone Number', 'ultimate-member' ),
-				'mobile_number'         => __( 'Mobile Number', 'ultimate-member' ),
-			);
-
-			$this->filter_supported_fields = apply_filters( 'um_members_directory_custom_field_types_supported_filter', array( 'date', 'time', 'select', 'multiselect', 'radio', 'checkbox', 'rating', 'text', 'textarea', 'number' ) );
-
-			$core_search_keys = $this->get_core_search_fields();
-
-			$this->searching_fields = array();
-			if ( ! empty( UM()->builtin()->all_user_fields() ) ) {
-				foreach ( UM()->builtin()->all_user_fields() as $key => $data ) {
-					if ( in_array( $key, $core_search_keys, true ) ) {
-						if ( isset( $data['title'] ) && array_search( $data['title'], $this->searching_fields, true ) !== false ) {
-							$data['title'] = $data['title'] . ' (' . $key . ')';
-						}
-
-						$title = isset( $data['title'] ) ? $data['title'] : ( isset( $data['label'] ) ? $data['label'] : '' );
-						if ( empty( $title ) ) {
-							continue;
-						}
-
-						$this->searching_fields[ $key ] = $title;
-					}
-				}
-			}
-			if ( ! empty( UM()->builtin()->saved_fields ) ) {
-				foreach ( UM()->builtin()->saved_fields as $key => $data ) {
-
-					if ( '_um_last_login' === $key ) {
-						continue;
-					}
-
-					if ( isset( $data['type'] ) && in_array( $data['type'], $this->filter_supported_fields ) ) {
-						if ( isset( $data['title'] ) && array_search( $data['title'], $this->filter_fields ) !== false ) {
-							$data['title'] = $data['title'] . ' (' . $key . ')';
-						}
-
-						$title = isset( $data['title'] ) ? $data['title'] : ( isset( $data['label'] ) ? $data['label'] : '' );
-						if ( empty( $title ) ) {
-							continue;
-						}
-
-						$this->filter_fields[ $key ] = $title;
-					}
-				}
-			}
-
-			$this->filter_fields = apply_filters( 'um_members_directory_filter_fields', $this->filter_fields );
-
-			ksort( $this->filter_fields );
-
-			$this->searching_fields = array_merge( $this->searching_fields, $this->filter_fields );
-			asort( $this->searching_fields );
-
-			$this->filter_types = apply_filters( 'um_members_directory_filter_types', array(
-				'country'               => 'select',
-				'gender'                => 'select',
-				'languages'             => 'select',
-				'role'                  => 'select',
-				'birth_date'            => 'slider',
-				'last_login'            => 'datepicker',
-				'user_registered'       => 'datepicker',
-				'first_name'            => 'text',
-				'last_name'             => 'text',
-				'nickname'              => 'text',
-				'secondary_user_email'  => 'text',
-				'description'           => 'text',
-				'phone_number'          => 'text',
-				'mobile_number'         => 'text',
-			) );
-
-			$fields = UM()->builtin()->all_user_fields;
-
-			$custom_fields_types = array_flip( array_keys( $this->filter_fields ) );
-			foreach ( $custom_fields_types as $key => &$value ) {
-				if ( ! isset( $fields[ $key ] ) ) {
-					unset( $custom_fields_types[ $key ] );
-				} else {
-					switch ( $fields[ $key ]['type'] ) {
-						default:
-							$value = apply_filters( 'um_custom_field_filter_type', 'select', $fields[ $key ] );
-							break;
-						case 'text':
-						case 'textarea':
-							$value = 'text';
-							break;
-						case 'date':
-							$value = 'datepicker';
-							break;
-						case 'time':
-							$value = 'timepicker';
-							break;
-						case 'select':
-						case 'multiselect':
-						case 'radio':
-						case 'checkbox':
-							$value = 'select';
-							break;
-						case 'number':
-						case 'rating':
-							$value = 'slider';
-							break;
-					}
-				}
-			}
-
-			$this->filter_types = array_merge( $custom_fields_types, $this->filter_types );
-		}
-
 
 		/**
 		 * Render member's directory
@@ -953,7 +460,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			return $filter;
 		}
 
-
 		/**
 		 * @param string $filter
 		 * @param array $directory_data
@@ -1026,7 +532,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			return $range;
 		}
-
 
 		/**
 		 * @param $filter
@@ -2664,6 +2169,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id );
 
+			$this->init_image_sizing( $directory_data );
+
 			// Replace hook 'um_members_just_after_name'
 			ob_start();
 			do_action( 'um_members_just_after_name', $user_id, $directory_data );
@@ -2827,18 +2334,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 		}
 
-
 		/**
 		 * Main Query function for getting members via AJAX
 		 */
-		function ajax_get_members() {
-			if ( UM()->is_new_ui() ) {
-				if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'um_member_directory' ) ) {
-					wp_send_json_error( __( 'Wrong nonce.', 'ultimate-member' ) );
-				}
-			} else {
-				UM()->check_ajax_nonce();
-			}
+		public function ajax_get_members() {
+			UM()->check_ajax_nonce();
 
 			global $wpdb;
 
@@ -2998,15 +2498,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 */
 			$user_ids = apply_filters( 'um_prepare_user_results_array', $user_ids, $this->query_args );
 
-			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
-
-			$this->cover_size = UM()->mobile()->isTablet() ? $sizes[1] : end( $sizes );
-
-			$this->cover_size = apply_filters( 'um_member_directory_cover_image_size', $this->cover_size, $directory_data );
-
-			$avatar_size       = UM()->options()->get( 'profile_photosize' );
-			$this->avatar_size = str_replace( 'px', '', $avatar_size );
-			$this->avatar_size = apply_filters( 'um_member_directory_avatar_image_size', $this->avatar_size, $directory_data );
+			$this->init_image_sizing( $directory_data );
 
 			$users = array();
 			foreach ( $user_ids as $user_id ) {

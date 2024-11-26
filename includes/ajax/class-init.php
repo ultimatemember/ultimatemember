@@ -21,18 +21,17 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		 */
 		public function includes() {
 			$this->account();
+
 			if ( UM()->is_new_ui() ) {
 				$this->dev();
 				$this->directory();
 				$this->fields();
+				$this->profile();
 			}
 
 			$this->files();
 			$this->forms();
 			$this->pages();
-			if ( UM()->is_new_ui() ) {
-				$this->profile();
-			}
 			$this->secure();
 			$this->user();
 			$this->users();

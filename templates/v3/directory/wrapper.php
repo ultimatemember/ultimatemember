@@ -167,14 +167,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<?php
 				if ( ! $single_view ) {
 					$button_args = array();
-					foreach ( UM()->member_directory()->view_types as $key => $value ) {
+					foreach ( UM()->member_directory()->view_types as $key => $view_title ) {
 						if ( in_array( $key, $view_types, true ) ) {
 							$b_classes = array( 'um-member-directory-view-type', 'um-member-directory-view-type-' . $key );
 							if ( $current_view === $key ) {
 								$b_classes[] = 'current';
 							}
 							$button_args[] = array(
-								'label'   => $value['title'],
+								'label'   => $view_title,
 								'classes' => $b_classes,
 								'data'    => array(
 									'type'    => $key,

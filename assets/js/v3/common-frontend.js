@@ -700,21 +700,9 @@ UM.frontend = {
 						} else {
 							setTimeout( UM.frontend.choices.populateChildOptions, 10, me.attr('id'), UM.frontend.choices.optionsCache[ arr_key ] );
 						}
-
-						// console.log( arr_key );
-						//
-						// if ( typeof arr_key !== 'undefined' || arr_key === '' ) {
-						// 	me.find('option[value!=""]').remove();
-						// 	me.val('').trigger('change');
-						//
-						// 	if ( arr_key === '' ) {
-						// 		me.disable();
-						// 	}
-						// }
 					});
 
 					wp.hooks.doAction( 'um_after_init_child_loop', parentOption, me );
-					// jQuery('select[name="' + parentOption + '"]').trigger('change');
 				});
 			}
 		},
@@ -728,10 +716,11 @@ UM.frontend = {
 					choices.clearStore();
 					choices.clearChoices();
 					choices.removeActiveItems();
-					if (newOptions.length === 0) {
-						choices.removeActiveItems();
-						// fallback when empty items
-						choices.setChoices([{id: '', label: wp.i18n.__( 'None', 'ultimate-member' ), placeholder: true, selected: true}], 'id', 'label', true);
+					if ( newOptions.length === 0 ) {
+						if ( ! element.parents( '.um-directory' ).length ) {
+							// Fallback when empty items, but not on the member directory (just on the UM forms).
+							choices.setChoices([{id: '', label: wp.i18n.__( 'None', 'ultimate-member' ), placeholder: true, selected: true}], 'id', 'label', true);
+						}
 						choices.disable();
 					} else {
 						choices.setChoices(newOptions, 'id', 'label', true);
@@ -782,12 +771,6 @@ UM.frontend = {
 			let actionInFilter = wp.hooks.applyFilters( 'um_populate_child_options', null, me, selector, data, arr_items );
 			if ( null === actionInFilter ) {
 				if ( typeof data !== 'undefined' ) {
-					// if ( typeof data.field.default !== 'undefined' && ! me.data('um-original-value') ) {
-					// 	me.val( data.field.default ).trigger('change');
-					// } else if ( me.data('um-original-value') !== '' ) {
-					// 	me.val( me.data('um-original-value') ).trigger('change');
-					// }
-
 					// @todo We need to close a lack of logic when child default value isn't situated in the diapason for default parent value.
 					if ( typeof data.field.default !== 'undefined' ) {
 						me.val( data.field.default ).trigger('change');

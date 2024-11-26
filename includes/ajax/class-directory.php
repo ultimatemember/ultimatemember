@@ -1679,13 +1679,7 @@ class Directory extends \um\common\Directory {
 		 */
 		$user_ids = apply_filters( 'um_prepare_user_results_array', $user_ids, $this->query_args );
 
-		$sizes            = UM()->options()->get( 'cover_thumb_sizes' );
-		$this->cover_size = UM()->mobile()->isTablet() ? $sizes[1] : end( $sizes );
-		$this->cover_size = apply_filters( 'um_member_directory_cover_image_size', $this->cover_size, $directory_data );
-
-//		$avatar_size       = UM()->options()->get( 'profile_photosize' );
-//		$this->avatar_size = str_replace( 'px', '', $avatar_size );
-//		$this->avatar_size = apply_filters( 'um_member_directory_avatar_image_size', $this->avatar_size, $directory_data );
+		$this->init_image_sizing( $directory_data );
 
 		$users = array();
 		foreach ( $user_ids as $user_id ) {

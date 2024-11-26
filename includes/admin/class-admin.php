@@ -371,6 +371,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					'_um_filters_is_collapsible'   => array(
 						'sanitize' => 'bool',
 					),
+					'_um_disable_filters_pre_query' => array(
+						'sanitize' => 'bool',
+					),
 					'_um_search_filters'           => array(
 						'sanitize' => array( $this, 'sanitize_filter_fields' ),
 					),
@@ -937,18 +940,22 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * @return array|string
 		 */
 		public function sanitize_md_view_types( $value ) {
-			$view_types = array_map(
-				function ( $item ) {
-					return $item['title'];
-				},
-				UM()->member_directory()->view_types
-			);
+			if ( UM()->is_new_ui() ) {
+				$view_types = UM()->member_directory()->view_types;
+			} else {
+				$view_types = array_map(
+					function ( $item ) {
+						return $item['title'];
+					},
+					UM()->member_directory()->view_types
+				);
+			}
 			$view_types = array_keys( $view_types );
 
 			if ( '' !== $value ) {
 				$value = array_filter(
 					$value,
-					function( $v, $k ) use ( $view_types ) {
+					function ( $v, $k ) use ( $view_types ) {
 						return in_array( sanitize_key( $k ), $view_types, true ) && 1 === (int) $v;
 					},
 					ARRAY_FILTER_USE_BOTH

@@ -82,6 +82,20 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_action( 'um_access_check_global_settings', array( &$this, 'um_access_check_global_settings' ) );
 
 			add_action( 'plugins_loaded', array( &$this, 'initialize_hooks' ), 1 );
+
+			add_action( 'template_redirect', array( &$this, 'access_members' ), 555 );
+		}
+
+		/**
+		 * Members page allowed?
+		 *
+		 * can be disabled by "Enable Members Directory" option
+		 *
+		 */
+		public function access_members() {
+			if ( um_is_predefined_page( 'members' ) && ! UM()->options()->get( 'members_page' ) ) {
+				um_redirect_home();
+			}
 		}
 
 		/**

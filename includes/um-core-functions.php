@@ -42,7 +42,7 @@ function um_get_predefined_page_id( $slug ) {
  * @return bool
  */
 function um_is_predefined_page( $slug, $post = null ) {
-	// handle $post inside, just we need make $post as \WP_Post. Otherwise something is wrong and return false
+	// handle $post inside, just we need make $post as \WP_Post. Otherwise, something is wrong and return false
 	if ( ! $post ) {
 		global $post;
 

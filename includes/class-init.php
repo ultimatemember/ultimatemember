@@ -577,24 +577,28 @@ if ( ! class_exists( 'UM' ) ) {
 		}
 
 		/**
-		 * @since 2.1.0
+		 * It handles only old UI. Use directory() instead.
 		 *
-		 * @return um\core\Member_Directory()
+		 * @since 2.1.0
+		 * @since 3.0.0 added um\common\Directory for new UI
+		 *
+		 * @return um\core\Member_Directory | um\common\Directory | um\core\Member_Directory_Meta
 		 */
-		function member_directory() {
+		public function member_directory() {
 			if ( empty( $this->classes['member_directory'] ) ) {
-
-				$search_in_table = $this->options()->get( 'member_directory_own_table' );
-
-				if ( ! empty( $search_in_table ) ) {
-					$this->classes['member_directory'] = new um\core\Member_Directory_Meta();
+				if ( $this->is_new_ui() ) {
+					$this->classes['member_directory'] = new um\common\Directory();
 				} else {
-					$this->classes['member_directory'] = new um\core\Member_Directory();
+					$search_in_table = $this->options()->get( 'member_directory_own_table' );
+					if ( ! empty( $search_in_table ) ) {
+						$this->classes['member_directory'] = new um\core\Member_Directory_Meta();
+					} else {
+						$this->classes['member_directory'] = new um\core\Member_Directory();
+					}
 				}
 			}
 			return $this->classes['member_directory'];
 		}
-
 
 		/**
 		 * @since 2.6.1

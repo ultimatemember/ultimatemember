@@ -243,7 +243,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			return 0;
 		}
 
-
 		/**
 		 * Appends field errors
 		 *

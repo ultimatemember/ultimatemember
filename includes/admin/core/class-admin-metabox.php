@@ -86,7 +86,117 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			add_filter( 'um_builtin_validation_types_continue_loop', array( &$this, 'validation_types_continue_loop' ), 1, 4 );
 			add_filter( 'um_restrict_content_hide_metabox', array( &$this, 'hide_metabox_restrict_content_shop' ), 10, 1 );
 
-			add_filter( 'um_member_directory_meta_value_before_save', array( UM()->member_directory(), 'before_save_data' ), 10, 3 );
+			add_filter( 'um_member_directory_meta_value_before_save', array( &$this, 'before_save_data' ), 10, 3 );
+		}
+
+		/**
+		 * @param $value
+		 * @param $key
+		 * @param $post_id
+		 *
+		 * @return array
+		 */
+		public function before_save_data( $value, $key, $post_id ) {
+			$post = get_post( $post_id );
+
+			if ( 'um_directory' !== $post->post_type ) {
+				return $value;
+			}
+
+			if ( ! empty( $value ) && in_array( $key, array( '_um_view_types', '_um_roles', '_um_roles_can_search', '_um_roles_can_filter' ), true ) ) {
+				$value = array_keys( $value );
+			} elseif ( '_um_search_filters' === $key ) {
+				$temp_value = array();
+
+				// phpcs:disable WordPress.Security.NonceVerification -- already verified here
+				if ( ! empty( $value ) ) {
+					foreach ( $value as $k ) {
+						$filter_type = UM()->member_directory()->filter_types[ $k ];
+						if ( ! empty( $filter_type ) ) {
+							if ( 'slider' === $filter_type ) {
+								if ( ! empty( $_POST[ $k ] ) ) {
+									if ( count( $_POST[ $k ] ) > 1 ) {
+										$temp_value[ $k ] = array_map( 'intval', $_POST[ $k ] );
+									} else {
+										$temp_value[ $k ] = (int) $_POST[ $k ];
+									}
+								}
+							} elseif ( 'datepicker' === $filter_type ) {
+								if ( ! empty( $_POST[ $k . '_from' ] ) ) {
+									$temp_value[ $k ][0] = sanitize_text_field( $_POST[ $k . '_from' ] );
+								}
+								if ( ! empty( $_POST[ $k . '_to' ] ) ) {
+									$temp_value[ $k ][1] = sanitize_text_field( $_POST[ $k . '_to' ] );
+								}
+							} elseif ( 'timepicker' === $filter_type ) {
+								if ( ! empty( $_POST[ $k . '_from' ] ) ) {
+									$temp_value[ $k ][0] = sanitize_text_field( $_POST[ $k . '_from' ] );
+								}
+								if ( ! empty( $_POST[ $k . '_to' ] ) ) {
+									$temp_value[ $k ][1] = sanitize_text_field( $_POST[ $k . '_to' ] );
+								}
+							} elseif ( 'select' === $filter_type ) {
+								if ( ! empty( $_POST[ $k ] ) ) {
+									if ( is_array( $_POST[ $k ] ) ) {
+										$temp_value[ $k ] = array_map( 'trim', $_POST[ $k ] );
+									} else {
+										$temp_value[ $k ] = array( trim( $_POST[ $k ] ) );
+									}
+
+									$temp_value[ $k ] = array_map( 'sanitize_text_field', $temp_value[ $k ] );
+								}
+							} else {
+								if ( ! empty( $_POST[ $k ] ) ) {
+									$temp_value[ $k ] = trim( sanitize_text_field( $_POST[ $k ] ) );
+								}
+							}
+						}
+					}
+				}
+
+				$value = $temp_value;
+
+				// phpcs:enable WordPress.Security.NonceVerification -- already verified here
+			} elseif ( '_um_sorting_fields' === $key ) {
+				if ( ! empty( $value['other_data'] ) ) {
+					$other_data = $value['other_data'];
+					unset( $value['other_data'] );
+
+					foreach ( $value as $k => &$row ) {
+						if ( ! empty( $other_data[ $k ]['meta_key'] ) ) {
+							$metakey = sanitize_text_field( $other_data[ $k ]['meta_key'] );
+							if ( ! empty( $metakey ) ) {
+								if ( ! empty( $other_data[ $k ]['label'] ) ) {
+									$metalabel = wp_strip_all_tags( $other_data[ $k ]['label'] );
+								}
+								if ( ! empty( $other_data[ $k ]['data_type'] ) ) {
+									$data_type = sanitize_text_field( $other_data[ $k ]['data_type'] );
+								}
+								if ( ! empty( $other_data[ $k ]['order'] ) ) {
+									$order = sanitize_text_field( $other_data[ $k ]['order'] );
+								}
+								$row = array(
+									$metakey => $metakey,
+									'label'  => ! empty( $metalabel ) ? $metalabel : $metakey,
+									'type'   => ! empty( $data_type ) ? $data_type : '',
+									'order'  => ! empty( $order ) ? $order : '',
+								);
+							}
+						}
+					}
+					unset( $row );
+				}
+			} elseif ( '_um_sortby_custom' === $key ) {
+				$value = sanitize_text_field( $value );
+			} elseif ( '_um_sortby_custom_label' === $key ) {
+				$value = wp_strip_all_tags( $value );
+			} elseif ( '_um_sortby_custom_type' === $key ) {
+				$value = sanitize_text_field( $value );
+			} elseif ( '_um_sortby_custom_order' === $key ) {
+				$value = sanitize_text_field( $value );
+			}
+
+			return $value;
 		}
 
 		public function remove_meta_box() {

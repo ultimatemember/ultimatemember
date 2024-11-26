@@ -131,6 +131,9 @@
 .um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .um-field-wrapper .um-time-range-row input {
   max-width: 140px;
 }
+.um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .um-field-wrapper input[type=search].choices__input {
+  width: 10px;
+}
 .um.um-directory .um-member-directory-header .um-member-directory-header-row-grid {
   width: 100%;
   display: grid;
