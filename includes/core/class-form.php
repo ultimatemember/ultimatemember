@@ -112,6 +112,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 		/**
 		 * Old UI options populate callback.
+		 *
+		 * @todo maybe deprecate since new UI.
 		 */
 		public function ajax_select_options() {
 			UM()->check_ajax_nonce();

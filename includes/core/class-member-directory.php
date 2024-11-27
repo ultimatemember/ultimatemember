@@ -60,8 +60,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		}
 
 		/**
-		 * Render member's directory
-		 * filters selectboxes
+		 * Render member's directory filters. Deprecated in new UI.
+		 *
+		 * @todo deprecate since new UI is live
 		 *
 		 * @param string $filter
 		 * @param array $directory_data

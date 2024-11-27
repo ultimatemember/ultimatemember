@@ -191,6 +191,34 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '"/>';
 		}
 
+		/**
+		 * Prepare `custom_dropdown_options_source` argument and maybe update `allowed_choice_callbacks` option
+		 * @param array $args
+		 *
+		 * @return array
+		 */
+		private function parse_custom_dropdown_options_source_args( $args ) {
+			if ( array_key_exists( 'custom_dropdown_options_source', $args ) ) {
+				$args['custom_dropdown_options_source'] = wp_unslash( $args['custom_dropdown_options_source'] );
+
+				$choices_callback = $args['custom_dropdown_options_source'];
+				if ( function_exists( $choices_callback ) && ! $this->is_source_blacklisted( $choices_callback ) ) {
+					$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
+					if ( ! empty( $allowed_callbacks ) ) {
+						$allowed_callbacks   = array_map( 'rtrim', explode( "\n", $allowed_callbacks ) );
+						$allowed_callbacks[] = $choices_callback;
+					} else {
+						$allowed_callbacks = array( $choices_callback );
+					}
+					$allowed_callbacks = array_unique( $allowed_callbacks );
+					$allowed_callbacks = implode( "\r\n", $allowed_callbacks );
+
+					UM()->options()->update( 'allowed_choice_callbacks', $allowed_callbacks );
+				}
+			}
+
+			return $args;
+		}
 
 		/**
 		 * Updates a field globally
@@ -198,28 +226,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @param  integer $id
 		 * @param  array   $args
 		 */
-		function globally_update_field( $id, $args ) {
+		public function globally_update_field( $id, $args ) {
 			$fields = UM()->builtin()->saved_fields;
 
+			$args = $this->parse_custom_dropdown_options_source_args( $args );
+
 			$fields[ $id ] = $args;
-
-			if ( array_key_exists( 'custom_dropdown_options_source', $args ) ) {
-				if ( function_exists( wp_unslash( $args['custom_dropdown_options_source'] ) ) ) {
-					if ( ! $this->is_source_blacklisted( $args['custom_dropdown_options_source'] ) ) {
-						$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
-						if ( ! empty( $allowed_callbacks ) ) {
-							$allowed_callbacks   = array_map( 'rtrim', explode( "\n", $allowed_callbacks ) );
-							$allowed_callbacks[] = $args['custom_dropdown_options_source'];
-						} else {
-							$allowed_callbacks = array( $args['custom_dropdown_options_source'] );
-						}
-						$allowed_callbacks = array_unique( $allowed_callbacks );
-						$allowed_callbacks = implode( "\r\n", $allowed_callbacks );
-
-						UM()->options()->update( 'allowed_choice_callbacks', $allowed_callbacks );
-					}
-				}
-			}
 
 			unset( $fields[ $id ]['in_row'] );
 			unset( $fields[ $id ]['in_sub_row'] );
@@ -232,7 +244,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			update_option( 'um_fields', $fields );
 		}
 
-
 		/**
 		 * Updates a field in form only
 		 *
@@ -240,19 +251,17 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @param  array   $args
 		 * @param  integer $form_id
 		 */
-		function update_field( $id, $args, $form_id ) {
+		public function update_field( $id, $args, $form_id ) {
 			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
 
-			if ( $args['type'] == 'row' ) {
-				if ( isset( $fields[ $id ] ) ) {
-					$old_args = $fields[ $id ];
-					foreach ( $old_args as $k => $v ) {
-						if ( ! in_array( $k, array( 'sub_rows', 'cols' ) ) ) {
-							unset( $old_args[ $k ] );
-						}
+			if ( 'row' === $args['type'] && isset( $fields[ $id ] ) ) {
+				$old_args = $fields[ $id ];
+				foreach ( $old_args as $k => $v ) {
+					if ( ! in_array( $k, array( 'sub_rows', 'cols' ) ) ) {
+						unset( $old_args[ $k ] );
 					}
-					$args = array_merge( $old_args, $args );
 				}
+				$args = array_merge( $old_args, $args );
 			}
 
 			// custom fields support
@@ -260,30 +269,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$args = array_merge( UM()->builtin()->predefined_fields[ $id ], $args );
 			}
 
-			if ( array_key_exists( 'custom_dropdown_options_source', $args ) ) {
-				if ( function_exists( wp_unslash( $args['custom_dropdown_options_source'] ) ) ) {
-					if ( ! $this->is_source_blacklisted( $args['custom_dropdown_options_source'] ) ) {
-						$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
-						if ( ! empty( $allowed_callbacks ) ) {
-							$allowed_callbacks   = array_map( 'rtrim', explode( "\n", $allowed_callbacks ) );
-							$allowed_callbacks[] = $args['custom_dropdown_options_source'];
-						} else {
-							$allowed_callbacks = array( $args['custom_dropdown_options_source'] );
-						}
-						$allowed_callbacks = array_unique( $allowed_callbacks );
-						$allowed_callbacks = implode( "\r\n", $allowed_callbacks );
-
-						UM()->options()->update( 'allowed_choice_callbacks', $allowed_callbacks );
-
-						$args['custom_dropdown_options_source'] = wp_unslash( $args['custom_dropdown_options_source'] );
-					}
-				}
-			}
+			$args = $this->parse_custom_dropdown_options_source_args( $args );
 
 			$fields[ $id ] = $args;
 
 			// for group field only
-			if ( $args['type'] == 'group' ) {
+			if ( 'group' === $args['type'] ) {
 				$fields[ $id ]['in_group'] = '';
 			}
 
@@ -1471,6 +1462,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				if ( empty( $choices_callback ) ) {
 					return $value;
 				}
+				// @todo check `um_has_dropdown_options_source__$key` and `um_get_field__$key` hooks using here.
 				/**
 				 * Filters a marker for enable way to populate field options via the filter hook `um_get_field__$key`.
 				 *
@@ -1522,19 +1514,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					return $value;
 				}
 
-				/**
-				 * Filters a marker for enable way to populate field options via the filter hook `um_get_field__$key`.
-				 *
-				 * @param {bool} $has_custom_source Marker for using the hook. Default `false`.
-				 *
-				 * @return {bool} Populate via hook marker.
-				 *
-				 * @since 2.0.50
-				 * @hook um_has_dropdown_options_source__$key
-				 *
-				 * @example <caption>Marker for populate options for the field with key `my_key` via hook `um_get_field__my_key`.</caption>
-				 * add_filter( 'um_has_dropdown_options_source__my_key', '__return_true' );
-				 */
+				/** This filter is documented in includes/core/class-fields.php */
 				$has_custom_source = apply_filters( "um_has_dropdown_options_source__$key", false );
 				if ( $has_custom_source ) {
 

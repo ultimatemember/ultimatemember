@@ -167,6 +167,9 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 
 		/**
 		 * Don't handle in new UI
+		 *
+		 * @todo deprecate since new UI is live
+		 *
 		 * @param $changes
 		 * @param $args
 		 * @param $form_data

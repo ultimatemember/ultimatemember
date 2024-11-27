@@ -909,7 +909,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 			}
 
 			$arr = array_map( 'stripslashes', $arr );
-
+			// @todo check 'custom_dropdown_options_source' argument here
 			if ( ! empty( $arr ) && ! in_array( $value, array_map( 'trim', $arr ) ) && empty( $data['custom_dropdown_options_source'] ) ) {
 				$value = '';
 			} else {
@@ -928,7 +928,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 			if ( $option_pairs ) {
 				$arr = array_keys( $data['options'] );
 			}
-
+			// @todo check 'custom_dropdown_options_source' argument here
 			if ( ! empty( $arr ) && empty( $data['custom_dropdown_options_source'] ) ) {
 				$arr   = wp_unslash( $arr );
 				$arr   = wp_slash( array_map( 'trim', $arr ) );

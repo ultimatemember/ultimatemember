@@ -297,7 +297,7 @@ if ( UM()->is_new_ui() ) {
 				/** This filter is documented in includes/core/class-fields.php */
 				$has_custom_source = apply_filters( "um_has_dropdown_options_source__$key", false );
 				if ( isset( $array['options'] ) && in_array( $array['type'], array( 'select', 'multiselect' ), true ) ) {
-					$options = $array['options'];
+					$options          = $array['options'];
 					$choices_callback = UM()->fields()->get_custom_dropdown_options_source( $key, $array );
 					if ( ! empty( $choices_callback ) && ! $has_custom_source ) {
 						if ( ! empty( $array['parent_dropdown_relationship'] ) ) {
