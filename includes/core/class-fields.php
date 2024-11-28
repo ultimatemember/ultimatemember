@@ -1,7 +1,6 @@
 <?php
 namespace um\core;
 
-use DateTimeZone;
 use Exception;
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -1,6 +1,8 @@
 <?php
 namespace um\common;
 
+use DateTimeZone;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
