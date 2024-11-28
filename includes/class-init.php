@@ -1149,20 +1149,25 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['form'];
 		}
 
-
 		/**
-		 * @since 2.0
+		 * Fields class instance. Different base on UI version.
 		 *
-		 * @return um\core\Fields
+		 * @since 2.0
+		 * @since 3.0.0 added um\common\Fields for new UI
+		 *
+		 * @return um\core\Fields | um\common\Fields
 		 */
-		function fields() {
+		public function fields() {
 			if ( empty( $this->classes['fields'] ) ) {
-				$this->classes['fields'] = new um\core\Fields();
+				if ( $this->is_new_ui() ) {
+					$this->classes['fields'] = new um\common\Fields();
+				} else {
+					$this->classes['fields'] = new um\core\Fields();
+				}
 			}
 
 			return $this->classes['fields'];
 		}
-
 
 		/**
 		 * @since 2.0
