@@ -81,6 +81,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_action( 'um_access_check_individual_term_settings', array( &$this, 'um_access_check_individual_term_settings' ) );
 			add_action( 'um_access_check_global_settings', array( &$this, 'um_access_check_global_settings' ) );
 
+			// Don't change hook and priority, because hooks for filtering queries are run before `init`.
 			add_action( 'plugins_loaded', array( &$this, 'initialize_hooks' ), 1 );
 		}
 

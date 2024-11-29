@@ -49,7 +49,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		public function __construct() {
 			//mandrill compatibility
 			add_filter( 'mandrill_nl2br', array( &$this, 'mandrill_nl2br' ) );
-			add_action( 'plugins_loaded', array( &$this, 'init_paths' ), 99 );
+			add_action( 'plugins_loaded', array( &$this, 'init_paths' ), 99 ); // @todo change to init.
 		}
 
 		/**
