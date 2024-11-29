@@ -205,6 +205,7 @@ if ( ! class_exists( 'UM' ) ) {
 				// include UM classes
 				$this->includes();
 
+				// @todo build the proper 'init' priorities hook and docs about.
 				// include hook files
 				add_action( 'plugins_loaded', array( &$this, 'init' ), 0 );
 				// run hook for extensions init
