@@ -233,18 +233,6 @@ if ( ! class_exists( 'UM' ) ) {
 		}
 
 		/**
-		 * Loading UM textdomain.
-		 *
-		 * Note: 'ultimate-member' is a default textdomain.
-		 *
-		 * @since 2.8.5 WordPress native functions are used to make this function clear.
-		 * @deprecated 2.9.2 Ref. https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/#Enhanced-support-for-only-using-PHP-translation-files
-		 */
-		public function localize() {
-			_deprecated_function( __METHOD__, '2.9.2', '' );
-		}
-
-		/**
 		 * Fallback to avoid fatal errors for users who still have UM extensions compatible with UM 1.3.x and install UM >= 2.0 version before these extensions update.
 		 * Doing 1.3.x active extensions deactivate for properly running 2.0.x AJAX upgrades.
 		 */
@@ -847,30 +835,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['admin_columns'];
 		}
 
-
-		/**
-		 * @since 2.0
-		 * @deprecated 2.7.0
-		 *
-		 * @return um\admin\Enqueue
-		 */
-		public function admin_enqueue() {
-			_deprecated_function( __METHOD__, '2.7.0', 'UM()->admin()->enqueue()' );
-			return $this->admin()->enqueue();
-		}
-
-		/**
-		 * @since 2.0
-		 * @deprecated 2.8.6
-		 *
-		 * @return um\frontend\Modal
-		 */
-		function modal() {
-			_deprecated_function( __METHOD__, '2.8.6', 'UM()->frontend()->modal()' );
-			return $this->frontend()->modal();
-		}
-
-
 		/**
 		 * @since 2.0
 		 *
@@ -1329,25 +1293,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['mail'];
 		}
 
-
-		/**
-		 * @deprecated 2.1.0
-		 *
-		 * @since 2.0
-		 *
-		 * @return um\core\Members
-		 */
-		function members() {
-			um_deprecated_function( 'UM()->members()', '2.1.0', 'UM()->member_directory()' );
-
-			if ( empty( $this->classes['members'] ) ) {
-				$this->classes['members'] = new um\core\Members();
-			}
-
-			return $this->classes['members'];
-		}
-
-
 		/**
 		 * @since 2.0
 		 *
@@ -1476,14 +1421,57 @@ if ( ! class_exists( 'UM' ) ) {
 
 		}
 
-
 		/**
 		 * Init UM widgets
 		 *
 		 * @since 2.0
 		 */
-		function widgets_init() {
+		public function widgets_init() {
 			register_widget( 'um\widgets\UM_Search_Widget' );
+		}
+
+		/**
+		 * @since 2.0
+		 * @deprecated 2.7.0
+		 *
+		 * @return um\admin\Enqueue
+		 */
+		public function admin_enqueue() {
+			_deprecated_function( __METHOD__, '2.7.0', 'UM()->admin()->enqueue()' );
+			return $this->admin()->enqueue();
+		}
+
+		/**
+		 * @since 2.0
+		 * @deprecated 2.8.6
+		 *
+		 * @return um\frontend\Modal
+		 */
+		public function modal() {
+			_deprecated_function( __METHOD__, '2.8.6', 'UM()->frontend()->modal()' );
+			return $this->frontend()->modal();
+		}
+
+		/**
+		 * Loading UM textdomain.
+		 *
+		 * Note: 'ultimate-member' is a default textdomain.
+		 *
+		 * @since 2.8.5 WordPress native functions are used to make this function clear.
+		 * @deprecated 2.9.2 Ref. https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/#Enhanced-support-for-only-using-PHP-translation-files
+		 */
+		public function localize() {
+			_deprecated_function( __METHOD__, '2.9.2' );
+		}
+
+		/**
+		 * @since 2.0
+		 * @deprecated 2.1.0
+		 * @return um\core\Member_Directory | um\core\Member_Directory_Meta
+		 */
+		public function members() {
+			_deprecated_function( __METHOD__, '2.1.0', 'UM()->member_directory()' );
+			return UM()->member_directory();
 		}
 	}
 }
