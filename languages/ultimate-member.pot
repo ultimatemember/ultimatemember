@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Ultimate Member plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Member 2.9.1\n"
+"Project-Id-Version: Ultimate Member 2.9.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ultimate-member\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-12-02T12:18:27+00:00\n"
+"POT-Creation-Date: 2024-12-02T20:25:50+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: ultimate-member\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: includes/admin/class-site-health.php:292
 #: includes/admin/class-users-columns.php:322
 #: includes/admin/core/class-admin-menu.php:183
-#: includes/core/class-user.php:1055
+#: includes/core/class-user.php:1056
 msgid "Ultimate Member"
 msgstr ""
 
@@ -36,19 +36,19 @@ msgid "The easiest way to create powerful online communities and beautiful user 
 msgstr ""
 
 #. translators: %1$s - Plugin name, %1$s - Plugin Version
-#: includes/action-scheduler/class-init.php:62
+#: includes/action-scheduler/class-init.php:66
 msgid "<strong>%1$s %2$s</strong> The file needed to enable the Action Scheduler is missing. The plugin will continue to function as it did before, but without the new benefits offered by the Action Scheduler."
 msgstr ""
 
-#: includes/action-scheduler/class-init.php:78
+#: includes/action-scheduler/class-init.php:82
 msgid "Action Scheduler"
 msgstr ""
 
-#: includes/action-scheduler/class-init.php:79
+#: includes/action-scheduler/class-init.php:83
 msgid "Enable Action Scheduler"
 msgstr ""
 
-#: includes/action-scheduler/class-init.php:80
+#: includes/action-scheduler/class-init.php:84
 msgid "Check this box if you want to use the Ultimate Member action scheduler. By enabling it, certain tasks like sending system emails will be scheduled to run at optimal times, which can help reduce the load on your server"
 msgstr ""
 
@@ -2291,7 +2291,7 @@ msgstr ""
 #: includes/admin/core/class-admin-forms.php:1673
 #: includes/admin/core/class-admin-forms.php:1789
 #: includes/admin/core/class-admin-forms.php:1818
-#: includes/core/um-actions-profile.php:871
+#: includes/core/um-actions-profile.php:882
 #: assets/js/admin/forms.js:353
 #: assets/js/admin/forms.js:427
 #: assets/js/admin/forms.js:716
@@ -4396,8 +4396,8 @@ msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:1434
 #: includes/admin/core/class-admin-settings.php:1632
-#: includes/core/um-actions-profile.php:787
-#: includes/core/um-actions-profile.php:807
+#: includes/core/um-actions-profile.php:798
+#: includes/core/um-actions-profile.php:818
 msgid "Profile photo"
 msgstr ""
 
@@ -6202,12 +6202,12 @@ msgstr ""
 #: includes/class-config.php:231
 #: includes/core/class-fields.php:3048
 #: includes/core/class-fields.php:3173
-#: includes/core/um-actions-profile.php:872
-#: includes/core/um-actions-profile.php:884
-#: includes/core/um-actions-profile.php:1072
-#: includes/core/um-actions-profile.php:1105
-#: includes/core/um-actions-profile.php:1497
-#: includes/core/um-actions-profile.php:1504
+#: includes/core/um-actions-profile.php:883
+#: includes/core/um-actions-profile.php:895
+#: includes/core/um-actions-profile.php:1083
+#: includes/core/um-actions-profile.php:1116
+#: includes/core/um-actions-profile.php:1508
+#: includes/core/um-actions-profile.php:1515
 msgid "Cancel"
 msgstr ""
 
@@ -6798,7 +6798,7 @@ msgstr ""
 #: includes/class-config.php:942
 #: includes/class-config.php:1006
 #: includes/core/class-member-directory.php:2645
-#: includes/core/um-actions-profile.php:1503
+#: includes/core/um-actions-profile.php:1514
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
 msgstr ""
@@ -7282,7 +7282,7 @@ msgid "oEmbed"
 msgstr ""
 
 #: includes/core/class-builtin.php:761
-#: includes/core/class-user.php:1789
+#: includes/core/class-user.php:1718
 msgid "Only me"
 msgstr ""
 
@@ -7411,7 +7411,7 @@ msgid "Cover Photo"
 msgstr ""
 
 #: includes/core/class-builtin.php:1272
-#: includes/core/um-actions-profile.php:832
+#: includes/core/um-actions-profile.php:843
 msgid "Change your cover photo"
 msgstr ""
 
@@ -9388,7 +9388,7 @@ msgstr ""
 
 #: includes/core/class-fields.php:3003
 #: includes/core/class-fields.php:3047
-#: includes/core/um-actions-profile.php:1103
+#: includes/core/um-actions-profile.php:1114
 msgid "Change photo"
 msgstr ""
 
@@ -9561,7 +9561,7 @@ msgstr ""
 msgid "A theme or plugin compatibility issue"
 msgstr ""
 
-#: includes/core/class-files.php:1566
+#: includes/core/class-files.php:1534
 msgid "Original size"
 msgstr ""
 
@@ -9593,17 +9593,17 @@ msgstr ""
 msgid "GDPR Applied"
 msgstr ""
 
-#: includes/core/class-mail.php:644
+#: includes/core/class-mail.php:641
 #: includes/core/class-password.php:704
 #: includes/core/class-profile.php:542
 msgid "Your set password"
 msgstr ""
 
-#: includes/core/class-mail.php:650
+#: includes/core/class-mail.php:647
 msgid "Login to our site"
 msgstr ""
 
-#: includes/core/class-mail.php:653
+#: includes/core/class-mail.php:650
 msgid "Set your password"
 msgstr ""
 
@@ -9710,13 +9710,13 @@ msgstr ""
 
 #: includes/core/class-member-directory.php:2606
 #: includes/core/class-member-directory.php:2634
-#: includes/core/um-actions-profile.php:1470
-#: includes/core/um-actions-profile.php:1501
+#: includes/core/um-actions-profile.php:1481
+#: includes/core/um-actions-profile.php:1512
 msgid "Edit Profile"
 msgstr ""
 
 #: includes/core/class-member-directory.php:2640
-#: includes/core/um-actions-profile.php:1502
+#: includes/core/um-actions-profile.php:1513
 msgid "My Account"
 msgstr ""
 
@@ -9874,11 +9874,11 @@ msgstr ""
 msgid "Unable to crop image file: %s"
 msgstr ""
 
-#: includes/core/class-user.php:1117
+#: includes/core/class-user.php:1118
 msgid "Ultimate Member Role"
 msgstr ""
 
-#: includes/core/class-user.php:1120
+#: includes/core/class-user.php:1121
 msgid "&mdash; No role for Ultimate Member &mdash;"
 msgstr ""
 
@@ -10391,30 +10391,30 @@ msgstr ""
 msgid "Your choosed %s"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:867
-#: includes/core/um-actions-profile.php:883
-#: includes/core/um-actions-profile.php:954
+#: includes/core/um-actions-profile.php:878
+#: includes/core/um-actions-profile.php:894
+#: includes/core/um-actions-profile.php:965
 msgid "Upload a cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:867
+#: includes/core/um-actions-profile.php:878
 msgid "Change cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1071
+#: includes/core/um-actions-profile.php:1082
 msgid "Upload photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1104
+#: includes/core/um-actions-profile.php:1115
 msgid "Remove photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1305
+#: includes/core/um-actions-profile.php:1316
 msgid "Tell us a bit about yourself..."
 msgstr ""
 
 #. translators: %s: profile status.
-#: includes/core/um-actions-profile.php:1325
+#: includes/core/um-actions-profile.php:1336
 msgid "This user account status is %s"
 msgstr ""
 
