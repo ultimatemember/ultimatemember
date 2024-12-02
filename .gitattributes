@@ -39,11 +39,9 @@
 /.jshintrc export-ignore
 /.travis.yml export-ignore
 /bower.json export-ignore
-/composer.json export-ignore
 /gulpfile.js export-ignore
 /hookdoc-conf.json export-ignore
 /manifest.json export-ignore
-/package.json export-ignore
 /package-lock.json export-ignore
 /phpcs.xml export-ignore
 /phpdoc.dist.xml export-ignore
