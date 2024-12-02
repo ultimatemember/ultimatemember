@@ -230,16 +230,22 @@ class Directory extends \um\common\Directory {
 				// new
 				global $wpdb;
 
+				$directory_id              = $directory_data['form_id'];
+				$disable_filters_pre_query = (bool) get_post_meta( $directory_id, '_um_disable_filters_pre_query', true );
 				if ( 'role_select' !== $attrs['metakey'] ) {
-					$values_array = $wpdb->get_col(
-						$wpdb->prepare(
-							"SELECT DISTINCT meta_value
+					if ( true !== $disable_filters_pre_query ) {
+						$values_array = $wpdb->get_col(
+							$wpdb->prepare(
+								"SELECT DISTINCT meta_value
 							FROM $wpdb->usermeta
 							WHERE meta_key = %s AND
 								  meta_value != ''",
-							$attrs['metakey']
-						)
-					);
+								$attrs['metakey']
+							)
+						);
+					} elseif ( true === $disable_filters_pre_query && ! empty( $attrs['options'] ) ) {
+						$values_array = $attrs['options'];
+					}
 				} else {
 					$users_roles  = count_users();
 					$values_array = ( ! empty( $users_roles['avail_roles'] ) && is_array( $users_roles['avail_roles'] ) ) ? array_keys( array_filter( $users_roles['avail_roles'] ) ) : array();
@@ -256,11 +262,6 @@ class Directory extends \um\common\Directory {
 						}
 					}
 					$values_array = array_unique( $temp_values );
-				}
-
-				if ( 'online_status' !== $attrs['metakey'] && empty( $values_array ) ) {
-					ob_get_clean();
-					return '';
 				}
 
 				if ( isset( $attrs['metakey'] ) && strstr( $attrs['metakey'], 'role_' ) ) {
@@ -309,13 +310,25 @@ class Directory extends \um\common\Directory {
 					} else {
 						$attrs['options'] = $choices_callback();
 					}
+					if ( true === $disable_filters_pre_query ) {
+						$values_array = $attrs['options'];
+					}
+				}
+
+				if ( 'online_status' !== $attrs['metakey'] && empty( $values_array ) ) {
+					ob_get_clean();
+					return '';
 				}
 
 				if ( 'online_status' !== $attrs['metakey'] ) {
 					if ( 'role_select' !== $attrs['metakey'] && 'mycred_rank' !== $attrs['metakey'] && empty( $custom_dropdown ) && empty( $option_pairs ) ) {
-						$attrs['options'] = array_intersect( array_map( 'stripslashes', array_map( 'trim', $attrs['options'] ) ), $values_array );
+						if ( true !== $disable_filters_pre_query ) {
+							$attrs['options'] = array_intersect( array_map( 'stripslashes', array_map( 'trim', $attrs['options'] ) ), $values_array );
+						}
 					} elseif ( ! empty( $custom_dropdown ) ) {
-						$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
+						if ( true !== $disable_filters_pre_query ) {
+							$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
+						}
 					} else {
 						$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
 					}
