@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.7
-Stable tag: 2.9.1
+Stable tag: 2.9.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -166,9 +166,26 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.9.2 2024-11-xx =
+= 2.9.2 2024-12-04 =
 
+**Enhancements**
 
+* Added: `UM()->is_new_ui()` function for future enhancements related to new UI
+* Tweak: Changed hook's priority for initialization of email templates paths
+* Tweak: Removed `load_plugin_textdomain` due to (article)[https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/#Enhanced-support-for-only-using-PHP-translation-files]
+
+**Bugfixes**
+
+* Fixed: Using placeholders in email templates when Action Scheduler is active. Using `fetch_user_id` attribute for fetching necessary user before sending email
+* Fixed: PHP errors related to `UM()->localize()` function
+* Fixed: PHP errors in user meta header when `last_update` meta is empty
+
+**Deprecated**
+
+* Fully deprecated `UM()->localize()` function
+* Fully deprecated `um_language_textdomain` filter hook
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
 = 2.9.1 2024-11-15 =
 
