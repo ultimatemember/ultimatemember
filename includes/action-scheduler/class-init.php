@@ -53,6 +53,10 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 			}
 		}
 
+		public function is_enabled() {
+			return $this->enabled;
+		}
+
 		public function add_notice() {
 			UM()->admin()->notices()->add_notice(
 				'um-action-scheduler',

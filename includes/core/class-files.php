@@ -1447,24 +1447,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 		}
 
-
-		/**
-		 * New user upload
-		 *
-		 * @param $user_id
-		 * @param $source
-		 * @param $key
-		 *
-		 * @deprecated 2.1.0
-		 *
-		 * @return string
-		 */
-		function new_user_upload( $user_id, $source, $key ) {
-			um_deprecated_function( 'new_user_upload', '2.1.0', '' );
-			return '';
-		}
-
-
 		/**
 		 * Remove a directory
 		 *
@@ -1526,20 +1508,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		}
 
 		/**
-		 * Format Bytes
-		 *
-		 * @deprecated 2.8.7
-		 * @param $size
-		 * @param int $precision
-		 *
-		 * @return string
-		 */
-		public function format_bytes( $size, $precision = 1 ) {
-			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->filesystem()->format_bytes()' );
-			return UM()->common()->filesystem()::format_bytes( $size, $precision );
-		}
-
-		/**
 		 * Get the list of profile/cover sizes
 		 *
 		 * @param string $type
@@ -1569,6 +1537,34 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			return $sizes;
 		}
 
+		/**
+		 * New user upload
+		 *
+		 * @param $user_id
+		 * @param $source
+		 * @param $key
+		 *
+		 * @deprecated 2.1.0
+		 *
+		 * @return string
+		 */
+		public function new_user_upload( $user_id, $source, $key ) {
+			_deprecated_function( __METHOD__, '2.1.0' );
+			return '';
+		}
 
+		/**
+		 * Format Bytes
+		 *
+		 * @deprecated 2.8.7
+		 * @param $size
+		 * @param int $precision
+		 *
+		 * @return string
+		 */
+		public function format_bytes( $size, $precision = 1 ) {
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->filesystem()->format_bytes()' );
+			return UM()->common()->filesystem()::format_bytes( $size, $precision );
+		}
 	}
 }

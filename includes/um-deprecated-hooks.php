@@ -109,3 +109,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @depecated 2.8.7 Fully deprecated because there is used dropdown with statuses instead of list table views.
  * @hook um_admin_views_users
  */
+
+/**
+ * Filters the plugin's textdomain.
+ *
+ * @param {string} $domain Plugin's textdomain.
+ *
+ * @return {string} Maybe changed plugin's textdomain.
+ *
+ * @since 1.3.x
+ * @depecated 2.9.2 Fully deprecated because minimum required WP version is 5.5, but we cannot use `load_plugin_textdomain()` function since 4.6.0 if the plugin is situated in wp.org plugins directory.
+ * @hook um_language_textdomain
+ */
