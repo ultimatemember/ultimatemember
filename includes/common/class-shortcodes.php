@@ -2196,7 +2196,7 @@ class Shortcodes {
 							continue;
 						}
 
-						$filter_content = UM()->frontend()->directory()->show_filter( $filter, $args );
+						$filter_content = UM()->member_directory()->show_filter( $filter, $args );
 						if ( empty( $filter_content ) ) {
 							continue;
 						}
