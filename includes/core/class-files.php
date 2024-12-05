@@ -804,12 +804,11 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 *
 		 * @return string
 		 */
-		function get_fonticon_by_ext( $extension ) {
-			if ( isset( $this->fonticon[$extension]['icon'] ) ) {
-				return $this->fonticon[$extension]['icon'];
-			} else {
-				return $this->default_file_fonticon;
+		public function get_fonticon_by_ext( $extension ) {
+			if ( isset( $this->fonticon[ $extension ]['icon'] ) ) {
+				return $this->fonticon[ $extension ]['icon'];
 			}
+			return $this->default_file_fonticon;
 		}
 
 
@@ -820,12 +819,12 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 *
 		 * @return string
 		 */
-		function get_fonticon_bg_by_ext( $extension ) {
-			if ( isset( $this->fonticon[$extension]['color'] ) ) {
-				return $this->fonticon[$extension]['color'];
-			} else {
-				return '#666';
+		public function get_fonticon_bg_by_ext( $extension ) {
+			if ( isset( $this->fonticon[ $extension ]['color'] ) ) {
+				return $this->fonticon[ $extension ]['color'];
 			}
+
+			return '#666';
 		}
 
 
@@ -1347,17 +1346,16 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			return $this->upload_temp_url . $split[1];
 		}
 
-
 		/**
 		 * Make a user folder for uploads
 		 *
 		 * @param $user_id
 		 */
 		function new_user( $user_id ) {
-			if ( !file_exists( $this->upload_basedir . $user_id . '/' ) ) {
+			if ( ! file_exists( $this->upload_basedir . $user_id . '/' ) ) {
 				$old = umask(0);
-				@mkdir( $this->upload_basedir . $user_id . '/' , 0755, true);
-				umask($old);
+				@mkdir( $this->upload_basedir . $user_id . '/' , 0755, true );
+				umask( $old );
 			}
 		}
 
@@ -1380,7 +1378,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 		}
 
-
 		/**
 		 * Remove old files
 		 * @param string $dir							Path to directoty.
@@ -1402,13 +1399,13 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				$files = glob( $dir . '/*' );
 
 				foreach ( (array) $files as $file ) {
-					if ( in_array( wp_basename( $file ), array('.', '..') ) ) {
+					if ( in_array( wp_basename( $file ), array( '.', '..' ), true ) ) {
 						continue;
 					}
-					elseif ( is_dir( $file ) ) {
+
+					if ( is_dir( $file ) ) {
 						$this->remove_old_files( $file, $timestamp );
-					}
-					elseif ( is_file( $file ) ) {
+					} elseif ( is_file( $file ) ) {
 						$fileatime = fileatime( $file );
 						if ( $fileatime && $fileatime < (int) $timestamp ) {
 							unlink( $file );
@@ -1428,17 +1425,17 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 *
 		 * @return array
 		 */
-		function get_profile_photo_size( $type ) {
+		public function get_profile_photo_size( $type ) {
 			$sizes = UM()->options()->get( $type );
 
 			if ( ! empty( $sizes ) && is_array( $sizes ) ) {
 				$sizes = array_combine( $sizes, $sizes );
 
-				if ( $type == 'cover_thumb_sizes' ) {
+				if ( 'cover_thumb_sizes' === $type ) {
 					foreach ( $sizes as $key => $value ) {
 						$sizes[ $key ] = $value . 'px';
 					}
-				} elseif ( $type == 'photo_thumb_sizes' ) {
+				} elseif ( 'photo_thumb_sizes' === $type ) {
 					foreach ( $sizes as $key => $value ) {
 						$sizes[ $key ] = $value . 'x' . $value . 'px';
 					}
@@ -1481,7 +1478,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			return UM()->common()->filesystem()::format_bytes( $size, $precision );
 		}
 
-    /**
+		/**
 		 * Allowed image types
 		 *
 		 * @deprecated 3.0.0
