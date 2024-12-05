@@ -2274,7 +2274,7 @@ class Layouts {
 				// translators: %s: Maximum allowed file size.
 				$extra_info[] = sprintf( __( 'Maximum upload file size: %s.' ), size_format( $args['max_upload_size'] ) );
 			}
-			$extra_info = implode( '<br />', $extra_info );
+			$extra_info   = implode( '<br />', $extra_info );
 			$link_classes = array( 'um-upload-link', 'um-link' );
 			if ( ! empty( $args['disable_drop_zone'] ) ) {
 				$link_classes[] = 'um-link-disabled';
@@ -2282,7 +2282,7 @@ class Layouts {
 			ob_start();
 			?>
 			<span class="um-supporting-text">
-				<span><a href="#" class="<?php echo esc_attr( implode( ' ', $link_classes ) );?>">Click to upload</a> or drag and drop</span>
+				<span><a href="#" class="<?php echo esc_attr( implode( ' ', $link_classes ) ); ?>">Click to upload</a> or drag and drop</span>
 				<?php if ( ! empty( $extra_info ) ) { ?>
 					<span><?php echo wp_kses_post( $extra_info ); ?></span>
 				<?php } ?>
