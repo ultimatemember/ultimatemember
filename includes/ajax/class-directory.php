@@ -1291,6 +1291,7 @@ class Directory extends \um\common\Directory {
 									'key'       => $field,
 									'value'     => $value,
 									'compare'   => 'BETWEEN',
+									'type'      => 'NUMERIC',
 									'inclusive' => true,
 								);
 								break;
@@ -1581,7 +1582,7 @@ class Directory extends \um\common\Directory {
 		// handle filters
 		$this->filters( $directory_data );
 
-	//	$this->default_filters( $directory_data );
+		$this->default_filters( $directory_data );
 
 		/**
 		 * UM hook

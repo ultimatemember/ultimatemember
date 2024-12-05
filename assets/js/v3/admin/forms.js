@@ -552,7 +552,6 @@ jQuery(document).ready( function() {
 		var filter_key = obj.val();
 		var directory_id = obj.data('member_directory');
 		var nonce = button.data('nonce');
-
 		um_member_dir_filters_busy = true;
 		wp.ajax.send( 'um_member_directory_default_filter_settings', {
 			data: {
@@ -566,34 +565,9 @@ jQuery(document).ready( function() {
 
 				um_member_dir_filters_busy = false;
 
-				//slider filter
-				field_wrapper.find('.um-slider').each( function() {
-					var slider = jQuery( this );
-					var min_default_value = parseInt( slider.data('min') );
-					var max_default_value = parseInt( slider.data('max') );
-
-					var default_value = [ min_default_value, max_default_value ];
-
-					slider.slider({
-						range: true,
-						min: parseInt( slider.data('min') ),
-						max: parseInt( slider.data('max') ),
-						values: default_value,
-						create: function( event, ui ) {
-							//console.log( ui );
-						},
-						step: 1,
-						slide: function( event, ui ) {
-							um_set_range_label( jQuery( this ), ui );
-						},
-						stop: function( event, ui ) {
-
-						}
-					});
-
-					um_set_range_label( slider );
-				});
-
+				if ( jQuery('.um-range-container').length ) {
+					UM.common.slider.init();
+				}
 
 				//datepicker filter
 				field_wrapper.find('.um-datepicker-filter').each( function() {

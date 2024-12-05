@@ -114,11 +114,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 						$filter_type = UM()->member_directory()->filter_types[ $k ];
 						if ( ! empty( $filter_type ) ) {
 							if ( 'slider' === $filter_type ) {
-								if ( ! empty( $_POST[ $k ] ) ) {
-									if ( count( $_POST[ $k ] ) > 1 ) {
-										$temp_value[ $k ] = array_map( 'intval', $_POST[ $k ] );
-									} else {
-										$temp_value[ $k ] = (int) $_POST[ $k ];
+								if ( UM()->is_new_ui() ) {
+									if ( $_POST[ $k . '_min' ] ) {
+										$temp_value[ $k ][0] = (int) $_POST[ $k . '_min' ];
+									}
+									if ( $_POST[ $k . '_max' ] ) {
+										$temp_value[ $k ][1] = (int) $_POST[ $k . '_max' ];
+									}
+								} else {
+									if ( ! empty( $_POST[ $k ] ) ) {
+										if ( count( $_POST[ $k ] ) > 1 ) {
+											$temp_value[ $k ] = array_map( 'intval', $_POST[ $k ] );
+										} else {
+											$temp_value[ $k ] = (int) $_POST[ $k ];
+										}
 									}
 								}
 							} elseif ( 'datepicker' === $filter_type ) {

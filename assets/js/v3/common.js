@@ -149,7 +149,141 @@ UM.common = {
 				wrapper.html( '' ).umHide().removeClass( ['um-error-text','um-success-text'] );
 			}, timeout );
 		}
-	}
+	},
+	slider: {
+		controlFromSlider: function(fromSlider, toSlider/*, fromInput*/) {
+			const [from, to] = UM.common.slider.getParsed( fromSlider, toSlider );
+			UM.common.slider.fillSlider(fromSlider, toSlider, um_common_variables.colors.gray200, um_common_variables.colors.primary600bg, toSlider);
+			if (from > to) {
+				fromSlider.value = to;
+				// fromInput.value = to;
+			} else {
+				// fromInput.value = from;
+			}
+		},
+		controlToSlider: function(fromSlider, toSlider/*, toInput*/) {
+			const [from, to] = UM.common.slider.getParsed(fromSlider, toSlider);
+			UM.common.slider.fillSlider(fromSlider, toSlider, um_common_variables.colors.gray200, um_common_variables.colors.primary600bg, toSlider);
+			UM.common.slider.setToggleAccessible(toSlider);
+
+			if (from <= to) {
+				toSlider.value = to;
+				// toInput.value = to;
+			} else {
+				// toInput.value = from;
+				toSlider.value = from;
+			}
+		},
+		replacePlaceholder: function( currentFrom, from, to ) {
+			let placeholder = currentFrom.closest( '.um-range-container' ).querySelector('.um-range-placeholder');
+			if ( placeholder ) {
+				if ( placeholder.dataset.placeholderS && placeholder.dataset.placeholderP && placeholder.dataset.label ) {
+					if ( from === to ) {
+						placeholder.innerHTML = placeholder.dataset.placeholderS.replace( '\{\{\{value\}\}\}', from )
+						.replace( '\{\{\{label\}\}\}', placeholder.dataset.label );
+					} else {
+						let placeholderFrom = from;
+						let placeholderTo = to;
+
+						if ( placeholderFrom > placeholderTo ) {
+							placeholderFrom = placeholderTo;
+						} else if ( placeholderTo < placeholderFrom ) {
+							placeholderTo = placeholderFrom;
+						}
+
+						if ( placeholderTo === placeholderFrom ) {
+							placeholder.innerHTML = placeholder.dataset.placeholderS.replace( '\{\{\{value\}\}\}', placeholderFrom )
+							.replace( '\{\{\{label\}\}\}', placeholder.dataset.label );
+						} else {
+							placeholder.innerHTML = placeholder.dataset.placeholderP.replace( '\{\{\{value_from\}\}\}', placeholderFrom )
+							.replace( '\{\{\{value_to\}\}\}', placeholderTo )
+							.replace( '\{\{\{label\}\}\}', placeholder.dataset.label );
+						}
+					}
+				}
+			}
+		},
+		getParsed: function(currentFrom, currentTo) {
+			const from = parseInt(currentFrom.value, 10);
+			const to = parseInt(currentTo.value, 10);
+
+			UM.common.slider.replacePlaceholder( currentFrom, from, to );
+
+			return [from, to];
+		},
+		fillSlider: function(from, to, sliderColor, rangeColor, controlSlider) {
+			const rangeDistance = to.max-to.min;
+			const fromPosition = from.value - to.min;
+			const toPosition = to.value - to.min;
+
+			// Fix for blinking slider progress between switching z-index.
+			const thumbWidth = 23 / ( from.offsetWidth / 100 );
+			if ( 0 === fromPosition ) {
+				controlSlider.style.background = `linear-gradient(
+				  to right,
+				  transparent 0%,
+				  transparent ${thumbWidth}%,
+				  ${sliderColor} ${(fromPosition)/(rangeDistance)*100}%,
+				  ${rangeColor} ${((fromPosition)/(rangeDistance))*100}%,
+				  ${rangeColor} ${(toPosition)/(rangeDistance)*100}%,
+				  ${sliderColor} ${(toPosition)/(rangeDistance)*100}%,
+				  ${sliderColor} 100%)`;
+			} else {
+				controlSlider.style.background = `linear-gradient(
+				  to right,
+				  ${sliderColor} 0%,
+				  ${sliderColor} ${(fromPosition)/(rangeDistance)*100}%,
+				  ${rangeColor} ${((fromPosition)/(rangeDistance))*100}%,
+				  ${rangeColor} ${(toPosition)/(rangeDistance)*100}%,
+				  ${sliderColor} ${(toPosition)/(rangeDistance)*100}%,
+				  ${sliderColor} 100%)`;
+			}
+		},
+		setToggleAccessible: function (currentTarget) {
+			if ( Number(currentTarget.value) <= currentTarget.min ) {
+				currentTarget.style.zIndex = 2;
+			} else {
+				currentTarget.style.zIndex = 0;
+			}
+		},
+
+		init: function () {
+			jQuery('.um-range-container').each( function() {
+				const fromSlider = jQuery(this).find('.um-from-slider')[0];
+				const toSlider = jQuery(this).find('.um-to-slider')[0];
+				const controlSlider = jQuery(this).find('.um-sliders-control')[0];
+				if ( fromSlider && toSlider ) {
+					UM.common.slider.fillSlider(fromSlider, toSlider, um_common_variables.colors.gray200, um_common_variables.colors.primary600bg, toSlider);
+					UM.common.slider.setToggleAccessible(toSlider);
+
+					fromSlider.oninput = () => UM.common.slider.controlFromSlider(fromSlider, toSlider/*, fromInput*/);
+					toSlider.oninput = () => UM.common.slider.controlToSlider(fromSlider, toSlider/*, toInput*/);
+				}
+
+				if ( controlSlider ) {
+					controlSlider.addEventListener('mouseover', function() {
+						UM.common.slider.fillSlider(fromSlider, toSlider, um_common_variables.colors.gray300, um_common_variables.colors.primary700bg, toSlider);
+					});
+
+					controlSlider.addEventListener('mouseout', function() {
+						UM.common.slider.fillSlider(fromSlider, toSlider, um_common_variables.colors.gray200, um_common_variables.colors.primary600bg, toSlider);
+					});
+
+					const sliderForm = controlSlider.closest('form');
+					if ( sliderForm ) {
+						sliderForm.addEventListener('reset', function() {
+							setTimeout(function() {
+
+								// executes after the form has been reset. Reset need 1 second time.
+								UM.common.slider.fillSlider(fromSlider, toSlider, um_common_variables.colors.gray200, um_common_variables.colors.primary600bg, toSlider);
+								UM.common.slider.replacePlaceholder( fromSlider, fromSlider.value, toSlider.value );
+							}, 1);
+						});
+					}
+				}
+			});
+		}
+	},
 }
 
 jQuery(document).on( 'ajaxStart', function() {
@@ -159,9 +293,11 @@ jQuery(document).on( 'ajaxStart', function() {
 jQuery(document).on( 'ajaxSuccess', function() {
 	UM.common.tipsy.init();
 	UM.common.rating.init();
+	UM.common.slider.init();
 });
 
 jQuery(document).ready(function() {
 	UM.common.tipsy.init();
 	UM.common.rating.init();
+	UM.common.slider.init();
 });

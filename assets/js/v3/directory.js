@@ -591,7 +591,7 @@ UM.frontend.directory.prototype = {
 
 				um_init_new_dropdown();
 
-				UM.frontend.slider.init();
+				UM.common.slider.init();
 
 				instance.preloaderHide();
 			},

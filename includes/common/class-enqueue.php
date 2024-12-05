@@ -54,6 +54,38 @@ class Enqueue {
 		add_action( 'admin_enqueue_scripts', array( &$this, 'common_libs' ), 9 );
 		add_action( 'wp_enqueue_scripts', array( &$this, 'common_libs' ), 9 );
 		add_action( 'enqueue_block_assets', array( &$this, 'common_libs' ), 9 );
+		add_filter( 'um_common_js_variables', array( &$this, 'add_style_variables' ) );
+	}
+
+	/**
+	 * Adds our custom button colors to the global stylesheet.
+	 *
+	 * @since 2.8.4
+	 */
+	public function add_style_variables( $um_common_variables ) {
+		if ( UM()->is_new_ui() ) {
+			$um_common_variables['colors'] = array(
+				'gray25'  => '#fcfcfd',
+				'gray50'  => '#f9fafb',
+				'gray100' => '#f2f4f7',
+				'gray200' => '#eaecf0',
+				'gray300' => '#d0d5dd',
+				'gray400' => '#98a2b3',
+				'gray500' => '#667085',
+				'gray600' => '#475467',
+				'gray700' => '#344054',
+				'gray800' => '#1d2939',
+				'gray900' => '#101828',
+			);
+
+			$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color' ) );
+			foreach ( $palette as $title => $colors ) {
+				$um_common_variables['colors'][ 'primary' . $title . 'bg' ] = $colors['bg'];
+				$um_common_variables['colors'][ 'primary' . $title . 'fg' ] = $colors['fg'];
+			}
+		}
+
+		return $um_common_variables;
 	}
 
 	/**
