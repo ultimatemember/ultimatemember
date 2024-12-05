@@ -15,7 +15,6 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_bbPress_API bbPress_API()
 	 * @method UM_Followers_API Followers_API()
 	 * @method UM_Friends_API Friends_API()
-	 * @method UM_Instagram_API Instagram_API()
 	 * @method UM_Mailchimp Mailchimp()
 	 * @method UM_Messaging_API Messaging_API()
 	 * @method UM_myCRED myCRED()
@@ -42,6 +41,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_ForumWP ForumWP()
 	 * @method UM_Profile_Tabs Profile_Tabs()
 	 * @method UM_JobBoardWP JobBoardWP()
+	 * @method UM_Zapier Zapier()
 	 * @method UM_Google_Authenticator Google_Authenticator()
 	 */
 	final class UM extends UM_Functions {
@@ -175,7 +175,6 @@ if ( ! class_exists( 'UM' ) ) {
 			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'ultimate-member' ), '1.0' );
 		}
 
-
 		/**
 		 * UM constructor.
 		 *
@@ -184,7 +183,6 @@ if ( ! class_exists( 'UM' ) ) {
 		function __construct() {
 			parent::__construct();
 		}
-
 
 		/**
 		 * UM pseudo-constructor.
@@ -202,19 +200,18 @@ if ( ! class_exists( 'UM' ) ) {
 				}
 
 				$this->is_filtering = 0;
-				$this->honeypot = 'um_request';
-
-				// @todo investigate permanently delete https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/#Enhanced-support-for-only-using-PHP-translation-files
-				add_action( 'init', array( &$this, 'localize' ), 0 ); // textdomain loading
+				$this->honeypot     = 'um_request';
 
 				// include UM classes
 				$this->includes();
 
+				// @todo build the proper 'init' priorities hook and docs about.
 				// include hook files
 				add_action( 'plugins_loaded', array( &$this, 'init' ), 0 );
-				//run hook for extensions init
+				// run hook for extensions init
 				add_action( 'plugins_loaded', array( &$this, 'extensions_init' ), -19 );
 
+				// Fallback to avoid fatal errors for users who still have UM extensions compatible with UM 1.3.x and install UM >= 2.0 version before these extensions update.
 				add_action( 'init', array( &$this, 'old_update_patch' ), 0 );
 
 				//run activation
@@ -222,7 +219,7 @@ if ( ! class_exists( 'UM' ) ) {
 
 				register_deactivation_hook( UM_PLUGIN, array( &$this, 'deactivation' ) );
 
-				if ( is_multisite() && ! defined( 'DOING_AJAX' ) ) {
+				if ( ! defined( 'DOING_AJAX' ) && is_multisite() ) {
 					add_action( 'wp_loaded', array( $this, 'maybe_network_activation' ) );
 				}
 
@@ -237,44 +234,10 @@ if ( ! class_exists( 'UM' ) ) {
 		}
 
 		/**
-		 * Loading UM textdomain.
-		 *
-		 * Note: 'ultimate-member' is a default textdomain.
-		 *
-		 * @since 2.8.5 WordPress native functions are used to make this function clear.
+		 * Fallback to avoid fatal errors for users who still have UM extensions compatible with UM 1.3.x and install UM >= 2.0 version before these extensions update.
+		 * Doing 1.3.x active extensions deactivate for properly running 2.0.x AJAX upgrades.
 		 */
-//		public function localize() {
-//			$default_domain = dirname( plugin_basename( UM_PLUGIN ) );
-//			/**
-//			 * Filters the plugin's textdomain.
-//			 *
-//			 * @param {string} $domain Plugin's textdomain.
-//			 *
-//			 * @return {string} Maybe changed plugin's textdomain.
-//			 *
-//			 * @since 1.3.x
-//			 * @hook um_language_textdomain
-//			 *
-//			 * @example <caption>Change UM language locale.</caption>
-//			 * function my_um_language_textdomain( $domain ) {
-//			 *     $domain = 'ultimate-member-custom';
-//			 *     return $domain;
-//			 * }
-//			 * add_filter( 'um_language_textdomain', 'my_um_language_textdomain' );
-//			 */
-//			$domain = apply_filters( 'um_language_textdomain', $default_domain );
-//
-//			// Unload textdomain if it has already loaded.
-//			if ( is_textdomain_loaded( $domain ) ) {
-//				unload_textdomain( $domain, true );
-//			}
-//			load_plugin_textdomain( $domain, false, $default_domain . '/languages' );
-//		}
-
-		/**
-		 * 1.3.x active extensions deactivate for properly running 2.0.x AJAX upgrades
-		 */
-		function old_update_patch() {
+		public function old_update_patch() {
 			global $um_woocommerce, $um_bbpress, $um_followers, $um_friends, $um_mailchimp, $um_messaging, $um_mycred, $um_notices, $um_notifications, $um_online, $um_private_content, $um_profile_completeness, $um_recaptcha, $um_reviews, $um_activity, $um_social_login, $um_user_tags, $um_verified;
 
 			if ( is_object( $um_woocommerce ) ) {
@@ -877,30 +840,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['admin_columns'];
 		}
 
-
-		/**
-		 * @since 2.0
-		 * @deprecated 2.7.0
-		 *
-		 * @return um\admin\Enqueue
-		 */
-		public function admin_enqueue() {
-			_deprecated_function( __METHOD__, '2.7.0', 'UM()->admin()->enqueue()' );
-			return $this->admin()->enqueue();
-		}
-
-		/**
-		 * @since 2.0
-		 * @deprecated 2.8.6
-		 *
-		 * @return um\frontend\Modal
-		 */
-		function modal() {
-			_deprecated_function( __METHOD__, '2.8.6', 'UM()->frontend()->modal()' );
-			return $this->frontend()->modal();
-		}
-
-
 		/**
 		 * @since 2.0
 		 *
@@ -1477,14 +1416,57 @@ if ( ! class_exists( 'UM' ) ) {
 
 		}
 
-
 		/**
 		 * Init UM widgets
 		 *
 		 * @since 2.0
 		 */
-		function widgets_init() {
+		public function widgets_init() {
 			register_widget( 'um\widgets\UM_Search_Widget' );
+		}
+
+		/**
+		 * @since 2.0
+		 * @deprecated 2.7.0
+		 *
+		 * @return um\admin\Enqueue
+		 */
+		public function admin_enqueue() {
+			_deprecated_function( __METHOD__, '2.7.0', 'UM()->admin()->enqueue()' );
+			return $this->admin()->enqueue();
+		}
+
+		/**
+		 * @since 2.0
+		 * @deprecated 2.8.6
+		 *
+		 * @return um\frontend\Modal
+		 */
+		public function modal() {
+			_deprecated_function( __METHOD__, '2.8.6', 'UM()->frontend()->modal()' );
+			return $this->frontend()->modal();
+		}
+
+		/**
+		 * Loading UM textdomain.
+		 *
+		 * Note: 'ultimate-member' is a default textdomain.
+		 *
+		 * @since 2.8.5 WordPress native functions are used to make this function clear.
+		 * @deprecated 2.9.2 Ref. https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/#Enhanced-support-for-only-using-PHP-translation-files
+		 */
+		public function localize() {
+			_deprecated_function( __METHOD__, '2.9.2' );
+		}
+
+		/**
+		 * @since 2.0
+		 * @deprecated 2.1.0
+		 * @return um\core\Member_Directory | um\core\Member_Directory_Meta
+		 */
+		public function members() {
+			_deprecated_function( __METHOD__, '2.1.0', 'UM()->member_directory()' );
+			return UM()->member_directory();
 		}
 	}
 }

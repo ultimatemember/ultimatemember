@@ -1422,6 +1422,52 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		}
 
 		/**
+		 * Get the list of profile/cover sizes
+		 *
+		 * @param string $type
+		 *
+		 * @return array
+		 */
+		function get_profile_photo_size( $type ) {
+			$sizes = UM()->options()->get( $type );
+
+			if ( ! empty( $sizes ) && is_array( $sizes ) ) {
+				$sizes = array_combine( $sizes, $sizes );
+
+				if ( $type == 'cover_thumb_sizes' ) {
+					foreach ( $sizes as $key => $value ) {
+						$sizes[ $key ] = $value . 'px';
+					}
+				} elseif ( $type == 'photo_thumb_sizes' ) {
+					foreach ( $sizes as $key => $value ) {
+						$sizes[ $key ] = $value . 'x' . $value . 'px';
+					}
+				}
+			} else {
+				$sizes = array();
+				$sizes['original'] = __( 'Original size', 'ultimate-member' );
+			}
+
+			return $sizes;
+		}
+
+		/**
+		 * New user upload
+		 *
+		 * @param $user_id
+		 * @param $source
+		 * @param $key
+		 *
+		 * @deprecated 2.1.0
+		 *
+		 * @return string
+		 */
+		public function new_user_upload( $user_id, $source, $key ) {
+			_deprecated_function( __METHOD__, '2.1.0' );
+			return '';
+		}
+
+		/**
 		 * Format Bytes
 		 *
 		 * @deprecated 2.8.7
@@ -1431,11 +1477,11 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * @return string
 		 */
 		public function format_bytes( $size, $precision = 1 ) {
-			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->filesystem()::format_bytes()' );
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->filesystem()->format_bytes()' );
 			return UM()->common()->filesystem()::format_bytes( $size, $precision );
 		}
 
-		/**
+    /**
 		 * Allowed image types
 		 *
 		 * @deprecated 3.0.0
@@ -1487,36 +1533,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					'tiff'  => 'TIFF',
 				)
 			);
-		}
-
-		/**
-		 * Get the list of profile/cover sizes
-		 *
-		 * @param string $type
-		 *
-		 * @return array
-		 */
-		function get_profile_photo_size( $type ) {
-			$sizes = UM()->options()->get( $type );
-
-			if ( ! empty( $sizes ) && is_array( $sizes ) ) {
-				$sizes = array_combine( $sizes, $sizes );
-
-				if ( $type == 'cover_thumb_sizes' ) {
-					foreach ( $sizes as $key => $value ) {
-						$sizes[ $key ] = $value . 'px';
-					}
-				} elseif ( $type == 'photo_thumb_sizes' ) {
-					foreach ( $sizes as $key => $value ) {
-						$sizes[ $key ] = $value . 'x' . $value . 'px';
-					}
-				}
-			} else {
-				$sizes = array();
-				$sizes['original'] = __( 'Original size', 'ultimate-member' );
-			}
-
-			return $sizes;
 		}
 	}
 }

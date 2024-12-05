@@ -1116,7 +1116,6 @@ function um_profile_dynamic_meta_desc() {
 			'@context'     => 'https://schema.org',
 			'@type'        => 'ProfilePage',
 			'dateCreated'  => um_user( 'user_registered' ),
-			'dateModified' => gmdate( 'Y-m-d H:i:s', um_user( 'last_update' ) ),
 			'mainEntity'   => array(
 				'@type'         => 'Person',
 				'name'          => esc_attr( $title ),
@@ -1128,6 +1127,18 @@ function um_profile_dynamic_meta_desc() {
 				),
 			),
 		);
+		$user_last_update = um_user( 'last_update' );
+		if ( ! empty( $user_last_update ) ) {
+			if ( is_numeric( $user_last_update ) ) {
+				$user_last_update = (int) $user_last_update; // cast numeric type to int
+			} else {
+				$user_last_update = strtotime( $user_last_update ); // cast string date type to int
+			}
+			if ( ! empty( $user_last_update ) ) {
+				$person['dateModified'] = gmdate( 'Y-m-d H:i:s', $user_last_update );
+			}
+		}
+
 		/**
 		 * Filters changing the schema.org of profile's person.
 		 *
