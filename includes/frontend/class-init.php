@@ -25,6 +25,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			if ( UM()->is_new_ui() ) {
 				$this->directory();
 				$this->profile();
+				$this->uploader();
 			} else {
 				$this->modal();
 			}
@@ -122,6 +123,19 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			}
 
 			return UM()->classes['um\frontend\profile'];
+		}
+
+		/**
+		 * @since 3.0.0
+		 *
+		 * @return Uploader
+		 */
+		public function uploader() {
+			if ( empty( UM()->classes['um\frontend\uploader'] ) ) {
+				UM()->classes['um\frontend\uploader'] = new Uploader();
+			}
+
+			return UM()->classes['um\frontend\uploader'];
 		}
 
 		/**

@@ -27,6 +27,63 @@ wp.hooks.addFilter( 'um_uploader_data', 'ultimate-member', function( uploaderDat
 	return uploaderData;
 });
 
+wp.hooks.addFilter( 'um_uploader_file_filtered', 'ultimate-member', function( preventDefault, $button, up, file ) {
+	let handler = $button.data( 'handler' );
+	if ( 'field-image' !== handler && 'field-file' !== handler ) {
+		return preventDefault;
+	}
+
+	let $uploader = $button.parents( '.um-uploader' );
+	let $fileList = $uploader.find( '.um-uploader-filelist' );
+	let $dropZone = $uploader.find( '.um-uploader-dropzone' );
+
+	if ( $fileList.length ) {
+		$fileList.umShow();
+		$dropZone.umHide();
+
+		// flush files list if there is only 1 file can be uploaded.
+		if ( ! up.getOption( 'multi_selection' ) ) {
+			$fileList.find( '.um-uploader-file' ).each( function ( u, item ) {
+				up.removeFile( item.id );
+			} );
+		}
+
+		let fileRow = $fileList.find('#' + file.id);
+
+		if ( ! fileRow.length ) {
+			let $cloned = $uploader.find('.um-uploader-file-placeholder').clone().addClass('um-uploader-file').removeClass('um-uploader-file-placeholder um-display-none').attr('id',file.id);
+
+			let objSelectors = [
+				'.um-uploaded-value',
+				'.um-uploaded-value-hash',
+			];
+
+			for ( let i = 0; i < objSelectors.length; i++ ) {
+				let name = $cloned.find(objSelectors[i]).attr('name');
+				name = name.replace( '\{\{\{file_id\}\}\}', file.id );
+				$cloned.find(objSelectors[i]).prop('disabled',false).attr('name', name );
+			}
+
+			$fileList.append( $cloned );
+
+			fileRow = $fileList.find('#' + file.id);
+			fileRow.find('.um-uploader-file-name').text(file.name);
+			let extension = file.name.split('.').pop();
+			if ( '' === file.type ) {
+				extension = 'file';
+			}
+			fileRow.find('.um-file-extension-text').text(extension);
+			fileRow.find('.um-supporting-text').text(plupload.formatSize(file.size));
+
+			if ( $fileList.hasClass('um-uploader-filelist-sortable') ) {
+				$fileList.sortable();
+			}
+		}
+	}
+
+	return true;
+} );
+
 wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( preventDefault, $button, up, file, response ) {
 	let handler = $button.data( 'handler' );
 	if ( 'field-image' !== handler && 'field-file' !== handler ) {

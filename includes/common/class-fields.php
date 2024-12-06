@@ -2,6 +2,7 @@
 namespace um\common;
 
 use DateTimeZone;
+use Exception;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -1494,7 +1495,6 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 						}
 
 						$uploader_wrapper_classes = array( 'um-field-uploader-wrapper', 'um-field-image-uploader-wrapper' );
-						$cancel_button_classes    = array( 'um-field-image-uploader-cancel' );
 						if ( 'profile' === $this->set_mode && ! empty( $field_value ) && 'empty_file' !== $field_value ) {
 							$output .= '<div class="um-field-value">';
 
@@ -1546,24 +1546,46 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 							$output .= '</div></div>';
 
 							$uploader_wrapper_classes[] = 'um-display-none';
-						} else {
-							$cancel_button_classes[] = 'um-display-none';
 						}
 
 						$output .= '<div class="' . implode( ' ', $uploader_wrapper_classes ) . '">';
 
 						$output .= UM()->frontend()::layouts()::uploader( $uploader_args );
 
-						if ( 'profile' === $this->set_mode ) {
-							$output .= UM()->frontend()::layouts()::button(
-								__( 'Cancel', 'ultimate-member' ),
-								array(
-									'size'    => 's',
-									'classes' => $cancel_button_classes,
-									'design'  => 'tertiary-gray',
-								)
-							);
+						$control_classes = array( 'um-field-image-controls' );
+						if ( empty( $field_value ) || 'empty_file' === $field_value ) {
+							$control_classes[] = 'um-display-none';
 						}
+
+						$output .= '<div class="' . implode( ' ', $control_classes ) . '">';
+						$output .= UM()->frontend()::layouts()::button(
+							__( 'Change', 'ultimate-member' ),
+							array(
+								'size'    => 's',
+								'classes' => array( 'um-field-image-change' ),
+								'design'  => 'tertiary-color',
+							)
+						);
+						$output .= UM()->frontend()::layouts()::button(
+							__( 'Remove', 'ultimate-member' ),
+							array(
+								'size'    => 's',
+								'classes' => array( 'um-field-image-remove' ),
+								'design'  => 'tertiary-destructive',
+							)
+						);
+						$output .= '</div>';
+
+//						if ( 'profile' === $this->set_mode ) {
+//							$output .= UM()->frontend()::layouts()::button(
+//								__( 'Cancel', 'ultimate-member' ),
+//								array(
+//									'size'    => 's',
+//									'classes' => $cancel_button_classes,
+//									'design'  => 'tertiary-gray',
+//								)
+//							);
+//						}
 
 						$output .= '</div>';
 
