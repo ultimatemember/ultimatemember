@@ -99,9 +99,7 @@ class User {
 	 * Delete temp profile avatar AJAX handler.
 	 */
 	public function apply_profile_photo_change() {
-		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'um_upload_profile_photo_apply' ) ) {
-			wp_send_json_error( __( 'Invalid nonce', 'ultimate-member' ) );
-		}
+		check_ajax_referer( 'um_upload_profile_photo_apply', 'nonce' );
 
 		if ( ! array_key_exists( 'user_id', $_REQUEST ) ) {
 			wp_send_json_error( __( 'Invalid data', 'ultimate-member' ) );
@@ -114,7 +112,6 @@ class User {
 		}
 
 		$temp_profile_photo = get_user_meta( $user_id, 'um_temp_profile_photo', true );
-
 		if ( empty( $temp_profile_photo['path'] ) || ! file_exists( $temp_profile_photo['path'] ) ) {
 			wp_send_json_error( __( 'Cannot find uploaded file.', 'ultimate-member' ) );
 		}

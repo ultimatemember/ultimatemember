@@ -315,7 +315,7 @@ class Files {
 			UM()->setcookie( 'um-current-upload-filename', $unique_name );
 		}
 
-		$filepath = UM()->common()->filesystem()->temp_upload_dir . DIRECTORY_SEPARATOR . $unique_name;
+		$filepath = wp_normalize_path( UM()->common()->filesystem()->temp_upload_dir . '/' . $unique_name );
 
 		// phpcs:disable WordPress.WP.AlternativeFunctions -- for directly fopen, fwrite, fread, fclose functions using
 		// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged -- for silenced fopen, fwrite, fread, fclose functions running
@@ -368,7 +368,7 @@ class Files {
 			$fileinfo['name_loaded']  = $filename;
 			$fileinfo['name_saved']   = $name_saved;
 			$fileinfo['hash']         = md5( $fileinfo['name_saved'] . '_um_uploader_security_salt' );
-			$fileinfo['path']         = UM()->common()->filesystem()->temp_upload_dir . DIRECTORY_SEPARATOR . $fileinfo['name_saved'];
+			$fileinfo['path']         = wp_normalize_path( UM()->common()->filesystem()->temp_upload_dir . '/' . $fileinfo['name_saved'] );
 			$fileinfo['url']          = UM()->common()->filesystem()->temp_upload_url . '/' . $fileinfo['name_saved'];
 			$fileinfo['size']         = filesize( $fileinfo['file'] );
 			$fileinfo['size_format']  = size_format( $fileinfo['size'] );
