@@ -997,15 +997,14 @@ class Directory extends \um\common\Directory {
 								break;
 
 							case 'datepicker':
-								$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-								$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
-								$from_date = date( 'Y/m/d', $from_date );
-								$to_date   = date( 'Y/m/d', $to_date );
+								$from_date = $value[0];
+								$to_date   = $value[1];
 
 								$field_query = array(
 									'key'       => $field,
-									'value'     =>  array( $from_date, $to_date ),
+									'value'     => array( $from_date, $to_date ),
 									'compare'   => 'BETWEEN',
+									'type'      => 'DATE',
 									'inclusive' => true,
 								);
 
@@ -1013,7 +1012,7 @@ class Directory extends \um\common\Directory {
 								break;
 
 							case 'timepicker':
-								if ( $value[0] == $value[1] ) {
+								if ( $value[0] === $value[1] ) {
 									$field_query = array(
 										'key'   => $field,
 										'value' => $value[0],
@@ -1297,33 +1296,25 @@ class Directory extends \um\common\Directory {
 								break;
 
 							case 'datepicker':
-								$offset = 0;
-								if ( is_numeric( $gmt_offset ) ) {
-									$offset = $gmt_offset;
-								}
-
 								if ( ! empty( $value[0] ) ) {
-									$min = $value[0];
+									$from_date = $value[0];
 								} else {
-									$range = $this->datepicker_filters_range( $field );
-									$min   = strtotime( gmdate( 'Y/m/d', $range[0] ) );
+									$range     = $this->datepicker_filters_range( $field );
+									$from_date = strtotime( gmdate( 'Y-m-d', $range[0] ) );
 								}
 								if ( ! empty( $value[1] ) ) {
-									$max = $value[1];
+									$to_date = $value[1];
 								} else {
-									$max = strtotime( gmdate( 'Y/m/d' ) );
+									$to_date = strtotime( gmdate( 'Y-m-d' ) );
 								}
-
-								$from_date = (int) $min + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-								$to_date   = (int) $max + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
 
 								$field_query = array(
 									'key'       => $field,
 									'value'     => array( $from_date, $to_date ),
 									'compare'   => 'BETWEEN',
+									'type'      => 'DATE',
 									'inclusive' => true,
 								);
-
 								break;
 							case 'timepicker':
 								if ( ! empty( $value[0] ) ) {

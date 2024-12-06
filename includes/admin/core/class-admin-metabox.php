@@ -132,10 +132,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 								}
 							} elseif ( 'datepicker' === $filter_type ) {
 								if ( ! empty( $_POST[ $k . '_from' ] ) ) {
-									$temp_value[ $k ][0] = sanitize_text_field( $_POST[ $k . '_from' ] );
+									$temp_value[ $k ][0] = gmdate( 'Y-m-d', strtotime( $_POST[ $k . '_from' ] ) );
 								}
 								if ( ! empty( $_POST[ $k . '_to' ] ) ) {
-									$temp_value[ $k ][1] = sanitize_text_field( $_POST[ $k . '_to' ] );
+									$temp_value[ $k ][1] = gmdate( 'Y-m-d', strtotime( $_POST[ $k . '_to' ] ) );
 								}
 							} elseif ( 'timepicker' === $filter_type ) {
 								if ( ! empty( $_POST[ $k . '_from' ] ) ) {
