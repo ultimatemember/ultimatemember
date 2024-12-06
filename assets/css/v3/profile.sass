@@ -1,0 +1,276 @@
+@import "../selectors"
+@import "../mixins"
+@import "../box"
+@import "../colors"
+@import "../typography"
+
+.um.#{$prefix}profile
+  +flex( column,flex-start,stretch,nowrap )
+  row-gap: $spacing-xl
+  .#{$prefix}profile-header
+    +flex( column,flex-start,stretch,nowrap )
+    row-gap: $spacing-lg
+    .#{$prefix}profile-header-core
+      +flex( row,space-between,start,nowrap )
+      column-gap: $spacing-3xl
+      .#{$prefix}profile-header-content
+        +flex( column,flex-start,stretch,nowrap )
+        flex: 1
+        row-gap: $spacing-2xl
+        .#{$prefix}profile-header-main-row
+          +flex( row,space-between,center,nowrap )
+          column-gap: $spacing-xl
+          &.#{$prefix}profile-header-no-name
+            +flex( row,flex-end,center,nowrap )
+          &.#{$prefix}profile-header-no-actions
+            +flex( row,flex-start,center,nowrap )
+          .#{$prefix}profile-display-name-wrapper
+            +flex( row,flex-start,center,nowrap )
+            column-gap: $spacing-lg
+            .#{$prefix}profile-display-name
+              +typography(header,sm,semibold)
+              margin: 0
+              padding: 0
+              color: $gray-900
+          .#{$prefix}profile-header-actions
+            +flex( row,flex-end,center,nowrap )
+            column-gap: $spacing-xl
+        .#{$prefix}profile-header-social-row
+          +flex( row,flex-start,center,nowrap )
+          margin: 0
+          padding: 0
+          column-gap: $spacing-xl
+          a
+            text-align: center
+            width: 36px
+            line-height: 36px
+            height: 36px
+            font-size: 20px
+            border-radius: 100%
+            color: $um-white
+            opacity: 0.85
+            margin: 0 1px
+            transition: 0.25s
+            display: inline-block
+            &:hover
+              opacity: 1
+        .#{$prefix}profile-header-supporting-rows
+          +flex( column,flex-start,flex-start,nowrap )
+          margin: 0
+          padding: 0
+          row-gap: $spacing-xl
+          .#{$prefix}profile-header-supporting-row
+            +flex( row,flex-start,center,wrap )
+            margin: 0
+            padding: 0
+            gap: $spacing-xl
+            color: $gray-700
+            +typography( text, sm, regular )
+  .#{$prefix}profile-navbar
+    gap: $spacing-lg
+    margin: 0
+    padding: 0
+    +border-box
+    &:not(.#{$prefix}grid)
+      +flex( row, flex-start, center, nowrap )
+    &.#{$prefix}grid
+      .#{$prefix}dropdown-wrapper
+        .#{$prefix}dropdown-toggle-button
+          button
+            width: 100%
+            justify-content: center
+  &.#{$prefix}editing
+    .#{$prefix}profile-header
+      border-bottom: 1px solid $gray-200
+      padding-bottom: $spacing-lg
+
+.#{$prefix}profile-body
+  .#{$prefix}profile-note
+    text-align: center
+    color: $gray-700
+    +typography( text, sm, regular )
+  // Profile > About
+  &.#{$prefix}profile-main
+    +flex( column, stretch, start, nowrap )
+    +border-box
+    width: 100%
+    margin: 0
+    padding: 0
+    row-gap: $spacing-3xl
+    .#{$prefix}profile-rows
+      +flex( column, stretch, start, nowrap )
+      +border-box
+      margin: 0
+      padding: 0
+      width: 100%
+      row-gap: $spacing-2xl
+      .#{$prefix}row-heading
+        color: $gray-900
+        +typography( text, lg, semibold )
+        //+typography( header, xs, medium )
+      .#{$prefix}profile-row
+        +flex( column, stretch, start, nowrap )
+        +border-box
+        margin: 0
+        padding: 0
+        width: 100%
+        row-gap: $spacing-2xl
+        .#{$prefix}profile-cols
+          +flex( row, flex-start, start, nowrap )
+          +border-box
+          margin: 0
+          padding: 0
+          width: 100%
+          column-gap: $spacing-lg
+          .#{$prefix}profile-col
+            +flex( column, stretch, start, nowrap )
+            +border-box
+            margin: 0
+            padding: 0
+            row-gap: $spacing-2xl
+            .#{$prefix}field
+              +flex( column, flex-start, stretch, nowrap )
+              row-gap: $spacing-sm
+              +border-box
+              width: 100%
+              color: $gray-700
+              +typography( text, sm, regular )
+              padding: 0 0 $spacing-2xl 0
+              border-bottom: 1px solid $gray-200
+              &:last-child
+                border-bottom: none
+                padding: 0
+              &.#{$prefix}field-type_image,
+              &.#{$prefix}field-type_file
+                width: auto
+              label
+                color: $gray-900
+                +typography( text, md, medium )
+          &.#{$prefix}profile-cols-1
+            .#{$prefix}profile-col
+              width: 100%
+          &.#{$prefix}profile-cols-2
+            .#{$prefix}profile-col
+              width: 50%
+              &.#{$prefix}profile-col-right
+                align-items: end
+                .#{$prefix}field
+                  align-items: end
+          &.#{$prefix}profile-cols-3
+            .#{$prefix}profile-col
+              width: calc( 100% / 3 )
+    .#{$prefix}form-new
+      .#{$prefix}form-rows
+        .#{$prefix}form-row
+          .#{$prefix}form-cols
+            .#{$prefix}form-col
+              .#{$prefix}field
+                padding: 0 0 $spacing-2xl 0
+                border-bottom: 1px solid $gray-200
+                &:last-child
+                  border-bottom: none
+                  padding: 0
+  // Profile > Posts
+  &.#{$prefix}profile-posts
+    +flex( column, flex-start, center, nowrap )
+    gap: $spacing-lg
+    .#{$prefix}user-profile-posts-loop
+      width: 100%
+      .#{$prefix}list-item
+        +flex( row, flex-start, start, nowrap )
+        gap: $spacing-lg
+        .#{$prefix}item-img
+          a
+            display: block
+            margin: 0
+            padding: 0
+            img.wp-post-image
+              position: relative
+              width: 64px
+              height: 64px
+              aspect-ratio: 1 / 1
+              object-fit: cover
+              object-position: center
+              display: block
+          &.#{$prefix}empty-image
+            width: 64px
+            height: 64px
+            background: $gray-200
+            +typography( text, xs, regular )
+            color: $gray-600
+            +flex( row, center, center, nowrap )
+            cursor: default
+        .#{$prefix}item-data
+          +flex( column, flex-start, flex-start, nowrap )
+          flex: 1
+          gap: $spacing-sm
+          margin: 0
+          padding: 0
+          +border-box
+          .#{$prefix}header-link
+            +typography( text, md, semibold )
+            color: $gray-900
+          .#{$prefix}item-meta
+            +flex( row, flex-start, baseline, wrap )
+            gap: $spacing-md
+            margin: 0
+            padding: 0
+            .#{$prefix}supporting-text
+              a
+                +typography( text, sm, regular )
+                color: $gray-600
+                text-decoration: underline
+  // Profile > Comments
+  &.#{$prefix}profile-comments
+    +flex( column, flex-start, center, nowrap )
+    gap: $spacing-lg
+    .#{$prefix}user-profile-comments-loop
+      width: 100%
+      .#{$prefix}list-item
+        +flex( row, flex-start, start, nowrap )
+        gap: $spacing-lg
+        .#{$prefix}item-data
+          +flex( column, flex-start, flex-start, nowrap )
+          flex: 1
+          gap: $spacing-sm
+          margin: 0
+          padding: 0
+          +border-box
+          .#{$prefix}header-link
+            +typography( text, md, semibold )
+            color: $gray-900
+          .#{$prefix}item-meta
+            +flex( row, flex-start, baseline, wrap )
+            gap: $spacing-md
+            margin: 0
+            padding: 0
+            .#{$prefix}supporting-text
+              a
+                +typography( text, sm, regular )
+                color: $gray-600
+                text-decoration: underline
+
+.#{$prefix}field-value
+  .#{$prefix}photo-modal
+    +flex( row,flex-start,center,nowrap )
+    border-radius: $radius-xs
+    border: 1px solid $gray-200
+    padding: $spacing-xs
+    +border-box
+    max-width: 100%
+    img
+      border-radius: $radius-xs
+      max-height: 300px
+      max-width: 100%
+  .#{$prefix}field-single-file
+    +flex( row,flex-start,center,nowrap )
+    column-gap: $spacing-md
+    padding: 0
+    .#{$prefix}field-file-info
+      +flex( column,flex-start,start,nowrap )
+      .#{$prefix}field-file-download-link
+        visibility: hidden
+    &:hover
+      .#{$prefix}field-file-info
+        .#{$prefix}field-file-download-link
+          visibility: visible

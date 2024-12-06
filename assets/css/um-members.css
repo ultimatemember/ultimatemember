@@ -529,7 +529,7 @@ body #content .um-directory a:hover, body #content .um-directory a:focus {
   display: none;
   background: #999;
 }
-.um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-status.awaiting_admin_review, .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-status.inactive, .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-status.rejected {
+.um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-status.awaiting_email_confirmation, .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-status.awaiting_admin_review, .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-status.inactive, .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-status.rejected {
   display: block;
   position: absolute;
   top: 0;
@@ -738,7 +738,7 @@ body #content .um-directory a:hover, body #content .um-directory a:focus {
   display: none;
   background: #999;
 }
-.um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-status.awaiting_admin_review, .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-status.inactive, .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-status.rejected {
+.um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-status.awaiting_email_confirmation, .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-status.awaiting_admin_review, .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-status.inactive, .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-status.rejected {
   display: block;
   width: 100%;
   padding: 7px 15px;

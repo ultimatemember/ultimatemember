@@ -1,0 +1,135 @@
+@import "../../css/box"
+@import "../../css/colors"
+@import "../../css/mixins"
+@import "../../css/selectors"
+@import "../../css/typography"
+
+.#{$prefix}dropdown-wrapper
+  min-width: $icon-size
+  min-height: $icon-size
+  .#{$prefix}dropdown-toggle
+    position: relative
+    +border-box
+    &.#{$prefix}dropdown-toggle-dots
+      cursor: pointer
+      height: $icon-size
+      &:before
+        content: ""
+        position: absolute
+        top: 0
+        right: -8px
+        mask-size: contain
+        -webkit-mask-size: contain
+        mask-position: center
+        -webkit-mask-position: center
+        mask-repeat: no-repeat
+        -webkit-mask-repeat: no-repeat
+        mask-image: url(../../icons/dots-vertical.svg)
+        -webkit-mask-image: url(../../icons/dots-vertical.svg)
+        width: $icon-size
+        height: $icon-size
+        background-color: $gray-400
+        text-indent: 500%
+        white-space: nowrap
+        overflow: hidden
+      &:hover
+        &:before
+          background-color: $gray-600
+      &.#{$prefix}dropdown-shown,
+      &:focus
+        &:before
+          background-color: $gray-700
+    &.#{$prefix}dropdown-toggle-button,
+    &.#{$prefix}dropdown-toggle-link
+      > .#{$prefix}button
+        .#{$prefix}dropdown-chevron
+          width: $icon-size
+          height: $icon-size
+          position: relative
+          &:after
+            content: ""
+            position: absolute
+            top: 0
+            right: 0
+            mask-size: contain
+            -webkit-mask-size: contain
+            mask-position: center
+            -webkit-mask-position: center
+            mask-repeat: no-repeat
+            -webkit-mask-repeat: no-repeat
+            mask-image: url(../../icons/chevron-down.svg)
+            -webkit-mask-image: url(../../icons/chevron-down.svg)
+            width: $icon-size
+            height: $icon-size
+            background-color: $gray-700
+            text-indent: 500%
+            white-space: nowrap
+            overflow: hidden
+        &:disabled
+          .#{$prefix}dropdown-chevron
+            &:after
+              background-color: $button-color-disabled
+      &.#{$prefix}dropdown-shown
+        > .#{$prefix}button
+          .#{$prefix}dropdown-chevron
+            &:after
+              mask-image: url(../../icons/chevron-up.svg)
+              -webkit-mask-image: url(../../icons/chevron-up.svg)
+
+.#{$prefix}dropdown
+  font-size: 16px
+  margin: 0
+  position: absolute
+  height: auto
+  background: $um-white
+  z-index: 10
+  display: none
+  border: 1px solid $gray-200
+  border-radius: $radius-md
+  box-shadow: $shadow-lg
+  +border-box
+  .#{$prefix}dropdown-header
+    padding: $spacing-lg $spacing-xl
+    border-bottom: 1px solid $gray-200
+  ul
+    margin: 0
+    padding: $spacing-xs 0
+    border-bottom: 1px solid $gray-200
+    li
+      list-style-type: none
+      padding: $spacing-xxs $spacing-sm
+      margin: 0
+      a
+        display: block
+        padding: 9px 10px
+        +typography( text, sm, semibold )
+        color: $gray-700
+        text-decoration: none
+        border-radius: $radius-sm
+        &:hover
+          color: $gray-800
+          background: $gray-50
+        &:focus
+          color: $gray-700
+          background: none
+        &.#{$prefix}disabled
+          color: $gray-500
+          background: none
+          cursor: default
+          &:hover
+            color: $gray-500
+            background: none
+          &:focus
+            color: $gray-500
+            background: none
+        &.#{$prefix}destructive
+          color: $error-700
+          background: none
+          &:hover
+            color: $error-800
+            background-color: $error-50
+          &:focus
+            color: $error-700
+            background: none
+    &:last-child
+      border-bottom: none
