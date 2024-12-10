@@ -28,6 +28,7 @@ class Fields {
 			wp_send_json_error( __( 'Invalid user ID', 'ultimate-member' ) );
 		}
 		$child_name = sanitize_text_field( $_POST['child_name'] );
+		$child_name = str_replace( array( '[', ']' ), '', $child_name );
 
 		check_ajax_referer( 'um_dropdown_parent_nonce' . $child_name, 'nonce' );
 
@@ -58,7 +59,11 @@ class Fields {
 
 		if ( ! empty( $_POST['member_directory'] ) ) {
 			global $wpdb;
-			$directory_id              = UM()->member_directory()->get_directory_by_hash( sanitize_text_field( $_POST['member_directory_hash'] ) );
+			if ( ! empty( absint( $_POST['member_directory_id'] ) ) ) {
+				$directory_id = absint( $_POST['member_directory_id'] );
+			} else {
+				$directory_id = UM()->member_directory()->get_directory_by_hash( sanitize_text_field( $_POST['member_directory_hash'] ) );
+			}
 			$disable_filters_pre_query = (bool) get_post_meta( $directory_id, '_um_disable_filters_pre_query', true );
 
 			if ( true !== $disable_filters_pre_query ) {

@@ -569,6 +569,16 @@ jQuery(document).ready( function() {
 					UM.common.slider.init();
 				}
 
+				if ( jQuery('select.um-search-filter-field:not([data-choice="active"])').length ) {
+					UM.common.choices.init();
+					UM.common.choices.initChild();
+					jQuery('select.um-search-filter-field:not([data-choice="active"])').each( function() {
+						let select = jQuery(this);
+						let parent = select.attr('data-um-parent');
+						jQuery('#' + parent).trigger('change');
+					});
+				}
+
 				//datepicker filter
 				field_wrapper.find('.um-datepicker-filter').each( function() {
 					var elem = jQuery(this);
@@ -1147,4 +1157,13 @@ jQuery(document).ready( function() {
 		return false;
 	}
 
+	// Select-type filters with callback functions. Extend functionality via the JS hooks.
+	wp.hooks.addFilter( 'um_common_child_dropdown_child_options_request', 'um_member_directory', function( optionsRequestData, $child ) {
+		if ( $child.parents('.um-md-default-filters-list').length ) {
+			optionsRequestData.member_directory = true;
+			optionsRequestData.member_directory_id = $child.parents('.um-md-default-filters-list').attr('data-member_directory');
+		}
+
+		return optionsRequestData;
+	});
 });

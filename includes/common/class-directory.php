@@ -771,7 +771,11 @@ class Directory extends Directory_Config {
 						if ( isset( $_GET[ $filter_value_key ] ) ) {
 							$parent_option_value = sanitize_text_field( $_GET[ $filter_value_key ] );
 							$parent_option       = explode( '||', $parent_option_value );
+						} elseif ( ! empty( get_post_meta( $directory_id, '_um_search_filters', true ) ) ) {
+							$um_search_filters = get_post_meta( $directory_id, '_um_search_filters', true );
+							$parent_option     = $um_search_filters[ $parent_dropdown_relationship ];
 						}
+
 						$attrs['options'] = $choices_callback( $parent_option, $parent_dropdown_relationship );
 					} else {
 						$attrs['options'] = $choices_callback();

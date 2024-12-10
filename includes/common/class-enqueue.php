@@ -321,8 +321,11 @@ class Enqueue {
 		// Select2 JS.
 		$this->register_select2();
 
-		$common_js_deps  = array( 'jquery', 'wp-util', 'wp-hooks', 'wp-i18n', 'um_tipsy', 'um_raty' );
-		$common_css_deps = array_merge( array( 'um_tipsy', 'um_raty' ), self::$fonticons_handlers );
+		wp_register_script( 'um_choices', $libs_url . 'choices-js/choices' . $suffix . '.js', array(), '10.2.0', true );
+		wp_register_style( 'um_choices', $css_url . 'um-choices' . $suffix . '.css', array(), UM_VERSION );
+
+		$common_js_deps  = array( 'jquery', 'wp-util', 'wp-hooks', 'wp-i18n', 'um_tipsy', 'um_raty', 'um_choices' );
+		$common_css_deps = array_merge( array( 'um_tipsy', 'um_raty', 'um_choices' ), self::$fonticons_handlers );
 		if ( ! UM()->is_new_ui() ) {
 			// Date-time picker (Pickadate.JS)
 			wp_register_script( 'um_datetime', $libs_url . 'pickadate/picker' . $suffix . '.js', array( 'jquery' ), '3.6.2', true );
