@@ -8,7 +8,7 @@
  * Author URI: http://ultimatemember.com/
  * Text Domain: ultimate-member
  * Domain Path: /languages
- * Requires at least: 5.5
+ * Requires at least: 5.9
  * Requires PHP: 5.6
  *
  * @package UM
@@ -32,7 +32,7 @@ define( 'UM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'UM_PLUGIN', plugin_basename( __FILE__ ) );
 define( 'UM_VERSION', $plugin_data['Version'] );
 define( 'UM_PLUGIN_NAME', $plugin_data['Name'] );
-define( 'UM_DEV_MODE', true ); // @todo Requires at least: 5.9
+define( 'UM_DEV_MODE', true );
 
 require_once 'includes/class-functions.php';
 require_once 'includes/class-init.php';

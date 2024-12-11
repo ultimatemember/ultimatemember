@@ -44,6 +44,43 @@ jQuery(document).ready(function($) {
 		);
 	});*/
 
+	$( document.body ).on( 'click', '.um-modal-field-image-decline', function(e){
+		e.preventDefault();
+
+		// let $button = $(this);
+		// let $loader = $button.siblings('.um-ajax-spinner-svg');
+		// let $buttons = $button.parents('.um-modal-buttons-wrapper').find('.um-button');
+		// let userID = $button.data('user_id');
+		// let nonce = $button.data('nonce');
+		//
+		// $buttons.prop('disabled',true);
+		// $loader.show();
+		//
+		// wp.ajax.send(
+		// 	'um_decline_profile_photo_change',
+		// 	{
+		// 		data: {
+		// 			user_id: userID,
+		// 			nonce: nonce
+		// 		},
+		// 		success: function () {
+		// 			$loader.hide();
+		// 			if ( UM.frontend.cropper.obj ) {
+		// 				// If Cropper object exists then destroy before re-init.
+		// 				UM.frontend.cropper.destroy();
+		// 			}
+		// 			UM.modal.close();
+		// 		},
+		// 		error: function (data) {
+		// 			$buttons.prop('disabled',false);
+		// 			$loader.hide();
+		//
+		// 			console.log(data);
+		// 		}
+		// 	}
+		// );
+	});
+
 	$( document.body ).on( 'click', '.um-modal-avatar-decline', function(e){
 		e.preventDefault();
 
@@ -132,7 +169,14 @@ jQuery(document).ready(function($) {
 });
 
 wp.hooks.addAction( 'um-modal-shown', 'ultimate-member', function( $modal ) {
-	let $image = $modal.find('.um-profile-photo-crop-wrapper');
+	let $image = $modal.find('.um-modal-crop-wrapper');
+	if ( $image.length ) {
+		UM.frontend.cropper.init();
+	}
+}, 10, 1 );
+
+wp.hooks.addAction( 'um-modal-shown', 'ultimate-member', function( $modal ) {
+	let $image = $modal.find('.um-modal-crop-wrapper');
 	if ( $image.length ) {
 		UM.frontend.cropper.init();
 	}
@@ -142,6 +186,11 @@ wp.hooks.addAction( 'um-modal-before-close', 'ultimate-member', function( $modal
 	if ( $modal.find( '.um-modal-avatar-decline:not(:disabled)' ).length ) {
 		$modal.find( '.um-modal-avatar-decline' ).trigger('click');
 	}
+
+	if ( $modal.find( '.um-modal-field-image-decline:not(:disabled)' ).length ) {
+		$modal.find( '.um-modal-field-image-decline' ).trigger('click');
+	}
+
 	if ( UM.frontend.cropper.obj ) {
 		// If Cropper object exists then destroy before re-init.
 		UM.frontend.cropper.destroy();

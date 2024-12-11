@@ -91,12 +91,12 @@
   width: 100%;
   overflow: auto;
 }
-.um-modal .um-modal-body .um-profile-photo-crop-wrapper {
+.um-modal .um-modal-body .um-modal-crop-wrapper {
   width: 100%;
   margin: 0;
   padding: 0;
 }
-.um-modal .um-modal-body .um-profile-photo-crop-wrapper img {
+.um-modal .um-modal-body .um-modal-crop-wrapper img {
   float: left;
   width: 100%;
   height: auto;

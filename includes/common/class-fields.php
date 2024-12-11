@@ -1484,9 +1484,12 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 //							'value'    => $field_value,
 							'field_id' => $field_name,
 							'button'   => array(
-								'id' => $field_name . '_uploader_button',
-								'size' => 's',
+								'id'            => $field_name . '_uploader_button',
+								'size'          => 's',
 								'icon_position' => 'content',
+							),
+							'data'     => array(
+								'crop' => $data['crop_data'],
 							),
 						);
 
@@ -1526,24 +1529,25 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 								$output .= '';
 							}
 
-							$output .= '<div class="um-field-value-control">';
-							$output .= UM()->frontend()::layouts()::button(
-								__( 'Change', 'ultimate-member' ),
-								array(
-									'size'    => 's',
-									'classes' => array( 'um-field-image-change' ),
-									'design'  => 'tertiary-color',
-								)
-							);
-							$output .= UM()->frontend()::layouts()::button(
-								__( 'Remove', 'ultimate-member' ),
-								array(
-									'size'    => 's',
-									'classes' => array( 'um-field-image-remove' ),
-									'design'  => 'tertiary-destructive',
-								)
-							);
-							$output .= '</div></div>';
+//							$output .= '<div class="um-field-value-control">';
+//							$output .= UM()->frontend()::layouts()::button(
+//								__( 'Change', 'ultimate-member' ),
+//								array(
+//									'size'    => 's',
+//									'classes' => array( 'um-field-image-change' ),
+//									'design'  => 'secondary-color',
+//								)
+//							);
+//							$output .= UM()->frontend()::layouts()::button(
+//								__( 'Remove', 'ultimate-member' ),
+//								array(
+//									'size'    => 's',
+//									'classes' => array( 'um-field-image-remove' ),
+//									'design'  => 'tertiary-destructive',
+//								)
+//							);
+//							$output .= '</div></div>';
+							$output .= '</div>';
 
 							$uploader_wrapper_classes[] = 'um-display-none';
 						}
@@ -1563,9 +1567,19 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 							array(
 								'size'    => 's',
 								'classes' => array( 'um-field-image-change' ),
-								'design'  => 'tertiary-color',
+								'design'  => 'secondary-color',
 							)
 						);
+						if ( ! empty( $data['crop_data'] ) ) {
+							$output .= UM()->frontend()::layouts()::button(
+								__( 'Resize', 'ultimate-member' ),
+								array(
+									'size'    => 's',
+									'classes' => array( 'um-field-image-resize' ),
+									'design'  => 'secondary-color',
+								)
+							);
+						}
 						$output .= UM()->frontend()::layouts()::button(
 							__( 'Remove', 'ultimate-member' ),
 							array(
@@ -1723,7 +1737,7 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 						}
 
 						$uploader_wrapper_classes = array( 'um-field-uploader-wrapper', 'um-field-file-uploader-wrapper' );
-						$cancel_button_classes    = array( 'um-field-file-uploader-cancel' );
+						// $cancel_button_classes    = array( 'um-field-file-uploader-cancel' );
 						if ( 'profile' === $this->set_mode && ! empty( $file_field_value ) && 'empty_file' !== $file_field_value ) {
 							$output .= '<div class="um-field-value">';
 
@@ -1765,44 +1779,69 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 
 							$uploader_wrapper_classes[] = 'um-display-none';
 
-							$output .= '<div class="um-field-value-control">';
-
-							$output .= UM()->frontend()::layouts()::button(
-								__( 'Change', 'ultimate-member' ),
-								array(
-									'size'    => 's',
-									'classes' => array( 'um-field-file-change' ),
-									'design'  => 'tertiary-color',
-								)
-							);
-							$output .= UM()->frontend()::layouts()::button(
-								__( 'Remove', 'ultimate-member' ),
-								array(
-									'size'    => 's',
-									'classes' => array( 'um-field-file-remove' ),
-									'design'  => 'tertiary-destructive',
-								)
-							);
-
-							$output .= '</div></div>';
-						} else {
+//							$output .= '<div class="um-field-value-control">';
+//
+//							$output .= UM()->frontend()::layouts()::button(
+//								__( 'Change', 'ultimate-member' ),
+//								array(
+//									'size'    => 's',
+//									'classes' => array( 'um-field-file-change' ),
+//									'design'  => 'tertiary-color',
+//								)
+//							);
+//							$output .= UM()->frontend()::layouts()::button(
+//								__( 'Remove', 'ultimate-member' ),
+//								array(
+//									'size'    => 's',
+//									'classes' => array( 'um-field-file-remove' ),
+//									'design'  => 'tertiary-destructive',
+//								)
+//							);
+//
+//							$output .= '</div></div>';
+							$output .= '</div>';
+						}/* else {
 							$cancel_button_classes[] = 'um-display-none';
-						}
+						}*/
 
 						$output .= '<div class="' . implode( ' ', $uploader_wrapper_classes ) . '">';
 
 						$output .= UM()->frontend()::layouts()::uploader( $uploader_args );
 
-						if ( 'profile' === $this->set_mode ) {
-							$output .= UM()->frontend()::layouts()::button(
-								__( 'Cancel', 'ultimate-member' ),
-								array(
-									'size'    => 's',
-									'classes' => $cancel_button_classes,
-									'design'  => 'tertiary-gray',
-								)
-							);
+						$control_classes = array( 'um-field-file-controls' );
+						if ( empty( $field_value ) || 'empty_file' === $field_value ) {
+							$control_classes[] = 'um-display-none';
 						}
+
+						$output .= '<div class="' . implode( ' ', $control_classes ) . '">';
+						$output .= UM()->frontend()::layouts()::button(
+							__( 'Change', 'ultimate-member' ),
+							array(
+								'size'    => 's',
+								'classes' => array( 'um-field-file-change' ),
+								'design'  => 'secondary-color',
+							)
+						);
+						$output .= UM()->frontend()::layouts()::button(
+							__( 'Remove', 'ultimate-member' ),
+							array(
+								'size'    => 's',
+								'classes' => array( 'um-field-file-remove' ),
+								'design'  => 'tertiary-destructive',
+							)
+						);
+						$output .= '</div>';
+
+//						if ( 'profile' === $this->set_mode ) {
+//							$output .= UM()->frontend()::layouts()::button(
+//								__( 'Cancel', 'ultimate-member' ),
+//								array(
+//									'size'    => 's',
+//									'classes' => $cancel_button_classes,
+//									'design'  => 'tertiary-gray',
+//								)
+//							);
+//						}
 
 						$output .= '</div>';
 

@@ -26,6 +26,8 @@ class Files {
 			add_action( 'um_upload_file_validation', array( $this, 'upload_validation' ), 10, 5 );
 			add_action( 'um_upload_file_temp_uploaded', array( $this, 'temp_uploaded' ), 10, 2 );
 			add_filter( 'um_upload_file_fileinfo', array( $this, 'temp_fileinfo' ), 10, 2 );
+
+			add_filter( 'um_upload_file_fileinfo', array( $this, 'field_image_fileinfo' ), 10, 2 );
 		}
 	}
 
@@ -165,7 +167,7 @@ class Files {
 			$user_id = absint( $_REQUEST['user_id'] );
 			ob_start();
 			?>
-			<div class="um-profile-photo-crop-wrapper" data-crop="square" data-ratio="1" data-min_width="256" data-min_height="256">
+			<div class="um-modal-crop-wrapper" data-crop="square" data-ratio="1" data-min_width="256" data-min_height="256">
 				<img src="<?php echo esc_url( $fileinfo['url'] ); ?>" class="um-profile-photo-crop fusion-lazyload-ignore" alt="" />
 			</div>
 			<div class="um-modal-buttons-wrapper">
@@ -256,6 +258,13 @@ class Files {
 	 */
 	public function upload_file() {
 		$error = null;
+// For error debug
+//		wp_send_json(
+//			array(
+//				'OK'   => 0,
+//				'info' => '797979',
+//			)
+//		);
 
 		if ( empty( $_REQUEST['nonce'] ) ) {
 			$error = __( 'Nonce is required.', 'ultimate-member' );
@@ -401,5 +410,72 @@ class Files {
 				)
 			);
 		}
+	}
+
+	public function field_image_fileinfo( $fileinfo, $handler ) {
+		if ( 'field-image' !== $handler ) {
+			return $fileinfo;
+		}
+
+		$crop = ! empty( $_REQUEST['crop'] ) ? sanitize_key( wp_unslash( $_REQUEST['crop'] ) ) : 0;
+		if ( empty( $crop ) ) {
+			$fileinfo['lazy_image'] = wp_kses(
+				UM()->frontend()::layouts()::lazy_image(
+					$fileinfo['url'],
+					array(
+						'width' => '100%',
+					)
+				),
+				UM()->get_allowed_html( 'templates' )
+			);
+		} else {
+			ob_start();
+			?>
+			<div class="um-modal-crop-wrapper" data-crop="<?php echo esc_attr( $crop ); ?>" data-min_width="256" data-min_height="256">
+				<img src="<?php echo esc_url( $fileinfo['url'] ); ?>" class="um-field-image-crop fusion-lazyload-ignore" alt="" />
+			</div>
+			<div class="um-modal-buttons-wrapper">
+				<?php
+				echo wp_kses(
+					UM()->frontend()::layouts()::button(
+						__( 'Apply', 'ultimate-member' ),
+						array(
+							'type'    => 'button',
+							'design'  => 'primary',
+							'size'    => 'm',
+							'classes' => array( 'um-apply-field-image-crop' ),
+							'data'    => array(
+//								'user_id' => $user_id,
+								'nonce'   => wp_create_nonce( 'um_upload_profile_photo_apply' ),
+							),
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				echo wp_kses(
+					UM()->frontend()::layouts()::button(
+						__( 'Cancel', 'ultimate-member' ),
+						array(
+							'type'    => 'button',
+							'design'  => 'secondary-gray',
+							'size'    => 'm',
+							'classes' => array( 'um-modal-field-image-decline' ),
+							'data'    => array(
+//								'user_id' => $user_id,
+								'nonce'   => wp_create_nonce( 'um_upload_profile_photo_decline' ),
+							),
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				echo wp_kses( UM()->frontend()::layouts()::ajax_loader( 's' ), UM()->get_allowed_html( 'templates' ) );
+				?>
+			</div>
+			<?php
+			$fileinfo['modal_content'] = ob_get_clean();
+			$fileinfo['modal_content'] = UM()->ajax()->esc_html_spaces( $fileinfo['modal_content'] );
+		}
+
+		return $fileinfo;
 	}
 }

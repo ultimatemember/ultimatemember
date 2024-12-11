@@ -16,8 +16,9 @@ class Uploader {
 	 */
 	public function __construct() {
 		add_filter( 'um_upload_item_placeholder', array( $this, 'field_image_list_item_placeholder' ), 10, 2 );
-		add_filter( 'um_upload_item_placeholder', array( $this, 'field_file_list_item_placeholder' ), 10, 2 );
 		add_filter( 'um_upload_edit_list_item_row', array( $this, 'field_image_edit_list_item_row' ), 10, 3 );
+
+		add_filter( 'um_upload_item_placeholder', array( $this, 'field_file_list_item_placeholder' ), 10, 2 );
 		add_filter( 'um_upload_edit_list_item_row', array( $this, 'field_file_edit_list_item_row' ), 10, 3 );
 	}
 
@@ -34,36 +35,20 @@ class Uploader {
 
 		ob_start();
 		?>
-		<div class="um-uploader-file-placeholder um-uploader-image-file-placeholder um-display-none">
+		<div class="um-uploader-file-placeholder um-display-none">
+			<div class="um-uploader-file-preview" title="{{{name}}}"></div>
 			<div class="um-uploader-file-data">
-				<div class="um-uploader-file-preview-error um-display-none"></div>
-				<div class="um-uploader-user-photos-data-wrapper">
-					<div class="um-uploader-file-preview" title="{{{name}}}"></div>
-					<div class="um-uploader-file-data-header">
-						<div class="um-uploader-file-data-header-info">
-							<div class="um-uploader-file-name">{{{name}}}</div>
-							<?php
-							$button_content = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-								<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-								<path d="M4 7l16 0" />
-								<path d="M10 11l0 6" />
-								<path d="M14 11l0 6" />
-								<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-								<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-							</svg>';
-							$button_args    = array(
-								'type'          => 'button',
-								'icon_position' => 'content',
-								'design'        => 'link-gray',
-								'size'          => 's',
-								'classes'       => array( 'um-uploader-file-remove' ),
-							);
-							echo wp_kses( UM()->frontend()::layouts()::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) );
-							?>
-						</div>
-						<div class="um-supporting-text">{{{supporting}}}</div>
-						<?php echo wp_kses( UM()->frontend()::layouts()::progress_bar( array( 'label' => 'right' ) ), UM()->get_allowed_html( 'templates' ) ); ?>
-					</div>
+				<div class="um-file-extension">
+					<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file" width="48" height="48" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--um-gray-300, #d0d5dd)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+						<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+						<path d="M14 3v4a1 1 0 0 0 1 1h4" />
+						<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+					</svg>
+					<span class="um-file-extension-text">{{{extension}}}</span>
+				</div>
+				<div class="um-uploader-file-uploading-process">
+					<?php echo wp_kses( UM()->frontend()::layouts()::progress_bar( array( 'label' => 'bottom' ) ), UM()->get_allowed_html( 'templates' ) ); ?>
+					<div class="um-supporting-text">{{{supporting}}}</div>
 				</div>
 				<?php
 				if ( true !== $args['async'] ) {
@@ -96,50 +81,34 @@ class Uploader {
 
 		ob_start();
 		?>
-		<div class="um-uploader-file-placeholder um-uploader-image-file-placeholder um-display-none">
+		<div class="um-uploader-file-placeholder um-display-none">
 			<div class="um-uploader-file-data">
-				<div class="um-uploader-file-preview-error um-display-none"></div>
-				<div class="um-uploader-user-photos-data-wrapper">
-					<div class="um-uploader-file-preview" title="{{{name}}}"></div>
-					<div class="um-uploader-file-data-header">
-						<div class="um-uploader-file-data-header-info">
-							<div class="um-uploader-file-name">{{{name}}}</div>
-							<?php
-							$button_content = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-								<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-								<path d="M4 7l16 0" />
-								<path d="M10 11l0 6" />
-								<path d="M14 11l0 6" />
-								<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-								<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-							</svg>';
-							$button_args    = array(
-								'type'          => 'button',
-								'icon_position' => 'content',
-								'design'        => 'link-gray',
-								'size'          => 's',
-								'classes'       => array( 'um-uploader-file-remove' ),
-							);
-							echo wp_kses( UM()->frontend()::layouts()::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) );
-							?>
-						</div>
-						<div class="um-supporting-text">{{{supporting}}}</div>
-						<?php echo wp_kses( UM()->frontend()::layouts()::progress_bar( array( 'label' => 'right' ) ), UM()->get_allowed_html( 'templates' ) ); ?>
-					</div>
+				<div class="um-file-extension">
+					<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file" width="48" height="48" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--um-gray-300, #d0d5dd)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+						<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+						<path d="M14 3v4a1 1 0 0 0 1 1h4" />
+						<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+					</svg>
+					<span class="um-file-extension-text">{{{extension}}}</span>
 				</div>
-				<?php
-				if ( true !== $args['async'] ) {
-					$name          = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][path]' : $args['name'] . '[path]';
-					$filename_name = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][filename]' : $args['name'] . '[filename]';
-					$hash_name     = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][hash]' : $args['name'] . '[hash]';
-					?>
-					<input type="hidden" class="um-uploaded-value" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $name ); ?>" value="" disabled />
-					<input type="hidden" class="um-uploaded-filename" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $filename_name ); ?>" value="" disabled />
-					<input type="hidden" class="um-uploaded-value-hash" name="<?php echo esc_attr( $hash_name ); ?>" value="" disabled />
-					<?php
-				}
-				?>
+				<div class="um-uploader-file-name">{{{name}}}</div>
 			</div>
+			<div class="um-uploader-file-uploading-process">
+				<?php echo wp_kses( UM()->frontend()::layouts()::progress_bar( array( 'label' => 'bottom' ) ), UM()->get_allowed_html( 'templates' ) ); ?>
+				<div class="um-supporting-text">{{{supporting}}}</div>
+			</div>
+			<?php
+			if ( true !== $args['async'] ) {
+				$name          = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][path]' : $args['name'] . '[path]';
+				$filename_name = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][filename]' : $args['name'] . '[filename]';
+				$hash_name     = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][hash]' : $args['name'] . '[hash]';
+				?>
+				<input type="hidden" class="um-uploaded-value" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $name ); ?>" value="" disabled />
+				<input type="hidden" class="um-uploaded-filename" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $filename_name ); ?>" value="" disabled />
+				<input type="hidden" class="um-uploaded-value-hash" name="<?php echo esc_attr( $hash_name ); ?>" value="" disabled />
+				<?php
+			}
+			?>
 		</div>
 		<?php
 		return ob_get_clean();
@@ -168,14 +137,12 @@ class Uploader {
 		?>
 		<div class="um-uploader-file" id="album-photo-<?php echo esc_attr( $photo_id ); ?>">
 			<div class="um-uploader-file-data">
-				<div class="um-uploader-file-preview-error um-display-none"></div>
 				<div class="um-uploader-user-photos-data-wrapper">
 					<div class="um-uploader-file-preview" title="<?php echo esc_attr( $post_title ); ?>">
 						<img src="<?php echo esc_url( $preview_url ); ?>" alt="<?php echo esc_attr( $image_filename ); ?>" />
 					</div>
 					<div class="um-uploader-file-data-header">
 						<div class="um-uploader-file-data-header-info">
-							<div class="um-uploader-file-name"><?php echo esc_html( $post_title ); ?></div>
 							<?php
 							$button_content = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
 								<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -290,7 +257,6 @@ class Uploader {
 		?>
 		<div class="um-uploader-file" id="album-photo-<?php echo esc_attr( $photo_id ); ?>">
 			<div class="um-uploader-file-data">
-				<div class="um-uploader-file-preview-error um-display-none"></div>
 				<div class="um-uploader-user-photos-data-wrapper">
 					<div class="um-uploader-file-preview" title="<?php echo esc_attr( $post_title ); ?>">
 						<img src="<?php echo esc_url( $preview_url ); ?>" alt="<?php echo esc_attr( $image_filename ); ?>" />
