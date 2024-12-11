@@ -591,7 +591,7 @@ UM.frontend.directory.prototype = {
 
 				um_init_new_dropdown();
 
-				UM.frontend.slider.init();
+				UM.common.slider.init();
 
 				instance.preloaderHide();
 			},
@@ -1099,9 +1099,10 @@ wp.hooks.addFilter( 'um_toggle_block', 'um_member_directory', function( $toggleB
 });
 
 // Select-type filters with callback functions. Extend functionality via the JS hooks.
-wp.hooks.addFilter( 'um_frontend_child_dropdown_child_options_request', 'um_member_directory', function( optionsRequestData, $child ) {
+wp.hooks.addFilter( 'um_common_child_dropdown_child_options_request', 'um_member_directory', function( optionsRequestData, $child ) {
 	if ( $child.parents('.um-directory').length ) {
 		optionsRequestData.member_directory = true;
+		optionsRequestData.member_directory_hash = $child.parents('.um-directory').attr('data-hash');
 	}
 
 	return optionsRequestData;

@@ -356,7 +356,12 @@ final class Enqueue extends \um\common\Enqueue {
 		$js_url  = self::get_url( 'js' );
 		$css_url = self::get_url( 'css' );
 
-		wp_register_script( 'um_admin_forms', $js_url . 'admin/forms' . $suffix . '.js', array( 'um_admin_common', self::$select2_handle, 'jquery-ui-draggable', 'jquery-ui-sortable', 'jquery-ui-slider' ), UM_VERSION, true );
+		if ( UM()->is_new_ui() ) {
+			$src = $js_url . 'v3/admin/forms' . $suffix . '.js';
+		} else {
+			$src = $js_url . 'admin/forms' . $suffix . '.js';
+		}
+		wp_register_script( 'um_admin_forms', $src, array( 'um_admin_common', self::$select2_handle, 'jquery-ui-draggable', 'jquery-ui-sortable', 'jquery-ui-slider' ), UM_VERSION, true );
 		wp_set_script_translations( 'um_admin_forms', 'ultimate-member' );
 		$forms_data = array(
 			'successfully_redirect' => add_query_arg(
