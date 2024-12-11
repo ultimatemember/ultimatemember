@@ -82,6 +82,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			);
 		}
 
+
 		/**
 		 * File download link generate
 		 *
@@ -797,104 +798,17 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		}
 
 		/**
-		 * Allowed image types
-		 *
-		 * @return array
-		 */
-		function allowed_image_types() {
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_allowed_image_types
-			 * @description Extend allowed image types
-			 * @input_vars
-			 * [{"var":"$types","type":"array","desc":"Image ext types"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_allowed_image_types', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_allowed_image_types', 'my_allowed_image_types', 10, 1 );
-			 * function my_allowed_image_types( $types ) {
-			 *     // your code here
-			 *     return $types;
-			 * }
-			 * ?>
-			 */
-			return apply_filters( 'um_allowed_image_types', array(
-				'png'   => 'PNG',
-				'jpeg'  => 'JPEG',
-				'jpg'   => 'JPG',
-				'gif'   => 'GIF'
-			) );
-		}
-
-
-		/**
-		 * Allowed file types
-		 *
-		 * @return mixed
-		 */
-		function allowed_file_types() {
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_allowed_file_types
-			 * @description Extend allowed File types
-			 * @input_vars
-			 * [{"var":"$types","type":"array","desc":"Files ext types"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_allowed_file_types', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_allowed_file_types', 'my_allowed_file_types', 10, 1 );
-			 * function my_allowed_file_types( $types ) {
-			 *     // your code here
-			 *     return $types;
-			 * }
-			 * ?>
-			 */
-			return apply_filters( 'um_allowed_file_types', array(
-				'pdf'   => 'PDF',
-				'txt'   => 'Text',
-				'csv'   => 'CSV',
-				'doc'   => 'DOC',
-				'docx'  => 'DOCX',
-				'odt'   => 'ODT',
-				'ods'   => 'ODS',
-				'xls'   => 'XLS',
-				'xlsx'  => 'XLSX',
-				'zip'   => 'ZIP',
-				'rar'   => 'RAR',
-				'mp3'   => 'MP3',
-				'jpg'   => 'JPG',
-				'jpeg'  => 'JPEG',
-				'png'   => 'PNG',
-				'gif'   => 'GIF',
-				'eps'   => 'EPS',
-				'psd'   => 'PSD',
-				'tif'   => 'TIF',
-				'tiff'  => 'TIFF',
-			) );
-		}
-
-
-		/**
 		 * Get extension icon
 		 *
 		 * @param $extension
 		 *
 		 * @return string
 		 */
-		function get_fonticon_by_ext( $extension ) {
-			if ( isset( $this->fonticon[$extension]['icon'] ) ) {
-				return $this->fonticon[$extension]['icon'];
-			} else {
-				return $this->default_file_fonticon;
+		public function get_fonticon_by_ext( $extension ) {
+			if ( isset( $this->fonticon[ $extension ]['icon'] ) ) {
+				return $this->fonticon[ $extension ]['icon'];
 			}
+			return $this->default_file_fonticon;
 		}
 
 
@@ -905,12 +819,12 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 *
 		 * @return string
 		 */
-		function get_fonticon_bg_by_ext( $extension ) {
-			if ( isset( $this->fonticon[$extension]['color'] ) ) {
-				return $this->fonticon[$extension]['color'];
-			} else {
-				return '#666';
+		public function get_fonticon_bg_by_ext( $extension ) {
+			if ( isset( $this->fonticon[ $extension ]['color'] ) ) {
+				return $this->fonticon[ $extension ]['color'];
 			}
+
+			return '#666';
 		}
 
 
@@ -1336,15 +1250,13 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 		}
 
-
 		/**
-		 * Delete a main user photo
+		 * Delete a main user photo.
 		 *
-		 * @param $user_id
-		 * @param $type
+		 * @param int    $user_id
+		 * @param string $type
 		 */
-		function delete_core_user_photo( $user_id, $type ) {
-
+		public function delete_core_user_photo( $user_id, $type ) {
 			delete_user_meta( $user_id, $type );
 
 			/**
@@ -1368,24 +1280,25 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			 */
 			do_action( "um_after_remove_{$type}", $user_id );
 
-			$dir = $this->upload_basedir . $user_id . DIRECTORY_SEPARATOR;
+			$dir    = $this->upload_basedir . $user_id . DIRECTORY_SEPARATOR;
 			$prefix = $type;
-			chdir($dir);
-			$matches = glob($prefix.'*',GLOB_MARK);
+			chdir( $dir );
 
-			if( is_array($matches) && !empty($matches)) {
-				foreach($matches as $match) {
-					if( is_file($dir.$match) ) unlink($dir.$match);
+			$matches = glob( $prefix . '*', GLOB_MARK );
+			if ( is_array( $matches ) && ! empty( $matches ) ) {
+				foreach ( $matches as $match ) {
+					if ( is_file( $dir . $match ) ) {
+						unlink( $dir . $match );
+					}
 				}
 			}
 
-			if ( count(glob("$dir/*")) === 0) {
+			if ( count( glob( "$dir/*" ) ) === 0 ) {
 				rmdir( $dir );
 			}
 
 			UM()->user()->remove_cache( $user_id );
 		}
-
 
 		/**
 		 * Resize a local image
@@ -1433,17 +1346,16 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			return $this->upload_temp_url . $split[1];
 		}
 
-
 		/**
 		 * Make a user folder for uploads
 		 *
 		 * @param $user_id
 		 */
 		function new_user( $user_id ) {
-			if ( !file_exists( $this->upload_basedir . $user_id . '/' ) ) {
+			if ( ! file_exists( $this->upload_basedir . $user_id . '/' ) ) {
 				$old = umask(0);
-				@mkdir( $this->upload_basedir . $user_id . '/' , 0755, true);
-				umask($old);
+				@mkdir( $this->upload_basedir . $user_id . '/' , 0755, true );
+				umask( $old );
 			}
 		}
 
@@ -1466,7 +1378,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 		}
 
-
 		/**
 		 * Remove old files
 		 * @param string $dir							Path to directoty.
@@ -1488,13 +1399,13 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				$files = glob( $dir . '/*' );
 
 				foreach ( (array) $files as $file ) {
-					if ( in_array( wp_basename( $file ), array('.', '..') ) ) {
+					if ( in_array( wp_basename( $file ), array( '.', '..' ), true ) ) {
 						continue;
 					}
-					elseif ( is_dir( $file ) ) {
+
+					if ( is_dir( $file ) ) {
 						$this->remove_old_files( $file, $timestamp );
-					}
-					elseif ( is_file( $file ) ) {
+					} elseif ( is_file( $file ) ) {
 						$fileatime = fileatime( $file );
 						if ( $fileatime && $fileatime < (int) $timestamp ) {
 							unlink( $file );
@@ -1514,17 +1425,17 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 *
 		 * @return array
 		 */
-		function get_profile_photo_size( $type ) {
+		public function get_profile_photo_size( $type ) {
 			$sizes = UM()->options()->get( $type );
 
 			if ( ! empty( $sizes ) && is_array( $sizes ) ) {
 				$sizes = array_combine( $sizes, $sizes );
 
-				if ( $type == 'cover_thumb_sizes' ) {
+				if ( 'cover_thumb_sizes' === $type ) {
 					foreach ( $sizes as $key => $value ) {
 						$sizes[ $key ] = $value . 'px';
 					}
-				} elseif ( $type == 'photo_thumb_sizes' ) {
+				} elseif ( 'photo_thumb_sizes' === $type ) {
 					foreach ( $sizes as $key => $value ) {
 						$sizes[ $key ] = $value . 'x' . $value . 'px';
 					}
@@ -1565,6 +1476,60 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		public function format_bytes( $size, $precision = 1 ) {
 			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->filesystem()->format_bytes()' );
 			return UM()->common()->filesystem()::format_bytes( $size, $precision );
+		}
+
+		/**
+		 * Allowed image types
+		 *
+		 * @deprecated 3.0.0
+		 *
+		 * @return array
+		 */
+		public function allowed_image_types() {
+			_deprecated_function( __METHOD__, '3.0.0' );
+			return apply_filters(
+				'um_allowed_image_types',
+				array(
+					'png'   => 'PNG',
+					'jpeg'  => 'JPEG',
+					'jpg'   => 'JPG',
+					'gif'   => 'GIF'
+				)
+			);
+		}
+
+		/**
+		 * Allowed file types
+		 * @deprecated 3.0.0
+		 * @return array
+		 */
+		public function allowed_file_types() {
+			_deprecated_function( __METHOD__, '3.0.0' );
+			return apply_filters(
+				'um_allowed_file_types',
+				array(
+					'pdf'   => 'PDF',
+					'txt'   => 'Text',
+					'csv'   => 'CSV',
+					'doc'   => 'DOC',
+					'docx'  => 'DOCX',
+					'odt'   => 'ODT',
+					'ods'   => 'ODS',
+					'xls'   => 'XLS',
+					'xlsx'  => 'XLSX',
+					'zip'   => 'ZIP',
+					'rar'   => 'RAR',
+					'mp3'   => 'MP3',
+					'jpg'   => 'JPG',
+					'jpeg'  => 'JPEG',
+					'png'   => 'PNG',
+					'gif'   => 'GIF',
+					'eps'   => 'EPS',
+					'psd'   => 'PSD',
+					'tif'   => 'TIF',
+					'tiff'  => 'TIFF',
+				)
+			);
 		}
 	}
 }

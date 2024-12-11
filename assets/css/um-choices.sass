@@ -1,0 +1,176 @@
+@import "selectors"
+@import "mixins"
+@import "box"
+@import "colors"
+@import "typography"
+
+$choices-font-size-lg: 16px
+$choices-font-size-md: 14px
+$choices-font-size-sm: 12px
+$choices-guttering: 0
+$choices-border-radius: $radius-md
+$choices-border-radius-item: 20px
+$choices-bg-color: $um-white
+$choices-bg-color-disabled: $gray-50
+$choices-bg-color-dropdown: #fff
+$choices-text-color: $gray-900
+$choices-keyline-color: #ddd
+$choices-primary-color: #00bcd4
+$choices-disabled-color: #eaeaea
+$choices-highlight-color: $choices-primary-color
+$choices-button-dimension: 8px
+$choices-button-offset: 8px
+$choices-icon-cross: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjRkZGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==")
+$choices-icon-cross-inverse: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==")
+$choices-z-index: 3
+
+.um
+  @import "../libs/choices-js/choices.scss"
+  .choices
+    width: 100%
+    font-size: initial
+    .choices__inner
+      +border-box
+      border-color: $gray-300
+      font-size: initial
+      line-height: initial
+      box-shadow: $shadow-xs
+    &[data-type*=select-one]
+      &::after
+        content: " "
+        mask: url(../icons/chevron-down.svg)
+        -webkit-mask: url(../icons/chevron-down.svg)
+        width: 20px
+        height: 20px
+        opacity: 1
+        background-color: $gray-500
+        border: none
+        margin-top: -10px
+      &.is-open
+        &::after
+          mask: url(../icons/chevron-up.svg)
+          -webkit-mask: url(../icons/chevron-up.svg)
+          margin-top: -10px
+      .choices__inner
+        padding: $spacing-md $spacing-lg
+        min-height: auto
+        .choices__list--single
+          padding-left: 0
+          padding-top: 0
+          padding-bottom: 0
+    &[data-type*=select-multiple]
+      .choices__inner
+        +flex( row, flex-start, baseline, wrap )
+        padding: $spacing-md $spacing-lg
+        min-height: auto
+        gap: $spacing-md
+        .choices__list--multiple
+          +flex( row, flex-start, baseline, wrap )
+          gap: $spacing-md
+          padding-left: 0
+          padding-top: 0
+          padding-bottom: 0
+          .choices__item
+            +flex( row, flex-start, center, nowrap )
+            border-radius: $radius-sm
+            border: 1px solid $gray-300
+            background: $um-white
+            +typography( text, sm, medium )
+            color: $gray-700
+            padding: $spacing-xxs $spacing-sm
+            margin: 0
+            gap: $spacing-sm
+            button
+              background-image: none
+              background-color: $gray-400
+              border: none
+              box-shadow: none
+              opacity: 1
+              mask: url(../icons/x.svg)
+              -webkit-mask: url(../icons/x.svg)
+              width: 16px
+              height: 16px
+              margin: 0
+              padding: 0
+              background-size: auto
+              &:hover,
+              &:focus,
+              &:focus-visible
+                background-color: $gray-500
+                border: none
+                box-shadow: none
+                opacity: 1
+        input[type="search"]
+          margin: 0
+          padding: 0
+          border: 0
+          border-radius: 0
+          box-shadow: none
+          &:hover,
+          &:focus,
+          &:focus-visible
+            margin: 0
+            padding: 0
+            border: 0
+            border-radius: 0
+            box-shadow: none
+    &.is-focused
+      overflow: visible
+      .choices__inner
+        border: 1px solid $primary-300
+        box-shadow: $ring-brand-shadow-xs
+        background: $um-white
+        outline: none
+        overflow: visible
+    .choices__list
+      +border-box
+      &.choices__list--dropdown,
+      &[aria-expanded]
+        top: calc( 100% + 4px )
+        border-radius: $radius-md
+        box-shadow: $shadow-lg
+        border: 1px solid $gray-200
+        & > input[type="search"].choices__input.choices__input--cloned
+          +border-box
+          width: calc( 100% - 2*$spacing-md )
+          border-radius: $radius-md
+          border: 1px solid $gray-200
+          background: $um-white
+          box-shadow: $shadow-xs
+          padding: $spacing-md $spacing-lg
+          color: $gray-900
+          margin: $spacing-md $spacing-md 0 $spacing-md
+          +typography( text, md, regular )
+          &:focus,
+          &:focus-visible
+            border: 1px solid $gray-200
+            box-shadow: $shadow-xs
+            background: $um-white
+            outline: none
+          &:disabled
+            background: $gray-50
+            color: $gray-500
+          &::placeholder
+            color: $gray-500
+        & > .choices__list[role="listbox"]
+          padding: $spacing-sm
+        //.choices__item.choices__item--choice.is-selected.choices__item--selectable is-highlighted
+        .choices__item.choices__item--choice
+          padding-left: $spacing-md
+          padding-top: $spacing-md
+          padding-bottom: $spacing-md
+          &.choices__item--selectable
+            color: $gray-900
+            +typography( text, md, regular )
+            &.is-highlighted
+              background: $gray-50
+              border-radius: $radius-sm
+            &.is-selected
+              &::after
+                content: " "
+                mask: url(../icons/check.svg)
+                -webkit-mask: url(../icons/check.svg)
+                width: 20px
+                height: 20px
+                opacity: 1
+                background-color: $primary-600
