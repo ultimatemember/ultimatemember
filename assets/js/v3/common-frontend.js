@@ -415,12 +415,12 @@ UM.frontend = {
 									let actionInFilter = wp.hooks.applyFilters( 'um_uploader_file_uploaded', null, $button, up, file, response );
 									if ( null === actionInFilter ) {
 										// some default process.
+										$uploader.addClass('um-upload-completed');
 										if ( $fileList.length ) {
 											let fileRow = $fileList.find('#' + file.id);
 
 											fileRow.data('filename', response.data[0].name_saved).data('nonce', response.data[0].delete_nonce);
 											fileRow.find('.um-progress-bar-wrapper').remove();
-											fileRow.addClass('um-upload-completed');
 										}
 									}
 								}
@@ -580,14 +580,14 @@ UM.frontend = {
 
 				let $wrapper = jQuery(this).parents('.um-field-uploader-wrapper');
 				let $uploader = $wrapper.find('.um-uploader');
-				let $fileList  = $uploader.find( '.um-uploader-filelist' );
-				// $fileList.removeClass('um-upload-completed');
 
 				$uploader.find('.um-uploader-button').trigger( 'click' );
 			});
 
 			jQuery(document.body).on('click', '.um-field-image-remove', function() {
-				if ( ! confirm( wp.i18n.__( 'Are you sure that you want to delete this image?', 'ultimate-member' ) ) ) {
+				let confirmText = wp.i18n.__( 'Are you sure that you want to delete this image?', 'ultimate-member' );
+				confirmText = wp.hooks.applyFilters( 'um-field-image-remove-confirm-text', confirmText, jQuery(this) );
+				if ( confirmText && ! confirm( confirmText ) ) {
 					return false;
 				}
 
@@ -600,6 +600,15 @@ UM.frontend = {
 
 				let removeRow = function () {
 					let fileID = $fileRow.attr('id');
+					if ( ! fileID ) {
+						$fileRow.remove();
+						$dropZone.umShow();
+						$controls.umHide();
+						$fileList.html('').umHide();
+						$uploader.removeClass('um-upload-completed');
+						return;
+					}
+
 					let uploaderObj = UM.frontend.uploaders[ $uploader.data('plupload') ];
 
 					wp.hooks.doAction( 'um_uploader_file_row_removed', $fileRow, fileID, uploaderObj );
@@ -610,7 +619,8 @@ UM.frontend = {
 					$fileRow.remove();
 					$dropZone.umShow();
 					$controls.umHide();
-					$fileList.removeClass('um-upload-completed').umHide();
+					$fileList.html('').umHide();
+					$uploader.removeClass('um-upload-completed');
 
 					if ( filter && uploaderObj.files.length < filter ) {
 						let button = uploaderObj.getOption( 'browse_button' )[0];
@@ -629,7 +639,8 @@ UM.frontend = {
 					wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
 				}
 
-				if ( ! $fileRow.hasClass('um-upload-failed') ) {
+				let fileID = $fileRow.attr('id');
+				if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
 					let fileName = $fileRow.data('filename');
 					let nonce = $fileRow.data('nonce');
 
@@ -662,8 +673,6 @@ UM.frontend = {
 
 				let $wrapper = jQuery(this).parents('.um-field-uploader-wrapper');
 				let $uploader = $wrapper.find('.um-uploader');
-				let $fileList  = $uploader.find( '.um-uploader-filelist' );
-				// $fileList.removeClass('um-upload-completed');
 
 				$uploader.find('.um-uploader-button').trigger( 'click' );
 			});
@@ -682,6 +691,15 @@ UM.frontend = {
 
 				let removeRow = function () {
 					let fileID = $fileRow.attr('id');
+					if ( ! fileID ) {
+						$fileRow.remove();
+						$dropZone.umShow();
+						$controls.umHide();
+						$fileList.html('').umHide();
+						$uploader.removeClass('um-upload-completed');
+						return;
+					}
+
 					let uploaderObj = UM.frontend.uploaders[ $uploader.data('plupload') ];
 
 					wp.hooks.doAction( 'um_uploader_file_row_removed', $fileRow, fileID, uploaderObj );
@@ -692,7 +710,8 @@ UM.frontend = {
 					$fileRow.remove();
 					$dropZone.umShow();
 					$controls.umHide();
-					$fileList.removeClass('um-upload-completed').umHide();
+					$fileList.html('').umHide();
+					$uploader.removeClass('um-upload-completed');
 
 					if ( filter && uploaderObj.files.length < filter ) {
 						let button = uploaderObj.getOption( 'browse_button' )[0];
@@ -711,7 +730,8 @@ UM.frontend = {
 					wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
 				}
 
-				if ( ! $fileRow.hasClass('um-upload-failed') ) {
+				let fileID = $fileRow.attr('id');
+				if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
 					let fileName = $fileRow.data('filename');
 					let nonce = $fileRow.data('nonce');
 

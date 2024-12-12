@@ -419,19 +419,37 @@ class Files {
 
 		$crop = ! empty( $_REQUEST['crop'] ) ? sanitize_key( wp_unslash( $_REQUEST['crop'] ) ) : 0;
 		if ( empty( $crop ) ) {
+			// @todo with preview
+//			$fileinfo['lazy_image'] = wp_kses(
+//				'<a href="#" class="um-photo-modal" data-src="' . esc_url( $fileinfo['url'] ) . '" title="Preview Image Upload">' .
+//				UM()->frontend()::layouts()::lazy_image(
+//					$fileinfo['url'],
+//					array(
+//						'width' => '100%',
+//						'alt'   => __( 'Image Upload', 'ultimate-member' ),
+//					)
+//				) . '</a>',
+//				UM()->get_allowed_html( 'templates' )
+//			);
+
 			$fileinfo['lazy_image'] = wp_kses(
 				UM()->frontend()::layouts()::lazy_image(
 					$fileinfo['url'],
 					array(
 						'width' => '100%',
+						'alt'   => __( 'Image Upload', 'ultimate-member' ), // @todo field label here
 					)
 				),
 				UM()->get_allowed_html( 'templates' )
 			);
 		} else {
+			$field_id = ! empty( $_REQUEST['field_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['field_id'] ) ) : '';
+			$form_id  = ! empty( $_REQUEST['form_id'] ) ?  absint( $_REQUEST['form_id'] ) : '';
+			$real_id  = 'um_field_' . $form_id . '_' . $field_id;
+
 			ob_start();
 			?>
-			<div class="um-modal-crop-wrapper" data-crop="<?php echo esc_attr( $crop ); ?>" data-min_width="256" data-min_height="256">
+			<div class="um-modal-crop-wrapper" data-crop="<?php echo esc_attr( $crop ); ?>" data-field="<?php echo esc_attr( $real_id ); ?>" data-min_width="256" data-min_height="256">
 				<img src="<?php echo esc_url( $fileinfo['url'] ); ?>" class="um-field-image-crop fusion-lazyload-ignore" alt="" />
 			</div>
 			<div class="um-modal-buttons-wrapper">
@@ -446,7 +464,8 @@ class Files {
 							'classes' => array( 'um-apply-field-image-crop' ),
 							'data'    => array(
 //								'user_id' => $user_id,
-								'nonce'   => wp_create_nonce( 'um_upload_profile_photo_apply' ),
+								'field' => $real_id,
+								'nonce' => wp_create_nonce( 'um_upload_profile_photo_apply' ),
 							),
 						)
 					),
@@ -462,6 +481,7 @@ class Files {
 							'classes' => array( 'um-modal-field-image-decline' ),
 							'data'    => array(
 //								'user_id' => $user_id,
+								'field' => $real_id,
 								'nonce'   => wp_create_nonce( 'um_upload_profile_photo_decline' ),
 							),
 						)

@@ -1101,19 +1101,22 @@
                   margin: 0
                   padding: 0
                   row-gap: $spacing-sm
-                  .#{$prefix}uploader-filelist
-                    padding: $spacing-xl $spacing-3xl
-                    border-radius: $spacing-lg
-                    border: 1px solid $gray-200
-                    background: $um-white
-                    margin: 1px
-                    +border-box
+                  .#{$prefix}uploader
+                    width: 100%
+                    .#{$prefix}uploader-filelist
+                      padding: $spacing-xl $spacing-3xl
+                      border-radius: $spacing-lg
+                      border: 1px solid $gray-200
+                      background: $um-white
+                      margin: 1px
+                      +border-box
                     &.#{$prefix}upload-completed
-                      padding: 0
-                      margin: 0
-                      border: transparent
-                .#{$prefix}uploader
-                  width: 100%
+                      .#{$prefix}uploader-dropzone
+                        display: none
+                      .#{$prefix}uploader-filelist
+                        padding: 0
+                        margin: 0
+                        border: transparent
               &.#{$prefix}field-type_image
                 .#{$prefix}field-value
                   +flex( column, flex-start, stretch, nowrap )
@@ -1122,41 +1125,37 @@
                   padding: 0
                   row-gap: $spacing-sm
                 .#{$prefix}field-uploader-wrapper
-                  .#{$prefix}uploader-file
-                    +border-box
-                    +flex( column, flex-start, center, nowrap )
-                    padding: 0
-                    margin: 0
-                    border: none
-                    .#{$prefix}uploader-file-preview
-                      width: 100%
-                      +flex( row, flex-start, start, nowrap )
-                      .#{$prefix}image-lazyload-wrapper
-                        min-height: 150px
-                    .#{$prefix}uploader-file-data
-                      +flex( column, space-evenly, center, nowrap )
-                      row-gap: $spacing-lg
-                      width: 100%
-                      min-height: 114px
+                  .#{$prefix}uploader
+                    .#{$prefix}uploader-file
                       +border-box
-                      margin: 0
-                      .#{$prefix}uploader-file-uploading-process
-                        width: 100%
-                        +flex ( row, space-between, flex-start, nowrap )
-                        column-gap: $spacing-xl
-                        margin: 0
-                        +border-box
-                        position: relative
-                        .#{$prefix}progress-bar-wrapper
-                          width: 100%
-                        .#{$prefix}supporting-text
-                          position: absolute
-                          top: $spacing-xl
-                    &.#{$prefix}upload-completed
-                      overflow: hidden
-                      border: 0 transparent
-                      margin: 0
+                      +flex( column, flex-start, center, nowrap )
                       padding: 0
+                      margin: 0
+                      border: none
+                      .#{$prefix}uploader-file-preview
+                        width: 100%
+                        +flex( row, flex-start, start, nowrap )
+                        .#{$prefix}image-lazyload-wrapper
+                          min-height: 150px
+                      .#{$prefix}uploader-file-data
+                        +flex( column, space-evenly, center, nowrap )
+                        row-gap: $spacing-lg
+                        width: 100%
+                        min-height: 114px
+                        +border-box
+                        margin: 0
+                        .#{$prefix}uploader-file-uploading-process
+                          width: 100%
+                          +flex ( row, space-between, flex-start, nowrap )
+                          column-gap: $spacing-xl
+                          margin: 0
+                          +border-box
+                          position: relative
+                          .#{$prefix}progress-bar-wrapper
+                            width: 100%
+                          .#{$prefix}supporting-text
+                            position: absolute
+                            top: $spacing-xl
                     &.#{$prefix}upload-failed
                       .#{$prefix}uploader-file-preview
                         display: none
@@ -1167,6 +1166,14 @@
                             text-align: center
                             width: 100%
                             color: $error-500
+                    &.#{$prefix}upload-completed
+                      .#{$prefix}uploader-file
+                        overflow: hidden
+                        border: 0 transparent
+                        margin: 0
+                        padding: 0
+                        .#{$prefix}uploader-file-data
+                          display: none
                 .#{$prefix}field-image-controls
                   +flex( row, center, center, nowrap )
                   +border-box
@@ -1182,53 +1189,55 @@
                   padding: 0
                   row-gap: $spacing-sm
                 .#{$prefix}field-uploader-wrapper
-                  .#{$prefix}uploader-file
-                    +flex( column, space-between, center, nowrap )
-                    row-gap: $spacing-lg
-                    width: 100%
-                    min-height: 114px
-                    +border-box
-                    margin: 0
-                    padding: 0
-                    border: none
-                    .#{$prefix}uploader-file-data
-                      +flex( column, flex-start, center, nowrap )
+                  .#{$prefix}uploader
+                    .#{$prefix}uploader-file
+                      +flex( column, space-between, center, nowrap )
+                      row-gap: $spacing-lg
                       width: 100%
+                      min-height: 114px
                       +border-box
                       margin: 0
                       padding: 0
-                      row-gap: $spacing-lg
-                    .#{$prefix}uploader-file-name
-                      +typography( text, sm, regular )
-                      color: $gray-600
-                    .#{$prefix}uploader-file-uploading-process
-                      width: 100%
-                      +flex ( row, space-between, flex-start, nowrap )
-                      column-gap: $spacing-xl
-                      margin: 0
-                      +border-box
-                      position: relative
-                      .#{$prefix}progress-bar-wrapper
+                      border: none
+                      .#{$prefix}uploader-file-data
+                        +flex( column, flex-start, center, nowrap )
                         width: 100%
-                      .#{$prefix}supporting-text
-                        position: absolute
-                        top: $spacing-xl
-                    &.#{$prefix}upload-completed
-                      overflow: hidden
-                      border: 1px solid $gray-200
-                      margin: 1px
-                      +border-box
-                      padding: $spacing-xl $spacing-3xl
-                      min-height: 150px
+                        +border-box
+                        margin: 0
+                        padding: 0
+                        row-gap: $spacing-lg
+                      .#{$prefix}uploader-file-name
+                        +typography( text, sm, regular )
+                        color: $gray-600
                       .#{$prefix}uploader-file-uploading-process
-                        display: none
-                    &.#{$prefix}upload-failed
-                      .#{$prefix}uploader-file-uploading-process
-                        .#{$prefix}supporting-text
-                          position: unset
-                          text-align: center
+                        width: 100%
+                        +flex ( row, space-between, flex-start, nowrap )
+                        column-gap: $spacing-xl
+                        margin: 0
+                        +border-box
+                        position: relative
+                        .#{$prefix}progress-bar-wrapper
                           width: 100%
-                          color: $error-500
+                        .#{$prefix}supporting-text
+                          position: absolute
+                          top: $spacing-xl
+                      &.#{$prefix}upload-failed
+                        .#{$prefix}uploader-file-uploading-process
+                          .#{$prefix}supporting-text
+                            position: unset
+                            text-align: center
+                            width: 100%
+                            color: $error-500
+                    &.#{$prefix}upload-completed
+                      .#{$prefix}uploader-file
+                        overflow: hidden
+                        border: 1px solid $gray-200
+                        margin: 1px
+                        +border-box
+                        padding: $spacing-xl $spacing-3xl
+                        min-height: 150px
+                        .#{$prefix}uploader-file-uploading-process
+                          display: none
                 .#{$prefix}field-file-controls
                   +flex( row, center, center, nowrap )
                   +border-box

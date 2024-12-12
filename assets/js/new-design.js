@@ -47,38 +47,166 @@ jQuery(document).ready(function($) {
 	$( document.body ).on( 'click', '.um-modal-field-image-decline', function(e){
 		e.preventDefault();
 
-		// let $button = $(this);
-		// let $loader = $button.siblings('.um-ajax-spinner-svg');
-		// let $buttons = $button.parents('.um-modal-buttons-wrapper').find('.um-button');
-		// let userID = $button.data('user_id');
-		// let nonce = $button.data('nonce');
-		//
-		// $buttons.prop('disabled',true);
-		// $loader.show();
-		//
-		// wp.ajax.send(
-		// 	'um_decline_profile_photo_change',
-		// 	{
-		// 		data: {
-		// 			user_id: userID,
-		// 			nonce: nonce
-		// 		},
-		// 		success: function () {
-		// 			$loader.hide();
-		// 			if ( UM.frontend.cropper.obj ) {
-		// 				// If Cropper object exists then destroy before re-init.
-		// 				UM.frontend.cropper.destroy();
-		// 			}
-		// 			UM.modal.close();
-		// 		},
-		// 		error: function (data) {
-		// 			$buttons.prop('disabled',false);
-		// 			$loader.hide();
-		//
-		// 			console.log(data);
-		// 		}
-		// 	}
-		// );
+		if ( ! confirm( wp.i18n.__( 'Are you sure that you want to cancel crop of this image and remove it?', 'ultimate-member' ) ) ) {
+			return false;
+		}
+
+		let $button = $(this);
+		let $loader = $button.siblings('.um-ajax-spinner-svg');
+		let $buttons = $button.parents('.um-modal-buttons-wrapper').find('.um-button');
+
+		let fieldID = $button.data('field');
+
+		$buttons.prop('disabled',true);
+		$loader.show();
+		if ( UM.frontend.cropper.obj ) {
+			// If Cropper object exists then destroy before re-init.
+			UM.frontend.cropper.destroy();
+		}
+		UM.modal.close();
+
+		let changeTextCb = function( confirmText, obj ) {
+			if ( obj.hasClass('um-field-image-remove') ) {
+				confirmText = '';
+			}
+			return confirmText;
+		}
+		wp.hooks.addFilter( 'um-field-image-remove-confirm-text', 'ultimate-member', changeTextCb );
+		$('#' + fieldID).find( '.um-field-image-remove' ).trigger('click');
+		wp.hooks.removeFilter('um-field-image-remove-confirm-text', 'ultimate-member');
+	});
+
+	$( document.body ).on( 'click', '.um-finish-upload.image:not(.disabled)', function(){
+
+		var elem = jQuery(this);
+		var key = jQuery(this).attr('data-key');
+		var img_c = jQuery(this).parents('.um-modal-body').find('.um-single-image-preview');
+		var src = img_c.find('img').attr('src');
+
+		var file = img_c.find('img').data('file');
+		var user_id = 0;
+		if ( jQuery(this).parents('#um_upload_single').data('user_id')  ) {
+			user_id = jQuery(this).parents('#um_upload_single').data('user_id');
+		}
+
+		var d;
+		var form_id = 0;
+		var mode = '';
+		if ( jQuery('div.um-field-image[data-key="' + key + '"]').length === 1 ) {
+			var $formWrapper = jQuery('div.um-field-image[data-key="' + key + '"]').closest('.um-form');
+			form_id = $formWrapper.find('input[name="form_id"]').val();
+			mode = $formWrapper.attr('data-mode');
+		}
+
+		if ( jQuery('.cropper-hidden').length > 0 && UM.frontend.cropper.obj ) {
+			var data = UM.frontend.cropper.obj.getData();
+			var coord = Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height);
+
+			jQuery(this).html( jQuery(this).attr('data-processing') ).addClass('disabled');
+
+			jQuery.ajax({
+				url: wp.ajax.settings.url,
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					action: 'um_resize_image',
+					src : src,
+					coord : coord,
+					user_id : user_id,
+					key: key,
+					set_id: form_id,
+					set_mode: mode,
+					nonce: um_scripts.nonce
+				},
+				success: function( response ) {
+
+					if ( response.success ) {
+
+						d = new Date();
+
+						if ( key === 'profile_photo' ) {
+							jQuery('.um-profile-photo-img img').attr('src', response.data.image.source_url + "?"+d.getTime());
+						} else if ( key === 'cover_photo' ) {
+							jQuery('.um-cover-e').empty().html('<img src="' + response.data.image.source_url + "?"+d.getTime() + '" alt="" />');
+							if ( jQuery('.um').hasClass('um-editing') ) {
+								jQuery('.um-cover-overlay').show();
+							}
+						}
+
+						jQuery('.um-single-image-preview[data-key='+key+']').fadeIn().find('img').attr('src', response.data.image.source_url + "?"+d.getTime());
+
+						um_remove_modal();
+
+						jQuery('img.cropper-invisible').remove();
+
+						jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( elem.attr('data-change') );
+
+						jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type="hidden"]').val( response.data.image.filename );
+					}
+
+				}
+			});
+
+		} else {
+			d = new Date();
+
+			jQuery('.um-single-image-preview[data-key='+key+']').fadeIn().find('img').attr('src', src + "?"+d.getTime());
+
+			um_remove_modal();
+
+			jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( elem.attr('data-change') );
+
+			jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden]').val( file );
+		}
+	});
+
+	$( document.body ).on( 'click', '.um-apply-field-image-crop', function(e){
+		e.preventDefault();
+
+		let $button = $(this);
+		if ( $button.parents('.um-modal-body').find('.cropper-hidden').length > 0 && UM.frontend.cropper.obj ) {
+			let $loader = $button.siblings('.um-ajax-spinner-svg');
+			let $buttons = $button.parents('.um-modal-buttons-wrapper').find('.um-button');
+			let userID = $button.data('user_id');
+			let nonce = $button.data('nonce');
+
+			let cropperData = UM.frontend.cropper.obj.getData();
+			let coord = Math.round(cropperData.x) + ',' + Math.round(cropperData.y) + ',' + Math.round(cropperData.width) + ',' + Math.round(cropperData.height);
+
+			if ( coord ) {
+				$buttons.prop('disabled',true);
+				$loader.show();
+
+				wp.ajax.send(
+					'um_apply_profile_photo_change',
+					{
+						data: {
+							coord : coord,
+							user_id : userID,
+							nonce: nonce
+						},
+						success: function( response ) {
+							$('[data-um-modal-opened="1"]').siblings('.um-avatar').find('> img').replaceWith( response.avatar );
+							if ( response.all_sizes ) {
+								$.each( response.all_sizes, function(i) {
+									$('.um-avatar-' + i + '[data-user_id="' + userID + '"]').find('> img').replaceWith( response.all_sizes[i] );
+								})
+							}
+
+							$loader.hide();
+							if ( UM.frontend.cropper.obj ) {
+								// If Cropper object exists then destroy before re-init.
+								UM.frontend.cropper.destroy();
+							}
+							UM.modal.close();
+						},
+						error: function (data) {
+							console.log(data);
+						}
+					}
+				);
+			}
+		}
 	});
 
 	$( document.body ).on( 'click', '.um-modal-avatar-decline', function(e){

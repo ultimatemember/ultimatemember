@@ -46,7 +46,8 @@ wp.hooks.addFilter( 'um_uploader_file_filtered', 'ultimate-member', function( pr
 	let $dropZone = $uploader.find( '.um-uploader-dropzone' );
 
 	if ( $fileList.length ) {
-		$fileList.removeClass('um-upload-completed').umShow();
+		$uploader.removeClass('um-upload-completed');
+		$fileList.umShow();
 		$dropZone.umHide();
 
 		// flush files list if there is only 1 file can be uploaded.
@@ -59,6 +60,8 @@ wp.hooks.addFilter( 'um_uploader_file_filtered', 'ultimate-member', function( pr
 		let fileRow = $fileList.find('#' + file.id);
 
 		if ( ! fileRow.length ) {
+			$fileList.html('');
+
 			let $cloned = $uploader.find('.um-uploader-file-placeholder').clone().addClass('um-uploader-file').removeClass('um-uploader-file-placeholder um-display-none').attr('id',file.id);
 
 			let objSelectors = [
@@ -145,10 +148,9 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 			UM.profile.avatarModal = UM.modal.addModal( settings, null );
 		} else {
 			$wrapper.find( '.um-field-image-controls' ).umShow();
-			$fileList.addClass('um-upload-completed');
-			// $uploader.find('.um-uploader-file .um-uploader-field-image-data-wrapper.um-uploading-process').removeClass('um-uploading-process');
+			$uploader.addClass('um-upload-completed');
 
-			$uploader.find('.um-uploader-file .um-uploader-file-preview').prepend( response.data[0].lazy_image ).attr( 'title', response.data[0].name_saved );
+			$uploader.find('.um-uploader-file .um-uploader-file-preview').html( response.data[0].lazy_image );
 			$uploader.find('.um-uploader-file').find('.um-uploader-file-data').umHide();
 
 			UM.frontend.image.lazyload.init();
@@ -162,7 +164,6 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 	return null;
 });
 
-
 wp.hooks.addFilter( 'um_uploader_file_filtered', 'ultimate-member', function( preventDefault, $button, up, file ) {
 	let handler = $button.data( 'handler' );
 	if ( 'field-file' !== handler ) {
@@ -174,7 +175,8 @@ wp.hooks.addFilter( 'um_uploader_file_filtered', 'ultimate-member', function( pr
 	let $dropZone = $uploader.find( '.um-uploader-dropzone' );
 
 	if ( $fileList.length ) {
-		$fileList.removeClass('um-upload-completed').umShow();
+		$uploader.removeClass('um-upload-completed');
+		$fileList.umShow();
 		$dropZone.umHide();
 
 		// flush files list if there is only 1 file can be uploaded.
@@ -187,6 +189,8 @@ wp.hooks.addFilter( 'um_uploader_file_filtered', 'ultimate-member', function( pr
 		let fileRow = $fileList.find('#' + file.id);
 
 		if ( ! fileRow.length ) {
+			$fileList.html('');
+
 			let $cloned = $uploader.find('.um-uploader-file-placeholder').clone().addClass('um-uploader-file').removeClass('um-uploader-file-placeholder um-display-none').attr('id',file.id);
 
 			let objSelectors = [
@@ -228,9 +232,9 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 
 	$wrapper.find( '.um-field-file-controls' ).umShow();
 
-	if ( $fileList.length ) {
-		$fileList.addClass('um-upload-completed');
+	$uploader.addClass('um-upload-completed');
 
+	if ( $fileList.length ) {
 		let fileRow = $fileList.find( '#' + file.id );
 		fileRow.find( '.um-uploaded-value' ).val( response.data[0].name_saved );
 		fileRow.find( '.um-uploaded-value-hash' ).val( response.data[0].hash );
