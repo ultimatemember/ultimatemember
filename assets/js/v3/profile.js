@@ -121,6 +121,9 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 			$fileList.umHide();
 			$dropZone.umShow();
 
+			let fileRow = $fileList.find('#' + file.id);
+			fileRow.data('filename', response.data[0].name_saved).data('nonce', response.data[0].delete_nonce);
+
 			return true;
 		} else if ( 'square' === cropSetting ) {
 			let settings = {
@@ -139,6 +142,9 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 			$uploader.removeClass('um-upload-completed');
 			$fileList.umHide();
 			$dropZone.umShow();
+
+			let fileRow = $fileList.find('#' + file.id);
+			fileRow.data('filename', response.data[0].name_saved).data('nonce', response.data[0].delete_nonce);
 
 			return true;
 		} else {
@@ -411,6 +417,8 @@ jQuery(document).ready(function() {
 			let $loader = $button.siblings('.um-ajax-spinner-svg');
 			let $buttons = $button.parents('.um-modal-buttons-wrapper').find('.um-button');
 			let userID = $button.data('user_id');
+			let formID = $button.data('form_id');
+			let fieldID = $button.data('field_id');
 			let nonce = $button.data('nonce');
 
 			let cropperData = UM.frontend.cropper.obj.getData();
@@ -421,11 +429,14 @@ jQuery(document).ready(function() {
 				$loader.show();
 
 				wp.ajax.send(
-					'um_resize_image',
+					'um_crop_image',
 					{
 						data: {
+							src : src,
 							coord : coord,
 							user_id : userID,
+							field_id: fieldID,
+							form_id: formID,
 							nonce: nonce
 						},
 						success: function( response ) {
@@ -451,153 +462,6 @@ jQuery(document).ready(function() {
 			}
 		}
 	});
-
-	jQuery( document.body ).on( 'click', '.um-finish-upload.image:not(.disabled)', function(){
-
-		var elem = jQuery(this);
-		var key = jQuery(this).attr('data-key');
-		var img_c = jQuery(this).parents('.um-modal-body').find('.um-single-image-preview');
-		var src = img_c.find('img').attr('src');
-
-		var file = img_c.find('img').data('file');
-		var user_id = 0;
-		if ( jQuery(this).parents('#um_upload_single').data('user_id')  ) {
-			user_id = jQuery(this).parents('#um_upload_single').data('user_id');
-		}
-
-		var d;
-		var form_id = 0;
-		var mode = '';
-		if ( jQuery('div.um-field-image[data-key="' + key + '"]').length === 1 ) {
-			var $formWrapper = jQuery('div.um-field-image[data-key="' + key + '"]').closest('.um-form');
-			form_id = $formWrapper.find('input[name="form_id"]').val();
-			mode = $formWrapper.attr('data-mode');
-		}
-
-		if ( jQuery('.cropper-hidden').length > 0 && UM.frontend.cropper.obj ) {
-			var data = UM.frontend.cropper.obj.getData();
-			var coord = Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height);
-
-			jQuery(this).html( jQuery(this).attr('data-processing') ).addClass('disabled');
-
-			jQuery.ajax({
-				url: wp.ajax.settings.url,
-				type: 'POST',
-				dataType: 'json',
-				data: {
-					action: 'um_resize_image',
-					src : src,
-					coord : coord,
-					user_id : user_id,
-					key: key,
-					set_id: form_id,
-					set_mode: mode,
-					nonce: um_scripts.nonce
-				},
-				success: function( response ) {
-
-					if ( response.success ) {
-
-						d = new Date();
-
-						if ( key === 'profile_photo' ) {
-							jQuery('.um-profile-photo-img img').attr('src', response.data.image.source_url + "?"+d.getTime());
-						} else if ( key === 'cover_photo' ) {
-							jQuery('.um-cover-e').empty().html('<img src="' + response.data.image.source_url + "?"+d.getTime() + '" alt="" />');
-							if ( jQuery('.um').hasClass('um-editing') ) {
-								jQuery('.um-cover-overlay').show();
-							}
-						}
-
-						jQuery('.um-single-image-preview[data-key='+key+']').fadeIn().find('img').attr('src', response.data.image.source_url + "?"+d.getTime());
-
-						um_remove_modal();
-
-						jQuery('img.cropper-invisible').remove();
-
-						jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( elem.attr('data-change') );
-
-						jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type="hidden"]').val( response.data.image.filename );
-					}
-
-				}
-			});
-
-		} else {
-			d = new Date();
-
-			jQuery('.um-single-image-preview[data-key='+key+']').fadeIn().find('img').attr('src', src + "?"+d.getTime());
-
-			um_remove_modal();
-
-			jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( elem.attr('data-change') );
-
-			jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden]').val( file );
-		}
-	});
-
-
-	// jQuery( document.body ).on('click', '.um-field-image-change', function(e){
-	// 	e.preventDefault();
-	// 	let $fieldWrapper = jQuery(this).parents('.um-field');
-	// 	$fieldWrapper.find('.um-field-value').umHide();
-	// 	$fieldWrapper.find('.um-field-uploader-wrapper').umShow();
-	// });
-	//
-	// jQuery( document.body ).on('click', '.um-field-file-change', function(e){
-	// 	e.preventDefault();
-	// 	let $fieldWrapper = jQuery(this).parents('.um-field');
-	// 	$fieldWrapper.find('.um-field-value').umHide();
-	// 	$fieldWrapper.find('.um-field-uploader-wrapper').umShow();
-	// });
-
-	// jQuery( document.body ).on('click', '.um-field-image-uploader-cancel', function(e){
-	// 	e.preventDefault();
-	// 	if ( ! confirm( wp.i18n.__( 'Are you sure that you want to cancel uploader process? You cannot restore already uploaded image.', 'ultimate-member' ) ) ) {
-	// 		return false;
-	// 	}
-	//
-	// 	let $fieldWrapper = jQuery(this).parents('.um-field');
-	// 	$fieldWrapper.find('.um-field-value').umShow();
-	// 	$fieldWrapper.find('.um-field-uploader-wrapper').umHide();
-	// });
-	//
-	// jQuery( document.body ).on('click', '.um-field-file-uploader-cancel', function(e){
-	// 	e.preventDefault();
-	// 	if ( ! confirm( wp.i18n.__( 'Are you sure that you want to cancel uploader process? You cannot restore already uploaded file.', 'ultimate-member' ) ) ) {
-	// 		return false;
-	// 	}
-	//
-	// 	let $fieldWrapper = jQuery(this).parents('.um-field');
-	// 	$fieldWrapper.find('.um-field-value').umShow();
-	// 	$fieldWrapper.find('.um-field-uploader-wrapper').umHide();
-	// });
-
-	// jQuery( document.body ).on('click', '.um-field-image-remove', function(e){
-	// 	e.preventDefault();
-	// 	if ( ! confirm( wp.i18n.__( 'Are you sure that you want to remove this image?', 'ultimate-member' ) ) ) {
-	// 		return false;
-	// 	}
-	//
-	// 	let $fieldWrapper = jQuery(this).parents('.um-field');
-	// 	let $uploaderWrapper = $fieldWrapper.find('.um-field-uploader-wrapper');
-	// 	$uploaderWrapper.umShow();
-	// 	$uploaderWrapper.find('.um-field-image-uploader-cancel').umHide();
-	// 	$fieldWrapper.find('.um-field-value').remove();
-	// });
-	//
-	// jQuery( document.body ).on('click', '.um-field-file-remove', function(e){
-	// 	e.preventDefault();
-	// 	if ( ! confirm( wp.i18n.__( 'Are you sure that you want to remove this file?', 'ultimate-member' ) ) ) {
-	// 		return false;
-	// 	}
-	//
-	// 	let $fieldWrapper = jQuery(this).parents('.um-field');
-	// 	let $uploaderWrapper = $fieldWrapper.find('.um-field-uploader-wrapper');
-	// 	$uploaderWrapper.umShow();
-	// 	$uploaderWrapper.find('.um-field-file-uploader-cancel').umHide();
-	// 	$fieldWrapper.find('.um-field-value').remove();
-	// });
 
 	jQuery('.um-profile.um-viewing .um-profile-body .um-row').each(function(){
 		var this_row = jQuery(this);

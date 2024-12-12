@@ -549,7 +549,8 @@ UM.frontend = {
 					wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
 				}
 
-				if ( ! $fileRow.hasClass('um-upload-failed') ) {
+				let fileID = $fileRow.attr('id');
+				if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
 					let fileName = $fileRow.data('filename');
 					let nonce = $fileRow.data('nonce');
 
