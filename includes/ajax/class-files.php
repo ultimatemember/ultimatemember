@@ -99,40 +99,111 @@ class Files {
 		if ( 'upload-avatar' === $handler ) {
 			if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), 'um_upload_' . $handler ) ) {
 				// This nonce is not valid.
-				$error = __( 'Invalid nonce.', 'ultimate-member' );
+				$error = esc_html__( 'Invalid nonce.', 'ultimate-member' );
 			}
 
 			if ( ! array_key_exists( 'user_id', $_REQUEST ) ) {
-				$error = __( 'No user to set avatar.', 'ultimate-member' );
+				$error = esc_html__( 'No user to set avatar.', 'ultimate-member' );
 			}
 
 			$user_id = absint( $_REQUEST['user_id'] );
 
 			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-				$error = __( 'You can not edit this user.', 'ultimate-member' );
+				$error = esc_html__( 'You can not edit this user.', 'ultimate-member' );
 			}
 		} elseif ( 'field-file' === $handler || 'field-image' === $handler ) {
 			if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), 'um_upload_' . $handler ) ) {
 				// This nonce is not valid.
-				$error = __( 'Invalid nonce.', 'ultimate-member' );
+				$error = esc_html__( 'Invalid nonce.', 'ultimate-member' );
 			}
 
 			if ( ! array_key_exists( 'user_id', $_REQUEST ) ) {
-				$error = __( 'No user to set value.', 'ultimate-member' );
+				$error = esc_html__( 'No user to set value.', 'ultimate-member' );
 			}
 
-			$user_id = absint( $_REQUEST['user_id'] );
+			$user_id = empty( $_REQUEST['user_id'] ) ? null : absint( $_REQUEST['user_id'] );
+			if ( $user_id && is_user_logged_in() && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+				$error = esc_html__( 'You have no permission to edit this user', 'ultimate-member' );
+			}
 
-			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-				$error = __( 'You can not edit this user.', 'ultimate-member' );
+			if ( $user_id && ! is_user_logged_in() ) {
+				$error = esc_html__( 'You have no permission to edit this user', 'ultimate-member' );
 			}
 
 			if ( ! array_key_exists( 'form_id', $_REQUEST ) ) {
-				$error = __( 'No form to set value.', 'ultimate-member' );
+				$error = esc_html__( 'No form to set value.', 'ultimate-member' );
+			}
+
+			$form_id   = absint( $_REQUEST['form_id'] );
+			$form_post = get_post( $form_id );
+			// Invalid post ID. Maybe post doesn't exist.
+			if ( empty( $form_post ) ) {
+				$error = esc_html__( 'Invalid form ID', 'ultimate-member' );
+			}
+
+			if ( 'um_form' !== $form_post->post_type ) {
+				$error = esc_html__( 'Invalid form post type', 'ultimate-member' );
+			}
+
+			$form_status = get_post_status( $form_id );
+			if ( 'publish' !== $form_status ) {
+				$error = esc_html__( 'Invalid form status', 'ultimate-member' );
+			}
+
+			$post_data = UM()->query()->post_data( $form_id );
+			if ( ! array_key_exists( 'mode', $post_data ) ) {
+				$error = esc_html__( 'Invalid form type', 'ultimate-member' );
+			}
+
+			$mode = $post_data['mode'];
+			if ( ! is_user_logged_in() && 'profile' === $mode ) {
+				$error = esc_html__( 'You have no permission to edit this user', 'ultimate-member' );
+			}
+
+			if ( null !== $user_id && 'register' === $mode ) {
+				$error = esc_html__( 'User has to be empty on registration', 'ultimate-member' );
+			}
+
+			UM()->fields()->set_id   = $form_id;
+			UM()->fields()->set_mode = $mode;
+
+			// For profiles only.
+			if ( 'profile' === $mode && ! empty( $post_data['use_custom_settings'] ) && ! empty( $post_data['role'] ) ) {
+				// Option "Apply custom settings to this form". Option "Make this profile form role-specific".
+				// Show the first Profile Form with role selected, don't show profile forms below the page with other role-specific setting.
+				$current_user_roles = UM()->roles()->get_all_user_roles( $user_id );
+				if ( empty( $current_user_roles ) ) {
+					$error = esc_html__( 'You have no permission to edit this user through this form', 'ultimate-member' );
+				}
+
+				$post_data['role'] = maybe_unserialize( $post_data['role'] );
+
+				if ( is_array( $post_data['role'] ) ) {
+					if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {
+						$error = esc_html__( 'You have no permission to edit this user through this form', 'ultimate-member' );
+					}
+				} elseif ( ! in_array( $post_data['role'], $current_user_roles, true ) ) {
+					$error = esc_html__( 'You have no permission to edit this user through this form', 'ultimate-member' );
+				}
 			}
 
 			if ( ! array_key_exists( 'field_id', $_REQUEST ) ) {
-				$error = __( 'No field to set value.', 'ultimate-member' );
+				$error = esc_html__( 'No field to set value.', 'ultimate-member' );
+			}
+
+			$id = sanitize_text_field( $_REQUEST['field_id'] );
+
+			if ( ! array_key_exists( 'custom_fields', $post_data ) || empty( $post_data['custom_fields'] ) ) {
+				$error = esc_html__( 'Invalid form fields', 'ultimate-member' );
+			}
+
+			$custom_fields = maybe_unserialize( $post_data['custom_fields'] );
+			if ( ! is_array( $custom_fields ) || ! array_key_exists( $id, $custom_fields ) ) {
+				$error = esc_html__( 'Invalid field metakey', 'ultimate-member' );
+			}
+
+			if ( 'profile' === $mode && ! um_can_edit_field( $custom_fields[ $id ] ) ) {
+				$error = esc_html__( 'You have no permission to edit this field', 'ultimate-member' );
 			}
 		}
 
@@ -444,9 +515,9 @@ class Files {
 			);
 		} else {
 			$field_id = ! empty( $_REQUEST['field_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['field_id'] ) ) : '';
-			$form_id  = ! empty( $_REQUEST['form_id'] ) ?  absint( $_REQUEST['form_id'] ) : '';
+			$form_id  = ! empty( $_REQUEST['form_id'] ) ? absint( $_REQUEST['form_id'] ) : '';
 			$real_id  = 'um_field_' . $form_id . '_' . $field_id;
-
+			$user_id  = ! empty( $_REQUEST['user_id'] ) ? absint( $_REQUEST['user_id'] ) : false;
 			ob_start();
 			?>
 			<div class="um-modal-crop-wrapper" data-crop="<?php echo esc_attr( $crop ); ?>" data-field="<?php echo esc_attr( $real_id ); ?>" data-min_width="256" data-min_height="256">
@@ -463,9 +534,11 @@ class Files {
 							'size'    => 'm',
 							'classes' => array( 'um-apply-field-image-crop' ),
 							'data'    => array(
-//								'user_id' => $user_id,
-								'field' => $real_id,
-								'nonce' => wp_create_nonce( 'um_upload_profile_photo_apply' ),
+								'user_id'    => $user_id,
+								'form_id'    => $form_id,
+								'form_field' => $real_id,
+								'field_id'   => $field_id,
+								'nonce'      => wp_create_nonce( 'um_upload_profile_photo_apply' ),
 							),
 						)
 					),
@@ -480,9 +553,7 @@ class Files {
 							'size'    => 'm',
 							'classes' => array( 'um-modal-field-image-decline' ),
 							'data'    => array(
-//								'user_id' => $user_id,
-								'field' => $real_id,
-								'nonce'   => wp_create_nonce( 'um_upload_profile_photo_decline' ),
+								'form_field' => $real_id,
 							),
 						)
 					),

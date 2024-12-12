@@ -33,10 +33,12 @@ class Uploader {
 			return $value;
 		}
 
+		$label = isset( $args['field_data']['label'] ) ? $args['field_data']['label'] : __( 'Untitled photo', 'ultimate-member' );
+
 		ob_start();
 		?>
 		<div class="um-uploader-file-placeholder um-display-none">
-			<div class="um-uploader-file-preview" title="<?php esc_attr_e( 'Preview Image Upload', 'ultimate-member' ); ?>"></div>
+			<div class="um-uploader-file-preview" title="<?php /* translators: %s is the field label. */ echo esc_attr( sprintf( __( 'Preview %s', 'ultimate-member' ), $label ) ); ?>"></div>
 			<div class="um-uploader-file-data">
 				<div class="um-file-extension">
 					<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file" width="48" height="48" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--um-gray-300, #d0d5dd)" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -51,17 +53,11 @@ class Uploader {
 					<div class="um-supporting-text">{{{supporting}}}</div>
 				</div>
 				<?php
-				if ( true !== $args['async'] ) {
-					$name          = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][path]' : $args['name'] . '[path]';
-					$filename_name = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][filename]' : $args['name'] . '[filename]';
-					$hash_name     = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][hash]' : $args['name'] . '[hash]';
-					?>
-					<input type="hidden" class="um-uploaded-value" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $name ); ?>" value="" disabled />
-					<input type="hidden" class="um-uploaded-filename" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $filename_name ); ?>" value="" disabled />
-					<input type="hidden" class="um-uploaded-value-hash" name="<?php echo esc_attr( $hash_name ); ?>" value="" disabled />
-					<?php
-				}
+				$name      = $args['name'] . '[path]';
+				$hash_name = $args['name'] . '[hash]';
 				?>
+				<input type="hidden" class="um-uploaded-value" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $name ); ?>" value="" disabled />
+				<input type="hidden" class="um-uploaded-value-hash" name="<?php echo esc_attr( $hash_name ); ?>" value="" disabled />
 			</div>
 		</div>
 		<?php
@@ -100,7 +96,7 @@ class Uploader {
 				esc_html_e( 'This image has been removed.', 'ultimate-member' );
 			} else {
 				$uri   = UM()->files()->get_download_link( UM()->fields()->set_id, $args['data']['metakey'], um_user( 'ID' ) );
-				$label = isset( $args['data']['label'] ) ? $args['data']['label'] : __( 'Untitled photo', 'ultimate-member' );
+				$label = isset( $args['field_data']['label'] ) ? $args['field_data']['label'] : __( 'Untitled photo', 'ultimate-member' );
 				?>
 				<div class="um-uploader-file-preview" title="<?php /* translators: %s is the field label. */echo esc_attr( sprintf( __( 'Preview %s', 'ultimate-member' ), $label ) ); ?>">
 					<?php
@@ -118,12 +114,10 @@ class Uploader {
 				</div>
 				<div class="um-uploader-file-data">
 					<?php
-					$name          = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][path]' : $args['name'] . '[path]';
-					$filename_name = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][filename]' : $args['name'] . '[filename]';
-					$hash_name     = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][hash]' : $args['name'] . '[hash]';
+					$name      = $args['name'] . '[path]';
+					$hash_name = $args['name'] . '[hash]';
 					?>
 					<input type="hidden" class="um-uploaded-value" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $name ); ?>" value="" disabled />
-					<input type="hidden" class="um-uploaded-filename" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $filename_name ); ?>" value="" disabled />
 					<input type="hidden" class="um-uploaded-value-hash" name="<?php echo esc_attr( $hash_name ); ?>" value="" disabled />
 				</div>
 				<?php
@@ -164,17 +158,11 @@ class Uploader {
 				<div class="um-supporting-text">{{{supporting}}}</div>
 			</div>
 			<?php
-			if ( true !== $args['async'] ) {
-				$name          = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][path]' : $args['name'] . '[path]';
-				$filename_name = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][filename]' : $args['name'] . '[filename]';
-				$hash_name     = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][hash]' : $args['name'] . '[hash]';
-				?>
-				<input type="hidden" class="um-uploaded-value" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $name ); ?>" value="" disabled />
-				<input type="hidden" class="um-uploaded-filename" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $filename_name ); ?>" value="" disabled />
-				<input type="hidden" class="um-uploaded-value-hash" name="<?php echo esc_attr( $hash_name ); ?>" value="" disabled />
-				<?php
-			}
+			$name      = $args['name'] . '[path]';
+			$hash_name = $args['name'] . '[hash]';
 			?>
+			<input type="hidden" class="um-uploaded-value" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $name ); ?>" value="" disabled />
+			<input type="hidden" class="um-uploaded-value-hash" name="<?php echo esc_attr( $hash_name ); ?>" value="" disabled />
 		</div>
 		<?php
 		return ob_get_clean();
@@ -226,12 +214,10 @@ class Uploader {
 					<div class="um-uploader-file-name"><?php echo esc_html( $file_field_value ); ?></div>
 				</div>
 				<?php
-				$name          = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][path]' : $args['name'] . '[path]';
-				$filename_name = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][filename]' : $args['name'] . '[filename]';
-				$hash_name     = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][hash]' : $args['name'] . '[hash]';
+				$name      = $args['name'] . '[path]';
+				$hash_name = $args['name'] . '[hash]';
 				?>
 				<input type="hidden" class="um-uploaded-value" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $name ); ?>" value="" disabled />
-				<input type="hidden" class="um-uploaded-filename" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $filename_name ); ?>" value="" disabled />
 				<input type="hidden" class="um-uploaded-value-hash" name="<?php echo esc_attr( $hash_name ); ?>" value="" disabled />
 				<?php
 			}

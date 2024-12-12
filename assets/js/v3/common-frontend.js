@@ -475,6 +475,7 @@ UM.frontend = {
 			});
 		},
 		initActions: function () {
+			// Dropzone activity handlers.
 			jQuery(document.body).on('dragover', '.um-uploader-dropzone', function ( ev ){
 				let dropzoneTarget = ev.target;
 				if ( ! ev.target.classList.contains('um-uploader-dropzone') ) {
@@ -505,11 +506,13 @@ UM.frontend = {
 				jQuery(dropzoneTarget).removeAttr('drop-active');
 			});
 
+			// Duplicate uploader link.
 			jQuery(document.body).on('click', '.um-upload-link:not(.um-link-disabled)', function(e) {
 				e.preventDefault();
 				jQuery(this).parents('.um-uploader').find('.um-uploader-button').trigger('click');
 			});
 
+			// Default remove file from uploader queue button.
 			jQuery(document.body).on('click', '.um-uploader-file-remove', function() {
 				if ( ! confirm( wp.i18n.__( 'Are you sure that you want to delete this file?', 'ultimate-member' ) ) ) {
 					return false;

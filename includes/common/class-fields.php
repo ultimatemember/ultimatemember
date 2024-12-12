@@ -1476,22 +1476,23 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 						}
 
 						$uploader_args = array(
-							'async'    => false,
-							'handler'  => 'field-image',
-							'multiple' => false,
-							'types'    => $allowed_types,
-							'name'     => $field_name,
-							'value'    => $field_value,
-							'field_id' => $field_name,
-							'button'   => array(
+							'async'      => false,
+							'handler'    => 'field-image',
+							'multiple'   => false,
+							'types'      => $allowed_types,
+							'name'       => $field_name,
+							'value'      => $field_value,
+							'field_id'   => $field_name,
+							'button'     => array(
 								'id'            => $field_name . '_uploader_button',
 								'size'          => 's',
 								'icon_position' => 'content',
 							),
-							'data'     => array(
+							'data'       => array(
 								'crop'    => $data['crop_data'],
 								'metakey' => $data['metakey'],
 							),
+							'field_data' => $data,
 						);
 
 						if ( ! empty( $data['max_size'] ) ) {
@@ -1500,58 +1501,6 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 
 						if ( 'profile' === $this->set_mode && ! empty( $field_value ) ) {
 							$uploader_args['classes'][] = 'um-upload-completed';
-
-//							$output .= '<div class="um-field-value">';
-//
-//							$uri   = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
-//							$title = isset( $data['title'] ) ? $data['title'] : __( 'Untitled photo', 'ultimate-member' );
-//
-//							$removed = false;
-//							if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $field_value ) ) {
-//								if ( is_multisite() ) {
-//									//multisite fix for old customers
-//									$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $field_value );
-//									if ( ! file_exists( $file_path ) ) {
-//										$removed = true;
-//									}
-//								} else {
-//									$removed = true;
-//								}
-//							}
-//
-//							// if value is an image tag
-//							if ( preg_match( '/\<img.*src=\"([^"]+).*/', $field_value, $matches ) ) {
-//								$uri = $matches[1];
-//								// translators: %s is the field name
-//								$output .= '<a href="#" class="um-photo-modal" data-src="' . esc_url( $uri ) . '" title="' . sprintf( esc_attr__( 'Preview %s', 'ultimate-member' ), esc_attr( $title ) ) . '"><img class="um-photo-modal-img" src="' . esc_url( $uri ) . '" alt="' . esc_attr( $title ) . '" /></a>';
-//							} elseif ( ! $removed ) {
-//								// translators: %s is the field name
-//								$output .= '<a href="#" class="um-photo-modal" data-src="' . esc_url( $uri ) . '" title="' . sprintf( esc_attr__( 'Preview %s', 'ultimate-member' ), esc_attr( $title ) ) . '"><img class="um-photo-modal-img" src="' . esc_url( $uri ) . '" alt="' . esc_attr( $title ) . '" /></a>';
-//							} else {
-//								$output .= '';
-//							}
-
-//							$output .= '<div class="um-field-value-control">';
-//							$output .= UM()->frontend()::layouts()::button(
-//								__( 'Change', 'ultimate-member' ),
-//								array(
-//									'size'    => 's',
-//									'classes' => array( 'um-field-image-change' ),
-//									'design'  => 'secondary-color',
-//								)
-//							);
-//							$output .= UM()->frontend()::layouts()::button(
-//								__( 'Remove', 'ultimate-member' ),
-//								array(
-//									'size'    => 's',
-//									'classes' => array( 'um-field-image-remove' ),
-//									'design'  => 'tertiary-destructive',
-//								)
-//							);
-//							$output .= '</div></div>';
-//							$output .= '</div>';
-
-//							$uploader_wrapper_classes[] = 'um-display-none';
 						}
 
 						$uploader_wrapper_classes = array( 'um-field-uploader-wrapper', 'um-field-image-uploader-wrapper' );
@@ -1712,21 +1661,22 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 						}
 
 						$uploader_args = array(
-							'async'    => false,
-							'handler'  => 'field-file',
-							'multiple' => false,
-							'types'    => $allowed_types,
-							'name'     => $field_name,
-							'value'    => $file_field_value,
-							'field_id' => $field_name,
-							'button'   => array(
+							'async'      => false,
+							'handler'    => 'field-file',
+							'multiple'   => false,
+							'types'      => $allowed_types,
+							'name'       => $field_name,
+							'value'      => $file_field_value,
+							'field_id'   => $field_name,
+							'button'     => array(
 								'id'            => $field_name . '_uploader_button',
 								'size'          => 's',
 								'icon_position' => 'content',
 							),
-							'data'     => array(
+							'data'       => array(
 								'metakey' => $data['metakey'],
 							),
+							'field_data' => $data,
 						);
 
 						if ( ! empty( $data['max_size'] ) ) {
@@ -1735,46 +1685,6 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 
 						if ( 'profile' === $this->set_mode && ! empty( $file_field_value ) ) {
 							$uploader_args['classes'][] = 'um-upload-completed';
-
-//							$output .= '<div class="um-field-value">';
-//
-//							$file_type = wp_check_filetype( $file_field_value );
-//							$uri       = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
-//
-//							$removed = false;
-//							if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $file_field_value ) ) {
-//								if ( is_multisite() ) {
-//									//multisite fix for old customers
-//									$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $file_field_value );
-//									if ( ! file_exists( $file_path ) ) {
-//										$removed = true;
-//									}
-//								} else {
-//									$removed = true;
-//								}
-//							}
-//
-//							if ( $removed ) {
-//								$output .= __( 'This file has been removed.', 'ultimate-member' );
-//							} else {
-//								$file_info = um_user( $data['metakey'] . '_metadata' );
-//								if ( ! empty( $file_info['original_name'] ) ) {
-//									$file_field_value = $file_info['original_name'];
-//								}
-//
-//								$icon    = UM()->frontend()::layouts()::get_file_extension_icon( $file_type['ext'] );
-//								$output .= '<div class="um-field-single-file">
-//									' . $icon . '
-//									<div class="um-field-file-info">
-//										<span class="um-field-file-filename">' . esc_attr( $file_field_value ) . '</span>
-//										<a class="um-link um-link-secondary um-link-underline um-field-file-download-link" href="' . esc_url( $uri ) . '" target="_blank" title="' . esc_html__( 'Download', 'ultimate-member' ) . '">' .
-//										   esc_html__( 'Download', 'ultimate-member' ) .
-//										   '</a>
-//									</div>
-//								</div>';
-//							}
-//
-//							$output .= '</div>';
 						}
 
 						$uploader_wrapper_classes = array( 'um-field-uploader-wrapper', 'um-field-file-uploader-wrapper' );
