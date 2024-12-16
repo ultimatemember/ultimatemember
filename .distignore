@@ -1,5 +1,6 @@
 # Directories
 /.wordpress-org
+/.git
 /.github
 /assets/sass
 /assets/libs/fontawesome/scss
@@ -10,6 +11,7 @@
 
 # Files
 /.bowerrc
+/.distignore
 /.editorconfig
 /.gitattributes
 /.gitignore
