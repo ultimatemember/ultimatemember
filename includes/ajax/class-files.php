@@ -603,7 +603,7 @@ class Files {
 			wp_send_json_error( esc_js( __( 'Please login to edit this user', 'ultimate-member' ) ) );
 		}
 
-		$form_id = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : null;
+		$form_id   = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : null;
 		$form_post = get_post( $form_id );
 		// Invalid post ID. Maybe post doesn't exist.
 		if ( empty( $form_post ) ) {
@@ -671,22 +671,8 @@ class Files {
 			wp_send_json_error( esc_js( __( 'This field doesn\'t support image crop', 'ultimate-member' ) ) );
 		}
 
-		if ( 'profile' === $mode ) {
-			if ( in_array( $field_id, array( 'cover_photo', 'profile_photo' ), true ) ) {
-				if ( 'profile_photo' === $field_id ) {
-					$disable_photo_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'disable_profile_photo_upload' ) : $post_data['disable_photo_upload'];
-					if ( $disable_photo_uploader ) {
-						wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
-					}
-				} else {
-					$cover_enabled_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'profile_cover_enabled' ) : $post_data['cover_enabled'];
-					if ( ! $cover_enabled_uploader ) {
-						wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
-					}
-				}
-			} elseif ( ! um_can_edit_field( $custom_fields[ $field_id ] ) ) {
-				wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
-			}
+		if ( 'profile' === $mode && ! um_can_edit_field( $custom_fields[ $field_id ] ) ) {
+			wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
 		}
 
 		$src        = esc_url_raw( $_REQUEST['src'] );
@@ -695,8 +681,18 @@ class Files {
 			wp_send_json_error( esc_js( __( 'Invalid file ownership', 'ultimate-member' ) ) );
 		}
 
+		$coord_n = substr_count( $_REQUEST['coord'], ',' );
+		if ( 3 !== $coord_n ) {
+			wp_send_json_error( esc_js( __( 'Invalid coordinates', 'ultimate-member' ) ) );
+		}
 		$coord = sanitize_text_field( $_REQUEST['coord'] );
 
+		$crop = explode( ',', $coord );
+		$crop = array_map( 'intval', $crop );
+
+		$quality = UM()->options()->get( 'image_compression' );
+
+		// @todo continue with image crop in new UI.
 		UM()->uploader()->replace_upload_dir = true;
 
 		$output = UM()->uploader()->resize_image( $image_path, $src, $field_id, $user_id, $coord );

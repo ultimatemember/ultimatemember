@@ -138,13 +138,6 @@ wp.hooks.addAction( 'um-modal-shown', 'ultimate-member', function( $modal ) {
 	}
 }, 10, 1 );
 
-wp.hooks.addAction( 'um-modal-shown', 'ultimate-member', function( $modal ) {
-	let $image = $modal.find('.um-modal-crop-wrapper');
-	if ( $image.length ) {
-		UM.frontend.cropper.init();
-	}
-}, 10, 1 );
-
 wp.hooks.addAction( 'um-modal-before-close', 'ultimate-member', function( $modal ) {
 	if ( $modal.find( '.um-modal-avatar-decline:not(:disabled)' ).length ) {
 		$modal.find( '.um-modal-avatar-decline' ).trigger('click');

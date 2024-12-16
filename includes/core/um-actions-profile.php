@@ -731,18 +731,29 @@ if ( UM()->is_new_ui() ) {
 
 				if ( isset( $args['submitted'][ $key ] ) ) {
 					if ( in_array( $array['type'], array( 'image', 'file' ), true ) ) {
-						if ( um_is_temp_file( $args['submitted'][ $key ] ) || 'empty_file' === $args['submitted'][ $key ] ) {
-							$files[ $key ] = $args['submitted'][ $key ];
-						} elseif( um_is_file_owner( UM()->uploader()->get_upload_base_url() . $user_id . '/' . $args['submitted'][ $key ], $user_id ) ) {
+						// @todo handle submission
+						if ( UM()->is_new_ui() ) {
+							var_dump( $args['submitted'][ $key ] );
+							if ( array_key_exists( 'path', $args['submitted'][ $key ] ) ) {
 
+								if ( ! um_is_file_owner( UM()->uploader()->get_upload_base_url() . $user_id . '/' . $args['submitted'][ $key ]['path'], $user_id ) ) {
+
+								}
+							}
 						} else {
-							$files[ $key ] = 'empty_file';
+							if ( um_is_temp_file( $args['submitted'][ $key ] ) || 'empty_file' === $args['submitted'][ $key ] ) {
+								$files[ $key ] = $args['submitted'][ $key ];
+							} elseif( um_is_file_owner( UM()->uploader()->get_upload_base_url() . $user_id . '/' . $args['submitted'][ $key ], $user_id ) ) {
+
+							} else {
+								$files[ $key ] = 'empty_file';
+							}
 						}
 					} else {
 						if ( 'password' === $array['type'] ) {
 							$to_update[ $key ]         = wp_hash_password( $args['submitted'][ $key ] );
 							// translators: %s: title.
-							$args['submitted'][ $key ] = sprintf( __( 'Your choosed %s', 'ultimate-member' ), $array['title'] );
+							$args['submitted'][ $key ] = sprintf( __( 'Your chose %s', 'ultimate-member' ), $array['title'] );
 						} else {
 							if ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] !== $userinfo[ $key ] ) {
 								$to_update[ $key ] = $args['submitted'][ $key ];

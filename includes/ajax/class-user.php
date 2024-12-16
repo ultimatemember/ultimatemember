@@ -86,7 +86,7 @@ class User {
 			wp_send_json_error( __( 'Cannot find uploaded file.', 'ultimate-member' ) );
 		}
 
-		$result = unlink( $temp_profile_photo['path'] );
+		$result = wp_delete_file( $temp_profile_photo['path'] );
 		if ( false === $result ) {
 			delete_user_meta( $user_id, 'um_temp_profile_photo' );
 			wp_send_json_error( __( 'Cannot delete uploaded file.', 'ultimate-member' ) );
@@ -104,6 +104,12 @@ class User {
 		if ( ! array_key_exists( 'user_id', $_REQUEST ) ) {
 			wp_send_json_error( __( 'Invalid data', 'ultimate-member' ) );
 		}
+
+		// @todo check form ID and form metadata for locked profile photo loader.
+//		$disable_photo_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'disable_profile_photo_upload' ) : $post_data['disable_photo_upload'];
+//		if ( $disable_photo_uploader ) {
+//			wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
+//		}
 
 		$user_id = absint( $_REQUEST['user_id'] );
 
@@ -142,10 +148,12 @@ class User {
 			$multisite_fix_dir = UM()->uploader()->get_upload_base_dir();
 			$multisite_fix_dir = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $multisite_fix_dir );
 
-			$image_path = $multisite_fix_dir . um_user( 'ID' ) . '/profile_photo.' . $extension;
+			$image_dir = $multisite_fix_dir . um_user( 'ID' ) . '/';
 		} else {
-			$image_path = UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . '/profile_photo.' . $extension;
+			$image_dir = UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . '/';
 		}
+
+		$image_path = wp_normalize_path( $image_dir . 'profile_photo.' . $extension );
 
 		$src_x = $crop[0];
 		$src_y = $crop[1];
@@ -163,17 +171,27 @@ class User {
 
 		$image->set_quality( $quality );
 
-		$sizes_array = array();
+		// Flush user directory from original profile photo thumbnails.
+		$files = scandir( $image_dir );
+		if ( ! empty( $files ) ) {
+			foreach ( $files as $file ) {
+				if ( preg_match( '/^profile_photo-(.*?)/', $file ) ) {
+					wp_delete_file( wp_normalize_path( $image_dir . $file ) );
+				}
+			}
+		}
 
-		$all_sizes = UM()->config()->get( 'avatar_thumbnail_sizes' );
+		// Creates new file's thumbnails.
+		$sizes_array = array();
+		$all_sizes   = UM()->config()->get( 'avatar_thumbnail_sizes' );
 		foreach ( $all_sizes as $size ) {
 			$sizes_array[] = array( 'width' => $size );
 		}
-
 		$image->multi_resize( $sizes_array );
 
+		// Remove temp original file used for crop.
 		if ( file_exists( $temp_image_path ) ) {
-			unlink( $temp_image_path );
+			wp_delete_file( $temp_image_path );
 		}
 
 		update_user_meta( $user_id, 'profile_photo', 'profile_photo.' . $extension );

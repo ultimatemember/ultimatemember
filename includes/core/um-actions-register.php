@@ -747,10 +747,17 @@ function um_registration_save_files( $user_id, $args, $form_data ) {
 	$fields = maybe_unserialize( $form_data['custom_fields'] );
 	if ( ! empty( $fields ) && is_array( $fields ) ) {
 		foreach ( $fields as $key => $array ) {
-			if ( isset( $args['submitted'][ $key ] ) ) {
-				if ( isset( $array['type'] ) && in_array( $array['type'], array( 'image', 'file' ), true ) &&
-					( um_is_temp_file( $args['submitted'][ $key ] ) || 'empty_file' === $args['submitted'][ $key ] )
-				) {
+			if ( ! array_key_exists( 'type', $array ) || ! in_array( $array['type'], array( 'image', 'file' ), true ) ) {
+				continue;
+			}
+
+			// @todo handle submission
+			if ( UM()->is_new_ui() ) {
+				if ( isset( $args['submitted'][ $key ]['path'] ) && um_is_temp_file( $args['submitted'][ $key ]['path'] ) ) {
+					$files[ $key ] = $args['submitted'][ $key ]['path'];
+				}
+			} else {
+				if ( isset( $args['submitted'][ $key ] ) && um_is_temp_file( $args['submitted'][ $key ] ) ) {
 					$files[ $key ] = $args['submitted'][ $key ];
 				}
 			}
