@@ -1256,7 +1256,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @param $files
 		 * @param bool $move_only
 		 */
-		function move_temporary_files( $user_id, $files, $move_only = false ) {
+		public function move_temporary_files( $user_id, $files, $move_only = false ) {
 			$new_files = array();
 			$old_files = array();
 
@@ -1278,7 +1278,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 						if ( $valid ) {
 							if ( file_exists( $file ) && um_is_file_owner( $file, $user_id ) ) {
-								unlink( $file );
+								wp_delete_file( $file );
 							}
 						}
 					}
@@ -1352,8 +1352,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @param array $new_files
 		 * @param array $old_files
 		 */
-		function remove_unused_uploads( $user_id, $new_files, $old_files = array() ) {
-
+		public function remove_unused_uploads( $user_id, $new_files, $old_files = array() ) {
 			if ( ! file_exists( $this->get_upload_user_base_dir( $user_id ) ) ) {
 				return;
 			}
@@ -1396,7 +1395,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 					$can_unlink = apply_filters( 'um_can_remove_uploaded_file', true, $user_id, $str );
 					if ( $can_unlink ) {
-						unlink( $file );
+						wp_delete_file( $file );
 					}
 				}
 			}
