@@ -1,9 +1,10 @@
 ﻿== Changelog ==
 
-= 2.9.2 December 04, 2024 =
+= 2.9.2 December 16, 2024 =
 
 * Enhancements:
 
+  - Added: Compatibility with the new [Ultimate Member - Zapier](https://ultimatemember.com/extensions/zapier/) extension
   - Added: `UM()->is_new_ui()` function for future enhancements related to new UI
   - Tweak: Changed hook's priority for initialization of email templates paths
   - Tweak: Removed `load_plugin_textdomain` due to (article)[https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/#Enhanced-support-for-only-using-PHP-translation-files]
