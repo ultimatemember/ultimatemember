@@ -22,9 +22,10 @@ if ( ! class_exists( 'um\core\GDPR' ) ) {
 			add_filter( 'um_whitelisted_metakeys', array( &$this, 'extend_whitelisted' ), 10, 2 );
 
 			add_filter( 'um_before_save_filter_submitted', array( &$this, 'add_agreement_date' ) );
-			add_filter( 'um_email_registration_data', array( &$this, 'email_registration_data' ), 10, 1 );
-
 			add_action( 'um_after_form_fields', array( &$this, 'display_option' ) );
+
+			// @todo this is hook for deprecated function
+			add_filter( 'um_email_registration_data', array( &$this, 'email_registration_data' ), 10, 1 );
 		}
 
 		/**
