@@ -691,6 +691,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'enable_reset_password_limit'           => true,
 				'reset_password_limit_number'           => 3,
 				'change_password_request_limit'         => false,
+				'only_approved_user_reset_password'     => true,
 				'blocked_emails'                        => '',
 				'blocked_words'                         => 'admin' . "\r\n" . 'administrator' . "\r\n" . 'webmaster' . "\r\n" . 'support' . "\r\n" . 'staff',
 				'allowed_choice_callbacks'              => '',

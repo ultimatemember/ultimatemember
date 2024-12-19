@@ -123,7 +123,7 @@ class Site_Health {
 							'title' => get_the_title( $form_id ),
 							'link'  => get_edit_post_link( $form_id ),
 						);
-						$forms_count++;
+						++$forms_count;
 						continue 2;
 					}
 				}
@@ -652,23 +652,27 @@ class Site_Health {
 				'value' => UM()->options()->get( 'reset_password_limit_number' ),
 			);
 		}
-		$access_other_settings['um-change_password_request_limit'] = array(
+		$access_other_settings['um-change_password_request_limit']     = array(
 			'label' => __( 'Change Password request limit ', 'ultimate-member' ),
 			'value' => UM()->options()->get( 'change_password_request_limit' ),
 		);
-		$access_other_settings['um-blocked_emails']                = array(
+		$access_other_settings['um-only_approved_user_reset_password'] = array(
+			'label' => __( 'Only approved user Reset Password', 'ultimate-member' ),
+			'value' => UM()->options()->get( 'only_approved_user_reset_password' ),
+		);
+		$access_other_settings['um-blocked_emails']                    = array(
 			'label' => __( 'Blocked Email Addresses', 'ultimate-member' ),
 			'value' => stripslashes( $blocked_emails ),
 		);
-		$access_other_settings['um-blocked_words']                 = array(
+		$access_other_settings['um-blocked_words']                     = array(
 			'label' => __( 'Blacklist Words', 'ultimate-member' ),
 			'value' => stripslashes( $blocked_words ),
 		);
-		$access_other_settings['um-allowed_choice_callbacks']      = array(
+		$access_other_settings['um-allowed_choice_callbacks']          = array(
 			'label' => __( 'Allowed Choice Callbacks', 'ultimate-member' ),
 			'value' => stripslashes( $allowed_callbacks ),
 		);
-		$access_other_settings['um-allow_url_redirect_confirm']    = array(
+		$access_other_settings['um-allow_url_redirect_confirm']        = array(
 			'label' => __( 'Allow external link redirect confirm ', 'ultimate-member' ),
 			'value' => UM()->options()->get( 'allow_url_redirect_confirm' ) ? $labels['yes'] : $labels['no'],
 		);
