@@ -482,6 +482,11 @@ p.um-notice.warning a {
 	padding-right: 40px !important;
 }
 
+.um-form .um-field-area-password input[type="password"]::-ms-reveal,
+.um-form .um-field-area-password input[type="password"]::-ms-clear {
+	display: none;
+}
+
 .um-form input[type="number"] {
 	width: auto;
 	padding: 0 0 0 5px !important;
