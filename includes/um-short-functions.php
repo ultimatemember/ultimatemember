@@ -693,6 +693,8 @@ function um_user_submitted_registration_formatted( $style = false ) {
 		$output .= um_user_submited_display( 'use_gdpr_agreement', __( 'GDPR Applied', 'ultimate-member' ), $submitted_data );
 	}
 
+	$output .= apply_filters( 'um_before_user_submitted_registration_data', '', $output, $submitted_data );
+
 	if ( isset( $submitted_data ) && is_array( $submitted_data ) ) {
 
 		if ( isset( $submitted_data['form_id'] ) ) {
@@ -809,6 +811,8 @@ function um_user_submitted_registration_formatted( $style = false ) {
 			} // endfor
 		}
 	}
+
+	$output .= apply_filters( 'um_after_user_submitted_registration_data', '', $output, $submitted_data );
 
 	if ( $style ) {
 		$output .= '</div>';
