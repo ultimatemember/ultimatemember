@@ -23,9 +23,6 @@ if ( ! class_exists( 'um\core\GDPR' ) ) {
 
 			add_filter( 'um_before_save_filter_submitted', array( &$this, 'add_agreement_date' ) );
 			add_action( 'um_after_form_fields', array( &$this, 'display_option' ) );
-
-			// @todo this is hook for deprecated function
-			add_filter( 'um_email_registration_data', array( &$this, 'email_registration_data' ), 10, 1 );
 		}
 
 		/**
@@ -50,7 +47,7 @@ if ( ! class_exists( 'um\core\GDPR' ) ) {
 			$use_gdpr_error_text = get_post_meta( $form_data['form_id'], '_um_register_use_gdpr_error_text', true );
 			$use_gdpr_error_text = ! empty( $use_gdpr_error_text ) ? $use_gdpr_error_text : __( 'Please agree privacy policy.', 'ultimate-member' );
 
-			if ( $gdpr_enabled && ! isset( $submitted_data['submitted']['use_gdpr_agreement'] ) ) {
+			if ( $gdpr_enabled && empty( $submitted_data['submitted']['use_gdpr_agreement'] ) ) {
 				UM()->form()->add_error( 'use_gdpr_agreement', $use_gdpr_error_text );
 			}
 		}
@@ -75,21 +72,6 @@ if ( ! class_exists( 'um\core\GDPR' ) ) {
 		public function add_agreement_date( $submitted ) {
 			if ( isset( $submitted['use_gdpr_agreement'] ) ) {
 				$submitted['use_gdpr_agreement'] = current_time( 'mysql', true );
-			}
-
-			return $submitted;
-		}
-
-		/**
-		 * @param $submitted
-		 *
-		 * @return mixed
-		 */
-		public function email_registration_data( $submitted ) {
-			if ( ! empty( $submitted['use_gdpr_agreement'] ) ) {
-				$title               = __( 'GDPR Applied', 'ultimate-member' );
-				$submitted[ $title ] = wp_date( get_option( 'date_format', 'F j, Y' ) . ' ' . get_option( 'time_format', 'g:i a' ), strtotime( $submitted['use_gdpr_agreement'] ) );
-				unset( $submitted['use_gdpr_agreement'] );
 			}
 
 			return $submitted;

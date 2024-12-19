@@ -1,4 +1,4 @@
-wp.hooks.addFilter( 'um_toggle_block', 'um-terms-conditions', function( $toggleBlock, $toggleButton ) {
+wp.hooks.addFilter( 'um_toggle_block', 'um_gdpr', function( $toggleBlock, $toggleButton ) {
 	if ( $toggleButton.hasClass( 'um-hide-gdpr' ) ) {
 		// Change toggle text.
 		let textAfter  = $toggleButton.data( 'toggle-text' );
