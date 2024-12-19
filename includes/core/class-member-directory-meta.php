@@ -1027,7 +1027,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			$this->sql_order = apply_filters( 'um_modify_sortby_parameter_meta', $this->sql_order, $sortby );
 
 			$profiles_per_page = $directory_data['profiles_per_page'];
-			if ( UM()->mobile()->isMobile() && isset( $directory_data['profiles_per_page_mobile'] ) ) {
+			if ( wp_is_mobile() && isset( $directory_data['profiles_per_page_mobile'] ) ) {
 				$profiles_per_page = $directory_data['profiles_per_page_mobile'];
 			}
 
@@ -1105,7 +1105,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
 
-			$this->cover_size = UM()->mobile()->isTablet() ? $sizes[1] : end( $sizes );
+			$this->cover_size = wp_is_mobile() ? $sizes[1] : end( $sizes );
 
 			$avatar_size       = UM()->options()->get( 'profile_photosize' );
 			$this->avatar_size = str_replace( 'px', '', $avatar_size );
