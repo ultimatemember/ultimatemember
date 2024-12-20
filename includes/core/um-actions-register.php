@@ -718,13 +718,12 @@ if ( UM()->is_new_ui() ) {
 	add_action( 'um_after_register_fields', 'um_add_submit_button_to_register', 1000 );
 }
 
-
 /**
  * Show Fields
  *
  * @param $args
  */
-function um_add_register_fields( $args ){
+function um_add_register_fields( $args ) {
 	echo UM()->fields()->display( 'register', $args );
 }
 add_action( 'um_main_register_fields', 'um_add_register_fields', 100 );
