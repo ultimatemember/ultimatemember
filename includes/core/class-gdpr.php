@@ -45,7 +45,7 @@ if ( ! class_exists( 'um\core\GDPR' ) ) {
 		public function agreement_validation( $submitted_data, $form_data ) {
 			$gdpr_enabled        = get_post_meta( $form_data['form_id'], '_um_register_use_gdpr', true );
 			$use_gdpr_error_text = get_post_meta( $form_data['form_id'], '_um_register_use_gdpr_error_text', true );
-			$use_gdpr_error_text = ! empty( $use_gdpr_error_text ) ? $use_gdpr_error_text : __( 'Please agree privacy policy.', 'ultimate-member' );
+			$use_gdpr_error_text = ! empty( $use_gdpr_error_text ) ? $use_gdpr_error_text : __( 'Please confirm your acceptance of our privacy policy', 'ultimate-member' );
 
 			if ( $gdpr_enabled && empty( $submitted_data['submitted']['use_gdpr_agreement'] ) ) {
 				UM()->form()->add_error( 'use_gdpr_agreement', $use_gdpr_error_text );

@@ -1459,6 +1459,21 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'default'        => true,
 					'account_only'   => true,
 				);
+
+				$this->predefined_fields['gdpr_details'] = array(
+					'content'     => '',
+					'type'        => 'block',
+					'private_use' => true,
+				);
+
+				$this->predefined_fields['use_gdpr_agreement'] = array(
+					'metakey'        => 'use_gdpr_agreement',
+					'type'           => 'bool',
+					'checkbox_label' => __( 'Please confirm that you agree to our privacy policy', 'ultimate-member' ),
+					'required'       => 1,
+					'editable'       => true,
+					'private_use'    => true,
+				);
 			}
 
 			/**
