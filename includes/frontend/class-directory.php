@@ -311,7 +311,7 @@ class Directory extends \um\common\Directory {
 					}
 				}
 
-				if ( 'online_status' !== $attrs['metakey'] ) {
+				if ( 'online_status' !== $attrs['metakey'] && isset( $attrs['options'] ) ) {
 					if ( 'role_select' !== $attrs['metakey'] && 'mycred_rank' !== $attrs['metakey'] && empty( $custom_dropdown ) && empty( $option_pairs ) ) {
 						$attrs['options'] = array_intersect( array_map( 'stripslashes', array_map( 'trim', $attrs['options'] ) ), $values_array );
 					} elseif ( ! empty( $custom_dropdown ) ) {
