@@ -125,7 +125,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			add_action( 'init', array( &$this, 'set' ), 1 );
 
 			// When the cache should be cleared
-			add_action( 'um_delete_user', array( &$this, 'remove_cache' ), 10, 1 );
+			add_action( 'um_delete_user', array( &$this, 'remove_cache' ) );
 
 			// When user cache should be cleared
 			add_action( 'um_after_user_updated', array( &$this, 'remove_cache' ) );
@@ -643,9 +643,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 			}
 
-			// remove uploads
-			UM()->files()->remove_dir( UM()->files()->upload_temp );
-			UM()->files()->remove_dir( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR );
+			// remove user's uploads
+			UM()->common()->filesystem()::remove_dir( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR );
 
 			delete_transient( 'um_count_users_unassigned' );
 			delete_transient( 'um_count_users_pending_dot' );
@@ -685,7 +684,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 			}
 
-			$this->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 		}
 
 
@@ -706,7 +705,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 			}
 
-			$this->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 		}
 
 
@@ -1021,7 +1020,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			//Update permalink
 			$this->generate_profile_slug( $user_id, true );
 
-			$this->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 		}
 
 		/**
@@ -1275,8 +1274,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		/**
 		 * @param $user_id
 		 */
-		function remove_cache( $user_id ) {
-			delete_option( "um_cache_userdata_{$user_id}" );
+		public function remove_cache( $user_id ) {
+			UM()->common()->users()->remove_cache( $user_id );
 		}
 
 

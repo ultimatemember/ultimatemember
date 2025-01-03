@@ -517,7 +517,9 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->user();
 			$this->profile();
 			$this->builtin();
-			$this->files();
+			if ( ! $this->is_new_ui() ) {
+				$this->files();
+			}
 			$this->form()->hooks();
 			$this->permalinks();
 			$this->cron();
@@ -1402,18 +1404,16 @@ if ( ! class_exists( 'UM' ) ) {
 
 			require_once 'core/um-filters-login.php';
 			require_once 'core/um-filters-fields.php';
-			require_once 'core/um-filters-files.php';
 			require_once 'core/um-filters-navmenu.php';
-			if ( ! ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_no_conflict_avatar' ) ) ) {
-				require_once 'core/um-filters-avatars.php';
-			}
 			require_once 'core/um-filters-user.php';
-
 			require_once 'core/um-filters-profile.php';
 			require_once 'core/um-filters-account.php';
 			require_once 'core/um-filters-misc.php';
 			require_once 'core/um-filters-commenting.php';
 
+			if ( ! ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_no_conflict_avatar' ) ) ) {
+				require_once 'core/um-filters-avatars.php';
+			}
 		}
 
 		/**

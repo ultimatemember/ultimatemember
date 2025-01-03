@@ -95,7 +95,7 @@ class Uploader {
 			if ( $removed ) {
 				esc_html_e( 'This image has been removed.', 'ultimate-member' );
 			} else {
-				$uri   = UM()->files()->get_download_link( UM()->fields()->set_id, $args['data']['metakey'], um_user( 'ID' ) );
+				$uri   = UM()->fields()->get_download_link( UM()->fields()->set_id, $args['data']['metakey'], um_user( 'ID' ) );
 				$label = isset( $args['field_data']['label'] ) ? $args['field_data']['label'] : __( 'Untitled photo', 'ultimate-member' );
 				?>
 				<div class="um-uploader-file-preview" title="<?php /* translators: %s is the field label. */echo esc_attr( sprintf( __( 'Preview %s', 'ultimate-member' ), $label ) ); ?>">

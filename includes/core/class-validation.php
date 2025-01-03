@@ -33,12 +33,11 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		 * Validation constructor.
 		 */
 		public function __construct() {
-			add_filter( 'um_user_pre_updating_files_array', array( $this, 'validate_files' ) );
-
 			if ( UM()->is_new_ui() ) {
 				add_filter( 'um_before_save_filter_submitted', array( $this, 'validate_fields_values' ), 10, 3 );
 			} else {
 				add_filter( 'um_before_save_filter_submitted', array( $this, 'validate_fields_values_v2' ), 10, 3 );
+				add_filter( 'um_user_pre_updating_files_array', array( $this, 'validate_files' ) );
 			}
 		}
 

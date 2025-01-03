@@ -108,6 +108,11 @@ class Users {
 		return $roles;
 	}
 
+	/**
+	 * Flush cookies for secure access to temp uploaded files.
+	 *
+	 * @return void
+	 */
 	public function flush_cookies() {
 		UM()->setcookie( 'um-temp-uploads', false );
 	}
@@ -263,6 +268,8 @@ class Users {
 	 * @return bool
 	 */
 	public function delete_photo( $user_id, $type ) {
+		global $wp_filesystem;
+
 		delete_user_meta( $user_id, $type );
 		delete_user_meta( $user_id, $type . '_metadata_temp' );
 
@@ -294,24 +301,38 @@ class Users {
 		 * }
 		 * add_action( 'um_after_remove_cover_photo', 'my_custom_remove_cover_photo' );
 		 */
-		do_action( "um_after_remove_{$type}", $user_id );
+		do_action( "um_after_remove_$type", $user_id );
 
-		$dir = UM()->files()->upload_basedir . $user_id . DIRECTORY_SEPARATOR;
-		chdir( $dir );
+		$dir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR;
 
-		// Searching files via the pattern and remove them.
-		$matches = glob( $type . '*', GLOB_MARK );
-		if ( is_array( $matches ) && ! empty( $matches ) ) {
-			foreach ( $matches as $match ) {
-				if ( is_file( $dir . $match ) ) {
-					unlink( $dir . $match );
-				}
+		$dirlist = $wp_filesystem->dirlist( $dir );
+		$dirlist = $dirlist ? $dirlist : array();
+		if ( empty( $dirlist ) ) {
+			// remove empty folder.
+			UM()->common()->filesystem()::remove_dir( $dir );
+			return true;
+		}
+
+		foreach ( array_keys( $dirlist ) as $file ) {
+			if ( '.' === $file || '..' === $file ) {
+				continue;
+			}
+
+			// Searching files via the pattern and remove them.
+			preg_match( '/' . $type . '/', $file, $matches );
+			if ( empty( $matches ) ) {
+				continue;
+			}
+
+			$filepath = wp_normalize_path( $dir . $file );
+			if ( $wp_filesystem->is_file( $filepath ) ) {
+				wp_delete_file( $filepath );
 			}
 		}
 
 		// Checking if the user's directory is empty.
 		if ( count( glob( "$dir/*" ) ) === 0 ) {
-			rmdir( $dir );
+			UM()->common()->filesystem()::remove_dir( $dir );
 		}
 
 		// Flush the user's cache.

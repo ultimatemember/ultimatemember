@@ -128,7 +128,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			$this->user_id = get_current_user_id();
 		}
 
-
 		/**
 		 * Get core temporary directory path
 		 *
@@ -136,9 +135,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @return string
 		 */
 		public function get_core_temp_dir() {
-			return $this->get_upload_base_dir(). $this->temp_upload_dir;
+			return $this->get_upload_base_dir() . $this->temp_upload_dir;
 		}
-
 
 		/**
 		 * Get core temporary directory URL
@@ -147,9 +145,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @return string
 		 */
 		public function get_core_temp_url() {
-			return $this->get_upload_base_url(). $this->temp_upload_dir;
+			return $this->get_upload_base_url() . $this->temp_upload_dir;
 		}
-
 
 		/**
 		 * Get core upload directory
@@ -503,7 +500,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			$response['handle_upload'] = $movefile;
 
 			// Remove old files from 'temp' directory
-			UM()->files()->remove_old_files( UM()->files()->upload_temp );
+			UM()->common()->filesystem()->clear_temp_dir();
 
 			return $response;
 		}
@@ -674,7 +671,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			$response['handle_upload'] = $movefile;
 
 			// Remove old files from 'temp' directory
-			UM()->files()->remove_old_files( UM()->files()->upload_temp );
+			UM()->common()->filesystem()->clear_temp_dir();
 
 			return $response;
 		}
@@ -1223,10 +1220,9 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			return $response;
 		}
 
-
 		/**
 		 * Fix image orientation
-		 *
+		 * @todo maybe use WordPress native `$editor->maybe_exif_rotate()` function.
 		 * @since 2.1.6
 		 *
 		 * @param  array $movefile
@@ -1237,7 +1233,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			if ( $image_fix_orientation && $movefile['type'] == 'image/jpeg' ) {
 				$image = imagecreatefromjpeg( $movefile['file'] );
 				if ( $image ) {
-					$image = UM()->files()->fix_image_orientation( $image, $movefile['file'] );
+					$image   = $this->fix_image_orientation( $image, $movefile['file'] );
 					$quality = UM()->options()->get( 'image_compression' );
 					imagejpeg( $image, $movefile['file'], $quality );
 				}
@@ -1245,6 +1241,36 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			return $movefile;
 		}
 
+		/**
+		 * Fix image orientation
+		 *
+		 * @param $rotate
+		 * @param $source
+		 *
+		 * @return resource
+		 */
+		public function fix_image_orientation( $rotate, $source ) {
+			if ( extension_loaded( 'exif' ) ) {
+				$exif = @exif_read_data( $source );
+
+				if ( isset( $exif['Orientation'] ) ) {
+					switch ( $exif['Orientation'] ) {
+						case 3:
+							$rotate = imagerotate( $rotate, 180, 0 );
+							break;
+
+						case 6:
+							$rotate = imagerotate( $rotate, -90, 0 );
+							break;
+
+						case 8:
+							$rotate = imagerotate( $rotate, 90, 0 );
+							break;
+					}
+				}
+			}
+			return $rotate;
+		}
 
 		/**
 		 * Move temporary files
@@ -1291,7 +1317,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				}
 
 				//move temporary file from temp directory to the correct user directory
-				$temp_file_path = UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $filename;
+				$temp_file_path = $this->get_core_temp_dir() . DIRECTORY_SEPARATOR . $filename;
 				if ( file_exists( $temp_file_path ) ) {
 					$extra_hash = hash( 'crc32b', time() );
 
@@ -1357,7 +1383,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				return;
 			}
 
-			UM()->user()->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 			UM()->user()->set( $user_id );
 			$user_meta_keys = UM()->user()->profile;
 

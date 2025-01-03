@@ -886,10 +886,17 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 												$form[ 'confirm_' . $k ] = trim( $form[ 'confirm_' . $k ] );
 											}
 											break;
-										case 'text':
-										case 'select':
 										case 'image':
 										case 'file':
+											if ( is_array( $form[ $k ] ) && UM()->is_new_ui() ) {
+												$form[ $k ]['path'] = isset( $form[ $k ]['path'] ) ? sanitize_file_name( $form[ $k ]['path'] ) : '';
+												$form[ $k ]['hash'] = isset( $form[ $k ]['hash'] ) ? sanitize_key( $form[ $k ]['hash'] ) : '';
+											} else {
+												$form[ $k ] = sanitize_text_field( $form[ $k ] );
+											}
+											break;
+										case 'text':
+										case 'select':
 										case 'date':
 										case 'time':
 										case 'rating':

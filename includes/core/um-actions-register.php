@@ -783,6 +783,13 @@ function um_registration_save_files( $user_id, $args, $form_data ) {
 	 */
 	$files = apply_filters( 'um_user_pre_updating_files_array', $files, $user_id );
 	if ( ! empty( $files ) && is_array( $files ) ) {
+		if ( UM()->is_new_ui() ) {
+			foreach ( $files as $key => $filename ) {
+				if ( validate_file( $filename ) !== 0 ) {
+					unset( $files[ $key ] );
+				}
+			}
+		}
 		UM()->uploader()->replace_upload_dir = true;
 		UM()->uploader()->move_temporary_files( $user_id, $files );
 		UM()->uploader()->replace_upload_dir = false;
