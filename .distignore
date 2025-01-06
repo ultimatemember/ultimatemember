@@ -1,0 +1,30 @@
+# Directories
+/.wordpress-org
+/.git
+/.github
+/assets/sass
+/assets/libs/fontawesome/scss
+/blocks-src
+/docs
+/node_modules
+/tests
+
+# Files
+/.bowerrc
+/.distignore
+/.editorconfig
+/.gitattributes
+/.gitignore
+/.jshintrc
+/.travis.yml
+/bower.json
+/composer.json
+/gulpfile.js
+/hookdoc-conf.json
+/manifest.json
+/package.json
+/package-lock.json
+/phpcs.xml
+/phpdoc.dist.xml
+/README.md
+*.sass

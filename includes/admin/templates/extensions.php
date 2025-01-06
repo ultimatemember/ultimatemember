@@ -167,18 +167,18 @@ $premium['profile-tabs'] = array(
 );
 
 $premium['stripe'] = array(
-	'url' => 'https://ultimatemember.com/extensions/stripe/',
+	'url'  => 'https://ultimatemember.com/extensions/stripe/',
 	'img'  => 'stripe.png',
 	'name' => 'Stripe',
 	'desc' => 'Sell paid memberships to access your website via Stripe subscriptions',
 );
 
-//$premium['zapier'] = array(
-//	'url' => 'https://ultimatemember.com/extensions/zapier/',
-//	'img'  => 'zapier.png',
-//	'name' => 'Zapier',
-//	'desc' => 'Integrates your Zapier with Ultimate Member',
-//);
+$premium['zapier'] = array(
+	'url'  => 'https://ultimatemember.com/extensions/zapier/',
+	'img'  => 'zapier.png',
+	'name' => 'Zapier',
+	'desc' => 'Allow to integrate the Zapier popular apps with Ultimate Member',
+);
 
 $free['jobboardwp'] = array(
 	'url'  => 'https://wordpress.org/plugins/um-jobboardwp',

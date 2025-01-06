@@ -41,6 +41,7 @@ Read about all of the plugin's features at [Ultimate Member](https://ultimatemem
 
 Ultimate Member has a range of extensions that allow you to extend the power of the plugin. You can purchase all of these extensions at a significant discount with our [All Access Pass](https://ultimatemember.com/pricing/) or you can purchase extensions individually.
 
+* [Zapier](https://ultimatemember.com/extensions/zapier/) - Allow to integrate the Zapier popular apps with Ultimate Member
 * [Stripe](https://ultimatemember.com/extensions/stripe/) - Sell paid memberships to access your website via Stripe subscriptions
 * [User Notes](https://ultimatemember.com/extensions/user-notes/) - Allow users to create public and private notes from their profile
 * [Profile Tabs](https://ultimatemember.com/extensions/profile-tabs/) - Allow to add the custom tabs to profiles
@@ -217,10 +218,11 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Deprecated function `um_is_temp_upload()` use function 'UM()->files()->is_temp_upload()' instead.
 * Deprecated function `um_is_temp_image()` because it is unused.
 
-= 2.9.2 2024-12-04 =
+= 2.9.2 2024-12-16 =
 
 **Enhancements**
 
+* Added: Compatibility with the new [Ultimate Member - Zapier](https://ultimatemember.com/extensions/zapier/) extension
 * Added: `UM()->is_new_ui()` function for future enhancements related to new UI
 * Tweak: Changed hook's priority for initialization of email templates paths
 * Tweak: Removed `load_plugin_textdomain` due to (article)[https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/#Enhanced-support-for-only-using-PHP-translation-files]
