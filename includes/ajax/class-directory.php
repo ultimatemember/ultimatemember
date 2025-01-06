@@ -34,6 +34,20 @@ class Directory extends \um\common\Directory {
 		parent::__construct();
 		add_action( 'wp_ajax_nopriv_um_get_members', array( $this, 'ajax_get_members' ) );
 		add_action( 'wp_ajax_um_get_members', array( $this, 'ajax_get_members' ) );
+		add_action( 'wp_ajax_um_member_directory_default_filter_settings', array( $this, 'default_filter_settings' ) );
+	}
+
+	public function default_filter_settings() {
+		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'um_search_filters' ) ) {
+			wp_send_json_error( __( 'Wrong nonce.', 'ultimate-member' ) );
+		}
+
+		// we can't use function "sanitize_key" because it changes uppercase to lowercase
+		$filter_key   = sanitize_text_field( $_REQUEST['key'] );
+		$directory_id = absint( $_REQUEST['directory_id'] );
+		$html         = UM()->member_directory()->show_filter( $filter_key, array( 'form_id' => $directory_id ), false, true );
+
+		wp_send_json_success( array( 'field_html' => $html ) );
 	}
 
 	protected function empty_response( $directory_data ) {
@@ -983,15 +997,14 @@ class Directory extends \um\common\Directory {
 								break;
 
 							case 'datepicker':
-								$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-								$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
-								$from_date = date( 'Y/m/d', $from_date );
-								$to_date   = date( 'Y/m/d', $to_date );
+								$from_date = $value[0];
+								$to_date   = $value[1];
 
 								$field_query = array(
 									'key'       => $field,
-									'value'     =>  array( $from_date, $to_date ),
+									'value'     => array( $from_date, $to_date ),
 									'compare'   => 'BETWEEN',
+									'type'      => 'DATE',
 									'inclusive' => true,
 								);
 
@@ -999,7 +1012,7 @@ class Directory extends \um\common\Directory {
 								break;
 
 							case 'timepicker':
-								if ( $value[0] == $value[1] ) {
+								if ( $value[0] === $value[1] ) {
 									$field_query = array(
 										'key'   => $field,
 										'value' => $value[0],
@@ -1277,38 +1290,31 @@ class Directory extends \um\common\Directory {
 									'key'       => $field,
 									'value'     => $value,
 									'compare'   => 'BETWEEN',
+									'type'      => 'NUMERIC',
 									'inclusive' => true,
 								);
 								break;
 
 							case 'datepicker':
-								$offset = 0;
-								if ( is_numeric( $gmt_offset ) ) {
-									$offset = $gmt_offset;
-								}
-
 								if ( ! empty( $value[0] ) ) {
-									$min = $value[0];
+									$from_date = $value[0];
 								} else {
-									$range = $this->datepicker_filters_range( $field );
-									$min   = strtotime( gmdate( 'Y/m/d', $range[0] ) );
+									$range     = $this->datepicker_filters_range( $field );
+									$from_date = strtotime( gmdate( 'Y-m-d', $range[0] ) );
 								}
 								if ( ! empty( $value[1] ) ) {
-									$max = $value[1];
+									$to_date = $value[1];
 								} else {
-									$max = strtotime( gmdate( 'Y/m/d' ) );
+									$to_date = strtotime( gmdate( 'Y-m-d' ) );
 								}
-
-								$from_date = (int) $min + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-								$to_date   = (int) $max + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
 
 								$field_query = array(
 									'key'       => $field,
 									'value'     => array( $from_date, $to_date ),
 									'compare'   => 'BETWEEN',
+									'type'      => 'DATE',
 									'inclusive' => true,
 								);
-
 								break;
 							case 'timepicker':
 								if ( ! empty( $value[0] ) ) {
@@ -1567,7 +1573,7 @@ class Directory extends \um\common\Directory {
 		// handle filters
 		$this->filters( $directory_data );
 
-	//	$this->default_filters( $directory_data );
+		$this->default_filters( $directory_data );
 
 		/**
 		 * UM hook
