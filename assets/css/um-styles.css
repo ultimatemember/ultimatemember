@@ -373,7 +373,6 @@ p.um-notice.warning a {
 .um-field-label label {
 	font-size: 15px !important;
 	line-height: 22px !important;
-	font-weight: bold;
 	font-weight: 600;
 }
 
@@ -481,6 +480,11 @@ p.um-notice.warning a {
 
 .um-form .um-field-area-password input[type="password"] {
 	padding-right: 40px !important;
+}
+
+.um-form .um-field-area-password input[type="password"]::-ms-reveal,
+.um-form .um-field-area-password input[type="password"]::-ms-clear {
+	display: none;
 }
 
 .um-form input[type="number"] {

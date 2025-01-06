@@ -154,6 +154,37 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		}
 
 		/**
+		 * Get the list of profile/cover sizes
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param string $type
+		 *
+		 * @return array
+		 */
+		public function get_profile_photo_size( $type ) {
+			$sizes = $this->get( $type );
+
+			if ( ! empty( $sizes ) && is_array( $sizes ) ) {
+				$sizes = array_combine( $sizes, $sizes );
+
+				if ( 'cover_thumb_sizes' === $type ) {
+					foreach ( $sizes as $key => $value ) {
+						$sizes[ $key ] = $value . 'px';
+					}
+				} elseif ( 'photo_thumb_sizes' === $type ) {
+					foreach ( $sizes as $key => $value ) {
+						$sizes[ $key ] = $value . 'x' . $value . 'px';
+					}
+				}
+			} else {
+				$sizes = array( 'original' => __( 'Original size', 'ultimate-member' ) );
+			}
+
+			return $sizes;
+		}
+
+		/**
 		 * Get core page ID
 		 *
 		 * @todo Deprecate soon

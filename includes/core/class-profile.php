@@ -67,7 +67,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 				die( esc_html__( 'You can not edit this user', 'ultimate-member' ) );
 			}
 
-			UM()->files()->delete_core_user_photo( $user_id, 'profile_photo' );
+			UM()->common()->users()->delete_photo( $user_id, 'profile_photo' );
 		}
 
 		/**
@@ -85,8 +85,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 				die( esc_html__( 'You can not edit this user', 'ultimate-member' ) );
 			}
-
-			UM()->files()->delete_core_user_photo( $user_id, 'cover_photo' );
+			UM()->common()->users()->delete_photo( $user_id, 'cover_photo' );
 		}
 
 		/**

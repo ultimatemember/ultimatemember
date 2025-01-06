@@ -13,7 +13,7 @@ UM.frontend = {
 		 */
 		obj: null,
 		init: function() {
-			let target_img = jQuery('.um-modal .um-profile-photo-crop-wrapper img').first();
+			let target_img = jQuery('.um-modal .um-modal-crop-wrapper img').first();
 			if ( ! target_img.length || '' === target_img.attr('src') ) {
 				return;
 			}
@@ -23,7 +23,7 @@ UM.frontend = {
 				UM.frontend.cropper.destroy();
 			}
 
-			var target_img_parent = jQuery('.um-modal .um-profile-photo-crop-wrapper');
+			var target_img_parent = jQuery('.um-modal .um-modal-crop-wrapper');
 
 			var crop_data = target_img.parent().data('crop');
 			var min_width = target_img.parent().data('min_width');
@@ -60,6 +60,7 @@ UM.frontend = {
 					zoomable: false,
 					rotatable: false,
 					dashed: false,
+					scalable: false
 				};
 			} else if ( 'cover' === crop_data ) {
 				if ( Math.round( min_width / ratio ) > 0 ) {
@@ -73,6 +74,7 @@ UM.frontend = {
 					zoomable: false,
 					rotatable: false,
 					dashed: false,
+					scalable: false
 				};
 			} else if ( 'user' === crop_data ) {
 				opts = {
@@ -83,6 +85,7 @@ UM.frontend = {
 					zoomable: false,
 					rotatable: false,
 					dashed: false,
+					scalable: false
 				};
 			}
 
@@ -415,12 +418,12 @@ UM.frontend = {
 									let actionInFilter = wp.hooks.applyFilters( 'um_uploader_file_uploaded', null, $button, up, file, response );
 									if ( null === actionInFilter ) {
 										// some default process.
+										$uploader.addClass('um-upload-completed');
 										if ( $fileList.length ) {
 											let fileRow = $fileList.find('#' + file.id);
 
 											fileRow.data('filename', response.data[0].name_saved).data('nonce', response.data[0].delete_nonce);
 											fileRow.find('.um-progress-bar-wrapper').remove();
-											fileRow.addClass('um-upload-completed');
 										}
 									}
 								}
@@ -475,6 +478,7 @@ UM.frontend = {
 			});
 		},
 		initActions: function () {
+			// Dropzone activity handlers.
 			jQuery(document.body).on('dragover', '.um-uploader-dropzone', function ( ev ){
 				let dropzoneTarget = ev.target;
 				if ( ! ev.target.classList.contains('um-uploader-dropzone') ) {
@@ -505,11 +509,13 @@ UM.frontend = {
 				jQuery(dropzoneTarget).removeAttr('drop-active');
 			});
 
+			// Duplicate uploader link.
 			jQuery(document.body).on('click', '.um-upload-link:not(.um-link-disabled)', function(e) {
 				e.preventDefault();
 				jQuery(this).parents('.um-uploader').find('.um-uploader-button').trigger('click');
 			});
 
+			// Default remove file from uploader queue button.
 			jQuery(document.body).on('click', '.um-uploader-file-remove', function() {
 				if ( ! confirm( wp.i18n.__( 'Are you sure that you want to delete this file?', 'ultimate-member' ) ) ) {
 					return false;
@@ -546,7 +552,193 @@ UM.frontend = {
 					wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
 				}
 
-				if ( ! $fileRow.hasClass('um-upload-failed') ) {
+				let fileID = $fileRow.attr('id');
+				if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
+					let fileName = $fileRow.data('filename');
+					let nonce = $fileRow.data('nonce');
+
+					// then file can be removed from server.
+					wp.ajax.send(
+						'um_delete_temp_file',
+						{
+							data: {
+								name: fileName,
+								nonce: nonce
+							},
+							success: function () {
+								removeRow();
+							},
+							error: function (data) {
+								alert(data);
+								console.log(data);
+							}
+						}
+					);
+				} else {
+					removeRow();
+				}
+			});
+
+			// Image/File type fields controls.
+			jQuery(document.body).on('click', '.um-field-image-change', function() {
+				if ( ! confirm( wp.i18n.__( 'Are you sure that you want to change this image?', 'ultimate-member' ) ) ) {
+					return false;
+				}
+
+				let $wrapper = jQuery(this).parents('.um-field-uploader-wrapper');
+				let $uploader = $wrapper.find('.um-uploader');
+
+				$uploader.find('.um-uploader-button').trigger( 'click' );
+			});
+
+			jQuery(document.body).on('click', '.um-field-image-remove', function() {
+				let confirmText = wp.i18n.__( 'Are you sure that you want to delete this image?', 'ultimate-member' );
+				confirmText = wp.hooks.applyFilters( 'um-field-image-remove-confirm-text', confirmText, jQuery(this) );
+				if ( confirmText && ! confirm( confirmText ) ) {
+					return false;
+				}
+
+				let $controls = jQuery(this).parents('.um-field-image-controls');
+				let $wrapper = jQuery(this).parents('.um-field-uploader-wrapper');
+				let $uploader = $wrapper.find('.um-uploader');
+				let $fileRow  = $uploader.find('.um-uploader-file');
+				let $dropZone  = $uploader.find( '.um-uploader-dropzone' );
+				let $fileList  = $uploader.find( '.um-uploader-filelist' );
+
+				let removeRow = function () {
+					let fileID = $fileRow.attr('id');
+					if ( ! fileID ) {
+						$fileRow.remove();
+						$dropZone.umShow();
+						$controls.umHide();
+						$fileList.html('').umHide();
+						$uploader.removeClass('um-upload-completed');
+						return;
+					}
+
+					let uploaderObj = UM.frontend.uploaders[ $uploader.data('plupload') ];
+
+					wp.hooks.doAction( 'um_uploader_file_row_removed', $fileRow, fileID, uploaderObj );
+
+					let filter = uploaderObj.getOption( 'filters' ).um_files_limit;
+
+					uploaderObj.removeFile( fileID );
+					$fileRow.remove();
+					$dropZone.umShow();
+					$controls.umHide();
+					$fileList.html('').umHide();
+					$uploader.removeClass('um-upload-completed');
+
+					if ( filter && uploaderObj.files.length < filter ) {
+						let button = uploaderObj.getOption( 'browse_button' )[0];
+						button.removeAttribute('disabled');
+
+						let dropZone = uploaderObj.getOption( 'drop_element' )[0];
+						if ( dropZone ) {
+							dropZone.classList.remove('um-dropzone-disabled');
+							let uploadLink = dropZone.querySelector( '.um-upload-link' );
+							if ( uploadLink ) {
+								uploadLink.classList.remove('um-link-disabled');
+							}
+						}
+					}
+
+					wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
+				}
+
+				let fileID = $fileRow.attr('id');
+				if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
+					let fileName = $fileRow.data('filename');
+					let nonce = $fileRow.data('nonce');
+
+					// then file can be removed from server.
+					wp.ajax.send(
+						'um_delete_temp_file',
+						{
+							data: {
+								name: fileName,
+								nonce: nonce
+							},
+							success: function () {
+								removeRow();
+							},
+							error: function (data) {
+								alert(data);
+								console.log(data);
+							}
+						}
+					);
+				} else {
+					removeRow();
+				}
+			});
+
+			jQuery(document.body).on('click', '.um-field-file-change', function() {
+				if ( ! confirm( wp.i18n.__( 'Are you sure that you want to change this file?', 'ultimate-member' ) ) ) {
+					return false;
+				}
+
+				let $wrapper = jQuery(this).parents('.um-field-uploader-wrapper');
+				let $uploader = $wrapper.find('.um-uploader');
+
+				$uploader.find('.um-uploader-button').trigger( 'click' );
+			});
+
+			jQuery(document.body).on('click', '.um-field-file-remove', function() {
+				if ( ! confirm( wp.i18n.__( 'Are you sure that you want to delete this file?', 'ultimate-member' ) ) ) {
+					return false;
+				}
+
+				let $controls = jQuery(this).parents('.um-field-file-controls');
+				let $wrapper = jQuery(this).parents('.um-field-uploader-wrapper');
+				let $uploader = $wrapper.find('.um-uploader');
+				let $fileRow  = $uploader.find('.um-uploader-file');
+				let $dropZone  = $uploader.find( '.um-uploader-dropzone' );
+				let $fileList  = $uploader.find( '.um-uploader-filelist' );
+
+				let removeRow = function () {
+					let fileID = $fileRow.attr('id');
+					if ( ! fileID ) {
+						$fileRow.remove();
+						$dropZone.umShow();
+						$controls.umHide();
+						$fileList.html('').umHide();
+						$uploader.removeClass('um-upload-completed');
+						return;
+					}
+
+					let uploaderObj = UM.frontend.uploaders[ $uploader.data('plupload') ];
+
+					wp.hooks.doAction( 'um_uploader_file_row_removed', $fileRow, fileID, uploaderObj );
+
+					let filter = uploaderObj.getOption( 'filters' ).um_files_limit;
+
+					uploaderObj.removeFile( fileID );
+					$fileRow.remove();
+					$dropZone.umShow();
+					$controls.umHide();
+					$fileList.html('').umHide();
+					$uploader.removeClass('um-upload-completed');
+
+					if ( filter && uploaderObj.files.length < filter ) {
+						let button = uploaderObj.getOption( 'browse_button' )[0];
+						button.removeAttribute('disabled');
+
+						let dropZone = uploaderObj.getOption( 'drop_element' )[0];
+						if ( dropZone ) {
+							dropZone.classList.remove('um-dropzone-disabled');
+							let uploadLink = dropZone.querySelector( '.um-upload-link' );
+							if ( uploadLink ) {
+								uploadLink.classList.remove('um-link-disabled');
+							}
+						}
+					}
+
+					wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
+				}
+
+				let fileID = $fileRow.attr('id');
+				if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
 					let fileName = $fileRow.data('filename');
 					let nonce = $fileRow.data('nonce');
 

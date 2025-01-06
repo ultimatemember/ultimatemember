@@ -125,7 +125,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			add_action( 'init', array( &$this, 'set' ), 1 );
 
 			// When the cache should be cleared
-			add_action( 'um_delete_user', array( &$this, 'remove_cache' ), 10, 1 );
+			add_action( 'um_delete_user', array( &$this, 'remove_cache' ) );
 
 			// When user cache should be cleared
 			add_action( 'um_after_user_updated', array( &$this, 'remove_cache' ) );
@@ -643,9 +643,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 			}
 
-			// remove uploads
-			UM()->files()->remove_dir( UM()->files()->upload_temp );
-			UM()->files()->remove_dir( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR );
+			// remove user's uploads
+			UM()->common()->filesystem()::remove_dir( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR );
 
 			delete_transient( 'um_count_users_unassigned' );
 			delete_transient( 'um_count_users_pending_dot' );
@@ -685,7 +684,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 			}
 
-			$this->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 		}
 
 
@@ -706,7 +705,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 			}
 
-			$this->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 		}
 
 
@@ -1021,7 +1020,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			//Update permalink
 			$this->generate_profile_slug( $user_id, true );
 
-			$this->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 		}
 
 		/**
@@ -1275,8 +1274,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		/**
 		 * @param $user_id
 		 */
-		function remove_cache( $user_id ) {
-			delete_option( "um_cache_userdata_{$user_id}" );
+		public function remove_cache( $user_id ) {
+			UM()->common()->users()->remove_cache( $user_id );
 		}
 
 
@@ -1553,28 +1552,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		}
 
 		/**
-		 * Set user's account status
-		 *
-		 * @deprecated 2.8.7
-		 *
-		 * @param string $status
-		 */
-		public function set_status( $status ) {
-			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->set_status()' );
-			UM()->common()->users()->set_status( $status, um_user( 'ID' ) );
-		}
-
-		/**
-		 * Set user's hash
-		 *
-		 * @deprecated 2.8.7
-		 */
-		public function assign_secretkey() {
-			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->assign_secretkey()' );
-			UM()->common()->users()->assign_secretkey( um_user( 'ID' ) );
-		}
-
-		/**
 		 * @param WP_User $userdata
 		 *
 		 * @return string|WP_Error
@@ -1614,55 +1591,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			if ( ! empty( $user_id ) ) {
 				um_reset_user();
 			}
-		}
-
-		/**
-		 * This method approves a user membership and sends them an optional welcome/approval email.
-		 * @param bool $repeat @deprecated
-		 * @deprecated 2.8.7
-		 */
-		public function approve( $repeat = true ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- deprecated function
-			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->approve()' );
-			UM()->common()->users()->approve( um_user( 'ID' ), $repeat );
-		}
-
-		/**
-		 * Pending email
-		 * @deprecated 2.8.7
-		 */
-		public function email_pending() {
-			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->send_activation()' );
-			UM()->common()->users()->send_activation( um_user( 'ID' ) );
-		}
-
-		/**
-		 * This method puts a user under manual review by administrator and sends them an optional email.
-		 * @deprecated 2.8.7
-		 * @return void
-		 */
-		public function pending() {
-			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->set_as_pending()' );
-			UM()->common()->users()->set_as_pending( um_user( 'ID' ) );
-		}
-
-		/**
-		 * This method rejects a user membership and sends them an optional email.
-		 * @deprecated 2.8.7
-		 * @return void
-		 */
-		public function reject() {
-			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->reject()' );
-			UM()->common()->users()->reject( um_user( 'ID' ) );
-		}
-
-		/**
-		 * This method deactivates a user membership and sends them an optional email.
-		 * @deprecated 2.8.7
-		 * @return void
-		 */
-		public function deactivate() {
-			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->deactivate()' );
-			UM()->common()->users()->deactivate( um_user( 'ID' ) );
 		}
 
 		/**
@@ -2119,20 +2047,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		}
 
 		/**
-		 * This method checks if a user exists or not in your site based on the user ID.
-		 *
-		 * @deprecated 2.8.7
-		 *
-		 * @param int $user_id A user ID must be passed to check if the user exists
-		 *
-		 * @return bool|int
-		 */
-		public function user_exists_by_id( $user_id ) {
-			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()::user_exists' );
-			return UM()->common()->users()::user_exists( $user_id ) ? $user_id : false;
-		}
-
-		/**
 		 * @param string $hash
 		 *
 		 * @return bool|int
@@ -2292,6 +2206,102 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		public function add_activation_replace_placeholder( $replace_placeholders ) {
 			$replace_placeholders[] = um_user( 'account_activation_link' );
 			return $replace_placeholders;
+		}
+
+		/**
+		 * Set user's account status
+		 *
+		 * @deprecated 2.8.7
+		 *
+		 * @param string $status
+		 */
+		public function set_status( $status ) {
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->set_status()' );
+			UM()->common()->users()->set_status( $status, um_user( 'ID' ) );
+		}
+
+		/**
+		 * Set user's hash
+		 *
+		 * @deprecated 2.8.7
+		 */
+		public function assign_secretkey() {
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->assign_secretkey()' );
+			UM()->common()->users()->assign_secretkey( um_user( 'ID' ) );
+		}
+
+		/**
+		 * Update files
+		 *
+		 * @param $changes
+		 *
+		 * @deprecated 2.1.0
+		 */
+		public function update_files( $changes ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- deprecated function
+			_deprecated_function( __METHOD__, '2.1.0' );
+		}
+
+		/**
+		 * This method checks if a user exists or not in your site based on the user ID.
+		 *
+		 * @deprecated 2.8.7
+		 *
+		 * @param int $user_id A user ID must be passed to check if the user exists
+		 *
+		 * @return bool|int
+		 */
+		public function user_exists_by_id( $user_id ) {
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()::user_exists' );
+			return UM()->common()->users()::user_exists( $user_id ) ? $user_id : false;
+		}
+
+		/**
+		 * This method approves a user membership and sends them an optional welcome/approval email.
+		 * @param bool $repeat @deprecated
+		 * @deprecated 2.8.7
+		 */
+		public function approve( $repeat = true ) {
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->approve()' );
+			UM()->common()->users()->approve( um_user( 'ID' ), $repeat );
+		}
+
+		/**
+		 * Pending email
+		 * @deprecated 2.8.7
+		 */
+		public function email_pending() {
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->send_activation()' );
+			UM()->common()->users()->send_activation( um_user( 'ID' ) );
+		}
+
+		/**
+		 * This method puts a user under manual review by administrator and sends them an optional email.
+		 * @deprecated 2.8.7
+		 * @return void
+		 */
+		public function pending() {
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->set_as_pending()' );
+			UM()->common()->users()->set_as_pending( um_user( 'ID' ) );
+		}
+
+		/**
+		 * This method rejects a user membership and sends them an optional email.
+		 * @deprecated 2.8.7
+		 * @return void
+		 */
+		public function reject() {
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->reject()' );
+			UM()->common()->users()->reject( um_user( 'ID' ) );
+		}
+
+		/**
+		 * This method deactivates a user membership and sends them an optional email.
+		 * @deprecated 2.8.7
+		 * @return void
+		 */
+		public function deactivate() {
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->deactivate()' );
+			UM()->common()->users()->deactivate( um_user( 'ID' ) );
 		}
 	}
 }

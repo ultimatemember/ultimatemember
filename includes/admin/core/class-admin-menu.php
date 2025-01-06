@@ -349,33 +349,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			include_once UM()->admin()->templates_path . 'dashboard/cache.php';
 		}
 
-
-		/**
-		 * Get a directory size
-		 *
-		 * @param $directory
-		 *
-		 * @return float|int
-		 */
-		function dir_size( $directory ) {
-			if ( $directory == 'temp' ) {
-				$directory = UM()->files()->upload_temp;
-				$size = 0;
-
-				foreach( new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator( $directory ) ) as $file ) {
-					$filename = $file->getFilename();
-					if ( $filename == '.' || $filename == '..' ) {
-						continue;
-					}
-
-					$size += $file->getSize();
-				}
-				return round ( $size / 1048576, 2);
-			}
-			return 0;
-		}
-
-
 		/**
 		 * Which admin page to show?
 		 */
@@ -427,5 +400,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 
 		}
 
+		/**
+		 * Get a directory size
+		 *
+		 * @deprecated 3.0.0
+		 * @param $directory
+		 *
+		 * @return float|int
+		 */
+		public function dir_size( $directory ) {
+			_deprecated_function( __METHOD__, '3.0.0', 'UM()->common()->filesystem()->dir_size()' );
+			if ( 'temp' === $directory ) {
+				$directory = UM()->common()->filesystem()->get_tempdir();
+				return UM()->common()->filesystem()->dir_size( $directory );
+			}
+			return 0;
+		}
 	}
 }

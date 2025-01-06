@@ -1866,7 +1866,11 @@ class Shortcodes {
 				wp_enqueue_style( 'um_members' );
 			}
 		} elseif ( 'register' === $args['mode'] ) {
-			wp_enqueue_script( 'um-gdpr' );
+			if ( UM()->is_new_ui() ) {
+				wp_enqueue_script( 'um_register' );
+			} else {
+				wp_enqueue_script( 'um-gdpr' );
+			}
 		}
 
 		if ( 'directory' !== $args['mode'] ) {

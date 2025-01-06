@@ -47,25 +47,8 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * Mail constructor.
 		 */
 		public function __construct() {
-			//mandrill compatibility
+			add_action( 'init', array( &$this, 'init_paths' ), 0 ); // init class variables on zero-priority.
 			add_filter( 'mandrill_nl2br', array( &$this, 'mandrill_nl2br' ) );
-			add_action( 'plugins_loaded', array( &$this, 'init_paths' ), 99 );
-		}
-
-		/**
-		 * Mandrill compatibility
-		 *
-		 * @param $nl2br
-		 * @param string $message
-		 * @return bool
-		 */
-		public function mandrill_nl2br( $nl2br, $message = '' ) {
-			// text emails
-			if ( ! UM()->options()->get( 'email_html' ) ) {
-				$nl2br = true;
-			}
-
-			return $nl2br;
 		}
 
 		/**
@@ -85,12 +68,26 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			 * @example <caption>Extends email templates path.</caption>
 			 * function my_email_templates_path_by_slug( $paths ) {
 			 *     // your code here
-			 *     $paths['{template_name}'] = '{template_path}';
+			 *     $paths['template_name'] = 'template_path';
 			 *     return $paths;
 			 * }
 			 * add_filter( 'um_email_templates_path_by_slug', 'my_email_templates_path_by_slug' );
 			 */
 			$this->path_by_slug = apply_filters( 'um_email_templates_path_by_slug', $this->path_by_slug );
+		}
+
+		/**
+		 * Mandrill compatibility
+		 *
+		 * @param $nl2br
+		 * @return bool
+		 */
+		public function mandrill_nl2br( $nl2br ) {
+			if ( ! UM()->options()->get( 'email_html' ) ) {
+				$nl2br = true; // nl2br for text emails
+			}
+
+			return $nl2br;
 		}
 
 		/**

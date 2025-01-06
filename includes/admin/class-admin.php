@@ -968,12 +968,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 		/**
-		 * @param array|string $value
+		 * @param int|string $value
 		 *
-		 * @return array|string
+		 * @return string|int
 		 */
 		public function sanitize_photosize( $value ) {
-			$sizes = UM()->files()->get_profile_photo_size( 'photo_thumb_sizes' );
+			$sizes = UM()->options()->get_profile_photo_size( 'photo_thumb_sizes' );
 			$sizes = array_keys( $sizes );
 
 			if ( '' !== $value ) {
@@ -984,12 +984,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 		/**
-		 * @param array|string $value
+		 * @param int|string $value
 		 *
-		 * @return array|string
+		 * @return string|int
 		 */
 		public function sanitize_cover_photosize( $value ) {
-			$sizes = UM()->files()->get_profile_photo_size( 'cover_thumb_sizes' );
+			$sizes = UM()->options()->get_profile_photo_size( 'cover_thumb_sizes' );
 			$sizes = array_keys( $sizes );
 
 			if ( '' !== $value ) {
@@ -1796,8 +1796,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * Purge temp uploads dir.
 		 */
 		public function purge_temp() {
-			UM()->files()->remove_dir( UM()->files()->upload_temp );
-
+			UM()->common()->filesystem()::remove_dir( UM()->common()->filesystem()->get_tempdir() );
 			$url = add_query_arg(
 				array(
 					'page'   => 'ultimatemember',

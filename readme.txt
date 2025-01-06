@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.7
-Stable tag: 2.9.1
+Stable tag: 2.9.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -41,6 +41,7 @@ Read about all of the plugin's features at [Ultimate Member](https://ultimatemem
 
 Ultimate Member has a range of extensions that allow you to extend the power of the plugin. You can purchase all of these extensions at a significant discount with our [All Access Pass](https://ultimatemember.com/pricing/) or you can purchase extensions individually.
 
+* [Zapier](https://ultimatemember.com/extensions/zapier/) - Allow to integrate the Zapier popular apps with Ultimate Member
 * [Stripe](https://ultimatemember.com/extensions/stripe/) - Sell paid memberships to access your website via Stripe subscriptions
 * [User Notes](https://ultimatemember.com/extensions/user-notes/) - Allow users to create public and private notes from their profile
 * [Profile Tabs](https://ultimatemember.com/extensions/profile-tabs/) - Allow to add the custom tabs to profiles
@@ -166,7 +167,7 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 3.0.0: xxxx, 2024 =
+= 3.0.0: xxxx, 2025 =
 
 **Enhancements**
 
@@ -176,11 +177,68 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Fixed: User status filter on wp-admin > Users on mobile devices
 
+
+
+
+**Tweaks**
+
+* Function `UM()->files()->delete_file()` is private
+* Function `UM()->files()->download_routing()` is moved to `UM()->common()->rewrite()->download_routing()`
+
 **Deprecated**
 
 * Action hook 'um_after_profile_header_name_args' use action hook 'um_after_profile_header_name' instead.
 * Filter hook 'um_allowed_image_types' use filter hook 'um_allowed_default_image_types' instead.
 * Filter hook 'um_allowed_file_types' use filter hook 'um_allowed_default_file_types' instead.
+* Deleted permanently function `um_user_uploads_dir()` deprecated since 2.0.26
+* Deleted permanently function `um_user_uploads_uri()` deprecated since 2.0.26
+* Deleted permanently function `UM()->admin_notices()->create_languages_folder()` due to this [article](https://developer.wordpress.org/plugins/internationalization/localization/#using-localizations). It's WordPress native folder.
+* Deprecated function `UM()->admin_menu()->dir_size()`. Use function 'UM()->common()->filesystem()->dir_size()' instead.
+* Deprecated function `UM()->files()->remove_dir()` use function 'UM()->common()->filesystem()::remove_dir()' instead.
+* Deprecated function `UM()->files()->get_profile_photo_size()` use function 'UM()->options()->get_profile_photo_size()' instead.
+* Deprecated function `UM()->files()->delete_core_user_photo()` use function 'UM()->common()->users()->delete_photo()' instead.
+* Deprecated function `UM()->files()->remove_old_files()` because used only for temp directory. Use function 'UM()->common()->filesystem()::clear_temp_dir()' instead.
+* Deprecated function `UM()->files()->get_fonticon_by_ext()`. Use function 'UM()->fonticons()->get_file_fonticon()' instead.
+* Deprecated function `UM()->files()->get_fonticon_bg_by_ext()`. Use function 'UM()->fonticons()->get_file_fonticon_bg()' instead.
+* Deprecated function `UM()->files()->fix_image_orientation()`. Use function 'UM()->uploader()->fix_image_orientation()' instead.
+* Deprecated function `UM()->files()->create_and_copy_image()` because it is unused.
+* Deprecated function `UM()->files()->new_user()` because it is unused.
+* Deprecated function `UM()->files()->resize_image()` because it is unused.
+* Deprecated function `UM()->files()->new_image_upload_temp()` because it is unused.
+* Deprecated function `UM()->files()->in_array()` because it is unused.
+* Deprecated function `UM()->files()->get_file_data()` because it is unused.
+* Deprecated function `UM()->files()->get_image_data()` because it is unused.
+* Deprecated function `UM()->files()->get_extension_by_mime_type()` because it is unused.
+* Deprecated function `UM()->files()->make_dir()` because it is unused.
+* Deprecated function `UM()->files()->new_file_upload_temp()` because it is unused.
+* Deprecated function `UM()->files()->unique_dir()` because it is unused.
+* Deprecated function `UM()->files()->allowed_file_types()` because it is unused.
+* Deprecated function `UM()->files()->allowed_image_types()` because it is unused.
+* Deprecated function `UM()->files()->get_download_link()`. Use function 'UM()->fields()->get_download_link()' instead.
+* Deprecated function `um_is_temp_upload()` use function 'UM()->files()->is_temp_upload()' instead.
+* Deprecated function `um_is_temp_image()` because it is unused.
+
+= 2.9.2 2024-12-16 =
+
+**Enhancements**
+
+* Added: Compatibility with the new [Ultimate Member - Zapier](https://ultimatemember.com/extensions/zapier/) extension
+* Added: `UM()->is_new_ui()` function for future enhancements related to new UI
+* Tweak: Changed hook's priority for initialization of email templates paths
+* Tweak: Removed `load_plugin_textdomain` due to (article)[https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/#Enhanced-support-for-only-using-PHP-translation-files]
+
+**Bugfixes**
+
+* Fixed: Using placeholders in email templates when Action Scheduler is active. Using `fetch_user_id` attribute for fetching necessary user before sending email
+* Fixed: PHP errors related to `UM()->localize()` function
+* Fixed: PHP errors in user meta header when `last_update` meta is empty
+
+**Deprecated**
+
+* Fully deprecated `UM()->localize()` function
+* Fully deprecated `um_language_textdomain` filter hook
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
 = 2.9.1 2024-11-15 =
 

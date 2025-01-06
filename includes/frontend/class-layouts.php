@@ -2206,6 +2206,7 @@ class Layouts {
 				'max_files'         => '', // Integer value of the limit files in the files list. Empty = unlimited.
 				'disable_drop_zone' => false,
 				'dropzone_error'    => '',
+				'data'              => array(),
 			)
 		);
 
@@ -2230,6 +2231,16 @@ class Layouts {
 			$classes = array_merge( $classes, $args['classes'] );
 		}
 		$classes = array_unique( $classes );
+
+		$data_atts = array();
+		foreach ( $args['data'] as $data_k => $data_v ) {
+			$data_atts[] = 'data-' . $data_k . '="' . esc_attr( $data_v ) . '"';
+		}
+		if ( ! empty( $data_atts ) ) {
+			$data_atts = ' ' . implode( ' ', $data_atts );
+		} else {
+			$data_atts = '';
+		}
 
 		$id = $args['id'];
 
@@ -2274,7 +2285,7 @@ class Layouts {
 				// translators: %s: Maximum allowed file size.
 				$extra_info[] = sprintf( __( 'Maximum upload file size: %s.' ), size_format( $args['max_upload_size'] ) );
 			}
-			$extra_info = implode( '<br />', $extra_info );
+			$extra_info   = implode( '<br />', $extra_info );
 			$link_classes = array( 'um-upload-link', 'um-link' );
 			if ( ! empty( $args['disable_drop_zone'] ) ) {
 				$link_classes[] = 'um-link-disabled';
@@ -2282,7 +2293,7 @@ class Layouts {
 			ob_start();
 			?>
 			<span class="um-supporting-text">
-				<span><a href="#" class="<?php echo esc_attr( implode( ' ', $link_classes ) );?>">Click to upload</a> or drag and drop</span>
+				<span><a href="#" class="<?php echo esc_attr( implode( ' ', $link_classes ) ); ?>">Click to upload</a> or drag and drop</span>
 				<?php if ( ! empty( $extra_info ) ) { ?>
 					<span><?php echo wp_kses_post( $extra_info ); ?></span>
 				<?php } ?>
@@ -2293,7 +2304,7 @@ class Layouts {
 
 		ob_start();
 		?>
-		<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" id="<?php echo esc_attr( $id ); ?>">
+		<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" id="<?php echo esc_attr( $id ); ?>"<?php echo $data_atts; ?>>
 			<?php
 			$button_content = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-upload" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z" fill="none"/>

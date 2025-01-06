@@ -693,6 +693,8 @@ function um_user_submitted_registration_formatted( $style = false ) {
 		$output .= um_user_submited_display( 'use_gdpr_agreement', __( 'GDPR Applied', 'ultimate-member' ), $submitted_data );
 	}
 
+	$output .= apply_filters( 'um_before_user_submitted_registration_data', '', $output, $submitted_data );
+
 	if ( isset( $submitted_data ) && is_array( $submitted_data ) ) {
 
 		if ( isset( $submitted_data['form_id'] ) ) {
@@ -809,6 +811,8 @@ function um_user_submitted_registration_formatted( $style = false ) {
 			} // endfor
 		}
 	}
+
+	$output .= apply_filters( 'um_after_user_submitted_registration_data', '', $output, $submitted_data );
 
 	if ( $style ) {
 		$output .= '</div>';
@@ -1067,68 +1071,6 @@ function um_profile_id() {
 
 	return 0;
 }
-
-
-/**
- * Check that temp upload is valid
- *
- * @param string $url
- *
- * @return bool|string
- */
-function um_is_temp_upload( $url ) {
-	if ( is_string( $url ) ) {
-		$url = trim( $url );
-	}
-
-	if ( filter_var( $url, FILTER_VALIDATE_URL ) === false ) {
-		$url = realpath( $url );
-	}
-
-	if ( ! $url ) {
-		return false;
-	}
-
-	$url = explode( '/ultimatemember/temp/', $url );
-	if ( isset( $url[1] ) ) {
-
-		if ( strstr( $url[1], '../' ) || strstr( $url[1], '%' ) ) {
-			return false;
-		}
-
-		$src = UM()->files()->upload_temp . $url[1];
-		if ( ! file_exists( $src ) ) {
-			return false;
-		}
-
-		return $src;
-	}
-
-	return false;
-}
-
-
-/**
- * Check that temp image is valid
- *
- * @param $url
- *
- * @return bool|string
- */
-function um_is_temp_image( $url ) {
-	$url = explode( '/ultimatemember/temp/', $url );
-	if (isset( $url[1] )) {
-		$src = UM()->files()->upload_temp . $url[1];
-		if (!file_exists( $src ))
-			return false;
-		list( $width, $height, $type, $attr ) = @getimagesize( $src );
-		if (isset( $width ) && isset( $height ))
-			return $src;
-	}
-
-	return false;
-}
-
 
 /**
  * Check user's file ownership

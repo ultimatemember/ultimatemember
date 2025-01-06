@@ -128,7 +128,6 @@
 			}
 
 			/* Attributes, classes and styles */
-			console.log( $modal );
 			$modal.get( 0 ).umModalOptions = options;
 			if ( typeof options.attributes === 'object' ) {
 				for ( let i in options.attributes ) {

@@ -374,13 +374,20 @@ if ( UM()->is_new_ui() ) {
 
 				if ( isset( $args['submitted'][ $key ] ) ) {
 					if ( in_array( $array['type'], array( 'image', 'file' ), true ) ) {
-						if ( um_is_temp_file( $args['submitted'][ $key ] ) || 'empty_file' === $args['submitted'][ $key ] ) {
-							$files[ $key ] = $args['submitted'][ $key ];
-						} elseif( um_is_file_owner( UM()->uploader()->get_upload_base_url() . $user_id . '/' . $args['submitted'][ $key ], $user_id ) ) {
-
-						} else {
-							$files[ $key ] = 'empty_file';
+						var_dump( $args['submitted'][ $key ] );
+						exit;
+						// @todo handle submission
+						if ( array_key_exists( 'path', $args['submitted'][ $key ] ) ) {
+							$files[ $key ] = $args['submitted'][ $key ]['path'];
 						}
+
+//						if ( um_is_temp_file( $args['submitted'][ $key ] ) || 'empty_file' === $args['submitted'][ $key ] ) {
+//							$files[ $key ] = $args['submitted'][ $key ];
+//						} elseif( um_is_file_owner( UM()->uploader()->get_upload_base_url() . $user_id . '/' . $args['submitted'][ $key ], $user_id ) ) {
+//
+//						} else {
+//							$files[ $key ] = 'empty_file';
+//						}
 					} else {
 						if ( 'password' === $array['type'] ) {
 							$to_update[ $key ]         = wp_hash_password( $args['submitted'][ $key ] );
@@ -524,6 +531,12 @@ if ( UM()->is_new_ui() ) {
 		/** This action is documented in ultimate-member/includes/core/um-actions-register.php */
 		$files = apply_filters( 'um_user_pre_updating_files_array', $files, $user_id );
 		if ( ! empty( $files ) && is_array( $files ) ) {
+			foreach ( $files as $key => $filename ) {
+				if ( validate_file( $filename ) !== 0 ) {
+					unset( $files[ $key ] );
+				}
+			}
+
 			UM()->uploader()->replace_upload_dir = true;
 			UM()->uploader()->move_temporary_files( $user_id, $files );
 			UM()->uploader()->replace_upload_dir = false;
@@ -742,7 +755,7 @@ if ( UM()->is_new_ui() ) {
 						if ( 'password' === $array['type'] ) {
 							$to_update[ $key ]         = wp_hash_password( $args['submitted'][ $key ] );
 							// translators: %s: title.
-							$args['submitted'][ $key ] = sprintf( __( 'Your choosed %s', 'ultimate-member' ), $array['title'] );
+							$args['submitted'][ $key ] = sprintf( __( 'Your chose %s', 'ultimate-member' ), $array['title'] );
 						} else {
 							if ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] !== $userinfo[ $key ] ) {
 								$to_update[ $key ] = $args['submitted'][ $key ];
@@ -1116,7 +1129,6 @@ function um_profile_dynamic_meta_desc() {
 			'@context'     => 'https://schema.org',
 			'@type'        => 'ProfilePage',
 			'dateCreated'  => um_user( 'user_registered' ),
-			'dateModified' => gmdate( 'Y-m-d H:i:s', um_user( 'last_update' ) ),
 			'mainEntity'   => array(
 				'@type'         => 'Person',
 				'name'          => esc_attr( $title ),
@@ -1128,6 +1140,18 @@ function um_profile_dynamic_meta_desc() {
 				),
 			),
 		);
+		$user_last_update = um_user( 'last_update' );
+		if ( ! empty( $user_last_update ) ) {
+			if ( is_numeric( $user_last_update ) ) {
+				$user_last_update = (int) $user_last_update; // cast numeric type to int
+			} else {
+				$user_last_update = strtotime( $user_last_update ); // cast string date type to int
+			}
+			if ( ! empty( $user_last_update ) ) {
+				$person['dateModified'] = gmdate( 'Y-m-d H:i:s', $user_last_update );
+			}
+		}
+
 		/**
 		 * Filters changing the schema.org of profile's person.
 		 *

@@ -132,7 +132,7 @@ jQuery(document).ready(function($) {
 });
 
 wp.hooks.addAction( 'um-modal-shown', 'ultimate-member', function( $modal ) {
-	let $image = $modal.find('.um-profile-photo-crop-wrapper');
+	let $image = $modal.find('.um-modal-crop-wrapper');
 	if ( $image.length ) {
 		UM.frontend.cropper.init();
 	}
@@ -142,6 +142,11 @@ wp.hooks.addAction( 'um-modal-before-close', 'ultimate-member', function( $modal
 	if ( $modal.find( '.um-modal-avatar-decline:not(:disabled)' ).length ) {
 		$modal.find( '.um-modal-avatar-decline' ).trigger('click');
 	}
+
+	if ( $modal.find( '.um-modal-field-image-decline:not(:disabled)' ).length ) {
+		$modal.find( '.um-modal-field-image-decline' ).trigger('click');
+	}
+
 	if ( UM.frontend.cropper.obj ) {
 		// If Cropper object exists then destroy before re-init.
 		UM.frontend.cropper.destroy();

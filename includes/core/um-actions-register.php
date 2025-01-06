@@ -718,13 +718,12 @@ if ( UM()->is_new_ui() ) {
 	add_action( 'um_after_register_fields', 'um_add_submit_button_to_register', 1000 );
 }
 
-
 /**
  * Show Fields
  *
  * @param $args
  */
-function um_add_register_fields( $args ){
+function um_add_register_fields( $args ) {
 	echo UM()->fields()->display( 'register', $args );
 }
 add_action( 'um_main_register_fields', 'um_add_register_fields', 100 );
@@ -747,10 +746,17 @@ function um_registration_save_files( $user_id, $args, $form_data ) {
 	$fields = maybe_unserialize( $form_data['custom_fields'] );
 	if ( ! empty( $fields ) && is_array( $fields ) ) {
 		foreach ( $fields as $key => $array ) {
-			if ( isset( $args['submitted'][ $key ] ) ) {
-				if ( isset( $array['type'] ) && in_array( $array['type'], array( 'image', 'file' ), true ) &&
-					( um_is_temp_file( $args['submitted'][ $key ] ) || 'empty_file' === $args['submitted'][ $key ] )
-				) {
+			if ( ! array_key_exists( 'type', $array ) || ! in_array( $array['type'], array( 'image', 'file' ), true ) ) {
+				continue;
+			}
+
+			// @todo handle submission
+			if ( UM()->is_new_ui() ) {
+				if ( isset( $args['submitted'][ $key ]['path'] ) && um_is_temp_file( $args['submitted'][ $key ]['path'] ) ) {
+					$files[ $key ] = $args['submitted'][ $key ]['path'];
+				}
+			} else {
+				if ( isset( $args['submitted'][ $key ] ) && um_is_temp_file( $args['submitted'][ $key ] ) ) {
 					$files[ $key ] = $args['submitted'][ $key ];
 				}
 			}
@@ -777,6 +783,13 @@ function um_registration_save_files( $user_id, $args, $form_data ) {
 	 */
 	$files = apply_filters( 'um_user_pre_updating_files_array', $files, $user_id );
 	if ( ! empty( $files ) && is_array( $files ) ) {
+		if ( UM()->is_new_ui() ) {
+			foreach ( $files as $key => $filename ) {
+				if ( validate_file( $filename ) !== 0 ) {
+					unset( $files[ $key ] );
+				}
+			}
+		}
 		UM()->uploader()->replace_upload_dir = true;
 		UM()->uploader()->move_temporary_files( $user_id, $files );
 		UM()->uploader()->replace_upload_dir = false;

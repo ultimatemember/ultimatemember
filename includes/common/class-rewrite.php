@@ -20,6 +20,7 @@ class Rewrite {
 		add_filter( 'rewrite_rules_array', array( &$this, 'add_rewrite_rules' ) );
 
 		add_action( 'template_redirect', array( &$this, 'temp_files_routing' ), 1 );
+		add_action( 'template_redirect', array( &$this, 'download_routing' ), 1 );
 	}
 
 	/**
@@ -140,7 +141,7 @@ class Rewrite {
 			$url      = UM()->permalinks()->get_current_url();
 			$filename = wp_basename( $url );
 		}
-		$temp_dir  = UM()->common()->filesystem()->temp_upload_dir;
+		$temp_dir  = UM()->common()->filesystem()->get_tempdir();
 		$file_path = wp_normalize_path( "$temp_dir/$filename" );
 		if ( ! file_exists( $file_path ) ) {
 			return;
@@ -158,6 +159,155 @@ class Rewrite {
 		} else {
 			$this->image_download( $user_id, $field_key, $field_value );
 		}
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function download_routing() {
+		if ( 'download' !== get_query_var( 'um_action' ) ) {
+			return false;
+		}
+
+		$query_form = get_query_var( 'um_form' );
+		if ( empty( $query_form ) ) {
+			return false;
+		}
+
+		$form_id     = get_query_var( 'um_form' );
+		$query_field = get_query_var( 'um_field' );
+		if ( empty( $query_field ) ) {
+			return false;
+		}
+		$field_key  = urldecode( get_query_var( 'um_field' ) );
+		$query_user = get_query_var( 'um_user' );
+		if ( empty( $query_user ) ) {
+			return false;
+		}
+
+		$user_id = get_query_var( 'um_user' );
+		$user    = get_userdata( $user_id );
+
+		if ( empty( $user ) || is_wp_error( $user ) ) {
+			return false;
+		}
+		$query_verify = get_query_var( 'um_verify' );
+		if ( empty( $query_verify ) ||
+		     ! wp_verify_nonce( $query_verify, $user_id . $form_id . 'um-download-nonce' ) ) {
+			return false;
+		}
+
+		um_fetch_user( $user_id );
+		$field_data = get_post_meta( $form_id, '_um_custom_fields', true );
+		if ( empty( $field_data[ $field_key ] ) ) {
+			return false;
+		}
+
+		if ( ! um_can_view_field( $field_data[ $field_key ] ) ) {
+			return false;
+		}
+
+		$field_value = UM()->fields()->field_value( $field_key );
+		if ( empty( $field_value ) ) {
+			return false;
+		}
+
+		$download_type = $field_data[ $field_key ]['type'];
+		if ( $download_type === 'file' ) {
+			$this->file_download( $user_id, $field_key, $field_value );
+		} else {
+			$this->image_download( $user_id, $field_key, $field_value );
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param $user_id
+	 * @param $field_key
+	 * @param $field_value
+	 */
+	private function image_download( $user_id, $field_key, $field_value ) {
+		$file_path = UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . $field_value;
+		if ( ! file_exists( $file_path ) ) {
+			if ( is_multisite() ) {
+				//multisite fix for old customers
+				$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file_path );
+			}
+		}
+
+		//validate traversal file
+		if ( validate_file( $file_path ) === 1 ) {
+			return;
+		}
+
+		$file_info = get_user_meta( $user_id, $field_key . '_metadata', true );
+
+		$pathinfo     = pathinfo( $file_path );
+		$size         = filesize( $file_path );
+		$originalname = ! empty( $file_info['original_name'] ) ? $file_info['original_name'] : $pathinfo['basename'];
+		$type         = ! empty( $file_info['type'] ) ? $file_info['type'] : $pathinfo['extension'];
+
+		header( 'Content-Description: File Transfer' );
+		header( 'Content-Type: ' . $type );
+		header( 'Content-Disposition: inline; filename="' . $originalname . '"' );
+		header( 'Content-Transfer-Encoding: binary' );
+		header( 'Expires: 0' );
+		header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+		header( 'Pragma: public' );
+		header( 'Content-Length: ' . $size );
+
+		$levels = ob_get_level();
+		for ( $i = 0; $i < $levels; $i++ ) {
+			@ob_end_clean();
+		}
+
+		readfile( $file_path );
+		exit;
+	}
+
+	/**
+	 * @param $user_id
+	 * @param $field_key
+	 * @param $field_value
+	 */
+	private function file_download( $user_id, $field_key, $field_value ) {
+		$file_path = UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . $field_value;
+		if ( ! file_exists( $file_path ) ) {
+			if ( is_multisite() ) {
+				//multisite fix for old customers
+				$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file_path );
+			}
+		}
+
+		//validate traversal file
+		if ( validate_file( $file_path ) === 1 ) {
+			return;
+		}
+
+		$file_info = get_user_meta( $user_id, $field_key . '_metadata', true );
+
+		$pathinfo     = pathinfo( $file_path );
+		$size         = filesize( $file_path );
+		$originalname = ! empty( $file_info['original_name'] ) ? $file_info['original_name'] : $pathinfo['basename'];
+		$type         = ! empty( $file_info['type'] ) ? $file_info['type'] : $pathinfo['extension'];
+
+		header( 'Content-Description: File Transfer' );
+		header( 'Content-Type: ' . $type );
+		header( 'Content-Disposition: attachment; filename="' . $originalname . '"' );
+		header( 'Content-Transfer-Encoding: binary' );
+		header( 'Expires: 0' );
+		header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+		header( 'Pragma: public' );
+		header( 'Content-Length: ' . $size );
+
+		$levels = ob_get_level();
+		for ( $i = 0; $i < $levels; $i++ ) {
+			@ob_end_clean();
+		}
+
+		readfile( $file_path );
+		exit;
 	}
 
 	/**

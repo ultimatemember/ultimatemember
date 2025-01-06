@@ -3028,7 +3028,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							if ( ( isset( $this->set_mode ) && 'register' === $this->set_mode ) || file_exists( UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $field_value ) ) {
 								$img_value = UM()->uploader()->get_core_temp_url() . '/' . $this->field_value( $key, $default, $data );
 							} else {
-								$img_value = UM()->files()->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
+								$img_value = $this->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
 							}
 							$img = '<img class="fusion-lazyload-ignore" src="' . esc_attr( $img_value ) . '" alt="" />';
 						} else {
@@ -3136,7 +3136,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$file_url = UM()->uploader()->get_core_temp_url() . DIRECTORY_SEPARATOR . $file_field_value;
 							$file_dir = UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $file_field_value;
 						} else {
-							$file_url = UM()->files()->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
+							$file_url = $this->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
 							$file_dir = UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $file_field_value;
 						}
 
@@ -3151,8 +3151,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$output .= '<a href="#" class="cancel"><i class="um-icon-close"></i></a>';
 							}
 
-							$fonticon_bg = UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] );
-							$fonticon    = UM()->files()->get_fonticon_by_ext( $file_type['ext'] );
+							$fonticon_bg = UM()->fonticons()->get_file_fonticon_bg( $file_type['ext'] );
+							$fonticon    = UM()->fonticons()->get_file_fonticon( $file_type['ext'] );
 
 							$output .= '<div class="um-single-fileinfo">';
 							$output .= '<a href="' . esc_url( $file_url ) . '" target="_blank">';
@@ -5042,6 +5042,43 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$html_atts .= $conditional;
 
 			return $html_atts;
+		}
+
+		/**
+		 * File download link generate
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param int $form_id
+		 * @param string $field_key
+		 * @param int $user_id
+		 *
+		 * @return string
+		 */
+		public function get_download_link( $form_id, $field_key, $user_id ) {
+			$field_key = rawurlencode( $field_key );
+
+			if ( UM()->is_permalinks ) {
+				$url   = get_home_url( get_current_blog_id() );
+				$nonce = wp_create_nonce( $user_id . $form_id . 'um-download-nonce' );
+				$url  .= "/um-download/{$form_id}/{$field_key}/{$user_id}/{$nonce}";
+			} else {
+				$url   = get_home_url( get_current_blog_id() );
+				$nonce = wp_create_nonce( $user_id . $form_id . 'um-download-nonce' );
+				$url   = add_query_arg(
+					array(
+						'um_action' => 'download',
+						'um_form'   => $form_id,
+						'um_field'  => $field_key,
+						'um_user'   => $user_id,
+						'um_verify' => $nonce,
+					),
+					$url
+				);
+			}
+
+			// add time to query args for sites with the cache
+			return add_query_arg( array( 't' => time() ), $url );
 		}
 	}
 }

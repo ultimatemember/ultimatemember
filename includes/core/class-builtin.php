@@ -92,7 +92,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 */
 		function get_specific_fields( $fields ) {
 			$fields = explode( ',', $fields );
-			$array = array();
+			$array  = array();
 			foreach ( $fields as $field ) {
 				if ( isset( $this->predefined_fields[ $field ] ) ) {
 					$array[ $field ] = $this->predefined_fields[ $field ];
@@ -111,7 +111,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 */
 		function get_specific_field( $fields ) {
 			$fields = explode( ',', $fields );
-			$array = array();
+			$array  = array();
 			foreach ( $fields as $field ) {
 				if ( isset( $this->predefined_fields[ $field ] ) ) {
 					$array = $this->predefined_fields[ $field ];
@@ -220,234 +220,277 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 * Core Fields
 		 */
 		public function set_core_fields() {
+			if ( UM()->is_new_ui() ) {
+				$image_field = array(
+					'name'     => 'Image Upload',
+					'col1'     => array( '_title', '_metakey', '_help', '_allowed_types', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_public', '_roles', '_max_size', '_crop' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'    => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey'  => array(
+							'mode' => 'unique',
+						),
+						'_max_size' => array(
+							'mode'  => 'numeric',
+							'error' => __( 'Please enter a valid size', 'ultimate-member' ),
+						),
+					),
+				);
+				$file_field  = array(
+					'name'     => 'File Upload',
+					'col1'     => array( '_title', '_metakey', '_help', '_allowed_types' ),
+					'col2'     => array( '_label', '_icon', '_public', '_roles', '_max_size', '_visibility' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'    => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey'  => array(
+							'mode' => 'unique',
+						),
+						'_max_size' => array(
+							'mode'  => 'numeric',
+							'error' => __( 'Please enter a valid size', 'ultimate-member' ),
+						),
+					),
+				);
+			} else {
+				$image_field = array(
+					'name'     => 'Image Upload',
+					'col1'     => array( '_title', '_metakey', '_help', '_allowed_types', '_max_size', '_crop', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_public', '_roles', '_upload_text', '_upload_help_text', '_button_text' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'    => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey'  => array(
+							'mode' => 'unique',
+						),
+						'_max_size' => array(
+							'mode'  => 'numeric',
+							'error' => __( 'Please enter a valid size', 'ultimate-member' ),
+						),
+					),
+				);
+				$file_field  = array(
+					'name'     => 'File Upload',
+					'col1'     => array( '_title', '_metakey', '_help', '_allowed_types', '_max_size', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_public', '_roles', '_upload_text', '_upload_help_text', '_button_text' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'    => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey'  => array(
+							'mode' => 'unique',
+						),
+						'_max_size' => array(
+							'mode'  => 'numeric',
+							'error' => __( 'Please enter a valid size', 'ultimate-member' ),
+						),
+					),
+				);
+			}
 			$this->core_fields = array(
-				'row' => array(
-					'name' => 'Row',
-					'in_fields' => false,
-					'form_only' => true,
+				'row'              => array(
+					'name'                => 'Row',
+					'in_fields'           => false,
+					'form_only'           => true,
 					'conditional_support' => 0,
-					'icon' => 'fas fa-pencil',
-					'col1' => array('_id','_background','_text_color','_padding','_margin','_border','_borderradius','_borderstyle','_bordercolor'),
-					'col2' => array('_heading','_heading_text','_heading_background_color','_heading_text_color','_icon','_icon_color','_css_class'),
+					'icon'                => 'fas fa-pencil',
+					'col1'                => array( '_id', '_background', '_text_color', '_padding', '_margin', '_border', '_borderradius', '_borderstyle', '_bordercolor' ),
+					'col2'                => array( '_heading', '_heading_text', '_heading_background_color', '_heading_text_color', '_icon', '_icon_color', '_css_class' ),
 				),
 
-				'text' => array(
-					'name' => 'Text Box',
-					'col1' => array('_title','_metakey','_help','_default','_min_chars','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate','_max_chars'),
-					'col3' => array('_required','_editable'),
+				'text'             => array(
+					'name'     => 'Text Box',
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_min_chars', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate', '_max_chars' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
-					)
+					),
 				),
 
-				'tel' => array(
-					'name' => __( 'Telephone', 'ultimate-member' ),
-					'col1' => array('_title','_metakey','_help','_default','_min_chars','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate','_max_chars'),
-					'col3' => array('_required','_editable'),
+				'tel'              => array(
+					'name'     => __( 'Telephone', 'ultimate-member' ),
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_min_chars', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate', '_max_chars' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member'),
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
-					)
+					),
 				),
 
-				'number' => array(
-					'name' => __('Number','ultimate-member'),
-					'col1' => array('_title','_metakey','_help','_default','_min','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate','_max'),
-					'col3' => array('_required','_editable'),
+				'number'           => array(
+					'name'     => __( 'Number', 'ultimate-member' ),
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_min', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate', '_max' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
-					)
+					),
 				),
 
-				'textarea' => array(
-					'name' => 'Textarea',
-					'col1' => array('_title','_metakey','_help','_height','_max_chars','_max_words','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_default','_html'),
-					'col3' => array('_required','_editable'),
+				'textarea'         => array(
+					'name'     => 'Textarea',
+					'col1'     => array( '_title', '_metakey', '_help', '_height', '_max_chars', '_max_words', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_default', '_html' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
-					)
+					),
 				),
 
-				'select' => array(
-					'name' => 'Dropdown',
-					'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_custom_dropdown_options_source','_parent_dropdown_relationship'),
-					'col3' => array('_required','_editable'),
+				'select'           => array(
+					'name'     => 'Dropdown',
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_options', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_custom_dropdown_options_source', '_parent_dropdown_relationship' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-						'_options' => array(
-							'mode' => 'required',
-							'error' => __('You have not added any choices yet.','ultimate-member')
-						),
-					)
-				),
-
-				'multiselect' => array(
-					'name' => 'Multi-Select',
-					'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_min_selections','_max_selections','_custom_dropdown_options_source'),
-					'col3' => array('_required','_editable'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
 						'_options' => array(
-							'mode' => 'required',
-							'error' => __('You have not added any choices yet.','ultimate-member')
+							'mode'  => 'required',
+							'error' => __( 'You have not added any choices yet.', 'ultimate-member' ),
 						),
-					)
+					),
 				),
 
-				'radio' => array(
-					'name' => 'Radio',
-					'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-					'col2' => array('_label','_icon','_public','_roles'),
-					'col3' => array('_required','_editable'),
+				'multiselect'      => array(
+					'name'     => 'Multi-Select',
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_options', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_min_selections', '_max_selections', '_custom_dropdown_options_source' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
 						'_options' => array(
-							'mode' => 'required',
-							'error' => __('You have not added any choices yet.','ultimate-member')
+							'mode'  => 'required',
+							'error' => __( 'You have not added any choices yet.', 'ultimate-member' ),
 						),
-					)
+					),
 				),
 
-				'checkbox' => array(
-					'name' => 'Checkbox',
-					'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-					'col2' => array('_label','_icon','_public','_roles','_max_selections'),
-					'col3' => array('_required','_editable'),
+				'radio'            => array(
+					'name'     => 'Radio',
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_options', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_public', '_roles' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
 						'_options' => array(
-							'mode' => 'required',
-							'error' => __('You have not added any choices yet.','ultimate-member')
+							'mode'  => 'required',
+							'error' => __( 'You have not added any choices yet.', 'ultimate-member' ),
 						),
-					)
+					),
 				),
 
-				'url' => array(
-					'name' => 'URL',
-					'col1' => array('_title','_metakey','_help','_default','_url_text','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_url_target','_url_rel','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable'),
+				'checkbox'         => array(
+					'name'     => 'Checkbox',
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_options', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_public', '_roles', '_max_selections' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
-					)
+						'_options' => array(
+							'mode'  => 'required',
+							'error' => __( 'You have not added any choices yet.', 'ultimate-member' ),
+						),
+					),
 				),
 
-				'password' => array(
-					'name' => 'Password',
-					'col1' => array('_title','_metakey','_help','_min_chars','_max_chars','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_force_good_pass','_force_confirm_pass','_label_confirm_pass'),
-					'col3' => array('_required','_editable'),
+				'url'              => array(
+					'name'     => 'URL',
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_url_text', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_url_target', '_url_rel', '_public', '_roles', '_validate', '_custom_validate' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
-					)
+					),
 				),
 
-				'image' => array(
-					'name' => 'Image Upload',
-					'col1' => array('_title','_metakey','_help','_allowed_types','_max_size','_crop','_visibility'),
-					'col2' => array('_label','_icon','_public','_roles','_upload_text','_upload_help_text','_button_text'),
-					'col3' => array('_required','_editable'),
+				'password'         => array(
+					'name'     => 'Password',
+					'col1'     => array( '_title', '_metakey', '_help', '_min_chars', '_max_chars', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_force_good_pass', '_force_confirm_pass', '_label_confirm_pass' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
-						'_max_size' => array(
-							'mode' => 'numeric',
-							'error' => __('Please enter a valid size','ultimate-member')
-						),
-					)
+					),
 				),
 
-				'file' => array(
-					'name' => 'File Upload',
-					'col1' => array('_title','_metakey','_help','_allowed_types','_max_size','_visibility'),
-					'col2' => array('_label','_icon','_public','_roles','_upload_text','_upload_help_text','_button_text'),
-					'col3' => array('_required','_editable'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-						'_max_size' => array(
-							'mode' => 'numeric',
-							'error' => __( 'Please enter a valid size', 'ultimate-member' )
-						),
-					)
-				),
+				'image'            => $image_field,
 
-				'date' => array(
+				'file'             => $file_field,
+
+				'date'             => array(
 					'name'     => 'Date Picker',
 					'col1'     => array( '_title', '_metakey', '_help', '_default', '_range', '_years', '_years_x', '_range_start', '_range_end', '_visibility' ),
 					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_format', '_format_custom', '_pretty_format', '_disabled_weekdays' ),
@@ -473,151 +516,14 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					),
 				),
 
-				'time' => array(
-					'name' => 'Time Picker',
-					'col1' => array('_title','_metakey','_help','_format','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_default','_public','_roles','_intervals'),
-					'col3' => array('_required','_editable'),
+				'time'             => array(
+					'name'     => 'Time Picker',
+					'col1'     => array( '_title', '_metakey', '_help', '_format', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_default', '_public', '_roles', '_intervals' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __( 'You must provide a title', 'ultimate-member' )
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-					)
-				),
-
-				'rating' => array(
-					'name' => 'Rating',
-					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_icon','_public','_roles','_number','_default'),
-					'col3' => array('_required','_editable'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-					)
-				),
-
-				'block' => array(
-					'name' => 'Content Block',
-					'col1' => array('_title','_visibility'),
-					'col2' => array('_public','_roles'),
-					'col_full' => array('_content'),
-					'mce_content' => true,
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-					)
-				),
-
-				'shortcode' => array(
-					'name' => 'Shortcode',
-					'col1' => array('_title','_visibility'),
-					'col2' => array('_public','_roles'),
-					'col_full' => array('_content'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_content' => array(
-							'mode' => 'required',
-							'error' => __('You must add a shortcode to the content area','ultimate-member')
-						),
-					)
-				),
-
-				'spacing' => array(
-					'name' => 'Spacing',
-					'col1' => array('_title','_visibility'),
-					'col2' => array('_spacing'),
-					'form_only' => true,
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-					)
-				),
-
-				'divider' => array(
-					'name' => 'Divider',
-					'col1' => array('_title','_width','_divider_text','_visibility'),
-					'col2' => array('_style','_color','_public','_roles'),
-					'form_only' => true,
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-					)
-				),
-
-				'googlemap' => array(
-					'name' => 'Google Map',
-					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-					)
-				),
-
-				'youtube_video' => array(
-					'name' => 'YouTube Video',
-					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-					)
-				),
-
-				'vimeo_video' => array(
-					'name' => 'Vimeo Video',
-					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-					)
-				),
-
-				'soundcloud_track' => array(
-					'name' => 'SoundCloud Track',
-					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
+						'_title'   => array(
+							'mode'  => 'required',
 							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
@@ -625,11 +531,148 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 						),
 					),
 				),
-				'spotify' => array(
+
+				'rating'           => array(
+					'name'     => 'Rating',
+					'col1'     => array( '_title', '_metakey', '_help', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_public', '_roles', '_number', '_default' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+
+				'block'            => array(
+					'name'        => 'Content Block',
+					'col1'        => array( '_title', '_visibility' ),
+					'col2'        => array( '_public', '_roles' ),
+					'col_full'    => array( '_content' ),
+					'mce_content' => true,
+					'validate'    => array(
+						'_title' => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+					),
+				),
+
+				'shortcode'        => array(
+					'name'     => 'Shortcode',
+					'col1'     => array( '_title', '_visibility' ),
+					'col2'     => array( '_public', '_roles' ),
+					'col_full' => array( '_content' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_content' => array(
+							'mode'  => 'required',
+							'error' => __( 'You must add a shortcode to the content area', 'ultimate-member' ),
+						),
+					),
+				),
+
+				'spacing'          => array(
+					'name'      => 'Spacing',
+					'col1'      => array( '_title', '_visibility' ),
+					'col2'      => array( '_spacing' ),
+					'form_only' => true,
+					'validate'  => array(
+						'_title' => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+					),
+				),
+
+				'divider'          => array(
+					'name'      => 'Divider',
+					'col1'      => array( '_title', '_width', '_divider_text', '_visibility' ),
+					'col2'      => array( '_style', '_color', '_public', '_roles' ),
+					'form_only' => true,
+					'validate'  => array(
+						'_title' => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+					),
+				),
+
+				'googlemap'        => array(
+					'name'     => 'Google Map',
+					'col1'     => array( '_title', '_metakey', '_help', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+
+				'youtube_video'    => array(
+					'name'     => 'YouTube Video',
+					'col1'     => array( '_title', '_metakey', '_help', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+
+				'vimeo_video'      => array(
+					'name'     => 'Vimeo Video',
+					'col1'     => array( '_title', '_metakey', '_help', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+
+				'soundcloud_track' => array(
+					'name'     => 'SoundCloud Track',
+					'col1'     => array( '_title', '_metakey', '_help', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+				'spotify'          => array(
 					'name'     => __( 'Spotify URL', 'ultimate-member' ),
-					'col1'     => array('_title','_metakey','_help','_visibility'),
-					'col2'     => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3'     => array('_required','_editable'),
+					'col1'     => array( '_title', '_metakey', '_help', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
 						'_title'   => array(
 							'mode'  => 'required',
@@ -698,7 +741,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$this->core_fields = apply_filters( 'um_core_fields_hook', $this->core_fields );
 		}
 
-
 		/**
 		 * Predefined Fields
 		 */
@@ -709,7 +751,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$um_roles = array();
 			if ( ! empty( $wp_roles->roles ) ) {
 				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
-				$um_roles = UM()->roles()->get_roles( false, $exclude_roles );
+				$um_roles      = UM()->roles()->get_roles( false, $exclude_roles );
 			}
 
 			$profile_privacy = array(
@@ -1230,49 +1272,49 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 
 				// private use ( not public list )
 
-				'profile_photo' => array(
-					'title'       => __('Profile Photo','ultimate-member'),
+				'profile_photo'        => array(
+					'title'       => __( 'Profile Photo', 'ultimate-member' ),
 					'metakey'     => 'profile_photo',
 					'type'        => 'image',
-					'label'       => __('Change your profile photo','ultimate-member'),
-					'upload_text' => __('Upload your photo here','ultimate-member'),
+					'label'       => __( 'Change your profile photo', 'ultimate-member' ),
+					'upload_text' => __( 'Upload your photo here', 'ultimate-member' ),
 					'icon'        => 'fas fa-camera',
 					'crop'        => 1,
 					'max_size'    => ( UM()->options()->get( 'profile_photo_max_size' ) ) ? UM()->options()->get( 'profile_photo_max_size' ) : 999999999,
-					'min_width'   => str_replace('px','',UM()->options()->get( 'profile_photosize' )),
-					'min_height'  => str_replace('px','',UM()->options()->get('profile_photosize')),
+					'min_width'   => str_replace( 'px', '', UM()->options()->get( 'profile_photosize' ) ),
+					'min_height'  => str_replace( 'px', '', UM()->options()->get( 'profile_photosize' ) ),
 					'private_use' => true,
 				),
 
-				'cover_photo' => array(
-					'title' => __('Cover Photo','ultimate-member'),
-					'metakey' => 'cover_photo',
-					'type' => 'image',
-					'label' => __('Change your cover photo','ultimate-member'),
-					'upload_text' => __('Upload profile cover here','ultimate-member'),
-					'icon' => 'far fa-image',
-					'crop' => 2,
-					'max_size' => ( UM()->options()->get('cover_photo_max_size') ) ? UM()->options()->get('cover_photo_max_size') : 999999999,
-					'modal_size' => 'large',
-					'ratio' => str_replace(':1','',UM()->options()->get('profile_cover_ratio')),
-					'min_width' => UM()->options()->get('cover_min_width'),
+				'cover_photo'          => array(
+					'title'       => __( 'Cover Photo', 'ultimate-member' ),
+					'metakey'     => 'cover_photo',
+					'type'        => 'image',
+					'label'       => __( 'Change your cover photo', 'ultimate-member' ),
+					'upload_text' => __( 'Upload profile cover here', 'ultimate-member' ),
+					'icon'        => 'far fa-image',
+					'crop'        => 2,
+					'max_size'    => ( UM()->options()->get( 'cover_photo_max_size' ) ) ? UM()->options()->get( 'cover_photo_max_size' ) : 999999999,
+					'modal_size'  => 'large',
+					'ratio'       => str_replace( ':1', '', UM()->options()->get( 'profile_cover_ratio' ) ),
+					'min_width'   => UM()->options()->get( 'cover_min_width' ),
 					'private_use' => true,
 				),
 
-				'username_b' => array(
-					'title' => __('Username or Email','ultimate-member'),
-					'metakey' => 'username_b',
-					'type' => 'text',
-					'placeholder' => __('Enter your username or email','ultimate-member'),
-					'required' => 1,
-					'public' => 1,
-					'editable' => false,
+				'username_b'           => array(
+					'title'       => __( 'Username or Email', 'ultimate-member' ),
+					'metakey'     => 'username_b',
+					'type'        => 'text',
+					'placeholder' => __( 'Enter your username or email', 'ultimate-member' ),
+					'required'    => 1,
+					'public'      => 1,
+					'editable'    => false,
 					'private_use' => true,
 				),
 
 				// account page use ( not public )
 
-				'profile_privacy'       => array(
+				'profile_privacy'      => array(
 					'title'         => __( 'Profile Privacy', 'ultimate-member' ),
 					'metakey'       => 'profile_privacy',
 					'type'          => 'select',
@@ -1288,7 +1330,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required_perm' => 'can_make_private_profile',
 				),
 
-				'profile_noindex'       => array(
+				'profile_noindex'      => array(
 					'title'         => __( 'Avoid indexing my profile by search engines', 'ultimate-member' ),
 					'metakey'       => 'profile_noindex',
 					'type'          => 'select',
@@ -1299,67 +1341,67 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'      => true,
 					'default'       => UM()->roles()->um_user_can( 'profile_noindex' ) ? '1' : '0',
 					'options'       => array(
-						'0'     => __( 'No', 'ultimate-member' ),
-						'1'     => __( 'Yes', 'ultimate-member' ),
+						'0' => __( 'No', 'ultimate-member' ),
+						'1' => __( 'Yes', 'ultimate-member' ),
 					),
 					'allowclear'    => 0,
 					'account_only'  => true,
 					'required_perm' => 'can_make_private_profile',
 				),
 
-				'hide_in_members'       => array(
-					'title'         => __( 'Hide my profile from directory', 'ultimate-member' ),
-					'metakey'       => 'hide_in_members',
-					'type'          => 'radio',
-					'label'         => __( 'Hide my profile from directory', 'ultimate-member' ),
-					'help'          => __( 'Here you can hide yourself from appearing in public directory', 'ultimate-member' ),
-					'required'      => 0,
-					'public'        => 1,
-					'editable'      => true,
-					'default'       => UM()->member_directory()->get_hide_in_members_default() ? 'Yes' : 'No',
-					'options'       => array(
-						'No'    => __( 'No', 'ultimate-member' ),
-						'Yes'   => __( 'Yes', 'ultimate-member' ),
+				'hide_in_members'      => array(
+					'title'        => __( 'Hide my profile from directory', 'ultimate-member' ),
+					'metakey'      => 'hide_in_members',
+					'type'         => 'radio',
+					'label'        => __( 'Hide my profile from directory', 'ultimate-member' ),
+					'help'         => __( 'Here you can hide yourself from appearing in public directory', 'ultimate-member' ),
+					'required'     => 0,
+					'public'       => 1,
+					'editable'     => true,
+					'default'      => UM()->member_directory()->get_hide_in_members_default() ? 'Yes' : 'No',
+					'options'      => array(
+						'No'  => __( 'No', 'ultimate-member' ),
+						'Yes' => __( 'Yes', 'ultimate-member' ),
 					),
-					'account_only'  => true,
-					'required_opt'  => array( 'members_page', true ),
+					'account_only' => true,
+					'required_opt' => array( 'members_page', true ),
 				),
 
-				'um_show_last_login'    => array(
-					'title'         => __( 'Show my last login?', 'ultimate-member' ),
-					'metakey'       => 'um_show_last_login',
-					'type'          => 'radio',
-					'label'         => __( 'Show my last login?', 'ultimate-member' ),
-					'help'          => __( 'Here you can hide last login field on profile page and card in member directory', 'ultimate-member' ),
-					'required'      => 0,
-					'public'        => 1,
-					'editable'      => true,
-					'default'       => 'yes',
-					'options'       => array(
+				'um_show_last_login'   => array(
+					'title'        => __( 'Show my last login?', 'ultimate-member' ),
+					'metakey'      => 'um_show_last_login',
+					'type'         => 'radio',
+					'label'        => __( 'Show my last login?', 'ultimate-member' ),
+					'help'         => __( 'Here you can hide last login field on profile page and card in member directory', 'ultimate-member' ),
+					'required'     => 0,
+					'public'       => 1,
+					'editable'     => true,
+					'default'      => 'yes',
+					'options'      => array(
 						'no'  => __( 'No', 'ultimate-member' ),
 						'yes' => __( 'Yes', 'ultimate-member' ),
 					),
-					'account_only'  => true,
+					'account_only' => true,
 				),
 
-				'delete_account'        => array(
-					'title'         => __( 'Delete Account', 'ultimate-member' ),
-					'metakey'       => 'delete_account',
-					'type'          => 'radio',
-					'label'         => __( 'Delete Account', 'ultimate-member'),
-					'help'          => __( 'If you confirm, everything related to your profile will be deleted permanently from the site', 'ultimate-member' ),
-					'required'      => 0,
-					'public'        => 1,
-					'editable'      => true,
-					'default'       => __( 'No', 'ultimate-member' ),
-					'options'       => array(
+				'delete_account'       => array(
+					'title'        => __( 'Delete Account', 'ultimate-member' ),
+					'metakey'      => 'delete_account',
+					'type'         => 'radio',
+					'label'        => __( 'Delete Account', 'ultimate-member' ),
+					'help'         => __( 'If you confirm, everything related to your profile will be deleted permanently from the site', 'ultimate-member' ),
+					'required'     => 0,
+					'public'       => 1,
+					'editable'     => true,
+					'default'      => __( 'No', 'ultimate-member' ),
+					'options'      => array(
 						__( 'Yes', 'ultimate-member' ),
 						__( 'No', 'ultimate-member' ),
 					),
-					'account_only'  => true,
+					'account_only' => true,
 				),
 
-				'single_user_password'  => array(
+				'single_user_password' => array(
 					'title'        => __( 'Password', 'ultimate-member' ),
 					'metakey'      => 'single_user_password',
 					'type'         => 'password',
@@ -1416,6 +1458,21 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'       => true,
 					'default'        => true,
 					'account_only'   => true,
+				);
+
+				$this->predefined_fields['gdpr_details'] = array(
+					'content'     => '',
+					'type'        => 'block',
+					'private_use' => true,
+				);
+
+				$this->predefined_fields['use_gdpr_agreement'] = array(
+					'metakey'        => 'use_gdpr_agreement',
+					'type'           => 'bool',
+					'checkbox_label' => __( 'Please confirm that you agree to our privacy policy', 'ultimate-member' ),
+					'required'       => 1,
+					'editable'       => true,
+					'private_use'    => true,
 				);
 			}
 
@@ -1552,7 +1609,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				$this->fields_dropdown = $fields_without_metakey;
 			}
 
-			$custom = $this->custom_fields;
+			$custom     = $this->custom_fields;
 			$predefined = $this->predefined_fields;
 
 			if ( $exclude_types ) {
@@ -1603,34 +1660,34 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 */
 		function validation_types() {
 
-			$array[0]                          = __('None','ultimate-member');
-			$array['alphabetic']               = __('Alphabetic value only','ultimate-member');
-			$array['alpha_numeric']            = __('Alpha-numeric value','ultimate-member');
-			$array['english']                  = __('English letters only','ultimate-member');
-			$array['facebook_url']             = __('Facebook URL','ultimate-member');
-			$array['instagram_url']            = __('Instagram URL','ultimate-member');
-			$array['linkedin_url']             = __('LinkedIn URL','ultimate-member');
-			$array['lowercase']                = __('Lowercase only','ultimate-member');
-			$array['numeric']                  = __('Numeric value only','ultimate-member');
-			$array['phone_number']             = __('Phone Number','ultimate-member');
-			$array['skype']                    = __('Skype ID','ultimate-member');
+			$array[0]                          = __( 'None', 'ultimate-member' );
+			$array['alphabetic']               = __( 'Alphabetic value only', 'ultimate-member' );
+			$array['alpha_numeric']            = __( 'Alpha-numeric value', 'ultimate-member' );
+			$array['english']                  = __( 'English letters only', 'ultimate-member' );
+			$array['facebook_url']             = __( 'Facebook URL', 'ultimate-member' );
+			$array['instagram_url']            = __( 'Instagram URL', 'ultimate-member' );
+			$array['linkedin_url']             = __( 'LinkedIn URL', 'ultimate-member' );
+			$array['lowercase']                = __( 'Lowercase only', 'ultimate-member' );
+			$array['numeric']                  = __( 'Numeric value only', 'ultimate-member' );
+			$array['phone_number']             = __( 'Phone Number', 'ultimate-member' );
+			$array['skype']                    = __( 'Skype ID', 'ultimate-member' );
 			$array['soundcloud']               = __( 'SoundCloud Profile', 'ultimate-member' );
 			$array['twitter_url']              = __( 'X (formerly Twitter) URL', 'ultimate-member' );
-			$array['is_email']                 = __('Email( Not Unique )','ultimate-member');
-			$array['unique_email']             = __('Unique Email','ultimate-member');
-			$array['unique_value']             = __('Unique Metakey value','ultimate-member');
-			$array['unique_username']          = __('Unique Username','ultimate-member');
-			$array['unique_username_or_email'] = __('Unique Username/Email','ultimate-member');
-			$array['url']                      = __('Website URL','ultimate-member');
-			$array['youtube_url']              = __('YouTube Profile','ultimate-member');
-			$array['youtube_video']            = __('YouTube Video','ultimate-member');
-			$array['spotify_url']              = __('Spotify URL','ultimate-member');
-			$array['telegram_url']             = __('Telegram URL','ultimate-member');
-			$array['discord']                  = __('Discord ID','ultimate-member');
-			$array['tiktok_url']               = __('TikTok URL','ultimate-member');
-			$array['twitch_url']               = __('Twitch URL','ultimate-member');
-			$array['reddit_url']               = __('Reddit URL','ultimate-member');
-			$array['custom']                   = __('Custom Validation','ultimate-member');
+			$array['is_email']                 = __( 'Email( Not Unique )', 'ultimate-member' );
+			$array['unique_email']             = __( 'Unique Email', 'ultimate-member' );
+			$array['unique_value']             = __( 'Unique Metakey value', 'ultimate-member' );
+			$array['unique_username']          = __( 'Unique Username', 'ultimate-member' );
+			$array['unique_username_or_email'] = __( 'Unique Username/Email', 'ultimate-member' );
+			$array['url']                      = __( 'Website URL', 'ultimate-member' );
+			$array['youtube_url']              = __( 'YouTube Profile', 'ultimate-member' );
+			$array['youtube_video']            = __( 'YouTube Video', 'ultimate-member' );
+			$array['spotify_url']              = __( 'Spotify URL', 'ultimate-member' );
+			$array['telegram_url']             = __( 'Telegram URL', 'ultimate-member' );
+			$array['discord']                  = __( 'Discord ID', 'ultimate-member' );
+			$array['tiktok_url']               = __( 'TikTok URL', 'ultimate-member' );
+			$array['twitch_url']               = __( 'Twitch URL', 'ultimate-member' );
+			$array['reddit_url']               = __( 'Reddit URL', 'ultimate-member' );
+			$array['custom']                   = __( 'Custom Validation', 'ultimate-member' );
 
 			/**
 			 * UM hook

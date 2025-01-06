@@ -24,7 +24,7 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 		 * Admin_GDPR constructor.
 		 */
 		function __construct() {
-			add_action( 'init', array( &$this, 'init_fields' ), 10 );
+			add_action( 'init', array( &$this, 'init_fields' ) );
 			add_action( 'admin_init', array( &$this, 'plugin_add_suggested_privacy_content' ), 20 );
 			add_filter( 'wp_privacy_personal_data_exporters', array( &$this, 'plugin_register_exporters' ) );
 			add_filter( 'wp_privacy_personal_data_erasers', array( &$this, 'plugin_register_erasers' ) );
