@@ -166,6 +166,15 @@ function um_same_page_something_wrong( field_key ) {
 	um_add_same_page_log( field_key, wp.i18n.__( 'Your upgrade was crashed, please contact with support', 'ultimate-member' ) );
 }
 
+// Select-type filters with callback functions. Extend functionality via the JS hooks.
+wp.hooks.addFilter( 'um_common_child_dropdown_child_options_request', 'um_member_directory', function( optionsRequestData, $child ) {
+	if ( $child.parents('.um-md-default-filters-list').length ) {
+		optionsRequestData.member_directory = true;
+		optionsRequestData.member_directory_id = $child.parents('.um-md-default-filters-list').data('member_directory');
+	}
+
+	return optionsRequestData;
+});
 
 jQuery(document).ready( function() {
 	um_admin_init_users_select();
@@ -1156,14 +1165,4 @@ jQuery(document).ready( function() {
 
 		return false;
 	}
-
-	// Select-type filters with callback functions. Extend functionality via the JS hooks.
-	wp.hooks.addFilter( 'um_common_child_dropdown_child_options_request', 'um_member_directory', function( optionsRequestData, $child ) {
-		if ( $child.parents('.um-md-default-filters-list').length ) {
-			optionsRequestData.member_directory = true;
-			optionsRequestData.member_directory_id = $child.parents('.um-md-default-filters-list').attr('data-member_directory');
-		}
-
-		return optionsRequestData;
-	});
 });

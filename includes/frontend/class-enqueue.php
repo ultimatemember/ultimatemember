@@ -320,7 +320,7 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_script( 'um_dropdown', $js_url . 'dropdown' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 
 			wp_register_script( 'um_members', $js_url . 'um-members' . $suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'um_dropdown', 'wp-hooks', 'jquery-masonry', 'um_scripts' ), UM_VERSION, true );
-			wp_register_script( 'um_profile', $js_url . 'um-profile' . $suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'um_scripts' ), UM_VERSION, true );
+			wp_register_script( 'um_profile', $js_url . 'um-profile' . $suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'um_scripts', 'um_dropdown' ), UM_VERSION, true );
 			wp_set_script_translations( 'um_profile', 'ultimate-member' );
 
 			/**

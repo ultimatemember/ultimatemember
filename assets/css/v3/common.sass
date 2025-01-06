@@ -1,0 +1,112 @@
+@import "../selectors"
+@import "../mixins"
+@import "../box"
+@import "../colors"
+@import "../typography"
+
+/* Tipsy customizations */
+.um,
+.um-page
+  .tipsy
+    z-index: 9999999999
+    font-size: inherit
+
+  .tipsy-inner
+    background-color: #333333
+    color: #fff
+    max-width: 250px
+    padding: 6px 10px
+    text-align: left
+    font-size: 13px
+    line-height: 17px
+    word-wrap: break-word
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
+
+  .tipsy-arrow-n
+    border-bottom-color: #333
+  .tipsy-arrow-s
+    border-top-color: #333
+  .tipsy-arrow-e
+    border-left-color: #333
+  .tipsy-arrow-w
+    border-right-color: #333
+
+
+// Range slider.
+.um
+  .#{$prefix}range-container
+    +flex( column, flex-start, stretch, nowrap )
+    width: 100%
+    margin: 0
+    padding: 0
+    gap: 4px
+    .#{$prefix}sliders-control
+      position: relative
+      height: 8px
+      padding: 8px 0
+      input[type="range"]
+        margin: 0
+        -webkit-appearance: none
+        appearance: none
+        width: 100%
+        position: absolute
+        background-color: var(--um-gray-200, #eaecf0)
+        pointer-events: none
+        height: 8px
+        transition: all .2s ease
+        border-radius: 4px
+        outline: none
+        &:hover,
+        &:focus,
+        &:focus-visible
+          outline: none
+        &::-webkit-slider-thumb
+          -webkit-appearance: none
+          pointer-events: all
+          border-radius: 12px
+          border: 2px solid $wp-admin-primary
+          background: $um-white
+          cursor: pointer
+          height: 24px
+          width: 24px
+          +border-box
+          &:hover
+            border: 2px solid $wp-admin-primary
+          &:active
+            border: 2px solid $wp-admin-primary
+        &::-moz-range-thumb
+          -webkit-appearance: none
+          pointer-events: all
+          border-radius: 12px
+          border: 2px solid $wp-admin-primary
+          background: $um-white
+          cursor: pointer
+          height: 24px
+          width: 24px
+          +border-box
+          &:hover
+            border: 2px solid $wp-admin-primary
+          &:active
+            border: 2px solid $wp-admin-primary
+        &.#{$prefix}from-slider
+          height: 0
+          z-index: 1
+          &::-webkit-slider-thumb
+            margin-top: 8px
+          &::-moz-range-thumb
+            margin-top: 8px
+            padding-top: 8px
+            top: 8px
+            position: relative
+            display: block
+      &:hover
+        input[type="range"]
+          background-color: $gray-300
+          &::-webkit-slider-thumb,
+          &::-moz-range-thumb
+            border: 2px solid $wp-admin-primary
+
+  @-moz-document url-prefix()
+    .#{$prefix}from-slider
+      top: 12px

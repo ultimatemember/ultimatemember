@@ -38,16 +38,14 @@ class Directory extends \um\common\Directory {
 	}
 
 	public function default_filter_settings() {
-		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'um_search_filters' ) ) {
-			wp_send_json_error( __( 'Wrong nonce.', 'ultimate-member' ) );
-		}
+		check_ajax_referer( 'um_search_filters', 'nonce' );
 
 		// we can't use function "sanitize_key" because it changes uppercase to lowercase
 		$filter_key   = sanitize_text_field( $_REQUEST['key'] );
 		$directory_id = absint( $_REQUEST['directory_id'] );
-		$html         = UM()->member_directory()->show_filter( $filter_key, array( 'form_id' => $directory_id ), false, true );
+		$html         = $this->show_filter( $filter_key, array( 'form_id' => $directory_id ), false, true );
 
-		wp_send_json_success( array( 'field_html' => $html ) );
+		wp_send_json_success( array( 'field_html' => UM()->ajax()->esc_html_spaces( $html ) ) );
 	}
 
 	protected function empty_response( $directory_data ) {
@@ -1504,9 +1502,7 @@ class Directory extends \um\common\Directory {
 	 * @throws Exception
 	 */
 	public function ajax_get_members() {
-		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'um_member_directory' ) ) {
-			wp_send_json_error( __( 'Wrong nonce.', 'ultimate-member' ) );
-		}
+		check_ajax_referer( 'um_member_directory', 'nonce' );
 
 		global $wpdb;
 

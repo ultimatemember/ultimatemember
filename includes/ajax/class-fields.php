@@ -59,23 +59,17 @@ class Fields {
 
 		if ( ! empty( $_POST['member_directory'] ) ) {
 			global $wpdb;
-			if ( ! empty( absint( $_POST['member_directory_id'] ) ) ) {
-				$directory_id = absint( $_POST['member_directory_id'] );
-			} else {
-				$directory_id = UM()->member_directory()->get_directory_by_hash( sanitize_text_field( $_POST['member_directory_hash'] ) );
-			}
-			$disable_filters_pre_query = (bool) get_post_meta( $directory_id, '_um_disable_filters_pre_query', true );
+			if ( ! empty( absint( $_POST['member_directory_id'] ) ) && current_user_can( 'manage_options' ) ) {
+				// request from wp-admin filters.
+				// $directory_id = absint( $_POST['member_directory_id'] );
 
-			if ( true !== $disable_filters_pre_query ) {
-				$values_array = $wpdb->get_col(
-					$wpdb->prepare(
-						"SELECT DISTINCT meta_value
-					FROM $wpdb->usermeta
-					WHERE meta_key = %s AND
-						  meta_value != ''",
-						$child_name
-					)
-				);
+				// Disable pre-queries for wp-admin filter settings by default.
+				$disable_filters_pre_query = true;
+			} else {
+				// request from the frontend filters.
+				$directory_id = UM()->member_directory()->get_directory_by_hash( sanitize_text_field( $_POST['member_directory_hash'] ) );
+				// Get real meta values from DB when pre-filters aren't disabled
+				$disable_filters_pre_query = (bool) get_post_meta( $directory_id, '_um_disable_filters_pre_query', true );
 			}
 
 			$parent_options = array();
@@ -89,25 +83,29 @@ class Fields {
 
 			$arr_options['items'] = $ajax_source_func( $parent_options, sanitize_text_field( $_POST['parent_option_name'] ) );
 
-			if ( true === $disable_filters_pre_query && ! empty( $arr_options['items'] ) ) {
-				$values_array = $arr_options['items'];
-			}
+			if ( true !== $disable_filters_pre_query ) {
+				$values_array = $wpdb->get_col(
+					$wpdb->prepare(
+						"SELECT DISTINCT meta_value
+						FROM $wpdb->usermeta
+						WHERE meta_key = %s AND
+							  meta_value != ''",
+						$child_name
+					)
+				);
 
-			if ( ! empty( $values_array ) ) {
-				if ( array_keys( $arr_options['items'] ) !== range( 0, count( $arr_options['items'] ) - 1 ) ) {
-					// array with dropdown items is associative
-					if ( true !== (bool) get_post_meta( $directory_id, '_um_disable_filters_pre_query', true ) ) {
+				if ( ! empty( $values_array ) ) {
+					if ( array_keys( $arr_options['items'] ) !== range( 0, count( $arr_options['items'] ) - 1 ) ) {
+						// array with dropdown items is associative
 						$arr_options['items'] = array_intersect_key( array_map( 'trim', $arr_options['items'] ), array_flip( $values_array ) );
+					} else {
+						// array with dropdown items has sequential numeric keys, starting from 0 and there are intersected values with $values_array
+						$arr_options['items'] = array_intersect( $arr_options['items'], $values_array );
 					}
 				} else {
-					// array with dropdown items has sequential numeric keys, starting from 0 and there are intersected values with $values_array
-					$arr_options['items'] = array_intersect( $arr_options['items'], $values_array );
+					$arr_options['items'] = array();
 				}
-			} else {
-				$arr_options['items'] = array();
 			}
-
-			wp_send_json_success( $arr_options );
 		} else {
 			if ( isset( $_POST['form_id'] ) ) {
 				UM()->fields()->set_id = absint( $_POST['form_id'] );
@@ -160,8 +158,8 @@ class Fields {
 					wp_send_json_error( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
 				}
 			}
-
-			wp_send_json_success( $arr_options );
 		}
+
+		wp_send_json_success( $arr_options );
 	}
 }

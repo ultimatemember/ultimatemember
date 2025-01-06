@@ -1584,6 +1584,7 @@ class Layouts {
 			$args,
 			array(
 				'label'       => '',
+				'show_label'  => true,
 				'min'         => 0,
 				'max'         => 100,
 				'name'        => '',
@@ -1635,7 +1636,9 @@ class Layouts {
 		ob_start();
 		?>
 		<div class="um-field-wrapper">
-			<label for="<?php echo esc_attr( $fields['from']['name'] ); ?>"><?php echo esc_html( $args['label'] ); ?></label>
+			<?php if ( $args['show_label'] ) { ?>
+				<label for="<?php echo esc_attr( $fields['from']['name'] ); ?>"><?php echo esc_html( $args['label'] ); ?></label>
+			<?php } ?>
 			<div class="um-range-container">
 				<div class="um-sliders-control">
 					<?php
@@ -1671,13 +1674,14 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'min'     => '',
-				'max'     => '',
-				'id'      => '',
-				'name'    => '',
-				'label'   => '',
-				'value'   => '',
-				'classes' => array(
+				'min'        => '',
+				'max'        => '',
+				'id'         => '',
+				'name'       => '',
+				'label'      => '',
+				'show_label' => true,
+				'value'      => '',
+				'classes'    => array(
 					'wrapper' => array(),
 					'from'    => array(),
 					'to'      => array(),
@@ -1713,7 +1717,9 @@ class Layouts {
 		ob_start();
 		?>
 		<div class="um-field-wrapper">
-			<label for="<?php echo esc_attr( $args['id'] . '_from' ); ?>"><?php echo esc_html( $args['label'] ); ?></label>
+			<?php if ( $args['show_label'] ) { ?>
+				<label for="<?php echo esc_attr( $args['id'] . '_from' ); ?>"><?php echo esc_html( $args['label'] ); ?></label>
+			<?php } ?>
 			<div class="um-date-range-row">
 				<input type="date" class="<?php echo esc_attr( $from_classes ); ?>" id="<?php echo esc_attr( $args['id'] . '_from' ); ?>" name="<?php echo esc_attr( $args['name'] . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
 				<label for="<?php echo esc_attr( $args['id'] . '_to' ); ?>">to</label>
@@ -1728,13 +1734,14 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'min'     => '',
-				'max'     => '',
-				'id'      => '',
-				'name'    => '',
-				'label'   => '',
-				'value'   => '',
-				'classes' => array(
+				'min'        => '',
+				'max'        => '',
+				'id'         => '',
+				'name'       => '',
+				'label'      => '',
+				'show_label' => true,
+				'value'      => '',
+				'classes'    => array(
 					'wrapper' => array(),
 					'from'    => array(),
 					'to'      => array(),
@@ -1770,7 +1777,9 @@ class Layouts {
 		ob_start();
 		?>
 		<div class="um-field-wrapper">
-			<label for="<?php echo esc_attr( $args['id'] . '_from' ); ?>"><?php echo esc_html( $args['label'] ); ?></label>
+			<?php if ( $args['show_label'] ) { ?>
+				<label for="<?php echo esc_attr( $args['id'] . '_from' ); ?>"><?php echo esc_html( $args['label'] ); ?></label>
+			<?php } ?>
 			<div class="um-time-range-row">
 				<input type="time" class="<?php echo esc_attr( $from_classes ); ?>" id="<?php echo esc_attr( $args['id'] . '_from' ); ?>" name="<?php echo esc_attr( $args['name'] . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
 				<label for="<?php echo esc_attr( $args['id'] . '_to' ); ?>">to</label>

@@ -37,6 +37,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			parent::__construct();
 			add_action( 'wp_ajax_nopriv_um_get_members', array( $this, 'ajax_get_members' ) );
 			add_action( 'wp_ajax_um_get_members', array( $this, 'ajax_get_members' ) );
+			add_action( 'wp_ajax_um_member_directory_default_filter_settings', array( $this, 'default_filter_settings' ) );
 		}
 
 		/**
@@ -2566,21 +2567,20 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			<?php
 		}
 
-
 		/**
 		 * AJAX handler - Get options for the member directory "Admin filtering"
 		 * @version 2.1.12
 		 */
-		function default_filter_settings() {
+		public function default_filter_settings() {
 			UM()->admin()->check_ajax_nonce();
 
 			// we can't use function "sanitize_key" because it changes uppercase to lowercase
-			$filter_key = sanitize_text_field( $_REQUEST['key'] );
+			$filter_key   = sanitize_text_field( $_REQUEST['key'] );
 			$directory_id = absint( $_REQUEST['directory_id'] );
 
 			$html = $this->show_filter( $filter_key, array( 'form_id' => $directory_id ), false, true );
 
-			wp_send_json_success( array( 'field_html' => $html ) );
+			wp_send_json_success( array( 'field_html' => UM()->ajax()->esc_html_spaces( $html ) ) );
 		}
 
 		/**

@@ -680,7 +680,9 @@ class Directory extends Directory_Config {
 				$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : $default_value;
 				?>
 				<div class="um-field-wrapper">
-					<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( stripslashes( $label ) ); ?></label>
+					<?php if ( ! $admin ) { ?>
+						<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( stripslashes( $label ) ); ?></label>
+					<?php } ?>
 					<input type="text" autocomplete="off" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?>"
 					       placeholder="<?php echo esc_attr( $label ); ?>"
 					       value="<?php echo esc_attr( $filter_from_url ); ?>" class="um-search-filter-field"
@@ -836,7 +838,9 @@ class Directory extends Directory_Config {
 				}
 				?>
 				<div class="<?php echo esc_attr( $dropdown_class ); ?>">
-					<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( stripslashes( $label ) ); ?></label>
+					<?php if ( ! $admin ) { ?>
+						<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( stripslashes( $label ) ); ?></label>
+					<?php } ?>
 					<select multiple class="js-choice um-search-filter-field" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
 					        aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
 						<?php echo $custom_dropdown; ?>>
@@ -884,8 +888,27 @@ class Directory extends Directory_Config {
 				break;
 
 			case 'slider':
-				$range = $this->slider_filters_range( $filter, $directory_data );
-				if ( $range ) {
+				if ( $admin ) {
+					$value = array( 0, 0 );
+					if ( $default_value ) {
+						$value = $default_value;
+					}
+					?>
+					<div class="um-field-wrapper">
+						<label for="<?php echo esc_attr( $filter . '_min' ); ?>"><?php esc_html_e( 'From', 'ultimate-member' ); ?></label>
+						<input type="number" autocomplete="off" id="<?php echo esc_attr( $filter . '_min' ); ?>" name="<?php echo esc_attr( $filter . '_min' ); ?>"
+							   value="<?php echo esc_attr( min( $value ) ); ?>" class="um-search-filter-field" />
+						<label for="<?php echo esc_attr( $filter . '_max' ); ?>"><?php esc_html_e( 'To', 'ultimate-member' ); ?></label>
+						<input type="number" autocomplete="off" id="<?php echo esc_attr( $filter . '_max' ); ?>" name="<?php echo esc_attr( $filter . '_max' ); ?>"
+							   value="<?php echo esc_attr( max( $value ) ); ?>" class="um-search-filter-field" />
+					</div>
+					<?php
+				} else {
+					$range = $this->slider_filters_range( $filter, $directory_data );
+					if ( ! $range ) {
+						break;
+					}
+
 					$label = '';
 					if ( isset( $attrs['label'] ) ) {
 						$label = $attrs['label'];
@@ -896,11 +919,7 @@ class Directory extends Directory_Config {
 					$filter_from_url_from = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : $range[0];
 					$filter_from_url_to   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : $range[1];
 
-					if ( $default_value ) {
-						$value = $default_value;
-					} else {
-						$value = array( $filter_from_url_from, $filter_from_url_to );
-					}
+					$value = array( $filter_from_url_from, $filter_from_url_to );
 
 					list( $single_placeholder, $plural_placeholder ) = $this->slider_range_placeholder( $filter, $attrs );
 
@@ -908,6 +927,7 @@ class Directory extends Directory_Config {
 						UM()->frontend()::layouts()::range(
 							array(
 								'label'       => stripslashes( $label ),
+								'show_label'  => ! $admin,
 								'name'        => $filter,
 								'classes'     => array(
 									'from' => array( 'um-search-filter-field' ),
@@ -928,33 +948,46 @@ class Directory extends Directory_Config {
 				break;
 
 			case 'datepicker':
-				$range = $this->datepicker_filters_range( $filter );
+				if ( $admin ) {
+					$value = array( gmdate( 'Y-m-d' ), gmdate( 'Y-m-d' ) );
+					if ( $default_value ) {
+						$value = $default_value;
+					}
+					?>
+					<div class="um-date-range-row">
+						<label for="<?php echo esc_attr( $filter . '_from' ); ?>"><?php esc_html_e( 'From', 'ultimate-member' ); ?></label>
+						<input type="date" id="<?php echo esc_attr( $filter . '_from' ); ?>" name="<?php echo esc_attr( $filter . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
+						<label for="<?php echo esc_attr( $filter . '_to' ); ?>"><?php esc_html_e( 'To', 'ultimate-member' ); ?></label>
+						<input type="date" id="<?php echo esc_attr( $filter . '_to' ); ?>" name="<?php echo esc_attr( $filter . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( max( $value ) ); ?>" />
+					</div>
+					<?php
+				} else {
+					$range = $this->datepicker_filters_range( $filter );
+					if ( ! $range ) {
+						break;
+					}
 
-				$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
-				$label = stripslashes( $label );
+					$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
+					$label = stripslashes( $label );
 
-				if ( $range ) {
 					list( $min, $max ) = $range;
 
 					$filter_from_url_from = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : $range[0];
 					$filter_from_url_to   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : $range[1];
 
-					if ( $default_value ) {
-						$value = $default_value;
-					} else {
-						$value = array( $filter_from_url_from, $filter_from_url_to );
-					}
+					$value = array( $filter_from_url_from, $filter_from_url_to );
 
 					echo wp_kses(
 						UM()->frontend()::layouts()::date_range(
 							array(
-								'id'      => $filter,
-								'name'    => $filter,
-								'label'   => $label,
-								'value'   => $value,
-								'min'     => $min,
-								'max'     => $max,
-								'classes' => array(
+								'id'         => $filter,
+								'name'       => $filter,
+								'label'      => $label,
+								'show_label' => ! $admin,
+								'value'      => $value,
+								'min'        => $min,
+								'max'        => $max,
+								'classes'    => array(
 									'from' => array( 'um-search-filter-field' ),
 									'to'   => array( 'um-search-filter-field' ),
 								),
@@ -964,34 +997,48 @@ class Directory extends Directory_Config {
 					);
 				}
 				break;
+
 			case 'timepicker':
-				$range = $this->timepicker_filters_range( $filter );
+				if ( $admin ) {
+					$value = array( '00:00', '23:59' );
+					if ( $default_value ) {
+						$value = $default_value;
+					}
+					?>
+					<div class="um-date-range-row">
+						<label for="<?php echo esc_attr( $filter . '_from' ); ?>"><?php esc_html_e( 'From', 'ultimate-member' ); ?></label>
+						<input type="time" id="<?php echo esc_attr( $filter . '_from' ); ?>" name="<?php echo esc_attr( $filter . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
+						<label for="<?php echo esc_attr( $filter . '_to' ); ?>"><?php esc_html_e( 'To', 'ultimate-member' ); ?></label>
+						<input type="time" id="<?php echo esc_attr( $filter . '_to' ); ?>" name="<?php echo esc_attr( $filter . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( max( $value ) ); ?>" />
+					</div>
+					<?php
+				} else {
+					$range = $this->timepicker_filters_range( $filter );
+					if ( ! $range ) {
+						break;
+					}
 
-				$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
-				$label = stripslashes( $label );
+					$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
+					$label = stripslashes( $label );
 
-				if ( $range ) {
 					list( $min, $max ) = $range;
 
 					$filter_from_url_from = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : '';
 					$filter_from_url_to   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : '';
 
-					if ( $default_value ) {
-						$value = $default_value;
-					} else {
-						$value = array( $filter_from_url_from, $filter_from_url_to );
-					}
+					$value = array( $filter_from_url_from, $filter_from_url_to );
 
 					echo wp_kses(
 						UM()->frontend()::layouts()::time_range(
 							array(
-								'id'      => $filter,
-								'name'    => $filter,
-								'label'   => $label,
-								'value'   => $value,
-								'min'     => $min,
-								'max'     => $max,
-								'classes' => array(
+								'id'         => $filter,
+								'name'       => $filter,
+								'label'      => $label,
+								'show_label' => ! $admin,
+								'value'      => $value,
+								'min'        => $min,
+								'max'        => $max,
+								'classes'    => array(
 									'from' => array( 'um-search-filter-field' ),
 									'to'   => array( 'um-search-filter-field' ),
 								),
@@ -1000,8 +1047,8 @@ class Directory extends Directory_Config {
 						UM()->get_allowed_html( 'templates' )
 					);
 				}
-
 				break;
+
 		}
 
 		return ob_get_clean();

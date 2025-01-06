@@ -1,14 +1,11 @@
 <?php
 namespace um\admin\core;
 
-// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 if ( ! class_exists( 'um\admin\core\Admin_Ajax_Hooks' ) ) {
-
 
 	/**
 	 * Class Admin_Ajax_Hooks
@@ -16,9 +13,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Ajax_Hooks' ) ) {
 	 */
 	class Admin_Ajax_Hooks {
 
-
 		/**
-		 * Admin_Columns constructor.
+		 * Admin_Ajax_Hooks constructor.
 		 */
 		public function __construct() {
 			add_action( 'wp_ajax_um_do_ajax_action', array( UM()->fields(), 'do_ajax_action' ) );
@@ -28,10 +24,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Ajax_Hooks' ) ) {
 			add_action( 'wp_ajax_um_dynamic_modal_content', array( UM()->builder(), 'dynamic_modal_content' ) );
 			add_action( 'wp_ajax_um_populate_dropdown_options', array( UM()->builder(), 'populate_dropdown_options' ) );
 			add_action( 'wp_ajax_um_rated', array( UM()->admin_menu(), 'ultimatemember_rated' ) );
-			if ( ! UM()->is_new_ui() ) {
-				add_action( 'wp_ajax_um_member_directory_default_filter_settings', array( UM()->member_directory(), 'default_filter_settings' ) );
-			}
-
 			add_action( 'wp_ajax_um_same_page_update', array( UM()->admin_settings(), 'same_page_update_ajax' ) );
 		}
 	}

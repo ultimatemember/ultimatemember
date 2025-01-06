@@ -383,6 +383,11 @@ class Enqueue {
 		$um_common_variables = apply_filters( 'um_common_js_variables', $um_common_variables );
 		wp_localize_script( 'um_common', 'um_common_variables', $um_common_variables );
 
-		wp_register_style( 'um_common', $css_url . 'common' . $suffix . '.css', $common_css_deps, UM_VERSION );
+		if ( UM()->is_new_ui() ) {
+			$src = $css_url . 'v3/common' . $suffix . '.css';
+		} else {
+			$src = $css_url . 'common' . $suffix . '.css';
+		}
+		wp_register_style( 'um_common', $src, $common_css_deps, UM_VERSION );
 	}
 }
