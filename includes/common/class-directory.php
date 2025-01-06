@@ -927,7 +927,6 @@ class Directory extends Directory_Config {
 						UM()->frontend()::layouts()::range(
 							array(
 								'label'       => stripslashes( $label ),
-								'show_label'  => ! $admin,
 								'name'        => $filter,
 								'classes'     => array(
 									'from' => array( 'um-search-filter-field' ),
@@ -980,14 +979,13 @@ class Directory extends Directory_Config {
 					echo wp_kses(
 						UM()->frontend()::layouts()::date_range(
 							array(
-								'id'         => $filter,
-								'name'       => $filter,
-								'label'      => $label,
-								'show_label' => ! $admin,
-								'value'      => $value,
-								'min'        => $min,
-								'max'        => $max,
-								'classes'    => array(
+								'id'      => $filter,
+								'name'    => $filter,
+								'label'   => $label,
+								'value'   => $value,
+								'min'     => $min,
+								'max'     => $max,
+								'classes' => array(
 									'from' => array( 'um-search-filter-field' ),
 									'to'   => array( 'um-search-filter-field' ),
 								),
@@ -1031,14 +1029,13 @@ class Directory extends Directory_Config {
 					echo wp_kses(
 						UM()->frontend()::layouts()::time_range(
 							array(
-								'id'         => $filter,
-								'name'       => $filter,
-								'label'      => $label,
-								'show_label' => ! $admin,
-								'value'      => $value,
-								'min'        => $min,
-								'max'        => $max,
-								'classes'    => array(
+								'id'      => $filter,
+								'name'    => $filter,
+								'label'   => $label,
+								'value'   => $value,
+								'min'     => $min,
+								'max'     => $max,
+								'classes' => array(
 									'from' => array( 'um-search-filter-field' ),
 									'to'   => array( 'um-search-filter-field' ),
 								),
