@@ -167,13 +167,22 @@ function um_same_page_something_wrong( field_key ) {
 }
 
 // Select-type filters with callback functions. Extend functionality via the JS hooks.
-wp.hooks.addFilter( 'um_common_child_dropdown_child_options_request', 'um_member_directory', function( optionsRequestData, $child ) {
+wp.hooks.addFilter( 'um_common_child_dropdown_child_options_request', 'um_member_directory_admin', function( optionsRequestData, $child ) {
 	if ( $child.parents('.um-md-default-filters-list').length ) {
 		optionsRequestData.member_directory = true;
 		optionsRequestData.member_directory_id = $child.parents('.um-md-default-filters-list').data('member_directory');
 	}
 
 	return optionsRequestData;
+});
+
+// Select-type filters with callback functions. Makes possible to populate filter fields properly.
+wp.hooks.addFilter( 'um_populate_child_options', 'um_member_directory_admin', function( actionInFilter, $child ) {
+	if ( $child.parents('.um-md-default-filters-list').length ) {
+		actionInFilter = true;
+	}
+
+	return actionInFilter;
 });
 
 jQuery(document).ready( function() {

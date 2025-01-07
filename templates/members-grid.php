@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
+$unique_hash = UM()->member_directory()->get_directory_hash( $args['form_id'] ); ?>
 
 <script type="text/template" id="tmpl-um-member-grid-<?php echo esc_attr( $unique_hash ) ?>">
 	<div class="um-members um-members-grid">

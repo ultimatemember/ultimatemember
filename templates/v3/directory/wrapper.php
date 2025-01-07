@@ -42,8 +42,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>"
-	data-hash="<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>" data-base-post="<?php echo esc_attr( $post_id ); ?>"
+<div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $unique_hash ); ?>"
+	data-hash="<?php echo esc_attr( $unique_hash ); ?>" data-base-post="<?php echo esc_attr( $post_id ); ?>"
 	data-must-search="<?php echo esc_attr( $must_search ); ?>" data-searched="<?php echo $not_searched ? '0' : '1'; ?>"
 	data-default-layout="<?php echo esc_attr( $default_view ); ?>" data-page="<?php echo esc_attr( $current_page ); ?>"
 	data-default-order="<?php echo esc_attr( $default_sorting ); ?>" data-sorting="<?php echo esc_attr( $sort_from_url ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_member_directory' ) ); ?>">
@@ -205,7 +205,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<?php
 						$items = array();
 						foreach ( $sorting_options as $value => $title ) {
-							$items[] = '<a href="#" data-directory-hash="' . esc_attr( substr( md5( $form_id ), 10, 5 ) ) . '" class="um-members-sorting um-sorting-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url === $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting === $value ) ? '1' : '0' ) . '">' . $title . '</a>';
+							$items[] = '<a href="#" data-directory-hash="' . esc_attr( $unique_hash ) . '" class="um-members-sorting um-sorting-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url === $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting === $value ) ? '1' : '0' ) . '">' . $title . '</a>';
 						}
 						echo wp_kses(
 							UM()->frontend()::layouts()::dropdown_menu(

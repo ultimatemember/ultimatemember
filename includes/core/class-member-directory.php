@@ -101,27 +101,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			if ( isset( $fields[ $field_key ] ) ) {
 				$attrs = $fields[ $field_key ];
 			} else {
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_custom_search_field_{$filter}
-				 * @description Custom search settings by $filter
-				 * @input_vars
-				 * [{"var":"$settings","type":"array","desc":"Search Settings"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_custom_search_field_{$filter}', 'function_name', 10, 1 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_custom_search_field_{$filter}', 'my_custom_search_field', 10, 1 );
-				 * function my_change_email_template_file( $settings ) {
-				 *     // your code here
-				 *     return $settings;
-				 * }
-				 * ?>
-				 */
+				/** This filter is documented in ultimate-member/includes/common/class-directory.php */
 				$attrs = apply_filters( "um_custom_search_field_{$filter}", array(), $field_key );
 			}
 
@@ -130,30 +110,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				return '';
 			}
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_search_fields
-			 * @description Filter all search fields
-			 * @input_vars
-			 * [{"var":"$settings","type":"array","desc":"Search Fields"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_search_fields', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_search_fields', 'my_search_fields', 10, 1 );
-			 * function my_search_fields( $settings ) {
-			 *     // your code here
-			 *     return $settings;
-			 * }
-			 * ?>
-			 */
+			/** This filter is documented in ultimate-member/includes/common/class-directory.php */
 			$attrs = apply_filters( 'um_search_fields', $attrs, $field_key, $directory_data['form_id'] );
 
-			$unique_hash = substr( md5( $directory_data['form_id'] ), 10, 5 );
+			$unique_hash = $this->get_directory_hash( $directory_data['form_id'] );
 
 			ob_start();
 
@@ -583,7 +543,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 * @return mixed
 		 */
-		public function datepicker_filters_range( $filter ) {
+		public function datepicker_filters_range( $filter, $directory_data = null ) {
 			global $wpdb;
 
 			switch ( $filter ) {
@@ -642,7 +602,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 * @return mixed
 		 */
-		protected function timepicker_filters_range( $filter ) {
+		protected function timepicker_filters_range( $filter, $directory_data = null ) {
 			global $wpdb;
 			$meta = $wpdb->get_col(
 				$wpdb->prepare(
@@ -2570,6 +2530,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		/**
 		 * AJAX handler - Get options for the member directory "Admin filtering"
 		 * @version 2.1.12
+		 *
+		 * @todo deprecate since new UI is live
 		 */
 		public function default_filter_settings() {
 			UM()->admin()->check_ajax_nonce();

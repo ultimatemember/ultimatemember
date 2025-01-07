@@ -18,6 +18,8 @@ class Directory extends \um\common\Directory {
 	 * @param $default_value
 	 *
 	 * @return void
+	 *
+	 * @todo maybe remove because unused
 	 */
 	public function get_filter_data( $filter, $directory_data, $default_value = false ) {
 		$filter_content = $this->show_filter( $filter, $directory_data );
@@ -28,7 +30,8 @@ class Directory extends \um\common\Directory {
 	}
 
 	/**
-	 * @deprecated
+	 * @todo maybe re-write for using 32-bit hash string in $_GET attribute for all filters params
+	 *
 	 * @param $search_filters
 	 * @param $args
 	 *

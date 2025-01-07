@@ -2051,7 +2051,7 @@ class Shortcodes {
 
 			$args = wp_parse_args( $args, $config_args );
 
-			$unique_hash         = substr( md5( $args['form_id'] ), 10, 5 );
+			$unique_hash         = UM()->member_directory()->get_directory_hash( $args['form_id'] );
 			$args['unique_hash'] = $unique_hash;
 
 			global $post;

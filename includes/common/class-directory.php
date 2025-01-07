@@ -469,86 +469,104 @@ class Directory extends Directory_Config {
 	}
 
 	/**
-	 * @param $filter
+	 * @param string $filter
+	 * @param array  $directory_data
 	 *
-	 * @return mixed
+	 * @return array
 	 */
-	public function datepicker_filters_range( $filter ) {
+	public function datepicker_filters_range( $filter, $directory_data ) {
 		global $wpdb;
+
+		$directory_id = $directory_data['form_id'];
+
+		$disable_filters_pre_query = (bool) get_post_meta( $directory_id, '_um_disable_filters_pre_query', true );
+		if ( true === $disable_filters_pre_query ) {
+			return array( gmdate( 'Y-m-d' ), gmdate( 'Y-m-d' ) );
+		}
+
+		$range = false;
 
 		switch ( $filter ) {
 			default:
-				global $wpdb;
-				$meta = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value
+				$meta = $wpdb->get_col(
+					$wpdb->prepare(
+						"SELECT DISTINCT meta_value
 						FROM {$wpdb->usermeta}
 						WHERE meta_key = %s
-						ORDER BY meta_value DESC", $filter ) );
+						ORDER BY meta_value DESC",
+						$filter
+					)
+				);
 
-				if ( empty( $meta ) || count( $meta ) === 1 ) {
-					$range = false;
-				} elseif ( ! empty( $meta ) ) {
+				if ( ! empty( $meta ) && count( $meta ) > 1 ) {
 					$range = array( strtotime( min( $meta ) ), strtotime( max( $meta ) ) );
 				}
 
 				$range = apply_filters( "um_member_directory_filter_{$filter}_datepicker", $range );
-
 				break;
+
 			case 'last_login':
 				$meta = $wpdb->get_row(
 					"SELECT DISTINCT COUNT(*) AS total,
 							MIN(meta_value) AS min,
 							MAX(meta_value) AS max
-						FROM {$wpdb->usermeta}
-						WHERE meta_key = '_um_last_login'",
+					FROM {$wpdb->usermeta}
+					WHERE meta_key = '_um_last_login'",
 					ARRAY_A
 				);
-				if ( empty( $meta['total'] ) || 1 === absint( $meta['total'] ) ) {
-					$range = false;
-				} elseif ( array_key_exists( 'min', $meta ) && array_key_exists( 'max', $meta ) ) {
+
+				if ( ! empty( $meta['total'] ) && absint( $meta['total'] ) > 1 && array_key_exists( 'min', $meta ) && array_key_exists( 'max', $meta ) ) {
 					$range = array( strtotime( $meta['min'] ), strtotime( $meta['max'] ) );
 				}
 				break;
+
 			case 'user_registered':
 				$meta = $wpdb->get_col(
 					"SELECT DISTINCT user_registered
-						FROM {$wpdb->users}
-						ORDER BY user_registered DESC"
+					FROM {$wpdb->users}
+					ORDER BY user_registered DESC"
 				);
 
-				if ( empty( $meta ) || count( $meta ) === 1 ) {
-					$range = false;
-				} elseif ( ! empty( $meta ) ) {
+				if ( ! empty( $meta ) && count( $meta ) > 1 ) {
 					$range = array( strtotime( min( $meta ) ), strtotime( max( $meta ) ) );
 				}
-
 				break;
+
 		}
 
 		return $range;
 	}
 
 	/**
-	 * @param $filter
+	 * @param string $filter
+	 * @param array  $directory_data
 	 *
-	 * @return mixed
+	 * @return array
 	 */
-	protected function timepicker_filters_range( $filter ) {
+	protected function timepicker_filters_range( $filter, $directory_data ) {
 		global $wpdb;
+
+		$directory_id = $directory_data['form_id'];
+
+		$disable_filters_pre_query = (bool) get_post_meta( $directory_id, '_um_disable_filters_pre_query', true );
+		if ( true === $disable_filters_pre_query ) {
+			return array( '00:00', '23:59' );
+		}
+
 		$meta = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT DISTINCT meta_value
-					FROM {$wpdb->usermeta}
-					WHERE meta_key = %s
-					ORDER BY meta_value DESC",
+				FROM {$wpdb->usermeta}
+				WHERE meta_key = %s
+				ORDER BY meta_value DESC",
 				$filter
 			)
 		);
 
 		$meta = array_filter( $meta );
 
-		if ( empty( $meta ) || count( $meta ) === 1 ) {
-			$range = false;
-		} elseif ( ! empty( $meta ) ) {
+		$range = false;
+		if ( ! empty( $meta ) && count( $meta ) > 1 ) {
 			$range = array( min( $meta ), max( $meta ) );
 		}
 
@@ -568,28 +586,30 @@ class Directory extends Directory_Config {
 	}
 
 	/**
-	 * Render member's directory
-	 * filters selectboxes
+	 * Render member's directory filters.
 	 *
 	 * @param string $filter
-	 * @param array $directory_data
-	 * @param mixed $default_value
-	 * @param bool $admin
+	 * @param array  $directory_data
+	 * @param mixed  $default_value
+	 * @param bool   $admin
 	 *
 	 * @return string $filter
 	 */
 	public function show_filter( $filter, $directory_data, $default_value = false, $admin = false ) {
+		global $wpdb;
+
 		if ( empty( $this->filter_types[ $filter ] ) ) {
 			return '';
 		}
 
-		if ( false === $default_value ) {
+		// Don't show filter (not select type) in the case when the same default filter is set from wp-admin
+		if ( ! $admin && 'select' !== $this->filter_types[ $filter ] ) {
 			$default_filters = array();
 			if ( ! empty( $directory_data['search_filters'] ) ) {
 				$default_filters = maybe_unserialize( $directory_data['search_filters'] );
 			}
 
-			if ( ! empty( $default_filters[ $filter ] ) && 'select' !== $this->filter_types[ $filter ] ) {
+			if ( ! empty( $default_filters[ $filter ] ) ) {
 				return '';
 			}
 		}
@@ -603,69 +623,73 @@ class Directory extends Directory_Config {
 
 		$fields = UM()->builtin()->all_user_fields;
 
-		if ( isset( $fields[ $field_key ] ) ) {
-			$attrs = $fields[ $field_key ];
-		} else {
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_custom_search_field_{$filter}
-			 * @description Custom search settings by $filter
-			 * @input_vars
-			 * [{"var":"$settings","type":"array","desc":"Search Settings"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_custom_search_field_{$filter}', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_custom_search_field_{$filter}', 'my_custom_search_field', 10, 1 );
-			 * function my_change_email_template_file( $settings ) {
-			 *     // your code here
-			 *     return $settings;
-			 * }
-			 * ?>
-			 */
-			$attrs = apply_filters( "um_custom_search_field_{$filter}", array(), $field_key );
-		}
+		$attrs = isset( $fields[ $field_key ] ) ? $fields[ $field_key ] : array();
+		/**
+		 * Filters the field's data used in member directory filter.
+		 * Where $filter is the filter key.
+		 *
+		 * @param {array}  $attrs     Filter's field data.
+		 * @param {string} $field_key Field key.
+		 *
+		 * @return {array} Filter's field data.
+		 *
+		 * @since 2.0
+		 * @hook um_custom_search_field_{$filter}
+		 *
+		 * @example <caption>Set data for the filter with `my_filter` filter.</caption>
+		 * function my_filter_search_field( $attrs, $field_key ) {
+		 *     // your code here
+		 *     if ( 'exam_date' === $field_key ) {
+		 *         $attrs = array(
+		 *             'title'    => 'Exam Date'
+		 *             'metakey'  => 'exam_date',
+		 *             'type'     => 'date',
+		 *             'label'    => 'Exam Date',
+		 *             'editable' => true,
+		 *         );
+		 *     }
+		 *     return $attrs;
+		 * }
+		 * add_filter( 'um_custom_search_field_my_filter', 'my_filter_search_field', 10, 2 );
+		 */
+		$attrs = apply_filters( "um_custom_search_field_$filter", $attrs, $field_key );
 
-		// skip private invisible fields
-		if ( ! um_can_view_field( $attrs ) ) {
+		// Skip private invisible fields
+		if ( ! $admin && ! um_can_view_field( $attrs ) ) {
 			return '';
 		}
 
 		/**
-		 * UM hook
+		 * Filters the field's data used in member directory filter.
 		 *
-		 * @type filter
-		 * @title um_search_fields
-		 * @description Filter all search fields
-		 * @input_vars
-		 * [{"var":"$settings","type":"array","desc":"Search Fields"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage
-		 * <?php add_filter( 'um_search_fields', 'function_name', 10, 1 ); ?>
-		 * @example
-		 * <?php
-		 * add_filter( 'um_search_fields', 'my_search_fields', 10, 1 );
-		 * function my_search_fields( $settings ) {
+		 * @param {array}  $attrs        Filter's field data.
+		 * @param {string} $field_key    Field key.
+		 * @param {int}    $directory_id Member Directory ID.
+		 *
+		 * @return {array} Filter's field data.
+		 *
+		 * @since 2.0
+		 * @hook um_search_fields
+		 *
+		 * @example <caption>Change `Birth Date` filter's label.</caption>
+		 * function my_filter_search_field( $attrs, $field_key, $directory_id ) {
 		 *     // your code here
-		 *     return $settings;
+		 *     if ( 'birth_date' === $field_key ) {
+		 *         $attrs['label'] = 'Birthday';
+		 *     }
+		 *     return $attrs;
 		 * }
-		 * ?>
+		 * add_filter( 'um_search_fields', 'my_filter_search_field', 10, 3 );
 		 */
 		$attrs = apply_filters( 'um_search_fields', $attrs, $field_key, $directory_data['form_id'] );
 
-		$unique_hash = substr( md5( $directory_data['form_id'] ), 10, 5 );
-
-		ob_start();
+		$unique_hash = $this->get_directory_hash( $directory_data['form_id'] );
 
 		switch ( $this->filter_types[ $filter ] ) {
 			default:
+				ob_start();
 				do_action( "um_member_directory_filter_type_{$this->filter_types[ $filter ]}", $filter, $directory_data, $unique_hash, $attrs, $default_value );
-				break;
+				return ob_get_clean();
 
 			case 'text':
 				$label = '';
@@ -678,376 +702,443 @@ class Directory extends Directory_Config {
 				$label = stripslashes( $label );
 
 				$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : $default_value;
+
+				ob_start();
 				?>
 				<div class="um-field-wrapper">
 					<?php if ( ! $admin ) { ?>
 						<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( stripslashes( $label ) ); ?></label>
 					<?php } ?>
 					<input type="text" autocomplete="off" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?>"
-					       placeholder="<?php echo esc_attr( $label ); ?>"
-					       value="<?php echo esc_attr( $filter_from_url ); ?>" class="um-search-filter-field"
-					       aria-label="<?php echo esc_attr( $label ); ?>" />
+						placeholder="<?php echo esc_attr( $label ); ?>"
+						value="<?php echo esc_attr( $filter_from_url ); ?>" class="um-search-filter-field"
+						aria-label="<?php echo esc_attr( $label ); ?>" />
 				</div>
 				<?php
-				break;
+				return ob_get_clean();
 
 			case 'select':
-				// getting value from GET line
-				$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? explode( '||', sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ) : array();
-
-				// new
-				global $wpdb;
-
-				$directory_id              = $directory_data['form_id'];
-				$disable_filters_pre_query = (bool) get_post_meta( $directory_id, '_um_disable_filters_pre_query', true );
-				if ( 'role_select' !== $attrs['metakey'] ) {
-					if ( true !== $disable_filters_pre_query ) {
-						$values_array = $wpdb->get_col(
-							$wpdb->prepare(
-								"SELECT DISTINCT meta_value
-							FROM $wpdb->usermeta
-							WHERE meta_key = %s AND
-								  meta_value != ''",
-								$attrs['metakey']
-							)
-						);
-					} elseif ( true === $disable_filters_pre_query && ! empty( $attrs['options'] ) ) {
-						$values_array = $attrs['options'];
-					}
-				} else {
-					$users_roles  = count_users();
-					$values_array = ( ! empty( $users_roles['avail_roles'] ) && is_array( $users_roles['avail_roles'] ) ) ? array_keys( array_filter( $users_roles['avail_roles'] ) ) : array();
-				}
-
-				if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
-					$values_array = array_map( 'maybe_unserialize', $values_array );
-					$temp_values  = array();
-					foreach ( $values_array as $values ) {
-						if ( is_array( $values ) ) {
-							$temp_values = array_merge( $temp_values, $values );
-						} else {
-							$temp_values[] = $values;
-						}
-					}
-					$values_array = array_unique( $temp_values );
-				}
-
-				if ( isset( $attrs['metakey'] ) && strstr( $attrs['metakey'], 'role_' ) ) {
-					$shortcode_roles = get_post_meta( $directory_data['form_id'], '_um_roles', true );
-					$um_roles        = UM()->roles()->get_roles( false );
-
-					if ( ! empty( $shortcode_roles ) && is_array( $shortcode_roles ) ) {
-						$attrs['options'] = array();
-
-						foreach ( $um_roles as $key => $value ) {
-							if ( in_array( $key, $shortcode_roles, true ) ) {
-								$attrs['options'][ $key ] = $value;
-							}
-						}
-					} else {
-						$attrs['options'] = array();
-
-						foreach ( $um_roles as $key => $value ) {
-							$attrs['options'][ $key ] = $value;
-						}
-					}
-				}
-
-				/** This filter is documented in includes/core/class-fields.php */
-				$option_pairs = apply_filters( 'um_select_options_pair', null, $attrs );
-
-				$custom_dropdown = '';
-
-				$choices_callback = UM()->fields()->get_custom_dropdown_options_source( $filter, $attrs );
-				if ( ! empty( $choices_callback ) ) {
-					$option_pairs     = true;
-					$custom_dropdown .= ' data-um-ajax-source="' . esc_attr( $choices_callback ) . '" data-nonce="' . wp_create_nonce( 'um_dropdown_parent_nonce' . $attrs['metakey'] ) . '" ';
-					if ( ! empty( $attrs['parent_dropdown_relationship'] ) ) {
-						/** This filter is documented in includes/core/class-fields.php */
-						$parent_dropdown_relationship = apply_filters( "um_custom_dropdown_options_parent__$filter", $attrs['parent_dropdown_relationship'], $attrs );
-
-						$custom_dropdown .= ' data-um-parent="' . esc_attr( $parent_dropdown_relationship ) . '"';
-						$filter_value_key = 'filter_' . $parent_dropdown_relationship . '_' . $unique_hash;
-
-						$parent_option = array();
-						if ( isset( $_GET[ $filter_value_key ] ) ) {
-							$parent_option_value = sanitize_text_field( $_GET[ $filter_value_key ] );
-							$parent_option       = explode( '||', $parent_option_value );
-						} elseif ( ! empty( get_post_meta( $directory_id, '_um_search_filters', true ) ) ) {
-							$um_search_filters = get_post_meta( $directory_id, '_um_search_filters', true );
-							$parent_option     = $um_search_filters[ $parent_dropdown_relationship ];
-						}
-
-						$attrs['options'] = $choices_callback( $parent_option, $parent_dropdown_relationship );
-					} else {
-						$attrs['options'] = $choices_callback();
-					}
-					if ( true === $disable_filters_pre_query ) {
-						$values_array = $attrs['options'];
-					}
-				}
-
-				if ( 'online_status' !== $attrs['metakey'] && empty( $values_array ) ) {
-					ob_get_clean();
-					return '';
-				}
-
-				if ( 'online_status' !== $attrs['metakey'] ) {
-					if ( 'role_select' !== $attrs['metakey'] && 'mycred_rank' !== $attrs['metakey'] && empty( $custom_dropdown ) && empty( $option_pairs ) ) {
-						if ( true !== $disable_filters_pre_query ) {
-							$attrs['options'] = array_intersect( array_map( 'stripslashes', array_map( 'trim', $attrs['options'] ) ), $values_array );
-						}
-					} elseif ( ! empty( $custom_dropdown ) ) {
-						if ( true !== $disable_filters_pre_query ) {
-							$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
-						}
-					} else {
-						$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
-					}
-				}
-
-				$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options', $attrs['options'], $values_array, $attrs );
-
-				if ( empty( $attrs['options'] ) || ! is_array( $attrs['options'] ) ) {
-					ob_get_clean();
-					return '';
-				}
-
-				if ( isset( $attrs['label'] ) ) {
-					$attrs['label'] = strip_tags( $attrs['label'] );
-				}
-
-				if ( ! empty( $default_filters[ $filter ] ) ) {
-					$attrs['options'] = array_intersect( $attrs['options'], $default_filters[ $filter ] );
-				}
-
-				ksort( $attrs['options'] );
-
-				$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options_sorted', $attrs['options'], $attrs );
-
-				$label = '';
-				if ( isset( $attrs['label'] ) ) {
-					$label = $attrs['label'];
-				} elseif ( ! isset( $attrs['label'] ) && isset( $attrs['title'] ) ) {
-					$label = $attrs['title'];
-				}
-
-				$dropdown_class = '';
-				if ( true !== $admin ) {
-					$dropdown_class = 'um-field-wrapper';
-				}
-				?>
-				<div class="<?php echo esc_attr( $dropdown_class ); ?>">
-					<?php if ( ! $admin ) { ?>
-						<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( stripslashes( $label ) ); ?></label>
-					<?php } ?>
-					<select multiple class="js-choice um-search-filter-field" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
-					        aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
-						<?php echo $custom_dropdown; ?>>
-						<?php
-						if ( ! empty( $attrs['options'] ) ) {
-
-							foreach ( $attrs['options'] as $k => $v ) {
-
-								$v = stripslashes( $v );
-
-								$opt = $v;
-
-								if ( strstr( $filter, 'role_' ) || 'role' === $filter ) {
-									$opt = $k;
-								}
-
-								if ( ! empty( $option_pairs ) ) {
-									$opt = $k;
-								}
-								?>
-								<option value="<?php echo esc_attr( $opt ); ?>" data-value_label="<?php esc_attr_e( $v, 'ultimate-member' ); ?>"
-									<?php
-									if ( $admin ) {
-										if ( ! is_array( $default_value ) ) {
-											$default_value = array( $default_value );
-										}
-
-										selected( in_array( $opt, $default_value ) );
-									} else {
-										selected( $opt === $default_value || ( ! empty( $filter_from_url ) && in_array( $opt, $filter_from_url, true ) ) );
-									}
-									?>
-								>
-									<?php _e( $v, 'ultimate-member' ); ?>
-								</option>
-
-								<?php
-							}
-						}
-						?>
-
-					</select>
-				</div>
-				<?php
-				break;
+				return $this->render_dropdown_filter( $attrs, $filter, $directory_data, $default_value, $admin );
 
 			case 'slider':
 				if ( $admin ) {
-					$value = array( 0, 0 );
-					if ( $default_value ) {
-						$value = $default_value;
-					}
-					?>
-					<div class="um-field-wrapper">
-						<label for="<?php echo esc_attr( $filter . '_min' ); ?>"><?php esc_html_e( 'From', 'ultimate-member' ); ?></label>
-						<input type="number" autocomplete="off" id="<?php echo esc_attr( $filter . '_min' ); ?>" name="<?php echo esc_attr( $filter . '_min' ); ?>"
-							   value="<?php echo esc_attr( min( $value ) ); ?>" class="um-search-filter-field" />
-						<label for="<?php echo esc_attr( $filter . '_max' ); ?>"><?php esc_html_e( 'To', 'ultimate-member' ); ?></label>
-						<input type="number" autocomplete="off" id="<?php echo esc_attr( $filter . '_max' ); ?>" name="<?php echo esc_attr( $filter . '_max' ); ?>"
-							   value="<?php echo esc_attr( max( $value ) ); ?>" class="um-search-filter-field" />
-					</div>
-					<?php
-				} else {
-					$range = $this->slider_filters_range( $filter, $directory_data );
-					if ( ! $range ) {
-						break;
-					}
-
-					$label = '';
-					if ( isset( $attrs['label'] ) ) {
-						$label = $attrs['label'];
-					} elseif ( ! isset( $attrs['label'] ) && isset( $attrs['title'] ) ) {
-						$label = $attrs['title'];
-					}
-
-					$filter_from_url_from = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : $range[0];
-					$filter_from_url_to   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : $range[1];
-
-					$value = array( $filter_from_url_from, $filter_from_url_to );
-
-					list( $single_placeholder, $plural_placeholder ) = $this->slider_range_placeholder( $filter, $attrs );
-
-					echo wp_kses(
-						UM()->frontend()::layouts()::range(
-							array(
-								'label'       => stripslashes( $label ),
-								'name'        => $filter,
-								'classes'     => array(
-									'from' => array( 'um-search-filter-field' ),
-									'to'   => array( 'um-search-filter-field' ),
-								),
-								'value'       => $value,
-								'min'         => $range[0],
-								'max'         => $range[1],
-								'placeholder' => array(
-									'single' => $single_placeholder,
-									'plural' => $plural_placeholder,
-								),
-							)
-						),
-						UM()->get_allowed_html( 'templates' )
-					);
+					return $this->render_slider_admin_filter( $filter, $default_value );
 				}
-				break;
+
+				return $this->render_slider_filter( $attrs, $filter, $directory_data );
 
 			case 'datepicker':
 				if ( $admin ) {
-					$value = array( gmdate( 'Y-m-d' ), gmdate( 'Y-m-d' ) );
-					if ( $default_value ) {
-						$value = $default_value;
-					}
-					?>
-					<div class="um-date-range-row">
-						<label for="<?php echo esc_attr( $filter . '_from' ); ?>"><?php esc_html_e( 'From', 'ultimate-member' ); ?></label>
-						<input type="date" id="<?php echo esc_attr( $filter . '_from' ); ?>" name="<?php echo esc_attr( $filter . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
-						<label for="<?php echo esc_attr( $filter . '_to' ); ?>"><?php esc_html_e( 'To', 'ultimate-member' ); ?></label>
-						<input type="date" id="<?php echo esc_attr( $filter . '_to' ); ?>" name="<?php echo esc_attr( $filter . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( max( $value ) ); ?>" />
-					</div>
-					<?php
-				} else {
-					$range = $this->datepicker_filters_range( $filter );
-					if ( ! $range ) {
-						break;
-					}
-
-					$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
-					$label = stripslashes( $label );
-
-					list( $min, $max ) = $range;
-
-					$filter_from_url_from = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : $range[0];
-					$filter_from_url_to   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : $range[1];
-
-					$value = array( $filter_from_url_from, $filter_from_url_to );
-
-					echo wp_kses(
-						UM()->frontend()::layouts()::date_range(
-							array(
-								'id'      => $filter,
-								'name'    => $filter,
-								'label'   => $label,
-								'value'   => $value,
-								'min'     => $min,
-								'max'     => $max,
-								'classes' => array(
-									'from' => array( 'um-search-filter-field' ),
-									'to'   => array( 'um-search-filter-field' ),
-								),
-							)
-						),
-						UM()->get_allowed_html( 'templates' )
-					);
+					return $this->render_datepicker_admin_filter( $filter, $default_value );
 				}
-				break;
+				return $this->render_datepicker_filter( $attrs, $filter, $directory_data );
 
 			case 'timepicker':
 				if ( $admin ) {
-					$value = array( '00:00', '23:59' );
-					if ( $default_value ) {
-						$value = $default_value;
-					}
-					?>
-					<div class="um-date-range-row">
-						<label for="<?php echo esc_attr( $filter . '_from' ); ?>"><?php esc_html_e( 'From', 'ultimate-member' ); ?></label>
-						<input type="time" id="<?php echo esc_attr( $filter . '_from' ); ?>" name="<?php echo esc_attr( $filter . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
-						<label for="<?php echo esc_attr( $filter . '_to' ); ?>"><?php esc_html_e( 'To', 'ultimate-member' ); ?></label>
-						<input type="time" id="<?php echo esc_attr( $filter . '_to' ); ?>" name="<?php echo esc_attr( $filter . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( max( $value ) ); ?>" />
-					</div>
-					<?php
-				} else {
-					$range = $this->timepicker_filters_range( $filter );
-					if ( ! $range ) {
-						break;
-					}
-
-					$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
-					$label = stripslashes( $label );
-
-					list( $min, $max ) = $range;
-
-					$filter_from_url_from = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : '';
-					$filter_from_url_to   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : '';
-
-					$value = array( $filter_from_url_from, $filter_from_url_to );
-
-					echo wp_kses(
-						UM()->frontend()::layouts()::time_range(
-							array(
-								'id'      => $filter,
-								'name'    => $filter,
-								'label'   => $label,
-								'value'   => $value,
-								'min'     => $min,
-								'max'     => $max,
-								'classes' => array(
-									'from' => array( 'um-search-filter-field' ),
-									'to'   => array( 'um-search-filter-field' ),
-								),
-							)
-						),
-						UM()->get_allowed_html( 'templates' )
-					);
+					return $this->render_timepicker_admin_filter( $filter, $default_value );
 				}
-				break;
+
+				return $this->render_timepicker_filter( $attrs, $filter, $directory_data );
 
 		}
+	}
 
+	private function render_dropdown_filter( $attrs, $filter, $directory_data, $default_value, $admin ) {
+		global $wpdb;
+
+		$directory_id = $directory_data['form_id'];
+		$unique_hash  = $this->get_directory_hash( $directory_id );
+		$values_array = isset( $attrs['options'] ) ? $attrs['options'] : array(); // Fallback
+
+		// getting value from GET line
+		$filter_from_url = array();
+		if ( ! $admin ) {
+			$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? explode( '||', sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ) : $filter_from_url;
+		}
+
+		$disable_filters_pre_query = (bool) get_post_meta( $directory_id, '_um_disable_filters_pre_query', true );
+
+		/** This filter is documented in includes/core/class-fields.php */
+		$option_pairs     = apply_filters( 'um_select_options_pair', null, $attrs );
+		$custom_dropdown  = '';
+		$choices_callback = UM()->fields()->get_custom_dropdown_options_source( $filter, $attrs );
+		if ( ! empty( $choices_callback ) ) {
+			$option_pairs     = true;
+			$custom_dropdown .= ' data-um-ajax-source="' . esc_attr( $choices_callback ) . '" data-nonce="' . wp_create_nonce( 'um_dropdown_parent_nonce' . $attrs['metakey'] ) . '" ';
+			if ( ! empty( $attrs['parent_dropdown_relationship'] ) ) {
+				/** This filter is documented in includes/core/class-fields.php */
+				$parent_dropdown_relationship = apply_filters( "um_custom_dropdown_options_parent__$filter", $attrs['parent_dropdown_relationship'], $attrs );
+
+				$custom_dropdown .= ' data-um-parent="' . esc_attr( $parent_dropdown_relationship ) . '"';
+
+				$parent_option = array();
+				if ( $admin ) {
+					$um_search_filters = get_post_meta( $directory_id, '_um_search_filters', true );
+					if ( ! empty( $um_search_filters ) ) {
+						$parent_option = $um_search_filters[ $parent_dropdown_relationship ];
+					}
+				} else {
+					$filter_value_key = 'filter_' . $parent_dropdown_relationship . '_' . $unique_hash;
+					if ( isset( $_GET[ $filter_value_key ] ) ) {
+						$parent_option_value = sanitize_text_field( $_GET[ $filter_value_key ] );
+						$parent_option       = explode( '||', $parent_option_value );
+					}
+				}
+
+				$attrs['options'] = $choices_callback( $parent_option, $parent_dropdown_relationship );
+			} else {
+				$attrs['options'] = $choices_callback();
+			}
+
+			if ( ! $admin && true !== $disable_filters_pre_query ) {
+				$values_array = $wpdb->get_col(
+					$wpdb->prepare(
+						"SELECT DISTINCT meta_value
+						FROM $wpdb->usermeta
+						WHERE meta_key = %s AND
+							  meta_value != ''",
+						$attrs['metakey']
+					)
+				);
+
+				if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
+					$values_array = array_map( 'maybe_unserialize', $values_array );
+					$values_array = array_unique( array_merge( ...$values_array ) );
+				}
+
+				$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
+			}
+		} else {
+			if ( $admin ) {
+				$disable_filters_pre_query = true;
+
+				if ( 'role' === $filter ) {
+					$values_array = array();
+
+					$editable_roles  = array_reverse( get_editable_roles() );
+					$shortcode_roles = get_post_meta( $directory_id, '_um_roles', true );
+					$shortcode_roles = maybe_unserialize( $shortcode_roles );
+
+					if ( ! empty( $shortcode_roles ) && is_array( $shortcode_roles ) ) {
+						foreach ( $editable_roles as $role => $details ) {
+							if ( in_array( $role, $shortcode_roles, true ) ) {
+								$values_array[ $role ] = translate_user_role( $details['name'] );
+							}
+						}
+					} else {
+						foreach ( $editable_roles as $role => $details ) {
+							$values_array[ $role ] = translate_user_role( $details['name'] );
+						}
+					}
+
+					$attrs['options'] = $values_array;
+				}
+			} else {
+				if ( 'role' === $filter ) {
+					$values_array = array();
+
+					$shortcode_roles = get_post_meta( $directory_data['form_id'], '_um_roles', true );
+					$shortcode_roles = maybe_unserialize( $shortcode_roles );
+
+					$um_roles = UM()->roles()->get_roles();
+
+					if ( true !== $disable_filters_pre_query ) {
+						$users_roles = count_users();
+						$roles_exist = ( ! empty( $users_roles['avail_roles'] ) && is_array( $users_roles['avail_roles'] ) ) ? array_keys( array_filter( $users_roles['avail_roles'] ) ) : array();
+
+						foreach ( $um_roles as $key => $value ) {
+							if ( ! empty( $shortcode_roles ) && is_array( $shortcode_roles ) ) {
+								if ( in_array( $key, $roles_exist, true ) && in_array( $key, $shortcode_roles, true ) ) {
+									$values_array[ $key ] = $value;
+								}
+							} elseif ( in_array( $key, $roles_exist, true ) ) {
+								$values_array[ $key ] = $value;
+							}
+						}
+					} else {
+						foreach ( $um_roles as $key => $value ) {
+							if ( ! empty( $shortcode_roles ) && is_array( $shortcode_roles ) ) {
+								if ( in_array( $key, $shortcode_roles, true ) ) {
+									$values_array[ $key ] = $value;
+								}
+							} else {
+								$values_array[ $key ] = $value;
+							}
+						}
+					}
+
+					$attrs['options'] = $values_array;
+				} else {
+					if ( true !== $disable_filters_pre_query ) {
+						// @todo find the way how to remove `online_status` from there
+						if ( 'online_status' !== $attrs['metakey'] ) {
+							$values_array = $wpdb->get_col(
+								$wpdb->prepare(
+									"SELECT DISTINCT meta_value
+								FROM $wpdb->usermeta
+								WHERE meta_key = %s AND
+									  meta_value != ''",
+									$attrs['metakey']
+								)
+							);
+
+							if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
+								$values_array = array_map( 'maybe_unserialize', $values_array );
+								$values_array = array_unique( array_merge( ...$values_array ) );
+							}
+
+							// @todo find the way how to remove `mycred_rank` from there
+							if ( empty( $option_pairs ) && 'mycred_rank' !== $attrs['metakey'] ) {
+								$attrs['options'] = array_intersect( array_map( 'stripslashes', array_map( 'trim', $attrs['options'] ) ), $values_array );
+							} else {
+								$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
+							}
+						}
+					}
+				}
+			}
+		}
+
+		$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options', $attrs['options'], $values_array, $attrs );
+		if ( empty( $attrs['options'] ) || ! is_array( $attrs['options'] ) ) {
+			return '';
+		}
+
+		// Intersect options array with the default filter options
+		if ( ! $admin && ! empty( $directory_data['search_filters'] ) ) {
+			$default_filters = maybe_unserialize( $directory_data['search_filters'] );
+
+			if ( ! empty( $default_filters[ $filter ] ) ) {
+				$attrs['options'] = array_intersect( $attrs['options'], $default_filters[ $filter ] );
+			}
+		}
+
+		ksort( $attrs['options'] );
+
+		$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options_sorted', $attrs['options'], $attrs );
+
+		if ( empty( $attrs['options'] ) ) {
+			return '';
+		}
+
+		if ( isset( $attrs['label'] ) ) {
+			$attrs['label'] = wp_strip_all_tags( $attrs['label'] );
+		}
+
+		$label = '';
+		if ( isset( $attrs['label'] ) ) {
+			$label = $attrs['label'];
+		} elseif ( isset( $attrs['title'] ) ) {
+			$label = $attrs['title'];
+		}
+		$label = stripslashes( $label );
+
+		$dropdown_class = '';
+		if ( true !== $admin ) {
+			$dropdown_class = 'um-field-wrapper';
+		}
+
+		$name = $filter;
+		if ( $admin && count( $attrs['options'] ) > 1 ) {
+			$name .= '[]';
+		}
+		ob_start();
+		?>
+		<div class="<?php echo esc_attr( $dropdown_class ); ?>">
+			<?php if ( ! $admin ) { ?>
+				<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( $label ); ?></label>
+			<?php } ?>
+			<select multiple class="js-choice um-search-filter-field" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $name ); ?>"
+				aria-label="<?php echo esc_attr( $label ); ?>" <?php echo $custom_dropdown; ?>>
+				<?php
+				foreach ( $attrs['options'] as $k => $v ) {
+					$opt = stripslashes( $v );
+					if ( ! empty( $option_pairs ) || 'role' === $filter ) {
+						$opt = $k;
+					}
+
+					if ( $admin ) {
+						if ( ! is_array( $default_value ) ) {
+							$default_value = array( $default_value );
+						}
+
+						$selected = in_array( $opt, $default_value, true );
+					} else {
+						$selected = ( ! empty( $filter_from_url ) && in_array( $opt, $filter_from_url, true ) );
+					}
+					?>
+					<option value="<?php echo esc_attr( $opt ); ?>" data-value_label="<?php echo esc_attr( $v ); ?>" <?php selected( $selected ); ?>>
+						<?php echo esc_html( $v ); ?>
+					</option>
+					<?php
+				}
+				?>
+			</select>
+		</div>
+		<?php
 		return ob_get_clean();
+	}
+
+	private function render_slider_admin_filter( $filter, $default_value ) {
+		$value = array( 0, 0 );
+		if ( $default_value ) {
+			$value = $default_value;
+		}
+		ob_start();
+		?>
+		<div class="um-field-wrapper">
+			<label for="<?php echo esc_attr( $filter . '_min' ); ?>"><?php esc_html_e( 'From', 'ultimate-member' ); ?></label>
+			<input type="number" autocomplete="off" id="<?php echo esc_attr( $filter . '_min' ); ?>" name="<?php echo esc_attr( $filter . '_min' ); ?>"
+				value="<?php echo esc_attr( min( $value ) ); ?>" class="um-search-filter-field" />
+			<label for="<?php echo esc_attr( $filter . '_max' ); ?>"><?php esc_html_e( 'To', 'ultimate-member' ); ?></label>
+			<input type="number" autocomplete="off" id="<?php echo esc_attr( $filter . '_max' ); ?>" name="<?php echo esc_attr( $filter . '_max' ); ?>"
+				value="<?php echo esc_attr( max( $value ) ); ?>" class="um-search-filter-field" />
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	private function render_slider_filter( $attrs, $filter, $directory_data ) {
+		$unique_hash = $this->get_directory_hash( $directory_data['form_id'] );
+
+		// Ignore '_um_disable_filters_pre_query' meta here because range can be different for different fields and need to know the real range or hide this filter.
+		$range = $this->slider_filters_range( $filter, $directory_data );
+		if ( ! $range ) {
+			return '';
+		}
+
+		$label = '';
+		if ( isset( $attrs['label'] ) ) {
+			$label = $attrs['label'];
+		} elseif ( ! isset( $attrs['label'] ) && isset( $attrs['title'] ) ) {
+			$label = $attrs['title'];
+		}
+
+		$filter_from_url_from = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : $range[0];
+		$filter_from_url_to   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : $range[1];
+
+		$value = array( $filter_from_url_from, $filter_from_url_to );
+
+		list( $single_placeholder, $plural_placeholder ) = $this->slider_range_placeholder( $filter, $attrs );
+
+		return UM()->frontend()::layouts()::range(
+			array(
+				'label'       => stripslashes( $label ),
+				'name'        => $filter,
+				'classes'     => array(
+					'from' => array( 'um-search-filter-field' ),
+					'to'   => array( 'um-search-filter-field' ),
+				),
+				'value'       => $value,
+				'min'         => $range[0],
+				'max'         => $range[1],
+				'placeholder' => array(
+					'single' => $single_placeholder,
+					'plural' => $plural_placeholder,
+				),
+			)
+		);
+	}
+
+	private function render_datepicker_admin_filter( $filter, $default_value ) {
+		$value = array( gmdate( 'Y-m-d' ), gmdate( 'Y-m-d' ) );
+		if ( $default_value ) {
+			$value = $default_value;
+		}
+		ob_start();
+		?>
+		<div class="um-date-range-row">
+			<label for="<?php echo esc_attr( $filter . '_from' ); ?>"><?php esc_html_e( 'From', 'ultimate-member' ); ?></label>
+			<input type="date" id="<?php echo esc_attr( $filter . '_from' ); ?>" name="<?php echo esc_attr( $filter . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
+			<label for="<?php echo esc_attr( $filter . '_to' ); ?>"><?php esc_html_e( 'To', 'ultimate-member' ); ?></label>
+			<input type="date" id="<?php echo esc_attr( $filter . '_to' ); ?>" name="<?php echo esc_attr( $filter . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( max( $value ) ); ?>" />
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	private function render_datepicker_filter( $attrs, $filter, $directory_data ) {
+		$unique_hash = $this->get_directory_hash( $directory_data['form_id'] );
+
+		$range = $this->datepicker_filters_range( $filter, $directory_data );
+		if ( ! $range ) {
+			return '';
+		}
+
+		$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
+		$label = stripslashes( $label );
+
+		list( $min, $max ) = $range;
+
+		$filter_from_url_from = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : $range[0];
+		$filter_from_url_to   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : $range[1];
+
+		$value = array( $filter_from_url_from, $filter_from_url_to );
+
+		return UM()->frontend()::layouts()::date_range(
+			array(
+				'id'      => $filter,
+				'name'    => $filter,
+				'label'   => $label,
+				'value'   => $value,
+				'min'     => $min,
+				'max'     => $max,
+				'classes' => array(
+					'from' => array( 'um-search-filter-field' ),
+					'to'   => array( 'um-search-filter-field' ),
+				),
+			)
+		);
+	}
+
+	private function render_timepicker_admin_filter( $filter, $default_value ) {
+		$value = array( '00:00', '23:59' );
+		if ( $default_value ) {
+			$value = $default_value;
+		}
+		ob_start();
+		?>
+		<div class="um-date-range-row">
+			<label for="<?php echo esc_attr( $filter . '_from' ); ?>"><?php esc_html_e( 'From', 'ultimate-member' ); ?></label>
+			<input type="time" id="<?php echo esc_attr( $filter . '_from' ); ?>" name="<?php echo esc_attr( $filter . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
+			<label for="<?php echo esc_attr( $filter . '_to' ); ?>"><?php esc_html_e( 'To', 'ultimate-member' ); ?></label>
+			<input type="time" id="<?php echo esc_attr( $filter . '_to' ); ?>" name="<?php echo esc_attr( $filter . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( max( $value ) ); ?>" />
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	private function render_timepicker_filter( $attrs, $filter, $directory_data ) {
+		$unique_hash = $this->get_directory_hash( $directory_data['form_id'] );
+
+		$range = $this->timepicker_filters_range( $filter, $directory_data );
+		if ( ! $range ) {
+			return '';
+		}
+
+		$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
+		$label = stripslashes( $label );
+
+		list( $min, $max ) = $range;
+
+		$filter_from_url_from = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : '';
+		$filter_from_url_to   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : '';
+
+		$value = array( $filter_from_url_from, $filter_from_url_to );
+
+		return UM()->frontend()::layouts()::time_range(
+			array(
+				'id'      => $filter,
+				'name'    => $filter,
+				'label'   => $label,
+				'value'   => $value,
+				'min'     => $min,
+				'max'     => $max,
+				'classes' => array(
+					'from' => array( 'um-search-filter-field' ),
+					'to'   => array( 'um-search-filter-field' ),
+				),
+			)
+		);
 	}
 }

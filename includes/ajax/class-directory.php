@@ -1708,14 +1708,13 @@ class Directory extends \um\common\Directory {
 		foreach ( $directory_data['view_types'] as $view_type ) {
 			$response[ 'content_' . $view_type ] = UM()->ajax()->esc_html_spaces(
 				UM()->get_template(
-//					'v3/directory/' . $view_type . '.php',
 					'v3/directory/loop.php',
-					UM()->member_directory()->get_type_basename( $view_type ),
+					$this->get_type_basename( $view_type ),
 					array(
 						'members'        => $users,
 						'view_type'      => $view_type,
 						'directory_obj'  => $this,
-						'unique_hash'    => substr( md5( $directory_id ), 10, 5 ),
+						'unique_hash'    => $this->get_directory_hash( $directory_id ),
 						'directory_data' => $directory_data,
 					)
 				)
