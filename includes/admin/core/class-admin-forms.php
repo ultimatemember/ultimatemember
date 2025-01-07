@@ -1674,7 +1674,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$nonce = '';
 			if ( UM()->is_new_ui() ) {
-				$nonce = 'data-nonce="' . wp_create_nonce( 'um_search_filters' ) . '"';
+				$nonce = 'data-nonce="' . esc_attr( wp_create_nonce( 'um_search_filters' ) ) . '"';
 			}
 
 			$html .= "</ul><a href=\"javascript:void(0);\" class=\"button button-primary um-md-default-filters-add-option\" $nonce data-name=\"$name\">{$field_data['add_text']}</a>";

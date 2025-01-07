@@ -53,8 +53,9 @@
 .um .um-range-container .um-sliders-control input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   pointer-events: all;
+  box-shadow: 0 2px 4px -2px var(--um-gray-900-a-6, rgba(16, 24, 40, 0.06)), 0 4px 8px -2px var(--um-gray-900-a-10, rgba(16, 24, 40, 0.1));
   border-radius: 12px;
-  border: 2px solid #2271b1;
+  border: 2px solid var(--um-primary-600-bg, #7f56d9);
   background: #fff;
   cursor: pointer;
   height: 24px;
@@ -64,16 +65,17 @@
   -webkit-box-sizing: border-box;
 }
 .um .um-range-container .um-sliders-control input[type=range]::-webkit-slider-thumb:hover {
-  border: 2px solid #2271b1;
+  border: 2px solid var(--um-primary-700-bg, #6941c6);
 }
 .um .um-range-container .um-sliders-control input[type=range]::-webkit-slider-thumb:active {
-  border: 2px solid #2271b1;
+  border: 2px solid var(--um-primary-600-bg, #7f56d9);
 }
 .um .um-range-container .um-sliders-control input[type=range]::-moz-range-thumb {
   -webkit-appearance: none;
   pointer-events: all;
+  box-shadow: 0 2px 4px -2px var(--um-gray-900-a-6, rgba(16, 24, 40, 0.06)), 0 4px 8px -2px var(--um-gray-900-a-10, rgba(16, 24, 40, 0.1));
   border-radius: 12px;
-  border: 2px solid #2271b1;
+  border: 2px solid var(--um-primary-600-bg, #7f56d9);
   background: #fff;
   cursor: pointer;
   height: 24px;
@@ -83,10 +85,10 @@
   -webkit-box-sizing: border-box;
 }
 .um .um-range-container .um-sliders-control input[type=range]::-moz-range-thumb:hover {
-  border: 2px solid #2271b1;
+  border: 2px solid var(--um-primary-700-bg, #6941c6);
 }
 .um .um-range-container .um-sliders-control input[type=range]::-moz-range-thumb:active {
-  border: 2px solid #2271b1;
+  border: 2px solid var(--um-primary-600-bg, #7f56d9);
 }
 .um .um-range-container .um-sliders-control input[type=range].um-from-slider {
   height: 0;
@@ -106,7 +108,7 @@
   background-color: var(--um-gray-300, #d0d5dd);
 }
 .um .um-range-container .um-sliders-control:hover input[type=range]::-webkit-slider-thumb, .um .um-range-container .um-sliders-control:hover input[type=range]::-moz-range-thumb {
-  border: 2px solid #2271b1;
+  border: 2px solid var(--um-primary-700-bg, #6941c6);
 }
 @-moz-document url-prefix() {
   .um .um-from-slider {

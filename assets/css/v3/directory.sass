@@ -15,22 +15,22 @@
     width: 100%
     margin: 0
     padding: 0
-    gap: 4px
+    gap: $spacing-xs
     .#{$prefix}sliders-control
       position: relative
-      height: 8px
-      padding: 8px 0
+      height: $spacing-md
+      padding: $spacing-md 0
       input[type="range"]
         margin: 0
         -webkit-appearance: none
         appearance: none
         width: 100%
         position: absolute
-        background-color: var(--um-gray-200, #eaecf0)
+        background-color: $gray-200
         pointer-events: none
-        height: 8px
+        height: $spacing-md
         transition: all .2s ease
-        border-radius: 4px
+        border-radius: $radius-xs
         outline: none
         &:hover,
         &:focus,
@@ -39,40 +39,42 @@
         &::-webkit-slider-thumb
           -webkit-appearance: none
           pointer-events: all
-          border-radius: 12px
-          border: 2px solid $wp-admin-primary
+          box-shadow: $shadow-md
+          border-radius: $radius-xl
+          border: 2px solid $primary-600
           background: $um-white
           cursor: pointer
-          height: 24px
-          width: 24px
+          height: $spacing-3xl
+          width: $spacing-3xl
           +border-box
           &:hover
-            border: 2px solid $wp-admin-primary
+            border: 2px solid $primary-700
           &:active
-            border: 2px solid $wp-admin-primary
+            border: 2px solid $primary-600
         &::-moz-range-thumb
           -webkit-appearance: none
           pointer-events: all
-          border-radius: 12px
-          border: 2px solid $wp-admin-primary
+          box-shadow: $shadow-md
+          border-radius: $radius-xl
+          border: 2px solid $primary-600
           background: $um-white
           cursor: pointer
-          height: 24px
-          width: 24px
+          height: $spacing-3xl
+          width: $spacing-3xl
           +border-box
           &:hover
-            border: 2px solid $wp-admin-primary
+            border: 2px solid $primary-700
           &:active
-            border: 2px solid $wp-admin-primary
+            border: 2px solid $primary-600
         &.#{$prefix}from-slider
           height: 0
           z-index: 1
           &::-webkit-slider-thumb
-            margin-top: 8px
+            margin-top: $spacing-md
           &::-moz-range-thumb
-            margin-top: 8px
-            padding-top: 8px
-            top: 8px
+            margin-top: $spacing-md
+            padding-top: $spacing-md
+            top: $spacing-md
             position: relative
             display: block
       &:hover
@@ -80,11 +82,11 @@
           background-color: $gray-300
           &::-webkit-slider-thumb,
           &::-moz-range-thumb
-            border: 2px solid $wp-admin-primary
+            border: 2px solid $primary-700
 
   @-moz-document url-prefix()
     .#{$prefix}from-slider
-      top: 12px
+      top: $spacing-lg
 
 
 .um

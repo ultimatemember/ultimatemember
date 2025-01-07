@@ -938,7 +938,8 @@ class Directory extends Directory_Config {
 			$dropdown_class = 'um-field-wrapper';
 		}
 
-		$name = $filter;
+		$orig_name = $filter;
+		$name      = $filter;
 		if ( $admin && count( $attrs['options'] ) > 1 ) {
 			$name .= '[]';
 		}
@@ -948,7 +949,7 @@ class Directory extends Directory_Config {
 			<?php if ( ! $admin ) { ?>
 				<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( $label ); ?></label>
 			<?php } ?>
-			<select multiple class="js-choice um-search-filter-field" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $name ); ?>"
+			<select multiple class="js-choice um-search-filter-field" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $name ); ?>" data-orig-name="<?php echo esc_attr( $orig_name ); ?>"
 				aria-label="<?php echo esc_attr( $label ); ?>" <?php echo $custom_dropdown; ?>>
 				<?php
 				foreach ( $attrs['options'] as $k => $v ) {
