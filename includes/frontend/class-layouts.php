@@ -1721,9 +1721,9 @@ class Layouts {
 				<label for="<?php echo esc_attr( $args['id'] . '_from' ); ?>"><?php echo esc_html( $args['label'] ); ?></label>
 			<?php } ?>
 			<div class="um-date-range-row">
-				<input type="date" class="<?php echo esc_attr( $from_classes ); ?>" id="<?php echo esc_attr( $args['id'] . '_from' ); ?>" name="<?php echo esc_attr( $args['name'] . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
+				<input type="date" class="<?php echo esc_attr( $from_classes ); ?>" id="<?php echo esc_attr( $args['id'] . '_from' ); ?>" name="<?php echo esc_attr( $args['name'] . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( $value[0] ); ?>" />
 				<label for="<?php echo esc_attr( $args['id'] . '_to' ); ?>">to</label>
-				<input type="date" class="<?php echo esc_attr( $to_classes ); ?>" id="<?php echo esc_attr( $args['id'] . '_to' ); ?>" name="<?php echo esc_attr( $args['name'] . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( max( $value ) ); ?>" />
+				<input type="date" class="<?php echo esc_attr( $to_classes ); ?>" id="<?php echo esc_attr( $args['id'] . '_to' ); ?>" name="<?php echo esc_attr( $args['name'] . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( $value[1] ); ?>" />
 			</div>
 		</div>
 		<?php
@@ -1781,9 +1781,9 @@ class Layouts {
 				<label for="<?php echo esc_attr( $args['id'] . '_from' ); ?>"><?php echo esc_html( $args['label'] ); ?></label>
 			<?php } ?>
 			<div class="um-time-range-row">
-				<input type="time" class="<?php echo esc_attr( $from_classes ); ?>" id="<?php echo esc_attr( $args['id'] . '_from' ); ?>" name="<?php echo esc_attr( $args['name'] . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
+				<input type="time" class="<?php echo esc_attr( $from_classes ); ?>" id="<?php echo esc_attr( $args['id'] . '_from' ); ?>" name="<?php echo esc_attr( $args['name'] . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( $value[0] ); ?>" />
 				<label for="<?php echo esc_attr( $args['id'] . '_to' ); ?>">to</label>
-				<input type="time" class="<?php echo esc_attr( $to_classes ); ?>" id="<?php echo esc_attr( $args['id'] . '_to' ); ?>" name="<?php echo esc_attr( $args['name'] . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( max( $value ) ); ?>" />
+				<input type="time" class="<?php echo esc_attr( $to_classes ); ?>" id="<?php echo esc_attr( $args['id'] . '_to' ); ?>" name="<?php echo esc_attr( $args['name'] . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( $value[1] ); ?>" />
 			</div>
 		</div>
 		<?php

@@ -998,13 +998,35 @@ class Directory extends \um\common\Directory {
 								$from_date = $value[0];
 								$to_date   = $value[1];
 
-								$field_query = array(
-									'key'       => $field,
-									'value'     => array( $from_date, $to_date ),
-									'compare'   => 'BETWEEN',
-									'type'      => 'DATE',
-									'inclusive' => true,
-								);
+								if ( $from_date === $to_date ) {
+									$field_query = array(
+										'key'   => $field,
+										'value' => $value[0],
+										'type'  => 'DATE',
+									);
+								} elseif ( '' === $from_date && '' !== $to_date ) {
+									$field_query = array(
+										'key'     => $field,
+										'value'   => $to_date,
+										'compare' => '<=',
+										'type'    => 'DATE',
+									);
+								} elseif ( '' !== $from_date && '' === $to_date ) {
+									$field_query = array(
+										'key'     => $field,
+										'value'   => $from_date,
+										'compare' => '>=',
+										'type'    => 'DATE',
+									);
+								} else {
+									$field_query = array(
+										'key'       => $field,
+										'value'     => array( $from_date, $to_date ),
+										'compare'   => 'BETWEEN',
+										'type'      => 'DATE',
+										'inclusive' => true,
+									);
+								}
 
 								$this->custom_filters_in_query[ $field ] = array( $from_date, $to_date );
 								break;
@@ -1049,6 +1071,7 @@ class Directory extends \um\common\Directory {
 						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
 					}
 					break;
+
 				case 'role':
 					$value = array_map( 'strtolower', $value );
 
@@ -1087,13 +1110,26 @@ class Directory extends \um\common\Directory {
 					break;
 
 				case 'birth_date':
+					// The old format of the value stored in DB for the backward compatibility.
 					$from_date = wp_date( 'Y/m/d', mktime( 0, 0, 0, wp_date( 'm' ), wp_date( 'd' ), wp_date( 'Y', time() - min( $value ) * YEAR_IN_SECONDS ) ) );
 					$to_date   = wp_date( 'Y/m/d', mktime( 0, 0, 0, wp_date( 'm' ), wp_date( 'j' ) + 1, wp_date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) ) );
 
+					// New proper format.
+					$from_date_new = wp_date( 'Y-m-d', mktime( 0, 0, 0, wp_date( 'm' ), wp_date( 'd' ), wp_date( 'Y', time() - min( $value ) * YEAR_IN_SECONDS ) ) );
+					$to_date_new   = wp_date( 'Y-m-d', mktime( 0, 0, 0, wp_date( 'm' ), wp_date( 'j' ) + 1, wp_date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) ) );
+
 					$meta_query = array(
+						'relation' => 'OR',
 						array(
 							'key'       => 'birth_date',
 							'value'     => array( $to_date, $from_date ),
+							'compare'   => 'BETWEEN',
+							'type'      => 'DATE',
+							'inclusive' => true,
+						),
+						array(
+							'key'       => 'birth_date',
+							'value'     => array( $from_date_new, $to_date_new ),
 							'compare'   => 'BETWEEN',
 							'type'      => 'DATE',
 							'inclusive' => true,
@@ -1311,7 +1347,7 @@ class Directory extends \um\common\Directory {
 								if ( ! empty( $value[0] ) ) {
 									$from_date = $value[0];
 								} else {
-									$range     = $this->datepicker_filters_range( $field );
+									$range     = $this->datepicker_filters_range( $field, $directory_data );
 									$from_date = strtotime( gmdate( 'Y-m-d', $range[0] ) );
 								}
 								if ( ! empty( $value[1] ) ) {
@@ -1332,13 +1368,13 @@ class Directory extends \um\common\Directory {
 								if ( ! empty( $value[0] ) ) {
 									$value[0] = $value[0] . ':00';
 								} else {
-									$range    = $this->timepicker_filters_range( $field );
+									$range    = $this->timepicker_filters_range( $field, $directory_data );
 									$value[0] = $range[0] . ':00';
 								}
 								if ( ! empty( $value[1] ) ) {
 									$value[1] = $value[1] . ':00';
 								} else {
-									$range    = $this->timepicker_filters_range( $field );
+									$range    = $this->timepicker_filters_range( $field, $directory_data );
 									$value[1] = $range[1] . ':00';
 								}
 
@@ -1441,7 +1477,7 @@ class Directory extends \um\common\Directory {
 					if ( ! empty( $value[0] ) ) {
 						$min = $value[0];
 					} else {
-						$range = $this->datepicker_filters_range( 'last_login' );
+						$range = $this->datepicker_filters_range( 'last_login', $directory_data );
 						$min   = strtotime( gmdate( 'Y/m/d', $range[0] ) );
 					}
 					if ( ! empty( $value[1] ) ) {

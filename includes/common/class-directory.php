@@ -372,61 +372,42 @@ class Directory extends Directory_Config {
 		$range = false;
 
 		switch ( $filter ) {
-
-			default: {
-
-				$meta = $wpdb->get_row( $wpdb->prepare(
-					"SELECT MIN( CONVERT( meta_value, DECIMAL ) ) as min_meta,
+			default:
+				$meta = $wpdb->get_row(
+					$wpdb->prepare(
+						"SELECT MIN( CONVERT( meta_value, DECIMAL ) ) as min_meta,
 						MAX( CONVERT( meta_value, DECIMAL ) ) as max_meta,
 						COUNT( DISTINCT meta_value ) as amount
 						FROM {$wpdb->usermeta}
 						WHERE meta_key = %s",
-					$filter
-				), ARRAY_A );
+						$filter
+					),
+					ARRAY_A
+				);
 
-				if ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) && isset( $meta['amount'] ) && $meta['amount'] > 1 ) {
+				if ( isset( $meta['min_meta'], $meta['max_meta'], $meta['amount'] ) && $meta['amount'] > 1 ) {
 					$range = array( (float) $meta['min_meta'], (float) $meta['max_meta'] );
 				}
 
 				$range = apply_filters( 'um_member_directory_filter_slider_common', $range, $directory_data, $filter );
 				$range = apply_filters( "um_member_directory_filter_{$filter}_slider", $range, $directory_data );
-
 				break;
-			}
-			case 'birth_date': {
 
-//					$meta = $wpdb->get_col(
-//						"SELECT meta_value
-//						FROM {$wpdb->usermeta}
-//						WHERE meta_key = 'birth_date' AND
-//						      meta_value != ''"
-//					);
-//
-//					if ( empty( $meta ) || count( $meta ) < 2 ) {
-//						$range = false;
-//					} elseif ( is_array( $meta ) ) {
-//						$birth_dates = array_filter( array_map( 'strtotime', $meta ), 'is_numeric' );
-//						sort( $birth_dates );
-//						$min_meta = array_shift( $birth_dates );
-//						$max_meta = array_pop( $birth_dates );
-//						$range = array( $this->borndate( $max_meta ), $this->borndate( $min_meta ) );
-//					}
-
+			case 'birth_date':
 				$meta = $wpdb->get_row(
 					"SELECT MIN( meta_value ) as min_meta,
-						MAX( meta_value ) as max_meta,
-						COUNT( DISTINCT meta_value ) as amount
-						FROM {$wpdb->usermeta}
-						WHERE meta_key = 'birth_date' AND
-							  meta_value != ''",
-					ARRAY_A );
+					MAX( meta_value ) as max_meta,
+					COUNT( DISTINCT meta_value ) as amount
+					FROM {$wpdb->usermeta}
+					WHERE meta_key = 'birth_date' AND
+						  meta_value != ''",
+					ARRAY_A
+				);
 
-				if ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) && isset( $meta['amount'] ) && $meta['amount'] > 1 ) {
+				if ( isset( $meta['min_meta'], $meta['max_meta'], $meta['amount'] ) && $meta['amount'] > 1 ) {
 					$range = array( $this->borndate( strtotime( $meta['max_meta'] ) ), $this->borndate( strtotime( $meta['min_meta'] ) ) );
 				}
-
 				break;
-			}
 
 		}
 
@@ -499,7 +480,7 @@ class Directory extends Directory_Config {
 				);
 
 				if ( ! empty( $meta ) && count( $meta ) > 1 ) {
-					$range = array( strtotime( min( $meta ) ), strtotime( max( $meta ) ) );
+					$range = array( min( $meta ), max( $meta ) );
 				}
 
 				$range = apply_filters( "um_member_directory_filter_{$filter}_datepicker", $range );
@@ -528,7 +509,7 @@ class Directory extends Directory_Config {
 				);
 
 				if ( ! empty( $meta ) && count( $meta ) > 1 ) {
-					$range = array( strtotime( min( $meta ) ), strtotime( max( $meta ) ) );
+					$range = array( min( $meta ), max( $meta ) );
 				}
 				break;
 
@@ -596,8 +577,6 @@ class Directory extends Directory_Config {
 	 * @return string $filter
 	 */
 	public function show_filter( $filter, $directory_data, $default_value = false, $admin = false ) {
-		global $wpdb;
-
 		if ( empty( $this->filter_types[ $filter ] ) ) {
 			return '';
 		}
@@ -1071,8 +1050,8 @@ class Directory extends Directory_Config {
 
 		list( $min, $max ) = $range;
 
-		$filter_from_url_from = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : $range[0];
-		$filter_from_url_to   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : $range[1];
+		$filter_from_url_from = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : '';
+		$filter_from_url_to   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : '';
 
 		$value = array( $filter_from_url_from, $filter_from_url_to );
 
