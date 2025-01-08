@@ -1015,6 +1015,20 @@ class Directory extends \um\common\Directory {
 										'key'   => $field,
 										'value' => $value[0],
 									);
+								} elseif ( '' === $value[0] && '' !== $value[1] ) {
+									$field_query = array(
+										'key'     => $field,
+										'value'   => $value[1],
+										'compare' => '<=',
+										'type'    => 'TIME',
+									);
+								} elseif ( '' !== $value[0] && '' === $value[1] ) {
+									$field_query = array(
+										'key'     => $field,
+										'value'   => $value[0],
+										'compare' => '>=',
+										'type'    => 'TIME',
+									);
 								} else {
 									$field_query = array(
 										'key'       => $field,
@@ -1031,7 +1045,7 @@ class Directory extends \um\common\Directory {
 						}
 					}
 
-					if ( ! empty( $field_query ) && $field_query !== true ) {
+					if ( ! empty( $field_query ) && true !== $field_query ) {
 						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
 					}
 					break;
