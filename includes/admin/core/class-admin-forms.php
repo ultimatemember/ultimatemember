@@ -1595,7 +1595,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 *
 		 * @return string
 		 */
-		function render_md_default_filters( $field_data ) {
+		public function render_md_default_filters( $field_data ) {
 			if ( empty( $field_data['id'] ) ) {
 				return false;
 			}
@@ -1608,9 +1608,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$class_attr = ' class="um-forms-field ' . $class . '" ';
 
 			$data = array(
-				'field_id'          => $field_data['id'],
-				'id_attr'           => $id,
-				'member_directory'  => $post->ID
+				'field_id'         => $field_data['id'],
+				'id_attr'          => $id,
+				'member_directory' => $post->ID,
 			);
 
 			$data_attr = '';

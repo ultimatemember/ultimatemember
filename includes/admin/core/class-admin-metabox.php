@@ -115,10 +115,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 						if ( ! empty( $filter_type ) ) {
 							if ( 'slider' === $filter_type ) {
 								if ( UM()->is_new_ui() ) {
-									if ( $_POST[ $k . '_min' ] ) {
+									$temp_value[ $k ] = array( 0, 0 ); // Set default value for fallback.
+									if ( isset( $_POST[ $k . '_min' ] ) ) {
 										$temp_value[ $k ][0] = (int) $_POST[ $k . '_min' ];
 									}
-									if ( $_POST[ $k . '_max' ] ) {
+									if ( isset( $_POST[ $k . '_max' ] ) ) {
 										$temp_value[ $k ][1] = (int) $_POST[ $k . '_max' ];
 									}
 								} else {
@@ -131,32 +132,41 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 									}
 								}
 							} elseif ( 'datepicker' === $filter_type ) {
-								if ( ! empty( $_POST[ $k . '_from' ] ) ) {
-									$temp_value[ $k ][0] = gmdate( 'Y-m-d', strtotime( $_POST[ $k . '_from' ] ) );
-								}
-								if ( ! empty( $_POST[ $k . '_to' ] ) ) {
-									$temp_value[ $k ][1] = gmdate( 'Y-m-d', strtotime( $_POST[ $k . '_to' ] ) );
+								if ( UM()->is_new_ui() ) {
+									if ( ! empty( $_POST[ $k . '_from' ] ) ) {
+										$temp_value[ $k ][0] = gmdate( 'Y-m-d', strtotime( wp_unslash( $_POST[ $k . '_from' ] ) ) );
+									}
+									if ( ! empty( $_POST[ $k . '_to' ] ) ) {
+										$temp_value[ $k ][1] = gmdate( 'Y-m-d', strtotime( wp_unslash( $_POST[ $k . '_to' ] ) ) );
+									}
+								} else {
+									if ( ! empty( $_POST[ $k . '_from' ] ) ) {
+										$temp_value[ $k ][0] = sanitize_text_field( wp_unslash( $_POST[ $k . '_from' ] ) );
+									}
+									if ( ! empty( $_POST[ $k . '_to' ] ) ) {
+										$temp_value[ $k ][1] = sanitize_text_field( wp_unslash( $_POST[ $k . '_to' ] ) );
+									}
 								}
 							} elseif ( 'timepicker' === $filter_type ) {
 								if ( ! empty( $_POST[ $k . '_from' ] ) ) {
-									$temp_value[ $k ][0] = sanitize_text_field( $_POST[ $k . '_from' ] );
+									$temp_value[ $k ][0] = sanitize_text_field( wp_unslash( $_POST[ $k . '_from' ] ) );
 								}
 								if ( ! empty( $_POST[ $k . '_to' ] ) ) {
-									$temp_value[ $k ][1] = sanitize_text_field( $_POST[ $k . '_to' ] );
+									$temp_value[ $k ][1] = sanitize_text_field( wp_unslash( $_POST[ $k . '_to' ] ) );
 								}
 							} elseif ( 'select' === $filter_type ) {
 								if ( ! empty( $_POST[ $k ] ) ) {
 									if ( is_array( $_POST[ $k ] ) ) {
-										$temp_value[ $k ] = array_map( 'trim', $_POST[ $k ] );
+										$temp_value[ $k ] = array_map( 'trim', wp_unslash( $_POST[ $k ] ) );
 									} else {
-										$temp_value[ $k ] = array( trim( $_POST[ $k ] ) );
+										$temp_value[ $k ] = array( trim( wp_unslash( $_POST[ $k ] ) ) );
 									}
 
 									$temp_value[ $k ] = array_map( 'sanitize_text_field', $temp_value[ $k ] );
 								}
 							} else {
 								if ( ! empty( $_POST[ $k ] ) ) {
-									$temp_value[ $k ] = trim( sanitize_text_field( $_POST[ $k ] ) );
+									$temp_value[ $k ] = trim( sanitize_text_field( wp_unslash( $_POST[ $k ] ) ) );
 								}
 							}
 						}

@@ -28,7 +28,6 @@ class Fields {
 			wp_send_json_error( __( 'Invalid user ID', 'ultimate-member' ) );
 		}
 		$child_name = sanitize_text_field( $_POST['child_name'] );
-		$child_name = str_replace( array( '[', ']' ), '', $child_name );
 
 		check_ajax_referer( 'um_dropdown_parent_nonce' . $child_name, 'nonce' );
 

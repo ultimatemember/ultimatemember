@@ -1023,6 +1023,14 @@ class Directory extends Directory_Config {
 	private function render_datepicker_admin_filter( $filter, $default_value ) {
 		$value = array( gmdate( 'Y-m-d' ), gmdate( 'Y-m-d' ) );
 		if ( $default_value ) {
+			// Backward compatibility for dates in format Y/m/d.
+			foreach ( $default_value as &$v ) {
+				if ( strpos( $v, '/' ) ) {
+					$v = gmdate( 'Y-m-d', strtotime( $v ) );
+				}
+			}
+			unset( $v );
+
 			$value = $default_value;
 		}
 		ob_start();
