@@ -1727,15 +1727,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					break;
 				}
 			}
-
-			return $search;
+			// Early escape of the search line. The same as `$wpdb->prepare()`.
+			return esc_sql( $search );
 		}
 
 		/**
 		 * Handle general search line request
 		 */
 		public function general_search() {
-			//general search
+			// General search
 			if ( ! empty( $_POST['search'] ) ) {
 				// complex using with change_meta_sql function
 				$search = $this->prepare_search( $_POST['search'] );
