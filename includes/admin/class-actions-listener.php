@@ -28,7 +28,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 		 * @since 2.8.7
 		 */
 		public function actions_listener() {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'edit_users' ) ) {
 				return;
 			}
 
