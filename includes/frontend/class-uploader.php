@@ -75,19 +75,7 @@ class Uploader {
 			return $value;
 		}
 
-		$removed = false;
-		if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
-			if ( is_multisite() ) {
-				//multisite fix for old customers
-				$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value );
-				if ( ! file_exists( $file_path ) ) {
-					$removed = true;
-				}
-			} else {
-				$removed = true;
-			}
-		}
-
+		$removed = ! file_exists( UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) ) . DIRECTORY_SEPARATOR . $value );
 		ob_start();
 		?>
 		<div class="um-uploader-file">
@@ -182,19 +170,7 @@ class Uploader {
 
 		$file_type = wp_check_filetype( $edit_value_row );
 
-		$removed = false;
-		if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
-			if ( is_multisite() ) {
-				//multisite fix for old customers
-				$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value );
-				if ( ! file_exists( $file_path ) ) {
-					$removed = true;
-				}
-			} else {
-				$removed = true;
-			}
-		}
-
+		$removed = ! file_exists( UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) ) . DIRECTORY_SEPARATOR . $value );
 		ob_start();
 		?>
 		<div class="um-uploader-file">

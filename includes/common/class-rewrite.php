@@ -228,15 +228,9 @@ class Rewrite {
 	 * @param $field_value
 	 */
 	private function image_download( $user_id, $field_key, $field_value ) {
-		$file_path = UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . $field_value;
-		if ( ! file_exists( $file_path ) ) {
-			if ( is_multisite() ) {
-				//multisite fix for old customers
-				$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file_path );
-			}
-		}
+		$file_path = UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $field_value;
 
-		//validate traversal file
+		// Validate traversal file
 		if ( validate_file( $file_path ) === 1 ) {
 			return;
 		}
@@ -272,15 +266,8 @@ class Rewrite {
 	 * @param $field_value
 	 */
 	private function file_download( $user_id, $field_key, $field_value ) {
-		$file_path = UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . $field_value;
-		if ( ! file_exists( $file_path ) ) {
-			if ( is_multisite() ) {
-				//multisite fix for old customers
-				$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file_path );
-			}
-		}
-
-		//validate traversal file
+		$file_path = UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $field_value;
+		// Validate traversal file
 		if ( validate_file( $file_path ) === 1 ) {
 			return;
 		}

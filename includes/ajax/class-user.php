@@ -142,17 +142,8 @@ class User {
 		$temp_image_path = $image_path;
 		// Refresh image_path to make temporary image permanently after upload
 
-		$extension = pathinfo( $temp_image_path, PATHINFO_EXTENSION );
-		if ( is_multisite() ) {
-			// Multisite fix for old customers
-			$multisite_fix_dir = UM()->uploader()->get_upload_base_dir();
-			$multisite_fix_dir = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $multisite_fix_dir );
-
-			$image_dir = $multisite_fix_dir . um_user( 'ID' ) . '/';
-		} else {
-			$image_dir = UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . '/';
-		}
-
+		$extension  = pathinfo( $temp_image_path, PATHINFO_EXTENSION );
+		$image_dir  = UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) ) . DIRECTORY_SEPARATOR;
 		$image_path = wp_normalize_path( $image_dir . 'profile_photo.' . $extension );
 
 		$src_x = $crop[0];

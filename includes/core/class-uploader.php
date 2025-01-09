@@ -281,7 +281,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			if ( $this->replace_upload_dir ) {
 				$args['path'] = $this->upload_user_basedir;
-				$args['url'] = $this->upload_user_baseurl;
+				$args['url']  = $this->upload_user_baseurl;
 			}
 
 			return $args;

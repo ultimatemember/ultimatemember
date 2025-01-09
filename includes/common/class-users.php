@@ -195,27 +195,10 @@ class Users {
 			}
 			$locate[] = "profile_photo{$ext}";
 
-			if ( is_multisite() ) {
-				// Multisite fix for old customers
-				$multisite_fix_dir = UM()->uploader()->get_upload_base_dir();
-				$multisite_fix_url = UM()->uploader()->get_upload_base_url();
-				$multisite_fix_dir = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $multisite_fix_dir );
-				$multisite_fix_url = str_replace( '/sites/' . get_current_blog_id() . '/', '/', $multisite_fix_url );
-
-				foreach ( $locate as $avatar_basename ) {
-					if ( file_exists( $multisite_fix_dir . $user->ID . DIRECTORY_SEPARATOR . $avatar_basename ) ) {
-						$url = $multisite_fix_url . $user->ID . '/' . $avatar_basename;
-						break;
-					}
-				}
-			}
-
-			if ( empty( $url ) ) {
-				foreach ( $locate as $avatar_basename ) {
-					if ( file_exists( UM()->uploader()->get_upload_base_dir() . $user->ID . DIRECTORY_SEPARATOR . $avatar_basename ) ) {
-						$url = UM()->uploader()->get_upload_base_url() . $user->ID . '/' . $avatar_basename;
-						break;
-					}
+			foreach ( $locate as $avatar_basename ) {
+				if ( file_exists( UM()->common()->filesystem()->get_user_uploads_dir( $user->ID ) . DIRECTORY_SEPARATOR . $avatar_basename ) ) {
+					$url = UM()->common()->filesystem()->get_user_uploads_url( $user->ID ) . '/' . $avatar_basename;
+					break;
 				}
 			}
 		}
