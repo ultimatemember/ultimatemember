@@ -801,7 +801,15 @@ class Directory extends Directory_Config {
 
 				if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
 					$values_array = array_map( 'maybe_unserialize', $values_array );
-					$values_array = array_unique( array_merge( ...$values_array ) );
+					$temp_values  = array();
+					foreach ( $values_array as $values ) {
+						if ( is_array( $values ) ) {
+							$temp_values[] = $values;
+						} else {
+							$temp_values[] = array( $values );
+						}
+					}
+					$values_array = array_unique( array_merge( ...$temp_values ) );
 				}
 
 				$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
