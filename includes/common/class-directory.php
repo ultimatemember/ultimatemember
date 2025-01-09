@@ -683,17 +683,24 @@ class Directory extends Directory_Config {
 				$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : $default_value;
 
 				ob_start();
-				?>
-				<div class="um-field-wrapper">
-					<?php if ( ! $admin ) { ?>
-						<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( stripslashes( $label ) ); ?></label>
-					<?php } ?>
+				if ( $admin ) {
+					?>
 					<input type="text" autocomplete="off" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?>"
 						placeholder="<?php echo esc_attr( $label ); ?>"
-						value="<?php echo esc_attr( $filter_from_url ); ?>" class="um-search-filter-field"
+						value="<?php echo esc_attr( $filter_from_url ); ?>"
 						aria-label="<?php echo esc_attr( $label ); ?>" />
-				</div>
-				<?php
+					<?php
+				} else {
+					?>
+					<div class="um-field-wrapper">
+						<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( stripslashes( $label ) ); ?></label>
+						<input type="text" autocomplete="off" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?>"
+							placeholder="<?php echo esc_attr( $label ); ?>"
+							value="<?php echo esc_attr( $filter_from_url ); ?>" class="um-search-filter-field"
+							aria-label="<?php echo esc_attr( $label ); ?>" />
+					</div>
+					<?php
+				}
 				return ob_get_clean();
 
 			case 'select':
@@ -923,11 +930,12 @@ class Directory extends Directory_Config {
 			$name .= '[]';
 		}
 		ob_start();
+
+		if ( ! $admin ) {
 		?>
 		<div class="<?php echo esc_attr( $dropdown_class ); ?>">
-			<?php if ( ! $admin ) { ?>
-				<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( $label ); ?></label>
-			<?php } ?>
+			<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( $label ); ?></label>
+		<?php } ?>
 			<select multiple class="js-choice um-search-filter-field" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $name ); ?>" data-orig-name="<?php echo esc_attr( $orig_name ); ?>"
 				aria-label="<?php echo esc_attr( $label ); ?>" <?php echo $custom_dropdown; ?>>
 				<?php
@@ -954,8 +962,10 @@ class Directory extends Directory_Config {
 				}
 				?>
 			</select>
+		<?php if ( ! $admin ) { ?>
 		</div>
 		<?php
+		}
 		return ob_get_clean();
 	}
 
@@ -966,10 +976,12 @@ class Directory extends Directory_Config {
 		}
 		ob_start();
 		?>
-		<div class="um-field-wrapper">
+		<div>
 			<label for="<?php echo esc_attr( $filter . '_min' ); ?>"><?php esc_html_e( 'From', 'ultimate-member' ); ?></label>
 			<input type="number" autocomplete="off" id="<?php echo esc_attr( $filter . '_min' ); ?>" name="<?php echo esc_attr( $filter . '_min' ); ?>"
 				value="<?php echo esc_attr( min( $value ) ); ?>" class="um-search-filter-field" />
+		</div>
+		<div>
 			<label for="<?php echo esc_attr( $filter . '_max' ); ?>"><?php esc_html_e( 'To', 'ultimate-member' ); ?></label>
 			<input type="number" autocomplete="off" id="<?php echo esc_attr( $filter . '_max' ); ?>" name="<?php echo esc_attr( $filter . '_max' ); ?>"
 				value="<?php echo esc_attr( max( $value ) ); ?>" class="um-search-filter-field" />
@@ -1038,6 +1050,8 @@ class Directory extends Directory_Config {
 		<div class="um-date-range-row">
 			<label for="<?php echo esc_attr( $filter . '_from' ); ?>"><?php esc_html_e( 'From', 'ultimate-member' ); ?></label>
 			<input type="date" id="<?php echo esc_attr( $filter . '_from' ); ?>" name="<?php echo esc_attr( $filter . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
+		</div>
+		<div class="um-date-range-row">
 			<label for="<?php echo esc_attr( $filter . '_to' ); ?>"><?php esc_html_e( 'To', 'ultimate-member' ); ?></label>
 			<input type="date" id="<?php echo esc_attr( $filter . '_to' ); ?>" name="<?php echo esc_attr( $filter . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( max( $value ) ); ?>" />
 		</div>
@@ -1089,6 +1103,8 @@ class Directory extends Directory_Config {
 		<div class="um-date-range-row">
 			<label for="<?php echo esc_attr( $filter . '_from' ); ?>"><?php esc_html_e( 'From', 'ultimate-member' ); ?></label>
 			<input type="time" id="<?php echo esc_attr( $filter . '_from' ); ?>" name="<?php echo esc_attr( $filter . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
+		</div>
+		<div class="um-date-range-row">
 			<label for="<?php echo esc_attr( $filter . '_to' ); ?>"><?php esc_html_e( 'To', 'ultimate-member' ); ?></label>
 			<input type="time" id="<?php echo esc_attr( $filter . '_to' ); ?>" name="<?php echo esc_attr( $filter . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( max( $value ) ); ?>" />
 		</div>

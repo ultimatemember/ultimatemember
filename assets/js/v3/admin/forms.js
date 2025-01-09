@@ -414,7 +414,9 @@ jQuery(document).ready( function() {
 	 * Multi-selects field
 	 */
 	jQuery( document.body ).on( 'click', '.um-md-default-filters-option-line .um-select-delete', function() {
-		jQuery( this ).parents( 'li.um-md-default-filters-option-line' ).remove();
+		let $line    = jQuery( this ).parents( 'li.um-md-default-filters-option-line' );
+		$line.find('select.js-choice.um-search-filter-field').val('').trigger('change'); // flush selects for custom dropdown callbacks.
+		$line.remove();
 	});
 
 	jQuery( '.um-multi-selects-add-option' ).on('click', function() {
@@ -493,7 +495,7 @@ jQuery(document).ready( function() {
 					UM.common.choices.initChild();
 					jQuery('select.um-search-filter-field:not([data-choice="active"])').each( function() {
 						let select = jQuery(this);
-						let parent = select.attr('data-um-parent');
+						let parent = select.data('um-parent');
 						jQuery('#' + parent).trigger('change');
 					});
 				}

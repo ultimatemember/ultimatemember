@@ -182,6 +182,14 @@ function defaultTask( done ) {
 		.pipe( cleanCSS() )
 		.pipe( rename( { suffix: '.min' } ) )
 		.pipe( dest( 'assets/css/v3/' ) ); // min CSS files from SASS
+	src(['assets/css/v3/admin/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( dest( 'assets/css/v3/admin/' ) ); // full CSS files from SASS
+	src(['assets/css/v3/admin/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( cleanCSS() )
+		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( dest( 'assets/css/v3/admin/' ) ); // min CSS files from SASS
 	// End new UI
 
 	src(['assets/sass/*.sass']).pipe( sass().on( 'error', sass.logError ) ).pipe( dest( 'assets/css' ) );

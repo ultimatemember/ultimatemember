@@ -398,7 +398,12 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_enqueue_script( 'um_admin_forms' );
 
 		$deps = array_merge( array( 'wp-color-picker', 'um_ui', 'select2' ), self::$fonticons_handlers );
-		wp_register_style( 'um_admin_forms', $css_url . 'admin/forms' . $suffix . '.css', $deps, UM_VERSION );
+		if ( UM()->is_new_ui() ) {
+			$src = $css_url . 'v3/admin/forms' . $suffix . '.css';
+		} else {
+			$src = $css_url . 'admin/forms' . $suffix . '.css';
+		}
+		wp_register_style( 'um_admin_forms', $src, $deps, UM_VERSION );
 		// RTL styles.
 		if ( is_rtl() ) {
 			wp_style_add_data( 'um_admin_forms', 'rtl', true );
