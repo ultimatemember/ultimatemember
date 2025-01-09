@@ -729,6 +729,15 @@ class Directory extends Directory_Config {
 		}
 	}
 
+	/**
+	 * @param array  $attrs
+	 * @param string $filter
+	 * @param array  $directory_data
+	 * @param mixed  $default_value
+	 * @param bool   $admin
+	 *
+	 * @return false|string
+	 */
 	private function render_dropdown_filter( $attrs, $filter, $directory_data, $default_value, $admin ) {
 		global $wpdb;
 
@@ -757,17 +766,20 @@ class Directory extends Directory_Config {
 
 				$custom_dropdown .= ' data-um-parent="' . esc_attr( $parent_dropdown_relationship ) . '"';
 
-				$parent_option = array();
+				$parent_option     = array();
+				$um_search_filters = get_post_meta( $directory_id, '_um_search_filters', true );
 				if ( $admin ) {
-					$um_search_filters = get_post_meta( $directory_id, '_um_search_filters', true );
 					if ( ! empty( $um_search_filters ) ) {
-						$parent_option = $um_search_filters[ $parent_dropdown_relationship ];
+						$parent_option = isset( $um_search_filters[ $parent_dropdown_relationship ] ) ? $um_search_filters[ $parent_dropdown_relationship ] : $parent_option;
 					}
 				} else {
 					$filter_value_key = 'filter_' . $parent_dropdown_relationship . '_' . $unique_hash;
 					if ( isset( $_GET[ $filter_value_key ] ) ) {
 						$parent_option_value = sanitize_text_field( $_GET[ $filter_value_key ] );
 						$parent_option       = explode( '||', $parent_option_value );
+					} elseif ( ! empty( $um_search_filters ) ) {
+						// Case when display member directory filter in directory header, but the parent filter is set in Admin filtering.
+						$parent_option = isset( $um_search_filters[ $parent_dropdown_relationship ] ) ? $um_search_filters[ $parent_dropdown_relationship ] : $parent_option;
 					}
 				}
 
