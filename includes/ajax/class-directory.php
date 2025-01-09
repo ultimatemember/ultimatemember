@@ -941,43 +941,45 @@ class Directory extends \um\common\Directory {
 								break;
 
 							case 'select':
-								if ( is_array( $value ) ) {
-									$field_query = array();
-									foreach ( $value as $single_val ) {
-										$single_val = wp_unslash( $single_val );
+								if ( ! is_array( $value ) ) {
+									$value = array( $value );
+								}
 
-										$arr_meta_query = array(
-											array(
-												'key'     => $field,
-												'value'   => $single_val,
-												'compare' => '=',
-											),
-											array(
-												'key'     => $field,
-												'value'   => maybe_serialize( (string) $single_val ),
-												'compare' => 'LIKE',
-											),
-											array(
-												'key'     => $field,
-												'value'   => '"' . $single_val . '"',
-												'compare' => 'LIKE',
-											),
+								$field_query = array();
+								foreach ( $value as $single_val ) {
+									$single_val = wp_unslash( $single_val );
+
+									$arr_meta_query = array(
+										array(
+											'key'     => $field,
+											'value'   => $single_val,
+											'compare' => '=',
+										),
+										array(
+											'key'     => $field,
+											'value'   => maybe_serialize( (string) $single_val ),
+											'compare' => 'LIKE',
+										),
+										array(
+											'key'     => $field,
+											'value'   => '"' . $single_val . '"',
+											'compare' => 'LIKE',
+										),
+									);
+
+									if ( is_numeric( $single_val ) ) {
+										$arr_meta_query[] = array(
+											'key'     => $field,
+											'value'   => maybe_serialize( absint( $single_val ) ),
+											'compare' => 'LIKE',
 										);
-
-										if ( is_numeric( $single_val ) ) {
-											$arr_meta_query[] = array(
-												'key'     => $field,
-												'value'   => maybe_serialize( absint( $single_val ) ),
-												'compare' => 'LIKE',
-											);
-										}
-
-										$field_query[] = $arr_meta_query;
 									}
 
-									$field_query             = array_merge( ...$field_query );
-									$field_query['relation'] = esc_sql( $relation );
+									$field_query[] = $arr_meta_query;
 								}
+
+								$field_query             = array_merge( ...$field_query );
+								$field_query['relation'] = esc_sql( $relation );
 
 								$this->custom_filters_in_query[ $field ] = $value;
 								break;
@@ -1247,7 +1249,6 @@ class Directory extends \um\common\Directory {
 		}
 
 		foreach ( $default_filters as $field => $value ) {
-
 			switch ( $field ) {
 				default:
 					$filter_type = $this->filter_types[ $field ];
@@ -1276,7 +1277,6 @@ class Directory extends \um\common\Directory {
 					$field_query = apply_filters( "um_query_args_{$field}__filter", false, $field, $value, $filter_type );
 
 					if ( ! $field_query ) {
-
 						switch ( $filter_type ) {
 							default:
 								$field_query = apply_filters( "um_query_args_{$field}_{$filter_type}__filter", false, $field, $value, $filter_type );
@@ -1295,9 +1295,7 @@ class Directory extends \um\common\Directory {
 									$value = array( $value );
 								}
 
-								/** This filter is documented in includes/core/class-member-directory.php */
-								$field_query = apply_filters( 'um_members_directory_filter_select', array( 'relation' => 'OR' ), $field );
-
+								$field_query = array();
 								foreach ( $value as $single_val ) {
 									$single_val = trim( $single_val );
 
@@ -1309,7 +1307,7 @@ class Directory extends \um\common\Directory {
 										),
 										array(
 											'key'     => $field,
-											'value'   => serialize( (string) $single_val ),
+											'value'   => maybe_serialize( (string) $single_val ),
 											'compare' => 'LIKE',
 										),
 										array(
@@ -1320,19 +1318,21 @@ class Directory extends \um\common\Directory {
 									);
 
 									if ( is_numeric( $single_val ) ) {
-
 										$arr_meta_query[] = array(
 											'key'     => $field,
-											'value'   => serialize( absint( $single_val ) ),
+											'value'   => maybe_serialize( absint( $single_val ) ),
 											'compare' => 'LIKE',
 										);
-
 									}
 
-									$field_query = array_merge( $field_query, $arr_meta_query );
+									$field_query[] = $arr_meta_query;
 								}
 
+								$field_query             = array_merge( ...$field_query );
+								$field_query['relation'] = 'OR';
+								$field_query             = apply_filters( 'um_members_directory_filter_select', $field_query, $field );
 								break;
+
 							case 'slider':
 								$field_query = array(
 									'key'       => $field,
@@ -1344,44 +1344,59 @@ class Directory extends \um\common\Directory {
 								break;
 
 							case 'datepicker':
-								if ( ! empty( $value[0] ) ) {
-									$from_date = $value[0];
-								} else {
-									$range     = $this->datepicker_filters_range( $field, $directory_data );
-									$from_date = strtotime( gmdate( 'Y-m-d', $range[0] ) );
-								}
-								if ( ! empty( $value[1] ) ) {
-									$to_date = $value[1];
-								} else {
-									$to_date = strtotime( gmdate( 'Y-m-d' ) );
-								}
+								$from_date = $value[0];
+								$to_date   = $value[1];
 
-								$field_query = array(
-									'key'       => $field,
-									'value'     => array( $from_date, $to_date ),
-									'compare'   => 'BETWEEN',
-									'type'      => 'DATE',
-									'inclusive' => true,
-								);
+								if ( $from_date === $to_date ) {
+									$field_query = array(
+										'key'   => $field,
+										'value' => $value[0],
+										'type'  => 'DATE',
+									);
+								} elseif ( '' === $from_date && '' !== $to_date ) {
+									$field_query = array(
+										'key'     => $field,
+										'value'   => $to_date,
+										'compare' => '<=',
+										'type'    => 'DATE',
+									);
+								} elseif ( '' !== $from_date && '' === $to_date ) {
+									$field_query = array(
+										'key'     => $field,
+										'value'   => $from_date,
+										'compare' => '>=',
+										'type'    => 'DATE',
+									);
+								} else {
+									$field_query = array(
+										'key'       => $field,
+										'value'     => array( $from_date, $to_date ),
+										'compare'   => 'BETWEEN',
+										'type'      => 'DATE',
+										'inclusive' => true,
+									);
+								}
 								break;
-							case 'timepicker':
-								if ( ! empty( $value[0] ) ) {
-									$value[0] = $value[0] . ':00';
-								} else {
-									$range    = $this->timepicker_filters_range( $field, $directory_data );
-									$value[0] = $range[0] . ':00';
-								}
-								if ( ! empty( $value[1] ) ) {
-									$value[1] = $value[1] . ':00';
-								} else {
-									$range    = $this->timepicker_filters_range( $field, $directory_data );
-									$value[1] = $range[1] . ':00';
-								}
 
+							case 'timepicker':
 								if ( $value[0] === $value[1] ) {
 									$field_query = array(
 										'key'   => $field,
 										'value' => $value[0],
+									);
+								} elseif ( '' === $value[0] && '' !== $value[1] ) {
+									$field_query = array(
+										'key'     => $field,
+										'value'   => $value[1],
+										'compare' => '<=',
+										'type'    => 'TIME',
+									);
+								} elseif ( '' !== $value[0] && '' === $value[1] ) {
+									$field_query = array(
+										'key'     => $field,
+										'value'   => $value[0],
+										'compare' => '>=',
+										'type'    => 'TIME',
 									);
 								} else {
 									$field_query = array(
@@ -1393,10 +1408,11 @@ class Directory extends \um\common\Directory {
 									);
 								}
 								break;
+
 						}
 					}
 
-					if ( ! empty( $field_query ) && $field_query !== true ) {
+					if ( ! empty( $field_query ) && true !== $field_query ) {
 						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
 					}
 
@@ -1408,7 +1424,7 @@ class Directory extends \um\common\Directory {
 					if ( ! empty( $this->query_args['role__in'] ) ) {
 						$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
 						$default_role = array_intersect( $this->query_args['role__in'], $value );
-						$um_role = array_diff( $value, $default_role );
+						$um_role      = array_diff( $value, $default_role );
 
 						foreach ( $um_role as $key => &$val ) {
 							$val = 'um_' . str_replace( ' ', '-', $val );
@@ -1417,13 +1433,19 @@ class Directory extends \um\common\Directory {
 					} else {
 						$this->query_args['role__in'] = $value;
 					}
-
 					break;
+
 				case 'birth_date':
-					$from_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ), date( 'Y', time() - min( $value ) * YEAR_IN_SECONDS ) ) );
-					$to_date   = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ) + 1, date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) ) );
+					// The old format of the value stored in DB for the backward compatibility.
+					$from_date = wp_date( 'Y/m/d', mktime( 0, 0, 0, wp_date( 'm' ), wp_date( 'd' ), wp_date( 'Y', time() - min( $value ) * YEAR_IN_SECONDS ) ) );
+					$to_date   = wp_date( 'Y/m/d', mktime( 0, 0, 0, wp_date( 'm' ), wp_date( 'j' ) + 1, wp_date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) ) );
+
+					// New proper format.
+					$from_date_new = wp_date( 'Y-m-d', mktime( 0, 0, 0, wp_date( 'm' ), wp_date( 'd' ), wp_date( 'Y', time() - min( $value ) * YEAR_IN_SECONDS ) ) );
+					$to_date_new   = wp_date( 'Y-m-d', mktime( 0, 0, 0, wp_date( 'm' ), wp_date( 'j' ) + 1, wp_date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) ) );
 
 					$meta_query = array(
+						'relation' => 'OR',
 						array(
 							'key'       => 'birth_date',
 							'value'     => array( $to_date, $from_date ),
@@ -1431,11 +1453,18 @@ class Directory extends \um\common\Directory {
 							'type'      => 'DATE',
 							'inclusive' => true,
 						),
+						array(
+							'key'       => 'birth_date',
+							'value'     => array( $from_date_new, $to_date_new ),
+							'compare'   => 'BETWEEN',
+							'type'      => 'DATE',
+							'inclusive' => true,
+						),
 					);
 
 					$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
-
 					break;
+
 				case 'user_registered':
 					$offset = 0;
 					if ( is_numeric( $gmt_offset ) ) {
@@ -1459,8 +1488,8 @@ class Directory extends \um\common\Directory {
 					} else {
 						$this->query_args['date_query'] = array_merge( $this->query_args['date_query'], array( $date_query ) );
 					}
-
 					break;
+
 				case 'last_login':
 					$offset = 0;
 					if ( is_numeric( $gmt_offset ) ) {
@@ -1468,7 +1497,7 @@ class Directory extends \um\common\Directory {
 					}
 
 					$value = array_map(
-						function( $date ) {
+						function ( $date ) {
 							return is_numeric( $date ) ? $date : strtotime( $date );
 						},
 						$value
@@ -1514,6 +1543,7 @@ class Directory extends \um\common\Directory {
 
 					$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
 					break;
+
 			}
 		}
 	}
