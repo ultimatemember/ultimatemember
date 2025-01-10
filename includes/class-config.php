@@ -92,6 +92,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 
 		public $display_name_options = array();
 
+		public $google_maps_locales = array();
+
 		/**
 		 * Config constructor.
 		 */
@@ -138,49 +140,49 @@ if ( ! class_exists( 'um\Config' ) ) {
 			);
 
 			$this->core_directory_meta['members'] = array(
-				'_um_core'                      => 'members',
-				'_um_template'                  => 'members',
-				'_um_mode'                      => 'directory',
-				'_um_view_types'                => array( 'grid' ),
-				'_um_default_view'              => 'grid',
-				'_um_roles'                     => array(),
-				'_um_has_profile_photo'         => 0,
-				'_um_has_cover_photo'           => 0,
-				'_um_show_these_users'          => '',
-				'_um_exclude_these_users'       => '',
+				'_um_core'                     => 'members',
+				'_um_template'                 => 'members',
+				'_um_mode'                     => 'directory',
+				'_um_view_types'               => array( 'grid' ),
+				'_um_default_view'             => 'grid',
+				'_um_roles'                    => array(),
+				'_um_has_profile_photo'        => 0,
+				'_um_has_cover_photo'          => 0,
+				'_um_show_these_users'         => '',
+				'_um_exclude_these_users'      => '',
 
-				'_um_sortby'                    => 'user_registered_desc',
-				'_um_sortby_custom'             => '',
-				'_um_sortby_custom_label'       => '',
-				'_um_enable_sorting'            => 0,
-				'_um_sorting_fields'            => array(),
+				'_um_sortby'                   => 'user_registered_desc',
+				'_um_sortby_custom'            => '',
+				'_um_sortby_custom_label'      => '',
+				'_um_enable_sorting'           => 0,
+				'_um_sorting_fields'           => array(),
 
-				'_um_profile_photo'             => '1',
-				'_um_cover_photos'              => '1',
-				'_um_show_name'                 => '1',
-				'_um_show_tagline'              => 0,
-				'_um_tagline_fields'            => array(),
-				'_um_show_userinfo'             => 0,
-				'_um_reveal_fields'             => array(),
-				'_um_show_social'               => 0,
-				'_um_userinfo_animate'          => '1',
+				'_um_profile_photo'            => '1',
+				'_um_cover_photos'             => '1',
+				'_um_show_name'                => '1',
+				'_um_show_tagline'             => 0,
+				'_um_tagline_fields'           => array(),
+				'_um_show_userinfo'            => 0,
+				'_um_reveal_fields'            => array(),
+				'_um_show_social'              => 0,
+				'_um_userinfo_animate'         => '1',
 
-				'_um_search'                    => 0,
-				'_um_roles_can_search'          => array(),
-				'_um_filters'                   => 0,
-				'_um_roles_can_filter'          => array(),
-				'_um_search_fields'             => array(),
-				'_um_filters_expanded'          => 0,
-				'_um_filters_is_collapsible'    => 1,
-				'_um_search_filters'            => array(),
+				'_um_search'                   => 0,
+				'_um_roles_can_search'         => array(),
+				'_um_filters'                  => 0,
+				'_um_roles_can_filter'         => array(),
+				'_um_search_fields'            => array(),
+				'_um_filters_expanded'         => 0,
+				'_um_filters_is_collapsible'   => 1,
+				'_um_search_filters'           => array(),
 
-				'_um_must_search'               => 0,
-				'_um_max_users'                 => '',
-				'_um_profiles_per_page'         => 12,
-				'_um_profiles_per_page_mobile'  => 6,
-				'_um_directory_header'          => __( '{total_users} Members', 'ultimate-member' ),
-				'_um_directory_header_single'   => __( '{total_users} Member', 'ultimate-member' ),
-				'_um_directory_no_users'        => __( 'We are sorry. We cannot find any users who match your search criteria.', 'ultimate-member' ),
+				'_um_must_search'              => 0,
+				'_um_max_users'                => '',
+				'_um_profiles_per_page'        => 12,
+				'_um_profiles_per_page_mobile' => 6,
+				'_um_directory_header'         => __( '{total_users} Members', 'ultimate-member' ),
+				'_um_directory_header_single'  => __( '{total_users} Member', 'ultimate-member' ),
+				'_um_directory_no_users'       => __( 'We are sorry. We cannot find any users who match your search criteria.', 'ultimate-member' ),
 			);
 
 			$this->core_global_meta_all = array(
@@ -206,57 +208,57 @@ if ( ! class_exists( 'um\Config' ) ) {
 
 			$this->core_form_meta_all = array(
 				/*Profile Form*/
-				'_um_profile_show_name'             => 1,
-				'_um_profile_show_social_links'     => 0,
-				'_um_profile_show_bio'              => 1,
-				'_um_profile_bio_maxchars'          => 180,
-				'_um_profile_header_menu'           => 'bc',
-				'_um_profile_empty_text'            => 1,
-				'_um_profile_empty_text_emo'        => 1,
-				'_um_profile_role'                  => array(),
-				'_um_profile_template'              => 'profile',
-				'_um_profile_max_width'             => '1000px',
-				'_um_profile_area_max_width'        => '600px',
-				'_um_profile_align'                 => 'center',
-				'_um_profile_icons'                 => 'label',
-				'_um_profile_disable_photo_upload'  => 0,
-				'_um_profile_photosize'             => '190',
-				'_um_profile_cover_enabled'         => 1,
-				'_um_profile_coversize'             => 'original',
-				'_um_profile_cover_ratio'           => '2.7:1',
-				'_um_profile_photocorner'           => '1',
-				'_um_profile_header_bg'             => '',
-				'_um_profile_primary_btn_word'      => __( 'Update Profile', 'ultimate-member' ),
-				'_um_profile_secondary_btn'         => '1',
-				'_um_profile_secondary_btn_word'    => __( 'Cancel', 'ultimate-member' ),
+				'_um_profile_show_name'            => 1,
+				'_um_profile_show_social_links'    => 0,
+				'_um_profile_show_bio'             => 1,
+				'_um_profile_bio_maxchars'         => 180,
+				'_um_profile_header_menu'          => 'bc',
+				'_um_profile_empty_text'           => 1,
+				'_um_profile_empty_text_emo'       => 1,
+				'_um_profile_role'                 => array(),
+				'_um_profile_template'             => 'profile',
+				'_um_profile_max_width'            => '1000px',
+				'_um_profile_area_max_width'       => '600px',
+				'_um_profile_align'                => 'center',
+				'_um_profile_icons'                => 'label',
+				'_um_profile_disable_photo_upload' => 0,
+				'_um_profile_photosize'            => '190',
+				'_um_profile_cover_enabled'        => 1,
+				'_um_profile_coversize'            => 'original',
+				'_um_profile_cover_ratio'          => '2.7:1',
+				'_um_profile_photocorner'          => '1',
+				'_um_profile_header_bg'            => '',
+				'_um_profile_primary_btn_word'     => __( 'Update Profile', 'ultimate-member' ),
+				'_um_profile_secondary_btn'        => '1',
+				'_um_profile_secondary_btn_word'   => __( 'Cancel', 'ultimate-member' ),
 
 				/*Registration Form*/
-				'_um_register_role'                 => '0',
-				'_um_register_template'             => 'register',
-				'_um_register_max_width'            => '450px',
-				'_um_register_align'                => 'center',
-				'_um_register_icons'                => 'label',
-				'_um_register_primary_btn_word'     => __( 'Register', 'ultimate-member' ),
-				'_um_register_secondary_btn'        => 1,
-				'_um_register_secondary_btn_word'   => __( 'Login', 'ultimate-member' ),
-				'_um_register_secondary_btn_url'    => '',
+				'_um_register_role'                => '0',
+				'_um_register_template'            => 'register',
+				'_um_register_max_width'           => '450px',
+				'_um_register_align'               => 'center',
+				'_um_register_icons'               => 'label',
+				'_um_register_primary_btn_word'    => __( 'Register', 'ultimate-member' ),
+				'_um_register_secondary_btn'       => 1,
+				'_um_register_secondary_btn_word'  => __( 'Login', 'ultimate-member' ),
+				'_um_register_secondary_btn_url'   => '',
 
 				/*Login Form*/
-				'_um_login_template'                => 'login',
-				'_um_login_max_width'               => '450px',
-				'_um_login_align'                   => 'center',
-				'_um_login_icons'                   => 'label',
-				'_um_login_primary_btn_word'        => __( 'Login', 'ultimate-member' ),
-				'_um_login_forgot_pass_link'        => 1,
-				'_um_login_show_rememberme'         => 1,
-				'_um_login_secondary_btn'           => 1,
-				'_um_login_secondary_btn_word'      => __( 'Register', 'ultimate-member' ),
-				'_um_login_secondary_btn_url'       => '',
+				'_um_login_template'               => 'login',
+				'_um_login_max_width'              => '450px',
+				'_um_login_align'                  => 'center',
+				'_um_login_icons'                  => 'label',
+				'_um_login_primary_btn_word'       => __( 'Login', 'ultimate-member' ),
+				'_um_login_forgot_pass_link'       => 1,
+				'_um_login_show_rememberme'        => 1,
+				'_um_login_secondary_btn'          => 1,
+				'_um_login_secondary_btn_word'     => __( 'Register', 'ultimate-member' ),
+				'_um_login_secondary_btn_url'      => '',
 
 				/*Member Directory*/
-				'_um_directory_template'            => 'members',
-				'_um_directory_header'              => __( '{total_users} Members', 'ultimate-member' ),
-				'_um_directory_header_single'       => __( '{total_users} Member', 'ultimate-member' ),
+				'_um_directory_template'           => 'members',
+				'_um_directory_header'             => __( '{total_users} Members', 'ultimate-member' ),
+				'_um_directory_header_single'      => __( '{total_users} Member', 'ultimate-member' ),
 			);
 			/**
 			 * Filters the list of Ultimate Member forms meta.
@@ -432,175 +434,175 @@ if ( ! class_exists( 'um\Config' ) ) {
 			);
 
 			$this->email_notifications = array(
-				'welcome_email' => array(
-					'key'           => 'welcome_email',
-					'title'         => __( 'Account Welcome Email','ultimate-member' ),
-					'subject'       => 'Welcome to {site_name}!',
-					'body'          => 'Hi {display_name},<br /><br />' .
-					                   'Thank you for signing up with {site_name}! Your account is now active.<br /><br />' .
-					                   '{action_title}:<br /><br />' .
-					                   '{action_url} <br /><br />' .
-					                   'Your account email: {email} <br />' .
-					                   'Your account username: {username} <br /><br />' .
-					                   'If you have any problems, please contact us at {admin_email}<br /><br />' .
-					                   'Thanks,<br />' .
-					                   '{site_name}',
-					'description'   => __('Whether to send the user an email when his account is automatically approved','ultimate-member'),
+				'welcome_email'         => array(
+					'key'            => 'welcome_email',
+					'title'          => __( 'Account Welcome Email', 'ultimate-member' ),
+					'subject'        => 'Welcome to {site_name}!',
+					'body'           => 'Hi {display_name},<br /><br />' .
+										'Thank you for signing up with {site_name}! Your account is now active.<br /><br />' .
+										'{action_title}:<br /><br />' .
+										'{action_url} <br /><br />' .
+										'Your account email: {email} <br />' .
+										'Your account username: {username} <br /><br />' .
+										'If you have any problems, please contact us at {admin_email}<br /><br />' .
+										'Thanks,<br />' .
+										'{site_name}',
+					'description'    => __( 'Whether to send the user an email when his account is automatically approved', 'ultimate-member' ),
+					'recipient'      => 'user',
+					'default_active' => true,
+				),
+				'checkmail_email'       => array(
+					'key'         => 'checkmail_email',
+					'title'       => __( 'Account Activation Email', 'ultimate-member' ),
+					'subject'     => 'Please activate your account',
+					'body'        => 'Hi {display_name},<br /><br />' .
+										'Thank you for signing up with {site_name}! To activate your account, please click the link below to confirm your email address:<br /><br />' .
+										'{account_activation_link} <br /><br />' .
+										'If you have any problems, please contact us at {admin_email}<br /><br />' .
+										'Thanks, <br />' .
+										'{site_name}',
+					'description' => __( 'Whether to send the user an email when his account needs email activation', 'ultimate-member' ),
 					'recipient'   => 'user',
-					'default_active' => true
 				),
-				'checkmail_email' => array(
-					'key'           => 'checkmail_email',
-					'title'         => __( 'Account Activation Email','ultimate-member' ),
-					'subject'       => 'Please activate your account',
-					'body'          => 'Hi {display_name},<br /><br />' .
-					                   'Thank you for signing up with {site_name}! To activate your account, please click the link below to confirm your email address:<br /><br />' .
-					                   '{account_activation_link} <br /><br />' .
-					                   'If you have any problems, please contact us at {admin_email}<br /><br />' .
-					                   'Thanks, <br />' .
-					                   '{site_name}',
-					'description'   => __('Whether to send the user an email when his account needs email activation','ultimate-member'),
-					'recipient'   => 'user'
-				),
-				'pending_email' => array(
-					'key'           => 'pending_email',
-					'title'         => __( 'Your account is pending review','ultimate-member' ),
-					'subject'       => '[{site_name}] New user account',
-					'body'          => 'Hi {display_name}, <br /><br />' .
-					                   'Thank you for signing up with {site_name}! Your account is currently being reviewed by a member of our team.<br /><br />' .
-					                   'Please allow us some time to process your request.<br /><br />' .
-					                   'If you have any problems, please contact us at {admin_email}<br /><br />' .
-					                   'Thanks,<br />' .
-					                   '{site_name}',
-					'description'   => __('Whether to send the user an email when his account needs admin review','ultimate-member'),
-					'recipient'   => 'user'
-				),
-				'approved_email' => array(
-					'key'           => 'approved_email',
-					'title'         => __( 'Account Approved Email','ultimate-member' ),
-					'subject'       => 'Your account at {site_name} is now active',
-					'body'          => 'Hi {display_name},<br /><br />' .
-					                   'Thank you for signing up with {site_name}! Your account has been approved and is now active.<br /><br />' .
-					                   'To login please visit the following url:<br /><br />' .
-					                   '{login_url}<br /><br />' .
-					                   'Your account email: {email}<br />' .
-					                   'Your account username: {username}<br />' .
-					                   'Set your account password: {password_reset_link}<br /><br />' .
-					                   'If you have any problems, please contact us at {admin_email}<br /><br />' .
-					                   'Thanks,<br />' .
-					                   '{site_name}',
-					'description'   => __('Whether to send the user an email when his account is approved','ultimate-member'),
-					'recipient'   => 'user'
-				),
-				'rejected_email' => array(
-					'key'           => 'rejected_email',
-					'title'         => __( 'Account Rejected Email','ultimate-member' ),
-					'subject'       => 'Your account has been rejected',
-					'body'          => 'Hi {display_name},<br /><br />' .
-					                   'Thank you for applying for membership to {site_name}! We have reviewed your information and unfortunately we are unable to accept you as a member at this moment.<br /><br />' .
-					                   'Please feel free to apply again at a future date.<br /><br />' .
-					                   'Thanks,<br />' .
-					                   '{site_name}',
-					'description'   => __('Whether to send the user an email when his account is rejected','ultimate-member'),
-					'recipient'   => 'user'
-				),
-				'inactive_email' => array(
-					'key'           => 'inactive_email',
-					'title'         => __( 'Account Deactivated Email','ultimate-member' ),
-					'subject'       => 'Your account has been deactivated',
-					'body'          => 'Hi {display_name},<br /><br />' .
-					                   'This is an automated email to let you know your {site_name} account has been deactivated.<br /><br />' .
-					                   'If you would like your account to be reactivated please contact us at {admin_email}<br /><br />' .
-					                   'Thanks,<br />' .
-					                   '{site_name}',
-					'description'   => __('Whether to send the user an email when his account is deactivated','ultimate-member'),
+				'pending_email'         => array(
+					'key'         => 'pending_email',
+					'title'       => __( 'Your account is pending review', 'ultimate-member' ),
+					'subject'     => '[{site_name}] New user account',
+					'body'        => 'Hi {display_name}, <br /><br />' .
+										'Thank you for signing up with {site_name}! Your account is currently being reviewed by a member of our team.<br /><br />' .
+										'Please allow us some time to process your request.<br /><br />' .
+										'If you have any problems, please contact us at {admin_email}<br /><br />' .
+										'Thanks,<br />' .
+										'{site_name}',
+					'description' => __( 'Whether to send the user an email when his account needs admin review', 'ultimate-member' ),
 					'recipient'   => 'user',
-					'default_active' => true
 				),
-				'deletion_email' => array(
-					'key'           => 'deletion_email',
-					'title'         => __( 'Account Deleted Email','ultimate-member' ),
-					'subject'       => 'Your account has been deleted',
-					'body'          => 'Hi {display_name},<br /><br />' .
-					                   'This is an automated email to let you know your {site_name} account has been deleted. All of your personal information has been permanently deleted and you will no longer be able to login to {site_name}.<br /><br />' .
-					                   'If your account has been deleted by accident please contact us at {admin_email} <br />' .
-					                   'Thanks,<br />' .
-					                   '{site_name}',
-					'description'   => __('Whether to send the user an email when his account is deleted','ultimate-member'),
+				'approved_email'        => array(
+					'key'         => 'approved_email',
+					'title'       => __( 'Account Approved Email', 'ultimate-member' ),
+					'subject'     => 'Your account at {site_name} is now active',
+					'body'        => 'Hi {display_name},<br /><br />' .
+										'Thank you for signing up with {site_name}! Your account has been approved and is now active.<br /><br />' .
+										'To login please visit the following url:<br /><br />' .
+										'{login_url}<br /><br />' .
+										'Your account email: {email}<br />' .
+										'Your account username: {username}<br />' .
+										'Set your account password: {password_reset_link}<br /><br />' .
+										'If you have any problems, please contact us at {admin_email}<br /><br />' .
+										'Thanks,<br />' .
+										'{site_name}',
+					'description' => __( 'Whether to send the user an email when his account is approved', 'ultimate-member' ),
 					'recipient'   => 'user',
-					'default_active' => true
 				),
-				'resetpw_email' => array(
-					'key'           => 'resetpw_email',
-					'title'         => __( 'Password Reset Email','ultimate-member' ),
-					'subject'       => 'Reset your password',
-					'body'          => 'Hi {display_name},<br /><br />' .
-					                   'We received a request to reset the password for your account. If you made this request, click the link below to change your password:<br /><br />' .
-					                   '{password_reset_link}<br /><br />' .
-					                   'If you didn\'t make this request, you can ignore this email <br /><br />' .
-					                   'Thanks,<br />' .
-					                   '{site_name}',
-					'description'   => __('Whether to send an email when users changed their password (Recommended, please keep on)','ultimate-member'),
+				'rejected_email'        => array(
+					'key'         => 'rejected_email',
+					'title'       => __( 'Account Rejected Email', 'ultimate-member' ),
+					'subject'     => 'Your account has been rejected',
+					'body'        => 'Hi {display_name},<br /><br />' .
+										'Thank you for applying for membership to {site_name}! We have reviewed your information and unfortunately we are unable to accept you as a member at this moment.<br /><br />' .
+										'Please feel free to apply again at a future date.<br /><br />' .
+										'Thanks,<br />' .
+										'{site_name}',
+					'description' => __( 'Whether to send the user an email when his account is rejected', 'ultimate-member' ),
 					'recipient'   => 'user',
-					'default_active' => true
 				),
-				'changedpw_email' => array(
-					'key'           => 'changedpw_email',
-					'title'         => __( 'Password Changed Email','ultimate-member' ),
-					'subject'       => 'Your {site_name} password has been changed',
-					'body'          => 'Hi {display_name},<br /><br />' .
-					                   'You recently changed the password associated with your {site_name} account.<br /><br />' .
-					                   'If you did not make this change and believe your {site_name} account has been compromised, please contact us at the following email address: {admin_email}<br /><br />' .
-					                   'Thanks,<br />' .
-					                   '{site_name}',
-					'description'   => __('Whether to send the user an email when he requests to reset password (Recommended, please keep on)','ultimate-member'),
-					'recipient'   => 'user',
-					'default_active' => true
+				'inactive_email'        => array(
+					'key'            => 'inactive_email',
+					'title'          => __( 'Account Deactivated Email', 'ultimate-member' ),
+					'subject'        => 'Your account has been deactivated',
+					'body'           => 'Hi {display_name},<br /><br />' .
+										'This is an automated email to let you know your {site_name} account has been deactivated.<br /><br />' .
+										'If you would like your account to be reactivated please contact us at {admin_email}<br /><br />' .
+										'Thanks,<br />' .
+										'{site_name}',
+					'description'    => __( 'Whether to send the user an email when his account is deactivated', 'ultimate-member' ),
+					'recipient'      => 'user',
+					'default_active' => true,
 				),
-				'changedaccount_email' => array(
-					'key'           => 'changedaccount_email',
-					'title'         => __( 'Account Updated Email','ultimate-member' ),
-					'subject'       => 'Your account at {site_name} was updated',
-					'body'          => 'Hi {display_name},<br /><br />' .
-					                   'You recently updated your {site_name} account.<br /><br />' .
-					                   'If you did not make this change and believe your {site_name} account has been compromised, please contact us at the following email address: {admin_email}<br /><br />' .
-					                   'Thanks,<br />' .
-					                   '{site_name}',
-					'description'   => __('Whether to send the user an email when he updated their account','ultimate-member'),
-					'recipient'     => 'user',
-					'default_active'=> true
+				'deletion_email'        => array(
+					'key'            => 'deletion_email',
+					'title'          => __( 'Account Deleted Email', 'ultimate-member' ),
+					'subject'        => 'Your account has been deleted',
+					'body'           => 'Hi {display_name},<br /><br />' .
+										'This is an automated email to let you know your {site_name} account has been deleted. All of your personal information has been permanently deleted and you will no longer be able to login to {site_name}.<br /><br />' .
+										'If your account has been deleted by accident please contact us at {admin_email} <br />' .
+										'Thanks,<br />' .
+										'{site_name}',
+					'description'    => __( 'Whether to send the user an email when his account is deleted', 'ultimate-member' ),
+					'recipient'      => 'user',
+					'default_active' => true,
+				),
+				'resetpw_email'         => array(
+					'key'            => 'resetpw_email',
+					'title'          => __( 'Password Reset Email', 'ultimate-member' ),
+					'subject'        => 'Reset your password',
+					'body'           => 'Hi {display_name},<br /><br />' .
+										'We received a request to reset the password for your account. If you made this request, click the link below to change your password:<br /><br />' .
+										'{password_reset_link}<br /><br />' .
+										'If you didn\'t make this request, you can ignore this email <br /><br />' .
+										'Thanks,<br />' .
+										'{site_name}',
+					'description'    => __( 'Whether to send an email when users changed their password (Recommended, please keep on)', 'ultimate-member' ),
+					'recipient'      => 'user',
+					'default_active' => true,
+				),
+				'changedpw_email'       => array(
+					'key'            => 'changedpw_email',
+					'title'          => __( 'Password Changed Email', 'ultimate-member' ),
+					'subject'        => 'Your {site_name} password has been changed',
+					'body'           => 'Hi {display_name},<br /><br />' .
+										'You recently changed the password associated with your {site_name} account.<br /><br />' .
+										'If you did not make this change and believe your {site_name} account has been compromised, please contact us at the following email address: {admin_email}<br /><br />' .
+										'Thanks,<br />' .
+										'{site_name}',
+					'description'    => __( 'Whether to send the user an email when he requests to reset password (Recommended, please keep on)', 'ultimate-member' ),
+					'recipient'      => 'user',
+					'default_active' => true,
+				),
+				'changedaccount_email'  => array(
+					'key'            => 'changedaccount_email',
+					'title'          => __( 'Account Updated Email', 'ultimate-member' ),
+					'subject'        => 'Your account at {site_name} was updated',
+					'body'           => 'Hi {display_name},<br /><br />' .
+										'You recently updated your {site_name} account.<br /><br />' .
+										'If you did not make this change and believe your {site_name} account has been compromised, please contact us at the following email address: {admin_email}<br /><br />' .
+										'Thanks,<br />' .
+										'{site_name}',
+					'description'    => __( 'Whether to send the user an email when he updated their account', 'ultimate-member' ),
+					'recipient'      => 'user',
+					'default_active' => true,
 				),
 				'notification_new_user' => array(
-					'key'           => 'notification_new_user',
-					'title'         => __( 'New User Notification','ultimate-member' ),
-					'subject'       => '[{site_name}] New user account',
-					'body'          => '{display_name} has just created an account on {site_name}. To view their profile click here:<br /><br />' .
-					                   '{user_profile_link}<br /><br />' .
-					                   'Here is the submitted registration form:<br /><br />' .
-					                   '{submitted_registration}',
-					'description'   => __('Whether to receive notification when a new user account is created','ultimate-member'),
-					'recipient'   => 'admin',
-					'default_active' => true
+					'key'            => 'notification_new_user',
+					'title'          => __( 'New User Notification', 'ultimate-member' ),
+					'subject'        => '[{site_name}] New user account',
+					'body'           => '{display_name} has just created an account on {site_name}. To view their profile click here:<br /><br />' .
+										'{user_profile_link}<br /><br />' .
+										'Here is the submitted registration form:<br /><br />' .
+										'{submitted_registration}',
+					'description'    => __( 'Whether to receive notification when a new user account is created', 'ultimate-member' ),
+					'recipient'      => 'admin',
+					'default_active' => true,
 				),
-				'notification_review' => array(
-					'key'           => 'notification_review',
-					'title'         => __( 'Account Needs Review Notification','ultimate-member' ),
-					'subject'       => '[{site_name}] New user awaiting review',
-					'body'          => '{display_name} has just applied for membership to {site_name} and is waiting to be reviewed.<br /><br />' .
-					                   'To review this member please click the following link:<br /><br />' .
-					                   '{user_profile_link}<br /><br />' .
-					                   'Here is the submitted registration form:<br /><br />' .
-					                   '{submitted_registration}',
-					'description'   => __('Whether to receive notification when an account needs admin review','ultimate-member'),
-					'recipient'   => 'admin'
+				'notification_review'   => array(
+					'key'         => 'notification_review',
+					'title'       => __( 'Account Needs Review Notification', 'ultimate-member' ),
+					'subject'     => '[{site_name}] New user awaiting review',
+					'body'        => '{display_name} has just applied for membership to {site_name} and is waiting to be reviewed.<br /><br />' .
+										'To review this member please click the following link:<br /><br />' .
+										'{user_profile_link}<br /><br />' .
+										'Here is the submitted registration form:<br /><br />' .
+										'{submitted_registration}',
+					'description' => __( 'Whether to receive notification when an account needs admin review', 'ultimate-member' ),
+					'recipient'   => 'admin',
 				),
 				'notification_deletion' => array(
-					'key'           => 'notification_deletion',
-					'title'         => __( 'Account Deletion Notification','ultimate-member' ),
-					'subject'       => '[{site_name}] Account deleted',
-					'body'          => '{display_name} has just deleted their {site_name} account.',
-					'description'   => __('Whether to receive notification when an account is deleted','ultimate-member'),
-					'recipient'   => 'admin'
+					'key'         => 'notification_deletion',
+					'title'       => __( 'Account Deletion Notification', 'ultimate-member' ),
+					'subject'     => '[{site_name}] Account deleted',
+					'body'        => '{display_name} has just deleted their {site_name} account.',
+					'description' => __( 'Whether to receive notification when an account is deleted', 'ultimate-member' ),
+					'recipient'   => 'admin',
 				),
 				'suspicious-activity'   => array(
 					'key'            => 'suspicious-activity',
@@ -734,6 +736,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'secure_allowed_redirect_hosts'         => '',
 				'delete_comments'                       => false,
 				'enable_action_scheduler'               => false,
+				'um_google_lang_as_default'             => true,
+				'um_google_lang'                        => '',
+				'um_google_maps_js_api_key'             => '',
 			);
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );
@@ -908,14 +913,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 * @return array
 		 */
 		function get_core_pages() {
-			$permalink = array();
+			$permalink  = array();
 			$core_pages = array_keys( $this->core_pages );
 			if ( empty( $core_pages ) ) {
 				return $permalink;
 			}
 
 			foreach ( $core_pages as $page_key ) {
-				$page_option_key = UM()->options()->get_predefined_page_option_key( $page_key );
+				$page_option_key        = UM()->options()->get_predefined_page_option_key( $page_key );
 				$permalink[ $page_key ] = UM()->options()->get( $page_option_key );
 			}
 
@@ -966,6 +971,96 @@ if ( ! class_exists( 'um\Config' ) ) {
 				$this->{'init_' . $key}();
 			}
 			return apply_filters( 'um_config_get', $this->$key, $key );
+		}
+
+		/**
+		 * @since 2.9.3
+		 *
+		 * @return void
+		 */
+		public function init_google_maps_locales() {
+			$this->google_maps_locales = array(
+				'af'     => __( 'Afrikaans', 'ultimate-member' ),
+				'sq'     => __( 'Albanian', 'ultimate-member' ),
+				'am'     => __( 'Amharic', 'ultimate-member' ),
+				'ar'     => __( 'Arabic', 'ultimate-member' ),
+				'hy'     => __( 'Armenian', 'ultimate-member' ),
+				'az'     => __( 'Azerbaijani', 'ultimate-member' ),
+				'eu'     => __( 'Basque', 'ultimate-member' ),
+				'be'     => __( 'Belarusian', 'ultimate-member' ),
+				'bn'     => __( 'Bengali', 'ultimate-member' ),
+				'bs'     => __( 'Bosnian', 'ultimate-member' ),
+				'my'     => __( 'Burmese', 'ultimate-member' ),
+				'ca'     => __( 'Catalan', 'ultimate-member' ),
+				'zh'     => __( 'Chinese', 'ultimate-member' ),
+				'zh-CN'  => __( 'Chinese (Simplified)', 'ultimate-member' ),
+				'zh-HK'  => __( 'Chinese (Hong Kong)', 'ultimate-member' ),
+				'zh-TW'  => __( 'Chinese (Traditional)', 'ultimate-member' ),
+				'hr'     => __( 'Croatian', 'ultimate-member' ),
+				'cs'     => __( 'Czech', 'ultimate-member' ),
+				'da'     => __( 'Danish', 'ultimate-member' ),
+				'nl'     => __( 'Dutch', 'ultimate-member' ),
+				'en'     => __( 'English', 'ultimate-member' ),
+				'en-AU'  => __( 'English (Australian)', 'ultimate-member' ),
+				'en-GB'  => __( 'English (Great Britain)', 'ultimate-member' ),
+				'et'     => __( 'Estonian', 'ultimate-member' ),
+				'fa'     => __( 'Farsi', 'ultimate-member' ),
+				'fi'     => __( 'Finnish', 'ultimate-member' ),
+				'fil'    => __( 'Filipino', 'ultimate-member' ),
+				'fr'     => __( 'French', 'ultimate-member' ),
+				'fr-CA'  => __( 'French (Canada)', 'ultimate-member' ),
+				'gl'     => __( 'Galician', 'ultimate-member' ),
+				'ka'     => __( 'Georgian', 'ultimate-member' ),
+				'de'     => __( 'German', 'ultimate-member' ),
+				'el'     => __( 'Greek', 'ultimate-member' ),
+				'gu'     => __( 'Gujarati', 'ultimate-member' ),
+				'iw'     => __( 'Hebrew', 'ultimate-member' ),
+				'hi'     => __( 'Hindi', 'ultimate-member' ),
+				'hu'     => __( 'Hungarian', 'ultimate-member' ),
+				'is'     => __( 'Icelandic', 'ultimate-member' ),
+				'id'     => __( 'Indonesian', 'ultimate-member' ),
+				'it'     => __( 'Italian', 'ultimate-member' ),
+				'ja'     => __( 'Japanese', 'ultimate-member' ),
+				'kn'     => __( 'Kannada', 'ultimate-member' ),
+				'kk'     => __( 'Kazakh', 'ultimate-member' ),
+				'km'     => __( 'Khmer', 'ultimate-member' ),
+				'ko'     => __( 'Korean', 'ultimate-member' ),
+				'ky'     => __( 'Kyrgyz', 'ultimate-member' ),
+				'lo'     => __( 'Lao', 'ultimate-member' ),
+				'lv'     => __( 'Latvian', 'ultimate-member' ),
+				'lt'     => __( 'Lithuanian', 'ultimate-member' ),
+				'mk'     => __( 'Macedonian', 'ultimate-member' ),
+				'ms'     => __( 'Malay', 'ultimate-member' ),
+				'ml'     => __( 'Malayalam', 'ultimate-member' ),
+				'mr'     => __( 'Marathi', 'ultimate-member' ),
+				'mn'     => __( 'Mongolian', 'ultimate-member' ),
+				'ne'     => __( 'Nepali', 'ultimate-member' ),
+				'no'     => __( 'Norwegian', 'ultimate-member' ),
+				'pl'     => __( 'Polish', 'ultimate-member' ),
+				'pt'     => __( 'Portuguese', 'ultimate-member' ),
+				'pt-BR'  => __( 'Portuguese (Brazil)', 'ultimate-member' ),
+				'pt-PT'  => __( 'Portuguese (Portugal)', 'ultimate-member' ),
+				'pa'     => __( 'Punjabi', 'ultimate-member' ),
+				'ro'     => __( 'Romanian', 'ultimate-member' ),
+				'ru'     => __( 'Russian', 'ultimate-member' ),
+				'sr'     => __( 'Serbian', 'ultimate-member' ),
+				'si'     => __( 'Sinhalese', 'ultimate-member' ),
+				'sk'     => __( 'Slovak', 'ultimate-member' ),
+				'sl'     => __( 'Slovenian', 'ultimate-member' ),
+				'es'     => __( 'Spanish', 'ultimate-member' ),
+				'es-419' => __( 'Spanish (Latin America)', 'ultimate-member' ),
+				'sw'     => __( 'Swahili', 'ultimate-member' ),
+				'sv'     => __( 'Swedish', 'ultimate-member' ),
+				'ta'     => __( 'Tamil', 'ultimate-member' ),
+				'te'     => __( 'Telugu', 'ultimate-member' ),
+				'th'     => __( 'Thai', 'ultimate-member' ),
+				'tr'     => __( 'Turkish', 'ultimate-member' ),
+				'uk'     => __( 'Ukrainian', 'ultimate-member' ),
+				'ur'     => __( 'Urdu', 'ultimate-member' ),
+				'uz'     => __( 'Uzbek', 'ultimate-member' ),
+				'vi'     => __( 'Vietnamese', 'ultimate-member' ),
+				'zu'     => __( 'Zulu', 'ultimate-member' ),
+			);
 		}
 
 		/**
