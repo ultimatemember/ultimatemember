@@ -1716,6 +1716,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			// Make the search line empty if it contains the mySQL query statements.
 			$regexp_map = array(
 				'/select(.*?)from/im',
+				'/select(.*?)sleep/im',
+				'/select(.*?)database/im',
+				'/select(.*?)where/im',
 				'/update(.*?)set/im',
 				'/delete(.*?)from/im',
 			);
@@ -1873,8 +1876,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$search_where = preg_replace( '/ AND \((.*?)\)/im', "$1 OR", $search_where );
 
 						// str_replace( '/', '\/', wp_slash( $search ) ) means that we add backslashes to special symbols + add backslash to slash(/) symbol for proper regular pattern.
+						$pattern = $wpdb->prepare( $meta_join_for_search . '.meta_value = %s', $search );
+						$pattern = '/(' . str_replace( '/', '\/', wp_slash( $pattern ) ) . ')/im';
+
 						$sql['where'] = preg_replace(
-							'/(' . $meta_join_for_search . '.meta_value = \'' . str_replace( '/', '\/', wp_slash( $search ) ) . '\')/im',
+							$pattern,
 							trim( $search_where ) . " $1",
 							$sql['where'],
 							1
