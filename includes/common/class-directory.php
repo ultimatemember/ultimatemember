@@ -801,15 +801,14 @@ class Directory extends Directory_Config {
 
 				if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
 					$values_array = array_map( 'maybe_unserialize', $values_array );
-					$temp_values  = array();
-					foreach ( $values_array as $values ) {
-						if ( is_array( $values ) ) {
-							$temp_values[] = $values;
-						} else {
-							$temp_values[] = array( $values );
-						}
-					}
-					$values_array = array_unique( array_merge( ...$temp_values ) );
+					$values_array = array_map(
+						function ( $item ) {
+							$item = maybe_unserialize( $item );
+							return is_array( $item ) ? $item : (array) $item;
+						},
+						$values_array
+					);
+					$values_array = array_unique( array_merge( ...$values_array ) );
 				}
 
 				$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
@@ -881,15 +880,21 @@ class Directory extends Directory_Config {
 							$values_array = $wpdb->get_col(
 								$wpdb->prepare(
 									"SELECT DISTINCT meta_value
-								FROM $wpdb->usermeta
-								WHERE meta_key = %s AND
-									  meta_value != ''",
+									FROM $wpdb->usermeta
+									WHERE meta_key = %s AND
+										  meta_value != ''",
 									$attrs['metakey']
 								)
 							);
 
 							if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
-								$values_array = array_map( 'maybe_unserialize', $values_array );
+								$values_array = array_map(
+									function ( $item ) {
+										$item = maybe_unserialize( $item );
+										return is_array( $item ) ? $item : (array) $item;
+									},
+									$values_array
+								);
 								$values_array = array_unique( array_merge( ...$values_array ) );
 							}
 
@@ -905,7 +910,8 @@ class Directory extends Directory_Config {
 			}
 		}
 
-		$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options', $attrs['options'], $values_array, $attrs );
+		$options = array_key_exists( 'options', $attrs ) ? $attrs['options'] : array();
+		$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options', $options, $values_array, $attrs );
 		if ( empty( $attrs['options'] ) || ! is_array( $attrs['options'] ) ) {
 			return '';
 		}
