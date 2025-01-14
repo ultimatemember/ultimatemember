@@ -1374,7 +1374,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		function pagination_options( $directory_data ) {
 			// number of profiles for mobile
 			$profiles_per_page = $directory_data['profiles_per_page'];
-			if ( UM()->mobile()->isMobile() && isset( $directory_data['profiles_per_page_mobile'] ) ) {
+			if ( wp_is_mobile() && isset( $directory_data['profiles_per_page_mobile'] ) ) {
 				$profiles_per_page = $directory_data['profiles_per_page_mobile'];
 			}
 
@@ -2553,7 +2553,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			// number of profiles for mobile
 			$profiles_per_page = $directory_data['profiles_per_page'];
-			if ( UM()->mobile()->isMobile() && isset( $directory_data['profiles_per_page_mobile'] ) ) {
+			if ( wp_is_mobile() && isset( $directory_data['profiles_per_page_mobile'] ) ) {
 				$profiles_per_page = $directory_data['profiles_per_page_mobile'];
 			}
 
@@ -2998,7 +2998,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
 
-			$this->cover_size = UM()->mobile()->isTablet() ? $sizes[1] : end( $sizes );
+			$this->cover_size = wp_is_mobile() ? $sizes[1] : end( $sizes );
 
 			$this->cover_size = apply_filters( 'um_member_directory_cover_image_size', $this->cover_size, $directory_data );
 
