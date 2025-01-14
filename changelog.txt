@@ -29,6 +29,10 @@
   - Fully deprecated `UM()->localize()` function
   - Fully deprecated `um_language_textdomain` filter hook
 
+* Templates required update:
+
+  - account.php
+
 * Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
 
 = 2.9.1 November 15, 2024 =

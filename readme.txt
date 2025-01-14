@@ -196,6 +196,10 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fully deprecated `UM()->localize()` function
 * Fully deprecated `um_language_textdomain` filter hook
 
+**Templates required update**
+
+* account.php
+
 **Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
 = 2.9.1 2024-11-15 =
