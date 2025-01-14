@@ -911,7 +911,7 @@ class Directory extends Directory_Config {
 		}
 
 		$options = array_key_exists( 'options', $attrs ) ? $attrs['options'] : array();
-		$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options', $options, $values_array, $attrs );
+		$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options', $options, $values_array, $attrs, $directory_data );
 		if ( empty( $attrs['options'] ) || ! is_array( $attrs['options'] ) ) {
 			return '';
 		}
@@ -927,7 +927,7 @@ class Directory extends Directory_Config {
 
 		ksort( $attrs['options'] );
 
-		$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options_sorted', $attrs['options'], $attrs );
+		$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options_sorted', $attrs['options'], $attrs, $directory_data );
 
 		if ( empty( $attrs['options'] ) ) {
 			return '';
