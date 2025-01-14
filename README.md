@@ -48,4 +48,4 @@ GNU Version 2 or Any Later Version
 
 ## Changelog
 
-[ From v1.0.0 to latest version ](https://wordpress.org/plugins/ultimate-member/changelog/).
+[ From v1.0.0 to latest version ](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
