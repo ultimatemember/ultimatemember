@@ -1460,10 +1460,10 @@ if ( ! class_exists( 'UM' ) ) {
 
 		/**
 		 * @since 2.0
-		 * @deprecated 2.9.3
+		 * @deprecated 2.9.2
 		 */
 		public function mobile() {
-			_deprecated_function( __METHOD__, '2.9.3', 'wp_is_mobile' );
+			_deprecated_function( __METHOD__, '2.9.2', 'wp_is_mobile' );
 		}
 	}
 }

@@ -1,22 +1,31 @@
 ﻿== Changelog ==
 
-= 2.9.2 December 16, 2024 =
+= 2.9.2 January 14, 2025 =
 
 * Enhancements:
 
   - Added: Compatibility with the new [Ultimate Member - Zapier](https://ultimatemember.com/extensions/zapier/) extension
+  - Added: Only approved user Reset Password setting defined as true by default
   - Added: `UM()->is_new_ui()` function for future enhancements related to new UI
+  - Added: Filter hook `um_before_user_submitted_registration_data`
   - Tweak: Changed hook's priority for initialization of email templates paths
   - Tweak: Removed `load_plugin_textdomain` due to (article)[https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/#Enhanced-support-for-only-using-PHP-translation-files]
 
 * Bugfixes:
 
+  - Fixed: Security issue CVE ID: CVE-2025-0308
+  - Fixed: Security issue CVE ID: CVE-2025-0318
   - Fixed: Using placeholders in email templates when Action Scheduler is active. Using `fetch_user_id` attribute for fetching necessary user before sending email
+  - Fixed: PHP 8.4 compatibility. Using WordPress native `wp_is_mobile()` instead of MobileDetect library
   - Fixed: PHP errors related to `UM()->localize()` function
   - Fixed: PHP errors in user meta header when `last_update` meta is empty
+  - Fixed: Small CSS changes and avoid duplicates
+  - Fixed: Removed ms-native show password button for type="password" field in UM forms
+  - Fixed: Define scalable attribute for cropper
 
 * Deprecated:
 
+  - Fully deprecated `UM()->mobile()` function
   - Fully deprecated `UM()->localize()` function
   - Fully deprecated `um_language_textdomain` filter hook
 
