@@ -976,7 +976,8 @@ class Directory extends Directory_Config {
 							$default_value = array( $default_value );
 						}
 
-						$selected = in_array( $opt, $default_value, true );
+						// @todo find the way how to use strict comparison
+						$selected = in_array( $opt, $default_value, false ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- $default_value values can be strings but $opt can be a number ( for example user tags extension)
 					} else {
 						$selected = ( ! empty( $filter_from_url ) && in_array( $opt, $filter_from_url, true ) );
 					}
