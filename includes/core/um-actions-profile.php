@@ -917,12 +917,9 @@ function um_profile_header_cover_area( $args ) {
 						$size = $get_cover_size;
 					}
 
-					if ( UM()->mobile()->isMobile() ) {
-
-						// set for mobile width = 300 by default but can be changed via filter
-						if ( ! UM()->mobile()->isTablet() ) {
-							$size = 300;
-						}
+					if ( wp_is_mobile() ) {
+						// Set for mobile width = 300 by default but can be changed via filter
+						$size = 300;
 
 						/**
 						 * UM hook

@@ -693,6 +693,29 @@ function um_user_submitted_registration_formatted( $style = false ) {
 		$output .= um_user_submited_display( 'use_gdpr_agreement', __( 'GDPR Applied', 'ultimate-member' ), $submitted_data );
 	}
 
+	/**
+	 * Filters the custom HTML before user registration submitted and formatted data.
+	 *
+	 * @param {string} $before_html    Custom HTML before submitted data.
+	 * @param {string} $output         Prepared submitted data in HTML format.
+	 * @param {array}  $submitted_data Submitted user data during registration.
+	 *
+	 * @return {string} Custom HTML before submitted data.
+	 *
+	 * @since 2.9.2
+	 * @hook um_before_user_submitted_registration_data
+	 *
+	 * @example <caption>Change custom HTML before user registration submitted and formatted data.</caption>
+	 * function my_user_submitted_registration_data( $before_html, $output, $submitted_data ) {
+	 *     if ( ! empty( $submitted_data['custom_data'] ) ) {
+	 *         $before_html .= 'Custom HTML here';
+	 *     }
+	 *     return $before_html;
+	 * }
+	 * add_filter( 'um_before_user_submitted_registration_data', 'my_user_submitted_registration_data', 10, 3 );
+	 */
+	$output .= apply_filters( 'um_before_user_submitted_registration_data', '', $output, $submitted_data );
+
 	if ( isset( $submitted_data ) && is_array( $submitted_data ) ) {
 
 		if ( isset( $submitted_data['form_id'] ) ) {
@@ -809,6 +832,8 @@ function um_user_submitted_registration_formatted( $style = false ) {
 			} // endfor
 		}
 	}
+
+	$output .= apply_filters( 'um_after_user_submitted_registration_data', '', $output, $submitted_data );
 
 	if ( $style ) {
 		$output .= '</div>';

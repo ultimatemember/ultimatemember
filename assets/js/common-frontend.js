@@ -57,6 +57,7 @@ UM.frontend = {
 					zoomable: false,
 					rotatable: false,
 					dashed: false,
+					scalable: false
 				};
 			} else if ( 'cover' === crop_data ) {
 				if ( Math.round( min_width / ratio ) > 0 ) {
@@ -70,6 +71,7 @@ UM.frontend = {
 					zoomable: false,
 					rotatable: false,
 					dashed: false,
+					scalable: false
 				};
 			} else if ( 'user' === crop_data ) {
 				opts = {
@@ -80,6 +82,7 @@ UM.frontend = {
 					zoomable: false,
 					rotatable: false,
 					dashed: false,
+					scalable: false
 				};
 			}
 
