@@ -520,12 +520,10 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->form()->hooks();
 			$this->permalinks();
 			$this->cron();
-			$this->mobile();
 			$this->external_integrations();
 			$this->gdpr();
 			$this->member_directory();
 			$this->blocks();
-			$this->secure();
 
 			// If multisite networks active
 			if ( is_multisite() ) {
@@ -1334,21 +1332,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['templates'];
 		}
 
-
-		/**
-		 * @since 2.0
-		 *
-		 * @return um\lib\mobiledetect\Um_Mobile_Detect
-		 */
-		function mobile() {
-			if ( empty( $this->classes['mobile'] ) ) {
-				$this->classes['mobile'] = new um\lib\mobiledetect\Um_Mobile_Detect();
-			}
-
-			return $this->classes['mobile'];
-		}
-
-
 		/**
 		 * @since 2.0.44
 		 *
@@ -1473,6 +1456,14 @@ if ( ! class_exists( 'UM' ) ) {
 		public function members() {
 			_deprecated_function( __METHOD__, '2.1.0', 'UM()->member_directory()' );
 			return UM()->member_directory();
+		}
+
+		/**
+		 * @since 2.0
+		 * @deprecated 2.9.2
+		 */
+		public function mobile() {
+			_deprecated_function( __METHOD__, '2.9.2', 'wp_is_mobile' );
 		}
 	}
 }

@@ -933,20 +933,19 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 					} elseif ( ! UM()->validation()->safe_username( $submitted_data[ $key ] ) ) {
 						UM()->form()->add_error( $key, __( 'Your email contains invalid characters', 'ultimate-member' ) );
 					}
+					break;
+				}
+
+				if ( '' === $submitted_data[ $key ] ) {
+					UM()->form()->add_error( $key, __( 'You must provide your email', 'ultimate-member' ) );
+				} elseif ( ! is_email( $submitted_data[ $key ] ) || email_exists( $submitted_data[ $key ] ) ) {
+					UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 				} else {
-
-					if ( '' !== $submitted_data[ $key ] && ! is_email( $submitted_data[ $key ] ) ) {
-						UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
-					} elseif ( '' !== $submitted_data[ $key ] && email_exists( $submitted_data[ $key ] ) ) {
-						UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
-					} elseif ( '' !== $submitted_data[ $key ] ) {
-
-						$users = get_users( 'meta_value=' . $submitted_data[ $key ] );
-
-						foreach ( $users as $user ) {
-							if ( $user->ID !== $submitted_data['user_id'] ) {
-								UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
-							}
+					// There we have valid and unique user_email. But need to check in usermeta table for other users.
+					$users = get_users( 'meta_value=' . $submitted_data[ $key ] );
+					foreach ( $users as $user ) {
+						if ( $user->ID !== $submitted_data['user_id'] ) {
+							UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 						}
 					}
 				}
