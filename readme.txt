@@ -233,6 +233,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 == Upgrade Notice ==
 
+= 2.9.2 =
+This version fixes a security related bug. Upgrade immediately.
+
 = 2.9.0 =
 This version fixes a security related bug. Upgrade immediately.
 
