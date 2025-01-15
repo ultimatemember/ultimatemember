@@ -102,11 +102,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					foreach ( $sites as $blog_id ) {
 						$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
 						$metakeys[] = 'wc_money_spent_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
+						$metakeys[] = 'wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
 					}
 				} else {
 					$blog_id    = get_current_blog_id();
 					$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
 					$metakeys[] = 'wc_money_spent_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
+					$metakeys[] = 'wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
 				}
 
 				//member directory data
