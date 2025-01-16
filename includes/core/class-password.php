@@ -88,29 +88,8 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				$classes .= ' um-viewing';
 			}
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_form_official_classes__hook
-			 * @description Change form additional classes
-			 * @input_vars
-			 * [{"var":"$classes","type":"string","desc":"Form additional classes"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_form_official_classes__hook', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_form_official_classes__hook', 'my_form_official_classes', 10, 1 );
-			 * function my_form_official_classes( $classes ) {
-			 *     // your code here
-			 *     return $classes;
-			 * }
-			 * ?>
-			 */
-			$classes = apply_filters( 'um_form_official_classes__hook', $classes );
-			return $classes;
+			/** This filter is documented in includes/common/class-shortcodes.php */
+			return apply_filters( 'um_form_official_classes__hook', $classes );
 		}
 
 		/**
@@ -188,12 +167,17 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 			ob_start();
 
-			/** This filter is documented in includes/core/class-shortcodes.php */
+			/** This action is documented in includes/common/class-shortcodes.php */
 			do_action( "um_pre_{$args['mode']}_shortcode", $args );
-			/** This filter is documented in includes/core/class-shortcodes.php */
+			/** This action is documented in includes/common/class-shortcodes.php */
 			do_action( 'um_before_form_is_loaded', $args );
-			/** This filter is documented in includes/core/class-shortcodes.php */
+			/** This action is documented in includes/common/class-shortcodes.php */
 			do_action( "um_before_{$args['mode']}_form_is_loaded", $args );
+
+			if ( UM()->is_new_ui() ) {
+				wp_enqueue_style( 'um_new_design' );
+				wp_enqueue_script( 'um_new_design' );
+			}
 
 			UM()->shortcodes()->template_load( $args['template'], $args );
 
@@ -210,7 +194,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 * @return bool
 		 */
 		function is_reset_request() {
-			if ( um_is_core_page( 'password-reset' ) && isset( $_POST['_um_password_reset'] ) ) {
+			if ( um_is_predefined_page( 'password-reset' ) && isset( $_POST['_um_password_reset'] ) ) {
 				return true;
 			}
 
@@ -250,7 +234,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
 
-				if ( isset( $_GET['hash'] ) && isset( $_GET['login'] ) ) {
+				if ( isset( $_GET['hash'], $_GET['login'] ) ) {
 					$value = sprintf( '%s:%s', wp_unslash( $_GET['login'] ), wp_unslash( $_GET['hash'] ) );
 					$this->setcookie( $rp_cookie, $value );
 					// Not `um_safe_redirect()` because password-reset page is predefined page and is situated on the same host.

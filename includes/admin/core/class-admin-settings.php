@@ -97,20 +97,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$metakeys = apply_filters( 'um_metadata_same_page_update_ajax', $metakeys, UM()->builtin()->all_user_fields );
 
 				if ( is_multisite() ) {
-
 					$sites = get_sites( array( 'fields' => 'ids' ) );
 					foreach ( $sites as $blog_id ) {
 						$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
+						$metakeys[] = 'wc_money_spent_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
+						$metakeys[] = 'wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
 					}
 				} else {
 					$blog_id    = get_current_blog_id();
 					$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
+					$metakeys[] = 'wc_money_spent_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
+					$metakeys[] = 'wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
 				}
 
 				//member directory data
 				$metakeys[] = 'um_member_directory_data';
 				$metakeys[] = '_um_verified';
-				$metakeys[] = '_money_spent';
 				$metakeys[] = '_completed';
 				$metakeys[] = '_reviews_avg';
 
@@ -777,7 +779,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'account_tab_privacy'                  => array(
 						'sanitize' => 'bool',
 					),
-					'account_tab_delete'                   => array(
+					'account_tab_personal-data'             => array(
+						'sanitize' => 'bool',
+					),
+					'account_tab_delete'                    => array(
 						'sanitize' => 'bool',
 					),
 					'delete_account_text'                  => array(
@@ -1047,16 +1052,126 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'secure_allowed_redirect_hosts'        => array(
 						'sanitize' => 'textarea',
 					),
+					'primary_color'                      => array(
+						'sanitize' => 'color',
+					),
+					'enable_no_conflict_avatar'          => array(
+						'sanitize' => 'bool',
+					),
 				)
 			);
 
-			if ( false !== UM()->account()->is_notifications_tab_visible() ) {
+			if ( false !== UM()->account()::is_notifications_tab_visible() ) {
 				$settings_map['account_tab_notifications'] = array(
 					'sanitize' => 'bool',
 				);
 			}
 
 			$this->settings_map = apply_filters( 'um_settings_map', $settings_map );
+
+			$users_fields = array(
+				array(
+				  'id'          => 'register_role',
+				  'type'        => 'select',
+				  'label'       => __( 'Registration Default Role', 'ultimate-member' ),
+				  'description' => __( 'This will be the role assigned to users registering through Ultimate Member registration forms. By default, this setting will follow the core WordPress setting "New User Default Role" unless you specify a different role.', 'ultimate-member' ),
+				  'default'     => um_get_metadefault( 'register_role' ),
+				  'options'     => UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ),
+				  'size'        => 'small',
+				),
+				array(
+					'id'          => 'permalink_base',
+					'type'        => 'select',
+					'size'        => 'small',
+					'label'       => __( 'Profile Permalink Base', 'ultimate-member' ),
+					// translators: %s: Profile page URL
+					'description' => sprintf( __( 'Here you can control the permalink structure of the user profile URL globally e.g. %s<strong>username</strong>/.', 'ultimate-member' ), trailingslashit( um_get_core_page( 'user' ) ) ),
+					'options'     => UM()->config()->permalink_base_options,
+					'placeholder' => __( 'Select...', 'ultimate-member' ),
+				),
+				array(
+					'id'          => 'permalink_base_custom_meta',
+					'type'        => 'text',
+					'label'       => __( 'Profile Permalink Base Custom Meta Key', 'ultimate-member' ),
+					'description' => __( 'Specify the custom field meta key that you want to use as profile permalink base. Meta value should be unique.', 'ultimate-member' ),
+					'conditional' => array( 'permalink_base', '=', 'custom_meta' ),
+					'size'        => 'medium',
+				),
+				array(
+					'id'          => 'display_name',
+					'type'        => 'select',
+					'size'        => 'medium',
+					'label'       => __( 'User Display Name', 'ultimate-member' ),
+					'description' => __( 'This is the name that will be displayed for users on the front end of your site. Default setting uses first/last name as display name if it exists.', 'ultimate-member' ),
+					'options'     => UM()->config()->display_name_options,
+					'placeholder' => __( 'Select...', 'ultimate-member' ),
+				),
+				array(
+					'id'          => 'display_name_field',
+					'type'        => 'text',
+					'label'       => __( 'Display Name Custom Field(s)', 'ultimate-member' ),
+					'description' => __( 'Specify the custom field meta key or custom fields seperated by comma that you want to use to display users name on the frontend of your site.', 'ultimate-member' ),
+					'conditional' => array( 'display_name', '=', 'field' ),
+					'size'        => 'medium',
+				),
+				array(
+					'id'             => 'author_redirect',
+					'type'           => 'checkbox',
+					'label'          => __( 'Hide author pages', 'ultimate-member' ),
+					'checkbox_label' => __( 'Enable author page redirect to user profile', 'ultimate-member' ),
+					'description'    => __( 'If enabled, author pages will automatically redirect to the user\'s profile page.', 'ultimate-member' ),
+				),
+				array(
+					'id'             => 'members_page',
+					'type'           => 'checkbox',
+					'label'          => __( 'Members Directory', 'ultimate-member' ),
+					'checkbox_label' => __( 'Enable Members Directory', 'ultimate-member' ),
+					'description'    => __( 'Control whether to enable or disable member directories on this site', 'ultimate-member' ),
+				),
+				array(
+					'id'             => 'delete_comments',
+					'type'           => 'checkbox',
+					'label'          => __( 'Delete user comments', 'ultimate-member' ),
+					'checkbox_label' => __( 'Enable deleting user comments after deleting a user', 'ultimate-member' ),
+					'description'    => __( 'Do you want to automatically delete a user\'s comments when they delete their account or are removed from the admin dashboard?', 'ultimate-member' ),
+				),
+			);
+
+			$avatar_fields = array(
+				array(
+					'id'             => 'use_gravatars',
+					'type'           => 'checkbox',
+					'label'          => __( 'Use Gravatar', 'ultimate-member' ),
+					'checkbox_label' => __( 'Enable Gravatar', 'ultimate-member' ),
+					'description'    => __( 'Do you want to use Gravatar instead of the default plugin profile photo (If the user did not upload a custom profile photo/avatar)?', 'ultimate-member' ),
+				),
+				array(
+					'id'          => 'use_um_gravatar_default_builtin_image',
+					'type'        => 'select',
+					'label'       => __( 'Use Gravatar builtin image', 'ultimate-member' ),
+					'description' => __( 'Gravatar has a number of built in options which you can also use as defaults', 'ultimate-member' ),
+					'options'     => array(
+						'default'   => __( 'Default', 'ultimate-member' ),
+						'404'       => __( '404 ( File Not Found response )', 'ultimate-member' ),
+						'mm'        => __( 'Mystery Man', 'ultimate-member' ),
+						'identicon' => __( 'Identicon', 'ultimate-member' ),
+						'monsterid' => __( 'Monsterid', 'ultimate-member' ),
+						'wavatar'   => __( 'Wavatar', 'ultimate-member' ),
+						'retro'     => __( 'Retro', 'ultimate-member' ),
+						'blank'     => __( 'Blank ( a transparent PNG image )', 'ultimate-member' ),
+					),
+					'conditional' => array( 'use_gravatars', '=', 1 ),
+					'size'        => 'medium',
+				),
+				array(
+					'id'             => 'use_um_gravatar_default_image',
+					'type'           => 'checkbox',
+					'label'          => __( 'Replace Gravatar\'s Default avatar', 'ultimate-member' ),
+					'checkbox_label' => __( 'Set Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
+					'description'    => __( 'Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo/avatar)', 'ultimate-member' ),
+					'conditional'    => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
+				),
+			);
 
 			/**
 			 * UM hook
@@ -1096,106 +1211,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'users'    => array(
 										'title'       => __( 'Users', 'ultimate-member' ),
 										'description' => __( 'General users settings.', 'ultimate-member' ),
-										'fields'      => array(
-											array(
-												'id'      => 'register_role',
-												'type'    => 'select',
-												'label'   => __( 'Registration Default Role', 'ultimate-member' ),
-												'description' => __( 'This will be the role assigned to users registering through Ultimate Member registration forms. By default, this setting will follow the core WordPress setting "New User Default Role" unless you specify a different role.', 'ultimate-member' ),
-												'default' => um_get_metadefault( 'register_role' ),
-												'options' => UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ),
-												'size'    => 'small',
-											),
-											array(
-												'id'      => 'permalink_base',
-												'type'    => 'select',
-												'size'    => 'small',
-												'label'   => __( 'Profile Permalink Base', 'ultimate-member' ),
-												// translators: %s: Profile page URL
-												'description' => sprintf( __( 'Here you can control the permalink structure of the user profile URL globally e.g. %s<strong>username</strong>/.', 'ultimate-member' ), trailingslashit( um_get_core_page( 'user' ) ) ),
-												'options' => UM()->config()->permalink_base_options,
-												'placeholder' => __( 'Select...', 'ultimate-member' ),
-											),
-											array(
-												'id'    => 'permalink_base_custom_meta',
-												'type'  => 'text',
-												'label' => __( 'Profile Permalink Base Custom Meta Key', 'ultimate-member' ),
-												'description' => __( 'Specify the custom field meta key that you want to use as profile permalink base. Meta value should be unique.', 'ultimate-member' ),
-												'conditional' => array( 'permalink_base', '=', 'custom_meta' ),
-												'size'  => 'medium',
-											),
-											array(
-												'id'      => 'display_name',
-												'type'    => 'select',
-												'size'    => 'medium',
-												'label'   => __( 'User Display Name', 'ultimate-member' ),
-												'description' => __( 'This is the name that will be displayed for users on the front end of your site. Default setting uses first/last name as display name if it exists.', 'ultimate-member' ),
-												'options' => UM()->config()->display_name_options,
-												'placeholder' => __( 'Select...', 'ultimate-member' ),
-											),
-											array(
-												'id'    => 'display_name_field',
-												'type'  => 'text',
-												'label' => __( 'Display Name Custom Field(s)', 'ultimate-member' ),
-												'description' => __( 'Specify the custom field meta key or custom fields seperated by comma that you want to use to display users name on the frontend of your site.', 'ultimate-member' ),
-												'conditional' => array( 'display_name', '=', 'field' ),
-												'size'  => 'medium',
-											),
-											array(
-												'id'    => 'author_redirect',
-												'type'  => 'checkbox',
-												'label' => __( 'Hide author pages', 'ultimate-member' ),
-												'checkbox_label' => __( 'Enable author page redirect to user profile', 'ultimate-member' ),
-												'description' => __( 'If enabled, author pages will automatically redirect to the user\'s profile page.', 'ultimate-member' ),
-											),
-											array(
-												'id'    => 'members_page',
-												'type'  => 'checkbox',
-												'label' => __( 'Members Directory', 'ultimate-member' ),
-												'checkbox_label' => __( 'Enable Members Directory', 'ultimate-member' ),
-												'description' => __( 'Control whether to enable or disable member directories on this site.', 'ultimate-member' ),
-											),
-											array(
-												'id'    => 'use_gravatars',
-												'type'  => 'checkbox',
-												'label' => __( 'Use Gravatar', 'ultimate-member' ),
-												'checkbox_label' => __( 'Enable Gravatar', 'ultimate-member' ),
-												'description' => __( 'Do you want to use Gravatar instead of the default plugin profile photo (If the user did not upload a custom profile photo/avatar)?', 'ultimate-member' ),
-											),
-											array(
-												'id'      => 'use_um_gravatar_default_builtin_image',
-												'type'    => 'select',
-												'label'   => __( 'Use Gravatar builtin image', 'ultimate-member' ),
-												'description' => __( 'Gravatar has a number of built in options which you can also use as defaults.', 'ultimate-member' ),
-												'options' => array(
-													'default' => __( 'Default', 'ultimate-member' ),
-													'404' => __( '404 ( File Not Found response )', 'ultimate-member' ),
-													'mm'  => __( 'Mystery Man', 'ultimate-member' ),
-													'identicon' => __( 'Identicon', 'ultimate-member' ),
-													'monsterid' => __( 'Monsterid', 'ultimate-member' ),
-													'wavatar' => __( 'Wavatar', 'ultimate-member' ),
-													'retro' => __( 'Retro', 'ultimate-member' ),
-													'blank' => __( 'Blank ( a transparent PNG image )', 'ultimate-member' ),
-												),
-												'conditional' => array( 'use_gravatars', '=', 1 ),
-												'size'    => 'medium',
-											),
-											array(
-												'id'    => 'use_um_gravatar_default_image',
-												'type'  => 'checkbox',
-												'label' => __( 'Replace Gravatar\'s Default avatar', 'ultimate-member' ),
-												'checkbox_label' => __( 'Set Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
-												'description' => __( 'Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo/avatar).', 'ultimate-member' ),
-												'conditional' => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
-											),
-											array(
-												'id'    => 'delete_comments',
-												'type'  => 'checkbox',
-												'label' => __( 'Delete user comments', 'ultimate-member' ),
-												'checkbox_label' => __( 'Enable deleting user comments after deleting a user', 'ultimate-member' ),
-												'description' => __( 'Do you want to automatically delete a user\'s comments when they delete their account or are removed from the admin dashboard?', 'ultimate-member' ),
-											),
-										),
+										'fields'      => $users_fields,
+									),
+									'avatar'   => array(
+										'title'       => __( 'Avatar', 'ultimate-member' ),
+										'description' => __( 'User avatar settings.', 'ultimate-member' ),
+										'fields'      => $avatar_fields,
 									),
 									'password' => array(
 										'title'       => __( 'Password', 'ultimate-member' ),
@@ -1505,7 +1526,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sections' => array(
 							''      => array(
 								'title'       => __( 'Restriction Content', 'ultimate-member' ),
-								'description' => __( 'Provides  settings for controlling access to your site.', 'ultimate-member' ),
+								'description' => __( 'Provides settings for controlling access to your site.', 'ultimate-member' ),
 								'fields'      => $access_fields,
 							),
 							'other' => array(
@@ -1672,13 +1693,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'default' => um_get_metadefault( 'disable_profile_photo_upload' ),
 											),
 											array(
-												'id'      => 'profile_photosize',
-												'type'    => 'select',
-												'label'   => __( 'Profile Photo Size', 'ultimate-member' ),
-												'default' => um_get_metadefault( 'profile_photosize' ),
-												'options' => UM()->files()->get_profile_photo_size( 'photo_thumb_sizes' ),
+												'id'          => 'profile_photosize',
+												'type'        => 'select',
+												'label'       => __( 'Profile Photo Size', 'ultimate-member' ),
+												'default'     => um_get_metadefault( 'profile_photosize' ),
+												'options'     => UM()->options()->get_profile_photo_size( 'photo_thumb_sizes' ),
 												'description' => __( 'The global default of profile photo size. This can be overridden by individual form settings.', 'ultimate-member' ),
-												'size'    => 'small',
+												'size'        => 'small',
 											),
 										),
 									),
@@ -1705,14 +1726,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'description' => __( 'Switch on/off the profile cover photos.', 'ultimate-member' ),
 											),
 											array(
-												'id'      => 'profile_coversize',
-												'type'    => 'select',
-												'label'   => __( 'Profile Cover Size', 'ultimate-member' ),
-												'default' => um_get_metadefault( 'profile_coversize' ),
-												'options' => UM()->files()->get_profile_photo_size( 'cover_thumb_sizes' ),
+												'id'          => 'profile_coversize',
+												'type'        => 'select',
+												'label'       => __( 'Profile Cover Size', 'ultimate-member' ),
+												'default'     => um_get_metadefault( 'profile_coversize' ),
+												'options'     => UM()->options()->get_profile_photo_size( 'cover_thumb_sizes' ),
 												'description' => __( 'The global default width of cover photo size. This can be overridden by individual form settings.', 'ultimate-member' ),
 												'conditional' => array( 'profile_cover_enabled', '=', 1 ),
-												'size'    => 'small',
+												'size'        => 'small',
 											),
 											array(
 												'id'      => 'profile_cover_ratio',
@@ -2112,7 +2133,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'form_sections' => array(
 									'override_templates' => array(
 										'title'       => __( 'Override templates', 'ultimate-member' ),
-										// translators: %s: Link to the docs article.
+										// translators: %1$s and %2$s: Links to the docs article.
 										'description' => sprintf( __( 'Each time we release an update, you\'ll find a list of changes made to the template files. <a href="%1$s" target="_blank">Learn more about overriding templates</a>.<br />You can easily check the status of the latest templates to see if they are up-to-date or need updating. <a href="%2$s" target="_blank">Learn more about fixing outdated templates</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1516-templates-map', 'https://docs.ultimatemember.com/article/1847-fixing-outdated-ultimate-member-templates' ),
 										'fields'      => array(
 											array(
@@ -2152,9 +2173,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'description' => __( 'Check this box if you would like to enable new UI.', 'ultimate-member' ),
 											),
 											array(
-												'id'    => 'enable_new_form_builder',
-												'type'  => 'checkbox',
-												'label' => __( 'Form Builder', 'ultimate-member' ),
+												'id'          => 'primary_color',
+												'type'        => 'color',
+												'label'       => __( 'Primary Color', 'ultimate-member' ),
+												'conditional' => array( 'enable_new_ui', '=', '1' ),
+											),
+											array(
+												'id'             => 'enable_no_conflict_avatar',
+												'type'           => 'checkbox',
+												'label'          => __( 'New Avatars logic', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable new no-conflict mode for avatars', 'ultimate-member' ),
+												'description'    => __( 'Check this box if you would like to use new no-conflict handlers for avatars.', 'ultimate-member' ),
+											),
+											array(
+												'id'             => 'enable_new_form_builder',
+												'type'           => 'checkbox',
+												'label'          => __( 'Form Builder', 'ultimate-member' ),
 												'checkbox_label' => __( 'Enable new Form Builder (for developers only)', 'ultimate-member' ),
 												'description' => __( 'Check this box if you would like to enable new Form Builder.', 'ultimate-member' ),
 											),
@@ -2179,6 +2213,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'label' => __( 'Restriction content pre-queries', 'ultimate-member' ),
 												'checkbox_label' => __( 'Disable pre-queries for restriction content logic', 'ultimate-member' ),
 												'description' => __( 'Please enable this option only in the cases when you have big or unnecessary queries on your site with active restriction logic. If you want to exclude posts only from the results queries instead of pre_get_posts and fully-hidden post logic also please enable this option. It activates the restriction content logic until 2.2.x version without latest security enhancements.', 'ultimate-member' ),
+											),
+											array(
+												'id'             => 'enable_custom_emoji',
+												'type'           => 'checkbox',
+												'label'          => __( 'Custom UM emoji', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable outdated emoji', 'ultimate-member' ),
+												'description'    => __( 'Back support UM custom emoji additionally to WordPress native emotize.', 'ultimate-member' ),
 											),
 										),
 									),
@@ -2263,7 +2304,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				)
 			);
 
-			if ( false === UM()->account()->is_notifications_tab_visible() ) {
+			if ( false === UM()->account()::is_notifications_tab_visible() ) {
 				unset( $this->settings_structure['']['sections']['account']['form_sections']['notifications_tab'] );
 			}
 
@@ -2274,7 +2315,80 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			}
 
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE ) {
+				if ( UM()->options()->get( 'enable_new_ui' ) ) {
+					$this->settings_structure['']['sections']['account']['form_sections'] = UM()->array_insert_before(
+						$this->settings_structure['']['sections']['account']['form_sections'],
+						'delete_tab',
+						array(
+							'personal_data_tab' => array(
+								'title'       => __( 'Personal data tab', 'ultimate-member' ),
+								'description' => __( 'Enables you to toggle the personal data tab on the account page. Disable this tab to prevent users from exporting, deleting or anonymizing known data for a given user.', 'ultimate-member' ),
+								'fields'      => array(
+									array(
+										'id'             => 'account_tab_personal-data',
+										'type'           => 'checkbox',
+										'label'          => __( 'Personal Data Account Tab', 'ultimate-member' ),
+										'checkbox_label' => __( 'Display Personal Data account tab', 'ultimate-member' ),
+										'description'    => __( 'Enable or disable the "Personal Data" tab on the account page.', 'ultimate-member' ),
+									),
+								),
+							),
+						)
+					);
 
+					// removed "Account deletion text".
+					unset( $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][1], $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][2] );
+
+					// removed "Custom message on empty profile", "Custom message emoticon".
+					unset( $this->settings_structure['appearance']['sections']['']['form_sections']['fields']['fields'][4], $this->settings_structure['appearance']['sections']['']['form_sections']['fields']['fields'][5] );
+
+					// removed "Menu icons in desktop view".
+					unset( $this->settings_structure['appearance']['sections']['profile_menu']['fields'][ count( $this->settings_structure['appearance']['sections']['profile_menu']['fields'] ) - 1 ] );
+				}
+
+				if ( UM()->options()->get( 'enable_no_conflict_avatar' ) ) {
+					unset( $this->settings_structure['appearance']['sections']['']['form_sections']['profile_photo'], $this->settings_structure['']['sections']['uploads']['form_sections']['profile_photo'] );
+
+					if ( ! get_option( 'show_avatars' ) ) {
+						unset( $this->settings_structure['']['sections']['users']['form_sections']['avatar'] );
+					} else {
+						$this->settings_structure['']['sections']['users']['form_sections']['avatar']['fields'] = array(
+							array(
+								'id'             => 'use_um_gravatar_default_image',
+								'type'           => 'checkbox',
+								'label'          => __( 'Use Ultimate Member default avatar', 'ultimate-member' ),
+								'checkbox_label' => __( 'Replace WordPress native avatars', 'ultimate-member' ),
+								'description'    => __( 'Do you want to use the plugin default avatar instead of the WordPress native avatars and|or 3rd-party plugins.', 'ultimate-member' ),
+							),
+							array(
+								'id'                 => 'default_avatar',
+								'type'               => 'media',
+								'label'              => __( 'Default Profile Photo', 'ultimate-member' ),
+								'description'        => __( 'You can change the default profile picture globally here. Please make sure that the photo is 300x300px.', 'ultimate-member' ),
+								'upload_frame_title' => __( 'Select Default Profile Photo', 'ultimate-member' ),
+								'default'            => array(
+									'url' => UM_URL . 'assets/img/default_avatar.jpg',
+								),
+								'conditional'        => array( 'use_um_gravatar_default_image', '=', 1 ),
+							),
+							array(
+								'id'          => 'profile_photo_max_size',
+								'type'        => 'text',
+								'size'        => 'small',
+								'label'       => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
+								'description' => __( 'Sets a maximum size for the uploaded photo', 'ultimate-member' ),
+							),
+							array(
+								'id'             => 'disable_profile_photo_upload',
+								'type'           => 'checkbox',
+								'label'          => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
+								'checkbox_label' => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
+								'description'    => __( 'Switch on/off the profile photo uploader', 'ultimate-member' ),
+								'default'        => um_get_metadefault( 'disable_profile_photo_upload' ),
+							),
+						);
+					}
+				}
 			} else {
 				unset( $this->settings_structure['advanced']['sections']['features']['form_sections']['beta_features'] );
 			}

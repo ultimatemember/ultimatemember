@@ -1,12 +1,11 @@
 <?php
 namespace um\admin\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
-
 
 	/**
 	 * Class Admin_Forms
@@ -14,23 +13,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 	 */
 	class Admin_Forms {
 
-
 		/**
 		 * @var bool
 		 */
 		var $form_data;
 
-
 		/**
 		 * Admin_Forms constructor.
 		 * @param bool $form_data
 		 */
-		function __construct( $form_data = false ) {
+		public function __construct( $form_data = false ) {
 			if ( $form_data ) {
 				$this->form_data = $form_data;
 			}
 		}
-
 
 		/**
 		 * Set Form Data
@@ -39,11 +35,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 *
 		 * @return $this
 		 */
-		function set_data( $data ) {
+		public function set_data( $data ) {
 			$this->form_data = $data;
 			return $this;
 		}
-
 
 		/**
 		 * Render form
@@ -1164,9 +1159,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			}
 
 			$button = '';
-			$slug   = str_replace( 'core_', '', $field_data['id'] );
-			if ( ! um_get_predefined_page_id( $slug ) || 'publish' !== get_post_status( um_get_predefined_page_id( $slug ) ) ) {
-				$button = '&nbsp;<a href="' . esc_url( add_query_arg( array( 'um_adm_action' => 'install_predefined_page', 'um_page_slug' => $slug, '_wpnonce' => wp_create_nonce( 'install_predefined_page' ), ) ) ) . '" class="button button-primary">' . esc_html__( 'Create Default', 'ultimate-member' ) . '</a>';
+			if ( ! array_key_exists( 'predefined', $field_data ) || false !== $field_data['predefined'] ) {
+				$slug = str_replace( 'core_', '', $field_data['id'] );
+				if ( ! um_get_predefined_page_id( $slug ) || 'publish' !== get_post_status( um_get_predefined_page_id( $slug ) ) ) {
+					$button = '&nbsp;<a href="' . esc_url( add_query_arg( array( 'um_adm_action' => 'install_predefined_page', 'um_page_slug' => $slug, '_wpnonce' => wp_create_nonce( 'install_predefined_page' ), ) ) ) . '" class="button button-primary">' . esc_html__( 'Create Default', 'ultimate-member' ) . '</a>';
+				}
 			}
 
 			$html = "$hidden<select $multiple $id_attr $name_attr $class_attr $data_attr>$options</select>$button";
@@ -1420,7 +1417,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			return $html;
 		}
 
-
 		/**
 		 * @param $field_data
 		 *
@@ -1599,7 +1595,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 *
 		 * @return string
 		 */
-		function render_md_default_filters( $field_data ) {
+		public function render_md_default_filters( $field_data ) {
 			if ( empty( $field_data['id'] ) ) {
 				return false;
 			}
@@ -1612,9 +1608,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$class_attr = ' class="um-forms-field ' . $class . '" ';
 
 			$data = array(
-				'field_id'          => $field_data['id'],
-				'id_attr'           => $id,
-				'member_directory'  => $post->ID
+				'field_id'         => $field_data['id'],
+				'id_attr'          => $id,
+				'member_directory' => $post->ID,
 			);
 
 			$data_attr = '';
@@ -1676,7 +1672,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				}
 			}
 
-			$html .= "</ul><a href=\"javascript:void(0);\" class=\"button button-primary um-md-default-filters-add-option\" data-name=\"$name\">{$field_data['add_text']}</a>";
+			$nonce = '';
+			if ( UM()->is_new_ui() ) {
+				$nonce = 'data-nonce="' . esc_attr( wp_create_nonce( 'um_search_filters' ) ) . '"';
+			}
+
+			$html .= "</ul><a href=\"javascript:void(0);\" class=\"button button-primary um-md-default-filters-add-option\" $nonce data-name=\"$name\">{$field_data['add_text']}</a>";
 
 			return $html;
 		}

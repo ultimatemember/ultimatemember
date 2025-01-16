@@ -179,12 +179,62 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		/**
 		 * Setup admin menu
 		 */
-		public function primary_admin_menu() {
+		function primary_admin_menu() {
+			if ( UM()->is_new_ui() ) {
+				add_menu_page( __( 'UM Design BETA', 'ultimate-member' ), __( 'UM Design BETA', 'ultimate-member' ), 'manage_options', 'um-admin-design', array( &$this, 'admin_design_page' ), 'dashicons-admin-customizer' );
+			}
+
 			$this->pagehook = add_menu_page( __( 'Ultimate Member', 'ultimate-member' ), __( 'Ultimate Member', 'ultimate-member' ), 'manage_options', $this->slug, array( &$this, 'admin_page' ), 'dashicons-admin-users', '42.78578' );
 
 			add_action( 'load-' . $this->pagehook, array( &$this, 'on_load_page' ) );
 
 			add_submenu_page( $this->slug, __( 'Dashboard', 'ultimate-member' ), __( 'Dashboard', 'ultimate-member' ), 'manage_options', $this->slug, array( &$this, 'admin_page' ) );
+		}
+
+		public function admin_design_page() {
+			?>
+			<div id="um-admin-design-sample" class="wrap">
+				<div class="notice notice-error">
+					<h3 class="notice-title"><?php _e( 'Its error title' ); ?></h3>
+					<p>Error description.</p>
+				</div>
+
+				<div class="notice-error notice">
+					<p>Error notice.</p>
+				</div>
+
+				<div class="notice notice-error notice-alt">
+					<p>Error alt notice.</p>
+				</div>
+
+				<div class="notice notice-error notice-large">
+					<p>Error large notice.</p>
+				</div>
+
+				<div class="notice-info notice">
+					<p>Info notice.</p>
+				</div>
+
+				<div class="notice-warning notice">
+					<p>Warning notice.</p>
+				</div>
+
+				<div class="notice-success notice">
+					<p>Success notice.</p>
+				</div>
+
+				<div class="notice-error notice is-dismissible">
+					<p>Dismissible notice.</p>
+				</div>
+				<input type="submit" class="button button-primary" value="Primary button"/>
+				<input type="button" class="button" value="Secondary button"/>
+				<button type="submit" class="button button-primary">Primary button</button>
+				<button type="button" class="button">Secondary button</button>
+				<span class="spinner"></span>
+				<span class="spinner is-active"></span>
+				<div class="clear"></div>
+			</div>
+			<?php
 		}
 
 
@@ -299,33 +349,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			include_once UM()->admin()->templates_path . 'dashboard/cache.php';
 		}
 
-
-		/**
-		 * Get a directory size
-		 *
-		 * @param $directory
-		 *
-		 * @return float|int
-		 */
-		function dir_size( $directory ) {
-			if ( $directory == 'temp' ) {
-				$directory = UM()->files()->upload_temp;
-				$size = 0;
-
-				foreach( new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator( $directory ) ) as $file ) {
-					$filename = $file->getFilename();
-					if ( $filename == '.' || $filename == '..' ) {
-						continue;
-					}
-
-					$size += $file->getSize();
-				}
-				return round ( $size / 1048576, 2);
-			}
-			return 0;
-		}
-
-
 		/**
 		 * Which admin page to show?
 		 */
@@ -377,5 +400,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 
 		}
 
+		/**
+		 * Get a directory size
+		 *
+		 * @deprecated 3.0.0
+		 * @param $directory
+		 *
+		 * @return float|int
+		 */
+		public function dir_size( $directory ) {
+			_deprecated_function( __METHOD__, '3.0.0', 'UM()->common()->filesystem()->dir_size()' );
+			if ( 'temp' === $directory ) {
+				$directory = UM()->common()->filesystem()->get_tempdir();
+				return UM()->common()->filesystem()->dir_size( $directory );
+			}
+			return 0;
+		}
 	}
 }

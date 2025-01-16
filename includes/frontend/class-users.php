@@ -58,7 +58,7 @@ class Users {
 			$actions['delete'] = array( 'label' => __( 'Delete this user', 'ultimate-member' ) );
 		}
 
-		if ( current_user_can( 'manage_options' ) && ! is_super_admin( $user_id ) ) {
+		if ( current_user_can( 'manage_options' ) && ! is_super_admin( $user_id ) && UM()->common()->users()->has_status( $user_id, 'approved' ) ) {
 			$actions['switch_user'] = array( 'label' => __( 'Login as this user', 'ultimate-member' ) );
 		}
 
@@ -81,5 +81,115 @@ class Users {
 		 * add_filter( 'um_admin_user_actions_hook', 'um_custom_admin_user_actions_hook', 10, 2 );
 		 */
 		return apply_filters( 'um_admin_user_actions_hook', $actions, $user_id );
+	}
+
+	/**
+	 * Get admin actions for individual user.
+	 *
+	 * @param int    $user_id
+	 * @param string $context
+	 *
+	 * @return array
+	 */
+	public function get_dropdown_items( $user_id, $context = 'profile' ) {
+		$items   = array();
+		$user_id = absint( $user_id );
+
+		if ( is_user_logged_in() ) {
+			if ( get_current_user_id() === $user_id ) {
+				if ( 'profile' !== $context ) {
+					$items = array(
+						array(
+							'<a href="' . esc_url( um_edit_profile_url( $user_id ) ) . '" class="um-editprofile">' . esc_html__( 'Edit Profile', 'ultimate-member' ) . '</a>',
+							'<a href="' . esc_url( um_get_predefined_page_url( 'account' ) ) . '" class="um-myaccount">' . esc_html__( 'My Account', 'ultimate-member' ) . '</a>',
+						),
+						array(
+							'<a href="' . esc_url( um_get_predefined_page_url( 'logout' ) ) . '" class="um-logout">' . esc_html__( 'Logout', 'ultimate-member' ) . '</a>',
+						),
+					);
+
+					if ( ! empty( UM()->user()->cannot_edit ) ) {
+						unset( $items[0][0] );
+					}
+				} else {
+					$items = array(
+						'<a href="' . esc_url( um_get_predefined_page_url( 'account' ) ) . '">' . esc_html__( 'My Account', 'ultimate-member' ) . '</a>',
+						'<a href="' . esc_url( um_get_predefined_page_url( 'logout' ) ) . '">' . esc_html__( 'Logout', 'ultimate-member' ) . '</a>',
+					);
+				}
+			} else {
+				if ( 'profile' !== $context && UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+					$items[] = array(
+						'<a href="' . esc_url( um_edit_profile_url( $user_id ) ) . '" class="um-editprofile">' . esc_html__( 'Edit Profile', 'ultimate-member' ) . '</a>',
+					);
+				}
+
+				$admin_actions = $this->get_actions_list( $user_id );
+				if ( ! empty( $admin_actions ) ) {
+					$admin_items = array();
+					foreach ( $admin_actions as $id => $arr ) {
+						$url_args = array(
+							'um_action' => $id,
+							'uid'       => $user_id,
+							'nonce'     => wp_create_nonce( $id . $user_id ),
+						);
+
+						if ( 'directory' === $context ) {
+							$url = add_query_arg( $url_args, wp_get_referer() );
+						} else {
+							// get proper referer via WordPress native function in AJAX for member directories
+							$url = add_query_arg( $url_args, um_get_predefined_page_url( 'user' ) );
+						}
+
+						$link_classes = array(
+							'um-user-action',
+							'um_' . $id,
+						);
+						if ( 'delete' === $id ) {
+							$link_classes[] = 'um-destructive';
+						}
+
+						$link_html = '<a href="' . esc_url( $url ) . '" class="' . esc_attr( implode( ' ', $link_classes ) ) . '">' . esc_html( $arr['label'] ) . '</a>';
+						if ( 'switch_user' === $id ) {
+							if ( ! isset( $admin_items[1] ) ) {
+								$admin_items[1] = array();
+							}
+							$admin_items[1][] = $link_html;
+						} else {
+							if ( ! isset( $admin_items[0] ) ) {
+								$admin_items[0] = array();
+							}
+							$admin_items[0][] = $link_html;
+						}
+					}
+
+					$items = array_merge( $items, $admin_items );
+				}
+			}
+		}
+
+		/**
+		 * Filters the dropdown menu with "More actions" for user.
+		 *
+		 * @since 3.0.0
+		 * @hook um_user_dropdown_items
+		 *
+		 * @param {array}  $items   Possible dropdown items list.
+		 * @param {int}    $user_id User ID.
+		 * @param {string} $context Place from where we call base function. It's 'profile' by default.
+		 *
+		 * @return {array} Possible dropdown items list.
+		 *
+		 * @example <caption>Add `um_custom_action` as one of dropdown items.</caption>
+		 * function um_custom_user_dropdown_items( $items, $user_id, $context ) {
+		 *     // single level dropdown
+		 *     $items[] = '<a href="' . esc_url( $item_url ) . '">' . esc_html( $item_title ) . '</a>';
+		 *     // dropdown with separators
+		 *     $items[] = array( '<a href="' . esc_url( $item_url ) . '">' . esc_html( $item_title ) . '</a>' );
+		 *     return $items;
+		 * }
+		 * add_filter( 'um_user_dropdown_items', 'um_custom_user_dropdown_items', 10, 3 );
+		 */
+		return apply_filters( 'um_user_dropdown_items', $items, $user_id, $context );
 	}
 }

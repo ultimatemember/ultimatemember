@@ -23,6 +23,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 */
 		public function __construct() {
 			$this->init_variables();
+			add_filter( 'um_get_option_filter__primary_color', array( &$this, 'set_default_color' ) );
 		}
 
 		/**
@@ -30,6 +31,14 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 */
 		private function init_variables() {
 			$this->options = get_option( 'um_options', array() );
+		}
+
+		public function set_default_color( $color ) {
+			if ( empty( $color ) ) {
+				$color = '#7f56d9';
+			}
+
+			return $color;
 		}
 
 		/**
@@ -142,6 +151,37 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 			 * add_filter( 'um_predefined_page_option_key', 'my_um_predefined_page_option_key' );
 			 */
 			return apply_filters( 'um_predefined_page_option_key', "core_{$slug}" );
+		}
+
+		/**
+		 * Get the list of profile/cover sizes
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param string $type
+		 *
+		 * @return array
+		 */
+		public function get_profile_photo_size( $type ) {
+			$sizes = $this->get( $type );
+
+			if ( ! empty( $sizes ) && is_array( $sizes ) ) {
+				$sizes = array_combine( $sizes, $sizes );
+
+				if ( 'cover_thumb_sizes' === $type ) {
+					foreach ( $sizes as $key => $value ) {
+						$sizes[ $key ] = $value . 'px';
+					}
+				} elseif ( 'photo_thumb_sizes' === $type ) {
+					foreach ( $sizes as $key => $value ) {
+						$sizes[ $key ] = $value . 'x' . $value . 'px';
+					}
+				}
+			} else {
+				$sizes = array( 'original' => __( 'Original size', 'ultimate-member' ) );
+			}
+
+			return $sizes;
 		}
 
 		/**

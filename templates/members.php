@@ -23,7 +23,7 @@ foreach ( UM()->config()->core_directory_meta['members'] as $k => $v ) {
 	$def_args[ $key ] = $v;
 }
 
-$unique_hash = substr( md5( $args['form_id'] ), 10, 5 );
+$unique_hash = UM()->member_directory()->get_directory_hash( $args['form_id'] );
 
 $args = array_merge( $def_args, $args );
 
@@ -36,13 +36,16 @@ if ( is_user_logged_in() ) {
 $args = apply_filters( 'um_member_directory_agruments_on_load', $args );
 
 // Views
-$single_view = false;
+$single_view  = false;
 $current_view = 'grid';
 
 if ( ! empty( $args['view_types'] ) && is_array( $args['view_types'] ) ) {
-	$args['view_types'] = array_filter( $args['view_types'], function( $item ) {
-		return in_array( $item, array_keys( UM()->member_directory()->view_types ) );
-	});
+	$args['view_types'] = array_filter(
+		$args['view_types'],
+		function ( $item ) {
+			return array_key_exists( $item, UM()->member_directory()->view_types );
+		}
+	);
 }
 
 if ( empty( $args['view_types'] ) || ! is_array( $args['view_types'] ) ) {
@@ -237,8 +240,8 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 $postid = ! empty( $post->ID ) ? $post->ID : '';
 ?>
 
-<div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>"
-	 data-hash="<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ) ?>" data-base-post="<?php echo esc_attr( $postid ) ?>"
+<div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $unique_hash ); ?>"
+	 data-hash="<?php echo esc_attr( $unique_hash ) ?>" data-base-post="<?php echo esc_attr( $postid ) ?>"
 	 data-must-search="<?php echo esc_attr( $must_search ); ?>" data-searched="<?php echo $not_searched ? '0' : '1'; ?>"
 	 data-view_type="<?php echo esc_attr( $current_view ) ?>" data-page="<?php echo esc_attr( $current_page ) ?>"
 	 data-sorting="<?php echo esc_attr( $sort_from_url ) ?>">
@@ -313,7 +316,7 @@ $postid = ! empty( $post->ID ) ? $post->ID : '';
 						<?php $items = array();
 
 						foreach ( $sorting_options as $value => $title ) {
-							$items[] = '<a href="javascript:void(0);" data-directory-hash="' . esc_attr( substr( md5( $form_id ), 10, 5 ) ) . '" class="um-sortyng-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>'; ?>
+							$items[] = '<a href="javascript:void(0);" data-directory-hash="' . esc_attr( $unique_hash ) . '" class="um-sortyng-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>'; ?>
 						<?php }
 
 						UM()->member_directory()->dropdown_menu( '.um-member-directory-sorting-a', 'click', $items ); ?>

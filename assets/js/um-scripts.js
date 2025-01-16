@@ -1,21 +1,3 @@
-function um_sanitize_value( value, el ) {
-	var element = document.createElement( 'div' );
-	element.innerText = value;
-	var sanitized_value = element.innerHTML;
-	if ( el ) {
-		jQuery( el ).val( sanitized_value );
-	}
-
-	return sanitized_value;
-}
-
-function um_unsanitize_value( input ) {
-	var e = document.createElement( 'textarea' );
-	e.innerHTML = input;
-	// handle case of empty input
-	return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
-}
-
 jQuery(document).ready(function() {
 
 	jQuery( document.body ).on('click', '.um-dropdown a.real_url', function() {
@@ -412,33 +394,33 @@ jQuery(document).ready(function() {
 		}
 	});
 
-
-	jQuery(document).on('click', '.um-ajax-action', function( e ) {
-		e.preventDefault();
-		var hook = jQuery(this).data('hook');
-		var user_id = jQuery(this).data('user_id');
-		var args = jQuery(this).data('args');
-
-		if ( jQuery(this).data('js-remove') ){
-			jQuery(this).parents('.'+jQuery(this).data('js-remove')).fadeOut('fast');
-		}
-
-		jQuery.ajax({
-			url: wp.ajax.settings.url,
-			type: 'post',
-			data: {
-				action: 'um_muted_action',
-				hook: hook,
-				user_id: user_id,
-				arguments: args,
-				nonce: um_scripts.nonce
-			},
-			success: function(data){
-
-			}
-		});
-		return false;
-	});
+	// Deprecated AJAX action
+	// jQuery(document).on('click', '.um-ajax-action', function( e ) {
+	// 	e.preventDefault();
+	// 	var hook = jQuery(this).data('hook');
+	// 	var user_id = jQuery(this).data('user_id');
+	// 	var args = jQuery(this).data('args');
+	//
+	// 	if ( jQuery(this).data('js-remove') ){
+	// 		jQuery(this).parents('.'+jQuery(this).data('js-remove')).fadeOut('fast');
+	// 	}
+	//
+	// 	jQuery.ajax({
+	// 		url: wp.ajax.settings.url,
+	// 		type: 'post',
+	// 		data: {
+	// 			action: 'um_muted_action',
+	// 			hook: hook,
+	// 			user_id: user_id,
+	// 			arguments: args,
+	// 			nonce: um_scripts.nonce
+	// 		},
+	// 		success: function(data){
+	//
+	// 		}
+	// 	});
+	// 	return false;
+	// });
 
 	jQuery( document.body ).on('click', '#um-search-button', function() {
 		var action = jQuery(this).parents('.um-search-form').data('members_page');
@@ -611,6 +593,7 @@ jQuery(document).ready(function() {
 		var arr_items = [],
 			search_get = '';
 
+		// @todo member directory filters and populate options
 		if ( data.post.members_directory === 'yes' ) {
 			arr_items.push({id: '', text: '', selected: 1});
 		}

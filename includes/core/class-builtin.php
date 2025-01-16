@@ -67,31 +67,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return apply_filters( 'um_builtin_all_user_fields', $this->all_user_fields );
 		}
 
-
-		/**
-		 * Regular or multi-select/options
-		 *
-		 * @param $field
-		 * @param $attrs
-		 *
-		 * @return bool
-		 */
-		function is_dropdown_field( $field, $attrs ) {
-
-			if ( isset( $attrs['options'] ) ) {
-				return true;
-			}
-
-			$fields = $this->all_user_fields;
-
-			if ( isset( $fields[ $field ]['options'] ) || ! empty( $fields[ $field ]['custom_dropdown_options_source'] ) ) {
-				return true;
-			}
-
-			return false;
-		}
-
-
 		/**
 		 * Get a field
 		 *
@@ -117,7 +92,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 */
 		function get_specific_fields( $fields ) {
 			$fields = explode( ',', $fields );
-			$array = array();
+			$array  = array();
 			foreach ( $fields as $field ) {
 				if ( isset( $this->predefined_fields[ $field ] ) ) {
 					$array[ $field ] = $this->predefined_fields[ $field ];
@@ -136,7 +111,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 */
 		function get_specific_field( $fields ) {
 			$fields = explode( ',', $fields );
-			$array = array();
+			$array  = array();
 			foreach ( $fields as $field ) {
 				if ( isset( $this->predefined_fields[ $field ] ) ) {
 					$array = $this->predefined_fields[ $field ];
@@ -245,234 +220,277 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 * Core Fields
 		 */
 		public function set_core_fields() {
+			if ( UM()->is_new_ui() ) {
+				$image_field = array(
+					'name'     => 'Image Upload',
+					'col1'     => array( '_title', '_metakey', '_help', '_allowed_types', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_public', '_roles', '_max_size', '_crop' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'    => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey'  => array(
+							'mode' => 'unique',
+						),
+						'_max_size' => array(
+							'mode'  => 'numeric',
+							'error' => __( 'Please enter a valid size', 'ultimate-member' ),
+						),
+					),
+				);
+				$file_field  = array(
+					'name'     => 'File Upload',
+					'col1'     => array( '_title', '_metakey', '_help', '_allowed_types' ),
+					'col2'     => array( '_label', '_icon', '_public', '_roles', '_max_size', '_visibility' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'    => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey'  => array(
+							'mode' => 'unique',
+						),
+						'_max_size' => array(
+							'mode'  => 'numeric',
+							'error' => __( 'Please enter a valid size', 'ultimate-member' ),
+						),
+					),
+				);
+			} else {
+				$image_field = array(
+					'name'     => 'Image Upload',
+					'col1'     => array( '_title', '_metakey', '_help', '_allowed_types', '_max_size', '_crop', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_public', '_roles', '_upload_text', '_upload_help_text', '_button_text' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'    => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey'  => array(
+							'mode' => 'unique',
+						),
+						'_max_size' => array(
+							'mode'  => 'numeric',
+							'error' => __( 'Please enter a valid size', 'ultimate-member' ),
+						),
+					),
+				);
+				$file_field  = array(
+					'name'     => 'File Upload',
+					'col1'     => array( '_title', '_metakey', '_help', '_allowed_types', '_max_size', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_public', '_roles', '_upload_text', '_upload_help_text', '_button_text' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'    => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey'  => array(
+							'mode' => 'unique',
+						),
+						'_max_size' => array(
+							'mode'  => 'numeric',
+							'error' => __( 'Please enter a valid size', 'ultimate-member' ),
+						),
+					),
+				);
+			}
 			$this->core_fields = array(
-				'row' => array(
-					'name' => 'Row',
-					'in_fields' => false,
-					'form_only' => true,
+				'row'              => array(
+					'name'                => 'Row',
+					'in_fields'           => false,
+					'form_only'           => true,
 					'conditional_support' => 0,
-					'icon' => 'fas fa-pencil',
-					'col1' => array('_id','_background','_text_color','_padding','_margin','_border','_borderradius','_borderstyle','_bordercolor'),
-					'col2' => array('_heading','_heading_text','_heading_background_color','_heading_text_color','_icon','_icon_color','_css_class'),
+					'icon'                => 'fas fa-pencil',
+					'col1'                => array( '_id', '_background', '_text_color', '_padding', '_margin', '_border', '_borderradius', '_borderstyle', '_bordercolor' ),
+					'col2'                => array( '_heading', '_heading_text', '_heading_background_color', '_heading_text_color', '_icon', '_icon_color', '_css_class' ),
 				),
 
-				'text' => array(
-					'name' => 'Text Box',
-					'col1' => array('_title','_metakey','_help','_default','_min_chars','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate','_max_chars'),
-					'col3' => array('_required','_editable'),
+				'text'             => array(
+					'name'     => 'Text Box',
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_min_chars', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate', '_max_chars' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
-					)
+					),
 				),
 
-				'tel' => array(
-					'name' => __( 'Telephone', 'ultimate-member' ),
-					'col1' => array('_title','_metakey','_help','_default','_min_chars','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate','_max_chars'),
-					'col3' => array('_required','_editable'),
+				'tel'              => array(
+					'name'     => __( 'Telephone', 'ultimate-member' ),
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_min_chars', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate', '_max_chars' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member'),
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
-					)
+					),
 				),
 
-				'number' => array(
-					'name' => __('Number','ultimate-member'),
-					'col1' => array('_title','_metakey','_help','_default','_min','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate','_max'),
-					'col3' => array('_required','_editable'),
+				'number'           => array(
+					'name'     => __( 'Number', 'ultimate-member' ),
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_min', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate', '_max' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
-					)
+					),
 				),
 
-				'textarea' => array(
-					'name' => 'Textarea',
-					'col1' => array('_title','_metakey','_help','_height','_max_chars','_max_words','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_default','_html'),
-					'col3' => array('_required','_editable'),
+				'textarea'         => array(
+					'name'     => 'Textarea',
+					'col1'     => array( '_title', '_metakey', '_help', '_height', '_max_chars', '_max_words', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_default', '_html' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
-					)
+					),
 				),
 
-				'select' => array(
-					'name' => 'Dropdown',
-					'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_custom_dropdown_options_source','_parent_dropdown_relationship'),
-					'col3' => array('_required','_editable'),
+				'select'           => array(
+					'name'     => 'Dropdown',
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_options', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_custom_dropdown_options_source', '_parent_dropdown_relationship' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-						'_options' => array(
-							'mode' => 'required',
-							'error' => __('You have not added any choices yet.','ultimate-member')
-						),
-					)
-				),
-
-				'multiselect' => array(
-					'name' => 'Multi-Select',
-					'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_min_selections','_max_selections','_custom_dropdown_options_source'),
-					'col3' => array('_required','_editable'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
 						'_options' => array(
-							'mode' => 'required',
-							'error' => __('You have not added any choices yet.','ultimate-member')
+							'mode'  => 'required',
+							'error' => __( 'You have not added any choices yet.', 'ultimate-member' ),
 						),
-					)
+					),
 				),
 
-				'radio' => array(
-					'name' => 'Radio',
-					'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-					'col2' => array('_label','_icon','_public','_roles'),
-					'col3' => array('_required','_editable'),
+				'multiselect'      => array(
+					'name'     => 'Multi-Select',
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_options', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_min_selections', '_max_selections', '_custom_dropdown_options_source' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
 						'_options' => array(
-							'mode' => 'required',
-							'error' => __('You have not added any choices yet.','ultimate-member')
+							'mode'  => 'required',
+							'error' => __( 'You have not added any choices yet.', 'ultimate-member' ),
 						),
-					)
+					),
 				),
 
-				'checkbox' => array(
-					'name' => 'Checkbox',
-					'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-					'col2' => array('_label','_icon','_public','_roles','_max_selections'),
-					'col3' => array('_required','_editable'),
+				'radio'            => array(
+					'name'     => 'Radio',
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_options', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_public', '_roles' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
 						'_options' => array(
-							'mode' => 'required',
-							'error' => __('You have not added any choices yet.','ultimate-member')
+							'mode'  => 'required',
+							'error' => __( 'You have not added any choices yet.', 'ultimate-member' ),
 						),
-					)
+					),
 				),
 
-				'url' => array(
-					'name' => 'URL',
-					'col1' => array('_title','_metakey','_help','_default','_url_text','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_url_target','_url_rel','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable'),
+				'checkbox'         => array(
+					'name'     => 'Checkbox',
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_options', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_public', '_roles', '_max_selections' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
-					)
+						'_options' => array(
+							'mode'  => 'required',
+							'error' => __( 'You have not added any choices yet.', 'ultimate-member' ),
+						),
+					),
 				),
 
-				'password' => array(
-					'name' => 'Password',
-					'col1' => array('_title','_metakey','_help','_min_chars','_max_chars','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_force_good_pass','_force_confirm_pass','_label_confirm_pass'),
-					'col3' => array('_required','_editable'),
+				'url'              => array(
+					'name'     => 'URL',
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_url_text', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_url_target', '_url_rel', '_public', '_roles', '_validate', '_custom_validate' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
-					)
+					),
 				),
 
-				'image' => array(
-					'name' => 'Image Upload',
-					'col1' => array('_title','_metakey','_help','_allowed_types','_max_size','_crop','_visibility'),
-					'col2' => array('_label','_icon','_public','_roles','_upload_text','_upload_help_text','_button_text'),
-					'col3' => array('_required','_editable'),
+				'password'         => array(
+					'name'     => 'Password',
+					'col1'     => array( '_title', '_metakey', '_help', '_min_chars', '_max_chars', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_force_good_pass', '_force_confirm_pass', '_label_confirm_pass' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
-						'_max_size' => array(
-							'mode' => 'numeric',
-							'error' => __('Please enter a valid size','ultimate-member')
-						),
-					)
+					),
 				),
 
-				'file' => array(
-					'name' => 'File Upload',
-					'col1' => array('_title','_metakey','_help','_allowed_types','_max_size','_visibility'),
-					'col2' => array('_label','_icon','_public','_roles','_upload_text','_upload_help_text','_button_text'),
-					'col3' => array('_required','_editable'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-						'_max_size' => array(
-							'mode' => 'numeric',
-							'error' => __( 'Please enter a valid size', 'ultimate-member' )
-						),
-					)
-				),
+				'image'            => $image_field,
 
-				'date' => array(
+				'file'             => $file_field,
+
+				'date'             => array(
 					'name'     => 'Date Picker',
 					'col1'     => array( '_title', '_metakey', '_help', '_default', '_range', '_years', '_years_x', '_range_start', '_range_end', '_visibility' ),
 					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_format', '_format_custom', '_pretty_format', '_disabled_weekdays' ),
@@ -498,151 +516,14 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					),
 				),
 
-				'time' => array(
-					'name' => 'Time Picker',
-					'col1' => array('_title','_metakey','_help','_format','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_default','_public','_roles','_intervals'),
-					'col3' => array('_required','_editable'),
+				'time'             => array(
+					'name'     => 'Time Picker',
+					'col1'     => array( '_title', '_metakey', '_help', '_format', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_default', '_public', '_roles', '_intervals' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __( 'You must provide a title', 'ultimate-member' )
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-					)
-				),
-
-				'rating' => array(
-					'name' => 'Rating',
-					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_icon','_public','_roles','_number','_default'),
-					'col3' => array('_required','_editable'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-					)
-				),
-
-				'block' => array(
-					'name' => 'Content Block',
-					'col1' => array('_title','_visibility'),
-					'col2' => array('_public','_roles'),
-					'col_full' => array('_content'),
-					'mce_content' => true,
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-					)
-				),
-
-				'shortcode' => array(
-					'name' => 'Shortcode',
-					'col1' => array('_title','_visibility'),
-					'col2' => array('_public','_roles'),
-					'col_full' => array('_content'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_content' => array(
-							'mode' => 'required',
-							'error' => __('You must add a shortcode to the content area','ultimate-member')
-						),
-					)
-				),
-
-				'spacing' => array(
-					'name' => 'Spacing',
-					'col1' => array('_title','_visibility'),
-					'col2' => array('_spacing'),
-					'form_only' => true,
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-					)
-				),
-
-				'divider' => array(
-					'name' => 'Divider',
-					'col1' => array('_title','_width','_divider_text','_visibility'),
-					'col2' => array('_style','_color','_public','_roles'),
-					'form_only' => true,
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-					)
-				),
-
-				'googlemap' => array(
-					'name' => 'Google Map',
-					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-					)
-				),
-
-				'youtube_video' => array(
-					'name' => 'YouTube Video',
-					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-					)
-				),
-
-				'vimeo_video' => array(
-					'name' => 'Vimeo Video',
-					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-					)
-				),
-
-				'soundcloud_track' => array(
-					'name' => 'SoundCloud Track',
-					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
+						'_title'   => array(
+							'mode'  => 'required',
 							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
@@ -650,11 +531,148 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 						),
 					),
 				),
-				'spotify' => array(
+
+				'rating'           => array(
+					'name'     => 'Rating',
+					'col1'     => array( '_title', '_metakey', '_help', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_public', '_roles', '_number', '_default' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+
+				'block'            => array(
+					'name'        => 'Content Block',
+					'col1'        => array( '_title', '_visibility' ),
+					'col2'        => array( '_public', '_roles' ),
+					'col_full'    => array( '_content' ),
+					'mce_content' => true,
+					'validate'    => array(
+						'_title' => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+					),
+				),
+
+				'shortcode'        => array(
+					'name'     => 'Shortcode',
+					'col1'     => array( '_title', '_visibility' ),
+					'col2'     => array( '_public', '_roles' ),
+					'col_full' => array( '_content' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_content' => array(
+							'mode'  => 'required',
+							'error' => __( 'You must add a shortcode to the content area', 'ultimate-member' ),
+						),
+					),
+				),
+
+				'spacing'          => array(
+					'name'      => 'Spacing',
+					'col1'      => array( '_title', '_visibility' ),
+					'col2'      => array( '_spacing' ),
+					'form_only' => true,
+					'validate'  => array(
+						'_title' => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+					),
+				),
+
+				'divider'          => array(
+					'name'      => 'Divider',
+					'col1'      => array( '_title', '_width', '_divider_text', '_visibility' ),
+					'col2'      => array( '_style', '_color', '_public', '_roles' ),
+					'form_only' => true,
+					'validate'  => array(
+						'_title' => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+					),
+				),
+
+				'googlemap'        => array(
+					'name'     => 'Google Map',
+					'col1'     => array( '_title', '_metakey', '_help', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+
+				'youtube_video'    => array(
+					'name'     => 'YouTube Video',
+					'col1'     => array( '_title', '_metakey', '_help', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+
+				'vimeo_video'      => array(
+					'name'     => 'Vimeo Video',
+					'col1'     => array( '_title', '_metakey', '_help', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+
+				'soundcloud_track' => array(
+					'name'     => 'SoundCloud Track',
+					'col1'     => array( '_title', '_metakey', '_help', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate' ),
+					'col3'     => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+				'spotify'          => array(
 					'name'     => __( 'Spotify URL', 'ultimate-member' ),
-					'col1'     => array('_title','_metakey','_help','_visibility'),
-					'col2'     => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3'     => array('_required','_editable'),
+					'col1'     => array( '_title', '_metakey', '_help', '_visibility' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
 						'_title'   => array(
 							'mode'  => 'required',
@@ -723,43 +741,46 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$this->core_fields = apply_filters( 'um_core_fields_hook', $this->core_fields );
 		}
 
-
 		/**
 		 * Predefined Fields
 		 */
-		function set_predefined_fields() {
+		public function set_predefined_fields() {
+
 			global $wp_roles;
 
 			$um_roles = array();
 			if ( ! empty( $wp_roles->roles ) ) {
 				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
-				$um_roles = UM()->roles()->get_roles( false, $exclude_roles );
+				$um_roles      = UM()->roles()->get_roles( false, $exclude_roles );
 			}
 
+			$profile_privacy = array(
+				'Everyone' => __( 'Everyone', 'ultimate-member' ),
+				'Only me'  => __( 'Only me', 'ultimate-member' ),
+			);
+
 			/**
-			 * UM hook
+			 * Filters user profile privacy options.
 			 *
-			 * @type filter
-			 * @title um_profile_privacy_options
-			 * @description Profile Privacy Options
-			 * @input_vars
-			 * [{"var":"$privacy_options","type":"array","desc":"Privacy Options"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_profile_privacy_options', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_profile_privacy_options', 'my_profile_privacy_options', 10, 1 );
-			 * function my_profile_privacy_options( $privacy_options ) {
-			 *     // your code here
-			 *     return $privacy_options;
+			 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+			 * 100 - `um_friends_profile_privacy_options()` from Friends extension  privacy options.
+			 * 100 - `um_followers_profile_privacy_options()` from Followers extension  privacy options.
+			 *
+			 * @param {array} $fields Privacy options.
+			 *
+			 * @return {array} Privacy options.
+			 *
+			 * @since 1.3.x
+			 * @hook  um_profile_privacy_options
+			 *
+			 * @example <caption>Add custom privacy option.</caption>
+			 * function my_privacy_options( $options ) {
+			 *     $options['um_custom'] = __( 'Custom option title', 'ultimate-member' );
+			 *     return $options;
 			 * }
-			 * ?>
+			 * add_filter( 'um_profile_privacy_options', 'my_privacy_options' );
 			 */
-			$profile_privacy = apply_filters( 'um_profile_privacy_options', array(
-				'Everyone'  => __( 'Everyone', 'ultimate-member' ),
-				'Only me'   => __( 'Only me', 'ultimate-member' )
-			) );
+			$profile_privacy = apply_filters( 'um_profile_privacy_options', $profile_privacy );
 
 			/*
 			 * it's important create key for array equals value of 'metakey'.
@@ -1251,49 +1272,49 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 
 				// private use ( not public list )
 
-				'profile_photo' => array(
-					'title' => __('Profile Photo','ultimate-member'),
-					'metakey' => 'profile_photo',
-					'type' => 'image',
-					'label' => __('Change your profile photo','ultimate-member'),
-					'upload_text' => __('Upload your photo here','ultimate-member'),
-					'icon' => 'fas fa-camera',
-					'crop' => 1,
-					'max_size' => ( UM()->options()->get('profile_photo_max_size') ) ? UM()->options()->get('profile_photo_max_size') : 999999999,
-					'min_width' => str_replace('px','',UM()->options()->get('profile_photosize')),
-					'min_height' => str_replace('px','',UM()->options()->get('profile_photosize')),
+				'profile_photo'        => array(
+					'title'       => __( 'Profile Photo', 'ultimate-member' ),
+					'metakey'     => 'profile_photo',
+					'type'        => 'image',
+					'label'       => __( 'Change your profile photo', 'ultimate-member' ),
+					'upload_text' => __( 'Upload your photo here', 'ultimate-member' ),
+					'icon'        => 'fas fa-camera',
+					'crop'        => 1,
+					'max_size'    => ( UM()->options()->get( 'profile_photo_max_size' ) ) ? UM()->options()->get( 'profile_photo_max_size' ) : 999999999,
+					'min_width'   => str_replace( 'px', '', UM()->options()->get( 'profile_photosize' ) ),
+					'min_height'  => str_replace( 'px', '', UM()->options()->get( 'profile_photosize' ) ),
 					'private_use' => true,
 				),
 
-				'cover_photo' => array(
-					'title' => __('Cover Photo','ultimate-member'),
-					'metakey' => 'cover_photo',
-					'type' => 'image',
-					'label' => __('Change your cover photo','ultimate-member'),
-					'upload_text' => __('Upload profile cover here','ultimate-member'),
-					'icon' => 'far fa-image',
-					'crop' => 2,
-					'max_size' => ( UM()->options()->get('cover_photo_max_size') ) ? UM()->options()->get('cover_photo_max_size') : 999999999,
-					'modal_size' => 'large',
-					'ratio' => str_replace(':1','',UM()->options()->get('profile_cover_ratio')),
-					'min_width' => UM()->options()->get('cover_min_width'),
+				'cover_photo'          => array(
+					'title'       => __( 'Cover Photo', 'ultimate-member' ),
+					'metakey'     => 'cover_photo',
+					'type'        => 'image',
+					'label'       => __( 'Change your cover photo', 'ultimate-member' ),
+					'upload_text' => __( 'Upload profile cover here', 'ultimate-member' ),
+					'icon'        => 'far fa-image',
+					'crop'        => 2,
+					'max_size'    => ( UM()->options()->get( 'cover_photo_max_size' ) ) ? UM()->options()->get( 'cover_photo_max_size' ) : 999999999,
+					'modal_size'  => 'large',
+					'ratio'       => str_replace( ':1', '', UM()->options()->get( 'profile_cover_ratio' ) ),
+					'min_width'   => UM()->options()->get( 'cover_min_width' ),
 					'private_use' => true,
 				),
 
-				'username_b' => array(
-					'title' => __('Username or Email','ultimate-member'),
-					'metakey' => 'username_b',
-					'type' => 'text',
-					'placeholder' => __('Enter your username or email','ultimate-member'),
-					'required' => 1,
-					'public' => 1,
-					'editable' => false,
+				'username_b'           => array(
+					'title'       => __( 'Username or Email', 'ultimate-member' ),
+					'metakey'     => 'username_b',
+					'type'        => 'text',
+					'placeholder' => __( 'Enter your username or email', 'ultimate-member' ),
+					'required'    => 1,
+					'public'      => 1,
+					'editable'    => false,
 					'private_use' => true,
 				),
 
 				// account page use ( not public )
 
-				'profile_privacy'       => array(
+				'profile_privacy'      => array(
 					'title'         => __( 'Profile Privacy', 'ultimate-member' ),
 					'metakey'       => 'profile_privacy',
 					'type'          => 'select',
@@ -1309,7 +1330,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required_perm' => 'can_make_private_profile',
 				),
 
-				'profile_noindex'       => array(
+				'profile_noindex'      => array(
 					'title'         => __( 'Avoid indexing my profile by search engines', 'ultimate-member' ),
 					'metakey'       => 'profile_noindex',
 					'type'          => 'select',
@@ -1320,67 +1341,67 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'      => true,
 					'default'       => UM()->roles()->um_user_can( 'profile_noindex' ) ? '1' : '0',
 					'options'       => array(
-						'0'     => __( 'No', 'ultimate-member' ),
-						'1'     => __( 'Yes', 'ultimate-member' ),
+						'0' => __( 'No', 'ultimate-member' ),
+						'1' => __( 'Yes', 'ultimate-member' ),
 					),
 					'allowclear'    => 0,
 					'account_only'  => true,
 					'required_perm' => 'can_make_private_profile',
 				),
 
-				'hide_in_members'       => array(
-					'title'         => __( 'Hide my profile from directory', 'ultimate-member' ),
-					'metakey'       => 'hide_in_members',
-					'type'          => 'radio',
-					'label'         => __( 'Hide my profile from directory', 'ultimate-member' ),
-					'help'          => __( 'Here you can hide yourself from appearing in public directory', 'ultimate-member' ),
-					'required'      => 0,
-					'public'        => 1,
-					'editable'      => true,
-					'default'       => UM()->member_directory()->get_hide_in_members_default() ? 'Yes' : 'No',
-					'options'       => array(
-						'No'    => __( 'No', 'ultimate-member' ),
-						'Yes'   => __( 'Yes', 'ultimate-member' ),
+				'hide_in_members'      => array(
+					'title'        => __( 'Hide my profile from directory', 'ultimate-member' ),
+					'metakey'      => 'hide_in_members',
+					'type'         => 'radio',
+					'label'        => __( 'Hide my profile from directory', 'ultimate-member' ),
+					'help'         => __( 'Here you can hide yourself from appearing in public directory', 'ultimate-member' ),
+					'required'     => 0,
+					'public'       => 1,
+					'editable'     => true,
+					'default'      => UM()->member_directory()->get_hide_in_members_default() ? 'Yes' : 'No',
+					'options'      => array(
+						'No'  => __( 'No', 'ultimate-member' ),
+						'Yes' => __( 'Yes', 'ultimate-member' ),
 					),
-					'account_only'  => true,
-					'required_opt'  => array( 'members_page', true ),
+					'account_only' => true,
+					'required_opt' => array( 'members_page', true ),
 				),
 
-				'um_show_last_login'    => array(
-					'title'         => __( 'Show my last login?', 'ultimate-member' ),
-					'metakey'       => 'um_show_last_login',
-					'type'          => 'radio',
-					'label'         => __( 'Show my last login?', 'ultimate-member' ),
-					'help'          => __( 'Here you can hide last login field on profile page and card in member directory', 'ultimate-member' ),
-					'required'      => 0,
-					'public'        => 1,
-					'editable'      => true,
-					'default'       => 'yes',
-					'options'       => array(
+				'um_show_last_login'   => array(
+					'title'        => __( 'Show my last login?', 'ultimate-member' ),
+					'metakey'      => 'um_show_last_login',
+					'type'         => 'radio',
+					'label'        => __( 'Show my last login?', 'ultimate-member' ),
+					'help'         => __( 'Here you can hide last login field on profile page and card in member directory', 'ultimate-member' ),
+					'required'     => 0,
+					'public'       => 1,
+					'editable'     => true,
+					'default'      => 'yes',
+					'options'      => array(
 						'no'  => __( 'No', 'ultimate-member' ),
 						'yes' => __( 'Yes', 'ultimate-member' ),
 					),
-					'account_only'  => true,
+					'account_only' => true,
 				),
 
-				'delete_account'        => array(
-					'title'         => __( 'Delete Account', 'ultimate-member' ),
-					'metakey'       => 'delete_account',
-					'type'          => 'radio',
-					'label'         => __( 'Delete Account', 'ultimate-member'),
-					'help'          => __( 'If you confirm, everything related to your profile will be deleted permanently from the site', 'ultimate-member' ),
-					'required'      => 0,
-					'public'        => 1,
-					'editable'      => true,
-					'default'       => __( 'No', 'ultimate-member' ),
-					'options'       => array(
+				'delete_account'       => array(
+					'title'        => __( 'Delete Account', 'ultimate-member' ),
+					'metakey'      => 'delete_account',
+					'type'         => 'radio',
+					'label'        => __( 'Delete Account', 'ultimate-member' ),
+					'help'         => __( 'If you confirm, everything related to your profile will be deleted permanently from the site', 'ultimate-member' ),
+					'required'     => 0,
+					'public'       => 1,
+					'editable'     => true,
+					'default'      => __( 'No', 'ultimate-member' ),
+					'options'      => array(
 						__( 'Yes', 'ultimate-member' ),
 						__( 'No', 'ultimate-member' ),
 					),
-					'account_only'  => true,
+					'account_only' => true,
 				),
 
-				'single_user_password'  => array(
+				'single_user_password' => array(
 					'title'        => __( 'Password', 'ultimate-member' ),
 					'metakey'      => 'single_user_password',
 					'type'         => 'password',
@@ -1391,6 +1412,69 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'account_only' => true,
 				),
 			);
+
+			if ( UM()->is_new_ui() ) {
+				$this->predefined_fields['username_b']['label'] = __( 'Username or Email Address', 'ultimate-member' );
+
+				$this->predefined_fields['profile_noindex'] = array(
+					'title'          => __( 'Avoid indexing my profile by search engines', 'ultimate-member' ),
+					'metakey'        => 'profile_noindex',
+					'type'           => 'bool',
+					'label'          => __( 'Avoid indexing my profile by search engines', 'ultimate-member' ),
+					'checkbox_label' => __( 'Hide my profile for robots', 'ultimate-member' ),
+					'help'           => __( 'Here you can hide yourself from appearing in search engines.', 'ultimate-member' ),
+					'required'       => 0,
+					'public'         => 1,
+					'editable'       => true,
+					'default'        => UM()->roles()->um_user_can( 'profile_noindex' ) ? true : false,
+					'account_only'   => true,
+					'required_perm'  => 'can_make_private_profile',
+				);
+
+				$this->predefined_fields['hide_in_members'] = array(
+					'title'          => __( 'Hide my profile from directory', 'ultimate-member' ),
+					'metakey'        => 'hide_in_members',
+					'type'           => 'bool',
+					'label'          => __( 'Hide my profile from directory', 'ultimate-member' ),
+					'checkbox_label' => __( 'Hide my profile from directory', 'ultimate-member' ),
+					'help'           => __( 'Here you can hide yourself from appearing in public directory.', 'ultimate-member' ),
+					'required'       => 0,
+					'public'         => 1,
+					'editable'       => true,
+					'default'        => UM()->member_directory()->get_hide_in_members_default() ? true : false,
+					'account_only'   => true,
+					'required_opt'   => array( 'members_page', true ),
+				);
+
+				$this->predefined_fields['um_show_last_login'] = array(
+					'title'          => __( 'Show my last login', 'ultimate-member' ),
+					'metakey'        => 'um_show_last_login',
+					'type'           => 'bool',
+					'label'          => __( 'Show my last login', 'ultimate-member' ),
+					'checkbox_label' => __( 'Show my last login', 'ultimate-member' ),
+					'help'           => __( 'Here you can hide last login field on profile page and card in member directory', 'ultimate-member' ),
+					'required'       => 0,
+					'public'         => 1,
+					'editable'       => true,
+					'default'        => true,
+					'account_only'   => true,
+				);
+
+				$this->predefined_fields['gdpr_details'] = array(
+					'content'     => '',
+					'type'        => 'block',
+					'private_use' => true,
+				);
+
+				$this->predefined_fields['use_gdpr_agreement'] = array(
+					'metakey'        => 'use_gdpr_agreement',
+					'type'           => 'bool',
+					'checkbox_label' => __( 'Please confirm that you agree to our privacy policy', 'ultimate-member' ),
+					'required'       => 1,
+					'editable'       => true,
+					'private_use'    => true,
+				);
+			}
 
 			/**
 			 * Filters Ultimate Member predefined fields.
@@ -1525,7 +1609,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				$this->fields_dropdown = $fields_without_metakey;
 			}
 
-			$custom = $this->custom_fields;
+			$custom     = $this->custom_fields;
 			$predefined = $this->predefined_fields;
 
 			if ( $exclude_types ) {
@@ -1576,34 +1660,34 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 */
 		function validation_types() {
 
-			$array[0]                          = __('None','ultimate-member');
-			$array['alphabetic']               = __('Alphabetic value only','ultimate-member');
-			$array['alpha_numeric']            = __('Alpha-numeric value','ultimate-member');
-			$array['english']                  = __('English letters only','ultimate-member');
-			$array['facebook_url']             = __('Facebook URL','ultimate-member');
-			$array['instagram_url']            = __('Instagram URL','ultimate-member');
-			$array['linkedin_url']             = __('LinkedIn URL','ultimate-member');
-			$array['lowercase']                = __('Lowercase only','ultimate-member');
-			$array['numeric']                  = __('Numeric value only','ultimate-member');
-			$array['phone_number']             = __('Phone Number','ultimate-member');
-			$array['skype']                    = __('Skype ID','ultimate-member');
+			$array[0]                          = __( 'None', 'ultimate-member' );
+			$array['alphabetic']               = __( 'Alphabetic value only', 'ultimate-member' );
+			$array['alpha_numeric']            = __( 'Alpha-numeric value', 'ultimate-member' );
+			$array['english']                  = __( 'English letters only', 'ultimate-member' );
+			$array['facebook_url']             = __( 'Facebook URL', 'ultimate-member' );
+			$array['instagram_url']            = __( 'Instagram URL', 'ultimate-member' );
+			$array['linkedin_url']             = __( 'LinkedIn URL', 'ultimate-member' );
+			$array['lowercase']                = __( 'Lowercase only', 'ultimate-member' );
+			$array['numeric']                  = __( 'Numeric value only', 'ultimate-member' );
+			$array['phone_number']             = __( 'Phone Number', 'ultimate-member' );
+			$array['skype']                    = __( 'Skype ID', 'ultimate-member' );
 			$array['soundcloud']               = __( 'SoundCloud Profile', 'ultimate-member' );
 			$array['twitter_url']              = __( 'X (formerly Twitter) URL', 'ultimate-member' );
-			$array['is_email']                 = __('Email( Not Unique )','ultimate-member');
-			$array['unique_email']             = __('Unique Email','ultimate-member');
-			$array['unique_value']             = __('Unique Metakey value','ultimate-member');
-			$array['unique_username']          = __('Unique Username','ultimate-member');
-			$array['unique_username_or_email'] = __('Unique Username/Email','ultimate-member');
-			$array['url']                      = __('Website URL','ultimate-member');
-			$array['youtube_url']              = __('YouTube Profile','ultimate-member');
-			$array['youtube_video']            = __('YouTube Video','ultimate-member');
-			$array['spotify_url']              = __('Spotify URL','ultimate-member');
-			$array['telegram_url']             = __('Telegram URL','ultimate-member');
-			$array['discord']                  = __('Discord ID','ultimate-member');
-			$array['tiktok_url']               = __('TikTok URL','ultimate-member');
-			$array['twitch_url']               = __('Twitch URL','ultimate-member');
-			$array['reddit_url']               = __('Reddit URL','ultimate-member');
-			$array['custom']                   = __('Custom Validation','ultimate-member');
+			$array['is_email']                 = __( 'Email( Not Unique )', 'ultimate-member' );
+			$array['unique_email']             = __( 'Unique Email', 'ultimate-member' );
+			$array['unique_value']             = __( 'Unique Metakey value', 'ultimate-member' );
+			$array['unique_username']          = __( 'Unique Username', 'ultimate-member' );
+			$array['unique_username_or_email'] = __( 'Unique Username/Email', 'ultimate-member' );
+			$array['url']                      = __( 'Website URL', 'ultimate-member' );
+			$array['youtube_url']              = __( 'YouTube Profile', 'ultimate-member' );
+			$array['youtube_video']            = __( 'YouTube Video', 'ultimate-member' );
+			$array['spotify_url']              = __( 'Spotify URL', 'ultimate-member' );
+			$array['telegram_url']             = __( 'Telegram URL', 'ultimate-member' );
+			$array['discord']                  = __( 'Discord ID', 'ultimate-member' );
+			$array['tiktok_url']               = __( 'TikTok URL', 'ultimate-member' );
+			$array['twitch_url']               = __( 'Twitch URL', 'ultimate-member' );
+			$array['reddit_url']               = __( 'Reddit URL', 'ultimate-member' );
+			$array['custom']                   = __( 'Custom Validation', 'ultimate-member' );
 
 			/**
 			 * UM hook
@@ -1629,458 +1713,457 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return $array;
 		}
 
-
 		/**
-		 * Get predefined options
+		 * Get predefined options.
 		 *
-		 * @param $data
+		 * @param string $data
 		 *
-		 * @return array|mixed|void
+		 * @return array
 		 */
-		function get( $data ) {
-			switch ( $data ) {
+		public function get( $data ) {
+			$array = array();
 
+			switch ( $data ) {
 				case 'languages':
 					$array = array(
-						"aa" => __("Afar",'ultimate-member'),
-						"ab" => __("Abkhazian",'ultimate-member'),
-						"ae" => __("Avestan",'ultimate-member'),
-						"af" => __("Afrikaans",'ultimate-member'),
-						"ak" => __("Akan",'ultimate-member'),
-						"am" => __("Amharic",'ultimate-member'),
-						"an" => __("Aragonese",'ultimate-member'),
-						"ar" => __("Arabic",'ultimate-member'),
-						"as" => __("Assamese",'ultimate-member'),
-						"av" => __("Avaric",'ultimate-member'),
-						"ay" => __("Aymara",'ultimate-member'),
-						"az" => __("Azerbaijani",'ultimate-member'),
-						"ba" => __("Bashkir",'ultimate-member'),
-						"be" => __("Belarusian",'ultimate-member'),
-						"bg" => __("Bulgarian",'ultimate-member'),
-						"bh" => __("Bihari",'ultimate-member'),
-						"bi" => __("Bislama",'ultimate-member'),
-						"bm" => __("Bambara",'ultimate-member'),
-						"bn" => __("Bengali",'ultimate-member'),
-						"bo" => __("Tibetan",'ultimate-member'),
-						"br" => __("Breton",'ultimate-member'),
-						"bs" => __("Bosnian",'ultimate-member'),
-						"ca" => __("Catalan",'ultimate-member'),
-						"ce" => __("Chechen",'ultimate-member'),
-						"ch" => __("Chamorro",'ultimate-member'),
-						"co" => __("Corsican",'ultimate-member'),
-						"cr" => __("Cree",'ultimate-member'),
-						"cs" => __("Czech",'ultimate-member'),
-						"cu" => __("Church Slavic",'ultimate-member'),
-						"cv" => __("Chuvash",'ultimate-member'),
-						"cy" => __("Welsh",'ultimate-member'),
-						"da" => __("Danish",'ultimate-member'),
-						"de" => __("German",'ultimate-member'),
-						"dv" => __("Divehi",'ultimate-member'),
-						"dz" => __("Dzongkha",'ultimate-member'),
-						"ee" => __("Ewe",'ultimate-member'),
-						"el" => __("Greek",'ultimate-member'),
-						"en" => __("English",'ultimate-member'),
-						"eo" => __("Esperanto",'ultimate-member'),
-						"es" => __("Spanish",'ultimate-member'),
-						"et" => __("Estonian",'ultimate-member'),
-						"eu" => __("Basque",'ultimate-member'),
-						"fa" => __("Persian",'ultimate-member'),
-						"ff" => __("Fulah",'ultimate-member'),
-						"fi" => __("Finnish",'ultimate-member'),
-						"fj" => __("Fijian",'ultimate-member'),
-						"fo" => __("Faroese",'ultimate-member'),
-						"fr" => __("French",'ultimate-member'),
-						"fy" => __("Western Frisian",'ultimate-member'),
-						"ga" => __("Irish",'ultimate-member'),
-						"gd" => __("Scottish Gaelic",'ultimate-member'),
-						"gl" => __("Galician",'ultimate-member'),
-						"gn" => __("Guarani",'ultimate-member'),
-						"gu" => __("Gujarati",'ultimate-member'),
-						"gv" => __("Manx",'ultimate-member'),
-						"ha" => __("Hausa",'ultimate-member'),
-						"he" => __("Hebrew",'ultimate-member'),
-						"hi" => __("Hindi",'ultimate-member'),
-						"ho" => __("Hiri Motu",'ultimate-member'),
-						"hr" => __("Croatian",'ultimate-member'),
-						"ht" => __("Haitian",'ultimate-member'),
-						"hu" => __("Hungarian",'ultimate-member'),
-						"hy" => __("Armenian",'ultimate-member'),
-						"hz" => __("Herero",'ultimate-member'),
-						"ia" => __("Interlingua (International Auxiliary Language Association)",'ultimate-member'),
-						"id" => __("Indonesian",'ultimate-member'),
-						"ie" => __("Interlingue",'ultimate-member'),
-						"ig" => __("Igbo",'ultimate-member'),
-						"ii" => __("Sichuan Yi",'ultimate-member'),
-						"ik" => __("Inupiaq",'ultimate-member'),
-						"io" => __("Ido",'ultimate-member'),
-						"is" => __("Icelandic",'ultimate-member'),
-						"it" => __("Italian",'ultimate-member'),
-						"iu" => __("Inuktitut",'ultimate-member'),
-						"ja" => __("Japanese",'ultimate-member'),
-						"jv" => __("Javanese",'ultimate-member'),
-						"ka" => __("Kartuli",'ultimate-member'),
-						"kg" => __("Kongo",'ultimate-member'),
-						"ki" => __("Kikuyu",'ultimate-member'),
-						"kj" => __("Kwanyama",'ultimate-member'),
-						"kk" => __("Kazakh",'ultimate-member'),
-						"kl" => __("Kalaallisut",'ultimate-member'),
-						"km" => __("Khmer",'ultimate-member'),
-						"kn" => __("Kannada",'ultimate-member'),
-						"ko" => __("Korean",'ultimate-member'),
-						"kr" => __("Kanuri",'ultimate-member'),
-						"ks" => __("Kashmiri",'ultimate-member'),
-						"ku" => __("Kurdish",'ultimate-member'),
-						"kv" => __("Komi",'ultimate-member'),
-						"kw" => __("Cornish",'ultimate-member'),
-						"ky" => __("Kirghiz",'ultimate-member'),
-						"la" => __("Latin",'ultimate-member'),
-						"lb" => __("Luxembourgish",'ultimate-member'),
-						"lg" => __("Ganda",'ultimate-member'),
-						"li" => __("Limburgish",'ultimate-member'),
-						"ln" => __("Lingala",'ultimate-member'),
-						"lo" => __("Lao",'ultimate-member'),
-						"lt" => __("Lithuanian",'ultimate-member'),
-						"lu" => __("Luba-Katanga",'ultimate-member'),
-						"lv" => __("Latvian",'ultimate-member'),
-						"mg" => __("Malagasy",'ultimate-member'),
-						"mh" => __("Marshallese",'ultimate-member'),
-						"mi" => __("Maori",'ultimate-member'),
-						"mk" => __("Macedonian",'ultimate-member'),
-						"ml" => __("Malayalam",'ultimate-member'),
-						"mn" => __("Mongolian",'ultimate-member'),
-						"mr" => __("Marathi",'ultimate-member'),
-						"ms" => __("Malay",'ultimate-member'),
-						"mt" => __("Maltese",'ultimate-member'),
-						"my" => __("Burmese",'ultimate-member'),
-						"na" => __("Nauru",'ultimate-member'),
-						"nb" => __("Norwegian Bokmal",'ultimate-member'),
-						"nd" => __("North Ndebele",'ultimate-member'),
-						"ne" => __("Nepali",'ultimate-member'),
-						"ng" => __("Ndonga",'ultimate-member'),
-						"nl" => __("Dutch",'ultimate-member'),
-						"nn" => __("Norwegian Nynorsk",'ultimate-member'),
-						"no" => __("Norwegian",'ultimate-member'),
-						"nr" => __("South Ndebele",'ultimate-member'),
-						"nv" => __("Navajo",'ultimate-member'),
-						"ny" => __("Chichewa",'ultimate-member'),
-						"oc" => __("Occitan",'ultimate-member'),
-						"oj" => __("Ojibwa",'ultimate-member'),
-						"om" => __("Oromo",'ultimate-member'),
-						"or" => __("Oriya",'ultimate-member'),
-						"os" => __("Ossetian",'ultimate-member'),
-						"pa" => __("Panjabi",'ultimate-member'),
-						"pi" => __("Pali",'ultimate-member'),
-						"pl" => __("Polish",'ultimate-member'),
-						"ps" => __("Pashto",'ultimate-member'),
-						"pt" => __("Portuguese",'ultimate-member'),
-						"qu" => __("Quechua",'ultimate-member'),
-						"rm" => __("Raeto-Romance",'ultimate-member'),
-						"rn" => __("Kirundi",'ultimate-member'),
-						"ro" => __("Romanian",'ultimate-member'),
-						"ru" => __("Russian",'ultimate-member'),
-						"rw" => __("Kinyarwanda",'ultimate-member'),
-						"sa" => __("Sanskrit",'ultimate-member'),
-						"sc" => __("Sardinian",'ultimate-member'),
-						"sd" => __("Sindhi",'ultimate-member'),
-						"se" => __("Northern Sami",'ultimate-member'),
-						"sg" => __("Sango",'ultimate-member'),
-						"si" => __("Sinhala",'ultimate-member'),
-						"sk" => __("Slovak",'ultimate-member'),
-						"sl" => __("Slovenian",'ultimate-member'),
-						"sm" => __("Samoan",'ultimate-member'),
-						"sn" => __("Shona",'ultimate-member'),
-						"so" => __("Somali",'ultimate-member'),
-						"sq" => __("Albanian",'ultimate-member'),
-						"sr" => __("Serbian",'ultimate-member'),
-						"ss" => __("Swati",'ultimate-member'),
-						"st" => __("Southern Sotho",'ultimate-member'),
-						"su" => __("Sundanese",'ultimate-member'),
-						"sv" => __("Swedish",'ultimate-member'),
-						"sw" => __("Swahili",'ultimate-member'),
-						"ta" => __("Tamil",'ultimate-member'),
-						"te" => __("Telugu",'ultimate-member'),
-						"tg" => __("Tajik",'ultimate-member'),
-						"th" => __("Thai",'ultimate-member'),
-						"ti" => __("Tigrinya",'ultimate-member'),
-						"tk" => __("Turkmen",'ultimate-member'),
-						"tl" => __("Tagalog",'ultimate-member'),
-						"tn" => __("Tswana",'ultimate-member'),
-						"to" => __("Tonga",'ultimate-member'),
-						"tr" => __("Turkish",'ultimate-member'),
-						"ts" => __("Tsonga",'ultimate-member'),
-						"tt" => __("Tatar",'ultimate-member'),
-						"tw" => __("Twi",'ultimate-member'),
-						"ty" => __("Tahitian",'ultimate-member'),
-						"ug" => __("Uighur",'ultimate-member'),
-						"uk" => __("Ukrainian",'ultimate-member'),
-						"ur" => __("Urdu",'ultimate-member'),
-						"uz" => __("Uzbek",'ultimate-member'),
-						"ve" => __("Venda",'ultimate-member'),
-						"vi" => __("Vietnamese",'ultimate-member'),
-						"vo" => __("Volapuk",'ultimate-member'),
-						"wa" => __("Walloon",'ultimate-member'),
-						"wo" => __("Wolof",'ultimate-member'),
-						"xh" => __("Xhosa",'ultimate-member'),
-						"yi" => __("Yiddish",'ultimate-member'),
-						"yo" => __("Yoruba",'ultimate-member'),
-						"za" => __("Zhuang",'ultimate-member'),
-						"zh" => __("Chinese",'ultimate-member'),
-						"zu" => __("Zulu",'ultimate-member')
+						'aa' => __( 'Afar', 'ultimate-member' ),
+						'ab' => __( 'Abkhazian', 'ultimate-member' ),
+						'ae' => __( 'Avestan', 'ultimate-member' ),
+						'af' => __( 'Afrikaans', 'ultimate-member' ),
+						'ak' => __( 'Akan', 'ultimate-member' ),
+						'am' => __( 'Amharic', 'ultimate-member' ),
+						'an' => __( 'Aragonese', 'ultimate-member' ),
+						'ar' => __( 'Arabic', 'ultimate-member' ),
+						'as' => __( 'Assamese', 'ultimate-member' ),
+						'av' => __( 'Avaric', 'ultimate-member' ),
+						'ay' => __( 'Aymara', 'ultimate-member' ),
+						'az' => __( 'Azerbaijani', 'ultimate-member' ),
+						'ba' => __( 'Bashkir', 'ultimate-member' ),
+						'be' => __( 'Belarusian', 'ultimate-member' ),
+						'bg' => __( 'Bulgarian', 'ultimate-member' ),
+						'bh' => __( 'Bihari', 'ultimate-member' ),
+						'bi' => __( 'Bislama', 'ultimate-member' ),
+						'bm' => __( 'Bambara', 'ultimate-member' ),
+						'bn' => __( 'Bengali', 'ultimate-member' ),
+						'bo' => __( 'Tibetan', 'ultimate-member' ),
+						'br' => __( 'Breton', 'ultimate-member' ),
+						'bs' => __( 'Bosnian', 'ultimate-member' ),
+						'ca' => __( 'Catalan', 'ultimate-member' ),
+						'ce' => __( 'Chechen', 'ultimate-member' ),
+						'ch' => __( 'Chamorro', 'ultimate-member' ),
+						'co' => __( 'Corsican', 'ultimate-member' ),
+						'cr' => __( 'Cree', 'ultimate-member' ),
+						'cs' => __( 'Czech', 'ultimate-member' ),
+						'cu' => __( 'Church Slavic', 'ultimate-member' ),
+						'cv' => __( 'Chuvash', 'ultimate-member' ),
+						'cy' => __( 'Welsh', 'ultimate-member' ),
+						'da' => __( 'Danish', 'ultimate-member' ),
+						'de' => __( 'German', 'ultimate-member' ),
+						'dv' => __( 'Divehi', 'ultimate-member' ),
+						'dz' => __( 'Dzongkha', 'ultimate-member' ),
+						'ee' => __( 'Ewe', 'ultimate-member' ),
+						'el' => __( 'Greek', 'ultimate-member' ),
+						'en' => __( 'English', 'ultimate-member' ),
+						'eo' => __( 'Esperanto', 'ultimate-member' ),
+						'es' => __( 'Spanish', 'ultimate-member' ),
+						'et' => __( 'Estonian', 'ultimate-member' ),
+						'eu' => __( 'Basque', 'ultimate-member' ),
+						'fa' => __( 'Persian', 'ultimate-member' ),
+						'ff' => __( 'Fulah', 'ultimate-member' ),
+						'fi' => __( 'Finnish', 'ultimate-member' ),
+						'fj' => __( 'Fijian', 'ultimate-member' ),
+						'fo' => __( 'Faroese', 'ultimate-member' ),
+						'fr' => __( 'French', 'ultimate-member' ),
+						'fy' => __( 'Western Frisian', 'ultimate-member' ),
+						'ga' => __( 'Irish', 'ultimate-member' ),
+						'gd' => __( 'Scottish Gaelic', 'ultimate-member' ),
+						'gl' => __( 'Galician', 'ultimate-member' ),
+						'gn' => __( 'Guarani', 'ultimate-member' ),
+						'gu' => __( 'Gujarati', 'ultimate-member' ),
+						'gv' => __( 'Manx', 'ultimate-member' ),
+						'ha' => __( 'Hausa', 'ultimate-member' ),
+						'he' => __( 'Hebrew', 'ultimate-member' ),
+						'hi' => __( 'Hindi', 'ultimate-member' ),
+						'ho' => __( 'Hiri Motu', 'ultimate-member' ),
+						'hr' => __( 'Croatian', 'ultimate-member' ),
+						'ht' => __( 'Haitian', 'ultimate-member' ),
+						'hu' => __( 'Hungarian', 'ultimate-member' ),
+						'hy' => __( 'Armenian', 'ultimate-member' ),
+						'hz' => __( 'Herero', 'ultimate-member' ),
+						'ia' => __( 'Interlingua (International Auxiliary Language Association)', 'ultimate-member' ),
+						'id' => __( 'Indonesian', 'ultimate-member' ),
+						'ie' => __( 'Interlingue', 'ultimate-member' ),
+						'ig' => __( 'Igbo', 'ultimate-member' ),
+						'ii' => __( 'Sichuan Yi', 'ultimate-member' ),
+						'ik' => __( 'Inupiaq', 'ultimate-member' ),
+						'io' => __( 'Ido', 'ultimate-member' ),
+						'is' => __( 'Icelandic', 'ultimate-member' ),
+						'it' => __( 'Italian', 'ultimate-member' ),
+						'iu' => __( 'Inuktitut', 'ultimate-member' ),
+						'ja' => __( 'Japanese', 'ultimate-member' ),
+						'jv' => __( 'Javanese', 'ultimate-member' ),
+						'ka' => __( 'Kartuli', 'ultimate-member' ),
+						'kg' => __( 'Kongo', 'ultimate-member' ),
+						'ki' => __( 'Kikuyu', 'ultimate-member' ),
+						'kj' => __( 'Kwanyama', 'ultimate-member' ),
+						'kk' => __( 'Kazakh', 'ultimate-member' ),
+						'kl' => __( 'Kalaallisut', 'ultimate-member' ),
+						'km' => __( 'Khmer', 'ultimate-member' ),
+						'kn' => __( 'Kannada', 'ultimate-member' ),
+						'ko' => __( 'Korean', 'ultimate-member' ),
+						'kr' => __( 'Kanuri', 'ultimate-member' ),
+						'ks' => __( 'Kashmiri', 'ultimate-member' ),
+						'ku' => __( 'Kurdish', 'ultimate-member' ),
+						'kv' => __( 'Komi', 'ultimate-member' ),
+						'kw' => __( 'Cornish', 'ultimate-member' ),
+						'ky' => __( 'Kirghiz', 'ultimate-member' ),
+						'la' => __( 'Latin', 'ultimate-member' ),
+						'lb' => __( 'Luxembourgish', 'ultimate-member' ),
+						'lg' => __( 'Ganda', 'ultimate-member' ),
+						'li' => __( 'Limburgish', 'ultimate-member' ),
+						'ln' => __( 'Lingala', 'ultimate-member' ),
+						'lo' => __( 'Lao', 'ultimate-member' ),
+						'lt' => __( 'Lithuanian', 'ultimate-member' ),
+						'lu' => __( 'Luba-Katanga', 'ultimate-member' ),
+						'lv' => __( 'Latvian', 'ultimate-member' ),
+						'mg' => __( 'Malagasy', 'ultimate-member' ),
+						'mh' => __( 'Marshallese', 'ultimate-member' ),
+						'mi' => __( 'Maori', 'ultimate-member' ),
+						'mk' => __( 'Macedonian', 'ultimate-member' ),
+						'ml' => __( 'Malayalam', 'ultimate-member' ),
+						'mn' => __( 'Mongolian', 'ultimate-member' ),
+						'mr' => __( 'Marathi', 'ultimate-member' ),
+						'ms' => __( 'Malay', 'ultimate-member' ),
+						'mt' => __( 'Maltese', 'ultimate-member' ),
+						'my' => __( 'Burmese', 'ultimate-member' ),
+						'na' => __( 'Nauru', 'ultimate-member' ),
+						'nb' => __( 'Norwegian Bokmal', 'ultimate-member' ),
+						'nd' => __( 'North Ndebele', 'ultimate-member' ),
+						'ne' => __( 'Nepali', 'ultimate-member' ),
+						'ng' => __( 'Ndonga', 'ultimate-member' ),
+						'nl' => __( 'Dutch', 'ultimate-member' ),
+						'nn' => __( 'Norwegian Nynorsk', 'ultimate-member' ),
+						'no' => __( 'Norwegian', 'ultimate-member' ),
+						'nr' => __( 'South Ndebele', 'ultimate-member' ),
+						'nv' => __( 'Navajo', 'ultimate-member' ),
+						'ny' => __( 'Chichewa', 'ultimate-member' ),
+						'oc' => __( 'Occitan', 'ultimate-member' ),
+						'oj' => __( 'Ojibwa', 'ultimate-member' ),
+						'om' => __( 'Oromo', 'ultimate-member' ),
+						'or' => __( 'Oriya', 'ultimate-member' ),
+						'os' => __( 'Ossetian', 'ultimate-member' ),
+						'pa' => __( 'Panjabi', 'ultimate-member' ),
+						'pi' => __( 'Pali', 'ultimate-member' ),
+						'pl' => __( 'Polish', 'ultimate-member' ),
+						'ps' => __( 'Pashto', 'ultimate-member' ),
+						'pt' => __( 'Portuguese', 'ultimate-member' ),
+						'qu' => __( 'Quechua', 'ultimate-member' ),
+						'rm' => __( 'Raeto-Romance', 'ultimate-member' ),
+						'rn' => __( 'Kirundi', 'ultimate-member' ),
+						'ro' => __( 'Romanian', 'ultimate-member' ),
+						'ru' => __( 'Russian', 'ultimate-member' ),
+						'rw' => __( 'Kinyarwanda', 'ultimate-member' ),
+						'sa' => __( 'Sanskrit', 'ultimate-member' ),
+						'sc' => __( 'Sardinian', 'ultimate-member' ),
+						'sd' => __( 'Sindhi', 'ultimate-member' ),
+						'se' => __( 'Northern Sami', 'ultimate-member' ),
+						'sg' => __( 'Sango', 'ultimate-member' ),
+						'si' => __( 'Sinhala', 'ultimate-member' ),
+						'sk' => __( 'Slovak', 'ultimate-member' ),
+						'sl' => __( 'Slovenian', 'ultimate-member' ),
+						'sm' => __( 'Samoan', 'ultimate-member' ),
+						'sn' => __( 'Shona', 'ultimate-member' ),
+						'so' => __( 'Somali', 'ultimate-member' ),
+						'sq' => __( 'Albanian', 'ultimate-member' ),
+						'sr' => __( 'Serbian', 'ultimate-member' ),
+						'ss' => __( 'Swati', 'ultimate-member' ),
+						'st' => __( 'Southern Sotho', 'ultimate-member' ),
+						'su' => __( 'Sundanese', 'ultimate-member' ),
+						'sv' => __( 'Swedish', 'ultimate-member' ),
+						'sw' => __( 'Swahili', 'ultimate-member' ),
+						'ta' => __( 'Tamil', 'ultimate-member' ),
+						'te' => __( 'Telugu', 'ultimate-member' ),
+						'tg' => __( 'Tajik', 'ultimate-member' ),
+						'th' => __( 'Thai', 'ultimate-member' ),
+						'ti' => __( 'Tigrinya', 'ultimate-member' ),
+						'tk' => __( 'Turkmen', 'ultimate-member' ),
+						'tl' => __( 'Tagalog', 'ultimate-member' ),
+						'tn' => __( 'Tswana', 'ultimate-member' ),
+						'to' => __( 'Tonga', 'ultimate-member' ),
+						'tr' => __( 'Turkish', 'ultimate-member' ),
+						'ts' => __( 'Tsonga', 'ultimate-member' ),
+						'tt' => __( 'Tatar', 'ultimate-member' ),
+						'tw' => __( 'Twi', 'ultimate-member' ),
+						'ty' => __( 'Tahitian', 'ultimate-member' ),
+						'ug' => __( 'Uighur', 'ultimate-member' ),
+						'uk' => __( 'Ukrainian', 'ultimate-member' ),
+						'ur' => __( 'Urdu', 'ultimate-member' ),
+						'uz' => __( 'Uzbek', 'ultimate-member' ),
+						've' => __( 'Venda', 'ultimate-member' ),
+						'vi' => __( 'Vietnamese', 'ultimate-member' ),
+						'vo' => __( 'Volapuk', 'ultimate-member' ),
+						'wa' => __( 'Walloon', 'ultimate-member' ),
+						'wo' => __( 'Wolof', 'ultimate-member' ),
+						'xh' => __( 'Xhosa', 'ultimate-member' ),
+						'yi' => __( 'Yiddish', 'ultimate-member' ),
+						'yo' => __( 'Yoruba', 'ultimate-member' ),
+						'za' => __( 'Zhuang', 'ultimate-member' ),
+						'zh' => __( 'Chinese', 'ultimate-member' ),
+						'zu' => __( 'Zulu', 'ultimate-member' ),
 					);
 					break;
 
 				case 'countries':
-					$array = array (
-						'AF' => __('Afghanistan','ultimate-member'),
-						'AX' => __('Åland Islands','ultimate-member'),
-						'AL' => __('Albania','ultimate-member'),
-						'DZ' => __('Algeria','ultimate-member'),
-						'AS' => __('American Samoa','ultimate-member'),
-						'AD' => __('Andorra','ultimate-member'),
-						'AO' => __('Angola','ultimate-member'),
-						'AI' => __('Anguilla','ultimate-member'),
-						'AQ' => __('Antarctica','ultimate-member'),
-						'AG' => __('Antigua and Barbuda','ultimate-member'),
-						'AR' => __('Argentina','ultimate-member'),
-						'AM' => __('Armenia','ultimate-member'),
-						'AW' => __('Aruba','ultimate-member'),
-						'AU' => __('Australia','ultimate-member'),
-						'AT' => __('Austria','ultimate-member'),
-						'AZ' => __('Azerbaijan','ultimate-member'),
-						'BS' => __('Bahamas','ultimate-member'),
-						'BH' => __('Bahrain','ultimate-member'),
-						'BD' => __('Bangladesh','ultimate-member'),
-						'BB' => __('Barbados','ultimate-member'),
-						'BY' => __('Belarus','ultimate-member'),
-						'BE' => __('Belgium','ultimate-member'),
-						'BZ' => __('Belize','ultimate-member'),
-						'BJ' => __('Benin','ultimate-member'),
-						'BM' => __('Bermuda','ultimate-member'),
-						'BT' => __('Bhutan','ultimate-member'),
-						'BO' => __('Bolivia, Plurinational State of','ultimate-member'),
-						'BA' => __('Bosnia and Herzegovina','ultimate-member'),
-						'BW' => __('Botswana','ultimate-member'),
-						'BV' => __('Bouvet Island','ultimate-member'),
-						'BR' => __('Brazil','ultimate-member'),
-						'IO' => __('British Indian Ocean Territory','ultimate-member'),
-						'BN' => __('Brunei Darussalam','ultimate-member'),
-						'BG' => __('Bulgaria','ultimate-member'),
-						'BF' => __('Burkina Faso','ultimate-member'),
-						'BI' => __('Burundi','ultimate-member'),
-						'KH' => __('Cambodia','ultimate-member'),
-						'CM' => __('Cameroon','ultimate-member'),
-						'CA' => __('Canada','ultimate-member'),
-						'CV' => __('Cape Verde','ultimate-member'),
-						'KY' => __('Cayman Islands','ultimate-member'),
-						'CF' => __('Central African Republic','ultimate-member'),
-						'TD' => __('Chad','ultimate-member'),
-						'CL' => __('Chile','ultimate-member'),
-						'CN' => __('China','ultimate-member'),
-						'CX' => __('Christmas Island','ultimate-member'),
-						'CC' => __('Cocos (Keeling) Islands','ultimate-member'),
-						'CO' => __('Colombia','ultimate-member'),
-						'KM' => __('Comoros','ultimate-member'),
-						'CG' => __('Congo','ultimate-member'),
-						'CD' => __('Congo, the Democratic Republic of the','ultimate-member'),
-						'CK' => __('Cook Islands','ultimate-member'),
-						'CR' => __('Costa Rica','ultimate-member'),
-						'CI' => __("Côte d'Ivoire",'ultimate-member'),
-						'HR' => __('Croatia','ultimate-member'),
-						'CU' => __('Cuba','ultimate-member'),
-						'CY' => __('Cyprus','ultimate-member'),
-						'CZ' => __('Czech Republic','ultimate-member'),
-						'DK' => __('Denmark','ultimate-member'),
-						'DJ' => __('Djibouti','ultimate-member'),
-						'DM' => __('Dominica','ultimate-member'),
-						'DO' => __('Dominican Republic','ultimate-member'),
-						'EC' => __('Ecuador','ultimate-member'),
-						'EG' => __('Egypt','ultimate-member'),
-						'SV' => __('El Salvador','ultimate-member'),
-						'GQ' => __('Equatorial Guinea','ultimate-member'),
-						'ER' => __('Eritrea','ultimate-member'),
-						'EE' => __('Estonia','ultimate-member'),
-						'ET' => __('Ethiopia','ultimate-member'),
-						'FK' => __('Falkland Islands (Malvinas)','ultimate-member'),
-						'FO' => __('Faroe Islands','ultimate-member'),
-						'FJ' => __('Fiji','ultimate-member'),
-						'FI' => __('Finland','ultimate-member'),
-						'FR' => __('France','ultimate-member'),
-						'GF' => __('French Guiana','ultimate-member'),
-						'PF' => __('French Polynesia','ultimate-member'),
-						'TF' => __('French Southern Territories','ultimate-member'),
-						'GA' => __('Gabon','ultimate-member'),
-						'GM' => __('Gambia','ultimate-member'),
-						'GE' => __('Sakartvelo','ultimate-member'),
-						'DE' => __('Germany','ultimate-member'),
-						'GH' => __('Ghana','ultimate-member'),
-						'GI' => __('Gibraltar','ultimate-member'),
-						'GR' => __('Greece','ultimate-member'),
-						'GL' => __('Greenland','ultimate-member'),
-						'GD' => __('Grenada','ultimate-member'),
-						'GP' => __('Guadeloupe','ultimate-member'),
-						'GU' => __('Guam','ultimate-member'),
-						'GT' => __('Guatemala','ultimate-member'),
-						'GG' => __('Guernsey','ultimate-member'),
-						'GN' => __('Guinea','ultimate-member'),
-						'GW' => __('Guinea-Bissau','ultimate-member'),
-						'GY' => __('Guyana','ultimate-member'),
-						'HT' => __('Haiti','ultimate-member'),
-						'HM' => __('Heard Island and McDonald Islands','ultimate-member'),
-						'VA' => __('Holy See (Vatican City State)','ultimate-member'),
-						'HN' => __('Honduras','ultimate-member'),
-						'HK' => __('Hong Kong','ultimate-member'),
-						'HU' => __('Hungary','ultimate-member'),
-						'IS' => __('Iceland','ultimate-member'),
-						'IN' => __('India','ultimate-member'),
-						'ID' => __('Indonesia','ultimate-member'),
-						'IR' => __('Iran, Islamic Republic of','ultimate-member'),
-						'IQ' => __('Iraq','ultimate-member'),
-						'IE' => __('Ireland','ultimate-member'),
-						'IM' => __('Isle of Man','ultimate-member'),
-						'IL' => __('Israel','ultimate-member'),
-						'IT' => __('Italy','ultimate-member'),
-						'JM' => __('Jamaica','ultimate-member'),
-						'JP' => __('Japan','ultimate-member'),
-						'JE' => __('Jersey','ultimate-member'),
-						'JO' => __('Jordan','ultimate-member'),
-						'KZ' => __('Kazakhstan','ultimate-member'),
-						'KE' => __('Kenya','ultimate-member'),
-						'KI' => __('Kiribati','ultimate-member'),
-						'KP' => __("Korea, Democratic People's Republic of",'ultimate-member'),
-						'KR' => __('Korea, Republic of','ultimate-member'),
-						'KW' => __('Kuwait','ultimate-member'),
-						'KG' => __('Kyrgyzstan','ultimate-member'),
-						'LA' => __("Lao People's Democratic Republic",'ultimate-member'),
-						'LV' => __('Latvia','ultimate-member'),
-						'LB' => __('Lebanon','ultimate-member'),
-						'LS' => __('Lesotho','ultimate-member'),
-						'LR' => __('Liberia','ultimate-member'),
-						'LY' => __('Libyan Arab Jamahiriya','ultimate-member'),
-						'LI' => __('Liechtenstein','ultimate-member'),
-						'LT' => __('Lithuania','ultimate-member'),
-						'LU' => __('Luxembourg','ultimate-member'),
-						'MO' => __('Macao','ultimate-member'),
-						'MK' => __('Macedonia, the former Yugoslav Republic of','ultimate-member'),
-						'MG' => __('Madagascar','ultimate-member'),
-						'MW' => __('Malawi','ultimate-member'),
-						'MY' => __('Malaysia','ultimate-member'),
-						'MV' => __('Maldives','ultimate-member'),
-						'ML' => __('Mali','ultimate-member'),
-						'MT' => __('Malta','ultimate-member'),
-						'MH' => __('Marshall Islands','ultimate-member'),
-						'MQ' => __('Martinique','ultimate-member'),
-						'MR' => __('Mauritania','ultimate-member'),
-						'MU' => __('Mauritius','ultimate-member'),
-						'YT' => __('Mayotte','ultimate-member'),
-						'MX' => __('Mexico','ultimate-member'),
-						'FM' => __('Micronesia, Federated States of','ultimate-member'),
-						'MD' => __('Moldova, Republic of','ultimate-member'),
-						'MC' => __('Monaco','ultimate-member'),
-						'MN' => __('Mongolia','ultimate-member'),
-						'ME' => __('Montenegro','ultimate-member'),
-						'MS' => __('Montserrat','ultimate-member'),
-						'MA' => __('Morocco','ultimate-member'),
-						'MZ' => __('Mozambique','ultimate-member'),
-						'MM' => __('Myanmar','ultimate-member'),
-						'NA' => __('Namibia','ultimate-member'),
-						'NR' => __('Nauru','ultimate-member'),
-						'NP' => __('Nepal','ultimate-member'),
-						'NL' => __('Netherlands','ultimate-member'),
-						'AN' => __('Netherlands Antilles','ultimate-member'),
-						'NC' => __('New Caledonia','ultimate-member'),
-						'NZ' => __('New Zealand','ultimate-member'),
-						'NI' => __('Nicaragua','ultimate-member'),
-						'NE' => __('Niger','ultimate-member'),
-						'NG' => __('Nigeria','ultimate-member'),
-						'NU' => __('Niue','ultimate-member'),
-						'NF' => __('Norfolk Island','ultimate-member'),
-						'MP' => __('Northern Mariana Islands','ultimate-member'),
-						'NO' => __('Norway','ultimate-member'),
-						'OM' => __('Oman','ultimate-member'),
-						'PK' => __('Pakistan','ultimate-member'),
-						'PW' => __('Palau','ultimate-member'),
-						'PS' => __('Palestine','ultimate-member'),
-						'PA' => __('Panama','ultimate-member'),
-						'PG' => __('Papua New Guinea','ultimate-member'),
-						'PY' => __('Paraguay','ultimate-member'),
-						'PE' => __('Peru','ultimate-member'),
-						'PH' => __('Philippines','ultimate-member'),
-						'PN' => __('Pitcairn','ultimate-member'),
-						'PL' => __('Poland','ultimate-member'),
-						'PT' => __('Portugal','ultimate-member'),
-						'PR' => __('Puerto Rico','ultimate-member'),
-						'QA' => __('Qatar','ultimate-member'),
-						'RE' => __('Réunion','ultimate-member'),
-						'RO' => __('Romania','ultimate-member'),
-						'RU' => __('Russian Federation','ultimate-member'),
-						'RW' => __('Rwanda','ultimate-member'),
-						'BL' => __('Saint Barthélemy','ultimate-member'),
-						'SH' => __('Saint Helena','ultimate-member'),
-						'KN' => __('Saint Kitts and Nevis','ultimate-member'),
-						'LC' => __('Saint Lucia','ultimate-member'),
-						'MF' => __('Saint Martin (French part)','ultimate-member'),
-						'PM' => __('Saint Pierre and Miquelon','ultimate-member'),
-						'VC' => __('Saint Vincent and the Grenadines','ultimate-member'),
-						'WS' => __('Samoa','ultimate-member'),
-						'SM' => __('San Marino','ultimate-member'),
-						'ST' => __('Sao Tome and Principe','ultimate-member'),
-						'SA' => __('Saudi Arabia','ultimate-member'),
-						'SN' => __('Senegal','ultimate-member'),
-						'RS' => __('Serbia','ultimate-member'),
-						'SC' => __('Seychelles','ultimate-member'),
-						'SL' => __('Sierra Leone','ultimate-member'),
-						'SG' => __('Singapore','ultimate-member'),
-						'SK' => __('Slovakia','ultimate-member'),
-						'SI' => __('Slovenia','ultimate-member'),
-						'SB' => __('Solomon Islands','ultimate-member'),
-						'SO' => __('Somalia','ultimate-member'),
-						'ZA' => __('South Africa','ultimate-member'),
-						'GS' => __('South Georgia and the South Sandwich Islands','ultimate-member'),
-						'SS' => __('South Sudan','ultimate-member'),
-						'ES' => __('Spain','ultimate-member'),
-						'LK' => __('Sri Lanka','ultimate-member'),
-						'SD' => __('Sudan','ultimate-member'),
-						'SR' => __('Suriname','ultimate-member'),
-						'SJ' => __('Svalbard and Jan Mayen','ultimate-member'),
-						'SZ' => __('Eswatini','ultimate-member'),
-						'SE' => __('Sweden','ultimate-member'),
-						'CH' => __('Switzerland','ultimate-member'),
-						'SY' => __('Syrian Arab Republic','ultimate-member'),
-						'TW' => __('Taiwan, Province of China','ultimate-member'),
-						'TJ' => __('Tajikistan','ultimate-member'),
-						'TZ' => __('Tanzania, United Republic of','ultimate-member'),
-						'TH' => __('Thailand','ultimate-member'),
-						'TL' => __('Timor-Leste','ultimate-member'),
-						'TG' => __('Togo','ultimate-member'),
-						'TK' => __('Tokelau','ultimate-member'),
-						'TO' => __('Tonga','ultimate-member'),
-						'TT' => __('Trinidad and Tobago','ultimate-member'),
-						'TN' => __('Tunisia','ultimate-member'),
-						'TR' => __('Turkey','ultimate-member'),
-						'TM' => __('Turkmenistan','ultimate-member'),
-						'TC' => __('Turks and Caicos Islands','ultimate-member'),
-						'TV' => __('Tuvalu','ultimate-member'),
-						'UG' => __('Uganda','ultimate-member'),
-						'UA' => __('Ukraine','ultimate-member'),
-						'AE' => __('United Arab Emirates','ultimate-member'),
-						'GB' => __('United Kingdom','ultimate-member'),
-						'US' => __('United States','ultimate-member'),
-						'UM' => __('United States Minor Outlying Islands','ultimate-member'),
-						'UY' => __('Uruguay','ultimate-member'),
-						'UZ' => __('Uzbekistan','ultimate-member'),
-						'VU' => __('Vanuatu','ultimate-member'),
-						'VE' => __('Venezuela, Bolivarian Republic of','ultimate-member'),
-						'VN' => __('Viet Nam','ultimate-member'),
-						'VG' => __('Virgin Islands, British','ultimate-member'),
-						'VI' => __('Virgin Islands, U.S.','ultimate-member'),
-						'WF' => __('Wallis and Futuna','ultimate-member'),
-						'EH' => __('Western Sahara','ultimate-member'),
-						'YE' => __('Yemen','ultimate-member'),
-						'ZM' => __('Zambia','ultimate-member'),
-						'ZW' => __('Zimbabwe','ultimate-member'),
+					$array = array(
+						'AF' => __( 'Afghanistan', 'ultimate-member' ),
+						'AX' => __( 'Åland Islands', 'ultimate-member' ),
+						'AL' => __( 'Albania', 'ultimate-member' ),
+						'DZ' => __( 'Algeria', 'ultimate-member' ),
+						'AS' => __( 'American Samoa', 'ultimate-member' ),
+						'AD' => __( 'Andorra', 'ultimate-member' ),
+						'AO' => __( 'Angola', 'ultimate-member' ),
+						'AI' => __( 'Anguilla', 'ultimate-member' ),
+						'AQ' => __( 'Antarctica', 'ultimate-member' ),
+						'AG' => __( 'Antigua and Barbuda', 'ultimate-member' ),
+						'AR' => __( 'Argentina', 'ultimate-member' ),
+						'AM' => __( 'Armenia', 'ultimate-member' ),
+						'AW' => __( 'Aruba', 'ultimate-member' ),
+						'AU' => __( 'Australia', 'ultimate-member' ),
+						'AT' => __( 'Austria', 'ultimate-member' ),
+						'AZ' => __( 'Azerbaijan', 'ultimate-member' ),
+						'BS' => __( 'Bahamas', 'ultimate-member' ),
+						'BH' => __( 'Bahrain', 'ultimate-member' ),
+						'BD' => __( 'Bangladesh', 'ultimate-member' ),
+						'BB' => __( 'Barbados', 'ultimate-member' ),
+						'BY' => __( 'Belarus', 'ultimate-member' ),
+						'BE' => __( 'Belgium', 'ultimate-member' ),
+						'BZ' => __( 'Belize', 'ultimate-member' ),
+						'BJ' => __( 'Benin', 'ultimate-member' ),
+						'BM' => __( 'Bermuda', 'ultimate-member' ),
+						'BT' => __( 'Bhutan', 'ultimate-member' ),
+						'BO' => __( 'Bolivia, Plurinational State of', 'ultimate-member' ),
+						'BA' => __( 'Bosnia and Herzegovina', 'ultimate-member' ),
+						'BW' => __( 'Botswana', 'ultimate-member' ),
+						'BV' => __( 'Bouvet Island', 'ultimate-member' ),
+						'BR' => __( 'Brazil', 'ultimate-member' ),
+						'IO' => __( 'British Indian Ocean Territory', 'ultimate-member' ),
+						'BN' => __( 'Brunei Darussalam', 'ultimate-member' ),
+						'BG' => __( 'Bulgaria', 'ultimate-member' ),
+						'BF' => __( 'Burkina Faso', 'ultimate-member' ),
+						'BI' => __( 'Burundi', 'ultimate-member' ),
+						'KH' => __( 'Cambodia', 'ultimate-member' ),
+						'CM' => __( 'Cameroon', 'ultimate-member' ),
+						'CA' => __( 'Canada', 'ultimate-member' ),
+						'CV' => __( 'Cape Verde', 'ultimate-member' ),
+						'KY' => __( 'Cayman Islands', 'ultimate-member' ),
+						'CF' => __( 'Central African Republic', 'ultimate-member' ),
+						'TD' => __( 'Chad', 'ultimate-member' ),
+						'CL' => __( 'Chile', 'ultimate-member' ),
+						'CN' => __( 'China', 'ultimate-member' ),
+						'CX' => __( 'Christmas Island', 'ultimate-member' ),
+						'CC' => __( 'Cocos (Keeling) Islands', 'ultimate-member' ),
+						'CO' => __( 'Colombia', 'ultimate-member' ),
+						'KM' => __( 'Comoros', 'ultimate-member' ),
+						'CG' => __( 'Congo', 'ultimate-member' ),
+						'CD' => __( 'Congo, the Democratic Republic of the', 'ultimate-member' ),
+						'CK' => __( 'Cook Islands', 'ultimate-member' ),
+						'CR' => __( 'Costa Rica', 'ultimate-member' ),
+						'CI' => __( "Côte d'Ivoire", 'ultimate-member' ),
+						'HR' => __( 'Croatia', 'ultimate-member' ),
+						'CU' => __( 'Cuba', 'ultimate-member' ),
+						'CY' => __( 'Cyprus', 'ultimate-member' ),
+						'CZ' => __( 'Czech Republic', 'ultimate-member' ),
+						'DK' => __( 'Denmark', 'ultimate-member' ),
+						'DJ' => __( 'Djibouti', 'ultimate-member' ),
+						'DM' => __( 'Dominica', 'ultimate-member' ),
+						'DO' => __( 'Dominican Republic', 'ultimate-member' ),
+						'EC' => __( 'Ecuador', 'ultimate-member' ),
+						'EG' => __( 'Egypt', 'ultimate-member' ),
+						'SV' => __( 'El Salvador', 'ultimate-member' ),
+						'GQ' => __( 'Equatorial Guinea', 'ultimate-member' ),
+						'ER' => __( 'Eritrea', 'ultimate-member' ),
+						'EE' => __( 'Estonia', 'ultimate-member' ),
+						'ET' => __( 'Ethiopia', 'ultimate-member' ),
+						'FK' => __( 'Falkland Islands (Malvinas)', 'ultimate-member' ),
+						'FO' => __( 'Faroe Islands', 'ultimate-member' ),
+						'FJ' => __( 'Fiji', 'ultimate-member' ),
+						'FI' => __( 'Finland', 'ultimate-member' ),
+						'FR' => __( 'France', 'ultimate-member' ),
+						'GF' => __( 'French Guiana', 'ultimate-member' ),
+						'PF' => __( 'French Polynesia', 'ultimate-member' ),
+						'TF' => __( 'French Southern Territories', 'ultimate-member' ),
+						'GA' => __( 'Gabon', 'ultimate-member' ),
+						'GM' => __( 'Gambia', 'ultimate-member' ),
+						'GE' => __( 'Sakartvelo', 'ultimate-member' ),
+						'DE' => __( 'Germany', 'ultimate-member' ),
+						'GH' => __( 'Ghana', 'ultimate-member' ),
+						'GI' => __( 'Gibraltar', 'ultimate-member' ),
+						'GR' => __( 'Greece', 'ultimate-member' ),
+						'GL' => __( 'Greenland', 'ultimate-member' ),
+						'GD' => __( 'Grenada', 'ultimate-member' ),
+						'GP' => __( 'Guadeloupe', 'ultimate-member' ),
+						'GU' => __( 'Guam', 'ultimate-member' ),
+						'GT' => __( 'Guatemala', 'ultimate-member' ),
+						'GG' => __( 'Guernsey', 'ultimate-member' ),
+						'GN' => __( 'Guinea', 'ultimate-member' ),
+						'GW' => __( 'Guinea-Bissau', 'ultimate-member' ),
+						'GY' => __( 'Guyana', 'ultimate-member' ),
+						'HT' => __( 'Haiti', 'ultimate-member' ),
+						'HM' => __( 'Heard Island and McDonald Islands', 'ultimate-member' ),
+						'VA' => __( 'Holy See (Vatican City State)', 'ultimate-member' ),
+						'HN' => __( 'Honduras', 'ultimate-member' ),
+						'HK' => __( 'Hong Kong', 'ultimate-member' ),
+						'HU' => __( 'Hungary', 'ultimate-member' ),
+						'IS' => __( 'Iceland', 'ultimate-member' ),
+						'IN' => __( 'India', 'ultimate-member' ),
+						'ID' => __( 'Indonesia', 'ultimate-member' ),
+						'IR' => __( 'Iran, Islamic Republic of', 'ultimate-member' ),
+						'IQ' => __( 'Iraq', 'ultimate-member' ),
+						'IE' => __( 'Ireland', 'ultimate-member' ),
+						'IM' => __( 'Isle of Man', 'ultimate-member' ),
+						'IL' => __( 'Israel', 'ultimate-member' ),
+						'IT' => __( 'Italy', 'ultimate-member' ),
+						'JM' => __( 'Jamaica', 'ultimate-member' ),
+						'JP' => __( 'Japan', 'ultimate-member' ),
+						'JE' => __( 'Jersey', 'ultimate-member' ),
+						'JO' => __( 'Jordan', 'ultimate-member' ),
+						'KZ' => __( 'Kazakhstan', 'ultimate-member' ),
+						'KE' => __( 'Kenya', 'ultimate-member' ),
+						'KI' => __( 'Kiribati', 'ultimate-member' ),
+						'KP' => __( "Korea, Democratic People's Republic of", 'ultimate-member' ),
+						'KR' => __( 'Korea, Republic of', 'ultimate-member' ),
+						'KW' => __( 'Kuwait', 'ultimate-member' ),
+						'KG' => __( 'Kyrgyzstan', 'ultimate-member' ),
+						'LA' => __( "Lao People's Democratic Republic", 'ultimate-member' ),
+						'LV' => __( 'Latvia', 'ultimate-member' ),
+						'LB' => __( 'Lebanon', 'ultimate-member' ),
+						'LS' => __( 'Lesotho', 'ultimate-member' ),
+						'LR' => __( 'Liberia', 'ultimate-member' ),
+						'LY' => __( 'Libyan Arab Jamahiriya', 'ultimate-member' ),
+						'LI' => __( 'Liechtenstein', 'ultimate-member' ),
+						'LT' => __( 'Lithuania', 'ultimate-member' ),
+						'LU' => __( 'Luxembourg', 'ultimate-member' ),
+						'MO' => __( 'Macao', 'ultimate-member' ),
+						'MK' => __( 'Macedonia, the former Yugoslav Republic of', 'ultimate-member' ),
+						'MG' => __( 'Madagascar', 'ultimate-member' ),
+						'MW' => __( 'Malawi', 'ultimate-member' ),
+						'MY' => __( 'Malaysia', 'ultimate-member' ),
+						'MV' => __( 'Maldives', 'ultimate-member' ),
+						'ML' => __( 'Mali', 'ultimate-member' ),
+						'MT' => __( 'Malta', 'ultimate-member' ),
+						'MH' => __( 'Marshall Islands', 'ultimate-member' ),
+						'MQ' => __( 'Martinique', 'ultimate-member' ),
+						'MR' => __( 'Mauritania', 'ultimate-member' ),
+						'MU' => __( 'Mauritius', 'ultimate-member' ),
+						'YT' => __( 'Mayotte', 'ultimate-member' ),
+						'MX' => __( 'Mexico', 'ultimate-member' ),
+						'FM' => __( 'Micronesia, Federated States of', 'ultimate-member' ),
+						'MD' => __( 'Moldova, Republic of', 'ultimate-member' ),
+						'MC' => __( 'Monaco', 'ultimate-member' ),
+						'MN' => __( 'Mongolia', 'ultimate-member' ),
+						'ME' => __( 'Montenegro', 'ultimate-member' ),
+						'MS' => __( 'Montserrat', 'ultimate-member' ),
+						'MA' => __( 'Morocco', 'ultimate-member' ),
+						'MZ' => __( 'Mozambique', 'ultimate-member' ),
+						'MM' => __( 'Myanmar', 'ultimate-member' ),
+						'NA' => __( 'Namibia', 'ultimate-member' ),
+						'NR' => __( 'Nauru', 'ultimate-member' ),
+						'NP' => __( 'Nepal', 'ultimate-member' ),
+						'NL' => __( 'Netherlands', 'ultimate-member' ),
+						'AN' => __( 'Netherlands Antilles', 'ultimate-member' ),
+						'NC' => __( 'New Caledonia', 'ultimate-member' ),
+						'NZ' => __( 'New Zealand', 'ultimate-member' ),
+						'NI' => __( 'Nicaragua', 'ultimate-member' ),
+						'NE' => __( 'Niger', 'ultimate-member' ),
+						'NG' => __( 'Nigeria', 'ultimate-member' ),
+						'NU' => __( 'Niue', 'ultimate-member' ),
+						'NF' => __( 'Norfolk Island', 'ultimate-member' ),
+						'MP' => __( 'Northern Mariana Islands', 'ultimate-member' ),
+						'NO' => __( 'Norway', 'ultimate-member' ),
+						'OM' => __( 'Oman', 'ultimate-member' ),
+						'PK' => __( 'Pakistan', 'ultimate-member' ),
+						'PW' => __( 'Palau', 'ultimate-member' ),
+						'PS' => __( 'Palestine', 'ultimate-member' ),
+						'PA' => __( 'Panama', 'ultimate-member' ),
+						'PG' => __( 'Papua New Guinea', 'ultimate-member' ),
+						'PY' => __( 'Paraguay', 'ultimate-member' ),
+						'PE' => __( 'Peru', 'ultimate-member' ),
+						'PH' => __( 'Philippines', 'ultimate-member' ),
+						'PN' => __( 'Pitcairn', 'ultimate-member' ),
+						'PL' => __( 'Poland', 'ultimate-member' ),
+						'PT' => __( 'Portugal', 'ultimate-member' ),
+						'PR' => __( 'Puerto Rico', 'ultimate-member' ),
+						'QA' => __( 'Qatar', 'ultimate-member' ),
+						'RE' => __( 'Réunion', 'ultimate-member' ),
+						'RO' => __( 'Romania', 'ultimate-member' ),
+						'RU' => __( 'Russian Federation', 'ultimate-member' ),
+						'RW' => __( 'Rwanda', 'ultimate-member' ),
+						'BL' => __( 'Saint Barthélemy', 'ultimate-member' ),
+						'SH' => __( 'Saint Helena', 'ultimate-member' ),
+						'KN' => __( 'Saint Kitts and Nevis', 'ultimate-member' ),
+						'LC' => __( 'Saint Lucia', 'ultimate-member' ),
+						'MF' => __( 'Saint Martin (French part)', 'ultimate-member' ),
+						'PM' => __( 'Saint Pierre and Miquelon', 'ultimate-member' ),
+						'VC' => __( 'Saint Vincent and the Grenadines', 'ultimate-member' ),
+						'WS' => __( 'Samoa', 'ultimate-member' ),
+						'SM' => __( 'San Marino', 'ultimate-member' ),
+						'ST' => __( 'Sao Tome and Principe', 'ultimate-member' ),
+						'SA' => __( 'Saudi Arabia', 'ultimate-member' ),
+						'SN' => __( 'Senegal', 'ultimate-member' ),
+						'RS' => __( 'Serbia', 'ultimate-member' ),
+						'SC' => __( 'Seychelles', 'ultimate-member' ),
+						'SL' => __( 'Sierra Leone', 'ultimate-member' ),
+						'SG' => __( 'Singapore', 'ultimate-member' ),
+						'SK' => __( 'Slovakia', 'ultimate-member' ),
+						'SI' => __( 'Slovenia', 'ultimate-member' ),
+						'SB' => __( 'Solomon Islands', 'ultimate-member' ),
+						'SO' => __( 'Somalia', 'ultimate-member' ),
+						'ZA' => __( 'South Africa', 'ultimate-member' ),
+						'GS' => __( 'South Georgia and the South Sandwich Islands', 'ultimate-member' ),
+						'SS' => __( 'South Sudan', 'ultimate-member' ),
+						'ES' => __( 'Spain', 'ultimate-member' ),
+						'LK' => __( 'Sri Lanka', 'ultimate-member' ),
+						'SD' => __( 'Sudan', 'ultimate-member' ),
+						'SR' => __( 'Suriname', 'ultimate-member' ),
+						'SJ' => __( 'Svalbard and Jan Mayen', 'ultimate-member' ),
+						'SZ' => __( 'Eswatini', 'ultimate-member' ),
+						'SE' => __( 'Sweden', 'ultimate-member' ),
+						'CH' => __( 'Switzerland', 'ultimate-member' ),
+						'SY' => __( 'Syrian Arab Republic', 'ultimate-member' ),
+						'TW' => __( 'Taiwan, Province of China', 'ultimate-member' ),
+						'TJ' => __( 'Tajikistan', 'ultimate-member' ),
+						'TZ' => __( 'Tanzania, United Republic of', 'ultimate-member' ),
+						'TH' => __( 'Thailand', 'ultimate-member' ),
+						'TL' => __( 'Timor-Leste', 'ultimate-member' ),
+						'TG' => __( 'Togo', 'ultimate-member' ),
+						'TK' => __( 'Tokelau', 'ultimate-member' ),
+						'TO' => __( 'Tonga', 'ultimate-member' ),
+						'TT' => __( 'Trinidad and Tobago', 'ultimate-member' ),
+						'TN' => __( 'Tunisia', 'ultimate-member' ),
+						'TR' => __( 'Turkey', 'ultimate-member' ),
+						'TM' => __( 'Turkmenistan', 'ultimate-member' ),
+						'TC' => __( 'Turks and Caicos Islands', 'ultimate-member' ),
+						'TV' => __( 'Tuvalu', 'ultimate-member' ),
+						'UG' => __( 'Uganda', 'ultimate-member' ),
+						'UA' => __( 'Ukraine', 'ultimate-member' ),
+						'AE' => __( 'United Arab Emirates', 'ultimate-member' ),
+						'GB' => __( 'United Kingdom', 'ultimate-member' ),
+						'US' => __( 'United States', 'ultimate-member' ),
+						'UM' => __( 'United States Minor Outlying Islands', 'ultimate-member' ),
+						'UY' => __( 'Uruguay', 'ultimate-member' ),
+						'UZ' => __( 'Uzbekistan', 'ultimate-member' ),
+						'VU' => __( 'Vanuatu', 'ultimate-member' ),
+						'VE' => __( 'Venezuela, Bolivarian Republic of', 'ultimate-member' ),
+						'VN' => __( 'Viet Nam', 'ultimate-member' ),
+						'VG' => __( 'Virgin Islands, British', 'ultimate-member' ),
+						'VI' => __( 'Virgin Islands, U.S.', 'ultimate-member' ),
+						'WF' => __( 'Wallis and Futuna', 'ultimate-member' ),
+						'EH' => __( 'Western Sahara', 'ultimate-member' ),
+						'YE' => __( 'Yemen', 'ultimate-member' ),
+						'ZM' => __( 'Zambia', 'ultimate-member' ),
+						'ZW' => __( 'Zimbabwe', 'ultimate-member' ),
 					);
 					break;
-
 			}
 
 			/**
@@ -2103,9 +2186,29 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			 * }
 			 * ?>
 			 */
-			$array = apply_filters( "um_{$data}_predefined_field_options", $array );
-			return $array;
+			return apply_filters( "um_{$data}_predefined_field_options", $array );
 		}
 
+		/**
+		 * Regular or multi-select/options
+		 * @todo fully remove since 3.1.0
+		 * @deprecated 3.0.0
+		 *
+		 * @param $field
+		 * @param $attrs
+		 *
+		 * @return bool
+		 */
+		public function is_dropdown_field( $field, $attrs ) {
+			_deprecated_function( __METHOD__, '3.0.0' );
+
+			if ( isset( $attrs['options'] ) ) {
+				return true;
+			}
+
+			$fields = $this->all_user_fields;
+
+			return isset( $fields[ $field ]['options'] ) || ! empty( $fields[ $field ]['custom_dropdown_options_source'] );
+		}
 	}
 }

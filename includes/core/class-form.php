@@ -111,7 +111,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		}
 
 		/**
+		 * Old UI options populate callback.
 		 *
+		 * @todo maybe deprecate since new UI.
 		 */
 		public function ajax_select_options() {
 			UM()->check_ajax_nonce();
@@ -200,27 +202,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 				wp_send_json( $arr_options );
 			} else {
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_ajax_select_options__debug_mode
-				 * @description Activate debug mode for AJAX select options
-				 * @input_vars
-				 * [{"var":"$debug_mode","type":"bool","desc":"Enable Debug mode"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_ajax_select_options__debug_mode', 'function_name', 10, 1 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_ajax_select_options__debug_mode', 'my_ajax_select_options__debug_mode', 10, 1 );
-				 * function my_ajax_select_options__debug_mode( $debug_mode ) {
-				 *     // your code here
-				 *     return $debug_mode;
-				 * }
-				 * ?>
-				 */
+				/** This filter is documented in includes/ajax/class-fields.php */
 				$debug = apply_filters( 'um_ajax_select_options__debug_mode', false );
 				if ( $debug ) {
 					$arr_options['debug'] = array(
@@ -232,8 +214,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				if ( ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] ) ) {
 					// If the requested callback function is added in the form or added in the field option, execute it with call_user_func.
 					if ( isset( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
-						! empty( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
-						$form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] === $ajax_source_func ) {
+					     ! empty( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
+					     $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] === $ajax_source_func ) {
 
 						$arr_options['field'] = $form_fields[ $_POST['child_name'] ];
 
@@ -249,7 +231,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			}
 		}
 
-
 		/**
 		 * Count the form errors.
 		 * @return integer
@@ -263,7 +244,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 			return 0;
 		}
-
 
 		/**
 		 * Appends field errors
@@ -906,10 +886,17 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 												$form[ 'confirm_' . $k ] = trim( $form[ 'confirm_' . $k ] );
 											}
 											break;
-										case 'text':
-										case 'select':
 										case 'image':
 										case 'file':
+											if ( is_array( $form[ $k ] ) && UM()->is_new_ui() ) {
+												$form[ $k ]['path'] = isset( $form[ $k ]['path'] ) ? sanitize_file_name( $form[ $k ]['path'] ) : '';
+												$form[ $k ]['hash'] = isset( $form[ $k ]['hash'] ) ? sanitize_key( $form[ $k ]['hash'] ) : '';
+											} else {
+												$form[ $k ] = sanitize_text_field( $form[ $k ] );
+											}
+											break;
+										case 'text':
+										case 'select':
 										case 'date':
 										case 'time':
 										case 'rating':

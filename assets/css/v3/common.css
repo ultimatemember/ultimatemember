@@ -1,0 +1,35 @@
+/* Tipsy customizations */
+.um .tipsy,
+.um-page .tipsy {
+  z-index: 9999999999;
+  font-size: inherit;
+}
+.um .tipsy-inner,
+.um-page .tipsy-inner {
+  background-color: #333333;
+  color: #fff;
+  max-width: 250px;
+  padding: 6px 10px;
+  text-align: left;
+  font-size: 13px;
+  line-height: 17px;
+  word-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.um .tipsy-arrow-n,
+.um-page .tipsy-arrow-n {
+  border-bottom-color: #333;
+}
+.um .tipsy-arrow-s,
+.um-page .tipsy-arrow-s {
+  border-top-color: #333;
+}
+.um .tipsy-arrow-e,
+.um-page .tipsy-arrow-e {
+  border-left-color: #333;
+}
+.um .tipsy-arrow-w,
+.um-page .tipsy-arrow-w {
+  border-right-color: #333;
+}

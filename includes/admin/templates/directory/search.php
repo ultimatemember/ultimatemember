@@ -13,8 +13,21 @@ $_um_roles_filter_value = empty( $_um_roles_filter_value ) ? array() : $_um_role
 $_um_search_exclude_fields = get_post_meta( $post_id, '_um_search_exclude_fields', true );
 $_um_search_include_fields = get_post_meta( $post_id, '_um_search_include_fields', true );
 $_um_search_fields         = get_post_meta( $post_id, '_um_search_fields', true );
-$_um_search_filters        = get_post_meta( $post_id, '_um_search_filters', true ); ?>
+$_um_search_filters        = get_post_meta( $post_id, '_um_search_filters', true );
 
+$pre_queries = array();
+if ( UM()->is_new_ui() ) {
+	$pre_queries = array(
+		'id'             => '_um_disable_filters_pre_query',
+		'type'           => 'checkbox',
+		'label'          => __( 'Filter pre-queries', 'ultimate-member' ),
+		'checkbox_label' => __( 'Disable pre-queries for displaying filters', 'ultimate-member' ),
+		'description'    => __( 'Activate this option to display all filter options, not just the unique values available in the users\' database.', 'ultimate-member' ),
+		'value'          => (bool) get_post_meta( $post_id, '_um_disable_filters_pre_query', true ),
+		'conditional'    => array( '_um_filters', '=', 1 ),
+	);
+}
+?>
 
 <div class="um-admin-metabox">
 	<?php
@@ -93,26 +106,29 @@ $_um_search_filters        = get_post_meta( $post_id, '_um_search_filters', true
 					'sorting'             => true,
 				),
 				array(
-					'id'          => '_um_filters_expanded',
-					'type'        => 'checkbox',
-					'label'       => __( 'Expand the filter bar by default', 'ultimate-member' ),
-					'tooltip'     => __( 'If turned on, filters bar will be visible after a page loading', 'ultimate-member' ),
-					'value'       => (bool) get_post_meta( $post_id, '_um_filters_expanded', true ),
-					'conditional' => array( '_um_filters', '=', 1 ),
+					'id'             => '_um_filters_expanded',
+					'type'           => 'checkbox',
+					'label'          => __( 'Filter bar visibility', 'ultimate-member' ),
+					'checkbox_label' => __( 'Expand the filter bar by default', 'ultimate-member' ),
+					'description'    => __( 'If turned on, filters bar will be visible after a page loading', 'ultimate-member' ),
+					'value'          => (bool) get_post_meta( $post_id, '_um_filters_expanded', true ),
+					'conditional'    => array( '_um_filters', '=', 1 ),
 				),
 				array(
-					'id'          => '_um_filters_is_collapsible',
-					'type'        => 'checkbox',
-					'label'       => __( 'Can filter bar be collapsed', 'ultimate-member' ),
-					'tooltip'     => __( 'If turned on, filters bar can be collapsed after a page loading', 'ultimate-member' ),
-					'value'       => (bool) get_post_meta( $post_id, '_um_filters_is_collapsible', true ),
-					'conditional' => array( '_um_filters_expanded', '=', 1 ),
+					'id'             => '_um_filters_is_collapsible',
+					'type'           => 'checkbox',
+					'label'          => __( 'Collapsible filter bar', 'ultimate-member' ),
+					'checkbox_label' => __( 'Can filter bar be collapsed', 'ultimate-member' ),
+					'description'    => __( 'If turned on, filters bar can be collapsed after a page loading', 'ultimate-member' ),
+					'value'          => (bool) get_post_meta( $post_id, '_um_filters_is_collapsible', true ),
+					'conditional'    => array( '_um_filters_expanded', '=', 1 ),
 				),
+				$pre_queries,
 				array(
 					'id'                  => '_um_search_filters',
 					'type'                => 'md_default_filters',
 					'label'               => __( 'Admin filtering', 'ultimate-member' ),
-					'tooltip'             => __( 'Limit which users appear in the member directory e.g only display users from USA', 'ultimate-member' ),
+					'description'         => __( 'Limit which users appear in the member directory e.g only display users from USA. Filter pre-queries are disabled for admin filtering.', 'ultimate-member' ),
 					'value'               => $_um_search_filters,
 					'options'             => UM()->member_directory()->filter_fields,
 					'add_text'            => __( 'Add New Filter', 'ultimate-member' ),

@@ -39,6 +39,13 @@ if ( ! class_exists( 'um\Config' ) ) {
 		public $predefined_pages;
 
 		/**
+		 * @since 2.8.4
+		 *
+		 * @var array
+		 */
+		public $avatar_thumbnail_sizes;
+
+		/**
 		 * @var array
 		 */
 		public $core_directory_meta = array();
@@ -175,6 +182,15 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_filters_expanded'         => 0,
 				'_um_filters_is_collapsible'   => 1,
 				'_um_search_filters'           => array(),
+				'_um_search'                    => 0,
+				'_um_roles_can_search'          => array(),
+				'_um_filters'                   => 0,
+				'_um_roles_can_filter'          => array(),
+				'_um_search_fields'             => array(),
+				'_um_filters_expanded'          => 0,
+				'_um_disable_filters_pre_query' => 0,
+				'_um_filters_is_collapsible'    => 1,
+				'_um_search_filters'            => array(),
 
 				'_um_must_search'              => 0,
 				'_um_max_users'                => '',
@@ -667,6 +683,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'account_tab_password'                  => true,
 				'account_tab_privacy'                   => true,
 				'account_tab_notifications'             => true,
+				'account_tab_personal-data'             => true,
 				'account_tab_delete'                    => true,
 				'delete_account_text'                   => __( 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account enter your password below.', 'ultimate-member' ),
 				'delete_account_no_pass_required_text'  => __( 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account, click on the button below.', 'ultimate-member' ),
@@ -739,7 +756,12 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'um_google_lang_as_default'             => true,
 				'um_google_lang'                        => '',
 				'um_google_maps_js_api_key'             => '',
+				'primary_color'                         => '#7f56d9',
 			);
+
+			if ( UM()->is_new_ui() ) {
+				$this->settings_defaults['account_tab_personal-data'] = true;
+			}
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );
 
@@ -1136,6 +1158,11 @@ if ( ! class_exists( 'um\Config' ) ) {
 			// @todo remove in 3.0 version
 			$this->predefined_pages = apply_filters( 'um_core_pages', $this->predefined_pages );
 			$this->core_pages       = $this->predefined_pages;
+		}
+
+		public function init_avatar_thumbnail_sizes() {
+			$this->avatar_thumbnail_sizes = array( 32, 40, 64, 80, 128, 256 );
+			$this->avatar_thumbnail_sizes = apply_filters( 'um_avatar_thumbnail_sizes', $this->avatar_thumbnail_sizes );
 		}
 	}
 }

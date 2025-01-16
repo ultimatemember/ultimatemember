@@ -928,7 +928,7 @@ jQuery( document ).ready( function() {
 		var me = jQuery(this);
 		var _options = jQuery('textarea[id=_options]');
 
-		if( me.val() != '' ){
+		if ( '' !== me.val() ) {
 			var um_option_callback = me.val();
 			jQuery.ajax({
 				url: wp.ajax.settings.url,
@@ -952,8 +952,10 @@ jQuery( document ).ready( function() {
 
 				}
 			});
+			jQuery('#_parent_dropdown_relationship').parents( 'p' ).show();
+		} else {
+			jQuery('#_parent_dropdown_relationship').parents( 'p' ).hide();
 		}
-
 	});
 
 	if ( !jQuery('.um-admin-drag').length ) {
