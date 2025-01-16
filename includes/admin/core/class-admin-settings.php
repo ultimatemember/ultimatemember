@@ -1016,6 +1016,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'enable_action_scheduler'              => array(
 						'sanitize' => 'bool',
 					),
+					'um_google_lang_as_default'            => array(
+						'sanitize' => 'bool',
+					),
+					'um_google_lang'                       => array(
+						'sanitize' => 'text',
+					),
+					'um_google_maps_js_api_key'            => array(
+						'sanitize' => 'text',
+					),
 					'rest_api_version'                     => array(
 						'sanitize' => 'text',
 					),
@@ -2256,6 +2265,36 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									),
 								),
 							),
+							'apis'               => array(
+								'title'         => __( 'APIs', 'ultimate-member' ),
+								'form_sections' => array(
+									'google-maps' => array( // section key `google-maps` means the API $key used for filters in code.
+										'title'       => __( 'Google Maps', 'ultimate-member' ),
+										'description' => __( 'This section is designed to help you integrate Ultimate Member functionality with Google Maps API.', 'ultimate-member' ),
+										'fields'      => array(
+											array(
+												'id'    => 'um_google_maps_js_api_key',
+												'type'  => 'text',
+												'label' => __( 'Maps JavaScript API Key', 'ultimate-member' ),
+												'size'  => 'medium',
+											),
+											array(
+												'id'    => 'um_google_lang_as_default',
+												'type'  => 'checkbox',
+												'label' => __( 'Use site\'s locale as language for Google Maps', 'ultimate-member' ),
+											),
+											array(
+												'id'      => 'um_google_lang',
+												'type'    => 'select',
+												'label'   => __( 'Google Maps language', 'ultimate-member' ),
+												'size'    => 'small',
+												'options' => UM()->config()->get( 'google_maps_locales' ),
+												'conditional' => array( 'um_google_lang_as_default', '=', 0 ),
+											),
+										),
+									),
+								),
+							),
 						),
 					),
 					'system_info' => array(
@@ -2352,6 +2391,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				}
 			} else {
 				unset( $this->settings_structure['advanced']['sections']['features']['form_sections']['beta_features'] );
+			}
+
+			// Hide un-existed API
+			foreach ( $this->settings_structure['advanced']['sections']['apis']['form_sections'] as $api => $section_data ) {
+				if ( ! UM()->common()->apis()::has_api( $api ) ) {
+					unset( $this->settings_structure['advanced']['sections']['apis']['form_sections'][ $api ] );
+				}
+			}
+			// Hide APIs tab when there aren't any APIs
+			if ( count( $this->settings_structure['advanced']['sections']['apis']['form_sections'] ) < 1 ) {
+				unset( $this->settings_structure['advanced']['sections']['apis'] );
 			}
 		}
 
