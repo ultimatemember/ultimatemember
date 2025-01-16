@@ -97,7 +97,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$metakeys = apply_filters( 'um_metadata_same_page_update_ajax', $metakeys, UM()->builtin()->all_user_fields );
 
 				if ( is_multisite() ) {
-
 					$sites = get_sites( array( 'fields' => 'ids' ) );
 					foreach ( $sites as $blog_id ) {
 						$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';

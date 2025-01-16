@@ -896,7 +896,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			$this->sql_order = apply_filters( 'um_modify_sortby_parameter_meta', $this->sql_order, $sortby );
 
 			$profiles_per_page = $directory_data['profiles_per_page'];
-			if ( UM()->mobile()->isMobile() && isset( $directory_data['profiles_per_page_mobile'] ) ) {
+			if ( wp_is_mobile() && isset( $directory_data['profiles_per_page_mobile'] ) ) {
 				$profiles_per_page = $directory_data['profiles_per_page_mobile'];
 			}
 

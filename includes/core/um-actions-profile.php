@@ -1316,11 +1316,10 @@ function um_profile_header_cover_area( $args ) {
 					$size = $args['coversize'];
 				}
 
-				if ( UM()->mobile()->isMobile() ) {
+				if ( wp_is_mobile() ) {
 					// set for mobile width = 300 by default but can be changed via filter below.
-					if ( ! UM()->mobile()->isTablet() ) {
-						$size = 300;
-					}
+					$size = 300;
+
 					/**
 					 * Filters size of User Profile cover photo on mobile devices.
 					 *
