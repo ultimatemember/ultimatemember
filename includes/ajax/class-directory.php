@@ -292,7 +292,7 @@ class Directory extends \um\common\Directory {
 	private function pagination_options( $directory_data ) {
 		// number of profiles for mobile
 		$profiles_per_page = $directory_data['profiles_per_page'];
-		if ( isset( $directory_data['profiles_per_page_mobile'] ) && UM()->mobile()->isMobile() ) {
+		if ( isset( $directory_data['profiles_per_page_mobile'] ) && wp_is_mobile() ) {
 			$profiles_per_page = $directory_data['profiles_per_page_mobile'];
 		}
 
@@ -1733,7 +1733,7 @@ class Directory extends \um\common\Directory {
 		$current_page = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
 		// number of profiles for mobile
 		$profiles_per_page = $directory_data['profiles_per_page'];
-		if ( isset( $directory_data['profiles_per_page_mobile'] ) && UM()->mobile()->isMobile() ) {
+		if ( isset( $directory_data['profiles_per_page_mobile'] ) && wp_is_mobile() ) {
 			$profiles_per_page = $directory_data['profiles_per_page_mobile'];
 		}
 		$profiles_per_page = ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $profiles_per_page ) ? $directory_data['max_users'] : $profiles_per_page;
