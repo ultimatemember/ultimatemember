@@ -1,6 +1,9 @@
 <?php
 namespace um\core;
 
+use WP_Error;
+use WP_User;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -122,7 +125,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			add_action( 'init', array( &$this, 'set' ), 1 );
 
 			// When the cache should be cleared
-			add_action( 'um_delete_user', array( &$this, 'remove_cache' ), 10, 1 );
+			add_action( 'um_delete_user', array( &$this, 'remove_cache' ) );
 
 			// When user cache should be cleared
 			add_action( 'um_after_user_updated', array( &$this, 'remove_cache' ) );
@@ -131,10 +134,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			//add_action('edit_user_profile_update', array(&$this, 'remove_cache') );
 			add_action( 'um_when_role_is_set', array( &$this, 'remove_cache' ) );
 
-			add_action( 'show_user_profile', array( $this, 'profile_form_additional_section' ), 10 );
-			add_action( 'user_new_form', array( $this, 'profile_form_additional_section' ), 10 );
-			add_action( 'edit_user_profile', array( $this, 'profile_form_additional_section' ), 10 );
+			add_action( 'show_user_profile', array( $this, 'profile_form_additional_section' ) );
+			add_action( 'edit_user_profile', array( $this, 'profile_form_additional_section' ) );
+			add_action( 'user_new_form', array( $this, 'user_new_form_additional_section' ) );
+
 			add_filter( 'um_user_profile_additional_fields', array( $this, 'secondary_role_field' ), 1, 2 );
+			add_filter( 'um_user_new_form_additional_fields', array( $this, 'user_new_form_secondary_role_field' ), 1, 2 );
 
 			//on every update of user profile (hook from wp_update_user)
 			add_action( 'profile_update', array( &$this, 'profile_update' ), 10, 2 ); // user_id and old_user_data
@@ -526,9 +531,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					break;
 				case 'hide_in_members':
 					$hide_in_members = UM()->member_directory()->get_hide_in_members_default();
-					if ( ! empty( $_meta_value ) ) {
+					if ( UM()->is_new_ui() ) {
+						$hide_in_members = ! empty( $_meta_value );
+					} elseif ( ! empty( $_meta_value ) ) {
 						if ( 'Yes' === $_meta_value || __( 'Yes', 'ultimate-member' ) === $_meta_value ||
-							 array_intersect( array( 'Yes', __( 'Yes', 'ultimate-member' ) ), $_meta_value ) ) {
+							array_intersect( array( 'Yes', __( 'Yes', 'ultimate-member' ) ), $_meta_value ) ) {
 							$hide_in_members = true;
 						} else {
 							$hide_in_members = false;
@@ -636,9 +643,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 			}
 
-			// remove uploads
-			UM()->files()->remove_dir( UM()->files()->upload_temp );
-			UM()->files()->remove_dir( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR );
+			// remove user's uploads
+			UM()->common()->filesystem()::remove_dir( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR );
 
 			delete_transient( 'um_count_users_unassigned' );
 			delete_transient( 'um_count_users_pending_dot' );
@@ -678,7 +684,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 			}
 
-			$this->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 		}
 
 
@@ -699,7 +705,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 			}
 
-			$this->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 		}
 
 
@@ -968,7 +974,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * On wp_update_user function complete
 		 *
 		 * @param int $user_id
-		 * @param \WP_User $old_data
+		 * @param WP_User $old_data
 		 */
 		function profile_update( $user_id, $old_data ) {
 			// Bail if no user ID was passed
@@ -1014,64 +1020,85 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			//Update permalink
 			$this->generate_profile_slug( $user_id, true );
 
-			$this->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 		}
 
-
 		/**
-		 * Additional section for WP Profile page with UM data fields
+		 * Additional section for WP Profile page with UM data fields.
 		 *
-		 * @param \WP_User $userdata User data
+		 * @param WP_User $userdata The current WP_User object.
 		 * @return void
 		 */
-		function profile_form_additional_section( $userdata ) {
-
+		public function profile_form_additional_section( $userdata ) {
 			/**
-			 * UM hook
+			 * Filters WordPress user Profile page additional fields.
 			 *
-			 * @type filter
-			 * @title um_user_profile_additional_fields
-			 * @description Make additional content section
-			 * @input_vars
-			 * [{"var":"$content","type":"array","desc":"Additional section content"},
-			 * {"var":"$userdata","type":"array","desc":"Userdata"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_user_profile_additional_fields', 'function_name', 10, 2 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_user_profile_additional_fields', 'my_admin_pending_queue', 10, 2 );
-			 * function my_admin_pending_queue( $content, $userdata ) {
+			 * @param {string} $content  Additional content.
+			 * @param {object} $userdata Current user profile `WP_User` object.
+			 *
+			 * @return {string} Additional content.
+			 *
+			 * @since 2.0
+			 * @hook um_user_profile_additional_fields
+			 *
+			 * @example <caption>Add some custom content to the $some_id user profile.</caption>
+			 * function my_user_profile_additional_fields( $content, $userdata ) {
 			 *     // your code here
+			 *     if ( $userdata->ID === $some_id ) {
+			 *         $content .= 'some html';
+			 *     }
 			 *     return $content;
 			 * }
-			 * ?>
+			 * add_filter( 'um_user_profile_additional_fields', 'my_user_profile_additional_fields', 10, 2 );
 			 */
 			$section_content = apply_filters( 'um_user_profile_additional_fields', '', $userdata );
 
 			if ( ! empty( $section_content ) && ! ( is_multisite() && is_network_admin() ) ) {
-
-				if ( $userdata !== 'add-new-user' && $userdata !== 'add-existing-user' ) { ?>
-					<h3 id="um_user_screen_block"><?php esc_html_e( 'Ultimate Member', 'ultimate-member' ); ?></h3>
-					<?php
-				}
-
+				?>
+				<h3 id="um_user_screen_block"><?php esc_html_e( 'Ultimate Member', 'ultimate-member' ); ?></h3>
+				<?php
 				echo $section_content;
 			}
 		}
 
+		/**
+		 * Additional section for WP Profile page with UM data fields
+		 *
+		 * @param string $type A contextual string specifying which type of new user form the hook follows.
+		 *
+		 * @return void
+		 */
+		public function user_new_form_additional_section( $type ) {
+			/**
+			 * Filters WordPress user Profile page additional fields.
+			 *
+			 * @param {string} $content Additional content.
+			 * @param {string} $type    Contexts are 'add-existing-user' (Multisite), and 'add-new-user' (single site and network admin).
+			 *
+			 * @return {string} Additional content.
+			 *
+			 * @since 3.0.0
+			 * @hook um_user_new_form_additional_fields
+			 *
+			 * @example <caption>Add some custom content to the new user form.</caption>
+			 * function my_user_new_form_additional_fields( $content, $type ) {
+			 *     // your code here
+			 *     $content .= 'some html';
+			 *     return $content;
+			 * }
+			 * add_filter( 'um_user_new_form_additional_fields', 'my_user_new_form_additional_fields', 10, 2 );
+			 */
+			$section_content = apply_filters( 'um_user_new_form_additional_fields', '', $type );
+			if ( ! empty( $section_content ) && ! ( is_multisite() && is_network_admin() ) ) {
+				echo $section_content;
+			}
+		}
 
 		/**
-		 * Default interface for setting a ultimatemember role
-		 *
-		 * @param string $content Section HTML
-		 * @param \WP_User $userdata User data
-		 * @return string
+		 * @return array
 		 */
-		public function secondary_role_field( $content, $userdata ) {
-			$roles = array();
-
+		private static function get_roles_options() {
+			$roles     = array();
 			$role_keys = get_option( 'um_roles', array() );
 			if ( $role_keys ) {
 				foreach ( $role_keys as $role_key ) {
@@ -1083,35 +1110,41 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 			}
 
+			return $roles;
+		}
+
+		/**
+		 * Default interface for setting an ultimatemember role
+		 *
+		 * @param string $content Section HTML
+		 * @param WP_User $userdata User data
+		 * @return string
+		 */
+		public function secondary_role_field( $content, $userdata ) {
+			global $pagenow;
+			if ( 'profile.php' === $pagenow ) {
+				return $content;
+			}
+
+			// Bail if current user cannot edit users
+			if ( ! current_user_can( 'edit_user', $userdata->ID ) ) {
+				return $content;
+			}
+
+			$roles = self::get_roles_options();
 			if ( empty( $roles ) ) {
 				return $content;
 			}
 
-			global $pagenow;
-			if ( 'profile.php' == $pagenow ) {
-				return $content;
-			}
-
 			$style     = '';
-			$user_role = false;
-			if ( $userdata !== 'add-new-user' && $userdata !== 'add-existing-user' ) {
-				// Bail if current user cannot edit users
-				if ( ! current_user_can( 'edit_user', $userdata->ID ) ) {
-					return $content;
-				}
-
-				$user_role = UM()->roles()->get_um_user_role( $userdata->ID );
-				if ( $user_role && ! empty( $userdata->roles ) && count( $userdata->roles ) == 1 ) {
-					$style = 'style="display:none;"';
-				}
+			$user_role = UM()->roles()->get_um_user_role( $userdata->ID );
+			if ( $user_role && ! empty( $userdata->roles ) && 1 === count( $userdata->roles ) ) {
+				$style = 'display:none;';
 			}
-
-			$class = ( $userdata == 'add-existing-user' ) ? 'um_role_existing_selector_wrapper' : 'um_role_selector_wrapper';
 
 			ob_start();
 			?>
-
-			<div id="<?php echo esc_attr( $class ); ?>" <?php echo $style; ?>>
+			<div id="um_role_selector_wrapper" style="<?php echo esc_attr( $style ); ?>">
 				<table class="form-table">
 					<tbody>
 					<tr>
@@ -1128,10 +1161,52 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					</tbody>
 				</table>
 			</div>
-
 			<?php
 			$content .= ob_get_clean();
+			return $content;
+		}
 
+		/**
+		 * Default interface for setting an ultimatemember role
+		 *
+		 * @param string $content Section HTML
+		 * @param string $type    A contextual string specifying which type of new user form the hook follows.
+		 * @return string
+		 */
+		public function user_new_form_secondary_role_field( $content, $type ) {
+			global $pagenow;
+			if ( 'profile.php' === $pagenow ) {
+				return $content;
+			}
+
+			$roles = self::get_roles_options();
+			if ( empty( $roles ) ) {
+				return $content;
+			}
+
+			$class = 'add-existing-user' === $type ? 'um_role_existing_selector_wrapper' : 'um_role_selector_wrapper';
+
+			ob_start();
+			?>
+			<div id="<?php echo esc_attr( $class ); ?>">
+				<table class="form-table">
+					<tbody>
+					<tr>
+						<th><label for="um-role"><?php esc_html_e( 'Ultimate Member Role', 'ultimate-member' ); ?></label></th>
+						<td>
+							<select name="um-role" id="um-role">
+								<option value="" selected><?php esc_html_e( '&mdash; No role for Ultimate Member &mdash;', 'ultimate-member' ); ?></option>
+								<?php foreach ( $roles as $role_id => $details ) { ?>
+									<option value="<?php echo esc_attr( $role_id ); ?>"><?php echo esc_html( $details['name'] ); ?></option>
+								<?php } ?>
+							</select>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<?php
+			$content .= ob_get_clean();
 			return $content;
 		}
 
@@ -1199,8 +1274,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		/**
 		 * @param $user_id
 		 */
-		function remove_cache( $user_id ) {
-			delete_option( "um_cache_userdata_{$user_id}" );
+		public function remove_cache( $user_id ) {
+			UM()->common()->users()->remove_cache( $user_id );
 		}
 
 
@@ -1365,7 +1440,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 */
 		public function auto_login( $user_id, $rememberme = 0 ) {
-
 			wp_set_current_user( $user_id );
 
 			wp_set_auth_cookie( $user_id, $rememberme );
@@ -1373,7 +1447,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$user = get_user_by( 'ID', $user_id );
 
 			do_action( 'wp_login', $user->user_login, $user );
-
 		}
 
 		/**
@@ -1479,11 +1552,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		}
 
 		/**
-		 * @param \WP_User $userdata
+		 * @param WP_User $userdata
 		 *
-		 * @return string|\WP_Error
+		 * @return string|WP_Error
 		 */
-		function maybe_generate_password_reset_key( $userdata ) {
+		public function maybe_generate_password_reset_key( $userdata ) {
 			return get_password_reset_key( $userdata );
 		}
 
@@ -1617,13 +1690,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			delete_user_meta( $this->id, $key );
 		}
 
-
 		/**
 		 * Get admin actions for individual user
-		 *
-		 * @return array|bool
+		 * @todo remove as soon as new UI is live.
+		 * @return array
 		 */
-		function get_admin_actions() {
+		public function get_admin_actions() {
 			$items = array();
 
 			$actions = UM()->frontend()->users()->get_actions_list( um_profile_id() );
@@ -1639,11 +1711,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 						'nonce'     => wp_create_nonce( $id . um_profile_id() ),
 					)
 				);
+
 				$items[] = '<a href="' . esc_url( $url ) . '" class="real_url ' . esc_attr( $id ) . '-item">' . esc_html( $arr['label'] ) . '</a>';
 			}
 			return $items;
 		}
-
 
 		/**
 		 * This method checks if the profile indexing is disabled

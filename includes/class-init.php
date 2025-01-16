@@ -465,7 +465,6 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return void
 		 */
 		public function includes() {
-
 			$this->maybe_action_scheduler();
 
 			$this->common()->includes();
@@ -502,7 +501,9 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->frontend()->includes();
 				$this->login();
 				$this->register();
-				$this->user_posts();
+				if ( ! $this->is_new_ui() ) {
+					$this->user_posts();
+				}
 				$this->logout();
 			}
 
@@ -516,7 +517,9 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->user();
 			$this->profile();
 			$this->builtin();
-			$this->files();
+			if ( ! $this->is_new_ui() ) {
+				$this->files();
+			}
 			$this->form()->hooks();
 			$this->permalinks();
 			$this->cron();
@@ -524,6 +527,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->gdpr();
 			$this->member_directory();
 			$this->blocks();
+			$this->validation();
 
 			// If multisite networks active
 			if ( is_multisite() ) {
@@ -536,26 +540,29 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 		}
 
-
 		/**
-		 * @since 2.1.0
+		 * It handles only old UI. Use directory() instead.
 		 *
-		 * @return um\core\Member_Directory()
+		 * @since 2.1.0
+		 * @since 3.0.0 added um\common\Directory for new UI
+		 *
+		 * @return um\core\Member_Directory | um\common\Directory | um\core\Member_Directory_Meta
 		 */
-		function member_directory() {
+		public function member_directory() {
 			if ( empty( $this->classes['member_directory'] ) ) {
-
-				$search_in_table = $this->options()->get( 'member_directory_own_table' );
-
-				if ( ! empty( $search_in_table ) ) {
-					$this->classes['member_directory'] = new um\core\Member_Directory_Meta();
+				if ( $this->is_new_ui() ) {
+					$this->classes['member_directory'] = new um\common\Directory();
 				} else {
-					$this->classes['member_directory'] = new um\core\Member_Directory();
+					$search_in_table = $this->options()->get( 'member_directory_own_table' );
+					if ( ! empty( $search_in_table ) ) {
+						$this->classes['member_directory'] = new um\core\Member_Directory_Meta();
+					} else {
+						$this->classes['member_directory'] = new um\core\Member_Directory();
+					}
 				}
 			}
 			return $this->classes['member_directory'];
 		}
-
 
 		/**
 		 * @since 2.6.1
@@ -1032,29 +1039,14 @@ if ( ! class_exists( 'UM' ) ) {
 		}
 
 		/**
+		 * @return um\common\Shortcodes
 		 * @since 2.0
-		 * @todo Make it deprecated and review extensions.
+		 * @todo deprecate and use UM()->common()->shortcodes() instead
 		 *
-		 * @return um\frontend\Enqueue
 		 */
-		public function enqueue() {
-			_deprecated_function( __METHOD__, '2.7.0', 'UM()->frontend()->enqueue()' );
-			return $this->frontend()->enqueue();
+		public function shortcodes() {
+			return $this->common()->shortcodes();
 		}
-
-		/**
-		 * @since 2.0
-		 *
-		 * @return um\core\Shortcodes
-		 */
-		function shortcodes() {
-			if ( empty( $this->classes['shortcodes'] ) ) {
-				$this->classes['shortcodes'] = new um\core\Shortcodes();
-			}
-
-			return $this->classes['shortcodes'];
-		}
-
 
 		/**
 		 * @since 2.0
@@ -1097,20 +1089,25 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['form'];
 		}
 
-
 		/**
-		 * @since 2.0
+		 * Fields class instance. Different base on UI version.
 		 *
-		 * @return um\core\Fields
+		 * @since 2.0
+		 * @since 3.0.0 added um\common\Fields for new UI
+		 *
+		 * @return um\core\Fields | um\common\Fields
 		 */
-		function fields() {
+		public function fields() {
 			if ( empty( $this->classes['fields'] ) ) {
-				$this->classes['fields'] = new um\core\Fields();
+				if ( $this->is_new_ui() ) {
+					$this->classes['fields'] = new um\common\Fields();
+				} else {
+					$this->classes['fields'] = new um\core\Fields();
+				}
 			}
 
 			return $this->classes['fields'];
 		}
-
 
 		/**
 		 * @since 2.0
@@ -1139,20 +1136,20 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['roles'];
 		}
 
-
 		/**
 		 * @since 2.0
 		 *
+		 * @todo deprecate since old UI is deprecated
+		 *
 		 * @return um\core\User_posts
 		 */
-		function user_posts() {
+		public function user_posts() {
 			if ( empty( $this->classes['user_posts'] ) ) {
 				$this->classes['user_posts'] = new um\core\User_posts();
 			}
 
 			return $this->classes['user_posts'];
 		}
-
 
 		/**
 		 * @since 2.0
@@ -1236,20 +1233,18 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['uploader'];
 		}
 
-
 		/**
 		 * @since 2.0
 		 *
 		 * @return um\core\Validation
 		 */
-		function validation() {
+		public function validation() {
 			if ( empty( $this->classes['validation'] ) ) {
 				$this->classes['validation'] = new um\core\Validation();
 			}
 
 			return $this->classes['validation'];
 		}
-
 
 		/**
 		 * @since 2.0
@@ -1393,16 +1388,16 @@ if ( ! class_exists( 'UM' ) ) {
 
 			require_once 'core/um-filters-login.php';
 			require_once 'core/um-filters-fields.php';
-			require_once 'core/um-filters-files.php';
 			require_once 'core/um-filters-navmenu.php';
-			require_once 'core/um-filters-avatars.php';
 			require_once 'core/um-filters-user.php';
-
 			require_once 'core/um-filters-profile.php';
 			require_once 'core/um-filters-account.php';
 			require_once 'core/um-filters-misc.php';
 			require_once 'core/um-filters-commenting.php';
 
+			if ( ! ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_no_conflict_avatar' ) ) ) {
+				require_once 'core/um-filters-avatars.php';
+			}
 		}
 
 		/**

@@ -23,6 +23,8 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			$this->actions();
 
 			$this->cpt()->hooks();
+			$this->filesystem()->hooks();
+			$this->rewrite();
 			$this->screen();
 			$this->secure()->hooks();
 			$this->site_health();
@@ -40,6 +42,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\actions\emails'] = new actions\Emails();
 			}
 			// Other classes init here as soon as possible.
+		}
+
+		/**
+		 * @since 2.9.3
+		 *
+		 * @return APIs
+		 */
+		public function apis() {
+			if ( empty( UM()->classes['um\common\apis'] ) ) {
+				UM()->classes['um\common\apis'] = new APIs();
+			}
+			return UM()->classes['um\common\apis'];
 		}
 
 		/**
@@ -67,6 +81,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		}
 
 		/**
+		 * @since 3.0.0
+		 *
+		 * @return Rewrite
+		 */
+		public function rewrite() {
+			if ( empty( UM()->classes['um\common\rewrite'] ) ) {
+				UM()->classes['um\common\rewrite'] = new Rewrite();
+			}
+			return UM()->classes['um\common\rewrite'];
+		}
+
+		/**
 		 * @since 2.6.8
 		 *
 		 * @return Screen
@@ -91,6 +117,19 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		}
 
 		/**
+		 * @return Shortcodes
+		 *
+		 * @since 3.0.0
+		 */
+		public function shortcodes() {
+			if ( empty( UM()->classes['um\common\shortcodes'] ) ) {
+				UM()->classes['um\common\shortcodes'] = new Shortcodes();
+			}
+
+			return UM()->classes['um\common\shortcodes'];
+		}
+
+		/**
 		 * @since 2.6.8
 		 *
 		 * @return Site_Health
@@ -100,6 +139,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\site_health'] = new Site_Health();
 			}
 			return UM()->classes['um\common\site_health'];
+		}
+
+		/**
+		 * @since 3.0.0
+		 *
+		 * @return Color
+		 */
+		public static function color() {
+			if ( empty( UM()->classes['um\common\color'] ) ) {
+				UM()->classes['um\common\color'] = new Color();
+			}
+			return UM()->classes['um\common\color'];
 		}
 
 		/**

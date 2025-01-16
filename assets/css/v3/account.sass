@@ -1,0 +1,33 @@
+@import "../selectors"
+@import "../mixins"
+@import "../box"
+@import "../colors"
+@import "../typography"
+
+.um.#{$prefix}account
+  .#{$prefix}tabs-wrapper.#{$prefix}vertical-tabs
+    width: 100%
+    .#{$prefix}tabs-content
+      .#{$prefix}tab-content[data-tab="personal-data"]
+        row-gap: 0
+
+        form.#{$prefix}form-new
+          .#{$prefix}form-submit
+            +flex( row, flex-start, center, nowrap )
+            row-gap: initial
+            column-gap: $spacing-2xl
+            .#{$prefix}ajax-spinner-svg
+              display: none
+
+.um
+  .#{$prefix}section-header
+    +flex( column, flex-start, stretch, nowrap )
+    row-gap: $spacing-xs
+    .#{$prefix}section-title
+      +typography( text, lg, semibold )
+      color: $gray-900
+      margin: 0
+      padding: 0
+    .#{$prefix}section-supporting-text
+      margin: 0
+      padding: 0
