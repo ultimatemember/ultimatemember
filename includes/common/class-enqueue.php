@@ -328,7 +328,12 @@ class Enqueue {
 		 */
 		$um_common_variables = apply_filters( 'um_common_js_variables', $um_common_variables );
 		wp_localize_script( 'um_common', 'um_common_variables', $um_common_variables );
-
+		if ( UM()->common()->apis()::is_active( 'google-maps' ) ) {
+			$api_instance = UM()->common()->apis()->get( 'google-maps' );
+			if ( $api_instance ) {
+				$api_instance->add_inline_script();
+			}
+		}
 		$common_css_deps = array_merge( array( 'um_tipsy', 'um_confirm', 'um_datetime_date', 'um_datetime_time' ), self::$fonticons_handlers );
 		wp_register_style( 'um_common', $css_url . 'common' . $suffix . '.css', $common_css_deps, UM_VERSION );
 	}
