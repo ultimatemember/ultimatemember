@@ -673,24 +673,6 @@ function um_profile_dynamic_meta_desc() {
 		$url         = um_user_profile_url( $user_id );
 
 		/**
-		 * Filters the profile SEO image size. Default 190. Available 'original'.
-		 *
-		 * @param {string} $image_size Image size.
-		 * @param {int}    $user_id    User ID.
-		 *
-		 * @return {array} Changed image type
-		 *
-		 * @since 2.5.5
-		 * @hook um_profile_dynamic_meta_image_size
-		 *
-		 * @example <caption>Change meta image to cover photo `cover_photo`.</caption>
-		 * function my_um_profile_dynamic_meta_image_size( $image_size, $user_id ) {
-		 *     return 'original';
-		 * }
-		 * add_filter( 'um_profile_dynamic_meta_image_size', 'my_um_profile_dynamic_meta_image_size', 10, 2 );
-		 */
-		$image_size = apply_filters( 'um_profile_dynamic_meta_image_size', 190, $user_id );
-		/**
 		 * Filters the profile SEO image type. Default 'profile_photo'. Available 'cover_photo', 'profile_photo'.
 		 *
 		 * @param {string} $image_type Image type - cover_photo or profile_photo.
@@ -708,6 +690,29 @@ function um_profile_dynamic_meta_desc() {
 		 * add_filter( 'um_profile_dynamic_meta_image_type', 'my_um_profile_dynamic_meta_image_type', 10, 2 );
 		 */
 		$image_type = apply_filters( 'um_profile_dynamic_meta_image_type', 'profile_photo', $user_id );
+
+		// The minimum size is 200 x 200 px, however, we recommend keeping it to 600 x 315 px.
+		// If your image is smaller than 600 x 315 pixels, it will appear as a small image in the link preview.
+		$image_size_def = 'cover_photo' === $image_type ? 600 : 200;
+
+		/**
+		 * Filters the profile SEO image size. Default 190. Available 'original'.
+		 *
+		 * @param {string} $image_size Image size.
+		 * @param {int}    $user_id    User ID.
+		 *
+		 * @return {array} Changed image type
+		 *
+		 * @since 2.5.5
+		 * @hook um_profile_dynamic_meta_image_size
+		 *
+		 * @example <caption>Change meta image to cover photo `cover_photo`.</caption>
+		 * function my_um_profile_dynamic_meta_image_size( $image_size, $user_id ) {
+		 *     return 'original';
+		 * }
+		 * add_filter( 'um_profile_dynamic_meta_image_size', 'my_um_profile_dynamic_meta_image_size', 10, 2 );
+		 */
+		$image_size = apply_filters( 'um_profile_dynamic_meta_image_size', $image_size_def, $user_id );
 
 		if ( 'cover_photo' === $image_type ) {
 			if ( is_numeric( $image_size ) ) {
@@ -730,10 +735,17 @@ function um_profile_dynamic_meta_desc() {
 		}
 
 		$image      = current( explode( '?', $image ) ); // strip $_GET attributes from photo URL.
-		$image_url  = wp_parse_url( $image );
-		$image_name = explode( '/', $image_url['path'] );
-		$image_name = end( $image_name );
-		$image_info = wp_check_filetype( $image_name );
+		$image_path = wp_normalize_path( ABSPATH . wp_parse_url( $image, PHP_URL_PATH ) );
+		$image_info = wp_check_filetype( $image_path );
+
+		$imagesizes = getimagesize( $image_path );
+		if ( is_array( $imagesizes ) ) {
+			$image_width  = $imagesizes[0];
+			$image_height = $imagesizes[1];
+		} else {
+			$image_width  = $image_size;
+			$image_height = $image_size;
+		}
 
 		$person = array(
 			'@context'     => 'https://schema.org',
@@ -796,10 +808,8 @@ function um_profile_dynamic_meta_desc() {
 		<meta property="og:description" content="<?php echo esc_attr( $description ); ?>"/>
 		<meta property="og:image" content="<?php echo esc_url( $image ); ?>"/>
 		<meta property="og:image:alt" content="<?php esc_attr_e( 'Profile photo', 'ultimate-member' ); ?>"/>
-		<?php if ( is_numeric( $image_size ) ) { ?>
-			<meta property="og:image:height" content="<?php echo absint( $image_size ); ?>"/>
-			<meta property="og:image:width" content="<?php echo absint( $image_size ); ?>"/>
-		<?php } ?>
+		<meta property="og:image:height" content="<?php echo absint( $image_height ); ?>"/>
+		<meta property="og:image:width" content="<?php echo absint( $image_width ); ?>"/>
 		<?php if ( is_ssl() ) { ?>
 			<meta property="og:image:secure_url" content="<?php echo esc_url( $image ); ?>"/>
 		<?php } ?>
