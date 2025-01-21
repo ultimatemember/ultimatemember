@@ -296,13 +296,16 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 			foreach ( $this->rows as $row_id => $row_array ) {
 
 				$row_fields = $this->get_fields_by_row( $row_id );
+
 				if ( $row_fields ) {
 
 					$output .= $this->new_row_output( $row_id, $row_array );
 
 					$sub_rows = ( isset( $row_array['sub_rows'] ) ) ? $row_array['sub_rows'] : 1;
 					for ( $c = 0; $c < $sub_rows; $c++ ) {
-						$output .= '<div class="um-form-row">';
+						$form_row_classes = apply_filters( 'um_form_row_extend_classes', 'um-form-row', $row_fields );
+
+						$output .= '<div class="' . esc_attr( $form_row_classes ) . '">';
 						// cols
 						$cols = isset( $row_array['cols'] ) ? $row_array['cols'] : 1;
 						if ( is_numeric( $cols ) ) {
