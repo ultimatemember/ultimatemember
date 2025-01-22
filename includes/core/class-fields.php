@@ -173,7 +173,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return string
 		 */
-		protected function disabled_hidden_field( $key, $value ) {
+		public function disabled_hidden_field( $key, $value ) {
 			return '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '"/>';
 		}
 
