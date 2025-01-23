@@ -644,7 +644,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			// remove user's uploads
-			UM()->common()->filesystem()::remove_dir( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR );
+			UM()->common()->filesystem()::remove_dir( UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) ) . DIRECTORY_SEPARATOR );
 
 			delete_transient( 'um_count_users_unassigned' );
 			delete_transient( 'um_count_users_pending_dot' );

@@ -592,21 +592,14 @@ function um_user_submitted_registration( $style = false ) {
 			}
 
 			if ( UM()->fields()->get_field_type( $k ) == 'image' || UM()->fields()->get_field_type( $k ) == 'file' ) {
-				$file = basename( $v );
-				$filedata = get_user_meta( um_user( 'ID' ), $k . "_metadata", true );
+				$file     = basename( $v );
+				$filedata = get_user_meta( um_user( 'ID' ), $k . '_metadata', true );
 
-				$baseurl = UM()->uploader()->get_upload_base_url();
-				if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $file ) ) {
-					if ( is_multisite() ) {
-						//multisite fix for old customers
-						$baseurl = str_replace( '/sites/' . get_current_blog_id() . '/', '/', $baseurl );
-					}
-				}
-
+				$baseurl = UM()->common()->filesystem()->get_user_uploads_url( um_user( 'ID' ) );
 				if ( ! empty( $filedata['original_name'] ) ) {
-					$v = '<a href="' . esc_attr( $baseurl . um_user( 'ID' ) . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
+					$v = '<a href="' . esc_attr( $baseurl . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
 				} else {
-					$v = $baseurl . um_user( 'ID' ) . '/' . $file;
+					$v = $baseurl . '/' . $file;
 				}
 			}
 

@@ -746,7 +746,7 @@ if ( UM()->is_new_ui() ) {
 					if ( in_array( $array['type'], array( 'image', 'file' ), true ) ) {
 						if ( um_is_temp_file( $args['submitted'][ $key ] ) || 'empty_file' === $args['submitted'][ $key ] ) {
 							$files[ $key ] = $args['submitted'][ $key ];
-						} elseif( um_is_file_owner( UM()->uploader()->get_upload_base_url() . $user_id . '/' . $args['submitted'][ $key ], $user_id ) ) {
+						} elseif( um_is_file_owner( UM()->common()->filesystem()->get_user_uploads_url( $user_id ) . '/' . $args['submitted'][ $key ], $user_id ) ) {
 
 						} else {
 							$files[ $key ] = 'empty_file';
@@ -1430,8 +1430,9 @@ function um_profile_header( $args ) {
 		<div class="um-profile-photo" data-user_id="<?php echo esc_attr( um_profile_id() ); ?>" <?php echo wp_kses( UM()->fields()->aria_valid_attributes( UM()->fields()->is_error( 'profile_photo' ), 'profile_photo' ), UM()->get_allowed_html( 'templates' ) ); ?>>
 
 			<a href="<?php echo esc_url( um_user_profile_url() ); ?>" class="um-profile-photo-img" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
-				<?php if ( ! $default_size || $default_size == 'original' ) {
-					$profile_photo = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/" . um_profile( 'profile_photo' );
+				<?php
+				if ( ! $default_size || 'original' === $default_size ) {
+					$profile_photo = um_get_avatar_uri( um_profile( 'profile_photo' ), 'original' );
 
 					$data = um_get_user_avatar_data( um_user( 'ID' ) );
 					echo $overlay . sprintf( '<img src="%s" class="%s" alt="%s" data-default="%s" onerror="%s" />',
@@ -1443,7 +1444,8 @@ function um_profile_header( $args ) {
 						);
 				} else {
 					echo $overlay . get_avatar( um_user( 'ID' ), $default_size );
-				} ?>
+				}
+				?>
 			</a>
 
 			<?php if ( empty( $disable_photo_uploader ) && empty( UM()->user()->cannot_edit ) ) {
@@ -1724,13 +1726,13 @@ function um_add_edit_icon( $args ) {
 
 	// do not proceed if user cannot edit
 
-	if ( true === UM()->fields()->editing ) { ?>
-
+	if ( true === UM()->fields()->editing ) {
+		?>
 		<div class="um-profile-edit um-profile-headericon">
 			<a href="javascript:void(0);" class="um-profile-edit-a um-profile-save"><i class="um-faicon-check"></i></a>
 		</div>
-
-		<?php return;
+		<?php
+		return;
 	}
 
 	if ( ! um_is_myprofile() ) {
@@ -1804,12 +1806,11 @@ function um_add_edit_icon( $args ) {
 		* ?>
 		*/
 		$items = apply_filters( 'um_myprofile_edit_menu_items', $items );
-	} ?>
+	}
+	?>
 
 	<div class="um-profile-edit um-profile-headericon">
-
 		<a href="javascript:void(0);" class="um-profile-edit-a"><i class="um-faicon-cog"></i></a>
-
 		<?php UM()->profile()->new_ui( $args['header_menu'], 'div.um-profile-edit', 'click', $items ); ?>
 	</div>
 

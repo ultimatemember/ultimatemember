@@ -156,7 +156,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 				$is_temp = $this->is_temp_upload( $src );
 				if ( ! $is_temp ) {
-					if ( ! empty( $_POST['filename'] ) && file_exists( UM()->uploader()->get_upload_user_base_dir( $user_id ) . DIRECTORY_SEPARATOR . sanitize_file_name( $_POST['filename'] ) ) ) {
+					if ( ! empty( $_POST['filename'] ) && file_exists( UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . sanitize_file_name( $_POST['filename'] ) ) ) {
 						wp_send_json_success();
 					}
 				}

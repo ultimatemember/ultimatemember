@@ -356,20 +356,7 @@ function um_profile_field_filter_hook__file( $value, $data ) {
 	$file_type = wp_check_filetype( $value );
 	$uri       = UM()->fields()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
 
-	$removed = false;
-	if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
-		if ( is_multisite() ) {
-			//multisite fix for old customers
-			$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value );
-			if ( ! file_exists( $file_path ) ) {
-				$removed = true;
-			}
-		} else {
-			$removed = true;
-		}
-	}
-
-	if ( $removed ) {
+	if ( ! file_exists( UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) ) . DIRECTORY_SEPARATOR . $value ) ) {
 		$value = __( 'This file has been removed.', 'ultimate-member' );
 	} else {
 		$file_info = um_user( $data['metakey'] . '_metadata' );
@@ -420,16 +407,8 @@ function um_profile_field_filter_hook__image( $value, $data ) {
 	$title = isset( $data['title'] ) ? $data['title'] : __( 'Untitled photo', 'ultimate-member' );
 
 	$removed = false;
-	if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
-		if ( is_multisite() ) {
-			//multisite fix for old customers
-			$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value );
-			if ( ! file_exists( $file_path ) ) {
-				$removed = true;
-			}
-		} else {
-			$removed = true;
-		}
+	if ( ! file_exists( UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) ) . DIRECTORY_SEPARATOR . $value ) ) {
+		$removed = true;
 	}
 
 	if ( UM()->is_new_ui() ) {

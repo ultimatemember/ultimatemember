@@ -511,18 +511,18 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 * @param array $args
 		 */
 		public function new_ui( $position, $element, $trigger, $items, $args = array() ) {
-
 			$additional_data = '';
 			foreach ( $args as $key => $value ) {
-				$additional_data .= " data-{$key}=\"{$value}\"";
-			} ?>
+				$additional_data .= " data-{$key}=\"" . esc_attr( $value ) . '"';
+			}
+			?>
 
-			<div class="um-dropdown" data-element="<?php echo esc_attr( $element ); ?>" data-position="<?php echo esc_attr( $position ); ?>" data-trigger="<?php echo esc_attr( $trigger ); ?>"<?php echo $additional_data ?>>
+			<div class="um-dropdown" data-element="<?php echo esc_attr( $element ); ?>" data-position="<?php echo esc_attr( $position ); ?>" data-trigger="<?php echo esc_attr( $trigger ); ?>"<?php echo $additional_data; ?>>
 				<div class="um-dropdown-b">
 					<div class="um-dropdown-arr"><i class=""></i></div>
 					<ul>
-						<?php foreach ( $items as $k => $v ) { ?>
-							<li><?php echo $v; ?></li>
+						<?php foreach ( $items as $v ) { ?>
+							<li><?php echo wp_kses( $v, UM()->get_allowed_html( 'templates' ) ); ?></li>
 						<?php } ?>
 					</ul>
 				</div>

@@ -725,6 +725,25 @@ class Filesystem {
 	}
 
 	/**
+	 * @since 3.0.0
+	 *
+	 * @param string $path File path
+	 *
+	 * @return bool
+	 */
+	public static function remove_file( $path ) {
+		global $wp_filesystem;
+
+		self::maybe_init_wp_filesystem();
+
+		if ( ! $wp_filesystem->is_file( $path ) ) {
+			return false;
+		}
+
+		return $wp_filesystem->delete( $path );
+	}
+
+	/**
 	 * Format Bytes
 	 *
 	 * @param int $size

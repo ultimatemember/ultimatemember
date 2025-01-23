@@ -192,9 +192,12 @@
 			}
 		}
 
+		if ( typeof self.data.parent === 'undefined' ) {
+			self.data.parent = ''; // set empty default
+		}
+
 		if ( typeof um_dropdownMenu.globalHandlersInitted === 'undefined' ) {
 			um_dropdownMenu.globalHandlersInitted = true;
-			//var globalParent = '' !== self.data.parent ? self.data.parent : document.body;
 			$( document.body ).on('click', function(e) {
 				if ( ! $( e.target ).closest('.um-new-dropdown').length ) {
 					self.hideAll();

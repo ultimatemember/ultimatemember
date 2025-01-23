@@ -215,6 +215,21 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Deprecated function `UM()->files()->allowed_file_types()` because it is unused.
 * Deprecated function `UM()->files()->allowed_image_types()` because it is unused.
 * Deprecated function `UM()->files()->get_download_link()`. Use function 'UM()->fields()->get_download_link()' instead.
+* Deprecated function `UM()->uploader()->delete_existing_file()` because it is unused.
+* Deprecated function `UM()->uploader()->get_core_upload_dir()`. Use function `UM()->common()->filesystem()->get_basedir()` instead.
+* Deprecated function `UM()->uploader()->get_upload_base_dir()`. Use function `UM()->common()->filesystem()->get_basedir()` instead.
+* Deprecated function `UM()->uploader()->get_upload_base_url()`. Use function `UM()->common()->filesystem()->get_baseurl()` instead.
+* Deprecated function `UM()->uploader()->get_core_temp_url()`. Use function `UM()->common()->filesystem()->get_tempurl()` instead.
+* Deprecated function `UM()->uploader()->get_upload_user_base_dir()`. Use function `UM()->common()->filesystem()->get_user_uploads_dir()` instead.
+* Deprecated function `UM()->uploader()->get_upload_user_base_url()`. Use function `UM()->common()->filesystem()->get_user_uploads_url()` instead.
+* Deprecated variable `UM()->uploader()->wp_upload_dir` because it is unused.
+* Deprecated variable `UM()->uploader()->core_upload_dir` because it is unused.
+* Deprecated variable `UM()->uploader()->core_upload_url` because it is unused.
+* Deprecated variable `UM()->uploader()->temp_upload_dir` because it is unused.
+* Deprecated variable `UM()->uploader()->upload_baseurl` because it is unused.
+* Deprecated variable `UM()->uploader()->upload_basedir` because it is unused.
+* Deprecated variable `UM()->uploader()->upload_user_baseurl` because it is unused.
+* Deprecated variable `UM()->uploader()->upload_user_basedir` because it is unused.
 * Deprecated function `um_is_temp_upload()` use function 'UM()->files()->is_temp_upload()' instead.
 * Deprecated function `um_is_temp_image()` because it is unused.
 

@@ -3025,8 +3025,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					if ( ! empty( $field_value ) && 'empty_file' !== $field_value ) {
 						if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) ) {
-							if ( ( isset( $this->set_mode ) && 'register' === $this->set_mode ) || file_exists( UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $field_value ) ) {
-								$img_value = UM()->uploader()->get_core_temp_url() . '/' . $this->field_value( $key, $default, $data );
+							if ( ( isset( $this->set_mode ) && 'register' === $this->set_mode ) || file_exists( UM()->common()->filesystem()->get_tempdir() . DIRECTORY_SEPARATOR . $field_value ) ) {
+								$img_value = UM()->common()->filesystem()->get_tempurl() . '/' . $this->field_value( $key, $default, $data );
 							} else {
 								$img_value = $this->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
 							}
@@ -3132,12 +3132,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$file_field_name = $file_info['original_name'];
 						}
 
-						if ( ( isset( $this->set_mode ) && 'register' === $this->set_mode ) || file_exists( UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $file_field_value ) ) {
-							$file_url = UM()->uploader()->get_core_temp_url() . DIRECTORY_SEPARATOR . $file_field_value;
-							$file_dir = UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $file_field_value;
+						if ( ( isset( $this->set_mode ) && 'register' === $this->set_mode ) || file_exists( UM()->common()->filesystem()->get_tempdir() . DIRECTORY_SEPARATOR . $file_field_value ) ) {
+							$file_url = UM()->common()->filesystem()->get_tempurl() . '/' . $file_field_value;
+							$file_dir = UM()->common()->filesystem()->get_tempdir() . DIRECTORY_SEPARATOR . $file_field_value;
 						} else {
 							$file_url = $this->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
-							$file_dir = UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $file_field_value;
+							$file_dir = UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) ) . DIRECTORY_SEPARATOR . $file_field_value;
 						}
 
 						// Multisite fix for old customers.
