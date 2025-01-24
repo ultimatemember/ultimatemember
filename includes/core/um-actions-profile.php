@@ -693,7 +693,7 @@ function um_profile_dynamic_meta_desc() {
 
 		// The minimum size is 200 x 200 px, however, we recommend keeping it to 600 x 315 px.
 		// If your image is smaller than 600 x 315 pixels, it will appear as a small image in the link preview.
-		$image_size_def = 'cover_photo' === $image_type ? 600 : 200;
+		$default_image_size = 'cover_photo' === $image_type ? 600 : 200;
 
 		/**
 		 * Filters the profile SEO image size. Default 190. Available 'original'.
@@ -712,7 +712,7 @@ function um_profile_dynamic_meta_desc() {
 		 * }
 		 * add_filter( 'um_profile_dynamic_meta_image_size', 'my_um_profile_dynamic_meta_image_size', 10, 2 );
 		 */
-		$image_size = apply_filters( 'um_profile_dynamic_meta_image_size', $image_size_def, $user_id );
+		$image_size = apply_filters( 'um_profile_dynamic_meta_image_size', $default_image_size, $user_id );
 
 		if ( 'cover_photo' === $image_type ) {
 			if ( is_numeric( $image_size ) ) {
