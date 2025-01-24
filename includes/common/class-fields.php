@@ -298,14 +298,34 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 				$row_fields = $this->get_fields_by_row( $row_id );
 
 				if ( $row_fields ) {
+					/**
+					 * Filters the form row classes.
+					 *
+					 * @param {array} $classes Form row classes.
+					 * @param {array} $fields  Form row's fields.
+					 *
+					 * @return {array} Form row classes.
+					 *
+					 * @since 3.0.0
+					 * @hook um_form_row_classes
+					 *
+					 * @example <caption>Extends the form row's classes for 3rd-party functionality when 'my_key' field is situated in row.</caption>
+					 * function my_custom_um_form_row_classes( $classes, $fields ) {
+					 *     if ( array_key_exists( 'my_key', $fields ) ) {
+					 *         $classes[] = 'custom_class';
+					 *     }
+					 *     return $classes;
+					 * }
+					 * add_filter( 'um_form_row_classes', 'my_custom_um_form_row_classes', 10, 2 );
+					 */
+					$form_row_classes = apply_filters( 'um_form_row_classes', array( 'um-form-row' ), $row_fields );
 
 					$output .= $this->new_row_output( $row_id, $row_array );
 
 					$sub_rows = ( isset( $row_array['sub_rows'] ) ) ? $row_array['sub_rows'] : 1;
 					for ( $c = 0; $c < $sub_rows; $c++ ) {
-						$form_row_classes = apply_filters( 'um_form_row_extend_classes', 'um-form-row', $row_fields );
+						$output .= '<div class="' . esc_attr( implode( ' ', $form_row_classes ) ) . '">';
 
-						$output .= '<div class="' . esc_attr( $form_row_classes ) . '">';
 						// cols
 						$cols = isset( $row_array['cols'] ) ? $row_array['cols'] : 1;
 						if ( is_numeric( $cols ) ) {
