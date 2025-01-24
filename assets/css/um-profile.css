@@ -6,10 +6,6 @@
 	box-sizing: border-box;
 }
 
-.um-profile .um-cover-overlay {
-	display: none;
-}
-
 .um-profile.um-editing .um-cover.has-cover .um-cover-overlay {
 	display: block;
 }
@@ -53,22 +49,6 @@
 	background-color: #eee;
 	box-sizing: border-box;
 	position: relative;
-}
-
-.um-cover-add {
-	color: #aaa;
-	font-size: 36px;
-	width: 100%;
-	display: table;
-}
-
-.um-cover-add i {
-	font-size: 36px;
-}
-
-.um-cover-add span {
-	display: table-cell;
-	vertical-align: middle;
 }
 
 .um-cover-e {
@@ -160,7 +140,7 @@
 	text-align: center !important;
 }
 
-.um-header.no-cover .um-name { 
+.um-header.no-cover .um-name {
 	float: none !important;
 	margin-right: 0 !important;
 }

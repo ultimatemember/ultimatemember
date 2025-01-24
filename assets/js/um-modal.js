@@ -141,9 +141,13 @@ jQuery(document).ready(function() {
 						if ( key === 'profile_photo' ) {
 							jQuery('.um-profile-photo-img img').attr('src', response.data.image.source_url + "?"+d.getTime());
 						} else if ( key === 'cover_photo' ) {
-							jQuery('.um-cover-e').empty().html('<img src="' + response.data.image.source_url + "?"+d.getTime() + '" alt="" />');
-							if ( jQuery('.um').hasClass('um-editing') ) {
-								jQuery('.um-cover-overlay').show();
+							var $coverDiv = jQuery('.um-cover-e');
+							$coverDiv.find('img').remove();
+							$coverDiv.prepend('<img src="' + response.data.image.source_url + "?"+d.getTime() + '" alt="" />');
+
+							var $coverOverlay = $coverDiv.find('.um-cover-overlay');
+							if ( $coverOverlay.length ) {
+								$coverOverlay.find('.um-cover-overlay-t').html( $coverOverlay.data('text-change') );
 							}
 						}
 

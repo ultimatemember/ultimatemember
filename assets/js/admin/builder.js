@@ -135,7 +135,6 @@ UM.admin.builder = {
 
 				calcHeight = Math.round( width / ratios[0] ) + 'px';
 				elem.height( calcHeight );
-				elem.find('.um-cover-add').height( calcHeight );
 			});
 		}
 	}

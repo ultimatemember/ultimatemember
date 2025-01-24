@@ -263,8 +263,6 @@ function um_responsive(){
 
 		calcHeight = Math.round( width / ratios[0] ) + 'px';
 		elem.height( calcHeight );
-		elem.find('.um-cover-add').height( calcHeight );
-
 	});
 
 	UM_domenus();

@@ -23,7 +23,7 @@ jQuery(document).ready(function() {
 		jQuery(this).addClass('active');
 	});
 
-	jQuery( document.body ).on( 'click', '.um-cover a.um-cover-add, .um-photo a', function(e){
+	jQuery( document.body ).on( 'click', '.um-photo a', function(e){
 		e.preventDefault();
 	});
 
@@ -61,9 +61,13 @@ jQuery(document).ready(function() {
 	jQuery(document.body).on('click', '.um-reset-cover-photo', function(e){
 		var obj = jQuery(this);
 
-		jQuery('.um-cover-overlay').hide();
+		var $coverDiv = jQuery('.um-cover-e');
+		$coverDiv.find('img').remove();
 
-		jQuery('.um-cover-e').html('<a href="javascript:void(0);" class="um-cover-add" style="height: 370px;"><span class="um-cover-add-i"><i class="um-icon-plus um-tip-n" title="Upload a cover photo"></i></span></a>');
+		var $coverOverlay = $coverDiv.find('.um-cover-overlay');
+		if ( $coverOverlay.length ) {
+			$coverOverlay.find('.um-cover-overlay-t').html( $coverOverlay.data('text-upload') );
+		}
 
 		um_responsive();
 

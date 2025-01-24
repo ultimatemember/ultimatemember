@@ -839,6 +839,8 @@ add_action( 'wp_head', 'um_profile_dynamic_meta_desc', 20 );
 /**
  * Profile header cover
  *
+ * @version 2.9.0 - The cover photo uploader requires a form to work.
+ *
  * @param $args
  */
 function um_profile_header_cover_area( $args ) {
@@ -846,18 +848,10 @@ function um_profile_header_cover_area( $args ) {
 
 		$default_cover = UM()->options()->get( 'default_cover' );
 
-		$overlay = '<span class="um-cover-overlay">
-				<span class="um-cover-overlay-s">
-					<ins>
-						<i class="um-faicon-picture-o"></i>
-						<span class="um-cover-overlay-t">' . __( 'Change your cover photo', 'ultimate-member' ) . '</span>
-					</ins>
-				</span>
-			</span>';
-
+		$has_cover = um_user( 'cover_photo' ) || ( $default_cover && $default_cover['url'] );
 		?>
 
-		<div class="um-cover <?php if ( um_user( 'cover_photo' ) || ( $default_cover && $default_cover['url'] ) ) echo 'has-cover'; ?>"
+		<div class="um-cover <?php if ( $has_cover ) echo 'has-cover'; ?>"
 			 data-user_id="<?php echo esc_attr( um_profile_id() ); ?>" data-ratio="<?php echo esc_attr( $args['cover_ratio'] ); ?>">
 
 			<?php
@@ -881,7 +875,8 @@ function um_profile_header_cover_area( $args ) {
 			 * ?>
 			 */
 			do_action( 'um_cover_area_content', um_profile_id() );
-			if ( true === UM()->fields()->editing ) {
+			if ( true === UM()->fields()->editing && empty( UM()->user()->cannot_edit ) ) {
+				// Field and dropdown-menu.
 
 				$hide_remove = um_user( 'cover_photo' ) ? false : ' style="display:none;"';
 
@@ -889,31 +884,16 @@ function um_profile_header_cover_area( $args ) {
 
 				$items = array(
 					'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . $text . '</a>',
-					'<a href="javascript:void(0);" class="um-reset-cover-photo" data-user_id="' . um_profile_id() . '" ' . $hide_remove . '>' . __( 'Remove', 'ultimate-member' ) . '</a>',
+					'<a href="javascript:void(0);" class="um-reset-cover-photo" data-user_id="' . um_profile_id() . '" ' . $hide_remove . '>' . __( 'Remove photo', 'ultimate-member' ) . '</a>',
 					'<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
 				);
 
 				$items = apply_filters( 'um_cover_area_content_dropdown_items', $items, um_profile_id() );
 
 				UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
-			} else {
-
-				if ( ! isset( UM()->user()->cannot_edit ) && ! um_user( 'cover_photo' ) ) {
-
-					$items = array(
-						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . __( 'Upload a cover photo', 'ultimate-member' ) . '</a>',
-						'<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
-					);
-
-					$items = apply_filters( 'um_cover_area_content_dropdown_items', $items, um_profile_id() );
-
-					UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
-
-				}
-
+				UM()->fields()->add_hidden_field( 'cover_photo' );
 			}
-
-			UM()->fields()->add_hidden_field( 'cover_photo' ); ?>
+			?>
 
 			<div class="um-cover-e" data-ratio="<?php echo esc_attr( $args['cover_ratio'] ); ?>">
 
@@ -963,22 +943,26 @@ function um_profile_header_cover_area( $args ) {
 
 					echo '<img src="' . esc_url( $default_cover ) . '" alt="" />';
 
-				} else {
+				}
 
-					if ( ! isset( UM()->user()->cannot_edit ) ) { ?>
-
-						<a href="javascript:void(0);" class="um-cover-add"><span class="um-cover-add-i"><i
-									class="um-icon-plus um-tip-n"
-									title="<?php esc_attr_e( 'Upload a cover photo', 'ultimate-member' ); ?>"></i></span></a>
-
-					<?php }
-
-				} ?>
+				if ( true === UM()->fields()->editing && empty( UM()->user()->cannot_edit ) ) {
+					// Overlay.
+					?>
+						<span class="um-cover-overlay"
+									data-text-change="<?php esc_attr_e( 'Change your cover photo', 'ultimate-member' ); ?>"
+									data-text-upload="<?php esc_attr_e( 'Upload a cover photo', 'ultimate-member' ); ?>">
+							<span class="um-cover-overlay-s">
+								<ins>
+									<i class="um-faicon-picture-o"></i>
+									<span class="um-cover-overlay-t"><?php echo $has_cover ? __( 'Change your cover photo', 'ultimate-member' ) : __( 'Upload a cover photo', 'ultimate-member' ); ?></span>
+								</ins>
+							</span>
+						</span>
+					<?php
+				}
+				?>
 
 			</div>
-
-			<?php echo $overlay; ?>
-
 		</div>
 
 		<?php
@@ -1009,6 +993,8 @@ add_action( 'um_after_profile_header_name_args', 'um_social_links_icons', 50 );
 /**
  * Profile header
  *
+ * @version 2.9.0 - The profile photo uploader requires a form to work.
+ *
  * @param $args
  */
 function um_profile_header( $args ) {
@@ -1025,16 +1011,8 @@ function um_profile_header( $args ) {
 
 	if ( ! empty( $disable_photo_uploader ) ) {
 		$args['disable_photo_upload'] = 1;
-		$overlay = '';
-	} else {
-		$overlay = '<span class="um-profile-photo-overlay">
-			<span class="um-profile-photo-overlay-s">
-				<ins>
-					<i class="um-faicon-camera"></i>
-				</ins>
-			</span>
-		</span>';
-	} ?>
+	}
+	?>
 
 	<div class="um-header<?php echo esc_attr( $classes ); ?>">
 
@@ -1067,7 +1045,7 @@ function um_profile_header( $args ) {
 					$profile_photo = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/" . um_profile( 'profile_photo' );
 
 					$data = um_get_user_avatar_data( um_user( 'ID' ) );
-					echo $overlay . sprintf( '<img src="%s" class="%s" alt="%s" data-default="%s" onerror="%s" />',
+					echo sprintf( '<img src="%s" class="%s" alt="%s" data-default="%s" onerror="%s" />',
 						esc_url( $profile_photo ),
 						esc_attr( $data['class'] ),
 						esc_attr( $data['alt'] ),
@@ -1075,11 +1053,27 @@ function um_profile_header( $args ) {
 						'if ( ! this.getAttribute(\'data-load-error\') ){ this.setAttribute(\'data-load-error\', \'1\');this.setAttribute(\'src\', this.getAttribute(\'data-default\'));}'
 					);
 				} else {
-					echo $overlay . get_avatar( um_user( 'ID' ), $default_size );
-				} ?>
+					echo get_avatar( um_user( 'ID' ), $default_size );
+				}
+
+				if ( true === UM()->fields()->editing && empty( $disable_photo_uploader ) && empty( UM()->user()->cannot_edit ) ) {
+					// Overlay.
+					?>
+						<span class="um-profile-photo-overlay">
+							<span class="um-profile-photo-overlay-s">
+								<ins>
+									<i class="um-faicon-camera"></i>
+								</ins>
+							</span>
+						</span>
+					<?php
+				}
+				?>
 			</a>
 
-			<?php if ( empty( $disable_photo_uploader ) && empty( UM()->user()->cannot_edit ) ) {
+			<?php
+			if ( true === UM()->fields()->editing && empty( $disable_photo_uploader ) && empty( UM()->user()->cannot_edit ) ) {
+				// Field and dropdown-menu.
 
 				UM()->fields()->add_hidden_field( 'profile_photo' );
 
@@ -1115,7 +1109,7 @@ function um_profile_header( $args ) {
 
 					UM()->profile()->new_ui( 'bc', 'div.um-profile-photo', 'click', $items );
 
-				} elseif ( true === UM()->fields()->editing ) {
+				} else {
 
 					$items = array(
 						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
