@@ -2241,6 +2241,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			} else {
 				unset( $this->settings_structure['advanced']['sections']['features']['form_sections']['beta_features'] );
 			}
+
+			if ( UM()->account()->current_password_is_required( 'delete' ) ) {
+				unset( $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][2] );
+			} else {
+				unset( $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][1] );
+			}
 		}
 
 		/**
