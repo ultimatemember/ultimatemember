@@ -779,7 +779,7 @@ a.um-link-alt:hover {text-decoration: underline !important;}
 	border-radius: 5px;
 	z-index: 55;
 	display: none;
-    border: 1px solid #e5e5e5;
+	border: 1px solid #e5e5e5;
 	box-sizing: border-box;
 	-webkit-box-shadow: 0 0 2px rgba(0,0,0,0.1);
 	box-shadow: 0 0 1px rgba(0,0,0,0.1);

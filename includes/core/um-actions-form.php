@@ -748,6 +748,22 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 			}
 		}
 
+		if ( isset( $array['type'] ) && in_array( $array['type'], array( 'file', 'image' ), true ) && UM()->is_new_ui() ) {
+			// Check file/image uploading
+			if ( empty( $submitted_data[ $key ]['path'] ) || empty( $submitted_data[ $key ]['hash'] ) ) {
+				UM()->form()->add_error( $key, __( 'Invalid field value format', 'ultimate-member' ) );
+			} elseif ( md5( $submitted_data[ $key ]['path'] . $submitted_data['user_id'] . $form_id . '_um_uploader_security_salt' . NONCE_KEY ) !== $submitted_data[ $key ]['hash'] ) {
+				// invalid salt for file/image uploading, it's for the security
+				UM()->form()->add_error( $key, __( 'Invalid field value. Cheatin&#8217; huh?', 'ultimate-member' ) );
+			} else {
+				$filepath = wp_normalize_path( UM()->common()->filesystem()->get_tempdir() . '/' . $submitted_data[ $key ]['path'] );
+				if ( ! UM()->common()->filesystem()->is_file_author( $filepath ) ) {
+					// invalid file author, it's for the security
+					UM()->form()->add_error( $key, __( 'Invalid value for current user. Cheatin&#8217; huh?', 'ultimate-member' ) );
+				}
+			}
+		}
+
 		if ( empty( $array['validate'] ) ) {
 			continue;
 		}

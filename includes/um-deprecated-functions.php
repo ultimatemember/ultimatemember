@@ -339,34 +339,6 @@ function um_get_url_for_language( $post_id, $language ) {
 	return UM()->external_integrations()->get_url_for_language( $post_id, $language );
 }
 
-
-/**
- * user uploads directory
- *
- * @deprecated 2.0.26
- *
- * @return string
- */
-function um_user_uploads_dir() {
-	//um_deprecated_function( 'um_user_uploads_dir', '2.0.26', 'UM()->external_integrations()->get_url_for_language' );
-	$uri = UM()->files()->upload_basedir . um_user( 'ID' ) . '/';
-	return $uri;
-}
-
-/**
- * user uploads uri
- *
- * @deprecated 2.0.26
- *
- * @return string
- */
-function um_user_uploads_uri() {
-	//um_deprecated_function( 'um_user_uploads_uri', '2.0.26', 'UM()->external_integrations()->get_url_for_language' );
-	UM()->files()->upload_baseurl = set_url_scheme( UM()->files()->upload_baseurl );
-	$uri = UM()->files()->upload_baseurl . um_user( 'ID' ) . '/';
-	return $uri;
-}
-
 /**
  * Check if a legitimate password reset request is in action
  *
@@ -419,27 +391,6 @@ function um_time_diff( $time1, $time2 ) {
 	//um_deprecated_function( 'um_time_diff', '2.0.30', 'UM()->datetime()->time_diff' );
 
 	return UM()->datetime()->time_diff( $time1, $time2 );
-}
-
-
-/**
- * Get members to show in directory
- *
- * @deprecated 2.1.0
- *
- *
- * @param $argument
- *
- * @return mixed
- */
-function um_members( $argument ) {
-	//um_deprecated_function( 'um_members', '2.1.0', 'UM()->member_directory()' );
-
-	$result = null;
-	if ( isset( UM()->members()->results[ $argument ] ) ) {
-		$result = UM()->members()->results[ $argument ];
-	}
-	return $result;
 }
 
 
@@ -641,21 +592,14 @@ function um_user_submitted_registration( $style = false ) {
 			}
 
 			if ( UM()->fields()->get_field_type( $k ) == 'image' || UM()->fields()->get_field_type( $k ) == 'file' ) {
-				$file = basename( $v );
-				$filedata = get_user_meta( um_user( 'ID' ), $k . "_metadata", true );
+				$file     = basename( $v );
+				$filedata = get_user_meta( um_user( 'ID' ), $k . '_metadata', true );
 
-				$baseurl = UM()->uploader()->get_upload_base_url();
-				if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $file ) ) {
-					if ( is_multisite() ) {
-						//multisite fix for old customers
-						$baseurl = str_replace( '/sites/' . get_current_blog_id() . '/', '/', $baseurl );
-					}
-				}
-
+				$baseurl = UM()->common()->filesystem()->get_user_uploads_url( um_user( 'ID' ) );
 				if ( ! empty( $filedata['original_name'] ) ) {
-					$v = '<a href="' . esc_attr( $baseurl . um_user( 'ID' ) . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
+					$v = '<a href="' . esc_attr( $baseurl . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
 				} else {
-					$v = $baseurl . um_user( 'ID' ) . '/' . $file;
+					$v = $baseurl . '/' . $file;
 				}
 			}
 
@@ -684,4 +628,69 @@ function um_user_submitted_registration( $style = false ) {
 	}
 
 	return $output;
+}
+
+/**
+ * Check that temp image is valid
+ *
+ * @param $url
+ * @deprecated 3.0.0
+ *
+ * @return bool|string
+ */
+function um_is_temp_image( $url ) {
+	_deprecated_function( __FUNCTION__, '3.0.0' );
+
+	$url = explode( '/ultimatemember/temp/', $url );
+	if (isset( $url[1] )) {
+		$src = UM()->files()->upload_temp . $url[1];
+		if (!file_exists( $src ))
+			return false;
+		list( $width, $height, $type, $attr ) = @getimagesize( $src );
+		if (isset( $width ) && isset( $height ))
+			return $src;
+	}
+
+	return false;
+}
+
+/**
+ * Check that temp upload is valid
+ *
+ * @deprecated 3.0.0
+ *
+ * @param string $url
+ *
+ * @return bool|string
+ */
+function um_is_temp_upload( $url ) {
+	_deprecated_function( __FUNCTION__, '3.0.0', 'UM()->files()->is_temp_upload()' );
+	if ( is_string( $url ) ) {
+		$url = trim( $url );
+	}
+
+	if ( filter_var( $url, FILTER_VALIDATE_URL ) === false ) {
+		$url = realpath( $url );
+	}
+
+	if ( ! $url ) {
+		return false;
+	}
+
+	$url = explode( '/ultimatemember/temp/', $url );
+	if ( isset( $url[1] ) ) {
+
+		if ( strstr( $url[1], '../' ) || strstr( $url[1], '%' ) ) {
+			return false;
+		}
+
+		$src = UM()->files()->upload_temp . $url[1];
+		if ( ! file_exists( $src ) ) {
+			return false;
+		}
+
+		return $src;
+	}
+
+	return false;
 }
