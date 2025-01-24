@@ -2640,9 +2640,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 						<select name="_parent_dropdown_relationship" id="_parent_dropdown_relationship" style="width: 100%">
 							<option value=""><?php esc_html_e( 'No Selected', 'ultimate-member' ); ?></option>
 							<?php
-							if ( UM()->builtin()->custom_fields ) {
-								foreach ( UM()->builtin()->custom_fields as $array ) {
-									if ( array_key_exists( 'type', $array ) && 'select' === $array['type'] && ( ! isset( $field_args['metakey'] ) || $field_args['metakey'] != $array['metakey'] ) && isset( $array['title'] ) ) {
+							$relationship_options = apply_filters( 'um_field_parent_dropdown_relationship', UM()->builtin()->custom_fields, $field_args['metakey'] );
+							if ( $relationship_options ) {
+								foreach ( $relationship_options as $array ) {
+									if ( array_key_exists( 'type', $array ) && 'select' === $array['type'] && ( ! isset( $field_args['metakey'] ) || $field_args['metakey'] !== $array['metakey'] ) && isset( $array['title'] ) ) {
 										?>
 										<option value="<?php echo esc_attr( $array['metakey'] ); ?>" <?php selected( $array['metakey'], $this->edit_mode_value ); ?>><?php echo esc_html( $array['title'] ); ?></option>
 										<?php
