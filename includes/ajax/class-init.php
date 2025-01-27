@@ -24,6 +24,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 			$this->pages();
 			$this->secure();
 			$this->users();
+			$this->restrictions();
 		}
 
 		/**
@@ -72,6 +73,18 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 				UM()->classes['um\ajax\users'] = new Users();
 			}
 			return UM()->classes['um\ajax\users'];
+		}
+
+		/**
+		 * @since 2.9.x
+		 *
+		 * @return Users
+		 */
+		public function restrictions() {
+			if ( empty( UM()->classes['um\ajax\restrictions'] ) ) {
+				UM()->classes['um\ajax\restrictions'] = new Restrictions();
+			}
+			return UM()->classes['um\ajax\restrictions'];
 		}
 	}
 }

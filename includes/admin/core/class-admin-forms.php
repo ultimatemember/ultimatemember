@@ -1973,6 +1973,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			 */
 			$scope = apply_filters( 'um_entities_conditions_scope', $scope, $field_data );
 
+			$nonce = wp_create_nonce( 'um_entities_conditions_nonce' );
+
 			$value = $this->get_field_value( $field_data );
 
 			$class_hiiden_attr          = ' class="um-entities-conditions um-entities-conditions-full um-forms-field ' . esc_attr( $class ) . '" ';
@@ -1994,7 +1996,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$html .= '</div>';
 			$html .= '</div>';
 
-			$html .= '<div class="um-entities-conditions-wrap ' . $class . '-wrap">';
+			$html .= '<div class="um-entities-conditions-wrap ' . $class . '-wrap" data-nonce="' . $nonce . '">';
 
 			if ( ! empty( $value[ $field_data_id ] ) ) {
 				$entity = $value[ $field_data_id ];
@@ -2154,6 +2156,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$name      = $field_data_id . '_um_entity';
 			$name      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : $name;
 			$name_attr = ' name="' . $name . '[' . $field_data_id . ']" ';
+			$nonce     = wp_create_nonce( 'um_users_conditions_nonce' );
 
 			$original_name = ' data-original="' . $name . '[' . $field_data_id . ']" ';
 
@@ -2223,7 +2226,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$html .= '</div>';
 			$html .= '</div>';
 
-			$html .= '<div class="um-users-conditions-wrap" data-count="' . $scope_count . '">';
+			$html .= '<div class="um-users-conditions-wrap" data-count="' . $scope_count . '" data-nonce="' . $nonce . '">';
 
 			if ( ! empty( $value[ $field_data_id ] ) ) {
 				$i = 1;

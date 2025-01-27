@@ -58,7 +58,8 @@ class Users {
 	}
 
 	public function get_roles() {
-		UM()->admin()->check_ajax_nonce();
+		check_ajax_referer( 'um_users_conditions_nonce', 'nonce' );
+
 		$roles = get_editable_roles();
 		foreach ( $roles as $role => $role_data ) {
 			$options[ $role ] = $role_data['name'];

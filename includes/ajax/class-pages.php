@@ -74,7 +74,7 @@ class Pages {
 	 * AJAX callback for getting the tags list
 	 */
 	public function get_tags_list() {
-		UM()->admin()->check_ajax_nonce();
+		check_ajax_referer( 'um_entities_conditions_nonce', 'nonce' );
 
 		// we will pass post IDs and titles to this array
 		$return = array();
@@ -100,7 +100,7 @@ class Pages {
 	 * AJAX callback for getting the tags list
 	 */
 	public function get_category_list() {
-		UM()->admin()->check_ajax_nonce();
+		check_ajax_referer( 'um_entities_conditions_nonce', 'nonce' );
 
 		// we will pass post IDs and titles to this array
 		$return = array();

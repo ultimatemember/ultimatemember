@@ -634,6 +634,7 @@ $url_args = array(
 
 	<form action="" method="get" name="um-restriction-rules" id="um-restriction-rules" style="float: left;margin-right: 10px;">
 		<input type="hidden" name="page" value="um_restriction_rules" />
+		<input type="hidden" id="um_restriction_rules_nonce" name="um_restriction_rules_nonce" value="<?php echo esc_attr( wp_create_nonce( 'um_restriction_rules_order' ) ); ?>" />
 		<?php $list_table->display(); ?>
 	</form>
 </div>

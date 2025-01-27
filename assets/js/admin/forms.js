@@ -26,6 +26,10 @@ function um_admin_init_users_select() {
 
 		var action = 'um_get_users';
 		var scope  = 'users';
+		var nonce  = um_admin_scripts.nonce;
+		if( jQuery('.um-users-conditions-wrap').length ) {
+			nonce = jQuery('.um-users-conditions-wrap').attr('data-nonce');
+		}
 
 		var select2_atts = {
 			ajax: {
@@ -43,7 +47,7 @@ function um_admin_init_users_select() {
 						search: params.term, // search query
 						page: params.page || 1, // infinite scroll pagination
 						scope: scope,
-						nonce: um_admin_scripts.nonce
+						nonce: nonce
 					};
 
 					jQuery.each( jQuery(this)[0].attributes, function() {
@@ -119,6 +123,10 @@ function um_admin_init_pages_select() {
 	var action = 'um_get_pages_list';
 	var scope  = 'page';
 
+	var nonce  = um_admin_scripts.nonce;
+	if( jQuery('.um-entities-conditions-wrap').length ) {
+		nonce = jQuery('.um-entities-conditions-wrap').attr('data-nonce');
+	}
 	jQuery( '.um-pages-select2' ).select2({
 		ajax: {
 			url: wp.ajax.settings.url,
@@ -139,7 +147,7 @@ function um_admin_init_pages_select() {
 					action: action, // AJAX action for admin-ajax.php
 					scope: scope,
 					page: params.page || 1, // infinite scroll pagination
-					nonce: um_admin_scripts.nonce
+					nonce: nonce
 				};
 			},
 			processResults: function( data, params ) {
@@ -1500,6 +1508,7 @@ jQuery(document).ready( function() {
 	jQuery( '#um-restriction-rules #the-list' ).sortable({
 		update: function( event, ui ) {
 			var indexes = {};
+			let nonce = jQuery('#um_restriction_rules_nonce').val();
 
 			jQuery( '#um-restriction-rules #the-list tr' ).each( function( index ) {
 				var id        = jQuery( this ).find( '.check-column input' ).val();
@@ -1512,13 +1521,13 @@ jQuery(document).ready( function() {
 					dataType: 'json',
 					data: {
 						action: 'um_restriction_rules_order',
-						nonce: um_admin_scripts.nonce,
+						_wpnonce: nonce,
 						indexes: indexes
 					},
 					success: function( response ) {
 					},
 					error: function( error ) {
-						console.log( error )
+						console.log( error );
 					}
 				}
 			);
