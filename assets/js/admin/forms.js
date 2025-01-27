@@ -27,8 +27,10 @@ function um_admin_init_users_select() {
 		var action = 'um_get_users';
 		var scope  = 'users';
 		var nonce  = um_admin_scripts.nonce;
+		var restrictions = '';
 		if( jQuery('.um-users-conditions-wrap').length ) {
 			nonce = jQuery('.um-users-conditions-wrap').attr('data-nonce');
+			restrictions = true;
 		}
 
 		var select2_atts = {
@@ -47,6 +49,7 @@ function um_admin_init_users_select() {
 						search: params.term, // search query
 						page: params.page || 1, // infinite scroll pagination
 						scope: scope,
+						restrictions: restrictions,
 						nonce: nonce
 					};
 
@@ -124,8 +127,10 @@ function um_admin_init_pages_select() {
 	var scope  = 'page';
 
 	var nonce  = um_admin_scripts.nonce;
+	var restrictions = '';
 	if( jQuery('.um-entities-conditions-wrap').length ) {
 		nonce = jQuery('.um-entities-conditions-wrap').attr('data-nonce');
+		restrictions = true;
 	}
 	jQuery( '.um-pages-select2' ).select2({
 		ajax: {
@@ -146,6 +151,7 @@ function um_admin_init_pages_select() {
 					search: params.term, // search query
 					action: action, // AJAX action for admin-ajax.php
 					scope: scope,
+					restrictions: restrictions,
 					page: params.page || 1, // infinite scroll pagination
 					nonce: nonce
 				};

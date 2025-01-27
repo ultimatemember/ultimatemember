@@ -25,7 +25,12 @@ class Pages {
 	 * AJAX callback for getting the pages list
 	 */
 	public function get_pages_list() {
-		UM()->admin()->check_ajax_nonce();
+		// @todo add nonce for other page/posts ajax requests
+		if ( ! empty( $_GET['restrictions'] ) ) {
+			check_ajax_referer( 'um_entities_conditions_nonce', 'nonce' );
+		} else {
+			UM()->admin()->check_ajax_nonce();
+		}
 
 		// we will pass post IDs and titles to this array
 		$return = array();

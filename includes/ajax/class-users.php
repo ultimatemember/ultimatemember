@@ -18,7 +18,12 @@ class Users {
 	}
 
 	public function get_users() {
-		UM()->admin()->check_ajax_nonce();
+		// @todo add nonce for other users ajax requests
+		if ( ! empty( $_REQUEST['restrictions'] ) ) {
+			check_ajax_referer( 'um_users_conditions_nonce', 'nonce' );
+		} else {
+			UM()->admin()->check_ajax_nonce();
+		}
 
 		// phpcs:disable WordPress.Security.NonceVerification
 		$search_request = ! empty( $_REQUEST['search'] ) ? sanitize_text_field( $_REQUEST['search'] ) : '';
