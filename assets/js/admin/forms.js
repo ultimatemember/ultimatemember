@@ -24,16 +24,25 @@ function um_admin_init_users_select() {
 			return option;
 		}
 
+		var action = 'um_get_users';
+		var scope  = 'users';
+
 		var select2_atts = {
 			ajax: {
 				url: wp.ajax.settings.url,
 				dataType: 'json',
 				delay: 250, // delay in ms while typing when to perform a AJAX search
 				data: function( params ) {
+					if ( jQuery( this ).attr( 'data-parent' ) ) {
+						action = 'um_get_' + jQuery( this ).attr( 'data-parent' );
+						scope  = jQuery( this ).attr( 'data-parent' );
+					}
+
 					var args = {
-						action: 'um_get_users', // AJAX action for admin-ajax.php
+						action: action, // AJAX action for admin-ajax.php
 						search: params.term, // search query
 						page: params.page || 1, // infinite scroll pagination
+						scope: scope,
 						nonce: um_admin_scripts.nonce
 					};
 
@@ -54,14 +63,22 @@ function um_admin_init_users_select() {
 					params.page = params.page || 1;
 					var options = [];
 
-					if ( response.data.users ) {
-						jQuery.each( response.data.users, function( index, text ) {
-							if ( typeof text.img !== 'undefined' ) {
-								options.push({ id: text.ID, text: text.user_login + ' (#' + text.ID + ')', img: text.img });
-							} else {
-								options.push( { id: text.ID, text: text.user_login + ' (#' + text.ID + ')' } );
-							}
-						});
+					if ( 'users' === scope ) {
+						if ( response.data.users ) {
+							jQuery.each( response.data.users, function( index, text ) {
+								if ( typeof text.img !== 'undefined' ) {
+									options.push({ id: text.ID, text: text.user_login + ' (#' + text.ID + ')', img: text.img });
+								} else {
+									options.push( { id: text.ID, text: text.user_login + ' (#' + text.ID + ')' } );
+								}
+							});
+						}
+					} else {
+						if ( response.data.roles ) {
+							jQuery.each( response.data.roles, function( index, text ) {
+								options.push( { id: index, text: text.name + ' (#' + index + ')' } );
+							});
+						}
 					}
 
 					return {
@@ -99,15 +116,28 @@ function um_admin_init_users_select() {
 
 function um_admin_init_pages_select() {
 	// multiple select with AJAX search
-	jQuery('.um-pages-select2').select2({
+	var action = 'um_get_pages_list';
+	var scope  = 'page';
+
+	jQuery( '.um-pages-select2' ).select2({
 		ajax: {
 			url: wp.ajax.settings.url,
 			dataType: 'json',
 			delay: 250, // delay in ms while typing when to perform a AJAX search
 			data: function( params ) {
+				if ( jQuery( this ).attr( 'data-parent' ) ) {
+					if ( 'page' === jQuery( this ).attr( 'data-parent' ) || 'post' === jQuery( this ).attr( 'data-parent' ) ) {
+						action = 'um_get_pages_list';
+					} else {
+						action = 'um_get_' + jQuery( this ).attr( 'data-parent' ) + '_list';
+					}
+					scope = jQuery( this ).attr( 'data-parent' );
+				}
+
 				return {
 					search: params.term, // search query
-					action: 'um_get_pages_list', // AJAX action for admin-ajax.php
+					action: action, // AJAX action for admin-ajax.php
+					scope: scope,
 					page: params.page || 1, // infinite scroll pagination
 					nonce: um_admin_scripts.nonce
 				};
@@ -1170,4 +1200,328 @@ jQuery(document).ready( function() {
 		return false;
 	}
 
+	// Content restriction v3
+	jQuery( '.um-entities-conditions-wrap' ).on( 'change', '.um-entities-conditions', function()  {
+		var wrapper  = jQuery( this ).closest( '.um-entities-conditions-row' );
+		var option   = jQuery( this ).find( ':selected' ).val();
+		var original = wrapper.find( '.um-entities-conditions' ).data( 'original' );
+
+		wrapper.find( '.um-entities-conditions-responce' ).attr( 'data-parent', option );
+
+		console.log( wrapper.find( '.um-entities-conditions-responce' ) );
+		if ( wrapper.find( '.um-entities-conditions-responce' ).hasClass( 'um-pages-select2' ) ) {
+			wrapper.find( '.um-entities-conditions-responce' ).select2( 'destroy' );
+			wrapper.find( '.um-entities-conditions-responce' ).html( '' );
+			wrapper.find( '.um-entities-conditions-responce' ).removeClass( 'um-pages-select2' ).removeClass( 'select2-hidden-accessible' );
+		}
+		if ( 'none' === option ) {
+			wrapper.find( 'select, input' ).removeAttr( 'name' );
+			wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'disabled' ).removeAttr( 'multiple' );
+			wrapper.find( '.um-entities-conditions-responce' ).html( '' );
+
+			wrapper.find( '.um-entities-conditions-responce' ).addClass( 'um-entities-conditions-responce-hide' );
+			wrapper.find( '.um-entities-conditions' ).addClass( 'um-entities-conditions-full' );
+			wrapper.find( '.um-entities-conditions-responce-input' ).remove();
+		} else if ( 'site' === option ) {
+			wrapper.find( '.um-entities-conditions-responce' ).html( '' );
+			wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'multiple' );
+			wrapper.find( '.um-entities-conditions-responce' ).attr( 'disabled', 'disabled' );
+			wrapper.find( '.um-entities-conditions-responce' ).addClass( 'um-entities-conditions-responce-hide' );
+			wrapper.find( '.um-entities-conditions' ).addClass( 'um-entities-conditions-full' );
+			wrapper.find( '.um-entities-conditions-responce' ).after( '<input type="hidden" class="um-entities-conditions-responce-input" name="' + original + '[site]' + '" value="1">' );
+		} else {
+			wrapper.find( '.um-entities-conditions-responce' ).addClass( 'um-pages-select2' );
+
+			wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'disabled' );
+			wrapper.find( '.um-entities-conditions-responce' ).removeClass( 'um-entities-conditions-responce-hide' );
+			wrapper.find( '.um-entities-conditions' ).removeClass( 'um-entities-conditions-full' );
+			wrapper.find( '.um-entities-conditions-responce' ).attr( 'multiple', 'multiple' );
+			wrapper.find( '.um-entities-conditions' ).attr( 'name', original + '[' + option + ']' );
+			wrapper.find( '.um-entities-conditions-responce' ).attr( 'name', original + '[' + option + '][]' );
+			wrapper.find( '.um-entities-conditions-responce-input' ).remove();
+			um_admin_init_pages_select();
+		}
+	});
+
+	jQuery( '#um_add_protection_rule' ).on( 'click', function( e )  {
+		e.preventDefault();
+		var wrapper = jQuery( this ).closest( '.um-restriction-rule-content' ).find( '.um-protection-include-wrap' );
+		var el      = jQuery( '.um-entities-conditions-row-hidden .um-entities-conditions-row:first' ).clone();
+
+		wrapper.append( el );
+		wrapper.find( '.um-entities-conditions-row:last' ).find( 'select' ).removeAttr( 'disabled' );
+		wrapper.find( '.remove-row' ).removeAttr( 'disabled' );
+	});
+
+	jQuery( '#um_add_exclusion_rule' ).on( 'click', function( e )  {
+		e.preventDefault();
+		var wrapper = jQuery( this ).closest( '.um-restriction-rule-content' ).find( '.um-protection-exclude-wrap' );
+		var clone   = jQuery( this ).closest( '.um-restriction-rule-content' ).find( '.um-protection-include-wrap' );
+		var el      = jQuery( '.um-entities-conditions-row-hidden .um-entities-conditions-row:first' ).clone();
+		jQuery( this ).closest( '.um-restriction-rule-content' ).find( '.um-forms-line' ).show();
+
+		el.find( '.um-entities-conditions' ).attr( 'data-original', 'um_restriction_rule_content[_um_exclude]' );
+		el.find( '.um-entities-conditions' ).attr( 'data-field_id', '_um_exclude' );
+		el.find( '.um-entities-conditions' ).removeClass( 'um-protection-include' ).addClass( 'um-protection-exclude' );
+		el.find( '.um-entities-conditions-responce' ).attr( 'data-original', 'um_restriction_rule_content[_um_include]' );
+		el.find( '.um-entities-conditions-responce' ).attr( 'data-field_id', '_um_exclude' );
+		el.find( '.um-entities-conditions-responce' ).removeClass( 'um-protection-include' ).addClass( 'um-protection-exclude' );
+		el.find( '.um-entities-conditions-responce option[value!="0"], input' ).remove();
+		el.find( '.um-entities-conditions-responce option' ).html( '' );
+		el.find( '.um-entities-conditions option' ).removeAttr( 'selected' );
+		el.find( '.um-entities-conditions, .um-entities-conditions-responce' ).removeAttr( 'name' );
+		el.find( '.um-entities-conditions-responce' ).removeAttr( 'multiple' );
+
+		el.find( '.um-entities-conditions' ).addClass( 'um-entities-conditions-full' );
+		el.find( '.um-entities-conditions-responce' ).addClass( 'um-entities-conditions-responce-hide' );
+
+		wrapper.append( el );
+		wrapper.find( '.um-entities-conditions-row:last' ).find( 'select' ).removeAttr( 'disabled' );
+		wrapper.find( '.remove-row' ).removeAttr( 'disabled' );
+	});
+
+	jQuery( '.um-entities-conditions-wrap' ).on( 'click', '.remove-row', function( e )  {
+		e.preventDefault();
+		var wrapper = jQuery( this ).closest( '.um-entities-conditions-wrap' );
+		var row     = jQuery( this ).closest( '.um-entities-conditions-row' );
+		if ( wrapper.find( '.um-entities-conditions-row' ).length > 1 ) {
+			row.remove();
+		} else {
+			wrapper.find( 'select' ).removeAttr( 'disabled' ).removeAttr( 'multiple' );
+			wrapper.find( 'select option' ).removeAttr( 'selected' );
+			wrapper.find( '.um-entities-conditions-responce' ).html( '' );
+			wrapper.find( 'input' ).remove();
+
+			if ( 1 === jQuery( this ).closest( '.um-protection-include-wrap' ).length ) {
+				jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).hide();
+				jQuery( '#um_add_exclusion_rule' ).attr( 'disabled', 'disabled' );
+				jQuery( '.um-protection-exclude-wrap .um-entities-conditions-row' ).remove();
+				jQuery( this ).closest( '.um-protection-include-wrap' ).find( '.um-entities-conditions' ).addClass( 'um-entities-conditions-full' );
+				if ( jQuery( this ).closest( '.um-protection-include-wrap' ).find( '.um-entities-conditions-responce' ).hasClass( 'um-pages-select2' ) ) {
+					jQuery( this ).closest( '.um-protection-include-wrap' ).find( '.um-entities-conditions-responce' ).select2( 'destroy' );
+					jQuery( this ).closest( '.um-protection-include-wrap' ).find( '.um-entities-conditions-responce' ).removeClass( 'um-pages-select2' );
+				}
+				jQuery( this ).closest( '.um-protection-include-wrap' ).find( '.um-entities-conditions-responce' ).addClass( 'um-entities-conditions-responce-hide' );
+				if ( jQuery( this ).closest( '.um-protection-include-wrap' ).find( '.um-pages-select2' ).length ) {
+					jQuery( this ).closest( '.um-protection-include-wrap' ).find( '.um-pages-select2' ).select2( 'destroy' );
+				}
+			}
+			if ( 1 === jQuery( this ).closest( '.um-protection-exclude-wrap' ).length ) {
+				jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).hide();
+				jQuery( '.um-protection-exclude-wrap .um-entities-conditions-row' ).remove();
+				if ( jQuery( this ).closest( '.um-protection-exclude-wrap' ).find( '.um-pages-select2' ).length ) {
+					jQuery( this ).closest( '.um-protection-exclude-wrap' ).find( '.um-pages-select2' ).select2( 'destroy' );
+				}
+			}
+		}
+	});
+
+	if ( jQuery( '.um-protection-include-wrap .um-entities-conditions-row' ).length ) {
+		if ( null === jQuery( '.um-protection-include-wrap .um-entities-conditions-row .um-entities-conditions-responce' ).val() ) {
+			if ( 'site' !== jQuery( '.um-protection-include-wrap .um-entities-conditions-row .um-entities-conditions-responce-input' ).val() ) {
+				jQuery( '#um_add_exclusion_rule' ).attr( 'disabled', 'disabled' );
+			}
+
+		} else {
+			jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).show();
+		}
+		if ( typeof jQuery( '.um-protection-exclude-wrap .um-entities-conditions-row .um-entities-conditions-responce' ).val() === 'undefined' ) {
+			jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).hide();
+		}
+	}
+	jQuery( document ).on( 'change', '.um-protection-include-wrap .um-entities-conditions-responce', function()  {
+		var empty = true;
+		jQuery( '.um-protection-include-wrap .um-entities-conditions-responce' ).each( function () {
+			var value = jQuery( this ).val();
+			if ( null === value ) {
+				value = 1;
+			}
+			if ( Array.isArray( value ) ) {
+				if ( value.length !== 0 ) {
+					empty = false;
+					return;
+				}
+			} else {
+				if ( 0 !== parseInt( value ) && null !== value ) {
+					empty = false;
+					return;
+				}
+			}
+		});
+
+		if ( false === empty ) {
+			jQuery( '#um_add_exclusion_rule' ).removeAttr( 'disabled', 'disabled' );
+		} else {
+			jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).hide();
+			jQuery( '#um_add_exclusion_rule' ).attr( 'disabled', 'disabled' );
+			jQuery( '.um-protection-exclude-wrap .um-entities-conditions-row' ).remove();
+		}
+	});
+
+	jQuery( document ).on( 'change', '.um-protection-include-wrap .um-entities-conditions', function()  {
+		var empty = false;
+		if ( 'site' === jQuery( this ).val() ) {
+			empty = true;
+		} else {
+			var wrapper = jQuery( this ).closest( '.um-protection-include-wrap' );
+			wrapper.find( '.um-entities-conditions-responce' ).each( function () {
+				if ( 0 !== parseInt( jQuery( this ).val() ) ) {
+					empty = true;
+					return;
+				}
+			});
+		}
+
+		if ( true === empty ) {
+			jQuery( '#um_add_exclusion_rule' ).removeAttr( 'disabled', 'disabled' );
+		} else {
+			jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).hide();
+			jQuery( '#um_add_exclusion_rule' ).attr( 'disabled', 'disabled' );
+			jQuery( '.um-protection-exclude-wrap .um-entities-conditions-row' ).remove();
+		}
+	});
+
+	jQuery( '.um-users-conditions-wrap' ).on( 'change', '.um-users-conditions', function()  {
+		var wrapper  = jQuery( this ).closest( '.um-users-conditions-row' );
+		var option   = jQuery( this ).find( ':selected' ).val();
+		var num      = jQuery( this ).closest( '.um-users-conditions-row-group' ).attr( 'data-group' );
+		var original = wrapper.find( '.um-users-conditions' ).data( 'original' );
+
+		wrapper.find( '.um-users-conditions-responce' ).attr( 'data-parent', option );
+
+		if ( wrapper.find( '.um-users-conditions-responce' ).hasClass( 'um-select2-inited' ) ) {
+			wrapper.find( '.um-users-conditions-responce' ).select2( 'destroy' );
+			wrapper.find( '.um-users-conditions-responce' ).html( '' );
+			wrapper.find( '.um-users-conditions-responce' ).removeClass( 'um-select2-inited' ).removeClass( 'select2-hidden-accessible' );
+		}
+
+		if ( 'none' === option ) {
+			wrapper.find( 'select' ).removeAttr( 'name' );
+			wrapper.find( '.um-users-conditions-responce' ).removeAttr( 'multiple' );
+			wrapper.find( '.um-users-conditions-responce' ).html( '' );
+		} else {
+			jQuery( '.um-users-conditions-responce' ).addClass( 'um-user-select-field' );
+			wrapper.find( '.um-users-conditions-responce' ).attr( 'multiple', 'multiple' );
+			wrapper.find( '.um-users-conditions' ).attr( 'name', original + '[' + parseInt( num ) + '][' + option + ']' );
+			wrapper.find( '.um-users-conditions-compare' ).attr( 'name', original + '[' + parseInt( num ) + '][' + option + '][compare]' );
+			wrapper.find( '.um-users-conditions-responce' ).attr( 'name', original + '[' + parseInt( num ) + '][' + option + '][ids][]' );
+			um_admin_init_users_select();
+		}
+	});
+
+	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.add-row', function( e )  {
+		e.preventDefault();
+		var wrapper = jQuery( this ).closest( '.um-users-conditions-row-group' );
+		var el      = jQuery( '.um-users-conditions-row-hidden .um-users-conditions-row' ).clone();
+
+		el.find( '.um-users-conditions-responce option[value!="0"]' ).remove();
+		el.find( '.um-users-conditions-responce option' ).html( '' );
+		el.find( '.um-users-conditions option' ).removeAttr( 'selected' );
+		el.find( '.um-users-conditions, .um-users-conditions-compare, .um-users-conditions-responce' ).removeAttr( 'name' );
+		el.find( '.um-users-conditions-responce' ).removeAttr( 'multiple' );
+		el.find( '.um-users-conditions-compare option:first' ).prop( 'selected', true );
+
+		wrapper.append( el );
+
+		wrapper.find( '.remove-row' ).removeAttr( 'disabled' );
+	});
+
+	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.remove-row', function( e )  {
+		e.preventDefault();
+		var wrapper = jQuery( this ).closest( '.um-users-conditions-wrap' );
+		var row     = jQuery( this ).closest( '.um-users-conditions-row' );
+
+		if ( wrapper.find( '.um-users-conditions-row' ).length > 1 ) {
+			row.remove();
+		} else {
+			row.find( '.um-users-conditions option, .um-entities-conditions-responce option' ).removeAttr( 'selected' );
+			wrapper.find( '.um-users-conditions-row' ).find( 'select' ).removeAttr( 'disabled' ).removeAttr( 'multiple' );
+			wrapper.find( '.um-users-conditions-responce option[value!="0"]' ).remove();
+			wrapper.find( '.um-users-conditions-responce option' ).html( '' );
+		}
+
+		if ( wrapper.find( '.um-users-conditions-row' ).length > 1 ) {
+			row.remove();
+		}
+
+		jQuery( '.um-users-conditions-row-group' ).each( function() {
+			if ( 0 === jQuery( this ).find( '.um-users-conditions-row' ).length ) {
+				var elems = jQuery( this ).nextAll( '.um-users-conditions-row-group' );
+				jQuery( this ).remove();
+
+				if ( elems ) {
+					elems.each( function() {
+						var old_index        = jQuery( this ).attr( 'data-group' );
+						var old_name         = jQuery( this ).find( '.um-users-conditions' ).attr( 'name' );
+						var old_name_compare = jQuery( this ).find( '.um-users-conditions-compare' ).attr( 'name' );
+						var old_name_ids     = jQuery( this ).find( '.um-users-conditions-responce' ).attr( 'name' );
+						var new_index        = parseInt( old_index ) - 1;
+						jQuery( this ).attr( 'data-group', new_index );
+
+						if ( old_name ) {
+							var new_name = old_name.replace( old_index, new_index );
+							jQuery( this ).find( '.um-users-conditions' ).attr( 'name', new_name );
+						}
+						if ( old_name_compare ) {
+							var new_name_compare = old_name_compare.replace( old_index, new_index );
+							jQuery( this ).find( '.um-users-conditions-compare' ).attr( 'name', new_name_compare );
+						}
+						if ( old_name_ids ) {
+							var new_name_ids = old_name_ids.replace( old_index, new_index );
+							jQuery( this ).find( '.um-users-conditions-responce' ).attr( 'name', new_name_ids );
+						}
+					});
+				}
+			}
+		});
+	});
+
+	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.add-group-row', function(e)  {
+		e.preventDefault();
+		var wrapper = jQuery( this ).closest( '.um-users-conditions-wrap' );
+		var el      = jQuery( '.um-users-conditions-row-hidden .um-users-conditions-row-group' ).clone();
+		var num     = jQuery( '.um-users-conditions-row-group:last' ).attr( 'data-group' );
+
+		el.find( '.um-users-conditions-row' ).not( ':first' ).remove();
+		el.find( '.um-users-conditions-responce option[value!="0"]' ).remove();
+		el.find( '.um-users-conditions-responce option' ).html( '' );
+		el.find( '.um-users-conditions option' ).removeAttr( 'selected' );
+		el.find( '.um-users-conditions,.um-users-conditions-compare , .um-users-conditions-responce' ).removeAttr( 'name' );
+		el.find( '.um-users-conditions-responce' ).removeAttr( 'multiple' );
+		el.find( '.um-users-conditions-compare option:first' ).prop( 'selected', true );
+		el.attr( 'data-group', parseInt( num ) + 1 );
+		el.find( '.um-users-conditions-responce' ).addClass( 'um-user-select-field' );
+
+		jQuery( this ).closest( '.um-conditions-group-action-wrap' ).before( el );
+
+		wrapper.find( '.um-conditions-row-action' ).removeAttr( 'disabled' );
+	});
+
+	jQuery( '#um-restriction-rules #the-list' ).sortable({
+		update: function( event, ui ) {
+			var indexes = {};
+
+			jQuery( '#um-restriction-rules #the-list tr' ).each( function( index ) {
+				var id        = jQuery( this ).find( '.check-column input' ).val();
+				indexes[ id ] = index;
+			});
+			jQuery.ajax(
+				{
+					url: wp.ajax.settings.url,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						action: 'um_restriction_rules_order',
+						nonce: um_admin_scripts.nonce,
+						indexes: indexes
+					},
+					success: function( response ) {
+					},
+					error: function( error ) {
+						console.log( error )
+					}
+				}
+			);
+		}
+	});
 });

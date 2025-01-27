@@ -1587,6 +1587,33 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		/**
 		 * @param $field_data
 		 *
+		 * @return bool|string
+		 */
+		public function render_buttons_group( $field_data ) {
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			$id      = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
+
+			$class      = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+			$class_attr = ' class="' . esc_attr( $class ) . '" ';
+
+			$html = "<div $id_attr $class_attr>";
+			foreach ( $field_data['buttons'] as $button_id => $button ) {
+				$button_id_attr = ' id="' . esc_attr( $button_id ) . '" ';
+				$html          .= "<button type=\"button\" class='button' $button_id_attr />$button</button>";
+			}
+			$html .= '</div>';
+
+			return $html;
+		}
+
+
+		/**
+		 * @param $field_data
+		 *
 		 * @return mixed
 		 */
 		function render_info_text( $field_data ) {
@@ -1877,6 +1904,437 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			</a>
 			<?php
 			return ob_get_clean();
+		}
+
+		/**
+		 * @param $field_data
+		 *
+		 * @return bool|string
+		 */
+		public function render_entities_conditions( $field_data ) {
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			$id               = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+			$field_data_id    = $field_data['id'];
+			$id_attr          = ' id="' . esc_attr( $id ) . '" ';
+			$id_attr_responce = ' id="' . esc_attr( $id ) . '_responce" ';
+
+			$class  = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+			$class .= ! empty( $field_data['size'] ) ? $field_data['size'] : '';
+
+			$data = array(
+				'field_id' => $field_data_id,
+			);
+
+			$data_attr = '';
+			foreach ( $data as $key => $value ) {
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
+			}
+
+			$name      = $field_data_id . '_um_entity';
+			$name      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : $name;
+			$name_attr = ' name="' . $name . '[' . $field_data_id . ']" ';
+
+			$original_name = ' data-original="' . $name . '[' . $field_data_id . ']" ';
+
+			if ( empty( $field_data['scope'] ) || 'all' === $field_data['scope'] ) {
+				// @todo V3 all registered types
+				$scope = array(
+					'site'     => __( 'Entire website', 'ultimate-member' ),
+					'post'     => __( 'Post', 'ultimate-member' ),
+					'page'     => __( 'Page', 'ultimate-member' ),
+					'tags'     => __( 'Tags', 'ultimate-member' ),
+					'category' => __( 'Category', 'ultimate-member' ),
+				);
+			} else {
+				$scope = $field_data['scope'];
+			}
+
+			/**
+			 * Filters Ultimate Member change registered entities scope.
+			 *
+			 * @param {array} $scope      Entities scope.
+			 * @param {array} $field_data Field's data.
+			 *
+			 * @return {array} Entities scope.
+			 *
+			 * @since 2.8.x
+			 * @hook um_registered_types_conditions
+			 *
+			 * @example <caption>Remove page post type</caption>
+			 * function my_um_entities_conditions_scope( $scope, $field_data ) {
+			 *     // your code here
+			 *     unset( $scope['page'] );
+			 *     return $scope;
+			 * }
+			 * add_filter( 'um_entities_conditions_scope', 'my_um_entities_conditions_scope', 10, 2 );
+			 */
+			$scope = apply_filters( 'um_entities_conditions_scope', $scope, $field_data );
+
+			$value = $this->get_field_value( $field_data );
+
+			$class_hiiden_attr          = ' class="um-entities-conditions um-entities-conditions-full um-forms-field ' . esc_attr( $class ) . '" ';
+			$class_hiiden_attr_responce = ' class="um-entities-conditions-responce um-entities-conditions-responce-hide um-forms-field ' . esc_attr( $class ) . '" ';
+
+			$html  = '<div class="um-entities-conditions-row-hidden">';
+			$html .= '<div class="um-entities-conditions-row">';
+			$html .= '<select ' . $original_name . $class_hiiden_attr . $data_attr . '>';
+			$html .= '<option value="none">' . __( 'Select entity', 'ultimate-member' ) . '</option>';
+			foreach ( $scope as $key => $label ) {
+				$html .= '<option value="' . $key . '">' . $label . '</option>';
+			}
+			$html .= '</select>';
+
+			$html .= '<select data-placeholder="' . esc_html__( 'Select', 'ultimate-member' ) . '" ' . $original_name . $class_hiiden_attr_responce . $data_attr . '>';
+			$html .= '</select>';
+
+			$html .= '<button disabled title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="um-conditions-row-action remove-row button">-</button>';
+			$html .= '</div>';
+			$html .= '</div>';
+
+			$html .= '<div class="um-entities-conditions-wrap ' . $class . '-wrap">';
+
+			if ( ! empty( $value[ $field_data_id ] ) ) {
+				$entity = $value[ $field_data_id ];
+
+				foreach ( $entity as $entity_key => $ids ) {
+					if ( empty( $ids ) ) {
+						$ids = array();
+					}
+
+					if ( is_array( $ids ) ) {
+						$ids = array_map(
+							function ( $value ) {
+								return absint( $value );
+							},
+							$ids
+						);
+					}
+
+					$class_attr          = ' class="um-entities-conditions um-forms-field ' . esc_attr( $class ) . '" ';
+					$class_attr_responce = ' class="um-entities-conditions-responce um-forms-field ' . esc_attr( $class ) . '" ';
+
+					if ( 'site' !== $entity_key ) {
+						$entities = $this->get_entites( $entity_key, $ids );
+					}
+
+					if ( 'site' === $entity_key || 'none' === $entity_key ) {
+						$class_attr          = ' class="um-entities-conditions um-forms-field ' . esc_attr( $class ) . ' um-entities-conditions-full" ';
+						$class_attr_responce = ' class="um-entities-conditions-responce um-forms-field ' . esc_attr( $class ) . ' um-entities-conditions-responce-hide" ';
+					}
+					$disabled        = '';
+					$option_disabled = '';
+
+					$name_attr          = ' name="' . $name . '[' . $field_data_id . '][' . $entity_key . ']" ';
+					$name_attr_responce = ' name="' . $name . '[' . $field_data_id . '][' . $entity_key . '][]" ';
+
+					$html .= '<div class="um-entities-conditions-row">';
+					$html .= '<select ' . $original_name . $class_attr . $name_attr . $data_attr . '>';
+					$html .= '<option value="none">' . __( 'Select entity', 'ultimate-member' ) . '</option>';
+					foreach ( $scope as $key => $label ) {
+						$html .= '<option value="' . $key . '" ' . selected( $key === $entity_key, true, false ) . '>' . $label . '</option>';
+					}
+					$html .= '</select>';
+
+					if ( 'site' === $entity_key ) {
+						$disabled = ' disabled="disabled" ';
+						$html    .= '<input type="hidden" class="um-entities-conditions-responce-input" name="' . $name . '[' . $field_data_id . '][site]" value="site" />';
+					}
+
+					$multiple = '';
+					if ( is_array( $ids ) && ! empty( $ids ) ) {
+						$multiple = ' multiple="multiple" ';
+					}
+
+					$class_attr_responce = ' class="um-entities-conditions-responce um-pages-select2 um-forms-field ' . esc_attr( $class ) . '" ';
+
+					$html .= '<select data-placeholder="' . esc_html__( 'Select', 'ultimate-member' ) . '" data-parent="' . $entity_key . '" ' . $original_name . $multiple . $name_attr_responce . $class_attr_responce . $data_attr . $disabled . '>';
+					if ( ! empty( $entities ) ) {
+						if ( 'site' !== $entity_key ) {
+							foreach ( $entities as $value ) {
+								if ( 'site' !== $entity_key ) {
+									$space = '';
+									if ( strpos( $value, ':' ) !== false ) {
+										$values    = explode( ':', $value );
+										$id        = $values[0];
+										$post_name = $values[1];
+										if ( strpos( $post_name, '|' ) !== false ) {
+											$child_name = explode( '|', $post_name );
+											$space      = $child_name[1];
+											$post_name  = $child_name[0];
+										}
+									} else {
+										$id        = $value;
+										$post_name = get_the_title( $id );
+									}
+									$html .= '<option value="' . $id . '" ' . selected( in_array( absint( $id ), $ids, true ), true, false ) . '>' . esc_html( $space ) . esc_html__( 'ID#' ) . esc_html( $id ) . ': ' . esc_html( $post_name ) . '</option>';
+								}
+							}
+						}
+					}
+					$html .= '</select>';
+
+					$html .= '<button title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="um-conditions-row-action remove-row button">-</button>';
+					$html .= '</div>';
+				}
+			} else {
+				if ( 'um_restriction_rule_content__um_include' === $id ) {
+					$class_attr          = ' class="um-entities-conditions um-forms-field ' . esc_attr( $class ) . ' um-entities-conditions-full" ';
+					$class_attr_responce = ' class="um-entities-conditions-responce um-forms-field ' . esc_attr( $class ) . ' um-entities-conditions-responce-hide" ';
+
+					$html .= '<div class="um-entities-conditions-row">';
+					$html .= '<select ' . $original_name . $class_attr . $name_attr . $data_attr . '>';
+					$html .= '<option value="none">' . __( 'Select entity', 'ultimate-member' ) . '</option>';
+					foreach ( $scope as $key => $label ) {
+						$html .= '<option value="' . $key . '">' . $label . '</option>';
+					}
+					$html .= '</select>';
+
+					$html .= '<select data-placeholder="' . esc_html__( 'Select', 'ultimate-member' ) . '" ' . $original_name . $name_attr . $class_attr_responce . $data_attr . '>';
+					$html .= '</select>';
+
+					$html .= '<button disabled title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="um-conditions-row-action remove-row button">-</button>';
+					$html .= '</div>';
+				}
+			}
+			$html .= '</div>';
+
+			return $html;
+		}
+
+		public function get_entites( $entity, $ids ) {
+			$post_types = get_post_types( array( 'public' => true ), 'names' );
+			if ( in_array( $entity, $post_types, true ) ) {
+				foreach ( $ids as $id ) {
+					$entities[] = $id . ':' . get_the_title( $id );
+				}
+			} elseif ( 'tags' === $entity ) {
+				foreach ( $ids as $id ) {
+					$entities[] = $id . ':' . get_term( $id )->name;
+				}
+			} elseif ( 'category' === $entity ) {
+				foreach ( $ids as $id ) {
+					$entities[] = $id . ':' . get_term( $id )->name;
+				}
+			}
+
+			return $entities;
+		}
+
+		/**
+		 * @param $field_data
+		 *
+		 * @return bool|string
+		 */
+		public function render_users_conditions( $field_data ) {
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			$id            = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+			$field_data_id = $field_data['id'];
+
+			$class               = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+			$class              .= ! empty( $field_data['size'] ) ? $field_data['size'] : '';
+			$class_attr          = ' class="um-users-conditions um-forms-field ' . esc_attr( $class ) . '" ';
+			$class_attr_compare  = ' class="um-users-conditions-compare um-forms-field ' . esc_attr( $class ) . '" ';
+			$class_attr_responce = ' class="um-users-conditions-responce um-forms-field ' . esc_attr( $class ) . '" ';
+
+			$data = array(
+				'field_id' => $field_data_id,
+			);
+
+			$data_attr = '';
+			foreach ( $data as $key => $value ) {
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
+			}
+
+			$name      = $field_data_id . '_um_entity';
+			$name      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : $name;
+			$name_attr = ' name="' . $name . '[' . $field_data_id . ']" ';
+
+			$original_name = ' data-original="' . $name . '[' . $field_data_id . ']" ';
+
+			$scope = array(
+				'none'  => __( 'Select rule object', 'ultimate-member' ),
+				'users' => __( 'User', 'ultimate-member' ),
+				'role'  => __( 'User Role', 'ultimate-member' ),
+			);
+
+			/**
+			 * Filters Ultimate Member users scope.
+			 *
+			 * @param {array} $scope    Users scope.
+			 *
+			 * @return {array} Users scope.
+			 *
+			 * @since 2.8.x
+			 * @hook um_users_conditions_scope
+			 *
+			 * @example <caption>Remove user role</caption>
+			 * function my_um_entities_conditions_scope( $scope ) {
+			 *     // your code here
+			 *     unset( $scope['role'] );
+			 *     return $scope;
+			 * }
+			 * add_filter( 'um_users_conditions_scope', 'my_um_users_conditions_scope', 10, 1 );
+			 */
+			$scope = apply_filters( 'um_users_conditions_scope', $scope );
+
+			$scope_count = count( $scope );
+
+			$compare = array(
+				'equal'    => __( 'equal', 'ultimate-member' ),
+				'notequal' => __( 'doesn\'t equal', 'ultimate-member' ),
+			);
+
+			$value = $this->get_field_value( $field_data );
+
+			$html  = '<div class="um-users-conditions-row-hidden">';
+			$html .= '<div class="um-users-conditions-row-group" data-group="">';
+			$html .= '<div class="um-users-conditions-separator">' . esc_html__( 'OR' ) . '</div>';
+			$html .= '<div class="um-users-conditions-row">';
+			$html .= '<div class="um-users-conditions-connector">' . esc_html__( 'AND' ) . '</div>';
+			$html .= '<select ' . $original_name . $class_attr . $data_attr . '>';
+			foreach ( $scope as $key => $label ) {
+				$html .= '<option id="um_option_' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '">' . esc_html( $label ) . '</option>';
+			}
+			$html .= '</select>';
+
+			$html .= '<select ' . $original_name . $class_attr_compare . $data_attr . '>';
+			foreach ( $compare as $key => $label ) {
+				$html .= '<option value="' . esc_attr( $key ) . '">' . esc_html( $label ) . '</option>';
+			}
+			$html .= '</select>';
+
+			$html .= '<select data-placeholder="' . esc_html__( 'Select', 'ultimate-member' ) . '" ' . $original_name . $class_attr_responce . $data_attr . '>';
+			$html .= '</select>';
+
+			$html .= '<button title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="um-conditions-row-action add-row button">+</button>';
+			$html .= '<button disabled title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="um-conditions-row-action remove-row button">-</button>';
+			$html .= '</div>';
+			$html .= '</div>';
+
+			$html .= '<div class="um-conditions-group-action-wrap">';
+			$html .= '<div class="um-users-conditions-separator">' . esc_html__( 'OR' ) . '</div>';
+			$html .= '<button class="button-primary um-conditions-group-action add-group-row">' . esc_html__( 'Add group rule' ) . '</button>';
+			$html .= '</div>';
+			$html .= '</div>';
+
+			$html .= '<div class="um-users-conditions-wrap" data-count="' . $scope_count . '">';
+
+			if ( ! empty( $value[ $field_data_id ] ) ) {
+				$i = 1;
+				foreach ( $value[ $field_data_id ] as $group_key => $group ) {
+					$html .= '<div class="um-users-conditions-row-group" data-group="' . esc_attr( $i ) . '">';
+					$html .= '<div class="um-users-conditions-separator">' . esc_html__( 'OR' ) . '</div>';
+
+					$class_attr_responce = ' class="um-user-select-field um-users-conditions-responce um-forms-field ' . esc_attr( $class ) . '" ';
+
+					if ( ! empty( $group ) ) {
+						foreach ( $group as $rule_key => $rule ) {
+							$name_attr          = ' name="' . $name . '[' . $field_data_id . '][' . $i . '][' . $rule_key . ']" ';
+							$name_attr_compare  = ' name="' . $name . '[' . $field_data_id . '][' . $i . '][' . $rule_key . '][compare]" ';
+							$name_attr_responce = ' name="' . $name . '[' . $field_data_id . '][' . $i . '][' . $rule_key . '][ids][]" ';
+
+							$html .= '<div class="um-users-conditions-row">';
+							$html .= '<div class="um-users-conditions-connector">' . esc_html__( 'AND' ) . '</div>';
+
+							$html .= '<select ' . $original_name . $class_attr . $name_attr . $data_attr . '>';
+							foreach ( $scope as $key => $label ) {
+								$html .= '<option id="um_option_' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '" ' . selected( $key === $rule_key, true, false ) . '>' . esc_html( $label ) . '</option>';
+							}
+							$html .= '</select>';
+
+							$html .= '<select ' . $original_name . $class_attr_compare . $name_attr_compare . $data_attr . '>';
+							foreach ( $compare as $key => $label ) {
+								$html .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key === $rule['compare'], true, false ) . '>' . esc_html( $label ) . '</option>';
+							}
+							$html .= '</select>';
+
+							$multiple = '';
+							if ( 'users' === $rule_key || 'role' === $rule_key ) {
+								$multiple = ' multiple="multiple" ';
+							}
+
+							$html .= '<select data-placeholder="' . esc_html__( 'Select', 'ultimate-member' ) . '" data-parent="' . $rule_key . '" ' . $multiple . $original_name . $class_attr_responce . $name_attr_responce . $data_attr . '>';
+							if ( 'users' === $rule_key ) {
+								foreach ( $rule['ids'] as $user_id ) {
+									$user = get_user_by( 'ID', $user_id );
+									if ( ! empty( $user->display_name ) ) {
+										$display_name = $user->display_name;
+									} else {
+										$display_name = $user->user_login;
+									}
+									$html .= '<option value="' . esc_attr( $user_id ) . '" selected>' . esc_html( $display_name ) . '</option>';
+								}
+							} elseif ( 'role' === $rule_key ) {
+								$options = $this->get_roles_options( $rule_key );
+								foreach ( $rule['ids'] as $role_id ) {
+									$html .= '<option value="' . esc_attr( $role_id ) . '" selected>' . esc_html( $options[ $role_id ] ) . '</option>';
+								}
+							}
+							$html .= '</select>';
+
+							$html .= '<button title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="um-conditions-row-action add-row button">+</button>';
+							$html .= '<button title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="um-conditions-row-action remove-row button">-</button>';
+
+							$html .= '</div>';
+						}
+					}
+					$html .= '</div>';
+
+					++$i;
+				}
+				$html .= '<div class="um-conditions-group-action-wrap">';
+				$html .= '<div class="um-users-conditions-separator">' . esc_html__( 'OR' ) . '</div>';
+				$html .= '<button class="button-primary um-conditions-group-action add-group-row">' . esc_html__( 'Add group rule' ) . '</button>';
+				$html .= '</div>';
+			} else {
+				$html .= '<div class="um-users-conditions-row-group" data-group="1">';
+				$html .= '<div class="um-users-conditions-separator">' . esc_html__( 'OR' ) . '</div>';
+				$html .= '<div class="um-users-conditions-row">';
+				$html .= '<div class="um-users-conditions-connector">' . esc_html__( 'AND' ) . '</div>';
+				$html .= '<select ' . $original_name . $class_attr . $data_attr . '>';
+				foreach ( $scope as $key => $label ) {
+					$html .= '<option id="um_option_' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '">' . esc_html( $label ) . '</option>';
+				}
+				$html .= '</select>';
+
+				$html .= '<select ' . $original_name . $class_attr_compare . $data_attr . '>';
+				foreach ( $compare as $key => $label ) {
+					$html .= '<option value="' . esc_attr( $key ) . '">' . esc_html( $label ) . '</option>';
+				}
+				$html .= '</select>';
+
+				$html .= '<select data-placeholder="' . esc_html__( 'Select', 'ultimate-member' ) . '" ' . $original_name . $class_attr_responce . $data_attr . '>';
+				$html .= '</select>';
+
+				$html .= '<button title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="um-conditions-row-action add-row button">+</button>';
+				$html .= '<button disabled title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="um-conditions-row-action remove-row button">-</button>';
+				$html .= '</div>';
+				$html .= '</div>';
+
+				$html .= '<div class="um-conditions-group-action-wrap">';
+				$html .= '<div class="um-users-conditions-separator">' . esc_html__( 'OR' ) . '</div>';
+				$html .= '<button class="button-primary um-conditions-group-action add-group-row">' . esc_html__( 'Add group rule' ) . '</button>';
+				$html .= '</div>';
+			}
+			$html .= '</div>';
+
+			return $html;
+		}
+
+		public function get_roles_options( $type ) {
+			$options = array();
+			$roles   = get_editable_roles();
+			foreach ( $roles as $role => $role_data ) {
+				$options[ $role ] = $role_data['name'];
+			}
+
+			return $options;
 		}
 	}
 }

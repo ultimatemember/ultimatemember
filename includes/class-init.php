@@ -1370,6 +1370,15 @@ if ( ! class_exists( 'UM' ) ) {
 		}
 
 		/**
+		 * Checks if the new restrictions rules is enabled.
+		 *
+		 * @return bool
+		 */
+		public function is_new_restrictions() {
+			return defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && $this->options()->get( 'enable_restriction_settings_v3' );
+		}
+
+		/**
 		 * Include files with hooked filters/actions
 		 *
 		 * @since 2.0

@@ -1049,6 +1049,67 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			$this->settings_map = apply_filters( 'um_settings_map', $settings_map );
 
+			$access_sections       = array();
+			$access_sections_other = array(
+				'title'  => __( 'Other', 'ultimate-member' ),
+				'fields' => array(
+					array(
+						'id'    => 'enable_reset_password_limit',
+						'type'  => 'checkbox',
+						'label' => __( 'Enable the Reset Password Limit?', 'ultimate-member' ),
+					),
+					array(
+						'id'          => 'reset_password_limit_number',
+						'type'        => 'text',
+						'label'       => __( 'Reset Password Limit', 'ultimate-member' ),
+						'tooltip'     => __( 'Set the maximum reset password limit. If reached the maximum limit, user will be locked from using this.', 'ultimate-member' ),
+						'validate'    => 'numeric',
+						'conditional' => array( 'enable_reset_password_limit', '=', 1 ),
+						'size'        => 'small',
+					),
+					array(
+						'id'      => 'change_password_request_limit',
+						'type'    => 'checkbox',
+						'label'   => __( 'Change Password request limit', 'ultimate-member' ),
+						'tooltip' => __( 'This option adds rate limit when submitting the change password form in the Account page. Users are only allowed to submit 1 request per 30 minutes to prevent from any brute-force attacks or password guessing with the form.', 'ultimate-member' ),
+					),
+					array(
+						'id'      => 'blocked_emails',
+						'type'    => 'textarea',
+						'label'   => __( 'Blocked Email Addresses (Enter one email per line)', 'ultimate-member' ),
+						'tooltip' => __( 'This will block the specified e-mail addresses from being able to sign up or sign in to your site. To block an entire domain, use something like *@domain.com', 'ultimate-member' ),
+					),
+					array(
+						'id'      => 'blocked_words',
+						'type'    => 'textarea',
+						'label'   => __( 'Blacklist Words (Enter one word per line)', 'ultimate-member' ),
+						'tooltip' => __( 'This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username', 'ultimate-member' ),
+					),
+					array(
+						'id'      => 'allowed_choice_callbacks',
+						'type'    => 'textarea',
+						'label'   => __( 'Allowed Choice Callbacks (Enter one PHP function per line)', 'ultimate-member' ),
+						'tooltip' => __( 'This option lets you specify the choice callback functions to prevent anyone from using 3rd-party functions that may put your site at risk.', 'ultimate-member' ),
+					),
+					array(
+						'id'      => 'allow_url_redirect_confirm',
+						'type'    => 'checkbox',
+						'label'   => __( 'Allow external link redirect confirm', 'ultimate-member' ),
+						'tooltip' => __( 'Using JS.confirm alert when you go to an external link.', 'ultimate-member' ),
+					),
+				),
+			);
+
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'disable_restriction_settings_v2' ) ) {
+				$access_sections[''] = $access_sections_other;
+			} else {
+				$access_sections['']      = array(
+					'title'  => __( 'Restriction Content', 'ultimate-member' ),
+					'fields' => $access_fields,
+				);
+				$access_sections['other'] = $access_sections_other;
+			}
+
 			/**
 			 * UM hook
 			 *
@@ -1493,72 +1554,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					),
 					'access'      => array(
 						'title'    => __( 'Access', 'ultimate-member' ),
-						'sections' => array(
-							''      => array(
-								'title'       => __( 'Restriction Content', 'ultimate-member' ),
-								'description' => __( 'Provides  settings for controlling access to your site.', 'ultimate-member' ),
-								'fields'      => $access_fields,
-							),
-							'other' => array(
-								'title'         => __( 'Other', 'ultimate-member' ),
-								'form_sections' => array(
-									'rp'      => array(
-										'title'       => __( 'Reset Password', 'ultimate-member' ),
-										'description' => __( 'Allows to manage reset password settings.', 'ultimate-member' ),
-										'fields'      => array(
-											array(
-												'id'    => 'enable_reset_password_limit',
-												'type'  => 'checkbox',
-												'label' => __( 'Password reset limit', 'ultimate-member' ),
-												'checkbox_label' => __( 'Enable the Reset Password Limit?', 'ultimate-member' ),
-												'description' => __( 'If enabled, this sets a limit on the number of password resets a user can do.', 'ultimate-member' ),
-											),
-											array(
-												'id'       => 'reset_password_limit_number',
-												'type'     => 'text',
-												'label'    => __( 'Enter password reset limit', 'ultimate-member' ),
-												'description' => __( 'Set the maximum reset password limit. If reached the maximum limit, user will be locked from using this.', 'ultimate-member' ),
-												'validate' => 'numeric',
-												'conditional' => array( 'enable_reset_password_limit', '=', 1 ),
-												'size'     => 'small',
-											),
-											array(
-												'id'    => 'change_password_request_limit',
-												'type'  => 'checkbox',
-												'label' => __( 'Change Password request limit', 'ultimate-member' ),
-												'checkbox_label' => __( 'Enable limit for changing password', 'ultimate-member' ),
-												'description' => __( 'This option adds rate limit when submitting the change password form in the Account page. Users are only allowed to submit 1 request per 30 minutes to prevent from any brute-force attacks or password guessing with the form.', 'ultimate-member' ),
-											),
-											array(
-												'id'    => 'only_approved_user_reset_password',
-												'type'  => 'checkbox',
-												'label' => __( 'Only approved user Reset Password', 'ultimate-member' ),
-												'checkbox_label' => __( 'Enable reset password only for approved users', 'ultimate-member' ),
-												'description' => __( 'This option makes possible to reset password only for approved user. Is used to prevent from any spam email attacks from not approved users.', 'ultimate-member' ),
-											),
-										),
-									),
-									'blocked' => array(
-										'title'       => __( 'Blocked data when sign up', 'ultimate-member' ),
-										'description' => __( 'Allows to manage blocked data of signed up user.', 'ultimate-member' ),
-										'fields'      => array(
-											array(
-												'id'    => 'blocked_emails',
-												'type'  => 'textarea',
-												'label' => __( 'Blocked Email Addresses (Enter one email per line)', 'ultimate-member' ),
-												'description' => __( 'This will block the specified email addresses from being able to sign up or sign in to your site. To block an entire domain, use something like `*@domain.com`.', 'ultimate-member' ),
-											),
-											array(
-												'id'    => 'blocked_words',
-												'type'  => 'textarea',
-												'label' => __( 'Blacklist Words (Enter one word per line)', 'ultimate-member' ),
-												'description' => __( 'This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username.', 'ultimate-member' ),
-											),
-										),
-									),
-								),
-							),
-						),
+						'sections' => $access_sections,
 					),
 					'email'       => array(
 						'title'         => __( 'Emails', 'ultimate-member' ),
@@ -2155,6 +2151,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'label' => __( 'Legacy fonticons', 'ultimate-member' ),
 												'checkbox_label' => __( 'Enable legacy fonticons', 'ultimate-member' ),
 												'description' => __( 'Check this box if you would like to enable legacy Ultimate Member fonticons used outdated versions of FontAwesome and Ionicons libraries.', 'ultimate-member' ),
+											),
+											array(
+												'id'             => 'enable_restriction_settings_v3',
+												'type'           => 'checkbox',
+												'label'          => __( 'Restriction settings v3', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable restriction settings v3', 'ultimate-member' ),
+												'description'    => __( 'Check this box if you would like to enable Restriction settings v3 with new access rules.', 'ultimate-member' ),
+											),
+											array(
+												'id'             => 'disable_restriction_settings_v2',
+												'type'           => 'checkbox',
+												'label'          => __( 'Restriction settings v2', 'ultimate-member' ),
+												'checkbox_label' => __( 'Disable restriction settings v2', 'ultimate-member' ),
+												'description'    => __( 'Check this box if you would like to disable Restriction settings v2.', 'ultimate-member' ),
+												'conditional'    => array(
+													'enable_restriction_settings_v3',
+													'=',
+													1,
+												),
 											),
 										),
 									),

@@ -29,6 +29,11 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		/**
 		 * @var array
 		 */
+		public $restriction_rule_meta;
+
+		/**
+		 * @var array
+		 */
 		public $restriction_term_meta;
 
 		/**
@@ -205,6 +210,47 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					),
 					'wp_capabilities'                => array(
 						'sanitize' => array( $this, 'sanitize_wp_capabilities' ),
+					),
+				)
+			);
+
+			$this->restriction_rule_meta = apply_filters(
+				'um_restriction_rule_meta_map',
+				array(
+					'_um_priority'       => array(
+						'sanitize' => 'int',
+					),
+					'_um_description'    => array(
+						'sanitize' => 'textarea',
+					),
+					'_um_status'         => array(
+						'sanitize' => 'sanitize_array_key',
+						'default'  => 'active',
+						'array'    => array( 'active', 'inactive' ),
+					),
+					'_um_action'         => array(
+						'sanitize' => 'int',
+					),
+					'_um_message_type'   => array(
+						'sanitize' => 'int',
+					),
+					'_um_custom_message' => array(
+						'sanitize' => 'wp_kses',
+					),
+					'_um_redirect'       => array(
+						'sanitize' => 'int',
+					),
+					'_um_redirect_url'   => array(
+						'sanitize' => 'url',
+					),
+					'_um_include'        => array(
+						'sanitize' => array( $this, 'sanitize_registered_entities' ),
+					),
+					'_um_exclude'        => array(
+						'sanitize' => array( $this, 'sanitize_registered_entities' ),
+					),
+					'_um_users'          => array(
+						'sanitize' => array( $this, 'sanitize_registered_users' ),
 					),
 				)
 			);
@@ -1084,6 +1130,87 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 		/**
+		 * Sanitize user meta fields when wp-admin form has been submitted
+		 *
+		 * @param array $value
+		 *
+		 * @return array
+		 */
+		public function sanitize_registered_entities( $value ) {
+
+			if ( ! empty( $value ) ) {
+				if ( is_array( $value ) ) {
+					foreach ( $value as $key => $val ) {
+						$key = sanitize_key( $key );
+						if ( is_array( $val ) ) {
+							$val = array_map( 'absint', $val );
+						} else {
+							if ( 'site' === $val ) {
+								$val = 1;
+							} else {
+								$val = absint( $val );
+							}
+						}
+						if ( ! empty( $val ) ) {
+							$value[ $key ] = $val;
+						} else {
+							unset( $value[ $key ] );
+						}
+					}
+				} else {
+					$value = absint( $value );
+				}
+			}
+
+			return $value;
+		}
+
+		/**
+		 * Sanitize user meta fields when wp-admin form has been submitted
+		 *
+		 * @param array $value
+		 *
+		 * @return array
+		 */
+		public function sanitize_registered_users( $value ) {
+			if ( ! empty( $value ) ) {
+				foreach ( $value as $group => $group_val ) {
+					$group = absint( $group );
+					if ( ! empty( $group_val ) ) {
+						foreach ( $group_val as $key => $val ) {
+							if ( ! empty( $val['ids'] ) ) {
+								$key            = sanitize_key( $key );
+								$val['compare'] = sanitize_key( $val['compare'] );
+								foreach ( $val['ids'] as $k => $id ) {
+									if ( 'user' === $key ) {
+										$val['ids'][ $k ] = absint( $id );
+									} else {
+										$val['ids'][ $k ] = sanitize_key( $id );
+									}
+								}
+
+								$value[ $group ][ $key ] = $val;
+							} else {
+								unset( $value[ $group ][ $key ] );
+							}
+						}
+					}
+				}
+			}
+
+			$value = array_filter(
+				$value,
+				function( $item ) {
+					return ! empty( $item );
+				}
+			);
+
+			$value = array_values( $value );
+
+			return $value;
+		}
+
+		/**
 		 * Sanitize role meta fields when wp-admin form has been submitted
 		 *
 		 * @param array $data
@@ -1138,6 +1265,69 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$data = $sanitized;
 
 			$data = apply_filters( 'um_save_role_meta_sanitize', $data );
+
+			return $data;
+		}
+
+		/**
+		 * Sanitize restriction rule meta fields when wp-admin form has been submitted
+		 *
+		 * @param array $data
+		 *
+		 * @return array
+		 */
+		public function sanitize_restriction_rule_meta( $data ) {
+			$sanitized = array();
+
+			foreach ( $data as $k => $v ) {
+				if ( ! array_key_exists( $k, $this->restriction_rule_meta ) ) {
+					// @todo remove since 2.2.x and leave only continue
+					$sanitized[ $k ] = $v;
+					continue;
+				}
+
+				if ( ! array_key_exists( 'sanitize', $this->restriction_rule_meta[ $k ] ) ) {
+					// @todo remove since 2.2.x and leave only continue
+					$sanitized[ $k ] = $v;
+					continue;
+				}
+
+				if ( is_callable( $this->restriction_rule_meta[ $k ]['sanitize'], true, $callable_name ) ) {
+					add_filter( 'um_restriction_rule_meta_sanitize_' . $k, $this->restriction_rule_meta[ $k ]['sanitize'], 10, 1 );
+				}
+
+				switch ( $this->restriction_rule_meta[ $k ]['sanitize'] ) {
+					default:
+						$sanitized[ $k ] = apply_filters( 'um_restriction_rule_meta_sanitize_' . $k, $data[ $k ] );
+						break;
+					case 'int':
+						$sanitized[ $k ] = (int) $v;
+						break;
+					case 'bool':
+						$sanitized[ $k ] = (bool) $v;
+						break;
+					case 'textarea':
+						$sanitized[ $k ] = sanitize_textarea_field( $v );
+						break;
+					case 'wp_kses':
+						$sanitized[ $k ] = wp_kses_post( $v );
+						break;
+					case 'url':
+						$sanitized[ $k ] = esc_url_raw( $v );
+						break;
+					case 'sanitize_array_key':
+						if ( ! array_key_exists( 'default', $this->restriction_rule_meta[ $k ] ) || ! array_key_exists( 'array', $this->restriction_rule_meta[ $k ] ) ) {
+							continue 2;
+						}
+
+						$sanitized[ $k ] = ! in_array( sanitize_key( $v ), $this->restriction_rule_meta[ $k ]['array'], true ) ? $this->restriction_rule_meta[ $k ]['default'] : sanitize_key( $v );
+						break;
+				}
+			}
+
+			$data = $sanitized;
+
+			$data = apply_filters( 'um_save_restriction_rule_sanitize', $data );
 
 			return $data;
 		}

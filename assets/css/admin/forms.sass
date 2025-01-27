@@ -498,3 +498,87 @@ span.um-admin-icon-clear
   i
     font-size: 20px
     vertical-align: middle
+
+// Access rules
+.#{$prefix}entities-conditions-row
+  margin: 0 0 5px
+  .#{$prefix}entities-conditions-full
+    width: calc(100% - 42px)
+  .#{$prefix}entities-conditions-responce
+    vertical-align: top
+  .#{$prefix}entities-conditions-responce-hide
+    display: none
+  select
+    resize: vertical
+    width: calc( 50% - 21px )
+    height: 36px
+
+.#{$prefix}conditions-row-action
+  width: 36px
+  height: 36px
+  margin: 0 0 0 2px !important
+  &[disabled]
+    opacity: .5
+  &:hover
+    color: #2271b1
+
+.#{$prefix}users-conditions-row-group
+  margin: 0 0 10px
+  &:first-child
+    .um-users-conditions-separator
+      display: none
+.#{$prefix}users-conditions-row
+  margin: 0 0 5px
+  .um-users-conditions-responce
+    vertical-align: top
+  select
+    resize: vertical
+    width: 33.3%
+    height: 36px
+    &.um-users-conditions-compare
+      width: calc( 33.3% - 82px )
+.#{$prefix}conditions-group-action
+  min-width: 100px
+  width: auto
+  display: block !important
+  margin: 0 auto !important
+.#{$prefix}users-conditions-separator,
+.#{$prefix}users-conditions-connector
+  text-align: center
+  font-size: 11px
+  font-weight: 700
+  margin: 0 0 5px
+  display: block
+  color: #98a2b3
+.um-protection-buttons
+  display: flex
+  justify-content: center
+  button
+    margin: 0 5px !important
+.#{$prefix}users-conditions-row-hidden,
+.#{$prefix}entities-conditions-row-hidden
+  display: none
+.#{$prefix}users-conditions-row,
+.#{$prefix}entities-conditions-row
+  .select2-container
+    width: calc(50% - 21px)!important
+    vertical-align: top
+    li
+      margin: 1px 2px !important
+    .select2-search__field
+      min-height: 18px !important
+      height: 18px !important
+      margin: 0 !important
+    .select2-selection
+      min-height: 36px
+      padding: 6px 0 0
+    .select2-selection__clear
+      margin: 0
+  .select2-container--disabled
+    display: none
+.#{$prefix}users-conditions-row
+  &:nth-child(2)
+    .#{$prefix}users-conditions-connector
+      display: none
+  .select2-container
+    width: 33% !important
