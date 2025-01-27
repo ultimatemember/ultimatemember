@@ -250,7 +250,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			} elseif ( 'add' === sanitize_key( $_GET['tab'] ) || 'edit' === sanitize_key( $_GET['tab'] ) ) {
 				include_once UM_PATH . 'includes/admin/templates/restrictions/restriction-edit.php';
 			} else {
-				um_js_redirect( add_query_arg( array( 'page' => 'um_restriction_rules' ), get_admin_url( 'admin.php' ) ) );
+				wp_safe_redirect( add_query_arg( array( 'page' => 'um_restriction_rules' ), admin_url( 'admin.php' ) ) );
 			}
 			// phpcs:enable WordPress.Security.NonceVerification
 		}
