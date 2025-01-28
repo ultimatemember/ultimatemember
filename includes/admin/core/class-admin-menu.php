@@ -202,6 +202,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 				add_submenu_page( $this->slug, __( 'Member Directories', 'ultimate-member' ), __( 'Member Directories', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_directory', '' );
 			}
 
+			if ( UM()->is_new_restrictions() ) {
+				add_submenu_page( $this->slug, __( 'Access Rules', 'ultimate-member' ), __( 'Access Rules', 'ultimate-member' ), 'manage_options', 'um_restriction_rules', array( &$this, 'um_restriction_rules_page' ) );
+			}
+
 			/**
 			 * UM hook
 			 *
@@ -234,6 +238,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			} else {
 				um_js_redirect( add_query_arg( array( 'page' => 'um_roles' ), get_admin_url( 'admin.php' ) ) );
 			}
+		}
+
+		/**
+		 * Access rules v3
+		 */
+		public function um_restriction_rules_page() {
+			// phpcs:disable WordPress.Security.NonceVerification
+			if ( empty( $_GET['tab'] ) ) {
+				include_once UM_PATH . 'includes/admin/templates/restrictions/restrictions-list.php';
+			} elseif ( 'add' === sanitize_key( $_GET['tab'] ) || 'edit' === sanitize_key( $_GET['tab'] ) ) {
+				include_once UM_PATH . 'includes/admin/templates/restrictions/restriction-edit.php';
+			} else {
+				wp_safe_redirect( add_query_arg( array( 'page' => 'um_restriction_rules' ), admin_url( 'admin.php' ) ) );
+			}
+			// phpcs:enable WordPress.Security.NonceVerification
 		}
 
 

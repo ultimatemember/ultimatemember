@@ -14,11 +14,18 @@ class Users {
 
 	public function __construct() {
 		add_action( 'wp_ajax_um_get_users', array( $this, 'get_users' ) );
+		add_action( 'wp_ajax_um_get_role', array( $this, 'get_roles' ) );
 	}
 
 	public function get_users() {
-		UM()->admin()->check_ajax_nonce();
+		// @todo add nonce for other users ajax requests
+		if ( ! empty( $_REQUEST['restrictions'] ) ) {
+			check_ajax_referer( 'um_users_conditions_nonce', 'nonce' );
+		} else {
+			UM()->admin()->check_ajax_nonce();
+		}
 
+		// phpcs:disable WordPress.Security.NonceVerification
 		$search_request = ! empty( $_REQUEST['search'] ) ? sanitize_text_field( $_REQUEST['search'] ) : '';
 		$page           = ! empty( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 		$per_page       = 20;
@@ -45,11 +52,27 @@ class Users {
 				$users[ $key ]->img = $url;
 			}
 		}
+		// phpcs:enable WordPress.Security.NonceVerification
 
 		wp_send_json_success(
 			array(
 				'users'       => $users,
 				'total_count' => $total_count,
+			)
+		);
+	}
+
+	public function get_roles() {
+		check_ajax_referer( 'um_users_conditions_nonce', 'nonce' );
+
+		$roles = get_editable_roles();
+		foreach ( $roles as $role => $role_data ) {
+			$options[ $role ] = $role_data['name'];
+		}
+
+		wp_send_json_success(
+			array(
+				'roles' => $roles,
 			)
 		);
 	}

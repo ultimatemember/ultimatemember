@@ -82,6 +82,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			//roles metaboxes
 			add_action( 'um_roles_add_meta_boxes', array( &$this, 'add_metabox_role' ) );
 
+			//restriction rules metaboxes
+			add_action( 'um_restriction_rules_add_meta_boxes', array( &$this, 'add_metabox_restriction_rule' ) );
+
 			add_filter( 'um_builtin_validation_types_continue_loop', array( &$this, 'validation_types_continue_loop' ), 1, 4 );
 			add_filter( 'um_restrict_content_hide_metabox', array( &$this, 'hide_metabox_restrict_content_shop' ), 10, 1 );
 
@@ -785,6 +788,35 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 
 		/**
+		 * Load a restriction rule metabox
+		 *
+		 * @param $object
+		 * @param $box
+		 */
+		public function load_metabox_restriction_rule( $object, $box ) {
+			$box['id'] = str_replace( 'um-admin-form-', '', $box['id'] );
+
+			if ( 'builder' === $box['id'] ) {
+				UM()->builder()->form_id = get_the_ID();
+			}
+
+			preg_match( '#\{.*?\}#s', $box['id'], $matches );
+
+			if ( isset( $matches[0] ) ) {
+				$path      = $matches[0];
+				$box['id'] = preg_replace( '~(\\{[^}]+\\})~', '', $box['id'] );
+			} else {
+				$path = UM_PATH;
+			}
+
+			$path = str_replace( '{','', $path );
+			$path = str_replace( '}','', $path );
+
+			include_once $path . 'includes/admin/templates/restrictions/'. $box['id'] . '.php';
+		}
+
+
+		/**
 		 * Load a form metabox
 		 *
 		 * @param $object
@@ -1004,6 +1036,85 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 
 			foreach ( $roles_metaboxes as $metabox ) {
+				add_meta_box(
+					$metabox['id'],
+					$metabox['title'],
+					$metabox['callback'],
+					$metabox['screen'],
+					$metabox['context'],
+					$metabox['priority']
+				);
+			}
+		}
+
+		public function add_metabox_restriction_rule() {
+			$callback = array( &$this, 'load_metabox_restriction_rule' );
+
+			$rules_metaboxes = array(
+				array(
+					'id'       => 'um-admin-form-rules',
+					'title'    => __( 'Access', 'ultimate-member' ),
+					'callback' => $callback,
+					'screen'   => 'um_restriction_rule_meta',
+					'context'  => 'normal',
+					'priority' => 'default',
+				),
+				array(
+					'id'       => 'um-admin-form-entities',
+					'title'    => __( 'Content', 'ultimate-member' ),
+					'callback' => $callback,
+					'screen'   => 'um_restriction_rule_meta',
+					'context'  => 'normal',
+					'priority' => 'default',
+				),
+				array(
+					'id'       => 'um-admin-form-action',
+					'title'    => __( 'Action', 'ultimate-member' ),
+					'callback' => $callback,
+					'screen'   => 'um_restriction_rule_meta',
+					'context'  => 'normal',
+					'priority' => 'default',
+				),
+				array(
+					'id'       => 'um-admin-form-publish',
+					'title'    => __( 'Publish', 'ultimate-member' ),
+					'callback' => $callback,
+					'screen'   => 'um_restriction_rule_meta',
+					'context'  => 'side',
+					'priority' => 'default',
+				),
+			);
+
+			/**
+			 * Filters Ultimate Member extend Rules metabox.
+			 *
+			 * @param  {array} $rules_metaboxes Rules metabox.
+			 *
+			 * @return {array} $rules_metaboxes.
+			 *
+			 * @since 2.8.x
+			 * @hook um_admin_restriction_rule_metaboxes
+			 *
+			 * @example <caption>Extend UM core pages.</caption>
+			 * function my_um_admin_restriction_rule_metaboxes( $rules_metaboxes ) {
+			 *    $rules_metaboxes[] = array(
+			 *          'id'        => 'um-admin-form-your-custom',
+			 *          'title'     => __( 'My Rules Metabox', 'ultimate-member' ),
+			 *          'callback'  => 'my-metabox-callback',
+			 *          'screen'    => 'um_rule_meta',
+			 *          'context'   => 'side',
+			 *          'priority'  => 'default'
+			 *      );
+			 *     return $rules_metaboxes;
+			 * }
+			 * add_filter( 'um_admin_restriction_rule_metaboxes', 'my_um_admin_restriction_rule_metaboxes' );
+			 */
+			$rules_metaboxes = apply_filters( 'um_admin_restriction_rule_metaboxes', $rules_metaboxes );
+
+			/**
+			 * Add restriction rule metabox
+			 */
+			foreach ( $rules_metaboxes as $metabox ) {
 				add_meta_box(
 					$metabox['id'],
 					$metabox['title'],

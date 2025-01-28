@@ -248,7 +248,6 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 			</form>
 
 			<?php
-
 		}
 	}
 }

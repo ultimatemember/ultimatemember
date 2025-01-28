@@ -1,0 +1,93 @@
+.um-directory .um-member-directory-header .um-member-directory-header-row.um-member-directory-search-row {
+  justify-content: flex-start;
+}
+.um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-search-line label {
+  margin: 0 0 0 10px;
+}
+.um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-view-type {
+  margin: 0 0 0 10px;
+}
+.um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a a {
+  margin: 0 0 0 5px;
+}
+.um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a .um-new-dropdown {
+  right: -12px;
+  left: auto;
+}
+.um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-filters .um-member-directory-filters-a a {
+  margin: 0 0 0 5px;
+}
+.um-directory .um-member-directory-header .um-member-directory-header-row .um-search .um-search-filter.um-datepicker-filter-type input, .um-directory .um-member-directory-header .um-member-directory-header-row .um-search .um-search-filter.um-timepicker-filter-type input {
+  margin: 0 0 0 5px !important;
+}
+.um-directory .um-member-directory-header .um-member-directory-header-row .um-search .um-search-filter.um-datepicker-filter-type input:nth-child(even), .um-directory .um-member-directory-header .um-member-directory-header-row .um-search .um-search-filter.um-timepicker-filter-type input:nth-child(even) {
+  margin: 0 5px 0 0 !important;
+}
+.um-directory .um-member-directory-header .um-member-directory-header-row .um-filtered-line .um-members-filter-tag {
+  margin: 0 0 5px 10px;
+}
+.um-directory .um-member-directory-header .um-member-directory-header-row .um-filtered-line .um-members-filter-tag:first-child {
+  margin-left: 10px;
+}
+.um-directory .um-member-directory-header .um-member-directory-header-row .um-filtered-line .um-members-filter-tag .um-members-filter-remove {
+  margin-left: 0;
+  margin-right: 10px;
+}
+.um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-members-edit-btn a.um-edit-profile-btn:before {
+  margin-right: 0;
+  margin-left: 8px;
+}
+.um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-photo {
+  margin: 0 0 0 15px;
+}
+.um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-content {
+  margin: 0 0 0 10px;
+}
+.um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-actions .um-member-cog .um-new-dropdown {
+  right: auto;
+  left: 0;
+  text-align: right;
+}
+.um-directory .um-members-pagination-box .um-members-pagi {
+  align-items: center;
+}
+.um-directory .um-members-pagination-box .um-members-pagi .pagi.pagi-arrow {
+  transform: rotate(180deg);
+}
+.um-directory.uimob340 .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-view-type {
+  margin: 0 0 0 2px;
+}
+.um-directory.uimob340 .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-new-dropdown {
+  right: auto;
+  left: 0;
+}
+.um-directory.uimob340 .um-members-wrapper .um-members.um-members-list .um-member .um-member-photo {
+  margin: 0 0 0 10px;
+}
+.um-directory.uimob340 .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-footer-buttons {
+  margin: 0 0 0 10px;
+}
+.um-directory.uimob500 .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-view-type {
+  margin: 0 0 0 5px;
+}
+.um-directory.uimob500 .um-members-wrapper .um-members.um-members-list .um-member .um-member-photo {
+  margin: 0 0 0 10px;
+}
+.um-directory.uimob500 .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer {
+  align-items: flex-start;
+}
+.um-directory.uimob500 .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-footer-buttons {
+  margin: 0 0 0 10px;
+}
+.um-directory.uimob500 .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-footer-buttons .um-members-list-footer-button-wrapper {
+  margin: 0 0 5px 10px;
+}
+.um-directory.uimob800 .um-members-wrapper .um-members.um-members-list .um-member .um-member-photo {
+  margin: 0 0 0 10px;
+}
+.um-directory.uimob800 .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-footer-buttons {
+  margin: 0 0 0 10px;
+}
+.um-directory.uimob800 .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-footer-buttons .um-members-list-footer-button-wrapper {
+  margin: 0 0 5px 10px;
+}
