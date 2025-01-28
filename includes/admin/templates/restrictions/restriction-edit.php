@@ -68,11 +68,11 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 	$rule_error     = '';
 
 	if ( 'add' === sanitize_key( $_GET['tab'] ) ) {
-		if ( ! wp_verify_nonce( $_POST['um_nonce'], 'um-add-restriction-rule' ) ) {
+		if ( ! check_admin_referer( 'um-add-restriction-rule', 'um_nonce' ) ) {
 			$rule_error = __( 'Security Issue', 'ultimate-member' ) . '<br />';
 		}
 	} else {
-		if ( ! wp_verify_nonce( $_POST['um_nonce'], 'um-edit-restriction-rule' ) ) {
+		if ( ! check_admin_referer( 'um-edit-restriction-rule', 'um_nonce' ) ) {
 			$rule_error = __( 'Security Issue', 'ultimate-member' ) . '<br />';
 		}
 	}
@@ -154,12 +154,15 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 			$update      = true;
 			$data['id']  = $restriction_id;
 
+			$data['title']           = wp_unslash( $data['title'] );
+			$data['_um_description'] = wp_unslash( $data['_um_description'] );
+
 			if ( 'add' === sanitize_key( $_GET['tab'] ) ) {
 				$data['_um_priority']     = $rules_count;
 				$rules[ $restriction_id ] = $data;
 
 				if ( isset( $auto_increment ) ) {
-					$auto_increment++;
+					++$auto_increment;
 					UM()->options()->update( 'custom_restriction_rules_increment', $auto_increment );
 				}
 				$update = false;
