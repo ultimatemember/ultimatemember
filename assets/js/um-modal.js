@@ -106,11 +106,18 @@ jQuery(document).ready(function() {
 		var d;
 		var form_id = 0;
 		var mode = '';
-		if ( jQuery('div.um-field-image[data-key="' + key + '"]').length === 1 ) {
-			var $formWrapper = jQuery('div.um-field-image[data-key="' + key + '"]').closest('.um-form');
-			form_id = $formWrapper.find('input[name="form_id"]').val();
-			mode = $formWrapper.attr('data-mode');
+
+		// Get the form ID.
+		var $field = jQuery('div.um-field-image[data-key="' + key + '"]');
+		if ( $field.length === 1 ) {
+			var $formWrapper = $field.closest('.um-form');
+			form_id = $formWrapper.data('form_id') || $formWrapper.find('input[name="form_id"]').val();
+			mode = $formWrapper.data('mode');
+		} else {
+			console.warn( 'UM Warning: No field associated with image uploader.' );
+			return;
 		}
+		var $profileDiv = $field.closest('.um.um-profile');
 
 		if ( jQuery('.cropper-hidden').length > 0 && UM.frontend.cropper.obj ) {
 			var data = UM.frontend.cropper.obj.getData();
@@ -139,15 +146,23 @@ jQuery(document).ready(function() {
 						d = new Date();
 
 						if ( key === 'profile_photo' ) {
-							jQuery('.um-profile-photo-img img').attr('src', response.data.image.source_url + "?"+d.getTime());
+							// Replace image.
+							$profileDiv.find('.um-profile-photo-img img').attr('src', response.data.image.source_url + "?"+d.getTime());
+							// Hide overlay on viewing.
+							if ( $profileDiv.is('.um-viewing') ) {
+								$profileDiv.find('.um-profile-photo-overlay').hide();
+							}
 						} else if ( key === 'cover_photo' ) {
-							var $coverDiv = jQuery('.um-cover-e');
+							// Replace image.
+							var $coverDiv = $profileDiv.find('.um-cover-e');
 							$coverDiv.find('img').remove();
 							$coverDiv.prepend('<img src="' + response.data.image.source_url + "?"+d.getTime() + '" alt="" />');
-
+							// Change overlay text.
 							var $coverOverlay = $coverDiv.find('.um-cover-overlay');
-							if ( $coverOverlay.length ) {
-								$coverOverlay.find('.um-cover-overlay-t').html( $coverOverlay.data('text-change') );
+							$profileDiv.find('div.um-cover a.um-manual-trigger, .um-cover-overlay-t').html( $coverOverlay.data('text-change') );
+							// Hide overlay on viewing.
+							if ( $profileDiv.is('.um-viewing') ) {
+								$coverOverlay.hide();
 							}
 						}
 

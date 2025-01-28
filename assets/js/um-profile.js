@@ -34,6 +34,7 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
+	// Remove profile photo.
 	jQuery(document.body).on('click', '.um-reset-profile-photo', function(e) {
 
 		jQuery('.um-profile-photo-img img').attr( 'src', jQuery(this).attr( 'data-default_src' ) );
@@ -58,16 +59,17 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
+	// Remove cover photo.
 	jQuery(document.body).on('click', '.um-reset-cover-photo', function(e){
 		var obj = jQuery(this);
 
-		var $coverDiv = jQuery('.um-cover-e');
+		// Remove image.
+		var $profileDiv = jQuery('.um.um-profile');
+		var $coverDiv = $profileDiv.find('.um-cover-e');
 		$coverDiv.find('img').remove();
-
+		// Change overlay text.
 		var $coverOverlay = $coverDiv.find('.um-cover-overlay');
-		if ( $coverOverlay.length ) {
-			$coverOverlay.find('.um-cover-overlay-t').html( $coverOverlay.data('text-upload') );
-		}
+		$profileDiv.find('div.um-cover a.um-manual-trigger, .um-cover-overlay-t').html( $coverOverlay.data('text-upload') );
 
 		um_responsive();
 

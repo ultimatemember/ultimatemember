@@ -7,9 +7,11 @@
  * @param $args
  */
 function um_add_form_identifier( $args ) {
+	if ( true === UM()->fields()->editing && ! is_admin() ) {
 	?>
 		<input type="hidden" name="form_id" id="form_id_<?php echo esc_attr( $args['form_id'] ); ?>" value="<?php echo esc_attr( $args['form_id'] ); ?>" />
 	<?php
+	}
 }
 add_action( 'um_after_form_fields', 'um_add_form_identifier' );
 
@@ -20,9 +22,8 @@ add_action( 'um_after_form_fields', 'um_add_form_identifier' );
  * @param $args
  */
 function um_add_security_checks( $args ) {
-	if ( is_admin() ) {
-		return;
-	} ?>
+	if ( true === UM()->fields()->editing && ! is_admin() ) {
+	?>
 
 	<p class="<?php echo esc_attr( UM()->honeypot ); ?>_name">
 		<label for="<?php echo esc_attr( UM()->honeypot ) . '_' . $args['form_id']; ?>"><?php _e( 'Only fill in if you are not human' ); ?></label>
@@ -30,6 +31,7 @@ function um_add_security_checks( $args ) {
 	</p>
 
 	<?php
+	}
 }
 add_action( 'um_after_form_fields', 'um_add_security_checks' );
 add_action( 'um_account_page_hidden_fields', 'um_add_security_checks' );

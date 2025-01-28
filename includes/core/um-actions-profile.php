@@ -847,8 +847,8 @@ function um_profile_header_cover_area( $args ) {
 	if ( isset( $args['cover_enabled'] ) && $args['cover_enabled'] == 1 ) {
 
 		$default_cover = UM()->options()->get( 'default_cover' );
-
-		$has_cover = um_user( 'cover_photo' ) || ( $default_cover && $default_cover['url'] );
+		$has_cover     = um_user( 'cover_photo' ) || ( $default_cover && $default_cover['url'] );
+		$can_upload    = true === UM()->fields()->editing || empty( $has_cover || UM()->user()->cannot_edit )
 		?>
 
 		<div class="um-cover <?php if ( $has_cover ) echo 'has-cover'; ?>"
@@ -875,7 +875,7 @@ function um_profile_header_cover_area( $args ) {
 			 * ?>
 			 */
 			do_action( 'um_cover_area_content', um_profile_id() );
-			if ( true === UM()->fields()->editing && empty( UM()->user()->cannot_edit ) ) {
+			if ( $can_upload ) {
 				// Field and dropdown-menu.
 
 				$hide_remove = um_user( 'cover_photo' ) ? false : ' style="display:none;"';
@@ -945,16 +945,16 @@ function um_profile_header_cover_area( $args ) {
 
 				}
 
-				if ( true === UM()->fields()->editing && empty( UM()->user()->cannot_edit ) ) {
+				if ( $can_upload ) {
 					// Overlay.
 					?>
 						<span class="um-cover-overlay"
-									data-text-change="<?php esc_attr_e( 'Change your cover photo', 'ultimate-member' ); ?>"
+									data-text-change="<?php esc_attr_e( 'Change cover photo', 'ultimate-member' ); ?>"
 									data-text-upload="<?php esc_attr_e( 'Upload a cover photo', 'ultimate-member' ); ?>">
 							<span class="um-cover-overlay-s">
 								<ins>
 									<i class="um-faicon-picture-o"></i>
-									<span class="um-cover-overlay-t"><?php echo $has_cover ? __( 'Change your cover photo', 'ultimate-member' ) : __( 'Upload a cover photo', 'ultimate-member' ); ?></span>
+									<span class="um-cover-overlay-t"><?php echo $has_cover ? __( 'Change cover photo', 'ultimate-member' ) : __( 'Upload a cover photo', 'ultimate-member' ); ?></span>
 								</ins>
 							</span>
 						</span>
@@ -1009,7 +1009,11 @@ function um_profile_header( $args ) {
 	// Switch on/off the profile photo uploader
 	$disable_photo_uploader = empty( $args['use_custom_settings'] ) ? UM()->options()->get( 'disable_profile_photo_upload' ) : $args['disable_photo_upload'];
 
-	if ( ! empty( $disable_photo_uploader ) ) {
+	$default_avatar = UM()->options()->get( 'default_avatar' );
+	$has_avatar     = um_profile( 'profile_photo' ) || ( $default_avatar && $default_avatar['id'] );
+	$can_upload     = ( true === UM()->fields()->editing || empty( $has_avatar || UM()->user()->cannot_edit ) ) && empty( $disable_photo_uploader );
+
+	if ( ! $can_upload ) {
 		$args['disable_photo_upload'] = 1;
 	}
 	?>
@@ -1056,7 +1060,7 @@ function um_profile_header( $args ) {
 					echo get_avatar( um_user( 'ID' ), $default_size );
 				}
 
-				if ( true === UM()->fields()->editing && empty( $disable_photo_uploader ) && empty( UM()->user()->cannot_edit ) ) {
+				if ( $can_upload ) {
 					// Overlay.
 					?>
 						<span class="um-profile-photo-overlay">
@@ -1072,7 +1076,7 @@ function um_profile_header( $args ) {
 			</a>
 
 			<?php
-			if ( true === UM()->fields()->editing && empty( $disable_photo_uploader ) && empty( UM()->user()->cannot_edit ) ) {
+			if ( $can_upload ) {
 				// Field and dropdown-menu.
 
 				UM()->fields()->add_hidden_field( 'profile_photo' );

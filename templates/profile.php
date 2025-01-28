@@ -6,7 +6,7 @@
  *
  * Page: "Profile"
  *
- * @version 2.6.9
+ * @version 2.9.3
  *
  * @var string $mode
  * @var int    $form_id
@@ -18,9 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 $description_key = UM()->profile()->get_show_bio_key( $args );
 ?>
 
-<div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?> um-role-<?php echo esc_attr( um_user( 'role' ) ); ?> ">
+<div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?> um-role-<?php echo esc_attr( um_user( 'role' ) ); ?>">
 
-	<div class="um-form" data-mode="<?php echo esc_attr( $mode ) ?>">
+	<div class="um-form" data-mode="<?php echo esc_attr( $mode ) ?>"
+		 data-form_id="<?php echo esc_attr( $form_id ); ?>">
 
 		<?php
 		/**
