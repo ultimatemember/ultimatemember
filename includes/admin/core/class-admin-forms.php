@@ -2264,6 +2264,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 							$html .= '<select data-placeholder="' . esc_html__( 'Select', 'ultimate-member' ) . '" data-parent="' . $rule_key . '" ' . $multiple . $original_name . $class_attr_responce . $name_attr_responce . $data_attr . '>';
 							if ( 'users' === $rule_key ) {
+								$display_name = '';
 								foreach ( $rule['ids'] as $user_id ) {
 									$user = get_user_by( 'ID', $user_id );
 									if ( ! empty( $user->display_name ) ) {
