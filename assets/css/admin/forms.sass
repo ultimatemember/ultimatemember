@@ -96,7 +96,7 @@
   //  font-style: italic
   //  clear: both
 
-.um-external-link-icon
+.#{$prefix}external-link-icon
   width: 1em
   height: 1em
   margin: 0
@@ -477,7 +477,7 @@ input[type="number"]
 //  .select2-drop-active
 //    z-index: 99999 !important
 
-span.um-admin-icon-value
+span.#{$prefix}admin-icon-value
   margin: 0 10px
   font-size: 13px
   i
@@ -486,7 +486,7 @@ span.um-admin-icon-value
     position: relative
     top: 5px
 
-span.um-admin-icon-clear
+span.#{$prefix}admin-icon-clear
   display: none
   cursor: pointer
   position: relative
@@ -525,18 +525,20 @@ span.um-admin-icon-clear
 .#{$prefix}users-conditions-row-group
   margin: 0 0 10px
   &:first-child
-    .um-users-conditions-separator
+    .#{$prefix}users-conditions-separator
       display: none
 .#{$prefix}users-conditions-row
   margin: 0 0 5px
-  .um-users-conditions-responce
+  .#{$prefix}users-conditions-responce
     vertical-align: top
   select
     resize: vertical
-    width: 33.3%
+    width: 33%
     height: 36px
-    &.um-users-conditions-compare
+    &.#{$prefix}users-conditions-compare
       width: calc( 33.3% - 82px )
+  .select2-container
+    margin: 0 1px
 .#{$prefix}conditions-group-action
   min-width: 100px
   width: auto
@@ -550,7 +552,7 @@ span.um-admin-icon-clear
   margin: 0 0 5px
   display: block
   color: #98a2b3
-.um-protection-buttons
+.#{$prefix}protection-buttons
   display: flex
   justify-content: center
   button

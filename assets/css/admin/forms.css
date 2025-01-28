@@ -486,11 +486,14 @@ span.um-admin-icon-clear i {
 }
 .um-users-conditions-row select {
   resize: vertical;
-  width: 33.3%;
+  width: 33%;
   height: 36px;
 }
 .um-users-conditions-row select.um-users-conditions-compare {
   width: calc(33.3% - 82px);
+}
+.um-users-conditions-row .select2-container {
+  margin: 0 1px;
 }
 
 .um-conditions-group-action {
