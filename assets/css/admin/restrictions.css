@@ -1,7 +1,7 @@
 .wp-list-table tr {
   cursor: move;
 }
-.wp-list-table .column-descr {
+.wp-list-table .column-description {
   width: 10%;
 }
 .wp-list-table .column-status,

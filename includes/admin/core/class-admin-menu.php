@@ -246,7 +246,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		public function um_restriction_rules_page() {
 			// phpcs:disable WordPress.Security.NonceVerification
 			if ( empty( $_GET['tab'] ) ) {
-				include_once UM_PATH . 'includes/admin/core/list-tables/restrictions-list-table.php';
+				include_once UM_PATH . 'includes/admin/templates/restrictions/restrictions-list.php';
 			} elseif ( 'add' === sanitize_key( $_GET['tab'] ) || 'edit' === sanitize_key( $_GET['tab'] ) ) {
 				include_once UM_PATH . 'includes/admin/templates/restrictions/restriction-edit.php';
 			} else {

@@ -37,7 +37,7 @@ function um_admin_init_users_select() {
 			ajax: {
 				url: wp.ajax.settings.url,
 				dataType: 'json',
-				delay: 250, // delay in ms while typing when to perform a AJAX search
+				delay: 250, // delay in ms while typing when to perform the AJAX search
 				data: function( params ) {
 					if ( jQuery( this ).attr( 'data-parent' ) ) {
 						action = 'um_get_' + jQuery( this ).attr( 'data-parent' );

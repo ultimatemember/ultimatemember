@@ -27,9 +27,9 @@ $data = $object['action'];
 					'description' => __( 'Action when users without access tries to view the post', 'ultimate-member' ),
 					'value'       => ! empty( $data['_um_action'] ) ? $data['_um_action'] : 0,
 					'options'     => array(
-						0 => __( 'Show access restricted message', 'ultimate-member' ),
-						1 => __( 'Redirect user', 'ultimate-member' ),
-						2 => __( 'Display 404', 'ultimate-member' ),
+						0 => __( 'Display 404', 'ultimate-member' ),
+						1 => __( 'Show access restricted message', 'ultimate-member' ),
+						2 => __( 'Redirect user', 'ultimate-member' ),
 					),
 				),
 				array(
@@ -42,7 +42,7 @@ $data = $object['action'];
 						0 => __( 'Global default content message', 'ultimate-member' ),
 						1 => __( 'Custom content message', 'ultimate-member' ),
 					),
-					'conditional' => array( '_um_action', '=', '0' ),
+					'conditional' => array( '_um_action', '=', '1' ),
 				),
 				array(
 					'id'          => '_um_custom_message',
@@ -62,7 +62,7 @@ $data = $object['action'];
 						0 => __( 'Login page', 'ultimate-member' ),
 						1 => __( 'Custom URL', 'ultimate-member' ),
 					),
-					'conditional' => array( '_um_action', '=', '1' ),
+					'conditional' => array( '_um_action', '=', '2' ),
 				),
 				array(
 					'id'          => '_um_redirect_url',
