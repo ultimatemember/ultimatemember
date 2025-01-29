@@ -2101,7 +2101,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				$actions = apply_filters( 'um_member_directory_users_card_actions', $actions, $user_id );
 			} else {
-				if ( empty( UM()->user()->cannot_edit ) ) {
+
+				if ( um_user( 'can_edit_profile' ) ) {
 					$actions['um-editprofile'] = array(
 						'title' => esc_html__( 'Edit Profile', 'ultimate-member' ),
 						'url'   => um_edit_profile_url( $user_id ),
