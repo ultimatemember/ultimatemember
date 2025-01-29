@@ -107,9 +107,9 @@ jQuery(document).ready(function() {
 		var form_id = 0;
 		var mode = '';
 		if ( jQuery('div.um-field-image[data-key="' + key + '"]').length === 1 ) {
-			var $formWrapper = jQuery('div.um-field-image[data-key="' + key + '"]').closest('.um-form');
-			form_id = $formWrapper.find('input[name="form_id"]').val();
-			mode = $formWrapper.attr('data-mode');
+			let $formWrapper = jQuery('div.um-field-image[data-key="' + key + '"]').closest('.um-form');
+			form_id = $formWrapper.data('form_id');
+			mode = $formWrapper.data('mode');
 		}
 
 		if ( jQuery('.cropper-hidden').length > 0 && UM.frontend.cropper.obj ) {
