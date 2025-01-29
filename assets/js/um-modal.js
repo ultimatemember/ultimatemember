@@ -152,11 +152,29 @@ jQuery(document).ready(function() {
 
 								$dropdown.find('.um-reset-profile-photo').addClass('um-is-visible').show();
 							}
+
+							if ( ! jQuery('.um').hasClass('um-editing') ) {
+								$dropdown.remove();
+							}
 						} else if ( key === 'cover_photo' ) {
 							jQuery('.um-cover-e').empty().html('<img src="' + response.data.image.source_url + "?"+d.getTime() + '" alt="" />');
+
+							let $dropdown = jQuery('.um-cover .um-dropdown');
+							if ( ! $dropdown.find('.um-reset-cover-photo').hasClass('um-is-visible') ) {
+								let $dropdownItem = $dropdown.find('.um-manual-trigger[data-parent=".um-cover"]');
+								let altText = $dropdownItem.data('alt_text');
+								$dropdownItem.data( 'alt_text', $dropdownItem.text() ).text( altText );
+
+								$dropdown.find('.um-reset-cover-photo').addClass('um-is-visible').show();
+							}
+
 							if ( jQuery('.um').hasClass('um-editing') ) {
 								jQuery('.um-cover-overlay').show();
+							} else {
+								$dropdown.remove();
 							}
+
+							um_responsive();
 						}
 
 						jQuery('.um-single-image-preview[data-key='+key+']').fadeIn().find('img').attr('src', response.data.image.source_url + "?"+d.getTime());
