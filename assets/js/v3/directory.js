@@ -655,6 +655,26 @@ function um_build_template( directoryObj, data ) {
 
 jQuery(document.body).ready( function() {
 
+	jQuery(document.body).on('click', '.um-user-action', function(e) {
+		e.preventDefault();
+		if ( jQuery(this).data('confirm-onclick') ) {
+			// Using wp.hooks here for workaround and integrate um-dropdown links and js.confirm
+			if ( ! confirm( jQuery(this).data('confirm-onclick') ) ) {
+				wp.hooks.addFilter( 'um_dropdown_link_result', 'ultimate-member', function( result, attrClass, obj ) {
+					if ( ! obj.data('confirm-onclick') ) {
+						return result;
+					}
+					return false;
+				});
+				return false;
+			} else {
+				wp.hooks.removeFilter( 'um_dropdown_link_result', 'ultimate-member' );
+			}
+		} else {
+			wp.hooks.removeFilter( 'um_dropdown_link_result', 'ultimate-member' );
+		}
+	});
+
 	/**
 	 * Change View Type Handlers
 	 */

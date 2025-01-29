@@ -34,7 +34,10 @@ class Users {
 				$actions['approve_user'] = array( 'label' => __( 'Approve Membership', 'ultimate-member' ) );
 			}
 			if ( UM()->common()->users()->can_be_rejected( $user_id ) ) {
-				$actions['reject_user'] = array( 'label' => __( 'Reject Membership', 'ultimate-member' ) );
+				$actions['reject_user'] = array(
+					'label'   => __( 'Reject Membership', 'ultimate-member' ),
+					'confirm' => __( 'Are you sure you want to reject this user account?', 'ultimate-member' ),
+				);
 			}
 			if ( UM()->common()->users()->can_be_reactivated( $user_id ) ) {
 				$actions['reactivate_user'] = array( 'label' => __( 'Reactivate this account', 'ultimate-member' ) );
@@ -50,16 +53,25 @@ class Users {
 				$actions['resend_user_activation'] = array( 'label' => $title );
 			}
 			if ( UM()->common()->users()->can_be_deactivated( $user_id ) ) {
-				$actions['deactivate_user'] = array( 'label' => __( 'Deactivate this account', 'ultimate-member' ) );
+				$actions['deactivate_user'] = array(
+					'label'   => __( 'Deactivate this account', 'ultimate-member' ),
+					'confirm' => __( 'Are you sure you want to deactivate this user account?', 'ultimate-member' ),
+				);
 			}
 		}
 
 		if ( UM()->roles()->um_current_user_can( 'delete', $user_id ) ) {
-			$actions['delete'] = array( 'label' => __( 'Delete this user', 'ultimate-member' ) );
+			$actions['delete'] = array(
+				'label'   => __( 'Delete this user', 'ultimate-member' ),
+				'confirm' => __( 'Are you sure you want to delete this user? This action cannot be undone.', 'ultimate-member' ),
+			);
 		}
 
 		if ( current_user_can( 'manage_options' ) && ! is_super_admin( $user_id ) && UM()->common()->users()->has_status( $user_id, 'approved' ) ) {
-			$actions['switch_user'] = array( 'label' => __( 'Login as this user', 'ultimate-member' ) );
+			$actions['switch_user'] = array(
+				'label'   => __( 'Login as this user', 'ultimate-member' ),
+				'confirm' => __( 'Are you sure you want to login as this user? The current session will be finished.', 'ultimate-member' ),
+			);
 		}
 
 		/**
@@ -149,7 +161,12 @@ class Users {
 							$link_classes[] = 'um-destructive';
 						}
 
-						$link_html = '<a href="' . esc_url( $url ) . '" class="' . esc_attr( implode( ' ', $link_classes ) ) . '">' . esc_html( $arr['label'] ) . '</a>';
+						$confirm = '';
+						if ( ! empty( $arr['confirm'] ) ) {
+							$confirm = ' data-confirm-onclick="' . esc_attr( $arr['confirm'] ) . '"';
+						}
+
+						$link_html = '<a href="' . esc_url( $url ) . '" class="' . esc_attr( implode( ' ', $link_classes ) ) . '"' . $confirm . '>' . esc_html( $arr['label'] ) . '</a>';
 						if ( 'switch_user' === $id ) {
 							if ( ! isset( $admin_items[1] ) ) {
 								$admin_items[1] = array();

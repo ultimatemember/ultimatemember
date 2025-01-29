@@ -180,9 +180,13 @@
 
 				// Using wp.hooks here for workaround and integrate um-dropdown links and js.confirm for some links
 				let result = true;
-				result = wp.hooks.applyFilters( 'um_dropdown_link_result', result, attrClass );
+				result = wp.hooks.applyFilters( 'um_dropdown_link_result', result, attrClass, self.$menu.find('li a[class="' + attrClass + '"]') );
 				console.log( result );
+
 				if ( ! result ) {
+					if ( self.$element.data('um-dropdown-show') ) {
+						self.hide();
+					}
 					return false;
 				}
 

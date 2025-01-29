@@ -246,6 +246,26 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 
 jQuery(document).ready(function() {
 
+	jQuery(document.body).on('click', '.um-user-action', function(e) {
+		e.preventDefault();
+		if ( jQuery(this).data('confirm-onclick') ) {
+			// Using wp.hooks here for workaround and integrate um-dropdown links and js.confirm
+			if ( ! confirm( jQuery(this).data('confirm-onclick') ) ) {
+				wp.hooks.addFilter( 'um_dropdown_link_result', 'ultimate-member', function( result, attrClass, obj ) {
+					if ( ! obj.data('confirm-onclick') ) {
+						return result;
+					}
+					return false;
+				});
+				return false;
+			} else {
+				wp.hooks.removeFilter( 'um_dropdown_link_result', 'ultimate-member' );
+			}
+		} else {
+			wp.hooks.removeFilter( 'um_dropdown_link_result', 'ultimate-member' );
+		}
+	});
+
 	jQuery( document.body ).on( 'click', '.um-user-posts-load-more', function( e ) {
 		e.preventDefault();
 
@@ -322,38 +342,6 @@ jQuery(document).ready(function() {
 				}
 			}
 		);
-	});
-
-	jQuery( document.body ).on( 'click', '.um-user-action.um_delete', function(e) {
-		e.preventDefault();
-		// Using wp.hooks here for workaround and integrate um-dropdown links and js.confirm
-		if ( ! confirm( wp.i18n.__( 'Are you sure that you want to delete this user?', 'ultimate-member' ) ) ) {
-			wp.hooks.addFilter( 'um_dropdown_link_result', 'ultimate-member', function( result, attrClass ) {
-				if ( 'um-user-action um_delete um-destructive' !== attrClass ) {
-					return result;
-				}
-				return false;
-			});
-			return false;
-		} else {
-			wp.hooks.removeFilter( 'um_dropdown_link_result', 'ultimate-member' );
-		}
-	});
-
-	jQuery( document.body ).on( 'click', '.um-user-action.um_switch_user', function(e) {
-		e.preventDefault();
-
-		if ( ! confirm( wp.i18n.__( 'Are you sure that you want to switch to this user? It breaks your current session.', 'ultimate-member' ) ) ) {
-			wp.hooks.addFilter( 'um_dropdown_link_result', 'ultimate-member', function( result, attrClass ) {
-				if ( 'um-user-action um_switch_user' !== attrClass ) {
-					return result;
-				}
-				return false;
-			});
-			return false;
-		} else {
-			wp.hooks.removeFilter( 'um_dropdown_link_result', 'ultimate-member' );
-		}
 	});
 
 	jQuery( document.body ).on('click', '.um-photo-modal', function(e){
