@@ -555,6 +555,10 @@
   text-align: center;
   width: 100%;
   word-break: break-word;
+  padding: 0 12px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 .um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-box-main .um-member-tagline {
   font-size: var(--um-text-font-size-md, 16px);
@@ -626,6 +630,10 @@
   text-align: center;
   width: 100%;
   word-break: break-word;
+  padding: 0 12px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 .um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-no-cover .um-member-box-main .um-member-tagline {
   font-size: var(--um-text-font-size-md, 16px);
