@@ -35,26 +35,30 @@ jQuery(document).ready(function() {
 	});
 
 	jQuery(document.body).on('click', '.um-reset-profile-photo', function(e) {
+		let $obj = jQuery(this);
+		let user_id = $obj.data('user_id');
 
-		jQuery('.um-profile-photo-img img').attr( 'src', jQuery(this).attr( 'data-default_src' ) );
+		let $dropdownItem = $obj.parents('ul').find('.um-manual-trigger[data-parent=".um-profile-photo"]');
+		let altText = $dropdownItem.data('alt_text');
+		$dropdownItem.data( 'alt_text', $dropdownItem.text() ).text( altText );
 
-		user_id = jQuery(this).attr('data-user_id');
-		metakey = 'profile_photo';
-
-		UM.dropdown.hideAll();
+		jQuery('.um-profile-photo-img img').attr( 'src', $obj.data( 'default_src' ) );
 
 		jQuery.ajax({
 			url: wp.ajax.settings.url,
 			type: 'post',
 			data: {
 				action:'um_delete_profile_photo',
-				metakey: metakey,
+				metakey: 'profile_photo',
 				user_id: user_id,
 				nonce: um_scripts.nonce
+			},
+			success: function() {
+				$obj.removeClass('um-is-visible').hide();
 			}
 		});
 
-		jQuery(this).parents('li').hide();
+		UM.dropdown.hideAll();
 		return false;
 	});
 

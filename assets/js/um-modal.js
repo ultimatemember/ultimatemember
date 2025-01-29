@@ -108,8 +108,11 @@ jQuery(document).ready(function() {
 		var mode = '';
 		if ( jQuery('div.um-field-image[data-key="' + key + '"]').length === 1 ) {
 			let $formWrapper = jQuery('div.um-field-image[data-key="' + key + '"]').closest('.um-form');
-			form_id = $formWrapper.data('form_id');
+			form_id = $formWrapper.data('form_id') || $formWrapper.find('input[name="form_id"]').val(); // 'input[name="form_id"]' is a backward compatibility.
 			mode = $formWrapper.data('mode');
+		} else {
+			console.warn( wp.i18n.__( 'UM Warning: No field associated with image uploader.', 'ultimate-member' ) );
+			return;
 		}
 
 		if ( jQuery('.cropper-hidden').length > 0 && UM.frontend.cropper.obj ) {
@@ -140,6 +143,15 @@ jQuery(document).ready(function() {
 
 						if ( key === 'profile_photo' ) {
 							jQuery('.um-profile-photo-img img').attr('src', response.data.image.source_url + "?"+d.getTime());
+
+							let $dropdown = jQuery('.um-profile-photo .um-dropdown');
+							if ( ! $dropdown.find('.um-reset-profile-photo').hasClass('um-is-visible') ) {
+								let $dropdownItem = $dropdown.find('.um-manual-trigger[data-parent=".um-profile-photo"]');
+								let altText = $dropdownItem.data('alt_text');
+								$dropdownItem.data( 'alt_text', $dropdownItem.text() ).text( altText );
+
+								$dropdown.find('.um-reset-profile-photo').addClass('um-is-visible').show();
+							}
 						} else if ( key === 'cover_photo' ) {
 							jQuery('.um-cover-e').empty().html('<img src="' + response.data.image.source_url + "?"+d.getTime() + '" alt="" />');
 							if ( jQuery('.um').hasClass('um-editing') ) {
