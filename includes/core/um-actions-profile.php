@@ -855,7 +855,7 @@ function um_profile_header_cover_area( $args ) {
 	}
 	?>
 	<div class="<?php echo esc_attr( implode( ' ', $cover_wrapper_classes ) ); ?>"
-		 data-user_id="<?php echo esc_attr( um_profile_id() ); ?>" data-ratio="<?php echo esc_attr( $args['cover_ratio'] ); ?>">
+		data-user_id="<?php echo esc_attr( um_profile_id() ); ?>" data-ratio="<?php echo esc_attr( $args['cover_ratio'] ); ?>">
 		<?php
 		/**
 		 * UM hook
@@ -886,8 +886,8 @@ function um_profile_header_cover_area( $args ) {
 				$remove_classes[] = 'um-is-visible';
 			}
 
-			$text     = ! $user_cover ? __( 'Upload a cover photo', 'ultimate-member' ) : __( 'Change cover photo', 'ultimate-member' ) ;
-			$alt_text = $user_cover ? __( 'Upload a cover photo', 'ultimate-member' ) : __( 'Change cover photo', 'ultimate-member' ) ;
+			$text     = ! $user_cover ? __( 'Upload a cover photo', 'ultimate-member' ) : __( 'Change cover photo', 'ultimate-member' );
+			$alt_text = $user_cover ? __( 'Upload a cover photo', 'ultimate-member' ) : __( 'Change cover photo', 'ultimate-member' );
 
 			$items = array(
 				'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width" data-alt_text="' . esc_attr( $alt_text ) . '">' . esc_html( $text ) . '</a>',
@@ -898,7 +898,7 @@ function um_profile_header_cover_area( $args ) {
 			$items = apply_filters( 'um_cover_area_content_dropdown_items', $items, um_profile_id() );
 
 			UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
-		} elseif ( ! isset( UM()->user()->cannot_edit ) && ! $user_cover ) {
+		} elseif ( ! $user_cover && ! isset( UM()->user()->cannot_edit ) ) {
 			$items = array(
 				'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . esc_html__( 'Upload a cover photo', 'ultimate-member' ) . '</a>',
 				'<a href="javascript:void(0);" class="um-dropdown-hide">' . esc_html__( 'Cancel', 'ultimate-member' ) . '</a>',
