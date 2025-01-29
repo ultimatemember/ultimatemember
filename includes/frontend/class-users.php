@@ -120,7 +120,7 @@ class Users {
 						),
 					);
 
-					if ( ! empty( UM()->user()->cannot_edit ) ) {
+					if ( ! um_user( 'can_edit_profile' ) ) {
 						unset( $items[0][0] );
 					}
 				} else {
