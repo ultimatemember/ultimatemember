@@ -144,6 +144,18 @@ final class Enqueue extends \um\common\Enqueue {
 		$localize_data = apply_filters( 'um_enqueue_localize_data', $localize_data );
 		wp_localize_script( 'um_scripts', 'um_scripts', $localize_data );
 
+		// Makes the honeypot.
+		if ( ! empty( UM()->fields()->set_mode ) && ( 'profile' !== UM()->fields()->set_mode || true === UM()->fields()->editing ) ) {
+			ob_start();
+			?>
+			jQuery( window ).on( 'load', function() {
+				jQuery('input[name="<?php echo esc_js( UM()->honeypot ); ?>"]').val('');
+			});
+			<?php
+			$inline_script = ob_get_clean();
+			wp_add_inline_script( 'um_scripts', $inline_script );
+		}
+
 		wp_register_script( 'um_dropdown', $js_url . 'dropdown' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 
 		wp_register_script( 'um_members', $js_url . 'um-members' . $suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'um_dropdown', 'wp-hooks', 'jquery-masonry', 'um_scripts' ), UM_VERSION, true );
@@ -193,6 +205,18 @@ final class Enqueue extends \um\common\Enqueue {
 
 		$deps = array_merge( array( 'um_ui', 'um_tipsy', 'um_raty', 'select2', 'um_fileupload', 'um_common', 'um_responsive', 'um_modal' ), self::$fonticons_handlers );
 		wp_register_style( 'um_styles', $css_url . 'um-styles' . $suffix . '.css', $deps, UM_VERSION );
+
+		// Makes the honeypot invisible.
+		if ( ! empty( UM()->fields()->set_mode ) && ( 'profile' !== UM()->fields()->set_mode || true === UM()->fields()->editing ) ) {
+			ob_start();
+			?>
+			.<?php echo esc_attr( UM()->honeypot ); ?>_name {
+				display: none !important;
+			}
+			<?php
+			$inline_styles = ob_get_clean();
+			wp_add_inline_style( 'um_styles', $inline_styles );
+		}
 
 		wp_register_style( 'um_members', $css_url . 'um-members' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
 		// RTL styles.

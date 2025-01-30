@@ -9,10 +9,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param $args
  */
 function um_add_form_identifier( $args ) {
+	// Ignore wp-admin preview.
 	if ( is_admin() ) {
 		return;
 	}
 
+	// Ignore UM:Profile in view mode.
 	if ( 'profile' === UM()->fields()->set_mode && true !== UM()->fields()->editing ) {
 		return;
 	}
@@ -28,10 +30,12 @@ add_action( 'um_after_form_fields', 'um_add_form_identifier' );
  * @param $args
  */
 function um_add_security_checks( $args ) {
+	// Ignore wp-admin preview.
 	if ( is_admin() ) {
 		return;
 	}
 
+	// Ignore UM:Profile in view mode.
 	if ( 'profile' === UM()->fields()->set_mode && true !== UM()->fields()->editing ) {
 		return;
 	}
@@ -44,45 +48,3 @@ function um_add_security_checks( $args ) {
 }
 add_action( 'um_after_form_fields', 'um_add_security_checks' );
 add_action( 'um_account_page_hidden_fields', 'um_add_security_checks' );
-
-/**
- * Makes the honeypot invisible
- */
-function um_add_form_honeypot_css() {
-	if ( is_admin() ) {
-		return;
-	}
-
-	if ( 'profile' === UM()->fields()->set_mode && true !== UM()->fields()->editing ) {
-		return;
-	}
-	?>
-	<style type="text/css">
-		.<?php echo esc_attr( UM()->honeypot ); ?>_name {
-			display: none !important;
-		}
-	</style>
-	<?php
-}
-add_action( 'wp_head', 'um_add_form_honeypot_css' );
-
-/**
- * Empty the honeypot value
- */
-function um_add_form_honeypot_js() {
-	if ( is_admin() ) {
-		return;
-	}
-
-	if ( 'profile' === UM()->fields()->set_mode && true !== UM()->fields()->editing ) {
-		return;
-	}
-	?>
-	<script type="text/javascript">
-		jQuery( window ).on( 'load', function() {
-			jQuery('input[name="<?php echo esc_js( UM()->honeypot ); ?>"]').val('');
-		});
-	</script>
-	<?php
-}
-add_action( 'wp_footer', 'um_add_form_honeypot_js', 99999999999999999 );
