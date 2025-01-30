@@ -13,11 +13,12 @@ function um_add_form_identifier( $args ) {
 		return;
 	}
 
-	if ( true === UM()->fields()->editing ) {
-		?>
-		<input type="hidden" name="form_id" id="form_id_<?php echo esc_attr( $args['form_id'] ); ?>" value="<?php echo esc_attr( $args['form_id'] ); ?>" />
-		<?php
+	if ( 'profile' === UM()->fields()->set_mode && true !== UM()->fields()->editing ) {
+		return;
 	}
+	?>
+	<input type="hidden" name="form_id" id="form_id_<?php echo esc_attr( $args['form_id'] ); ?>" value="<?php echo esc_attr( $args['form_id'] ); ?>" />
+	<?php
 }
 add_action( 'um_after_form_fields', 'um_add_form_identifier' );
 
@@ -30,14 +31,16 @@ function um_add_security_checks( $args ) {
 	if ( is_admin() ) {
 		return;
 	}
-	if ( true === UM()->fields()->editing ) {
-		?>
-		<p class="<?php echo esc_attr( UM()->honeypot ); ?>_name">
-			<label for="<?php echo esc_attr( UM()->honeypot . '_' . $args['form_id'] ); ?>"><?php esc_html_e( 'Only fill in if you are not human' ); ?></label>
-			<input type="hidden" name="<?php echo esc_attr( UM()->honeypot ); ?>" id="<?php echo esc_attr( UM()->honeypot . '_' . $args['form_id'] ); ?>" class="input" value="" size="25" autocomplete="off" />
-		</p>
-		<?php
+
+	if ( 'profile' === UM()->fields()->set_mode && true !== UM()->fields()->editing ) {
+		return;
 	}
+	?>
+	<p class="<?php echo esc_attr( UM()->honeypot ); ?>_name">
+		<label for="<?php echo esc_attr( UM()->honeypot . '_' . $args['form_id'] ); ?>"><?php esc_html_e( 'Only fill in if you are not human' ); ?></label>
+		<input type="hidden" name="<?php echo esc_attr( UM()->honeypot ); ?>" id="<?php echo esc_attr( UM()->honeypot . '_' . $args['form_id'] ); ?>" class="input" value="" size="25" autocomplete="off" />
+	</p>
+	<?php
 }
 add_action( 'um_after_form_fields', 'um_add_security_checks' );
 add_action( 'um_account_page_hidden_fields', 'um_add_security_checks' );
@@ -49,15 +52,17 @@ function um_add_form_honeypot_css() {
 	if ( is_admin() ) {
 		return;
 	}
-	if ( true === UM()->fields()->editing ) {
-		?>
-		<style type="text/css">
-			.<?php echo esc_attr( UM()->honeypot ); ?>_name {
-				display: none !important;
-			}
-		</style>
-		<?php
+
+	if ( 'profile' === UM()->fields()->set_mode && true !== UM()->fields()->editing ) {
+		return;
 	}
+	?>
+	<style type="text/css">
+		.<?php echo esc_attr( UM()->honeypot ); ?>_name {
+			display: none !important;
+		}
+	</style>
+	<?php
 }
 add_action( 'wp_head', 'um_add_form_honeypot_css' );
 
@@ -65,6 +70,13 @@ add_action( 'wp_head', 'um_add_form_honeypot_css' );
  * Empty the honeypot value
  */
 function um_add_form_honeypot_js() {
+	if ( is_admin() ) {
+		return;
+	}
+
+	if ( 'profile' === UM()->fields()->set_mode && true !== UM()->fields()->editing ) {
+		return;
+	}
 	?>
 	<script type="text/javascript">
 		jQuery( window ).on( 'load', function() {
