@@ -1,12 +1,13 @@
 <?php
 namespace um\core;
 
+use WP_Error;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
-
 
 	/**
 	 * Class Plugin_Updater
@@ -14,12 +15,10 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 	 */
 	class Plugin_Updater {
 
-
 		/**
 		 * Plugin_Updater constructor.
 		 */
-		function __construct() {
-			//cron request to UM()->store_url;
+		public function __construct() {
 			add_action( 'um_daily_scheduled_events', array( &$this, 'um_checklicenses' ) );
 
 			// clean update plugin cache
@@ -35,16 +34,15 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 			//add_filter( 'auto_update_plugin', array( &$this, 'prevent_dangerous_auto_updates' ), 99, 2 );
 		}
 
-
 		/**
 		 * Prevent auto-updating the WooCommerce plugin on major releases if there are untested extensions active.
-		 *
+		 * @todo maybe check untested extensions.
 		 * @since 3.2.0
 		 * @param  bool   $should_update If should update.
 		 * @param  object $plugin        Plugin data.
 		 * @return bool
 		 */
-		function prevent_dangerous_auto_updates( $should_update, $plugin ) {
+		public function prevent_dangerous_auto_updates( $should_update, $plugin ) {
 			if ( ! isset( $plugin->plugin, $plugin->new_version ) ) {
 				return $should_update;
 			}
@@ -55,7 +53,6 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 
 			return $should_update;
 		}
-
 
 		/**
 		 * This action is documented in wp-admin/includes/class-wp-upgrader.php
@@ -204,33 +201,32 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 
 					foreach ( $the_plugs as $key => $value ) {
 
-						if ( in_array( $value, array_keys( $paid_extensions ) ) ) {
+						if ( array_key_exists( $value, $paid_extensions ) ) {
 							$license = UM()->options()->get( "um_{$paid_extensions[ $value ]['key']}_license_key" );
 
 							if ( empty( $license ) ) {
 								continue;
 							}
 
-							$active_um_plugins[ $value ] = $paid_extensions[ $value ];
+							$active_um_plugins[ $value ]            = $paid_extensions[ $value ];
 							$active_um_plugins[ $value ]['license'] = $license;
 						}
 					}
 
 					restore_current_blog();
 				}
-
 			} else {
 				$the_plugs = get_option( 'active_plugins' );
 				foreach ( $the_plugs as $key => $value ) {
 
-					if ( in_array( $value, array_keys( $paid_extensions ) ) ) {
+					if ( array_key_exists( $value, $paid_extensions ) ) {
 						$license = UM()->options()->get( "um_{$paid_extensions[ $value ]['key']}_license_key" );
 
 						if ( empty( $license ) ) {
 							continue;
 						}
 
-						$active_um_plugins[ $value ] = $paid_extensions[ $value ];
+						$active_um_plugins[ $value ]            = $paid_extensions[ $value ];
 						$active_um_plugins[ $value ]['license'] = $license;
 					}
 				}
@@ -239,14 +235,13 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 			return $active_um_plugins;
 		}
 
-
 		/**
 		 * Check license function
+		 * WP Cron request to UM()::$store_url
 		 */
-		function um_checklicenses() {
+		public function um_checklicenses() {
 			$exts = $this->get_active_plugins();
-
-			if ( 0 == count( $exts ) ) {
+			if ( empty( $exts ) ) {
 				return;
 			}
 
@@ -267,16 +262,16 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 					'slug'      => $slug,
 					'license'   => $data['license'],
 					'item_name' => $data['title'],
-					'version'   => $plugin_data['Version']
+					'version'   => $plugin_data['Version'],
 				);
 			}
 
 			$request = wp_remote_post(
-				UM()->store_url,
+				UM()::$store_url,
 				array(
-					'timeout'   => UM()->request_timeout,
+					'timeout'   => UM()::$request_timeout,
 					'sslverify' => false,
-					'body'      => $api_params
+					'body'      => $api_params,
 				)
 			);
 
@@ -284,11 +279,11 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 				$request = json_decode( wp_remote_retrieve_body( $request ) );
 			} else {
 				$request = wp_remote_post(
-					UM()->store_url,
+					UM()::$store_url,
 					array(
-						'timeout'   => UM()->request_timeout,
+						'timeout'   => UM()::$request_timeout,
 						'sslverify' => true,
-						'body'      => $api_params
+						'body'      => $api_params,
 					)
 				);
 
@@ -321,11 +316,11 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 							$request->$slug->get_version_check->sections = maybe_unserialize( $request->$slug->get_version_check->sections );
 							$request->$slug->get_version_check->sections = (array) $request->$slug->get_version_check->sections;
 						} else {
-							$request->$slug->get_version_check = new \WP_Error( 'plugins_api_failed',
+							$request->$slug->get_version_check = new WP_Error(
+								'plugins_api_failed',
 								sprintf(
-								/* translators: %s: support forums URL */
-									__( 'An unexpected error occurred. Something may be wrong with %s or this server&#8217;s configuration. If you continue to have problems, please try the <a href="%s">support forums</a>.' ),
-									UM()->store_url,
+									/* translators: %s: support forums URL */
+									__( 'An unexpected error occurred. Something may be wrong with installation or server&#8217;s configuration. If you continue to have problems, please try the <a href="%s">support forums</a>.' ),
 									__( 'https://wordpress.org/support/' )
 								),
 								wp_remote_retrieve_body( $request->$slug->get_version_check )
@@ -341,7 +336,7 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 						}
 
 						if ( ! empty( $request->$slug->get_version_check->sections ) ) {
-							foreach( $request->$slug->get_version_check->sections as $key => $section ) {
+							foreach ( $request->$slug->get_version_check->sections as $key => $section ) {
 								$request->$slug->get_version_check->$key = (array) $section;
 							}
 						}
@@ -350,10 +345,7 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 					}
 				}
 			}
-
-			return;
 		}
-
 
 		/**
 		 * Check for Updates by request to the marketplace
@@ -362,15 +354,15 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 		 * @param array $_transient_data plugin update array build by WordPress.
 		 * @return \stdClass modified plugin update array.
 		 */
-		function check_update( $_transient_data ) {
+		public function check_update( $_transient_data ) {
 			if ( ! is_object( $_transient_data ) ) {
-				$_transient_data = new \stdClass;
+				$_transient_data = new \stdClass();
 			}
 
 			$exts = $this->get_active_plugins();
 
 			foreach ( $exts as $slug => $data ) {
-				//if response for current product isn't empty check for override
+				// If response for current product isn't empty check for override.
 				if ( ! empty( $_transient_data->response ) && ! empty( $_transient_data->response[ $slug ] ) && $_transient_data->last_checked > time() - DAY_IN_SECONDS ) {
 					continue;
 				}
@@ -387,12 +379,14 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 
 				$version_info = $this->get_cached_version_info( $slug );
 				if ( false === $version_info ) {
-					$version_info = $this->single_request( 'plugin_latest_version', array(
-						'slug'      => $slug,
-						'license'   => $data['license'],
-						'item_name' => $data['title'],
-						'version'   => $plugin_data['Version']
-					) );
+					$version_info = $this->single_request(
+						array(
+							'slug'      => $slug,
+							'license'   => $data['license'],
+							'item_name' => $data['title'],
+							'version'   => $plugin_data['Version'],
+						)
+					);
 
 					$this->set_version_info_cache( $slug, $version_info );
 				}
@@ -400,42 +394,39 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 				if ( false !== $version_info && is_object( $version_info ) && isset( $version_info->new_version ) ) {
 					//show update version block if new version > then current
 					if ( version_compare( $plugin_data['Version'], $version_info->new_version, '<' ) ) {
-						$_transient_data->response[ $slug ] = $version_info;
+						$_transient_data->response[ $slug ]         = $version_info;
 						$_transient_data->response[ $slug ]->plugin = $slug;
 					} else {
-						$_transient_data->no_update[ $slug ] = $version_info;
+						$_transient_data->no_update[ $slug ]         = $version_info;
 						$_transient_data->no_update[ $slug ]->plugin = $slug;
 					}
 
-					$_transient_data->last_checked      = time();
-					$_transient_data->checked[ $slug ]  = $plugin_data['Version'];
+					$_transient_data->last_checked     = time();
+					$_transient_data->checked[ $slug ] = $plugin_data['Version'];
 
 				} elseif ( false !== $version_info && is_object( $version_info ) && ! isset( $version_info->new_version ) ) {
-					$_transient_data->no_update[ $slug ] = $version_info;
+					$_transient_data->no_update[ $slug ]         = $version_info;
 					$_transient_data->no_update[ $slug ]->plugin = $slug;
 
-					$_transient_data->last_checked      = time();
-					$_transient_data->checked[ $slug ]  = $plugin_data['Version'];
+					$_transient_data->last_checked     = time();
+					$_transient_data->checked[ $slug ] = $plugin_data['Version'];
 				}
 			}
 
 			return $_transient_data;
 		}
 
-
-
 		/**
-		 * Calls the API and, if successfull, returns the object delivered by the API.
+		 * Calls the API and, if successfully, returns the object delivered by the API.
 		 *
 		 * @uses get_bloginfo()
 		 * @uses wp_remote_post()
 		 * @uses is_wp_error()
 		 *
-		 * @param string  $_action The requested action.
-		 * @param array   $_data   Parameters for the API action.
+		 * @param array $_data Parameters for the API action.
 		 * @return false|object
 		 */
-		private function single_request( $_action, $_data ) {
+		private function single_request( $_data ) {
 			$api_params = array(
 				'edd_action' => 'get_version',
 				'author'     => 'Ultimate Member',
@@ -445,12 +436,12 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 
 			$api_params = array_merge( $api_params, $_data );
 
-			$request    = wp_remote_post(
-				UM()->store_url,
+			$request = wp_remote_post(
+				UM()::$store_url,
 				array(
-					'timeout'   => UM()->request_timeout,
+					'timeout'   => UM()::$request_timeout,
 					'sslverify' => false,
-					'body'      => $api_params
+					'body'      => $api_params,
 				)
 			);
 
@@ -473,7 +464,7 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 				$request->icons = maybe_unserialize( $request->icons );
 			}
 
-			if( ! empty( $request->sections ) ) {
+			if ( ! empty( $request->sections ) ) {
 				foreach ( $request->sections as $key => $section ) {
 					$request->$key = (array) $section;
 				}
@@ -490,7 +481,6 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 			return $request;
 		}
 
-
 		/**
 		 * Updates information on the "View version x.x details" popup with custom data.
 		 *
@@ -499,9 +489,9 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 		 * @param object  $_args
 		 * @return object $_data
 		 */
-		function plugin_information( $_data, $_action = '', $_args = null ) {
-			//by default $data = false (from Wordpress)
-			if ( $_action != 'plugin_information' ) {
+		public function plugin_information( $_data, $_action = '', $_args = null ) {
+			//by default $data = false (from WordPress)
+			if ( 'plugin_information' !== $_action ) {
 				return $_data;
 			}
 
@@ -513,42 +503,27 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 					if ( false === $api_request_transient ) {
 						$plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $slug );
 
-						$api_request_transient = $this->single_request( 'plugin_latest_version', array(
-							'slug'      => $slug,
-							'license'   => $data['license'],
-							'item_name' => $data['title'],
-							'version'   => $plugin_data['Version']
-						) );
+						$api_request_transient = $this->single_request(
+							array(
+								'slug'      => $slug,
+								'license'   => $data['license'],
+								'item_name' => $data['title'],
+								'version'   => $plugin_data['Version'],
+							)
+						);
 						$this->set_version_info_cache( $slug, $api_request_transient );
 					}
 					break;
 				}
 			}
 
-			//If we have no transient-saved value, run the API, set a fresh transient with the API value, and return that value too right now.
+			// If we have no transient-saved value, run the API, set a fresh transient with the API value, and return that value too right now.
 			if ( isset( $api_request_transient ) ) {
 				$_data = $api_request_transient;
 			}
 
 			return $_data;
 		}
-
-
-		/**
-		 * Disable SSL verification in order to prevent download update failures
-		 *
-		 * @param array   $args
-		 * @param string  $url
-		 * @return array $array
-		 */
-		function http_request_args( $args, $url ) {
-			// If it is an https request and we are performing a package download, disable ssl verification
-			if ( strpos( $url, 'https://' ) !== false && strpos( $url, 'action=package_download' ) ) {
-				$args['sslverify'] = false;
-			}
-			return $args;
-		}
-
 
 		/**
 		 * Download extension URL
@@ -559,51 +534,46 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 		 *
 		 * @return string
 		 */
-		function extend_download_url( $download_url, $slug, $data ) {
-
-			$url = get_site_url( get_current_blog_id() );
-			$domain  = strtolower( urlencode( rtrim( $url, '/' ) ) );
+		private function extend_download_url( $download_url, $slug, $data ) {
+			$url    = get_site_url( get_current_blog_id() );
+			$domain = strtolower( urlencode( rtrim( $url, '/' ) ) );
 
 			$plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $slug );
 
 			$api_params = array(
-				'action'        => 'get_last_version',
-				'license'       => ! empty( $data['license'] ) ? $data['license'] : '',
-				'item_name'     => str_replace( 'Ultimate Member - ', '', $plugin_data['Name'] ),
-				'blog_id'       => get_current_blog_id(),
-				'site_url'      => urlencode( $url ),
-				'domain'        => urlencode( $domain ),
-				'slug'          => urlencode( $slug ),
+				'action'    => 'get_last_version',
+				'license'   => ! empty( $data['license'] ) ? $data['license'] : '',
+				'item_name' => str_replace( 'Ultimate Member - ', '', $plugin_data['Name'] ),
+				'blog_id'   => get_current_blog_id(),
+				'site_url'  => urlencode( $url ),
+				'domain'    => urlencode( $domain ),
+				'slug'      => urlencode( $slug ),
 			);
 
-			$download_url = add_query_arg( $api_params, $download_url );
-
-			return $download_url;
+			return add_query_arg( $api_params, $download_url );
 		}
-
 
 		/**
 		 * @param $slug
 		 *
 		 * @return bool|string
 		 */
-		function get_cache_key( $slug ) {
+		private function get_cache_key( $slug ) {
 			$exts = $this->get_active_plugins();
 
 			if ( empty( $exts[ $slug ] ) ) {
 				return false;
 			}
 
-			return 'edd_sl_' . md5( serialize( $slug . $exts[ $slug ]['license'] ) );
+			return 'edd_sl_' . md5( maybe_serialize( $slug . $exts[ $slug ]['license'] ) );
 		}
-
 
 		/**
 		 * @param $slug
 		 *
 		 * @return array|bool|mixed|object
 		 */
-		function get_cached_version_info( $slug ) {
+		private function get_cached_version_info( $slug ) {
 			$cache_key = $this->get_cache_key( $slug );
 			if ( empty( $cache_key ) ) {
 				return false;
@@ -629,12 +599,11 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 			return $cache['value'];
 		}
 
-
 		/**
-		 * @param $slug
+		 * @param string $slug
 		 * @param string $value
 		 */
-		function set_version_info_cache( $slug, $value = '' ) {
+		private function set_version_info_cache( $slug, $value = '' ) {
 			$cache_key = $this->get_cache_key( $slug );
 			if ( empty( $cache_key ) ) {
 				return;
@@ -642,11 +611,10 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 
 			$data = array(
 				'timeout' => strtotime( '+6 hours', time() ),
-				'value'   => json_encode( $value )
+				'value'   => wp_json_encode( $value ),
 			);
 
 			update_option( $cache_key, $data, 'no' );
 		}
 	}
-
 }
