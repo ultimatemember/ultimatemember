@@ -90,7 +90,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 				return;
 			}
 
-			$temp_dir = UM()->common()->filesystem()->get_tempdir() . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $theme->get( 'template' );
+			$temp_dir = UM()->common()->filesystem()->get_upload_dir( 'theme-updater' ) . DIRECTORY_SEPARATOR . $theme->get( 'template' );
 			if ( ! is_dir( $temp_dir ) ) {
 				return;
 			}
@@ -137,7 +137,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 				return;
 			}
 
-			$temp_dir = UM()->common()->filesystem()->get_tempdir() . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $theme->get( 'template' );
+			$temp_dir = UM()->common()->filesystem()->get_upload_dir( 'theme-updater' ) . DIRECTORY_SEPARATOR . $theme->get( 'template' );
 			@mkdir( $temp_dir, 0777, true );
 
 			$src  = realpath( $um_dir );

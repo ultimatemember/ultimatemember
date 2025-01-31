@@ -16,7 +16,7 @@ class Files {
 	 * Files constructor.
 	 */
 	public function __construct() {
-		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE ) {
+		if ( UM()->is_new_ui() ) {
 			add_action( 'wp_ajax_um_delete_temp_file', array( $this, 'delete_temp_file' ) );
 			add_action( 'wp_ajax_nopriv_um_delete_temp_file', array( $this, 'delete_temp_file' ) );
 
@@ -445,11 +445,11 @@ class Files {
 
 			// @todo using $_COOKIE['um-temp-uploads'] for security links.
 			// Set temp file to cookies for access via secure link.
-			$temp_uploads = isset( $_COOKIE['um-temp-uploads'] ) ? maybe_unserialize( $_COOKIE['um-temp-uploads'] ) : array();
-			if ( is_array( $temp_uploads ) ) {
-				$temp_uploads[] = $fileinfo['hash'];
-			}
-			UM()->setcookie( 'um-temp-uploads', maybe_serialize( $temp_uploads ) );
+//			$temp_uploads = isset( $_COOKIE['um-temp-uploads'] ) ? maybe_unserialize( $_COOKIE['um-temp-uploads'] ) : array();
+//			if ( is_array( $temp_uploads ) ) {
+//				$temp_uploads[] = $fileinfo['hash'];
+//			}
+//			UM()->setcookie( 'um-temp-uploads', maybe_serialize( $temp_uploads ) );
 
 			// Flush this cookie because temp file is uploaded successfully.
 			UM()->setcookie( 'um-current-upload-filename', false );

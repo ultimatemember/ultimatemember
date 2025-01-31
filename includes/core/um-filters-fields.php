@@ -353,12 +353,13 @@ function um_profile_field_filter_hook__file( $value, $data ) {
 	if ( ! $value ) {
 		return '';
 	}
-	$file_type = wp_check_filetype( $value );
-	$uri       = UM()->fields()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
 
 	if ( ! file_exists( UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) ) . DIRECTORY_SEPARATOR . $value ) ) {
 		$value = __( 'This file has been removed.', 'ultimate-member' );
 	} else {
+		$file_type = wp_check_filetype( $value );
+		$uri       = UM()->fields()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
+
 		$file_info = um_user( $data['metakey'] . '_metadata' );
 		if ( ! empty( $file_info['original_name'] ) ) {
 			$value = $file_info['original_name'];

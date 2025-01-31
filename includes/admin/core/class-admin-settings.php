@@ -1058,6 +1058,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'enable_no_conflict_avatar'          => array(
 						'sanitize' => 'bool',
 					),
+					'files_secure_links'                 => array(
+						'sanitize' => 'bool',
+					),
 				)
 			);
 
@@ -2336,6 +2339,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						)
 					);
 
+					$this->settings_structure['']['sections']['uploads']['form_sections']['uploads']['fields'][] = array(
+						'id'             => 'files_secure_links',
+						'type'           => 'checkbox',
+						'label'          => __( 'Files secure links', 'ultimate-member' ),
+						'checkbox_label' => __( 'Use files secure links', 'ultimate-member' ),
+						'description'    => __( 'Turn this on to protect your files with secure links. Only authorized users can access them, and direct links won\'t work.', 'ultimate-member' ),
+					);
+
 					// removed "Account deletion text".
 					unset( $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][1], $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][2] );
 
@@ -3024,6 +3035,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							}
 						}
 					}
+				} elseif ( isset( $_POST['um_options']['files_secure_links'] ) ) {
+					UM()->rewrite()->reset_rules();
 				}
 			}
 		}

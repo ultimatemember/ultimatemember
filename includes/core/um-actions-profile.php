@@ -1827,11 +1827,19 @@ add_action( 'um_pre_header_editprofile', 'um_add_edit_icon' );
  * @throws Exception
  */
 function um_add_profile_fields( $args ) {
+	$allowed_html = UM()->get_allowed_html( 'templates' );
 	if ( true === UM()->fields()->editing ) {
-		echo wp_kses( UM()->fields()->display( 'profile', $args ), UM()->get_allowed_html( 'templates' ) );
+		$fields_html = UM()->fields()->display( 'profile', $args );
+		if ( ! $fields_html ) {
+			return;
+		}
 	} else {
 		UM()->fields()->viewing = true;
-		$allowed_html = UM()->get_allowed_html( 'templates' );
+		$fields_html = UM()->fields()->display_view( 'profile', $args );
+		if ( ! $fields_html ) {
+			return;
+		}
+
 		if ( empty( $allowed_html['iframe'] ) ) {
 			$allowed_html['iframe'] = array(
 				'allow'           => true,
@@ -1848,8 +1856,8 @@ function um_add_profile_fields( $args ) {
 				'allowfullscreen' => true,
 			);
 		}
-		echo wp_kses( UM()->fields()->display_view( 'profile', $args ), $allowed_html );
 	}
+	echo wp_kses( $fields_html, $allowed_html );
 }
 add_action( 'um_main_profile_fields', 'um_add_profile_fields', 100 );
 

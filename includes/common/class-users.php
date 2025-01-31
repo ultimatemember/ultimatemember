@@ -110,11 +110,11 @@ class Users {
 
 	/**
 	 * Flush cookies for secure access to temp uploaded files.
-	 *
+	 * @todo use a proper cookies
 	 * @return void
 	 */
 	public function flush_cookies() {
-		UM()->setcookie( 'um-temp-uploads', false );
+		// UM()->setcookie( 'um-temp-uploads', false );
 	}
 
 	public function add_filters() {

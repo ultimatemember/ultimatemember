@@ -66,17 +66,6 @@ class Filesystem {
 
 		$this->prepare_baseurl();
 		$this->prepare_tempurl();
-
-//		var_dump( $this->get_basedir() );
-//		var_dump( $this->get_baseurl() );
-//		var_dump( $this->get_tempdir() );
-//		var_dump( $this->get_tempurl() );
-//		var_dump( $this->get_upload_dir( 'test-directory/subtest' ) );
-//		var_dump( $this->get_upload_url( 'test-directory/subtest' ) );
-//
-//		var_dump( $this->get_upload_dir( 'test-directory2' ) );
-//		var_dump( $this->get_upload_url( 'test-directory2' ) );
-//		exit;
 	}
 
 	/**
@@ -848,6 +837,73 @@ class Filesystem {
 		 * @hook  um_user_uploads_url
 		 */
 		return apply_filters( 'um_user_uploads_url', $url, $user_id );
+	}
+
+	/**
+	 * Get user temp uploads directory
+	 *
+	 * @param int|null $user_id
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_user_temp_dir( $user_id = null ) {
+		if ( ! $user_id ) {
+
+		} else {
+			if ( ! UM()->common()->users()::user_exists( $user_id ) ) {
+				return '';
+			}
+		}
+
+		$user_dir = $this->get_tempdir() . DIRECTORY_SEPARATOR . $user_id;
+		/**
+		 * Filters the user uploads temp directory.
+		 *
+		 * @param {string} $url     User uploads temp directory.
+		 * @param {int}    $user_id User ID.
+		 *
+		 * @since 3.0.0
+		 * @hook  um_user_temp_dir
+		 */
+		$user_dir = apply_filters( 'um_user_temp_dir', $user_dir, $user_id );
+		if ( ! self::maybe_create_dir( $user_dir ) ) {
+			// Flush data on false directory exists or creation. Then directory doesn't exist.
+			return '';
+		}
+
+		return $user_dir;
+	}
+
+	/**
+	 * Get user temp uploads URL
+	 *
+	 * @param int|null $user_id
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_user_temp_url( $user_id = null ) {
+		if ( ! $user_id ) {
+
+		} else {
+			if ( ! UM()->common()->users()::user_exists( $user_id ) ) {
+				return '';
+			}
+		}
+
+		$url = $this->get_tempurl() . '/' . $user_id;
+		/**
+		 * Filters the user temp uploads URL.
+		 *
+		 * @param {string} $url     User temp uploads URL.
+		 * @param {int}    $user_id User ID.
+		 *
+		 * @since 3.0.0
+		 * @hook  um_user_temp_url
+		 */
+		return apply_filters( 'um_user_temp_url', $url, $user_id );
 	}
 
 	/**

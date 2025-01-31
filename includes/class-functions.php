@@ -811,19 +811,25 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		/**
 		 * Disable page caching and set or clear cookie.
 		 *
-		 * @param string $name
-		 * @param string $value
-		 * @param int    $expire
-		 * @param string $path
+		 * @param string    $name     Required. Specifies the name of the cookie.
+		 * @param string    $value    Optional. Specifies the value of the cookie.
+		 * @param int       $expire   Optional. Specifies when the cookie expires. The value: time()+86400*30, will set the cookie to expire in 30 days. If this parameter is omitted or set to 0, the cookie will expire at the end of the session (when the browser closes). Default is 0
+		 * @param string    $path     Optional. Specifies the server path of the cookie. If set to "/", the cookie will be available within the entire domain. If set to "/php/", the cookie will only be available within the php directory and all sub-directories of php. The default value is the current directory that the cookie is being set in
+		 * @param bool|null $secure   Optional. Specifies whether or not the cookie should only be transmitted over a secure HTTPS connection. TRUE indicates that the cookie will only be set if a secure connection exists. Default is `is_ssl()` function value.
+		 * @param bool      $httponly Optional. If set to TRUE the cookie will be accessible only through the HTTP protocol (the cookie will not be accessible by scripting languages). This setting can help to reduce identity theft through XSS attacks. Default is true.
 		 *
 		 * @since 2.8.4
 		 */
-		public function setcookie( $name, $value = '', $expire = 0, $path = '' ) {
+		public function setcookie( $name, $value = '', $expire = 0, $path = '', $secure = null, $httponly = true ) {
 			if ( empty( $value ) ) {
 				$expire = absint( time() - YEAR_IN_SECONDS );
 			}
 			if ( empty( $path ) ) {
 				list( $path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
+			}
+
+			if ( is_null( $secure ) ) {
+				$secure = is_ssl();
 			}
 
 			$levels = ob_get_level();
@@ -833,7 +839,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			}
 
 			nocache_headers();
-			setcookie( $name, $value, $expire, $path, COOKIE_DOMAIN, is_ssl(), true );
+			setcookie( $name, $value, $expire, $path, COOKIE_DOMAIN, $secure, $httponly );
 		}
 	}
 }

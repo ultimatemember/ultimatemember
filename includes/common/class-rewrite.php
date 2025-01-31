@@ -38,12 +38,20 @@ class Rewrite {
 
 		$public_query_vars[] = 'um_page';
 		$public_query_vars[] = 'um_action';
-		$public_query_vars[] = 'um_field';
-		$public_query_vars[] = 'um_form';
-		$public_query_vars[] = 'um_verify';
 
-		$public_query_vars[] = 'um_nonce';
-		$public_query_vars[] = 'um_filename';
+		if ( UM()->is_new_ui() ) {
+			if ( UM()->options()->get( 'files_secure_links' ) ) {
+				$public_query_vars[] = 'um_field';
+				$public_query_vars[] = 'um_form';
+
+				$public_query_vars[] = 'um_nonce';
+				$public_query_vars[] = 'um_filename';
+			}
+		} else {
+			$public_query_vars[] = 'um_field';
+			$public_query_vars[] = 'um_form';
+			$public_query_vars[] = 'um_verify';
+		}
 
 		return $public_query_vars;
 	}
@@ -58,11 +66,22 @@ class Rewrite {
 	public function add_rewrite_rules( $rules ) {
 		$newrules = array();
 
-		// NGINX-config `rewrite ^/um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ /index.php?um_action=download&um_form=$1&um_field=$2&um_user=$3&um_verify=$4 last;`
-		$newrules['um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$'] = 'index.php?um_action=download&um_form=$matches[1]&um_field=$matches[2]&um_user=$matches[3]&um_verify=$matches[4]';
+		if ( UM()->is_new_ui() ) {
+			if ( UM()->options()->get( 'files_secure_links' ) ) {
+				$image_mimes   = UM()->common()->filesystem()::image_mimes();
+				$files_mimes   = UM()->common()->filesystem()::file_mimes();
+				$allowed_mimes = implode( '|', array_merge( $image_mimes, $files_mimes ) );
 
-		// NGINX-config `rewrite ^/um-temp/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ /index.php?um_action=temp-access&um_nonce=$1 last;`
-		$newrules['um-temp/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$'] = 'index.php?um_action=temp-access&um_nonce=$matches[1]';
+				// NGINX-config `rewrite ^/um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/\d{1,10}\.(jpg|jpeg|jpe|gif|png|bmp|tif|tiff|ico|heic|heif|webp|avif|aac|flac|m4a|m4b|mka|mp3|ogg|oga|ram|wav|wma|3g2|3gp|3gpp|asf|avi|divx|flv|m4v|mkv|mov|mp4|mpeg|mpg|ogv|qt|wmv|doc|docx|docm|dotm|odt|pages|pdf|xps|oxps|rtf|wp|wpd|psd|xcf|numbers|ods|xls|xlsx|xlsm|xlsb|key|ppt|pptx|pptm|pps|ppsx|ppsm|sldx|sldm|odp|asc|csv|tsv|txt|gz|rar|tar|zip|7z|css|htm|html|js)$ /index.php?um_action=download&um_form=$1&um_field=$2&um_user=$3&um_nonce=$4 last;`
+				$newrules['um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/\d{1,10}\.(' . $allowed_mimes . ')$'] = 'index.php?um_action=download&um_form=$matches[1]&um_field=$matches[2]&um_user=$matches[3]&um_nonce=$matches[4]';
+
+				// NGINX-config `rewrite ^/um-temp/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ /index.php?um_action=temp-access&um_nonce=$1 last;`
+				$newrules['um-temp/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$'] = 'index.php?um_action=temp-access&um_nonce=$matches[1]';
+			}
+		} else {
+			// NGINX-config `rewrite ^/um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ /index.php?um_action=download&um_form=$1&um_field=$2&um_user=$3&um_verify=$4 last;`
+			$newrules['um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$'] = 'index.php?um_action=download&um_form=$matches[1]&um_field=$matches[2]&um_user=$matches[3]&um_verify=$matches[4]';
+		}
 
 		if ( isset( UM()->config()->permalinks['user'] ) ) {
 
@@ -129,8 +148,6 @@ class Rewrite {
 			return;
 		}
 
-		JB()->setcookie( 'jb-guest-job-posting', $uniqid, time() + HOUR_IN_SECONDS );
-
 		$query_verify = get_query_var( 'um_nonce' );
 		if ( empty( $query_verify ) || ! wp_verify_nonce( $query_verify, $user_id . 'um-temp-file-nonce' ) ) {
 			return;
@@ -169,29 +186,34 @@ class Rewrite {
 			return false;
 		}
 
-		$query_form = get_query_var( 'um_form' );
-		if ( empty( $query_form ) ) {
+		$form_id = get_query_var( 'um_form' );
+		if ( empty( $form_id ) ) {
 			return false;
 		}
 
-		$form_id     = get_query_var( 'um_form' );
-		$query_field = get_query_var( 'um_field' );
-		if ( empty( $query_field ) ) {
+		$field_key = get_query_var( 'um_field' );
+		if ( empty( $field_key ) ) {
 			return false;
 		}
-		$field_key  = urldecode( get_query_var( 'um_field' ) );
-		$query_user = get_query_var( 'um_user' );
-		if ( empty( $query_user ) ) {
-			return false;
-		}
+		$field_key = urldecode( $field_key );
 
 		$user_id = get_query_var( 'um_user' );
-		$user    = get_userdata( $user_id );
+		if ( empty( $user_id ) ) {
+			return false;
+		}
 
+		$user = get_userdata( $user_id );
 		if ( empty( $user ) || is_wp_error( $user ) ) {
 			return false;
 		}
-		$query_verify = get_query_var( 'um_verify' );
+
+		if ( UM()->is_new_ui() ) {
+			if ( UM()->options()->get( 'files_secure_links' ) ) {
+				$query_verify = get_query_var( 'um_nonce' );
+			}
+		} else {
+			$query_verify = get_query_var( 'um_verify' );
+		}
 		if ( empty( $query_verify ) ||
 		     ! wp_verify_nonce( $query_verify, $user_id . $form_id . 'um-download-nonce' ) ) {
 			return false;

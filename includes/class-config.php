@@ -761,6 +761,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 
 			if ( UM()->is_new_ui() ) {
 				$this->settings_defaults['account_tab_personal-data'] = true;
+				$this->settings_defaults['files_secure_links']        = true;
 			}
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );

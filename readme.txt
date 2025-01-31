@@ -232,6 +232,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Deprecated variable `UM()->uploader()->upload_user_basedir` because it is unused.
 * Deprecated function `um_is_temp_upload()` use function 'UM()->files()->is_temp_upload()' instead.
 * Deprecated function `um_is_temp_image()` because it is unused.
+* Deprecated function `UM()->password()->setcookie()`. Use function `UM()->setcookie()` instead.
 
 = 2.9.3 2025-xx-xx =
 
