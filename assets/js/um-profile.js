@@ -27,6 +27,11 @@ jQuery(document).ready(function() {
 		e.preventDefault();
 	});
 
+	// Prevent redirect on profile photo click.
+	jQuery( '.um-profile a.um-profile-photo-img' ).on( 'click', function ( e ) {
+		e.preventDefault();
+	} );
+
 	jQuery( document.body ).on('click', '.um-photo-modal', function(e){
 		e.preventDefault();
 		var photo_src = jQuery(this).attr('data-src');
