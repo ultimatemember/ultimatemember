@@ -114,7 +114,7 @@ class Users {
 	 * @return void
 	 */
 	public function flush_cookies() {
-		// UM()->setcookie( 'um-temp-uploads', false );
+		// UM()::setcookie( 'um-temp-uploads', false );
 	}
 
 	public function add_filters() {

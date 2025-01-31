@@ -236,7 +236,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 				if ( isset( $_GET['hash'], $_GET['login'] ) ) {
 					$value = sprintf( '%s:%s', wp_unslash( $_GET['login'] ), wp_unslash( $_GET['hash'] ) );
-					UM()->setcookie( $rp_cookie, $value );
+					UM()::setcookie( $rp_cookie, $value );
 					// Not `um_safe_redirect()` because password-reset page is predefined page and is situated on the same host.
 					wp_safe_redirect( remove_query_arg( array( 'hash', 'login' ) ) );
 					exit;
@@ -255,7 +255,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				}
 
 				if ( ! $user || is_wp_error( $user ) ) {
-					UM()->setcookie( $rp_cookie, false );
+					UM()::setcookie( $rp_cookie, false );
 					if ( $user && 'expired_key' === $user->get_error_code() ) {
 						wp_redirect( add_query_arg( array( 'updated' => 'expiredkey' ), um_get_core_page( 'password-reset' ) ) );
 					} else {
@@ -574,7 +574,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				}
 
 				if ( ! $user || is_wp_error( $user ) ) {
-					UM()->setcookie( $rp_cookie, false );
+					UM()::setcookie( $rp_cookie, false );
 					if ( $user && 'expired_key' === $user->get_error_code() ) {
 						wp_redirect( add_query_arg( array( 'updated' => 'expiredkey' ), um_get_core_page( 'password-reset' ) ) );
 					} else {
@@ -599,7 +599,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					if ( $attempts ) {
 						update_user_meta( $user->ID, 'password_rst_attempts', 0 );
 					}
-					UM()->setcookie( $rp_cookie, false );
+					UM()::setcookie( $rp_cookie, false );
 
 					$set_password_required = get_user_meta( $user->ID, 'um_set_password_required', true );
 					if ( ! empty( $set_password_required ) ) {
@@ -675,8 +675,8 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 * @param string $path
 		 */
 		public function setcookie( $name, $value = '', $expire = 0, $path = '' ) {
-			_deprecated_function( __METHOD__, '3.0.0', 'UM()->setcookie()' );
-			UM()->setcookie( $name, $value, $expire, $path );
+			_deprecated_function( __METHOD__, '3.0.0', 'UM()::setcookie()' );
+			UM()::setcookie( $name, $value, $expire, $path );
 		}
 	}
 }

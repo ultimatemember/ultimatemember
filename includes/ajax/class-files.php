@@ -374,7 +374,7 @@ class Files {
 		UM()->common()->filesystem()->clear_temp_dir();
 		// Save unique name to the cookies.
 		if ( ! isset( $_COOKIE['um-current-upload-filename'] ) && $chunks > 1 ) {
-			UM()->setcookie( 'um-current-upload-filename', $unique_name );
+			UM()::setcookie( 'um-current-upload-filename', $unique_name );
 		}
 
 		$filepath = wp_normalize_path( UM()->common()->filesystem()->get_tempdir() . '/' . $unique_name );
@@ -449,10 +449,10 @@ class Files {
 //			if ( is_array( $temp_uploads ) ) {
 //				$temp_uploads[] = $fileinfo['hash'];
 //			}
-//			UM()->setcookie( 'um-temp-uploads', maybe_serialize( $temp_uploads ) );
+//			UM()::setcookie( 'um-temp-uploads', maybe_serialize( $temp_uploads ) );
 
 			// Flush this cookie because temp file is uploaded successfully.
-			UM()->setcookie( 'um-current-upload-filename', false );
+			UM()::setcookie( 'um-current-upload-filename', false );
 
 			wp_send_json_success( $files );
 		} else {

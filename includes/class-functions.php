@@ -820,7 +820,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 *
 		 * @since 2.8.4
 		 */
-		public function setcookie( $name, $value = '', $expire = 0, $path = '', $secure = null, $httponly = true ) {
+		public static function setcookie( $name, $value = '', $expire = 0, $path = '', $secure = null, $httponly = true ) {
 			if ( empty( $value ) ) {
 				$expire = absint( time() - YEAR_IN_SECONDS );
 			}
