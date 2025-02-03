@@ -969,13 +969,15 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			$restricted_posts = array_unique( $restricted_posts );
 			foreach ( $restricted_posts as $k => $post_type ) {
 				if ( 'closed' === get_default_comment_status( $post_type ) ) {
-					$open_comments = $wpdb->get_var( $wpdb->prepare(
-						"SELECT ID
-						FROM {$wpdb->posts}
-						WHERE post_type = %s AND
-							  comment_status != 'closed'",
-						$post_type
-					) );
+					$open_comments = $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT ID
+							FROM {$wpdb->posts}
+							WHERE post_type = %s AND
+								  comment_status != 'closed'",
+							$post_type
+						)
+					);
 
 					if ( empty( $open_comments ) ) {
 						unset( $restricted_posts[ $k ] );
@@ -1070,12 +1072,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			}
 
 			$totals = (array) $wpdb->get_results(
-				"
-		SELECT comment_approved, COUNT( * ) AS total
-		FROM {$wpdb->comments}
-		{$where}
-		GROUP BY comment_approved
-	",
+				"SELECT comment_approved,
+				COUNT(*) AS total
+				FROM {$wpdb->comments}
+					{$where}
+				GROUP BY comment_approved",
 				ARRAY_A
 			);
 

@@ -1379,16 +1379,23 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				foreach ( $files as $file ) {
 					$str = basename( $file );
 
-					if ( strstr( $str, 'profile_photo' ) || strstr( $str, 'cover_photo' ) || preg_grep( '/' . $str . '/', $_array ) ) {
+					if ( false !== strpos( $str, 'profile_photo' ) || false !== strpos( $str, 'cover_photo' ) || preg_grep( '/' . $str . '/', $_array ) ) {
 						continue;
 					}
 
 					// Don't delete photo that belongs to the Social Activity post or Groups post
-					if ( strstr( $str, 'stream_photo' ) ) {
+					if ( false !== strpos( $str, 'stream_photo' ) ) {
 						global $wpdb;
-						$is_post_image = $wpdb->get_var( "
-							SELECT COUNT(*) FROM {$wpdb->postmeta}
-							WHERE `meta_key`='_photo' AND `meta_value`='{$str}';" );
+						$is_post_image = $wpdb->get_var(
+							$wpdb->prepare(
+								"SELECT COUNT(*)
+								FROM {$wpdb->postmeta}
+								WHERE meta_key = '_photo' AND
+									  meta_value = %s",
+								$str
+							)
+						);
+
 						if ( $is_post_image ) {
 							continue;
 						}

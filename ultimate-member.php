@@ -8,7 +8,7 @@
  * Author URI: http://ultimatemember.com/
  * Text Domain: ultimate-member
  * Domain Path: /languages
- * Requires at least: 5.5
+ * Requires at least: 6.2
  * Requires PHP: 5.6
  *
  * @package UM
