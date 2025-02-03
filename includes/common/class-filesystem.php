@@ -854,6 +854,10 @@ class Filesystem {
 				$user_id = get_current_user_id();
 			} else {
 				$user_id = UM()->common()->guest()->get_guest_token();
+				if ( is_null( $user_id ) ) {
+					// Possible hijacking.
+					return '';
+				}
 			}
 		} elseif ( ! UM()->common()->users()::user_exists( $user_id ) ) {
 			return '';

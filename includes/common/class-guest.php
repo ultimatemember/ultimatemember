@@ -1,6 +1,8 @@
 <?php
 namespace um\common;
 
+use Random\RandomException;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -19,6 +21,9 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 		 */
 		private static $key = 'um_guest_token';
 
+		/**
+		 * @var float|int
+		 */
 		private static $expiration = DAY_IN_SECONDS;
 
 		/**
@@ -31,39 +36,139 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 			add_action( 'wp_login', array( &$this, 'flush_cookies' ) );
 		}
 
+		/**
+		 * @return void
+		 * @throws RandomException
+		 */
 		public function set_guest_token() {
+			if ( UM()->is_ajax() ) {
+				return;
+			}
+
 			if ( is_user_logged_in() ) {
 				if ( isset( $_COOKIE[ self::$key ] ) ) {
 					// flush cookies after login
 					UM()::setcookie( self::$key, false );
 				}
 			} elseif ( ! isset( $_COOKIE[ self::$key ] ) ) {
-				$guest_token = bin2hex( random_bytes( 32 ) ); // More secure than uniqid()
-
-				self::insert_token( $guest_token );
-
-				// Set HTTP-only cookie
-				UM()::setcookie( self::$key, $guest_token, time() + self::$expiration, '', false ); // 1-day expiry
+				self::generate_token();
 			}
 		}
 
+		/**
+		 * @return string
+		 * @throws RandomException
+		 */
+		private static function generate_token() {
+			$guest_token = bin2hex( random_bytes( 32 ) ); // More secure than uniqid()
+
+			self::insert_token( $guest_token );
+
+			// Set HTTP-only cookie
+			UM()::setcookie( self::$key, $guest_token, time() + self::$expiration, '/', false ); // 1-day expiry
+
+			return $guest_token;
+		}
+
+		/**
+		 * @return string|null
+		 * @throws RandomException
+		 */
 		public function get_guest_token() {
+			global $wpdb;
+
 			if ( is_user_logged_in() ) {
 				return null;
 			}
 
 			if ( ! isset( $_COOKIE[ self::$key ] ) ) {
-				$guest_token = bin2hex( random_bytes( 32 ) ); // More secure than uniqid()
-
-				self::insert_token( $guest_token );
-
-				// Set HTTP-only cookie
-				UM()::setcookie( self::$key, $guest_token, time() + self::$expiration, '', false ); // 1-day expiry
-
-				return $guest_token;
+				return self::generate_token();
 			}
 
-			return $_COOKIE[ self::$key ];
+			$guest_token = sanitize_text_field( $_COOKIE[ self::$key ] );
+			$guest_data  = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT *
+					FROM {$wpdb->prefix}um_guest_tokens
+					WHERE token = %s",
+					$guest_token
+				)
+			);
+
+			if ( ! $guest_data ) {
+				// Possible hijacking attempt.
+				return null;
+			}
+
+			// Extra Security: Verify IP and User-Agent
+			wp_fix_server_vars();
+			if ( $guest_data->ip_address !== $_SERVER['REMOTE_ADDR'] || $guest_data->user_agent !== $_SERVER['HTTP_USER_AGENT'] ) {
+				// Possible hijacking attempt.
+				return null;
+			}
+
+			return $guest_token;
+		}
+
+		/**
+		 * @return void
+		 */
+		public static function set_download_attempts() {
+			global $wpdb;
+
+			$guest_token = sanitize_text_field( $_COOKIE[ self::$key ] );
+			if ( empty( $guest_token ) ) {
+				return;
+			}
+
+			wp_fix_server_vars();
+			$ip_address = $_SERVER['REMOTE_ADDR'];
+
+			// Log this download attempt
+			$wpdb->insert(
+				"{$wpdb->prefix}um_guest_download_attempts",
+				array(
+					'guest_token' => $guest_token,
+					'ip_address'  => $ip_address,
+				),
+				array(
+					'%s',
+					'%s',
+				)
+			);
+		}
+
+		/**
+		 * @return bool|null
+		 */
+		public static function check_excessive_downloads() {
+			global $wpdb;
+
+			$guest_token = sanitize_text_field( $_COOKIE[ self::$key ] );
+			if ( empty( $guest_token ) ) {
+				return null;
+			}
+
+			wp_fix_server_vars();
+			$ip_address = $_SERVER['REMOTE_ADDR'];
+			$interval   = apply_filters( 'um_guest_download_attempts_limit_interval', 5 );
+			$limit      = apply_filters( 'um_guest_download_attempts_limit', 5 );
+
+			// Check for excessive downloads (e.g., max 5 downloads per 5 minutes)
+			$download_count = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*)
+					FROM {$wpdb->prefix}um_guest_download_attempts
+					WHERE guest_token = %s AND
+						  ip_address = %s AND
+						  request_time > NOW() - INTERVAL %d MINUTE",
+					$guest_token,
+					$ip_address,
+					$interval
+				)
+			);
+
+			return $download_count >= $limit;
 		}
 
 		public function maybe_add_scheduled_action() {

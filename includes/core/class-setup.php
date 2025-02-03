@@ -53,6 +53,13 @@ ip_address varchar(45),
 user_agent text,
 created_at timestamp DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY  (id)
+) $charset_collate;
+CREATE TABLE {$wpdb->prefix}um_guest_download_attempts (
+id bigint(20) unsigned NOT NULL auto_increment,
+token varchar(64) NOT NULL,
+ip_address varchar(45),
+request_time timestamp DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY  (id)
 ) $charset_collate;";
 
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';

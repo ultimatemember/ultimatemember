@@ -9,7 +9,7 @@
  * Text Domain: ultimate-member
  * Domain Path: /languages
  * Requires at least: 5.9
- * Requires PHP: 5.6
+ * Requires PHP: 7.0
  *
  * @package UM
  */

@@ -211,6 +211,16 @@ class Rewrite {
 			return;
 		}
 
+		if ( ! is_user_logged_in() ) {
+			// Check for excessive downloads (e.g., max 5 downloads per 5 minutes)
+			$break_due_downloads_limit = UM()->common()->guest()::check_excessive_downloads();
+			if ( $break_due_downloads_limit ) {
+				return;
+			}
+
+			UM()->common()->guest()::set_download_attempts();
+		}
+
 		$pathinfo     = pathinfo( $file_path );
 		$size         = filesize( $file_path );
 		$originalname = $pathinfo['basename'];
