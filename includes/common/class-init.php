@@ -24,6 +24,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 
 			$this->cpt()->hooks();
 			$this->filesystem()->hooks();
+			$this->guest();
 			$this->rewrite();
 			$this->screen();
 			$this->secure()->hooks();
@@ -78,6 +79,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\filesystem'] = new Filesystem();
 			}
 			return UM()->classes['um\common\filesystem'];
+		}
+
+		/**
+		 * @since 3.0.0
+		 *
+		 * @return Guest
+		 */
+		public function guest() {
+			if ( empty( UM()->classes['um\common\guest'] ) ) {
+				UM()->classes['um\common\guest'] = new Guest();
+			}
+			return UM()->classes['um\common\guest'];
 		}
 
 		/**

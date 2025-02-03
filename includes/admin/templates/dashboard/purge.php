@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$temp_dir_size = UM()->common()->filesystem()->dir_size( UM()->common()->filesystem()->get_tempdir() );
+$temp_dir_size = UM()->common()->filesystem()::dir_size( UM()->common()->filesystem()->get_tempdir() );
 
 $url = add_query_arg(
 	array(

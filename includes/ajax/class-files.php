@@ -291,22 +291,6 @@ class Files {
 	}
 
 	/**
-	 * Generate unique filename.
-	 *
-	 * @param string $dir
-	 * @param string $name
-	 * @param string $ext
-	 *
-	 * @return string
-	 *
-	 * @since 3.0.0
-	 */
-	public function unique_filename( $dir, $name, $ext ) {
-		$hashed = hash( 'ripemd160', time() . wp_rand( 10, 1000 ) . $name );
-		return "temp_{$hashed}{$ext}";
-	}
-
-	/**
 	 * Common upload file handler. Default result file in temp directory with unique name.
 	 */
 	public function upload_file() {
@@ -354,10 +338,15 @@ class Files {
 			$filename = uniqid( 'file_' );
 		}
 
+		$tempdir = UM()->common()->filesystem()->get_user_temp_dir();
+		if ( empty( $tempdir ) ) {
+			$error = __( 'Cannot create the temp dir.', 'ultimate-member' );
+		}
+
 		if ( isset( $_COOKIE['um-current-upload-filename'] ) && $chunks > 1 ) {
 			$unique_name = sanitize_file_name( $_COOKIE['um-current-upload-filename'] );
 		} else {
-			$unique_name = wp_unique_filename( UM()->common()->filesystem()->get_tempdir(), $filename, array( &$this, 'unique_filename' ) );
+			$unique_name = wp_unique_filename( $tempdir, $filename );
 		}
 
 		do_action_ref_array( 'um_upload_file_validation', array( &$error, $handler, $chunks, $filename, $unique_name ) );
@@ -377,7 +366,7 @@ class Files {
 			UM()::setcookie( 'um-current-upload-filename', $unique_name );
 		}
 
-		$filepath = wp_normalize_path( UM()->common()->filesystem()->get_tempdir() . '/' . $unique_name );
+		$filepath = wp_normalize_path( $tempdir . '/' . $unique_name );
 
 		// phpcs:disable WordPress.WP.AlternativeFunctions -- for directly fopen, fwrite, fread, fclose functions using
 		// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged -- for silenced fopen, fwrite, fread, fclose functions running
@@ -431,7 +420,9 @@ class Files {
 			$fileinfo['name_saved']   = $name_saved;
 			$fileinfo['hash']         = md5( $fileinfo['name_saved'] . '_um_uploader_security_salt' );
 			$fileinfo['path']         = wp_normalize_path( UM()->common()->filesystem()->get_tempdir() . '/' . $fileinfo['name_saved'] );
-			$fileinfo['url']          = UM()->common()->filesystem()->get_tempurl() . '/' . $fileinfo['name_saved'];
+
+			$fileinfo['url']          = UM()->common()->filesystem()->get_temp_file_url( $fileinfo );
+
 			$fileinfo['size']         = filesize( $fileinfo['file'] );
 			$fileinfo['size_format']  = size_format( $fileinfo['size'] );
 			$fileinfo['time']         = gmdate( 'Y-m-d H:i:s', filemtime( $fileinfo['file'] ) );
@@ -442,14 +433,6 @@ class Files {
 			$files[] = $fileinfo;
 
 			do_action( 'um_upload_file_temp_uploaded', $handler, $fileinfo );
-
-			// @todo using $_COOKIE['um-temp-uploads'] for security links.
-			// Set temp file to cookies for access via secure link.
-//			$temp_uploads = isset( $_COOKIE['um-temp-uploads'] ) ? maybe_unserialize( $_COOKIE['um-temp-uploads'] ) : array();
-//			if ( is_array( $temp_uploads ) ) {
-//				$temp_uploads[] = $fileinfo['hash'];
-//			}
-//			UM()::setcookie( 'um-temp-uploads', maybe_serialize( $temp_uploads ) );
 
 			// Flush this cookie because temp file is uploaded successfully.
 			UM()::setcookie( 'um-current-upload-filename', false );

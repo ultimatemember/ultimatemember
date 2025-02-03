@@ -842,7 +842,7 @@ class Filesystem {
 	/**
 	 * Get user temp uploads directory
 	 *
-	 * @param int|null $user_id
+	 * @param int|string|null $user_id
 	 *
 	 * @since 3.0.0
 	 *
@@ -850,11 +850,13 @@ class Filesystem {
 	 */
 	public function get_user_temp_dir( $user_id = null ) {
 		if ( ! $user_id ) {
-
-		} else {
-			if ( ! UM()->common()->users()::user_exists( $user_id ) ) {
-				return '';
+			if ( is_user_logged_in() ) {
+				$user_id = get_current_user_id();
+			} else {
+				$user_id = UM()->common()->guest()->get_guest_token();
 			}
+		} elseif ( ! UM()->common()->users()::user_exists( $user_id ) ) {
+			return '';
 		}
 
 		$user_dir = $this->get_tempdir() . DIRECTORY_SEPARATOR . $user_id;
@@ -886,7 +888,11 @@ class Filesystem {
 	 */
 	public function get_user_temp_url( $user_id = null ) {
 		if ( ! $user_id ) {
+			if ( is_user_logged_in() ) {
+				$user_id = get_current_user_id();
+			} else {
 
+			}
 		} else {
 			if ( ! UM()->common()->users()::user_exists( $user_id ) ) {
 				return '';
@@ -913,8 +919,37 @@ class Filesystem {
 	 *
 	 * @return string
 	 */
-	public function dir_size( $directory ) {
+	public static function dir_size( $directory ) {
 		$size = get_dirsize( $directory );
 		return number_format( $size / ( 1024 * 1024 ), 2 ) . ' MB';
+	}
+
+	public function get_temp_file_url( $fileinfo ) {
+		$filetype    = wp_check_filetype( $fileinfo['file'] );
+		$field_value = $fileinfo['hash'] . '.' . $filetype['ext'];
+
+		if ( is_user_logged_in() ) {
+			$user_id = get_current_user_id();
+		} else {
+			$user_id = UM()->common()->guest()->get_guest_token();
+		}
+
+		$nonce = wp_create_nonce( $user_id . $field_value . 'um-temp-download-nonce' );
+
+		$url = get_home_url( get_current_blog_id() );
+		if ( UM()->is_permalinks ) {
+			$url .= "/um-temp/{$user_id}/{$nonce}/{$field_value}";
+		} else {
+			$url = add_query_arg(
+				array(
+					'um_action'   => 'temp-download',
+					'um_user'     => $user_id,
+					'um_nonce'    => $nonce,
+					'um_filename' => $field_value,
+				),
+				$url
+			);
+		}
+		return $url;
 	}
 }

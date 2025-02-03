@@ -1,8 +1,6 @@
 <?php
 namespace um\admin\core;
 
-use \RecursiveDirectoryIterator;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -397,7 +395,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 				include_once UM()->admin()->templates_path . 'extensions.php';
 
 			}
-
 		}
 
 		/**
@@ -412,7 +409,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			_deprecated_function( __METHOD__, '3.0.0', 'UM()->common()->filesystem()->dir_size()' );
 			if ( 'temp' === $directory ) {
 				$directory = UM()->common()->filesystem()->get_tempdir();
-				return UM()->common()->filesystem()->dir_size( $directory );
+				return UM()->common()->filesystem()::dir_size( $directory );
 			}
 			return 0;
 		}

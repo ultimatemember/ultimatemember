@@ -43,10 +43,10 @@ class Rewrite {
 			if ( UM()->options()->get( 'files_secure_links' ) ) {
 				$public_query_vars[] = 'um_field';
 				$public_query_vars[] = 'um_form';
-
-				$public_query_vars[] = 'um_nonce';
-				$public_query_vars[] = 'um_filename';
 			}
+
+			$public_query_vars[] = 'um_nonce';
+			$public_query_vars[] = 'um_filename';
 		} else {
 			$public_query_vars[] = 'um_field';
 			$public_query_vars[] = 'um_form';
@@ -67,17 +67,17 @@ class Rewrite {
 		$newrules = array();
 
 		if ( UM()->is_new_ui() ) {
-			if ( UM()->options()->get( 'files_secure_links' ) ) {
-				$image_mimes   = UM()->common()->filesystem()::image_mimes();
-				$files_mimes   = UM()->common()->filesystem()::file_mimes();
-				$allowed_mimes = implode( '|', array_merge( $image_mimes, $files_mimes ) );
+			$image_mimes   = UM()->common()->filesystem()::image_mimes();
+			$files_mimes   = UM()->common()->filesystem()::file_mimes();
+			$allowed_mimes = implode( '|', array_merge( $image_mimes, $files_mimes ) );
 
+			if ( UM()->options()->get( 'files_secure_links' ) ) {
 				// NGINX-config `rewrite ^/um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/\d{1,10}\.(jpg|jpeg|jpe|gif|png|bmp|tif|tiff|ico|heic|heif|webp|avif|aac|flac|m4a|m4b|mka|mp3|ogg|oga|ram|wav|wma|3g2|3gp|3gpp|asf|avi|divx|flv|m4v|mkv|mov|mp4|mpeg|mpg|ogv|qt|wmv|doc|docx|docm|dotm|odt|pages|pdf|xps|oxps|rtf|wp|wpd|psd|xcf|numbers|ods|xls|xlsx|xlsm|xlsb|key|ppt|pptx|pptm|pps|ppsx|ppsm|sldx|sldm|odp|asc|csv|tsv|txt|gz|rar|tar|zip|7z|css|htm|html|js)$ /index.php?um_action=download&um_form=$1&um_field=$2&um_user=$3&um_nonce=$4 last;`
 				$newrules['um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/\d{1,10}\.(' . $allowed_mimes . ')$'] = 'index.php?um_action=download&um_form=$matches[1]&um_field=$matches[2]&um_user=$matches[3]&um_nonce=$matches[4]';
-
-				// NGINX-config `rewrite ^/um-temp/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ /index.php?um_action=temp-access&um_nonce=$1 last;`
-				$newrules['um-temp/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$'] = 'index.php?um_action=temp-access&um_nonce=$matches[1]';
 			}
+
+			// NGINX-config `rewrite ^/um-temp/([^/]+)/([^/]+)/\w{1,32}\.(jpg|jpeg|jpe|gif|png|bmp|tif|tiff|ico|heic|heif|webp|avif|aac|flac|m4a|m4b|mka|mp3|ogg|oga|ram|wav|wma|3g2|3gp|3gpp|asf|avi|divx|flv|m4v|mkv|mov|mp4|mpeg|mpg|ogv|qt|wmv|doc|docx|docm|dotm|odt|pages|pdf|xps|oxps|rtf|wp|wpd|psd|xcf|numbers|ods|xls|xlsx|xlsm|xlsb|key|ppt|pptx|pptm|pps|ppsx|ppsm|sldx|sldm|odp|asc|csv|tsv|txt|gz|rar|tar|zip|7z|css|htm|html|js)$ /index.php?um_action=temp-download&um_user=$1&um_nonce=$2 last;`
+			$newrules['um-temp/([^/]+)/([^/]+)/\w{1,32}\.(' . $allowed_mimes . ')$'] = 'index.php?um_action=temp-download&um_user=$matches[1]&um_nonce=$matches[2]';
 		} else {
 			// NGINX-config `rewrite ^/um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ /index.php?um_action=download&um_form=$1&um_field=$2&um_user=$3&um_verify=$4 last;`
 			$newrules['um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$'] = 'index.php?um_action=download&um_form=$matches[1]&um_field=$matches[2]&um_user=$matches[3]&um_verify=$matches[4]';
@@ -140,16 +140,13 @@ class Rewrite {
 	}
 
 	/**
-	 * @todo temp files routing.
+	 * Handle a secure link of the temp file.
 	 * @return void
 	 */
 	public function temp_files_routing() {
-		if ( 'um-temp' !== get_query_var( 'um_action' ) ) {
-			return;
-		}
+		global $wp_filesystem, $wp_query;
 
-		$query_verify = get_query_var( 'um_nonce' );
-		if ( empty( $query_verify ) || ! wp_verify_nonce( $query_verify, $user_id . 'um-temp-file-nonce' ) ) {
+		if ( 'temp-download' !== get_query_var( 'um_action' ) ) {
 			return;
 		}
 
@@ -158,24 +155,83 @@ class Rewrite {
 			$url      = UM()->permalinks()->get_current_url();
 			$filename = wp_basename( $url );
 		}
-		$temp_dir  = UM()->common()->filesystem()->get_tempdir();
-		$file_path = wp_normalize_path( "$temp_dir/$filename" );
-		if ( ! file_exists( $file_path ) ) {
+
+		if ( is_user_logged_in() ) {
+			$user_id = get_current_user_id();
+		} else {
+			$user_id = UM()->common()->guest()->get_guest_token();
+		}
+
+		$queried_user = get_query_var( 'um_user' );
+		if ( empty( $queried_user ) || (string) $queried_user !== (string) $user_id ) {
+			$wp_query->set_404();
 			return;
 		}
 
-		$size = filesize( $file_path );
+		$query_verify = get_query_var( 'um_nonce' );
 
-		$file_info    = get_post_meta( $post_id, '_photo_metadata', true );
-		$originalname = $file_info['original_name'];
-		$type         = $file_info['type'];
-
-		$download_type = $field_data[ $field_key ]['type'];
-		if ( $download_type === 'file' ) {
-			$this->file_download( $user_id, $field_key, $field_value );
-		} else {
-			$this->image_download( $user_id, $field_key, $field_value );
+		if ( empty( $query_verify ) || ! wp_verify_nonce( $query_verify, $user_id . $filename . 'um-temp-download-nonce' ) ) {
+			$wp_query->set_404();
+			return;
 		}
+
+		$temp_dir  = UM()->common()->filesystem()->get_user_temp_dir();
+		$temp_dir .= DIRECTORY_SEPARATOR;
+
+		UM()->common()->filesystem()::maybe_init_wp_filesystem();
+
+		$dirlist = $wp_filesystem->dirlist( $temp_dir );
+		$dirlist = $dirlist ? $dirlist : array();
+		if ( empty( $dirlist ) ) {
+			$wp_query->set_404();
+			return;
+		}
+
+		foreach ( array_keys( $dirlist ) as $file ) {
+			if ( '.' === $file || '..' === $file ) {
+				continue;
+			}
+
+			$hash = md5( $file . '_um_uploader_security_salt' );
+
+			if ( 0 === strpos( $filename, $hash ) ) {
+				$file_path = wp_normalize_path( "$temp_dir/$file" );
+				break;
+			}
+		}
+
+		if ( ! file_exists( $file_path ) ) {
+			$wp_query->set_404();
+			return;
+		}
+
+		// Validate traversal file
+		if ( validate_file( $file_path ) === 1 ) {
+			$wp_query->set_404();
+			return;
+		}
+
+		$pathinfo     = pathinfo( $file_path );
+		$size         = filesize( $file_path );
+		$originalname = $pathinfo['basename'];
+		$type         = $pathinfo['extension'];
+
+		header( 'Content-Description: File Transfer' );
+		header( 'Content-Type: ' . $type );
+		header( 'Content-Disposition: inline; filename="' . $originalname . '"' );
+		header( 'Content-Transfer-Encoding: binary' );
+		header( 'Expires: 0' );
+		header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+		header( 'Pragma: public' );
+		header( 'Content-Length: ' . $size );
+
+		$levels = ob_get_level();
+		for ( $i = 0; $i < $levels; $i++ ) {
+			@ob_end_clean();
+		}
+
+		readfile( $file_path );
+		exit;
 	}
 
 	/**

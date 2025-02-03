@@ -45,6 +45,14 @@ PRIMARY KEY  (umeta_id),
 KEY user_id_indx (user_id),
 KEY meta_key_indx (um_key),
 KEY meta_value_indx (um_value(191))
+) $charset_collate;
+CREATE TABLE {$wpdb->prefix}um_guest_tokens (
+id bigint(20) unsigned NOT NULL auto_increment,
+token varchar(64) NOT NULL UNIQUE,
+ip_address varchar(45),
+user_agent text,
+created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY  (id)
 ) $charset_collate;";
 
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
