@@ -160,8 +160,8 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_script( 'um_new_design', $js_url . 'new-design' . $suffix . '.js', array( 'um_frontend_common', 'plupload', 'um_modal' ), UM_VERSION, true );
 
 			wp_register_script( 'um_directory', $js_url . 'v3/directory' . $suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'wp-hooks' ), UM_VERSION, true );
-			wp_register_script( 'um_profile', $js_url . 'v3/profile' . $suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'wp-hooks', 'um_modal' ), UM_VERSION, true );
-			wp_register_script( 'um_register', $js_url . 'v3/register' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, false );
+
+			wp_register_script( 'um_forms', $js_url . 'v3/forms' . $suffix . '.js', array( 'um_frontend_common', 'plupload', 'jquery-ui-slider', 'um_modal' ), UM_VERSION, true );
 
 			ob_start();
 			?>
@@ -171,12 +171,14 @@ final class Enqueue extends \um\common\Enqueue {
 			<?php
 			$inline_script = ob_get_clean();
 
-			wp_add_inline_script( 'um_new_design', $inline_script );
-			//wp_add_inline_script( 'um_profile', $inline_script );
+			wp_add_inline_script( 'um_forms', $inline_script );
+
+			wp_register_script( 'um_profile', $js_url . 'v3/profile' . $suffix . '.js', array( 'um_forms' ), UM_VERSION, true );
+			wp_register_script( 'um_register', $js_url . 'v3/register' . $suffix . '.js', array( 'um_forms' ), UM_VERSION, false );
 
 			// uploadFiles scripts + UM custom styles for uploader.
-			wp_register_script( 'um_jquery_form', $libs_url . 'jquery-form/jquery-form' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
-			wp_register_script( 'um_fileupload', $libs_url . 'fileupload/fileupload.js', array( 'um_jquery_form' ), UM_VERSION, true );
+//			wp_register_script( 'um_jquery_form', $libs_url . 'jquery-form/jquery-form' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
+//			wp_register_script( 'um_fileupload', $libs_url . 'fileupload/fileupload.js', array( 'um_jquery_form' ), UM_VERSION, true );
 
 //			$um_common_variables = array();
 //			/**

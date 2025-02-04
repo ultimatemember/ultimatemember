@@ -389,31 +389,4 @@ class Rewrite {
 		readfile( $file_path );
 		exit;
 	}
-
-	/**
-	 * Get temp file link.
-	 *
-	 * @param string $filename
-	 *
-	 * @return string
-	 */
-	public function get_temp_link( $filename ) {
-		$url   = get_home_url( get_current_blog_id() );
-		$nonce = wp_create_nonce( $user_id . $form_id . 'um-download-nonce' );
-
-		if ( UM()->is_permalinks ) {
-			$url = $url . "/um-temp/{$nonce}/$filename";
-		} else {
-			$url = add_query_arg(
-				array(
-					'um_action'   => 'temp-access',
-					'um_nonce'    => $nonce,
-					'um_filename' => $filename,
-				),
-				$url
-			);
-		}
-
-		return $url;
-	}
 }

@@ -121,10 +121,10 @@ class Files {
 				$error = esc_html__( 'Invalid nonce.', 'ultimate-member' );
 			}
 
-			if ( ! array_key_exists( 'user_id', $_REQUEST ) ) {
-				$error = esc_html__( 'No user to set value.', 'ultimate-member' );
-			}
-
+//			if ( ! array_key_exists( 'user_id', $_REQUEST ) ) {
+//				$error = esc_html__( 'No user to set value.', 'ultimate-member' );
+//			}
+			// Variable $user_id should equal null in the case of user registration.
 			$user_id = empty( $_REQUEST['user_id'] ) ? null : absint( $_REQUEST['user_id'] );
 			if ( $user_id && is_user_logged_in() && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 				$error = esc_html__( 'You have no permission to edit this user', 'ultimate-member' );
@@ -468,7 +468,9 @@ class Files {
 			return $fileinfo;
 		}
 
-		$crop = ! empty( $_REQUEST['crop'] ) ? sanitize_key( wp_unslash( $_REQUEST['crop'] ) ) : 0;
+		$field_id = ! empty( $_REQUEST['field_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['field_id'] ) ) : '';
+		$form_id  = ! empty( $_REQUEST['form_id'] ) ? absint( $_REQUEST['form_id'] ) : '';
+		$crop     = ! empty( $_REQUEST['crop'] ) ? sanitize_key( wp_unslash( $_REQUEST['crop'] ) ) : 0;
 		if ( empty( $crop ) ) {
 			// @todo with preview
 //			$fileinfo['lazy_image'] = wp_kses(
@@ -483,19 +485,26 @@ class Files {
 //				UM()->get_allowed_html( 'templates' )
 //			);
 
-			$fileinfo['lazy_image'] = wp_kses(
-				UM()->frontend()::layouts()::lazy_image(
-					$fileinfo['url'],
-					array(
-						'width' => '100%',
-						'alt'   => __( 'Image Upload', 'ultimate-member' ), // @todo field label here
-					)
+			// Prepare only required fileinfo.
+			$new_fileinfo = array(
+				'name_saved'   => $fileinfo['name_saved'],
+				'hash'         => $fileinfo['hash'],
+				'hash_temp'    => $fileinfo['hash_temp'],
+				'delete_nonce' => $fileinfo['delete_nonce'],
+				'lazy_image'   => wp_kses(
+					UM()->frontend()::layouts()::lazy_image(
+						$fileinfo['url'],
+						array(
+							'width' => '100%',
+							'alt'   => __( 'Image Upload', 'ultimate-member' ), // @todo field label here
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
 				),
-				UM()->get_allowed_html( 'templates' )
 			);
+
+			$fileinfo = $new_fileinfo;
 		} else {
-			$field_id = ! empty( $_REQUEST['field_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['field_id'] ) ) : '';
-			$form_id  = ! empty( $_REQUEST['form_id'] ) ? absint( $_REQUEST['form_id'] ) : '';
 			$real_id  = 'um_field_' . $form_id . '_' . $field_id;
 			$user_id  = ! empty( $_REQUEST['user_id'] ) ? absint( $_REQUEST['user_id'] ) : false;
 			ob_start();
