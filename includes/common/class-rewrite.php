@@ -175,7 +175,12 @@ class Rewrite {
 			return;
 		}
 
-		$temp_dir  = UM()->common()->filesystem()->get_user_temp_dir();
+		$temp_dir = UM()->common()->filesystem()->get_user_temp_dir();
+		if ( empty( $temp_dir ) ) {
+			// Possible hijacking.
+			$wp_query->set_404();
+			return;
+		}
 		$temp_dir .= DIRECTORY_SEPARATOR;
 
 		UM()->common()->filesystem()::maybe_init_wp_filesystem();

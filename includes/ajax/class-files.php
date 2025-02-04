@@ -28,7 +28,7 @@ class Files {
 			add_filter( 'um_upload_file_fileinfo', array( $this, 'temp_fileinfo' ), 10, 2 );
 
 			add_filter( 'um_upload_file_fileinfo', array( $this, 'uploader_hash' ), 10, 2 );
-			add_filter( 'um_upload_file_fileinfo', array( $this, 'field_image_fileinfo' ), 10, 2 );
+			add_filter( 'um_upload_file_fileinfo', array( $this, 'field_image_fileinfo' ), 11, 2 );
 
 			add_action( 'wp_ajax_nopriv_um_crop_image', array( $this, 'crop_image' ) ); // Enabled image resize on registration form.
 			add_action( 'wp_ajax_um_crop_image', array( $this, 'crop_image' ) );
@@ -457,7 +457,9 @@ class Files {
 		$user_id = empty( $_REQUEST['user_id'] ) ? null : absint( $_REQUEST['user_id'] );
 		$form_id = absint( $_REQUEST['form_id'] );
 
-		$fileinfo['hash'] = md5( $fileinfo['name_saved'] . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
+		// Set form submission hash, but create hash_temp for properly temp file routing.
+		$fileinfo['hash_temp'] = $fileinfo['hash'];
+		$fileinfo['hash']      = md5( $fileinfo['name_saved'] . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
 		return $fileinfo;
 	}
 
@@ -516,6 +518,7 @@ class Files {
 								'form_id'    => $form_id,
 								'form_field' => $real_id,
 								'field_id'   => $field_id,
+								'temp_hash'  => $fileinfo['hash_temp'],
 								'nonce'      => wp_create_nonce( 'um_field_image_crop_apply' . $field_id ),
 							),
 						)
@@ -560,7 +563,8 @@ class Files {
 
 		check_ajax_referer( 'um_field_image_crop_apply' . $field_id, 'nonce' );
 
-		if ( ! isset( $_REQUEST['src'], $_REQUEST['coord'] ) ) {
+//		if ( ! isset( $_REQUEST['src'], $_REQUEST['coord'] ) ) {
+		if ( ! isset( $_REQUEST['src'], $_REQUEST['temp_hash'], $_REQUEST['coord'] ) ) {
 			wp_send_json_error( esc_js( __( 'Invalid parameters', 'ultimate-member' ) ) );
 		}
 
@@ -650,10 +654,39 @@ class Files {
 			wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
 		}
 
-		$src        = esc_url_raw( $_REQUEST['src'] );
-		$image_path = um_is_file_owner( $src, $user_id, true );
-		if ( ! $image_path ) {
-			wp_send_json_error( esc_js( __( 'Invalid file ownership', 'ultimate-member' ) ) );
+		global $wp_filesystem;
+
+		$temp_dir = UM()->common()->filesystem()->get_user_temp_dir();
+		if ( empty( $temp_dir ) ) {
+			// Possible hijacking.
+			wp_send_json_error( esc_js( __( 'Possible hijacking', 'ultimate-member' ) ) );
+		}
+		$temp_dir .= DIRECTORY_SEPARATOR;
+
+		UM()->common()->filesystem()::maybe_init_wp_filesystem();
+
+		$dirlist = $wp_filesystem->dirlist( $temp_dir );
+		$dirlist = $dirlist ? $dirlist : array();
+		if ( empty( $dirlist ) ) {
+			wp_send_json_error( esc_js( __( 'Possible hijacking', 'ultimate-member' ) ) );
+		}
+
+		foreach ( array_keys( $dirlist ) as $file ) {
+			if ( '.' === $file || '..' === $file ) {
+				continue;
+			}
+
+			$hash = md5( $file . '_um_uploader_security_salt' );
+
+			if ( 0 === strpos( sanitize_text_field( $_REQUEST['temp_hash'] ), $hash ) ) {
+				$file_path = wp_normalize_path( "$temp_dir/$file" );
+				break;
+			}
+		}
+
+		// Validate traversal file
+		if ( ! isset( $file_path ) || ! file_exists( $file_path ) || validate_file( $file_path ) === 1 ) {
+			wp_send_json_error( esc_js( __( 'Possible hijacking', 'ultimate-member' ) ) );
 		}
 
 		$coord_n = substr_count( $_REQUEST['coord'], ',' );
@@ -665,14 +698,66 @@ class Files {
 		$crop = explode( ',', $coord );
 		$crop = array_map( 'intval', $crop );
 
-		$quality = UM()->options()->get( 'image_compression' );
+		$src = esc_url_raw( $_REQUEST['src'] );
 
-		// @todo continue with image crop in new UI.
-		UM()->uploader()->replace_upload_dir = true;
+		/**
+		 * Return an implementation that extends WP_Image_Editor
+		 * @see https://developer.wordpress.org/reference/classes/wp_image_editor/
+		 */
+		$image = wp_get_image_editor( $file_path );
+		if ( is_wp_error( $image ) ) {
+			wp_send_json_error( esc_js( __( "Unable to crop stream image file: {$file_path}", 'ultimate-member' ) ) );
+		}
 
-		$output = UM()->uploader()->resize_image( $image_path, $src, $field_id, $user_id, $coord );
+		$quality = (int) UM()->options()->get( 'image_compression' );
+		$max_w   = (int) UM()->options()->get( 'image_max_width' );
 
-		UM()->uploader()->replace_upload_dir = false;
+		// Crop
+		if ( ! empty( $crop ) ) {
+			if ( ! is_array( $crop ) ) {
+				$crop = explode( ",", $crop );
+			}
+
+			$src_x = $crop[0];
+			$src_y = $crop[1];
+			$src_w = $crop[2];
+			$src_h = $crop[3];
+
+			$image->crop( $src_x, $src_y, $src_w, $src_h );
+		}
+
+		// Resize
+		$dimensions = $image->get_size();
+		if ( $dimensions['width'] > $max_w ) {
+			$image->resize( $max_w, null );
+		}
+
+		// Quality
+		if ( $image->get_quality() > $quality ) {
+			$image->set_quality( $quality );
+		}
+
+		$image->save( $file_path );
+
+		$preview = wp_kses(
+			UM()->frontend()::layouts()::lazy_image(
+				$src,
+				array(
+					'width' => '100%',
+					'alt'   => __( 'Image Upload', 'ultimate-member' ), // @todo field label here
+				)
+			),
+			UM()->get_allowed_html( 'templates' )
+		);
+
+		$output = array(
+			'image' => array(
+				'source_url'  => $src,
+				'source_path' => $file_path,
+				'filename'    => wp_basename( $file_path ),
+				'file_preview' => $preview,
+			),
+		);
 
 		delete_option( "um_cache_userdata_{$user_id}" );
 		// phpcs:enable WordPress.Security.NonceVerification -- verified by the `check_ajax_nonce()`

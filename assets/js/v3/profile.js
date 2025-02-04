@@ -408,6 +408,9 @@ jQuery(document).ready(function() {
 			let formID = $button.data('form_id');
 			let fieldID = $button.data('field_id');
 			let nonce = $button.data('nonce');
+			let tempHash = $button.data('temp_hash');
+
+			let src = $button.parents('.um-modal-body').find('.cropper-hidden').attr('src');
 
 			let cropperData = UM.frontend.cropper.obj.getData();
 			let coord = Math.round(cropperData.x) + ',' + Math.round(cropperData.y) + ',' + Math.round(cropperData.width) + ',' + Math.round(cropperData.height);
@@ -421,6 +424,7 @@ jQuery(document).ready(function() {
 					{
 						data: {
 							src : src,
+							temp_hash : tempHash,
 							coord : coord,
 							user_id : userID,
 							field_id: fieldID,
@@ -433,6 +437,15 @@ jQuery(document).ready(function() {
 								$.each( response.all_sizes, function(i) {
 									$('.um-avatar-' + i + '[data-user_id="' + userID + '"]').find('> img').replaceWith( response.all_sizes[i] );
 								})
+							}
+
+							// Image-type form field
+							if ( response.image.file_preview ) {
+								jQuery('[data-key="' + fieldID + '"]').find('.um-uploader-file-preview').html( response.image.file_preview );
+								jQuery('[data-key="' + fieldID + '"]').find('.um-uploader-dropzone').umHide();
+								jQuery('[data-key="' + fieldID + '"]').find('.um-uploader-filelist').umShow();
+								jQuery('[data-key="' + fieldID + '"]').find('.um-uploader').addClass('um-upload-completed');
+								UM.frontend.image.lazyload.init();
 							}
 
 							$loader.hide();
