@@ -348,7 +348,21 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 			if ( um_submitting_account_page() ) {
 
-				UM()->form()->post_form = wp_unslash( $_POST );
+				$formdata = wp_unslash( $_POST );
+				if ( isset( $_POST['user_password'] ) ) {
+					$formdata['user_password'] = trim( $_POST['user_password'] );
+				}
+				if ( isset( $_POST['confirm_user_password'] ) ) {
+					$formdata['confirm_user_password'] = trim( $_POST['confirm_user_password'] );
+				}
+				if ( isset( $_POST['current_user_password'] ) ) {
+					$formdata['current_user_password'] = trim( $_POST['current_user_password'] );
+				}
+				if ( isset( $_POST['single_user_password'] ) ) {
+					$formdata['single_user_password'] = trim( $_POST['single_user_password'] );
+				}
+
+				UM()->form()->post_form = $formdata;
 
 				/**
 				 * UM hook
