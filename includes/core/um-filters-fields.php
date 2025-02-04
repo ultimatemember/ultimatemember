@@ -358,7 +358,7 @@ function um_profile_field_filter_hook__file( $value, $data ) {
 		$value = __( 'This file has been removed.', 'ultimate-member' );
 	} else {
 		$file_type = wp_check_filetype( $value );
-		$uri       = UM()->fields()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
+		$uri       = UM()->fields()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ), $value );
 
 		$file_info = um_user( $data['metakey'] . '_metadata' );
 		if ( ! empty( $file_info['original_name'] ) ) {
@@ -404,7 +404,7 @@ function um_profile_field_filter_hook__image( $value, $data ) {
 	if ( ! $value ) {
 		return '';
 	}
-	$uri   = UM()->fields()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
+	$uri   = UM()->fields()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ), $value );
 	$title = isset( $data['title'] ) ? $data['title'] : __( 'Untitled photo', 'ultimate-member' );
 
 	$removed = false;

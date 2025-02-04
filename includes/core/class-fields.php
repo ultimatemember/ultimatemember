@@ -3028,7 +3028,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							if ( ( isset( $this->set_mode ) && 'register' === $this->set_mode ) || file_exists( UM()->common()->filesystem()->get_tempdir() . DIRECTORY_SEPARATOR . $field_value ) ) {
 								$img_value = UM()->common()->filesystem()->get_tempurl() . '/' . $this->field_value( $key, $default, $data );
 							} else {
-								$img_value = $this->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
+								$img_value = $this->get_download_link( $this->set_id, $key, um_user( 'ID' ), $field_value );
 							}
 							$img = '<img class="fusion-lazyload-ignore" src="' . esc_attr( $img_value ) . '" alt="" />';
 						} else {
@@ -3136,7 +3136,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$file_url = UM()->common()->filesystem()->get_tempurl() . '/' . $file_field_value;
 							$file_dir = UM()->common()->filesystem()->get_tempdir() . DIRECTORY_SEPARATOR . $file_field_value;
 						} else {
-							$file_url = $this->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
+							$file_url = $this->get_download_link( $this->set_id, $key, um_user( 'ID' ), $file_field_value );
 							$file_dir = UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) ) . DIRECTORY_SEPARATOR . $file_field_value;
 						}
 
@@ -5055,10 +5055,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return string
 		 */
-		public function get_download_link( $form_id, $field_key, $user_id ) {
-			$field_value = UM()->fields()->field_value( $field_key );
-			if ( empty( $field_value ) ) {
-				return '';
+		public function get_download_link( $form_id, $field_key, $user_id, $field_value = null ) {
+			// Don't remove this contition to avoid recurcive
+			if ( is_null( $field_value ) ) {
+				$field_value = $this->field_value( $field_key );
+				if ( empty( $field_value ) ) {
+					return '';
+				}
 			}
 
 			// Validate traversal file.
