@@ -1511,6 +1511,7 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 							'icon_position' => 'content',
 						),
 						'data'       => array(
+							'form_id' => $this->set_id,
 							'crop'    => $data['crop_data'],
 							'metakey' => $data['metakey'],
 						),
@@ -1612,6 +1613,7 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 							'icon_position' => 'content',
 						),
 						'data'       => array(
+							'form_id' => $this->set_id,
 							'metakey' => $data['metakey'],
 						),
 						'field_data' => $data,

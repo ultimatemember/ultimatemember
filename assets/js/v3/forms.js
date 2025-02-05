@@ -66,6 +66,7 @@ wp.hooks.addFilter( 'um_uploader_file_filtered', 'ultimate-member', function( pr
 			let objSelectors = [
 				'.um-uploaded-value',
 				'.um-uploaded-value-hash',
+				'.um-uploaded-value-temp-hash',
 			];
 
 			for ( let i = 0; i < objSelectors.length; i++ ) {
@@ -111,7 +112,10 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 				header:   wp.i18n.__( 'Crop image', 'ultimate-member' ),
 				size:     'normal', // small, normal, large
 				content:  response.data[0].modal_content,
-				source: $button
+				source: $button,
+				attributes: {
+					'data-file-id': file.id
+				}
 			};
 
 			UM.profile.avatarModal = UM.modal.addModal( settings, null );
@@ -121,7 +125,7 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 			$dropZone.umShow();
 
 			let fileRow = $fileList.find('#' + file.id);
-			fileRow.data('filename', response.data[0].name_saved).data('nonce', response.data[0].delete_nonce);
+			fileRow.data('filename', response.data[0].name_saved).data('temp_hash', response.data[0].temp_hash).data('nonce', response.data[0].delete_nonce);
 
 			return true;
 		} else if ( 'square' === cropSetting ) {
@@ -133,7 +137,10 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 				header:   wp.i18n.__( 'Crop image', 'ultimate-member' ),
 				size:     'normal', // small, normal, large
 				content:  response.data[0].modal_content,
-				source: $button
+				source: $button,
+				attributes: {
+					'data-file-id': file.id
+				}
 			};
 
 			UM.profile.avatarModal = UM.modal.addModal( settings, null );
@@ -143,7 +150,7 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 			$dropZone.umShow();
 
 			let fileRow = $fileList.find('#' + file.id);
-			fileRow.data('filename', response.data[0].name_saved).data('nonce', response.data[0].delete_nonce);
+			fileRow.data('filename', response.data[0].name_saved).data('temp_hash', response.data[0].temp_hash).data('nonce', response.data[0].delete_nonce);
 
 			return true;
 		} else {
@@ -158,6 +165,9 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 			let fileRow = $fileList.find( '#' + file.id );
 			fileRow.find( '.um-uploaded-value' ).val( response.data[0].name_saved );
 			fileRow.find( '.um-uploaded-value-hash' ).val( response.data[0].hash );
+			fileRow.find( '.um-uploaded-value-temp-hash' ).val( response.data[0].temp_hash );
+
+			fileRow.data('filename', response.data[0].name_saved).data('temp_hash', response.data[0].temp_hash).data('nonce', response.data[0].delete_nonce);
 		}
 	}
 
@@ -196,6 +206,7 @@ wp.hooks.addFilter( 'um_uploader_file_filtered', 'ultimate-member', function( pr
 			let objSelectors = [
 				'.um-uploaded-value',
 				'.um-uploaded-value-hash',
+				'.um-uploaded-value-temp-hash',
 			];
 
 			for ( let i = 0; i < objSelectors.length; i++ ) {
@@ -238,7 +249,137 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 		let fileRow = $fileList.find( '#' + file.id );
 		fileRow.find( '.um-uploaded-value' ).val( response.data[0].name_saved );
 		fileRow.find( '.um-uploaded-value-hash' ).val( response.data[0].hash );
+		fileRow.find( '.um-uploaded-value-temp-hash' ).val( response.data[0].temp_hash );
 	}
 
 	return null;
+});
+
+jQuery(document).ready(function() {
+	// Click on uploaded image for preview in modal.
+	jQuery( document.body ).on( 'click', '.um-photo-modal', function(e){
+		e.preventDefault();
+		let photoSrc = jQuery(this).data('src');
+		let content = jQuery(this).html();
+
+		let settings = {
+			// These are the defaults.
+			classes:  'um-profile-field-photo-modal',
+			duration: 400, // ms
+			footer:   '',
+			header:   '',
+			size:     'large', // small, normal, large
+			content:  content,
+			template: '<div class="um-modal"><span class="um-modal-close um-modal-close-fixed">&times;</span><div class="um-modal-body"></div></div>'
+		};
+
+		UM.modal.addModal( settings, null );
+
+		return false;
+	});
+
+	jQuery( document.body ).on( 'click', '.um-modal-field-image-decline', function(e){
+		e.preventDefault();
+
+		if ( ! confirm( wp.i18n.__( 'Are you sure that you want to cancel crop of this image and remove it?', 'ultimate-member' ) ) ) {
+			return false;
+		}
+
+		let $button = jQuery(this);
+		let $loader = $button.siblings('.um-ajax-spinner-svg');
+		let $buttons = $button.parents('.um-modal-buttons-wrapper').find('.um-button');
+
+		let fieldID = $button.data('form_field');
+
+		$buttons.prop('disabled',true);
+		$loader.show();
+		if ( UM.frontend.cropper.obj ) {
+			// If Cropper object exists then destroy before re-init.
+			UM.frontend.cropper.destroy();
+		}
+		UM.modal.close();
+
+		let changeTextCb = function( confirmText, obj ) {
+			if ( obj.hasClass('um-field-image-remove') ) {
+				confirmText = '';
+			}
+			return confirmText;
+		}
+		// Avoid double confirmation message
+		wp.hooks.addFilter( 'um-field-image-remove-confirm-text', 'ultimate-member', changeTextCb );
+		jQuery('#' + fieldID).find( '.um-field-image-remove' ).trigger('click');
+		wp.hooks.removeFilter('um-field-image-remove-confirm-text', 'ultimate-member');
+	});
+
+	jQuery( document.body ).on( 'click', '.um-apply-field-image-crop', function(e){
+		e.preventDefault();
+
+		let $button = jQuery(this);
+
+		if ( $button.parents('.um-modal-body').find('.cropper-hidden').length > 0 && UM.frontend.cropper.obj ) {
+			let $loader = $button.siblings('.um-ajax-spinner-svg');
+			let $buttons = $button.parents('.um-modal-buttons-wrapper').find('.um-button');
+			let userID = $button.data('user_id');
+			let formID = $button.data('form_id');
+			let fieldID = $button.data('field_id');
+			let nonce = $button.data('nonce');
+			let tempHash = $button.data('temp_hash');
+
+			let $modal = $button.parents('.um-modal');
+			let fileID = $modal.data('file-id');
+
+			let src = $button.parents('.um-modal-body').find('.cropper-hidden').attr('src');
+
+			let cropperData = UM.frontend.cropper.obj.getData();
+			let coord = Math.round(cropperData.x) + ',' + Math.round(cropperData.y) + ',' + Math.round(cropperData.width) + ',' + Math.round(cropperData.height);
+
+			if ( coord ) {
+				$buttons.prop('disabled',true);
+				$loader.show();
+
+				wp.ajax.send(
+					'um_crop_image',
+					{
+						data: {
+							src : src,
+							temp_hash : tempHash,
+							coord : coord,
+							user_id : userID,
+							field_id: fieldID,
+							form_id: formID,
+							nonce: nonce
+						},
+						success: function( response ) {
+							// Image-type form field
+							if ( response.file_preview ) {
+								let $wrapper = jQuery('[data-key="' + fieldID + '"]');
+								$wrapper.find('.um-uploader-file-preview').html( response.file_preview );
+								$wrapper.find('.um-uploader-dropzone').umHide();
+								$wrapper.find('.um-uploader-filelist').umShow();
+								$wrapper.find('.um-uploader').addClass('um-upload-completed');
+								$wrapper.find( '.um-field-image-controls' ).umShow();
+
+								let $fileRow = $wrapper.find( '#' + fileID );
+								$fileRow.find( '.um-uploaded-value' ).val( response.filename );
+								$fileRow.find( '.um-uploaded-value-hash' ).val( response.hash );
+								$fileRow.find( '.um-uploaded-value-temp-hash' ).val( tempHash );
+
+								UM.frontend.image.lazyload.init();
+							}
+
+							$loader.hide();
+							if ( UM.frontend.cropper.obj ) {
+								// If Cropper object exists then destroy before re-init.
+								UM.frontend.cropper.destroy();
+							}
+							UM.modal.close();
+						},
+						error: function (data) {
+							console.log(data);
+						}
+					}
+				);
+			}
+		}
+	});
 });

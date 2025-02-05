@@ -422,7 +422,7 @@ UM.frontend = {
 										if ( $fileList.length ) {
 											let fileRow = $fileList.find('#' + file.id);
 
-											fileRow.data('filename', response.data[0].name_saved).data('nonce', response.data[0].delete_nonce);
+											fileRow.data('filename', response.data[0].name_saved).data('temp_hash', response.data[0].temp_hash).data('nonce', response.data[0].delete_nonce);
 											fileRow.find('.um-progress-bar-wrapper').remove();
 										}
 									}
@@ -555,6 +555,7 @@ UM.frontend = {
 				let fileID = $fileRow.attr('id');
 				if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
 					let fileName = $fileRow.data('filename');
+					let tempHash = $fileRow.data('temp_hash');
 					let nonce = $fileRow.data('nonce');
 
 					// then file can be removed from server.
@@ -563,6 +564,7 @@ UM.frontend = {
 						{
 							data: {
 								name: fileName,
+								hash: tempHash,
 								nonce: nonce
 							},
 							success: function () {
@@ -649,6 +651,7 @@ UM.frontend = {
 				let fileID = $fileRow.attr('id');
 				if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
 					let fileName = $fileRow.data('filename');
+					let tempHash = $fileRow.data('temp_hash');
 					let nonce = $fileRow.data('nonce');
 
 					// then file can be removed from server.
@@ -657,6 +660,7 @@ UM.frontend = {
 						{
 							data: {
 								name: fileName,
+								hash: tempHash,
 								nonce: nonce
 							},
 							success: function () {
@@ -740,6 +744,7 @@ UM.frontend = {
 				let fileID = $fileRow.attr('id');
 				if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
 					let fileName = $fileRow.data('filename');
+					let tempHash = $fileRow.data('temp_hash');
 					let nonce = $fileRow.data('nonce');
 
 					// then file can be removed from server.
@@ -748,6 +753,7 @@ UM.frontend = {
 						{
 							data: {
 								name: fileName,
+								hash: tempHash,
 								nonce: nonce
 							},
 							success: function () {

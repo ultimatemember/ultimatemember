@@ -1,6 +1,8 @@
 <?php
 namespace um\common;
 
+use Random\RandomException;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -142,6 +144,7 @@ class Rewrite {
 	/**
 	 * Handle a secure link of the temp file.
 	 * @return void
+	 * @throws RandomException
 	 */
 	public function temp_files_routing() {
 		global $wp_filesystem, $wp_query;
@@ -233,7 +236,7 @@ class Rewrite {
 
 		header( 'Content-Description: File Transfer' );
 		header( 'Content-Type: ' . $type );
-		header( 'Content-Disposition: inline; filename="' . $originalname . '"' );
+		header( 'Content-Disposition: inline; filename="' . esc_attr( $originalname ) . '"' );
 		header( 'Content-Transfer-Encoding: binary' );
 		header( 'Expires: 0' );
 		header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
@@ -245,7 +248,9 @@ class Rewrite {
 			@ob_end_clean();
 		}
 
-		readfile( $file_path );
+		$content = $wp_filesystem->get_contents( $file_path );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- temp file content.
+		echo $content;
 		exit;
 	}
 
