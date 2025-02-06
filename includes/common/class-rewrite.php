@@ -178,43 +178,8 @@ class Rewrite {
 			return;
 		}
 
-		$temp_dir = UM()->common()->filesystem()->get_user_temp_dir();
-		if ( empty( $temp_dir ) ) {
-			// Possible hijacking.
-			$wp_query->set_404();
-			return;
-		}
-		$temp_dir .= DIRECTORY_SEPARATOR;
-
-		UM()->common()->filesystem()::maybe_init_wp_filesystem();
-
-		$dirlist = $wp_filesystem->dirlist( $temp_dir );
-		$dirlist = $dirlist ? $dirlist : array();
-		if ( empty( $dirlist ) ) {
-			$wp_query->set_404();
-			return;
-		}
-
-		foreach ( array_keys( $dirlist ) as $file ) {
-			if ( '.' === $file || '..' === $file ) {
-				continue;
-			}
-
-			$hash = md5( $file . '_um_uploader_security_salt' );
-
-			if ( 0 === strpos( $filename, $hash ) ) {
-				$file_path = wp_normalize_path( "$temp_dir/$file" );
-				break;
-			}
-		}
-
-		if ( ! file_exists( $file_path ) ) {
-			$wp_query->set_404();
-			return;
-		}
-
-		// Validate traversal file
-		if ( validate_file( $file_path ) === 1 ) {
+		$file_path = UM()->common()->filesystem()->get_file_by_hash( $filename );
+		if ( false === $file_path ) {
 			$wp_query->set_404();
 			return;
 		}
@@ -228,6 +193,8 @@ class Rewrite {
 
 			UM()->common()->guest()::set_download_attempts();
 		}
+
+		UM()->common()->filesystem()::maybe_init_wp_filesystem();
 
 		$pathinfo     = pathinfo( $file_path );
 		$size         = filesize( $file_path );

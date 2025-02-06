@@ -889,8 +889,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										case 'image':
 										case 'file':
 											if ( is_array( $form[ $k ] ) && UM()->is_new_ui() ) {
-												$form[ $k ]['path'] = isset( $form[ $k ]['path'] ) ? sanitize_file_name( $form[ $k ]['path'] ) : '';
-												$form[ $k ]['hash'] = isset( $form[ $k ]['hash'] ) ? sanitize_key( $form[ $k ]['hash'] ) : '';
+												$form[ $k ]['filename']  = isset( $form[ $k ]['filename'] ) ? sanitize_file_name( $form[ $k ]['filename'] ) : '';
+												$form[ $k ]['hash']      = isset( $form[ $k ]['hash'] ) ? sanitize_key( $form[ $k ]['hash'] ) : '';
+												$form[ $k ]['temp_hash'] = isset( $form[ $k ]['temp_hash'] ) ? sanitize_key( $form[ $k ]['temp_hash'] ) : '';
 											} else {
 												$form[ $k ] = sanitize_text_field( $form[ $k ] );
 											}

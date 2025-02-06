@@ -45,44 +45,10 @@ class Files {
 
 		check_ajax_referer( 'um_delete_temp_file' . $_REQUEST['name'], 'nonce' );
 
-		global $wp_filesystem;
-
 		$filename = sanitize_text_field( $_REQUEST['hash'] );
 
-		$temp_dir = UM()->common()->filesystem()->get_user_temp_dir();
-		if ( empty( $temp_dir ) ) {
-			// Possible hijacking.
-			wp_send_json_error( __( 'Unknown file.', 'ultimate-member' ) );
-		}
-		$temp_dir .= DIRECTORY_SEPARATOR;
-
-		UM()->common()->filesystem()::maybe_init_wp_filesystem();
-
-		$dirlist = $wp_filesystem->dirlist( $temp_dir );
-		$dirlist = $dirlist ? $dirlist : array();
-		if ( empty( $dirlist ) ) {
-			wp_send_json_error( __( 'Unknown file.', 'ultimate-member' ) );
-		}
-
-		foreach ( array_keys( $dirlist ) as $file ) {
-			if ( '.' === $file || '..' === $file ) {
-				continue;
-			}
-
-			$hash = md5( $file . '_um_uploader_security_salt' );
-
-			if ( 0 === strpos( $filename, $hash ) ) {
-				$file_path = wp_normalize_path( "$temp_dir/$file" );
-				break;
-			}
-		}
-
-		if ( ! file_exists( $file_path ) ) {
-			wp_send_json_error( __( 'Unknown file.', 'ultimate-member' ) );
-		}
-
-		// Validate traversal file
-		if ( validate_file( $file_path ) === 1 ) {
+		$file_path = UM()->common()->filesystem()->get_file_by_hash( $filename );
+		if ( false === $file_path ) {
 			wp_send_json_error( __( 'Unknown file.', 'ultimate-member' ) );
 		}
 
@@ -449,9 +415,7 @@ class Files {
 			$fileinfo['name_saved']   = $name_saved;
 			$fileinfo['hash']         = md5( $fileinfo['name_saved'] . '_um_uploader_security_salt' );
 			$fileinfo['path']         = wp_normalize_path( UM()->common()->filesystem()->get_tempdir() . '/' . $fileinfo['name_saved'] );
-
 			$fileinfo['url']          = UM()->common()->filesystem()->get_temp_file_url( $fileinfo );
-
 			$fileinfo['size']         = filesize( $fileinfo['file'] );
 			$fileinfo['size_format']  = size_format( $fileinfo['size'] );
 			$fileinfo['time']         = gmdate( 'Y-m-d H:i:s', filemtime( $fileinfo['file'] ) );
@@ -521,15 +485,17 @@ class Files {
 				'hash'         => $fileinfo['hash'],
 				'temp_hash'    => $fileinfo['temp_hash'],
 				'delete_nonce' => $fileinfo['delete_nonce'],
-				'lazy_image'   => wp_kses(
-					UM()->frontend()::layouts()::lazy_image(
-						$fileinfo['url'],
-						array(
-							'width' => '100%',
-							'alt'   => __( 'Image Upload', 'ultimate-member' ), // @todo field label here
-						)
-					),
-					UM()->get_allowed_html( 'templates' )
+				'lazy_image'   => UM()->ajax()->esc_html_spaces(
+					wp_kses(
+						UM()->frontend()::layouts()::lazy_image(
+							$fileinfo['url'],
+							array(
+								'width' => '100%',
+								'alt'   => __( 'Image Upload', 'ultimate-member' ), // @todo field label here
+							)
+						),
+						UM()->get_allowed_html( 'templates' )
+					)
 				),
 			);
 
@@ -693,39 +659,10 @@ class Files {
 			wp_send_json_error( __( 'You have no permission to edit this field', 'ultimate-member' ) );
 		}
 
-		global $wp_filesystem;
-
-		$temp_dir = UM()->common()->filesystem()->get_user_temp_dir();
-		if ( empty( $temp_dir ) ) {
+		$temp_hash = sanitize_text_field( $_REQUEST['temp_hash'] );
+		$file_path = UM()->common()->filesystem()->get_file_by_hash( $temp_hash );
+		if ( false === $file_path ) {
 			// Possible hijacking.
-			wp_send_json_error( __( 'Possible hijacking', 'ultimate-member' ) );
-		}
-		$temp_dir .= DIRECTORY_SEPARATOR;
-
-		UM()->common()->filesystem()::maybe_init_wp_filesystem();
-
-		$dirlist = $wp_filesystem->dirlist( $temp_dir );
-		$dirlist = $dirlist ? $dirlist : array();
-		if ( empty( $dirlist ) ) {
-			wp_send_json_error( __( 'Possible hijacking', 'ultimate-member' ) );
-		}
-
-		$file_path = null;
-		foreach ( array_keys( $dirlist ) as $file ) {
-			if ( '.' === $file || '..' === $file ) {
-				continue;
-			}
-
-			$hash = md5( $file . '_um_uploader_security_salt' );
-
-			if ( 0 === strpos( sanitize_text_field( $_REQUEST['temp_hash'] ), $hash ) ) {
-				$file_path = wp_normalize_path( "$temp_dir/$file" );
-				break;
-			}
-		}
-
-		// Validate traversal or empty file
-		if ( empty( $file_path ) || ! file_exists( $file_path ) || validate_file( $file_path ) === 1 ) {
 			wp_send_json_error( __( 'Possible hijacking', 'ultimate-member' ) );
 		}
 

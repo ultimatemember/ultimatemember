@@ -766,18 +766,93 @@ class Filesystem {
 	 *
 	 * @return bool
 	 */
-	public function is_file_author( $file, $user_id = false ) {
-		if ( empty( $user_id ) ) {
+//	public function is_file_author( $file, $user_id = false ) {
+//		if ( empty( $user_id ) ) {
+//			$user_id = get_current_user_id();
+//		}
+//
+//		if ( empty( $user_id ) ) {
+//			$user = 'guest';
+//		} else {
+//			$user = get_user_by( 'id', $user_id );
+//		}
+//
+//		return true;
+//	}
+
+	/**
+	 * @param string $file_hash
+	 *
+	 * @return bool|string
+	 */
+	public function get_file_by_hash( $file_hash ) {
+		global $wp_filesystem;
+
+		$file_path = null;
+
+		$temp_dir = $this->get_user_temp_dir();
+		if ( empty( $temp_dir ) ) {
+			// Possible hijacking.
+			return false;
+		}
+		$temp_dir .= DIRECTORY_SEPARATOR;
+
+		self::maybe_init_wp_filesystem();
+
+		$dirlist = $wp_filesystem->dirlist( $temp_dir );
+		$dirlist = $dirlist ? $dirlist : array();
+		if ( empty( $dirlist ) ) {
+			return false;
+		}
+
+		foreach ( array_keys( $dirlist ) as $file ) {
+			if ( '.' === $file || '..' === $file ) {
+				continue;
+			}
+
+			$hash = md5( $file . '_um_uploader_security_salt' );
+
+			if ( 0 === strpos( $file_hash, $hash ) ) {
+				$file_path = wp_normalize_path( $temp_dir . $file );
+				break;
+			}
+		}
+
+		// Validate traversal file.
+		if ( empty( $file_path ) || ! file_exists( $file_path ) || validate_file( $file_path ) === 1 ) {
+			return false;
+		}
+
+		return $file_path;
+	}
+
+	/**
+	 * @since 3.0.0
+	 *
+	 * @param string $file_hash
+	 * @param int    $queried_user
+	 *
+	 * @return bool
+	 */
+	public function is_file_author( $file_hash, $queried_user = false ) {
+		$is_author = true;
+
+		if ( is_user_logged_in() ) {
 			$user_id = get_current_user_id();
-		}
-
-		if ( empty( $user_id ) ) {
-			$user = 'guest';
 		} else {
-			$user = get_user_by( 'id', $user_id );
+			$user_id = UM()->common()->guest()->get_guest_token();
 		}
 
-		return true;
+		if ( ! empty( $queried_user ) && (string) $queried_user !== (string) $user_id ) {
+			$is_author = false;
+		} else {
+			$file_path = $this->get_file_by_hash( $file_hash );
+			if ( false === $file_path ) {
+				$is_author = false;
+			}
+		}
+
+		return apply_filters( 'um_is_file_author', $is_author, $file_hash, $queried_user );
 	}
 
 	/**
@@ -880,40 +955,6 @@ class Filesystem {
 		}
 
 		return $user_dir;
-	}
-
-	/**
-	 * Get user temp uploads URL
-	 *
-	 * @param int|null $user_id
-	 * @since 3.0.0
-	 *
-	 * @return string
-	 */
-	public function get_user_temp_url( $user_id = null ) {
-		if ( ! $user_id ) {
-			if ( is_user_logged_in() ) {
-				$user_id = get_current_user_id();
-			} else {
-
-			}
-		} else {
-			if ( ! UM()->common()->users()::user_exists( $user_id ) ) {
-				return '';
-			}
-		}
-
-		$url = $this->get_tempurl() . '/' . $user_id;
-		/**
-		 * Filters the user temp uploads URL.
-		 *
-		 * @param {string} $url     User temp uploads URL.
-		 * @param {int}    $user_id User ID.
-		 *
-		 * @since 3.0.0
-		 * @hook  um_user_temp_url
-		 */
-		return apply_filters( 'um_user_temp_url', $url, $user_id );
 	}
 
 	/**

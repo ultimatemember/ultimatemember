@@ -120,9 +120,29 @@ function um_send_registration_notification( $user_id ) {
 	if ( ! empty( $emails ) ) {
 		foreach ( $emails as $email ) {
 			if ( 'pending' !== $registration_status ) {
-				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $email, 'notification_new_user', array( 'admin' => true, 'fetch_user_id' => $user_id ) ) );
+				UM()->maybe_action_scheduler()->enqueue_async_action(
+					'um_dispatch_email',
+					array(
+						$email,
+						'notification_new_user',
+						array(
+							'admin'         => true,
+							'fetch_user_id' => $user_id,
+						),
+					)
+				);
 			} else {
-				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $email, 'notification_review', array( 'admin' => true, 'fetch_user_id' => $user_id ) ) );
+				UM()->maybe_action_scheduler()->enqueue_async_action(
+					'um_dispatch_email',
+					array(
+						$email,
+						'notification_review',
+						array(
+							'admin'         => true,
+							'fetch_user_id' => $user_id,
+						),
+					)
+				);
 			}
 		}
 	}
@@ -385,7 +405,7 @@ function um_submit_form_register( $args, $form_data ) {
 			$temp_user_login = $user_login;
 			while ( username_exists( $temp_user_login ) ) {
 				$temp_user_login = $user_login . $count;
-				$count++;
+				++$count;
 			}
 			$user_login = $temp_user_login;
 		}
@@ -574,7 +594,7 @@ if ( UM()->is_new_ui() ) {
 		 * }
 		 * ?>
 		 */
-		$primary_btn_word = apply_filters('um_register_form_button_one', $primary_btn_word, $args );
+		$primary_btn_word = apply_filters( 'um_register_form_button_one', $primary_btn_word, $args );
 
 		if ( ! isset( $primary_btn_word ) || '' === $primary_btn_word ) {
 			$primary_btn_word = UM()->options()->get( 'register_primary_btn_word' );
@@ -628,9 +648,9 @@ if ( UM()->is_new_ui() ) {
 		 * }
 		 * ?>
 		 */
-		$primary_btn_word = apply_filters('um_register_form_button_one', $primary_btn_word, $args );
+		$primary_btn_word = apply_filters( 'um_register_form_button_one', $primary_btn_word, $args );
 
-		if ( ! isset( $primary_btn_word ) || $primary_btn_word == '' ){
+		if ( ! isset( $primary_btn_word ) || $primary_btn_word == '' ) {
 			$primary_btn_word = UM()->options()->get( 'register_primary_btn_word' );
 		}
 
@@ -659,11 +679,11 @@ if ( UM()->is_new_ui() ) {
 		 */
 		$secondary_btn_word = apply_filters( 'um_register_form_button_two', $secondary_btn_word, $args );
 
-		if ( ! isset( $secondary_btn_word ) || $secondary_btn_word == '' ){
+		if ( ! isset( $secondary_btn_word ) || $secondary_btn_word == '' ) {
 			$secondary_btn_word = UM()->options()->get( 'register_secondary_btn_word' );
 		}
 
-		$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page('login');
+		$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page( 'login' );
 		/**
 		 * UM hook
 		 *
@@ -686,25 +706,26 @@ if ( UM()->is_new_ui() ) {
 		 * }
 		 * ?>
 		 */
-		$secondary_btn_url = apply_filters('um_register_form_button_two_url', $secondary_btn_url, $args ); ?>
+		$secondary_btn_url = apply_filters( 'um_register_form_button_two_url', $secondary_btn_url, $args );
+		?>
 
 		<div class="um-col-alt">
 
 			<?php if ( ! empty( $args['secondary_btn'] ) ) { ?>
 
 				<div class="um-left um-half">
-					<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" />
+					<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
 				</div>
 				<div class="um-right um-half">
 					<a href="<?php echo esc_url( $secondary_btn_url ); ?>" class="um-button um-alt">
-						<?php _e( wp_unslash( $secondary_btn_word ),'ultimate-member' ); ?>
+						<?php _e( wp_unslash( $secondary_btn_word ), 'ultimate-member' ); ?>
 					</a>
 				</div>
 
 			<?php } else { ?>
 
 				<div class="um-center">
-					<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" />
+					<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
 				</div>
 
 			<?php } ?>
@@ -728,75 +749,113 @@ function um_add_register_fields( $args ) {
 }
 add_action( 'um_main_register_fields', 'um_add_register_fields', 100 );
 
-/**
- * Saving files to register a new user, if there are fields with files.
- *
- * @param $user_id
- * @param $args
- * @param $form_data
- */
-function um_registration_save_files( $user_id, $args, $form_data ) {
-	if ( empty( $args['submitted'] ) ) {
-		// It's only frontend case.
-		return;
-	}
 
-	$files = array();
+if ( UM()->is_new_ui() ) {
+	/**
+	 * Saving files to register a new user, if there are fields with files.
+	 *
+	 * @param $user_id
+	 * @param $args
+	 * @param $form_data
+	 */
+	function um_registration_save_files( $user_id, $args, $form_data ) {
+		global $wp_filesystem;
 
-	$fields = maybe_unserialize( $form_data['custom_fields'] );
-	if ( ! empty( $fields ) && is_array( $fields ) ) {
-		foreach ( $fields as $key => $array ) {
-			if ( ! array_key_exists( 'type', $array ) || ! in_array( $array['type'], array( 'image', 'file' ), true ) ) {
-				continue;
+		if ( empty( $args['submitted'] ) ) {
+			// It's only frontend case.
+			return;
+		}
+
+		UM()->common()->filesystem()::maybe_init_wp_filesystem();
+
+		$user_basedir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
+		// @todo test registration submission.
+		$fields = maybe_unserialize( $form_data['custom_fields'] );
+		if ( ! empty( $fields ) && is_array( $fields ) ) {
+			$user_meta_submitted     = get_user_meta( $user_id, 'submitted', true );
+			$user_meta_submitted_old = $user_meta_submitted; // Is used to compare.
+
+			foreach ( $fields as $key => $array ) {
+				if ( ! array_key_exists( 'type', $array ) || ! in_array( $array['type'], array( 'image', 'file' ), true ) ) {
+					continue;
+				}
+
+				if ( ! empty( $args['submitted'][ $key ]['temp_hash'] ) ) {
+					$filepath = UM()->common()->filesystem()->get_file_by_hash( $args['submitted'][ $key ]['temp_hash'] );
+					if ( ! empty( $filepath ) ) {
+						$filename = sanitize_file_name( $args['submitted'][ $key ]['filename'] );
+						if ( file_exists( $user_basedir . DIRECTORY_SEPARATOR . $filename ) ) {
+							$filename = wp_unique_filename( $user_basedir . DIRECTORY_SEPARATOR, $filename );
+						}
+						$new_filepath  = $user_basedir . DIRECTORY_SEPARATOR . $filename;
+						$moving_result = $wp_filesystem->move( $filepath, $new_filepath );
+						if ( $moving_result ) {
+							$user_meta_submitted[ $key ] = $filename;
+
+							update_user_meta( $user_id, $key, $filename );
+
+							if ( 'file' === $array['type'] ) {
+								$file_type = wp_check_filetype( $new_filepath );
+								$size      = filesize( $new_filepath );
+
+								$file_metadata = array(
+									'ext'         => $file_type['ext'],
+									'type'        => $file_type['type'],
+									'size'        => $size,
+									'size_format' => size_format( $size ),
+								);
+								$file_metadata = apply_filters( 'um_file_metadata', $file_metadata, $new_filepath, $key, $args['submitted'] );
+								update_user_meta( $user_id, $key . '_metadata', $file_metadata );
+							}
+						}
+					}
+				}
 			}
 
-			// @todo handle submission
-			if ( UM()->is_new_ui() ) {
-				if ( isset( $args['submitted'][ $key ]['path'] ) && um_is_temp_file( $args['submitted'][ $key ]['path'] ) ) {
-					$files[ $key ] = $args['submitted'][ $key ]['path'];
+			if ( $user_meta_submitted_old !== $user_meta_submitted ) {
+				update_user_meta( $user_id, 'submitted', $user_meta_submitted );
+			}
+		}
+	}
+} else {
+	/**
+	 * Saving files to register a new user, if there are fields with files.
+	 *
+	 * @param $user_id
+	 * @param $args
+	 * @param $form_data
+	 */
+	function um_registration_save_files( $user_id, $args, $form_data ) {
+		if ( empty( $args['submitted'] ) ) {
+			// It's only frontend case.
+			return;
+		}
+
+		$files = array();
+
+		$fields = maybe_unserialize( $form_data['custom_fields'] );
+		if ( ! empty( $fields ) && is_array( $fields ) ) {
+			foreach ( $fields as $key => $array ) {
+				if ( ! array_key_exists( 'type', $array ) || ! in_array( $array['type'], array( 'image', 'file' ), true ) ) {
+					continue;
 				}
-			} else {
+
 				if ( isset( $args['submitted'][ $key ] ) && um_is_temp_file( $args['submitted'][ $key ] ) ) {
 					$files[ $key ] = $args['submitted'][ $key ];
 				}
 			}
 		}
-	}
 
-	/**
-	 * Filters files submitted by the UM registration or profile form.
-	 *
-	 * @param {array} $files   Submitted files.
-	 * @param {int}   $user_id User ID.
-	 *
-	 * @return {array} Submitted files.
-	 *
-	 * @since 1.3.x
-	 * @hook um_user_pre_updating_files_array
-	 *
-	 * @example <caption>Extends submitted files.</caption>
-	 * function my_user_pre_updating_files( $files, $user_id ) {
-	 *     $files[] = 'some file';
-	 *     return $files;
-	 * }
-	 * add_filter( 'um_user_pre_updating_files_array', 'my_user_pre_updating_files', 10, 2 );
-	 */
-	$files = apply_filters( 'um_user_pre_updating_files_array', $files, $user_id );
-	if ( ! empty( $files ) && is_array( $files ) ) {
-		if ( UM()->is_new_ui() ) {
-			foreach ( $files as $key => $filename ) {
-				if ( validate_file( $filename ) !== 0 ) {
-					unset( $files[ $key ] );
-				}
-			}
+		/** This action is documented in ultimate-member/includes/core/um-actions-register.php */
+		$files = apply_filters( 'um_user_pre_updating_files_array', $files, $user_id );
+		if ( ! empty( $files ) && is_array( $files ) ) {
+			UM()->uploader()->replace_upload_dir = true;
+			UM()->uploader()->move_temporary_files( $user_id, $files );
+			UM()->uploader()->replace_upload_dir = false;
 		}
-		UM()->uploader()->replace_upload_dir = true;
-		UM()->uploader()->move_temporary_files( $user_id, $files );
-		UM()->uploader()->replace_upload_dir = false;
 	}
 }
 add_action( 'um_registration_set_extra_data', 'um_registration_save_files', 10, 3 );
-
 
 /**
  * Update user Full Name

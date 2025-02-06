@@ -374,6 +374,30 @@ if ( UM()->is_new_ui() ) {
 
 				if ( isset( $args['submitted'][ $key ] ) ) {
 					if ( in_array( $array['type'], array( 'image', 'file' ), true ) ) {
+						if ( ! empty( $args['submitted'][ $key ]['temp_hash'] ) ) {
+							$files[ $key ] = $args['submitted'][ $key ]['temp_hash'];
+
+							$filepath = UM()->common()->filesystem()->get_file_by_hash( $args['submitted'][ $key ]['temp_hash'] );
+
+							$to_update[ $key ] = $args['submitted'][ $key ]['filename'];
+							if ( 'file' === $array['type'] ) {
+								$file_type = wp_check_filetype( $filepath );
+								$size      = filesize( $filepath );
+
+								$to_update[ $key . '_metadata' ] = array(
+									'ext'         => $file_type['ext'],
+									'type'        => $file_type['type'],
+									'size'        => $size,
+									'size_format' => size_format( $size ),
+								);
+							}
+						} elseif ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ]['filename'] !== $userinfo[ $key ] ) {
+							$to_update[ $key ] = '';
+							if ( 'file' === $array['type'] ) {
+								$to_update[ $key . '_metadata' ] = '';
+							}
+						}
+
 						var_dump( $args['submitted'][ $key ] );
 						exit;
 						// @todo handle submission
@@ -388,18 +412,14 @@ if ( UM()->is_new_ui() ) {
 //						} else {
 //							$files[ $key ] = 'empty_file';
 //						}
-					} else {
-						if ( 'password' === $array['type'] ) {
-							$to_update[ $key ]         = wp_hash_password( $args['submitted'][ $key ] );
-							// translators: %s: title.
-							$args['submitted'][ $key ] = sprintf( __( 'Your choosed %s', 'ultimate-member' ), $array['title'] );
-						} else {
-							if ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] !== $userinfo[ $key ] ) {
-								$to_update[ $key ] = $args['submitted'][ $key ];
-							} elseif ( '' !== $args['submitted'][ $key ] ) {
-								$to_update[ $key ] = $args['submitted'][ $key ];
-							}
-						}
+					} elseif ( 'password' === $array['type'] ) {
+						$to_update[ $key ] = wp_hash_password( $args['submitted'][ $key ] );
+						// translators: %s: title.
+						$args['submitted'][ $key ] = sprintf( __( 'Your choosed %s', 'ultimate-member' ), $array['title'] );
+					} elseif ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] !== $userinfo[ $key ] ) {
+						$to_update[ $key ] = $args['submitted'][ $key ];
+					} elseif ( '' !== $args['submitted'][ $key ] ) {
+						$to_update[ $key ] = $args['submitted'][ $key ];
 					}
 
 					// use this filter after all validations has been completed, and we can extend data based on key
@@ -532,7 +552,7 @@ if ( UM()->is_new_ui() ) {
 		$files = apply_filters( 'um_user_pre_updating_files_array', $files, $user_id );
 		if ( ! empty( $files ) && is_array( $files ) ) {
 			foreach ( $files as $key => $filename ) {
-				if ( validate_file( $filename ) !== 0 ) {
+				if ( validate_file( $filename ) === 1 ) {
 					unset( $files[ $key ] );
 				}
 			}
