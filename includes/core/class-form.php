@@ -603,6 +603,18 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					}
 				}
 
+				// Flush empty files fields
+				if ( UM()->is_new_ui() ) {
+					foreach ( $custom_fields as $cf_k => $cf_data ) {
+						if ( ! array_key_exists( 'type', $cf_data ) || ! in_array( $cf_data['type'], array( 'image', 'file' ), true ) ) {
+							continue;
+						}
+						if ( isset( $this->post_form[ $cf_k ] ) && empty( $this->post_form[ $cf_k ]['filename'] ) ) {
+							unset( $this->post_form[ $cf_k ] );
+						}
+					}
+				}
+
 				$this->post_form              = $this->sanitize( $this->post_form );
 				$this->post_form['submitted'] = $this->post_form;
 

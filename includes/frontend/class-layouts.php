@@ -2134,7 +2134,7 @@ class Layouts {
 
 	public static function uploaded_item_edit_row( $args, $edit_value_row ) {
 		$custom_placeholder = apply_filters( 'um_upload_edit_list_item_row', null, $args, $edit_value_row );
-		if ( ! $custom_placeholder ) {
+		if ( is_null( $custom_placeholder ) ) {
 			ob_start();
 			?>
 			<div class="um-uploader-file-placeholder um-display-none">
@@ -2376,7 +2376,14 @@ class Layouts {
 				$filelist_classes = array(
 					'um-uploader-filelist',
 				);
-				if ( empty( $args['value'] ) ) {
+
+				$list_rows = '';
+				if ( ! empty( $args['value'] ) ) {
+					foreach ( $args['value'] as $file_row_value ) {
+						$list_rows .= self::uploaded_item_edit_row( $args, $file_row_value );
+					}
+				}
+				if ( empty( $args['value'] ) || empty( $list_rows ) ) {
 					$filelist_classes[] = 'um-display-none';
 				}
 				if ( ! empty( $args['sortable_files'] ) ) {
@@ -2384,15 +2391,11 @@ class Layouts {
 				}
 				?>
 				<div id="um-<?php echo esc_attr( $id ); ?>-uploader-filelist" class="<?php echo esc_attr( implode( ' ', $filelist_classes ) ); ?>">
-					<?php
-					if ( ! empty( $args['value'] ) ) {
-						foreach ( $args['value'] as $file_row_value ) {
-							echo wp_kses( self::uploaded_item_edit_row( $args, $file_row_value ), UM()->get_allowed_html( 'templates' ) );
-						}
-					}
-					?>
+					<?php echo wp_kses( $list_rows, UM()->get_allowed_html( 'templates' ) ); ?>
 				</div>
 				<?php
+
+				do_action( 'um_uploader_layout_after_files_list', $args, $list_rows );
 			}
 			?>
 		</div>

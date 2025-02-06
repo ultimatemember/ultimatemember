@@ -167,6 +167,10 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 			fileRow.find( '.um-uploaded-value-hash' ).val( response.data[0].hash );
 			fileRow.find( '.um-uploaded-value-temp-hash' ).val( response.data[0].temp_hash );
 
+			$uploader.find('.um-uploaded-value-hidden').prop('disabled', true);
+			$uploader.find('.um-uploaded-value-hash-hidden').prop('disabled', true);
+			$uploader.find('.um-uploaded-value-temp-hash-hidden').prop('disabled', true);
+
 			fileRow.data('filename', response.data[0].name_saved).data('temp_hash', response.data[0].temp_hash).data('nonce', response.data[0].delete_nonce);
 		}
 	}
@@ -250,6 +254,10 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 		fileRow.find( '.um-uploaded-value' ).val( response.data[0].name_saved );
 		fileRow.find( '.um-uploaded-value-hash' ).val( response.data[0].hash );
 		fileRow.find( '.um-uploaded-value-temp-hash' ).val( response.data[0].temp_hash );
+
+		$uploader.find('.um-uploaded-value-hidden').prop('disabled', true);
+		$uploader.find('.um-uploaded-value-hash-hidden').prop('disabled', true);
+		$uploader.find('.um-uploaded-value-temp-hash-hidden').prop('disabled', true);
 	}
 
 	return null;
@@ -363,6 +371,10 @@ jQuery(document).ready(function() {
 								$fileRow.find( '.um-uploaded-value' ).val( response.filename );
 								$fileRow.find( '.um-uploaded-value-hash' ).val( response.hash );
 								$fileRow.find( '.um-uploaded-value-temp-hash' ).val( tempHash );
+
+								$wrapper.find('.um-uploaded-value-hidden').prop('disabled', true);
+								$wrapper.find('.um-uploaded-value-hash-hidden').prop('disabled', true);
+								$wrapper.find('.um-uploaded-value-temp-hash-hidden').prop('disabled', true);
 
 								UM.frontend.image.lazyload.init();
 							}

@@ -608,6 +608,10 @@ UM.frontend = {
 				let $fileList  = $uploader.find( '.um-uploader-filelist' );
 
 				let removeRow = function () {
+					$uploader.find('.um-uploaded-value-hidden').prop('disabled', false);
+					$uploader.find('.um-uploaded-value-hash-hidden').prop('disabled', false);
+					$uploader.find('.um-uploaded-value-temp-hash-hidden').prop('disabled', false);
+
 					let fileID = $fileRow.attr('id');
 					if ( ! fileID ) {
 						$fileRow.remove();
@@ -701,6 +705,10 @@ UM.frontend = {
 				let $fileList  = $uploader.find( '.um-uploader-filelist' );
 
 				let removeRow = function () {
+					$uploader.find('.um-uploaded-value-hidden').prop('disabled', false);
+					$uploader.find('.um-uploaded-value-hash-hidden').prop('disabled', false);
+					$uploader.find('.um-uploaded-value-temp-hash-hidden').prop('disabled', false);
+
 					let fileID = $fileRow.attr('id');
 					if ( ! fileID ) {
 						$fileRow.remove();

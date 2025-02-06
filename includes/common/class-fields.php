@@ -1497,6 +1497,15 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 						$allowed_types = $data['allowed_types'];
 					}
 
+					// Workaround when triggered invalid form submission, and we need to pass 3 attributes per 1 file.
+					if ( is_array( $field_value ) && array_key_exists( 'filename', $field_value ) ) {
+						if ( empty( $field_value['temp_hash'] ) && empty( $field_value['filename'] ) ) {
+							$field_value = '';
+						} else {
+							$field_value = array( $field_value );
+						}
+					}
+
 					$uploader_args = array(
 						'async'      => false,
 						'handler'    => 'field-image',
@@ -1522,7 +1531,7 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 						$uploader_args['max_upload_size'] = $data['max_size'];
 					}
 
-					if ( 'profile' === $this->set_mode && ! empty( $field_value ) ) {
+					if ( ! empty( $field_value ) ) {
 						$uploader_args['classes'][] = 'um-upload-completed';
 					}
 
@@ -1599,6 +1608,15 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 						$allowed_types = $data['allowed_types'];
 					}
 
+					// Workaround when triggered invalid form submission, and we need to pass 3 attributes per 1 file.
+					if ( is_array( $file_field_value ) && array_key_exists( 'filename', $file_field_value ) ) {
+						if ( empty( $file_field_value['temp_hash'] ) && empty( $file_field_value['filename'] ) ) {
+							$file_field_value = '';
+						} else {
+							$file_field_value = array( $file_field_value );
+						}
+					}
+
 					$uploader_args = array(
 						'async'      => false,
 						'handler'    => 'field-file',
@@ -1623,7 +1641,7 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 						$uploader_args['max_upload_size'] = $data['max_size'];
 					}
 
-					if ( 'profile' === $this->set_mode && ! empty( $file_field_value ) ) {
+					if ( ! empty( $file_field_value ) ) {
 						$uploader_args['classes'][] = 'um-upload-completed';
 					}
 
