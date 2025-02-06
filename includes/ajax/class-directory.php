@@ -28,6 +28,11 @@ class Directory extends \um\common\Directory {
 	public $custom_filters_in_query = array();
 
 	/**
+	 * @var bool Searching marker
+	 */
+	public $is_search = false;
+
+	/**
 	 * Directory constructor.
 	 */
 	public function __construct() {
@@ -710,6 +715,8 @@ class Directory extends \um\common\Directory {
 		$meta_query = apply_filters( 'um_member_directory_general_search_meta_query', $meta_query, $search );
 
 		$this->query_args['meta_query'][] = $meta_query;
+
+		$this->is_search = true;
 	}
 
 	/**
@@ -872,6 +879,7 @@ class Directory extends \um\common\Directory {
 		// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 		$offset = ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) ? (int) $_POST['gmt_offset'] : 0;
 
+		$this->is_search = true;
 		foreach ( $filter_query as $field => $value ) {
 			$field = sanitize_text_field( $field );
 			$attrs = UM()->fields()->get_field( $field );
