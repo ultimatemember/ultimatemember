@@ -194,8 +194,8 @@ if ( UM()->is_new_ui() ) {
 	 * @param array $form_data
 	 */
 	function um_user_edit_profile( $args, $form_data ) {
+		global $wp_filesystem;
 		$to_update = null;
-		$files     = array();
 
 		$user_id = null;
 		if ( isset( $args['user_id'] ) ) {
@@ -212,6 +212,7 @@ if ( UM()->is_new_ui() ) {
 
 		$userinfo = UM()->user()->profile;
 
+		$user_basedir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
 		/**
 		 * Fires before collecting data to update on profile form submit.
 		 *
@@ -375,43 +376,51 @@ if ( UM()->is_new_ui() ) {
 				if ( isset( $args['submitted'][ $key ] ) ) {
 					if ( in_array( $array['type'], array( 'image', 'file' ), true ) ) {
 						if ( ! empty( $args['submitted'][ $key ]['temp_hash'] ) ) {
-							$files[ $key ] = $args['submitted'][ $key ]['temp_hash'];
+							// delete old file if it's exists
+							if ( isset( $userinfo[ $key ] ) && file_exists( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] ) ) {
+								wp_delete_file( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] );
+							}
 
 							$filepath = UM()->common()->filesystem()->get_file_by_hash( $args['submitted'][ $key ]['temp_hash'] );
+							if ( ! empty( $filepath ) ) {
+								$filename = sanitize_file_name( $args['submitted'][ $key ]['filename'] );
+								if ( file_exists( $user_basedir . DIRECTORY_SEPARATOR . $filename ) ) {
+									$filename = wp_unique_filename( $user_basedir . DIRECTORY_SEPARATOR, $filename );
+								}
+								$new_filepath  = $user_basedir . DIRECTORY_SEPARATOR . $filename;
+								$moving_result = $wp_filesystem->move( $filepath, $new_filepath );
+								if ( $moving_result ) {
+									$to_update[ $key ] = $filename;
 
-							$to_update[ $key ] = $args['submitted'][ $key ]['filename'];
-							if ( 'file' === $array['type'] ) {
-								$file_type = wp_check_filetype( $filepath );
-								$size      = filesize( $filepath );
+									if ( 'file' === $array['type'] ) {
+										$file_type = wp_check_filetype( $new_filepath );
+										$size      = filesize( $new_filepath );
 
-								$to_update[ $key . '_metadata' ] = array(
-									'ext'         => $file_type['ext'],
-									'type'        => $file_type['type'],
-									'size'        => $size,
-									'size_format' => size_format( $size ),
-								);
+										$file_metadata = array(
+											'ext'         => $file_type['ext'],
+											'type'        => $file_type['type'],
+											'size'        => $size,
+											'size_format' => size_format( $size ),
+										);
+
+										$file_metadata = apply_filters( 'um_file_metadata', $file_metadata, $new_filepath, $key, $args['submitted'] );
+
+										$to_update[ $key . '_metadata' ] = $file_metadata;
+									}
+								}
 							}
 						} elseif ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ]['filename'] !== $userinfo[ $key ] ) {
+							// File was deleted on frontend
+							// delete old file if it's exists
+							if ( file_exists( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] ) ) {
+								wp_delete_file( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] );
+							}
+
 							$to_update[ $key ] = '';
 							if ( 'file' === $array['type'] ) {
 								$to_update[ $key . '_metadata' ] = '';
 							}
 						}
-
-						var_dump( $args['submitted'][ $key ] );
-						exit;
-						// @todo handle submission
-						if ( array_key_exists( 'path', $args['submitted'][ $key ] ) ) {
-							$files[ $key ] = $args['submitted'][ $key ]['path'];
-						}
-
-//						if ( um_is_temp_file( $args['submitted'][ $key ] ) || 'empty_file' === $args['submitted'][ $key ] ) {
-//							$files[ $key ] = $args['submitted'][ $key ];
-//						} elseif( um_is_file_owner( UM()->uploader()->get_upload_base_url() . $user_id . '/' . $args['submitted'][ $key ], $user_id ) ) {
-//
-//						} else {
-//							$files[ $key ] = 'empty_file';
-//						}
 					} elseif ( 'password' === $array['type'] ) {
 						$to_update[ $key ] = wp_hash_password( $args['submitted'][ $key ] );
 						// translators: %s: title.
@@ -546,20 +555,6 @@ if ( UM()->is_new_ui() ) {
 			 * ?>
 			 */
 			do_action( 'um_after_user_updated', $user_id, $args, $to_update );
-		}
-
-		/** This action is documented in ultimate-member/includes/core/um-actions-register.php */
-		$files = apply_filters( 'um_user_pre_updating_files_array', $files, $user_id );
-		if ( ! empty( $files ) && is_array( $files ) ) {
-			foreach ( $files as $key => $filename ) {
-				if ( validate_file( $filename ) === 1 ) {
-					unset( $files[ $key ] );
-				}
-			}
-
-			UM()->uploader()->replace_upload_dir = true;
-			UM()->uploader()->move_temporary_files( $user_id, $files );
-			UM()->uploader()->replace_upload_dir = false;
 		}
 
 		/** This action is documented in ultimate-member/includes/core/um-actions-register.php */

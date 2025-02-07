@@ -603,8 +603,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					}
 				}
 
-				// Flush empty files fields
-				if ( UM()->is_new_ui() ) {
+				// Flush empty files fields during registration.
+				if ( 'register' === $this->form_data['mode'] && UM()->is_new_ui() ) {
 					foreach ( $custom_fields as $cf_k => $cf_data ) {
 						if ( ! array_key_exists( 'type', $cf_data ) || ! in_array( $cf_data['type'], array( 'image', 'file' ), true ) ) {
 							continue;

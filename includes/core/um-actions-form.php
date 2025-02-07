@@ -521,6 +521,13 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 			UM()->form()->add_error( $key, sprintf( __( '%s is required.', 'ultimate-member' ), $array['title'] ) );
 		}
 
+		if ( UM()->is_new_ui() ) {
+			if ( ! empty( $array['required'] ) && isset( $array['type'] ) && in_array( $array['type'], array( 'image', 'file' ), true ) && empty( $submitted_data[ $key ]['filename'] ) ) {
+				// translators: %s: title.
+				UM()->form()->add_error( $key, sprintf( __( '%s is required.', 'ultimate-member' ), $array['title'] ) );
+			}
+		}
+
 		if ( isset( $array['type'] ) && $array['type'] == 'checkbox' && isset( $array['required'] ) && $array['required'] == 1 && ! isset( $submitted_data[ $key ] ) ) {
 			// translators: %s: title.
 			UM()->form()->add_error( $key, sprintf( __( '%s is required.', 'ultimate-member' ), $array['title'] ) );
@@ -784,8 +791,8 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 				// Check for filename and hash compatibility below.
 			} elseif ( ! empty( $submitted_data[ $key ]['filename'] ) && empty( $submitted_data[ $key ]['hash'] ) ) {
 				UM()->form()->add_error( $key, __( 'Invalid field value format', 'ultimate-member' ) );
-			} elseif ( md5( $submitted_data[ $key ]['filename'] . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY ) !== $submitted_data[ $key ]['hash'] ) {
-				// invalid salt for file/image uploading, it's for the security
+			} elseif ( ! empty( $submitted_data[ $key ]['filename'] ) && md5( $submitted_data[ $key ]['filename'] . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY ) !== $submitted_data[ $key ]['hash'] ) {
+				// Invalid salt for file/image uploading, it's for the security but only for the not empty field.
 				UM()->form()->add_error( $key, __( 'Invalid field value. Cheatin&#8217; huh?', 'ultimate-member' ) );
 			}
 		}
