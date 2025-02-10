@@ -175,16 +175,24 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Bugfixes**
 
-* Fixed: User status filter on wp-admin > Users on mobile devices
-
-
-
-
 **Tweaks**
 
 * Function `UM()->files()->delete_file()` is private
 * Class `UM()->files()` is legacy since 3.0.0 and is used only when old UI is enabled
+  New UI function alternatives:
+  * `UM()->common()->filesystem()` class has all necessary methods.
+  * `UM()->files()->get_download_link()` -> 'UM()->fields()->get_download_link()'.
+  * `UM()->files()->delete_core_user_photo()` -> 'UM()->common()->users()->delete_photo()'.
+  * `UM()->frontend()->layouts()::uploader()` layout handles all default processes for uploading files via plupload.
+
 * Class `UM()->uploader()` is legacy since 3.0.0 and is used only when old UI is enabled
+  New UI function alternatives:
+  * `UM()->uploader()->get_core_upload_dir()` -> `UM()->common()->filesystem()->get_basedir()`
+  * `UM()->uploader()->get_upload_base_dir()` -> `UM()->common()->filesystem()->get_basedir()`
+  * `UM()->uploader()->get_upload_base_url()` -> `UM()->common()->filesystem()->get_baseurl()`
+  * `UM()->uploader()->get_core_temp_url()` -> `UM()->common()->filesystem()->get_tempurl()`
+  * `UM()->uploader()->get_upload_user_base_dir()` -> `UM()->common()->filesystem()->get_user_uploads_dir()`
+  * `UM()->uploader()->get_upload_user_base_url()` -> `UM()->common()->filesystem()->get_user_uploads_url()`
 
 **Deprecated**
 
@@ -198,9 +206,10 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Deprecated function `UM()->admin_menu()->dir_size()`. Use function 'UM()->common()->filesystem()->dir_size()' instead.
 * Deprecated function `UM()->files()->remove_dir()` use function 'UM()->common()->filesystem()::remove_dir()' instead.
 * Deprecated function `UM()->files()->get_profile_photo_size()` use function 'UM()->options()->get_profile_photo_size()' instead.
-* Deprecated function `UM()->files()->delete_core_user_photo()` use function 'UM()->common()->users()->delete_photo()' instead.
 * Deprecated function `UM()->files()->get_fonticon_by_ext()`. Use function 'UM()->fonticons()->get_file_fonticon()' instead.
 * Deprecated function `UM()->files()->get_fonticon_bg_by_ext()`. Use function 'UM()->fonticons()->get_file_fonticon_bg()' instead.
+* Deprecated function `UM()->files()->allowed_file_types()`. Use function `UM()->common()->filesystem()::file_mimes()` instead.
+* Deprecated function `UM()->files()->allowed_image_types()`. Use function `UM()->common()->filesystem()::image_mimes()` instead.
 * Deprecated function `UM()->files()->create_and_copy_image()` because it is unused.
 * Deprecated function `UM()->files()->new_user()` because it is unused.
 * Deprecated function `UM()->files()->new_image_upload_temp()` because it is unused.
@@ -213,25 +222,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Deprecated function `UM()->files()->upload_temp_file()` because it is unused.
 * Deprecated function `UM()->files()->new_file_upload_temp()` because it is unused.
 * Deprecated function `UM()->files()->unique_dir()` because it is unused.
-* Deprecated function `UM()->files()->allowed_file_types()` because it is unused.
-* Deprecated function `UM()->files()->allowed_image_types()` because it is unused.
-* Deprecated function `UM()->files()->get_download_link()`. Use function 'UM()->fields()->get_download_link()' instead for new UI.
-* Deprecated function `UM()->uploader()->delete_existing_file()` because it is unused.
-* Deprecated function `UM()->uploader()->get_core_upload_dir()`. Use function `UM()->common()->filesystem()->get_basedir()` instead.
-* Deprecated function `UM()->uploader()->get_upload_base_dir()`. Use function `UM()->common()->filesystem()->get_basedir()` instead.
-* Deprecated function `UM()->uploader()->get_upload_base_url()`. Use function `UM()->common()->filesystem()->get_baseurl()` instead.
-* Deprecated function `UM()->uploader()->get_core_temp_url()`. Use function `UM()->common()->filesystem()->get_tempurl()` instead.
-* Deprecated function `UM()->uploader()->get_upload_user_base_dir()`. Use function `UM()->common()->filesystem()->get_user_uploads_dir()` instead.
-* Deprecated function `UM()->uploader()->get_upload_user_base_url()`. Use function `UM()->common()->filesystem()->get_user_uploads_url()` instead.
-* Deprecated variable `UM()->uploader()->wp_upload_dir` because it is unused.
-* Deprecated variable `UM()->uploader()->core_upload_dir` because it is unused.
-* Deprecated variable `UM()->uploader()->core_upload_url` because it is unused.
-* Deprecated variable `UM()->uploader()->temp_upload_dir` because it is unused.
-* Deprecated variable `UM()->uploader()->upload_baseurl` because it is unused.
-* Deprecated variable `UM()->uploader()->upload_basedir` because it is unused.
-* Deprecated variable `UM()->uploader()->upload_user_baseurl` because it is unused.
-* Deprecated variable `UM()->uploader()->upload_user_basedir` because it is unused.
-* Deprecated function `um_is_temp_upload()` use function 'UM()->files()->is_temp_upload()' instead.
+* Deprecated variable `UM()->files()->fonticon`. Use private variable `UM()->fonticon()->file_fonticons` instead.
+* Deprecated variable `UM()->files()->default_file_fonticon`. Use private variable `UM()->fonticon()->default_file_fonticon` instead.
+* Deprecated function `um_is_temp_upload()` use function 'UM()->files()->is_temp_upload()' instead in old UI.
 * Deprecated function `um_is_temp_image()` because it is unused.
 * Deprecated function `UM()->password()->setcookie()`. Use function `UM()::setcookie()` instead.
 
