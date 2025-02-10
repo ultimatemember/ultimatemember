@@ -183,7 +183,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 **Tweaks**
 
 * Function `UM()->files()->delete_file()` is private
-* Function `UM()->files()->download_routing()` is moved to `UM()->common()->rewrite()->download_routing()`
+* Class `UM()->files()` is legacy since 3.0.0 and is used only when old UI is enabled
+* Class `UM()->uploader()` is legacy since 3.0.0 and is used only when old UI is enabled
 
 **Deprecated**
 
@@ -192,29 +193,29 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Filter hook 'um_allowed_file_types' use filter hook 'um_allowed_default_file_types' instead.
 * Deleted permanently function `um_user_uploads_dir()` deprecated since 2.0.26
 * Deleted permanently function `um_user_uploads_uri()` deprecated since 2.0.26
+* Deleted permanently function `um_user_submitted_registration` deprecated since 2.1.3
 * Deleted permanently function `UM()->admin_notices()->create_languages_folder()` due to this [article](https://developer.wordpress.org/plugins/internationalization/localization/#using-localizations). It's WordPress native folder.
 * Deprecated function `UM()->admin_menu()->dir_size()`. Use function 'UM()->common()->filesystem()->dir_size()' instead.
 * Deprecated function `UM()->files()->remove_dir()` use function 'UM()->common()->filesystem()::remove_dir()' instead.
 * Deprecated function `UM()->files()->get_profile_photo_size()` use function 'UM()->options()->get_profile_photo_size()' instead.
 * Deprecated function `UM()->files()->delete_core_user_photo()` use function 'UM()->common()->users()->delete_photo()' instead.
-* Deprecated function `UM()->files()->remove_old_files()` because used only for temp directory. Use function 'UM()->common()->filesystem()::clear_temp_dir()' instead.
 * Deprecated function `UM()->files()->get_fonticon_by_ext()`. Use function 'UM()->fonticons()->get_file_fonticon()' instead.
 * Deprecated function `UM()->files()->get_fonticon_bg_by_ext()`. Use function 'UM()->fonticons()->get_file_fonticon_bg()' instead.
-* Deprecated function `UM()->files()->fix_image_orientation()`. Use function 'UM()->uploader()->fix_image_orientation()' instead.
 * Deprecated function `UM()->files()->create_and_copy_image()` because it is unused.
 * Deprecated function `UM()->files()->new_user()` because it is unused.
-* Deprecated function `UM()->files()->resize_image()` because it is unused.
 * Deprecated function `UM()->files()->new_image_upload_temp()` because it is unused.
 * Deprecated function `UM()->files()->in_array()` because it is unused.
 * Deprecated function `UM()->files()->get_file_data()` because it is unused.
 * Deprecated function `UM()->files()->get_image_data()` because it is unused.
 * Deprecated function `UM()->files()->get_extension_by_mime_type()` because it is unused.
 * Deprecated function `UM()->files()->make_dir()` because it is unused.
+* Deprecated function `UM()->files()->path_only()` because it is unused.
+* Deprecated function `UM()->files()->upload_temp_file()` because it is unused.
 * Deprecated function `UM()->files()->new_file_upload_temp()` because it is unused.
 * Deprecated function `UM()->files()->unique_dir()` because it is unused.
 * Deprecated function `UM()->files()->allowed_file_types()` because it is unused.
 * Deprecated function `UM()->files()->allowed_image_types()` because it is unused.
-* Deprecated function `UM()->files()->get_download_link()`. Use function 'UM()->fields()->get_download_link()' instead.
+* Deprecated function `UM()->files()->get_download_link()`. Use function 'UM()->fields()->get_download_link()' instead for new UI.
 * Deprecated function `UM()->uploader()->delete_existing_file()` because it is unused.
 * Deprecated function `UM()->uploader()->get_core_upload_dir()`. Use function `UM()->common()->filesystem()->get_basedir()` instead.
 * Deprecated function `UM()->uploader()->get_upload_base_dir()`. Use function `UM()->common()->filesystem()->get_basedir()` instead.

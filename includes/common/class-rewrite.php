@@ -222,69 +222,71 @@ class Rewrite {
 	}
 
 	/**
-	 * @return bool
+	 * New UI download routing handler.
+	 *
+	 * @return void
 	 */
 	public function download_routing() {
+		if ( ! UM()->is_new_ui() ) {
+			return;
+		}
+
+		if ( ! UM()->options()->get( 'files_secure_links' ) ) {
+			return;
+		}
+
 		if ( 'download' !== get_query_var( 'um_action' ) ) {
-			return false;
+			return;
 		}
 
 		$form_id = get_query_var( 'um_form' );
 		if ( empty( $form_id ) ) {
-			return false;
+			return;
 		}
 
 		$field_key = get_query_var( 'um_field' );
 		if ( empty( $field_key ) ) {
-			return false;
+			return;
 		}
 		$field_key = urldecode( $field_key );
 
 		$user_id = get_query_var( 'um_user' );
 		if ( empty( $user_id ) ) {
-			return false;
+			return;
 		}
 
 		$user = get_userdata( $user_id );
 		if ( empty( $user ) || is_wp_error( $user ) ) {
-			return false;
+			return;
 		}
 
-		if ( UM()->is_new_ui() ) {
-			if ( UM()->options()->get( 'files_secure_links' ) ) {
-				$query_verify = get_query_var( 'um_nonce' );
-			}
-		} else {
-			$query_verify = get_query_var( 'um_verify' );
-		}
+		$query_verify = get_query_var( 'um_nonce' );
 		if ( empty( $query_verify ) ||
-		     ! wp_verify_nonce( $query_verify, $user_id . $form_id . 'um-download-nonce' ) ) {
-			return false;
+			! wp_verify_nonce( $query_verify, $user_id . $form_id . 'um-download-nonce' ) ) {
+			return;
 		}
 
 		um_fetch_user( $user_id );
 		$field_data = get_post_meta( $form_id, '_um_custom_fields', true );
 		if ( empty( $field_data[ $field_key ] ) ) {
-			return false;
+			return;
 		}
 
 		if ( ! um_can_view_field( $field_data[ $field_key ] ) ) {
-			return false;
+			return;
 		}
 
 		$field_value = UM()->fields()->field_value( $field_key );
 		if ( empty( $field_value ) ) {
-			return false;
+			return;
 		}
 
 		$download_type = $field_data[ $field_key ]['type'];
-		if ( $download_type === 'file' ) {
+		if ( 'file' === $download_type ) {
 			$this->file_download( $user_id, $field_key, $field_value );
 		} else {
 			$this->image_download( $user_id, $field_key, $field_value );
 		}
-
-		return false;
 	}
 
 	/**
@@ -293,6 +295,10 @@ class Rewrite {
 	 * @param $field_value
 	 */
 	private function image_download( $user_id, $field_key, $field_value ) {
+		global $wp_filesystem;
+
+		UM()->common()->filesystem()::maybe_init_wp_filesystem();
+
 		$file_path = UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $field_value;
 
 		// Validate traversal file
@@ -321,7 +327,9 @@ class Rewrite {
 			@ob_end_clean();
 		}
 
-		readfile( $file_path );
+		$content = $wp_filesystem->get_contents( $file_path );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- temp file content.
+		echo $content;
 		exit;
 	}
 
@@ -331,6 +339,10 @@ class Rewrite {
 	 * @param $field_value
 	 */
 	private function file_download( $user_id, $field_key, $field_value ) {
+		global $wp_filesystem;
+
+		UM()->common()->filesystem()::maybe_init_wp_filesystem();
+
 		$file_path = UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $field_value;
 		// Validate traversal file
 		if ( validate_file( $file_path ) === 1 ) {
@@ -358,7 +370,9 @@ class Rewrite {
 			@ob_end_clean();
 		}
 
-		readfile( $file_path );
+		$content = $wp_filesystem->get_contents( $file_path );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- temp file content.
+		echo $content;
 		exit;
 	}
 }

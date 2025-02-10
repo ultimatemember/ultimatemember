@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package um\frontend
  */
 class Uploader {
+
 	/**
 	 * Uploader constructor.
 	 */

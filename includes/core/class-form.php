@@ -214,8 +214,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				if ( ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] ) ) {
 					// If the requested callback function is added in the form or added in the field option, execute it with call_user_func.
 					if ( isset( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
-					     ! empty( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
-					     $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] === $ajax_source_func ) {
+						! empty( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
+						$form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] === $ajax_source_func ) {
 
 						$arr_options['field'] = $form_fields[ $_POST['child_name'] ];
 
@@ -485,10 +485,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 					if ( ! empty( $this->form_data['use_custom_settings'] ) && ! empty( $this->form_data['show_bio'] ) ) {
 						$cf_metakeys[] = UM()->profile()->get_show_bio_key( $this->form_data );
-					} else {
-						if ( UM()->options()->get( 'profile_show_bio' ) ) {
+					} elseif ( UM()->options()->get( 'profile_show_bio' ) ) {
 							$cf_metakeys[] = UM()->profile()->get_show_bio_key( $this->form_data );
-						}
 					}
 				}
 				// Add required usermeta for register.
@@ -797,70 +795,85 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					if ( is_array( $custom_fields ) ) {
 						foreach ( $custom_fields as $k => $field ) {
 
-							if ( isset( $field['type'] ) ) {
-								if ( isset( $form[ $k ] ) ) {
+							if ( isset( $field['type'], $form[ $k ] ) ) {
+								switch ( $field['type'] ) {
+									default:
+										$form[ $k ] = apply_filters( 'um_sanitize_form_field', $form[ $k ], $field );
+										break;
 
-									switch ( $field['type'] ) {
-										default:
-											$form[ $k ] = apply_filters( 'um_sanitize_form_field', $form[ $k ], $field );
-											break;
-										case 'number':
-											$form[ $k ] = '' !== $form[ $k ] ? (int) $form[ $k ] : '';
-											break;
-										case 'textarea':
-											if ( ! empty( $field['html'] ) || ( UM()->profile()->get_show_bio_key( $form ) === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
-												$form[ $k ] = html_entity_decode( $form[ $k ] ); // required because WP_Editor send sometimes encoded content.
-												$form[ $k ] = self::maybe_apply_tidy( $form[ $k ], $field );
+									case 'number':
+										$form[ $k ] = '' !== $form[ $k ] ? (int) $form[ $k ] : '';
+										break;
 
-												$allowed_html = UM()->get_allowed_html( 'templates' );
-												if ( empty( $allowed_html['iframe'] ) ) {
-													$allowed_html['iframe'] = array(
-														'allow'           => true,
-														'frameborder'     => true,
-														'loading'         => true,
-														'name'            => true,
-														'referrerpolicy'  => true,
-														'sandbox'         => true,
-														'src'             => true,
-														'srcdoc'          => true,
-														'title'           => true,
-														'width'           => true,
-														'height'          => true,
-														'allowfullscreen' => true,
-													);
-												}
-												$form[ $k ] = wp_kses( $form[ $k ], $allowed_html );
-												add_filter( 'wp_kses_allowed_html', array( &$this, 'wp_kses_user_desc' ), 10, 2 );
-											} else {
-												$form[ $k ] = sanitize_textarea_field( $form[ $k ] );
+									case 'textarea':
+										if ( ! empty( $field['html'] ) || ( UM()->profile()->get_show_bio_key( $form ) === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
+											$form[ $k ] = html_entity_decode( $form[ $k ] ); // required because WP_Editor send sometimes encoded content.
+											$form[ $k ] = self::maybe_apply_tidy( $form[ $k ], $field );
+
+											$allowed_html = UM()->get_allowed_html( 'templates' );
+											if ( empty( $allowed_html['iframe'] ) ) {
+												$allowed_html['iframe'] = array(
+													'allow' => true,
+													'frameborder' => true,
+													'loading' => true,
+													'name' => true,
+													'referrerpolicy' => true,
+													'sandbox' => true,
+													'src'  => true,
+													'srcdoc' => true,
+													'title' => true,
+													'width' => true,
+													'height' => true,
+													'allowfullscreen' => true,
+												);
 											}
-											break;
-										case 'oembed':
-										case 'url':
-											$f = UM()->builtin()->get_a_field( $k );
+											$form[ $k ] = wp_kses( $form[ $k ], $allowed_html );
+											add_filter( 'wp_kses_allowed_html', array( &$this, 'wp_kses_user_desc' ), 10, 2 );
+										} else {
+											$form[ $k ] = sanitize_textarea_field( $form[ $k ] );
+										}
+										break;
 
-											if ( is_array( $f ) && array_key_exists( 'match', $f ) && array_key_exists( 'advanced', $f ) && 'social' === $f['advanced'] ) {
-												$v = $form[ $k ];
+									case 'oembed':
+									case 'url':
+										$f = UM()->builtin()->get_a_field( $k );
 
-												// Make a proper social link
-												if ( ! empty( $v ) ) {
-													$replace_match = is_array( $f['match'] ) ? $f['match'][0] : $f['match'];
+										if ( is_array( $f ) && array_key_exists( 'match', $f ) && array_key_exists( 'advanced', $f ) && 'social' === $f['advanced'] ) {
+											$v = $form[ $k ];
 
-													$need_replace = false;
-													if ( is_array( $f['match'] ) ) {
-														$need_replace = true;
-														foreach ( $f['match'] as $arr_match ) {
-															if ( strstr( $v, $arr_match ) ) {
-																$need_replace = false;
-															}
+											// Make a proper social link
+											if ( ! empty( $v ) ) {
+												$replace_match = is_array( $f['match'] ) ? $f['match'][0] : $f['match'];
+
+												$need_replace = false;
+												if ( is_array( $f['match'] ) ) {
+													$need_replace = true;
+													foreach ( $f['match'] as $arr_match ) {
+														if ( strstr( $v, $arr_match ) ) {
+															$need_replace = false;
 														}
 													}
+												}
 
-													if ( ! is_array( $f['match'] ) || $need_replace ) {
-														if ( ! strstr( $v, $replace_match ) ) {
-															$domain = trim(
+												if ( ! is_array( $f['match'] ) || $need_replace ) {
+													if ( ! strstr( $v, $replace_match ) ) {
+														$domain = trim(
+															strtr(
+																$replace_match,
+																array(
+																	'https://' => '',
+																	'http://'  => '',
+																)
+															),
+															' /'
+														);
+
+														if ( ! strstr( $v, $domain ) ) {
+															$v = $replace_match . $v;
+														} else {
+															$v = 'https://' . trim(
 																strtr(
-																	$replace_match,
+																	$v,
 																	array(
 																		'https://' => '',
 																		'http://'  => '',
@@ -868,65 +881,55 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 																),
 																' /'
 															);
-
-															if ( ! strstr( $v, $domain ) ) {
-																$v = $replace_match . $v;
-															} else {
-																$v = 'https://' . trim(
-																	strtr(
-																		$v,
-																		array(
-																			'https://' => '',
-																			'http://'  => '',
-																		)
-																	),
-																	' /'
-																);
-															}
 														}
 													}
 												}
+											}
 
-												$form[ $k ] = esc_url_raw( $v );
-											} else {
-												$form[ $k ] = esc_url_raw( $form[ $k ] );
-											}
-											break;
-										case 'password':
-											$form[ $k ] = trim( $form[ $k ] );
-											if ( array_key_exists( 'confirm_' . $k, $form ) ) {
-												$form[ 'confirm_' . $k ] = trim( $form[ 'confirm_' . $k ] );
-											}
-											break;
-										case 'image':
-										case 'file':
-											if ( is_array( $form[ $k ] ) && UM()->is_new_ui() ) {
-												$form[ $k ]['filename']  = isset( $form[ $k ]['filename'] ) ? sanitize_file_name( $form[ $k ]['filename'] ) : '';
-												$form[ $k ]['hash']      = isset( $form[ $k ]['hash'] ) ? sanitize_key( $form[ $k ]['hash'] ) : '';
-												$form[ $k ]['temp_hash'] = isset( $form[ $k ]['temp_hash'] ) ? sanitize_key( $form[ $k ]['temp_hash'] ) : '';
-											} else {
-												$form[ $k ] = sanitize_text_field( $form[ $k ] );
-											}
-											break;
-										case 'text':
-										case 'select':
-										case 'date':
-										case 'time':
-										case 'rating':
-										case 'googlemap':
-										case 'youtube_video':
-										case 'vimeo_video':
-										case 'soundcloud_track':
-										case 'spotify':
-										case 'tel':
+											$form[ $k ] = esc_url_raw( $v );
+										} else {
+											$form[ $k ] = esc_url_raw( $form[ $k ] );
+										}
+										break;
+
+									case 'password':
+										$form[ $k ] = trim( $form[ $k ] );
+										if ( array_key_exists( 'confirm_' . $k, $form ) ) {
+											$form[ 'confirm_' . $k ] = trim( $form[ 'confirm_' . $k ] );
+										}
+										break;
+
+									case 'image':
+									case 'file':
+										if ( is_array( $form[ $k ] ) && UM()->is_new_ui() ) {
+											$form[ $k ]['filename']  = isset( $form[ $k ]['filename'] ) ? sanitize_file_name( $form[ $k ]['filename'] ) : '';
+											$form[ $k ]['hash']      = isset( $form[ $k ]['hash'] ) ? sanitize_key( $form[ $k ]['hash'] ) : '';
+											$form[ $k ]['temp_hash'] = isset( $form[ $k ]['temp_hash'] ) ? sanitize_key( $form[ $k ]['temp_hash'] ) : '';
+										} else {
 											$form[ $k ] = sanitize_text_field( $form[ $k ] );
-											break;
-										case 'multiselect':
-										case 'radio':
-										case 'checkbox':
-											$form[ $k ] = is_array( $form[ $k ] ) ? array_map( 'sanitize_text_field', $form[ $k ] ) : sanitize_text_field( $form[ $k ] );
-											break;
-									}
+										}
+										break;
+
+									case 'text':
+									case 'select':
+									case 'date':
+									case 'time':
+									case 'rating':
+									case 'googlemap':
+									case 'youtube_video':
+									case 'vimeo_video':
+									case 'soundcloud_track':
+									case 'spotify':
+									case 'tel':
+										$form[ $k ] = sanitize_text_field( $form[ $k ] );
+										break;
+
+									case 'multiselect':
+									case 'radio':
+									case 'checkbox':
+										$form[ $k ] = is_array( $form[ $k ] ) ? array_map( 'sanitize_text_field', $form[ $k ] ) : sanitize_text_field( $form[ $k ] );
+										break;
+
 								}
 							}
 						}
@@ -1129,7 +1132,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 			$roles = UM()->roles()->get_roles( false, $exclude_roles );
 			$roles = array_map(
-				function( $item ) {
+				function ( $item ) {
 					return html_entity_decode( $item, ENT_QUOTES );
 				},
 				$roles

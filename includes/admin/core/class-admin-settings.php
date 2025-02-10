@@ -3035,7 +3035,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							}
 						}
 					}
-				} elseif ( isset( $_POST['um_options']['files_secure_links'] ) ) {
+				} elseif ( isset( $_POST['um_options']['files_secure_links'] ) || isset( $_POST['um_options']['enable_new_ui'] ) ) {
 					UM()->rewrite()->reset_rules();
 				}
 			}

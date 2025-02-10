@@ -501,9 +501,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->frontend()->includes();
 				$this->login();
 				$this->register();
-				if ( ! $this->is_new_ui() ) {
-					$this->user_posts();
-				}
 				$this->logout();
 			}
 
@@ -519,6 +516,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->builtin();
 			if ( ! $this->is_new_ui() ) {
 				$this->files();
+				$this->user_posts();
 			}
 			$this->form()->hooks();
 			$this->permalinks();
@@ -1139,21 +1137,6 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @todo deprecate since old UI is deprecated
-		 *
-		 * @return um\core\User_posts
-		 */
-		public function user_posts() {
-			if ( empty( $this->classes['user_posts'] ) ) {
-				$this->classes['user_posts'] = new um\core\User_posts();
-			}
-
-			return $this->classes['user_posts'];
-		}
-
-		/**
-		 * @since 2.0
-		 *
 		 * @return um\core\Profile
 		 */
 		function profile() {
@@ -1206,29 +1189,44 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['builtin'];
 		}
 
+		/**
+		 * IMPORTANT: It's not used in since 3.0.0 when UM new UI is active.
+		 * @return um\legacy\User_posts
+		 * @todo deprecate since old UI is deprecated
+		 *
+		 * @since 2.0
+		 */
+		public function user_posts() {
+			if ( empty( $this->classes['user_posts'] ) ) {
+				$this->classes['user_posts'] = new um\legacy\User_Posts();
+			}
+
+			return $this->classes['user_posts'];
+		}
 
 		/**
+		 * IMPORTANT: It's not used in since 3.0.0 when UM new UI is active.
 		 * @since 2.0
-		 *
-		 * @return um\core\Files
+		 * @todo deprecate since old UI is deprecated
+		 * @return um\legacy\Files
 		 */
 		public function files() {
 			if ( empty( $this->classes['files'] ) ) {
-				$this->classes['files'] = new um\core\Files();
+				$this->classes['files'] = new um\legacy\Files();
 			}
 
 			return $this->classes['files'];
 		}
 
-
 		/**
+		 * IMPORTANT: It's not used in since 3.0.0 when UM new UI is active.
 		 * @since 2.0.21
-		 *
-		 * @return um\core\Uploader
+		 * @todo deprecate since old UI is deprecated
+		 * @return um\legacy\Uploader
 		 */
-		function uploader() {
+		public function uploader() {
 			if ( empty( $this->classes['uploader'] ) ) {
-				$this->classes['uploader'] = new um\core\Uploader();
+				$this->classes['uploader'] = new um\legacy\Uploader();
 			}
 			return $this->classes['uploader'];
 		}
@@ -1369,7 +1367,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @since 2.0
 		 */
-		function init() {
+		public function init() {
 
 			ob_start();
 
@@ -1392,7 +1390,6 @@ if ( ! class_exists( 'UM' ) ) {
 			require_once 'core/um-filters-user.php';
 			require_once 'core/um-filters-profile.php';
 			require_once 'core/um-filters-account.php';
-			require_once 'core/um-filters-misc.php';
 			require_once 'core/um-filters-commenting.php';
 
 			if ( ! ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_no_conflict_avatar' ) ) ) {

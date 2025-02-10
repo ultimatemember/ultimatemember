@@ -3,7 +3,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$temp_dir_size = UM()->common()->filesystem()::dir_size( UM()->common()->filesystem()->get_tempdir() );
+if ( UM()->is_new_ui() ) {
+	$temp_folder = UM()->common()->filesystem()->get_tempdir();
+} else {
+	$temp_folder = UM()->files()->upload_temp;
+}
+
+$temp_dir_size = UM()->common()->filesystem()::dir_size( $temp_folder );
 
 $url = add_query_arg(
 	array(

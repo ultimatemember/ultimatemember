@@ -40,25 +40,8 @@ if ( ! class_exists( 'um\core\AJAX_Common' ) ) {
 			add_action( 'wp_ajax_um_muted_action', array( UM()->form(), 'ajax_muted_action' ) );
 
 			if ( ! UM()->is_new_ui() ) {
-				add_action( 'wp_ajax_um_remove_file', array( UM()->files(), 'ajax_remove_file' ) );
-				add_action( 'wp_ajax_nopriv_um_remove_file', array( UM()->files(), 'ajax_remove_file' ) );
-
-				add_action( 'wp_ajax_nopriv_um_fileupload', array( UM()->files(), 'ajax_file_upload' ) ); // Enabled files uploading on registration form.
-				add_action( 'wp_ajax_um_fileupload', array( UM()->files(), 'ajax_file_upload' ) );
-
-				add_action( 'wp_ajax_nopriv_um_imageupload', array( UM()->files(), 'ajax_image_upload' ) ); // Enabled image uploading on registration form.
-				add_action( 'wp_ajax_um_imageupload', array( UM()->files(), 'ajax_image_upload' ) );
-
-				add_action( 'wp_ajax_nopriv_um_resize_image', array( UM()->files(), 'ajax_resize_image' ) ); // Enabled image resize on registration form.
-				add_action( 'wp_ajax_um_resize_image', array( UM()->files(), 'ajax_resize_image' ) );
-
 				add_action( 'wp_ajax_um_select_options', array( UM()->form(), 'ajax_select_options' ) );
 				add_action( 'wp_ajax_nopriv_um_select_options', array( UM()->form(), 'ajax_select_options' ) );
-
-				add_action( 'wp_ajax_um_ajax_paginate_posts', array( UM()->user_posts(), 'load_posts' ) );
-				add_action( 'wp_ajax_um_ajax_paginate_comments', array( UM()->user_posts(), 'load_comments' ) );
-				add_action( 'wp_ajax_nopriv_um_ajax_paginate_posts', array( UM()->user_posts(), 'load_posts' ) );
-				add_action( 'wp_ajax_nopriv_um_ajax_paginate_comments', array( UM()->user_posts(), 'load_comments' ) );
 			}
 		}
 	}

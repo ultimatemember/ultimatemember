@@ -59,7 +59,11 @@ function um_after_insert_user( $user_id, $args, $form_data = null ) {
 	}
 
 	// Create user uploads directory.
-	$uploads_dir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
+	if ( UM()->is_new_ui() ) {
+		$uploads_dir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
+	} else {
+		UM()->uploader()->get_upload_user_base_dir( $user_id, true );
+	}
 
 	/**
 	 * Fires after insert user to DB and there you can set any extra details.

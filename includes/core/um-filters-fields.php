@@ -372,10 +372,10 @@ if ( UM()->is_new_ui() ) {
 				<div class="um-field-file-info">
 					<span class="um-field-file-filename">' . esc_attr( $value ) . '</span>
 					<a class="um-link um-link-secondary um-link-underline um-field-file-download-link" href="' . esc_url( $uri ) . '" target="_blank" title="' . esc_html__( 'Download', 'ultimate-member' ) . '">' .
-				         esc_html__( 'Download', 'ultimate-member' ) .
-				         '</a>
+						esc_html__( 'Download', 'ultimate-member' ) .
+					'</a>
 				</div>
-				</div>';
+			</div>';
 		}
 
 		return $value;
@@ -427,22 +427,33 @@ if ( UM()->is_new_ui() ) {
 		if ( ! $value ) {
 			return '';
 		}
+		$file_type = wp_check_filetype( $value );
+		$uri       = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
 
-		if ( ! file_exists( UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) ) . DIRECTORY_SEPARATOR . $value ) ) {
+		$removed = false;
+		if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
+			if ( is_multisite() ) {
+				//multisite fix for old customers
+				$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value );
+				if ( ! file_exists( $file_path ) ) {
+					$removed = true;
+				}
+			} else {
+				$removed = true;
+			}
+		}
+
+		if ( $removed ) {
 			$value = __( 'This file has been removed.', 'ultimate-member' );
 		} else {
-			$file_type = wp_check_filetype( $value );
-			$uri       = UM()->fields()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ), $value );
-
 			$file_info = um_user( $data['metakey'] . '_metadata' );
 			if ( ! empty( $file_info['original_name'] ) ) {
 				$value = $file_info['original_name'];
 			}
-
 			$value = '<div class="um-single-file-preview show">
 				<div class="um-single-fileinfo">
-					<a href="' . esc_url( $uri ) . '" target="_blank">
-						<span class="icon" style="background:' . UM()->fonticons()->get_file_fonticon_bg( $file_type['ext'] ) . '"><i class="' . UM()->fonticons()->get_file_fonticon( $file_type['ext'] ) . '"></i></span>
+					<a href="' . esc_url( $uri )  . '" target="_blank">
+						<span class="icon" style="background:'. UM()->fonticons()->get_file_fonticon_bg( $file_type['ext'] ) . '"><i class="'. UM()->fonticons()->get_file_fonticon( $file_type['ext'] ) .'"></i></span>
 						<span class="filename">' . esc_attr( $value ) . '</span>
 					</a>
 				</div>
@@ -464,20 +475,28 @@ if ( UM()->is_new_ui() ) {
 		if ( ! $value ) {
 			return '';
 		}
-		$uri   = UM()->fields()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ), $value );
-		$title = isset( $data['title'] ) ? $data['title'] : __( 'Untitled photo', 'ultimate-member' );
+		$uri = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
+		$title = ( isset( $data['title'] ) ) ? $data['title'] : __( 'Untitled photo', 'ultimate-member' );
 
 		$removed = false;
-		if ( ! file_exists( UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) ) . DIRECTORY_SEPARATOR . $value ) ) {
-			$removed = true;
+		if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
+			if ( is_multisite() ) {
+				//multisite fix for old customers
+				$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value );
+				if ( ! file_exists( $file_path ) ) {
+					$removed = true;
+				}
+			} else {
+				$removed = true;
+			}
 		}
 
 		// if value is an image tag
-		if ( preg_match( '/\<img.*src=\"([^"]+).*/', $value, $matches ) ) {
+		if( preg_match( '/\<img.*src=\"([^"]+).*/', $value, $matches ) ) {
 			$uri   = $matches[1];
-			$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="' . esc_url( $uri ) . '"><img src="' . esc_url( $uri ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" class="" /></a></div>';
-		} elseif ( ! $removed ) {
-			$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="' . esc_url( $uri ) . '"><img src="' . esc_url( $uri ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" class="" /></a></div>';
+			$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="' . esc_attr( $uri ) . '"><img src="' . esc_attr( $uri ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" class="" /></a></div>';
+		} else if ( ! $removed ) {
+			$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="' . esc_attr( $uri ) . '"><img src="' . esc_attr( $uri ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" class="" /></a></div>';
 		} else {
 			$value = '';
 		}

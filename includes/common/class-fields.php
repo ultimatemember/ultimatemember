@@ -2449,5 +2449,61 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 
 			return $output;
 		}
+
+		/**
+		 * File download link generate
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param int $form_id
+		 * @param string $field_key
+		 * @param int $user_id
+		 *
+		 * @return string
+		 */
+		public function get_download_link( $form_id, $field_key, $user_id, $field_value = null ) {
+			// Don't remove this condition to avoid recursive
+			if ( is_null( $field_value ) ) {
+				$field_value = $this->field_value( $field_key );
+				if ( empty( $field_value ) ) {
+					return '';
+				}
+			}
+
+			// Validate traversal file.
+			$file_path = UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $field_value;
+			if ( validate_file( $file_path ) === 1 ) {
+				return '';
+			}
+
+			if ( UM()->options()->get( 'files_secure_links' ) ) {
+				$filetype    = wp_check_filetype( $file_path );
+				$filetime    = filemtime( $file_path );
+				$field_value = $filetime . '.' . $filetype['ext'];
+
+				$field_key = rawurlencode( $field_key );
+				$nonce     = wp_create_nonce( $user_id . $form_id . 'um-download-nonce' );
+
+				$url = get_home_url( get_current_blog_id() );
+				if ( UM()->is_permalinks ) {
+					$url .= "/um-download/{$form_id}/{$field_key}/{$user_id}/{$nonce}/{$field_value}";
+				} else {
+					$url = add_query_arg(
+						array(
+							'um_action'   => 'download',
+							'um_form'     => $form_id,
+							'um_field'    => $field_key,
+							'um_user'     => $user_id,
+							'um_nonce'    => $nonce,
+							'um_filename' => $field_value,
+						),
+						$url
+					);
+				}
+				return $url;
+			}
+
+			return UM()->common()->filesystem()->get_user_uploads_url( $user_id ) . '/' . $field_value;
+		}
 	}
 }

@@ -761,7 +761,7 @@ if ( UM()->is_new_ui() ) {
 					if ( in_array( $array['type'], array( 'image', 'file' ), true ) ) {
 						if ( um_is_temp_file( $args['submitted'][ $key ] ) || 'empty_file' === $args['submitted'][ $key ] ) {
 							$files[ $key ] = $args['submitted'][ $key ];
-						} elseif( um_is_file_owner( UM()->common()->filesystem()->get_user_uploads_url( $user_id ) . '/' . $args['submitted'][ $key ], $user_id ) ) {
+						} elseif( um_is_file_owner( UM()->uploader()->get_upload_base_url() . $user_id . '/' . $args['submitted'][ $key ], $user_id ) ) {
 
 						} else {
 							$files[ $key ] = 'empty_file';

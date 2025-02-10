@@ -31,7 +31,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-init.php';
 
 $delete_options = UM()->options()->get( 'uninstall_on_delete' );
 if ( ! empty( $delete_options ) ) {
-
+	// @todo check multisite uninstall
 	//remove uploads
 	$upl_folder = UM()->common()->filesystem()->get_basedir();
 	UM()->common()->filesystem()::remove_dir( $upl_folder );
