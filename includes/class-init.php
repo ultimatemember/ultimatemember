@@ -1392,7 +1392,7 @@ if ( ! class_exists( 'UM' ) ) {
 			require_once 'core/um-filters-account.php';
 			require_once 'core/um-filters-commenting.php';
 
-			if ( ! ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_no_conflict_avatar' ) ) ) {
+			if ( ! UM()->is_new_ui() ) {
 				require_once 'core/um-filters-avatars.php';
 			}
 		}

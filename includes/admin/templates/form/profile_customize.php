@@ -212,24 +212,19 @@ $fields = array(
 	),
 );
 
-if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE ) {
-	if ( UM()->options()->get( 'enable_no_conflict_avatar' ) ) {
-		$hide_fields = array( '_um_profile_photosize' );
-		if ( ! get_option( 'show_avatars' ) ) {
-			$hide_fields = array_merge( $hide_fields, array( '_um_profile_photo_required', '_um_profile_disable_photo_upload' ) );
-		}
+if ( UM()->is_new_ui() ) {
+	$hide_fields = array( '_um_profile_photosize' );
+	if ( ! get_option( 'show_avatars' ) ) {
+		$hide_fields = array_merge( $hide_fields, array( '_um_profile_photo_required', '_um_profile_disable_photo_upload' ) );
+	}
 
-		foreach ( $fields as $field_k => $field ) {
-			if ( in_array( $field['id'], $hide_fields, true ) ) {
-				unset( $fields[ $field_k ] );
-			}
+	foreach ( $fields as $field_k => $field ) {
+		if ( in_array( $field['id'], $hide_fields, true ) ) {
+			unset( $fields[ $field_k ] );
 		}
 	}
 }
-
 ?>
-
-
 <div class="um-admin-metabox">
 	<?php
 	UM()->admin_forms(

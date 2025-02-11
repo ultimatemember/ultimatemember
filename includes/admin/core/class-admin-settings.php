@@ -1055,9 +1055,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'primary_color'                      => array(
 						'sanitize' => 'color',
 					),
-					'enable_no_conflict_avatar'          => array(
-						'sanitize' => 'bool',
-					),
 					'files_secure_links'                 => array(
 						'sanitize' => 'bool',
 					),
@@ -2182,13 +2179,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'conditional' => array( 'enable_new_ui', '=', '1' ),
 											),
 											array(
-												'id'             => 'enable_no_conflict_avatar',
-												'type'           => 'checkbox',
-												'label'          => __( 'New Avatars logic', 'ultimate-member' ),
-												'checkbox_label' => __( 'Enable new no-conflict mode for avatars', 'ultimate-member' ),
-												'description'    => __( 'Check this box if you would like to use new no-conflict handlers for avatars.', 'ultimate-member' ),
-											),
-											array(
 												'id'             => 'enable_new_form_builder',
 												'type'           => 'checkbox',
 												'label'          => __( 'Form Builder', 'ultimate-member' ),
@@ -2357,7 +2347,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					unset( $this->settings_structure['appearance']['sections']['profile_menu']['fields'][ count( $this->settings_structure['appearance']['sections']['profile_menu']['fields'] ) - 1 ] );
 				}
 
-				if ( UM()->options()->get( 'enable_no_conflict_avatar' ) ) {
+				if ( UM()->is_new_ui() ) {
 					unset( $this->settings_structure['appearance']['sections']['']['form_sections']['profile_photo'], $this->settings_structure['']['sections']['uploads']['form_sections']['profile_photo'] );
 
 					if ( ! get_option( 'show_avatars' ) ) {

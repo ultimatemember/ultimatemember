@@ -29,10 +29,6 @@ if ( ! class_exists( 'um\core\AJAX_Common' ) ) {
 				}
 			}
 
-			if ( ! ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_no_conflict_avatar' ) ) ) {
-				add_action( 'wp_ajax_um_delete_profile_photo', array( UM()->profile(), 'ajax_delete_profile_photo' ) );
-			}
-
 			add_action( 'wp_ajax_um_delete_cover_photo', array( UM()->profile(), 'ajax_delete_cover_photo' ) );
 
 			add_action( 'wp_ajax_um_ajax_paginate', array( UM()->query(), 'ajax_paginate' ) );
@@ -40,6 +36,7 @@ if ( ! class_exists( 'um\core\AJAX_Common' ) ) {
 			add_action( 'wp_ajax_um_muted_action', array( UM()->form(), 'ajax_muted_action' ) );
 
 			if ( ! UM()->is_new_ui() ) {
+				add_action( 'wp_ajax_um_delete_profile_photo', array( UM()->profile(), 'ajax_delete_profile_photo' ) );
 				add_action( 'wp_ajax_um_select_options', array( UM()->form(), 'ajax_select_options' ) );
 				add_action( 'wp_ajax_nopriv_um_select_options', array( UM()->form(), 'ajax_select_options' ) );
 			}
