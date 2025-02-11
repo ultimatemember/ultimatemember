@@ -773,7 +773,7 @@ if ( UM()->is_new_ui() ) {
 		UM()->common()->filesystem()::maybe_init_wp_filesystem();
 
 		$user_basedir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
-		// @todo test registration submission.
+
 		$fields = maybe_unserialize( $form_data['custom_fields'] );
 		if ( ! empty( $fields ) && is_array( $fields ) ) {
 			$user_meta_submitted     = get_user_meta( $user_id, 'submitted', true );
@@ -787,13 +787,46 @@ if ( UM()->is_new_ui() ) {
 				if ( ! empty( $args['submitted'][ $key ]['temp_hash'] ) ) {
 					$filepath = UM()->common()->filesystem()->get_file_by_hash( $args['submitted'][ $key ]['temp_hash'] );
 					if ( ! empty( $filepath ) ) {
-						$filename = sanitize_file_name( $args['submitted'][ $key ]['filename'] );
-						if ( file_exists( $user_basedir . DIRECTORY_SEPARATOR . $filename ) ) {
-							$filename = wp_unique_filename( $user_basedir . DIRECTORY_SEPARATOR, $filename );
+						if ( 'profile_photo' === $key ) {
+							$file_type = wp_check_filetype( $filepath );
+							$filename  = 'profile_photo.' . $file_type['ext'];
+						} elseif ( 'cover_photo' === $key ) {
+							$file_type = wp_check_filetype( $filepath );
+							$filename  = 'cover_photo.' . $file_type['ext'];
+						} else {
+							$filename = sanitize_file_name( $args['submitted'][ $key ]['filename'] );
+							if ( file_exists( $user_basedir . DIRECTORY_SEPARATOR . $filename ) ) {
+								$filename = wp_unique_filename( $user_basedir . DIRECTORY_SEPARATOR, $filename );
+							}
 						}
+
 						$new_filepath  = $user_basedir . DIRECTORY_SEPARATOR . $filename;
 						$moving_result = $wp_filesystem->move( $filepath, $new_filepath );
 						if ( $moving_result ) {
+							if ( 'profile_photo' === $key ) {
+								$image = wp_get_image_editor( $new_filepath ); // Return an implementation that extends WP_Image_Editor
+								if ( ! is_wp_error( $image ) ) {
+									// Creates new file's thumbnails.
+									$sizes_array = array();
+									$all_sizes   = UM()->config()->get( 'avatar_thumbnail_sizes' );
+									foreach ( $all_sizes as $size ) {
+										$sizes_array[] = array( 'width' => $size );
+									}
+									$image->multi_resize( $sizes_array );
+								}
+							} elseif ( 'cover_photo' === $key ) {
+								$image = wp_get_image_editor( $new_filepath ); // Return an implementation that extends WP_Image_Editor
+								if ( ! is_wp_error( $image ) ) {
+									// Creates new file's thumbnails.
+									$sizes_array = array();
+									$all_sizes   = UM()->options()->get( 'cover_thumb_sizes' );
+									foreach ( $all_sizes as $size ) {
+										$sizes_array[] = array( 'width' => $size );
+									}
+									$image->multi_resize( $sizes_array );
+								}
+							}
+
 							$user_meta_submitted[ $key ] = $filename;
 
 							update_user_meta( $user_id, $key, $filename );

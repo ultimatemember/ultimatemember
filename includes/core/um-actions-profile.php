@@ -376,20 +376,73 @@ if ( UM()->is_new_ui() ) {
 				if ( isset( $args['submitted'][ $key ] ) ) {
 					if ( in_array( $array['type'], array( 'image', 'file' ), true ) ) {
 						if ( ! empty( $args['submitted'][ $key ]['temp_hash'] ) ) {
-							// delete old file if it's exists
-							if ( isset( $userinfo[ $key ] ) && file_exists( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] ) ) {
-								wp_delete_file( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] );
-							}
-
 							$filepath = UM()->common()->filesystem()->get_file_by_hash( $args['submitted'][ $key ]['temp_hash'] );
 							if ( ! empty( $filepath ) ) {
-								$filename = sanitize_file_name( $args['submitted'][ $key ]['filename'] );
-								if ( file_exists( $user_basedir . DIRECTORY_SEPARATOR . $filename ) ) {
-									$filename = wp_unique_filename( $user_basedir . DIRECTORY_SEPARATOR, $filename );
+								// Delete old file if it's exists.
+								if ( isset( $userinfo[ $key ] ) && file_exists( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] ) ) {
+									wp_delete_file( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] );
 								}
+
+								if ( 'profile_photo' === $key ) {
+									// Flush user directory from original profile photo thumbnails.
+									$files = scandir( $user_basedir . DIRECTORY_SEPARATOR );
+									if ( ! empty( $files ) ) {
+										foreach ( $files as $file ) {
+											if ( preg_match( '/^profile_photo-(.*?)/', $file ) ) {
+												wp_delete_file( wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR . $file ) );
+											}
+										}
+									}
+
+									$file_type = wp_check_filetype( $filepath );
+									$filename  = 'profile_photo.' . $file_type['ext'];
+								} elseif ( 'cover_photo' === $key ) {
+									// Flush user directory from original cover photo thumbnails.
+									$files = scandir( $user_basedir . DIRECTORY_SEPARATOR );
+									if ( ! empty( $files ) ) {
+										foreach ( $files as $file ) {
+											if ( preg_match( '/^cover_photo-(.*?)/', $file ) ) {
+												wp_delete_file( wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR . $file ) );
+											}
+										}
+									}
+
+									$file_type = wp_check_filetype( $filepath );
+									$filename  = 'cover_photo.' . $file_type['ext'];
+								} else {
+									$filename = sanitize_file_name( $args['submitted'][ $key ]['filename'] );
+									if ( file_exists( $user_basedir . DIRECTORY_SEPARATOR . $filename ) ) {
+										$filename = wp_unique_filename( $user_basedir . DIRECTORY_SEPARATOR, $filename );
+									}
+								}
+
 								$new_filepath  = $user_basedir . DIRECTORY_SEPARATOR . $filename;
 								$moving_result = $wp_filesystem->move( $filepath, $new_filepath );
 								if ( $moving_result ) {
+									if ( 'profile_photo' === $key ) {
+										$image = wp_get_image_editor( $new_filepath ); // Return an implementation that extends WP_Image_Editor
+										if ( ! is_wp_error( $image ) ) {
+											// Creates new file's thumbnails.
+											$sizes_array = array();
+											$all_sizes   = UM()->config()->get( 'avatar_thumbnail_sizes' );
+											foreach ( $all_sizes as $size ) {
+												$sizes_array[] = array( 'width' => $size );
+											}
+											$image->multi_resize( $sizes_array );
+										}
+									} elseif ( 'cover_photo' === $key ) {
+										$image = wp_get_image_editor( $new_filepath ); // Return an implementation that extends WP_Image_Editor
+										if ( ! is_wp_error( $image ) ) {
+											// Creates new file's thumbnails.
+											$sizes_array = array();
+											$all_sizes   = UM()->options()->get( 'cover_thumb_sizes' );
+											foreach ( $all_sizes as $size ) {
+												$sizes_array[] = array( 'width' => $size );
+											}
+											$image->multi_resize( $sizes_array );
+										}
+									}
+
 									$to_update[ $key ] = $filename;
 
 									if ( 'file' === $array['type'] ) {

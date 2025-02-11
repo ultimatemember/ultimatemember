@@ -21,7 +21,7 @@ class Files {
 			add_action( 'wp_ajax_nopriv_um_delete_temp_file', array( $this, 'delete_temp_file' ) );
 
 			add_action( 'wp_ajax_um_upload', array( $this, 'upload_file' ) );
-			add_action( 'wp_ajax_nopriv_um_upload', array( $this, 'upload_file' ) );
+			add_action( 'wp_ajax_nopriv_um_upload', array( $this, 'upload_file' ) );  // Enabled image/file upload on registration form.
 
 			add_action( 'um_upload_file_validation', array( $this, 'upload_validation' ), 10, 5 );
 			add_action( 'um_upload_file_temp_uploaded', array( $this, 'temp_uploaded' ), 10, 2 );
