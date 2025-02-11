@@ -265,28 +265,29 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 
 jQuery(document).ready(function() {
 	// Click on uploaded image for preview in modal.
-	jQuery( document.body ).on( 'click', '.um-photo-modal', function(e){
+	jQuery( document.body ).on( 'click', '.um-photo-modal', function(e) {
 		e.preventDefault();
 		let photoSrc = jQuery(this).data('src');
-		let content = jQuery(this).html();
+		let lazyImg = jQuery(this).find('.um-image-lazyload');
+		let content = '<img class="um-photo-modal-img" src="' + photoSrc + '" alt="' + lazyImg.attr('alt') + '"/>';
 
 		let settings = {
 			// These are the defaults.
-			classes:  'um-profile-field-photo-modal',
+			classes: 'um-profile-field-photo-modal',
 			duration: 400, // ms
-			footer:   '',
-			header:   '',
-			size:     'large', // small, normal, large
-			content:  content,
+			footer: '',
+			header: '',
+			size: 'large', // small, normal, large
+			content: content,
 			template: '<div class="um-modal"><span class="um-modal-close um-modal-close-fixed">&times;</span><div class="um-modal-body"></div></div>'
 		};
 
-		UM.modal.addModal( settings, null );
+		UM.modal.addModal(settings, null);
 
 		return false;
 	});
 
-	jQuery( document.body ).on( 'click', '.um-modal-field-image-decline', function(e){
+	jQuery(document.body).on('click', '.um-modal-field-image-decline', function (e) {
 		e.preventDefault();
 
 		if ( ! confirm( wp.i18n.__( 'Are you sure that you want to cancel crop of this image and remove it?', 'ultimate-member' ) ) ) {

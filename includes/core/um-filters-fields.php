@@ -404,11 +404,32 @@ if ( UM()->is_new_ui() ) {
 		// if value is an image tag
 		if ( preg_match( '/\<img.*src=\"([^"]+).*/', $value, $matches ) ) {
 			$uri = $matches[1];
+
+			$lazy = wp_kses(
+				UM()->frontend()::layouts()::lazy_image(
+					$uri,
+					array(
+						'width' => '100%',
+						'alt'   => $title,
+					)
+				),
+				UM()->get_allowed_html( 'templates' )
+			);
 			// translators: %s is the field name
-			$value = '<a href="#" class="um-photo-modal" data-src="' . esc_url( $uri ) . '" title="' . sprintf( esc_attr__( 'Preview %s', 'ultimate-member' ), esc_attr( $title ) ) . '"><img class="um-photo-modal-img" src="' . esc_url( $uri ) . '" alt="' . esc_attr( $title ) . '" /></a>';
+			$value = '<a href="#" class="um-photo-modal" data-src="' . esc_url( $uri ) . '" title="' . sprintf( esc_attr__( 'Preview %s', 'ultimate-member' ), esc_attr( $title ) ) . '">' . $lazy . '</a>';
 		} elseif ( ! $removed ) {
+			$lazy = wp_kses(
+				UM()->frontend()::layouts()::lazy_image(
+					$uri,
+					array(
+						'width' => '100%',
+						'alt'   => $title,
+					)
+				),
+				UM()->get_allowed_html( 'templates' )
+			);
 			// translators: %s is the field name
-			$value = '<a href="#" class="um-photo-modal" data-src="' . esc_url( $uri ) . '" title="' . sprintf( esc_attr__( 'Preview %s', 'ultimate-member' ), esc_attr( $title ) ) . '"><img class="um-photo-modal-img" src="' . esc_url( $uri ) . '" alt="' . esc_attr( $title ) . '" /></a>';
+			$value = '<a href="#" class="um-photo-modal" data-src="' . esc_url( $uri ) . '" title="' . sprintf( esc_attr__( 'Preview %s', 'ultimate-member' ), esc_attr( $title ) ) . '">' . $lazy . '</a>';
 		} else {
 			$value = '';
 		}

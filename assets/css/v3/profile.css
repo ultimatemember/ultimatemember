@@ -255,9 +255,6 @@
   border-bottom: none;
   padding: 0;
 }
-.um-profile-body.um-profile-main .um-profile-rows .um-profile-row .um-profile-cols .um-profile-col .um-field.um-field-type_image, .um-profile-body.um-profile-main .um-profile-rows .um-profile-row .um-profile-cols .um-profile-col .um-field.um-field-type_file {
-  width: auto;
-}
 .um-profile-body.um-profile-main .um-profile-rows .um-profile-row .um-profile-cols .um-profile-col .um-field label {
   color: var(--um-gray-900, #101828);
   font-size: var(--um-text-font-size-md, 16px);
@@ -441,12 +438,23 @@
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  max-width: 100%;
+  width: 100%;
 }
-.um-field-value .um-photo-modal img {
+.um-field-value .um-photo-modal .um-image-lazyload-wrapper {
   border-radius: 4px;
-  max-height: 300px;
-  max-width: 100%;
+  width: 100%;
+}
+.um-field-value .um-photo-modal .um-image-lazyload-wrapper img {
+  border-radius: 4px;
+  width: 100%;
+  height: auto;
+}
+.um-field-value .um-photo-modal .um-image-lazyload-wrapper:not(.um-loaded) {
+  width: 100%;
+  min-height: 300px;
+}
+.um-field-value .um-photo-modal .um-image-lazyload-wrapper:not(.um-loaded) img {
+  min-height: 300px;
 }
 .um-field-value .um-field-single-file {
   display: flex;

@@ -140,9 +140,9 @@
               &:last-child
                 border-bottom: none
                 padding: 0
-              &.#{$prefix}field-type_image,
-              &.#{$prefix}field-type_file
-                width: auto
+              //&.#{$prefix}field-type_image,
+              //&.#{$prefix}field-type_file
+              //  width: auto
               label
                 color: $gray-900
                 +typography( text, md, medium )
@@ -257,11 +257,19 @@
     border: 1px solid $gray-200
     padding: $spacing-xs
     +border-box
-    max-width: 100%
-    img
+    width: 100%
+    .#{$prefix}image-lazyload-wrapper
       border-radius: $radius-xs
-      max-height: 300px
-      max-width: 100%
+      width: 100%
+      img
+        border-radius: $radius-xs
+        width: 100%
+        height: auto
+      &:not(.um-loaded)
+        width: 100%
+        min-height: 300px
+        img
+          min-height: 300px
   .#{$prefix}field-single-file
     +flex( row,flex-start,center,nowrap )
     column-gap: $spacing-md
