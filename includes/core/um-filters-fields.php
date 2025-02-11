@@ -393,6 +393,11 @@ if ( UM()->is_new_ui() ) {
 		if ( ! $value ) {
 			return '';
 		}
+
+		if ( 'profile_photo' === $data['metakey'] || 'cover_photo' === $data['metakey'] ) {
+			$value = um_profile( $data['metakey'] );
+		}
+
 		$uri   = UM()->fields()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ), $value );
 		$title = isset( $data['title'] ) ? $data['title'] : __( 'Untitled photo', 'ultimate-member' );
 
@@ -401,23 +406,7 @@ if ( UM()->is_new_ui() ) {
 			$removed = true;
 		}
 
-		// if value is an image tag
-		if ( preg_match( '/\<img.*src=\"([^"]+).*/', $value, $matches ) ) {
-			$uri = $matches[1];
-
-			$lazy = wp_kses(
-				UM()->frontend()::layouts()::lazy_image(
-					$uri,
-					array(
-						'width' => '100%',
-						'alt'   => $title,
-					)
-				),
-				UM()->get_allowed_html( 'templates' )
-			);
-			// translators: %s is the field name
-			$value = '<a href="#" class="um-photo-modal" data-src="' . esc_url( $uri ) . '" title="' . sprintf( esc_attr__( 'Preview %s', 'ultimate-member' ), esc_attr( $title ) ) . '">' . $lazy . '</a>';
-		} elseif ( ! $removed ) {
+		if ( ! $removed ) {
 			$lazy = wp_kses(
 				UM()->frontend()::layouts()::lazy_image(
 					$uri,

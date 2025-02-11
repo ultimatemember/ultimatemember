@@ -1476,6 +1476,11 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				);
 			}
 
+			if ( UM()->is_new_ui() ) {
+				$this->predefined_fields['profile_photo']['private_use'] = false;
+				// $this->predefined_fields['cover_photo']['private_use'] = false;
+			}
+
 			/**
 			 * Filters Ultimate Member predefined fields.
 			 *

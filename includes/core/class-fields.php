@@ -852,23 +852,23 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		public function field_value( $key, $default = false, $data = null ) {
 			// preview in backend
 			if ( isset( UM()->user()->preview ) && UM()->user()->preview ) {
-				if ( $this->set_mode == 'login' || $this->set_mode == 'register' ) {
+				if ( 'login' === $this->set_mode || 'register' === $this->set_mode ) {
 					return '';
-				} else {
-					$val = um_user( $key );
-					if ( ! empty( $val ) ) {
-						return $val;
-					} else {
-						return '';
-					}
 				}
+
+				$val = um_user( $key );
+				if ( ! empty( $val ) ) {
+					return $val;
+				}
+				return '';
 			}
 
-			if ( isset( $_SESSION ) && isset( $_SESSION['um_social_profile'][ $key ] ) && isset( $this->set_mode ) && $this->set_mode == 'register' ) {
-				return $_SESSION['um_social_profile'][ $key ];
+			$predefined_custom = apply_filters( 'um_predefined_field_value', null, $key, $default, $data );
+			if ( ! is_null( $predefined_custom ) ) {
+				return $predefined_custom;
 			}
 
-			$type = ( isset( $data['type'] ) ) ? $data['type'] : '';
+			$type = isset( $data['type'] ) ? $data['type'] : '';
 
 			// normal state
 			if ( isset( UM()->form()->post_form[ $key ] ) ) {
@@ -877,6 +877,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					return '';
 				}
 
+				// Flush values if invalid nonce on profile
 				if ( 'profile' === $this->set_mode ) {
 					if ( ! isset( UM()->form()->post_form['profile_nonce'] ) || false === wp_verify_nonce( UM()->form()->post_form['profile_nonce'], 'um-profile-nonce' . UM()->user()->target_id ) ) {
 						return '';
@@ -884,15 +885,25 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 
 				return stripslashes_deep( UM()->form()->post_form[ $key ] );
+			}
 
-			} elseif ( true === $this->editing && um_user( $key ) ) {
+			if ( true === $this->viewing && ( um_user( $key ) || isset( $data['show_anyway'] ) ) ) {
+				return um_filtered_value( $key, $data );
+			}
 
+			if ( true === $this->editing && um_user( $key ) ) {
 				// Show empty value for password fields.
 				if ( 'password' === $type || false !== strpos( $key, 'user_pass' ) ) {
 					return '';
 				}
 
-				$value = um_user( $key );
+				// Getting raw value for profile and cover photos
+				if ( 'profile_photo' === $key || 'cover_photo' === $key ) {
+					$value = um_profile( $key );
+				} else {
+					$value = um_user( $key );
+				}
+
 				/**
 				 * UM hook
 				 *
@@ -937,10 +948,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 * ?>
 				 */
 				$value = apply_filters( "um_edit_{$type}_field_value", $value, $key );
-
-			} elseif ( true === $this->viewing && ( um_user( $key ) || isset( $data['show_anyway'] ) ) ) {
-
-				return um_filtered_value( $key, $data );
 
 			} elseif ( isset( UM()->user()->profile[ $key ] ) ) {
 
@@ -1038,7 +1045,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 * ?>
 				 */
 				$default = apply_filters( "um_field_{$type}_default_value", $default, $data );
-
 			}
 
 			// Default Value for Registration Form and Profile Form editing
@@ -4311,6 +4317,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			// Disable these fields in profile view only.
+			if ( ( 'profile_photo' === $key || 'cover_photo' === $key ) && 'profile' === $this->set_mode && UM()->is_new_ui() ) {
+				return '';
+			}
 			if ( 'user_password' === $key && 'profile' === $this->set_mode ) {
 				return '';
 			}

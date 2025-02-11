@@ -1478,12 +1478,8 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 				case 'image':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . ' data-mode="' . esc_attr( $this->set_mode ) . '" data-upload-label="' . ( ! empty( $data['button_text'] ) ? esc_attr( $data['button_text'] ) : esc_attr__( 'Upload', 'ultimate-member' ) ) . '">';
 
-					$field_name = $key . $form_suffix;
-					if ( in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) ) {
-						$field_value = '';
-					} else {
-						$field_value = $this->field_value( $key, $default, $data );
-					}
+					$field_name  = $key . $form_suffix;
+					$field_value = $this->field_value( $key, $default, $data );
 
 					if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
