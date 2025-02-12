@@ -339,12 +339,13 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			if ( $this->is_change_request() ) {
 
 				$formdata = wp_unslash( $_POST );
-				if ( isset( $_POST['user_password'] ) ) {
-					$formdata['user_password'] = trim( $_POST['user_password'] );
-				}
-				if ( isset( $_POST['confirm_user_password'] ) ) {
-					$formdata['confirm_user_password'] = trim( $_POST['confirm_user_password'] );
-				}
+
+				// Don't un-slash passwords in manner of WordPress native password field.
+				$fields_map = array(
+					'user_password',
+					'confirm_user_password',
+				);
+				$formdata   = UM()->form()::ignore_formdata_unslash( $formdata, $fields_map );
 
 				UM()->form()->post_form = $formdata;
 
