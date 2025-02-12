@@ -980,7 +980,7 @@ class Filesystem {
 				$url
 			);
 		}
-		return self::add_timestamp_to_url( $url );
+		return self::add_timestamp( $url );
 	}
 
 	/**
@@ -991,8 +991,8 @@ class Filesystem {
 	 * @return string The URL with timestamp added if conditional function allows, original URL otherwise
 	 * @since 3.0.0
 	 */
-	public static function add_timestamp_to_url( $url ) {
-		if ( ! self::can_add_timestamp_to_url() ) {
+	public static function add_timestamp( $url ) {
+		if ( ! self::is_timestamp_addable() ) {
 			return $url;
 		}
 
@@ -1007,7 +1007,7 @@ class Filesystem {
 	 * @since 3.0.0
 	 *
 	 */
-	public static function can_add_timestamp_to_url() {
+	public static function is_timestamp_addable() {
 		/**
 		 * Filters whether to add a timestamp to the URL.
 		 *
@@ -1016,17 +1016,17 @@ class Filesystem {
 		 * @return bool
 		 *
 		 * @since 3.0.0
-		 * @hook um_add_timestamp_to_url
+		 * @hook um_filesystem_url_has_timestamp
 		 *
 		 * @example <caption>Avoid timestamp in URLs</caption>
 		 * ```php
-		 *  add_filter( 'um_add_timestamp_to_url', '__return_false' );
+		 *  add_filter( 'um_filesystem_url_has_timestamp', '__return_false' );
 		 *  function my_custom_upload_handlers( $handlers ) {
 		 *      $handlers[] = 'my-handler';
 		 *      return $handlers;
 		 *  }
 		 *  ```
 		 */
-		return apply_filters( 'um_add_timestamp_to_url', true );
+		return apply_filters( 'um_filesystem_url_has_timestamp', true );
 	}
 }

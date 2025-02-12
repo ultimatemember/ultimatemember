@@ -2502,7 +2502,7 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 						$url
 					);
 				}
-				return UM()->common()->filesystem()::add_timestamp_to_url( $url );
+				return UM()->common()->filesystem()::add_timestamp( $url );
 			}
 
 			return UM()->common()->filesystem()->get_user_uploads_url( $user_id ) . '/' . $field_value;

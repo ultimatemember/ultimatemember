@@ -155,8 +155,8 @@ class Rewrite {
 
 		$filename = get_query_var( 'um_filename' );
 		if ( empty( $filename ) ) {
-			$url      = UM()->permalinks()->get_current_url();
-			if ( UM()->common()->filesystem()::can_add_timestamp_to_url() ) {
+			$url = UM()->permalinks()->get_current_url();
+			if ( UM()->common()->filesystem()::is_timestamp_addable() ) {
 				$url = remove_query_arg( 'timestamp', $url );
 			}
 			$filename = wp_basename( $url );
