@@ -66,18 +66,10 @@ class Files {
 	 */
 	private static function get_possible_handlers() {
 		$handlers = array(
-			'common-upload',
+			'common-upload', // @todo maybe remove it before release
 			'field-file',
 			'field-image',
-//			'upload-image',
 		);
-//		if ( is_user_logged_in() ) {
-//			if ( ! UM()->options()->get( 'disable_profile_photo_upload' ) ) {
-//				$handlers[] = 'upload-avatar';
-//			}
-//		} else {
-//			$handlers[] = 'nopriv-upload';
-//		}
 
 		return apply_filters( 'um_upload_handlers', $handlers );
 	}

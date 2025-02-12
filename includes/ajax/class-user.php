@@ -8,6 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class User
  *
+ * @todo maybe delete this class because unused.
+ *
  * @package um\ajax
  */
 class User {

@@ -33,7 +33,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 			$this->forms();
 			$this->pages();
 			$this->secure();
-			$this->user();
+//			$this->user();
 			$this->users();
 		}
 
@@ -150,18 +150,18 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 			}
 			return UM()->classes['um\ajax\secure'];
 		}
-
-		/**
-		 * @since 3.0.0
-		 *
-		 * @return User
-		 */
-		public function user() {
-			if ( empty( UM()->classes['um\ajax\user'] ) ) {
-				UM()->classes['um\ajax\user'] = new User();
-			}
-			return UM()->classes['um\ajax\user'];
-		}
+//
+//		/**
+//		 * @since 3.0.0
+//		 *
+//		 * @return User
+//		 */
+//		public function user() {
+//			if ( empty( UM()->classes['um\ajax\user'] ) ) {
+//				UM()->classes['um\ajax\user'] = new User();
+//			}
+//			return UM()->classes['um\ajax\user'];
+//		}
 
 		/**
 		 * @since 2.8.7

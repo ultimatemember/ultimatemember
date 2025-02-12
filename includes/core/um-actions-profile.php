@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * It renders the content of main profile tab.
- *
+ * @todo remove as soon as new UI is live.
  * @param array $args
  */
 function um_profile_content_main( $args ) {
@@ -185,820 +185,295 @@ function um_profile_content_main( $args ) {
 }
 add_action( 'um_profile_content_main', 'um_profile_content_main' );
 
-if ( UM()->is_new_ui() ) {
-	/**
-	 * Update user's profile (frontend).
-	 * It handles the profile form submission.
-	 *
-	 * @param array $args
-	 * @param array $form_data
-	 */
-	function um_user_edit_profile( $args, $form_data ) {
-		global $wp_filesystem;
-		$to_update = null;
+/**
+ * Update user's profile (frontend).
+ * @todo remove as soon as new UI is live.
+ * @param array $args
+ * @param array $form_data
+ */
+function um_user_edit_profile( $args, $form_data ) {
+	// Disabled for now in new UI.
+	if ( UM()->is_new_ui() ) {
+		return;
+	}
+	$to_update = null;
+	$files     = array();
 
-		$user_id = null;
-		if ( isset( $args['user_id'] ) ) {
-			$user_id = $args['user_id'];
-		} elseif ( isset( $args['_user_id'] ) ) {
-			$user_id = $args['_user_id'];
-		}
+	$user_id = null;
+	if ( isset( $args['user_id'] ) ) {
+		$user_id = $args['user_id'];
+	} elseif ( isset( $args['_user_id'] ) ) {
+		$user_id = $args['_user_id'];
+	}
 
-		if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-			UM()->user()->set( $user_id );
-		} else {
-			wp_die( esc_html__( 'You are not allowed to edit this user.', 'ultimate-member' ) );
-		}
+	if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+		UM()->user()->set( $user_id );
+	} else {
+		wp_die( esc_html__( 'You are not allowed to edit this user.', 'ultimate-member' ) );
+	}
 
-		$userinfo = UM()->user()->profile;
+	$userinfo = UM()->user()->profile;
 
-		$user_basedir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
-		/**
-		 * Fires before collecting data to update on profile form submit.
-		 *
-		 * @since 1.3.x
-		 * @hook um_user_before_updating_profile
-		 *
-		 * @param {array} $userinfo Userdata.
-		 *
-		 * @example <caption>Make any custom action before collecting data to update on profile form submit.</caption>
-		 * function my_user_before_updating_profile( $role_key, $role_meta ) {
-		 *     // your code here
-		 * }
-		 * add_action( 'um_user_before_updating_profile', 'my_user_before_updating_profile', 10, 2 );
-		 */
-		do_action( 'um_user_before_updating_profile', $userinfo );
+	/** This action is documented in ultimate-member/includes/frontend/class-profile.php */
+	do_action( 'um_user_before_updating_profile', $userinfo );
 
-		$fields = maybe_unserialize( $form_data['custom_fields'] );
-		$fields = apply_filters( 'um_user_edit_profile_fields', $fields, $args, $form_data );
+	$fields = maybe_unserialize( $form_data['custom_fields'] );
+	/** This filter is documented in ultimate-member/includes/frontend/class-profile.php */
+	$fields = apply_filters( 'um_user_edit_profile_fields', $fields, $args, $form_data );
 
-		// loop through fields
-		if ( ! empty( $fields ) ) {
-			$arr_restricted_fields = UM()->fields()->get_restricted_fields_for_edit( $user_id );
+	// loop through fields
+	if ( ! empty( $fields ) ) {
+		$arr_restricted_fields = UM()->fields()->get_restricted_fields_for_edit( $user_id );
 
-			foreach ( $fields as $key => $array ) {
-				if ( ! isset( $array['type'] ) ) {
+		foreach ( $fields as $key => $array ) {
+			if ( ! isset( $array['type'] ) ) {
+				continue;
+			}
+
+			if ( isset( $array['edit_forbidden'] ) ) {
+				continue;
+			}
+
+			if ( is_array( $array ) ) {
+				$origin_data = UM()->fields()->get_field( $key );
+				if ( is_array( $origin_data ) ) {
+					// Merge data passed with original field data.
+					$array = array_merge( $origin_data, $array );
+				}
+			}
+
+			// required option? 'required_opt' - it's field attribute predefined in the field data in code
+			// @todo can be unnecessary. it's used in 1 place (user account).
+			if ( isset( $array['required_opt'] ) ) {
+				$opt = $array['required_opt'];
+				if ( UM()->options()->get( $opt[0] ) !== $opt[1] ) {
 					continue;
 				}
+			}
 
-				if ( isset( $array['edit_forbidden'] ) ) {
+			// fields that need to be disabled in edit mode (profile) (email, username, etc.)
+			if ( is_array( $arr_restricted_fields ) && in_array( $key, $arr_restricted_fields, true ) ) {
+				continue;
+			}
+
+			if ( ! um_can_edit_field( $array ) || ! um_can_view_field( $array ) ) {
+				continue;
+			}
+
+			// skip saving role here
+			if ( in_array( $key, array( 'role', 'role_select', 'role_radio' ), true ) ) {
+				continue;
+			}
+
+			//the same code in class-validation.php validate_fields_values for registration form
+			//rating field validation
+			if ( 'rating' === $array['type'] && isset( $args['submitted'][ $key ] ) ) {
+				if ( ! is_numeric( $args['submitted'][ $key ] ) ) {
 					continue;
-				}
-
-				if ( is_array( $array ) ) {
-					$origin_data = UM()->fields()->get_field( $key );
-					if ( is_array( $origin_data ) ) {
-						// Merge data passed with original field data.
-						$array = array_merge( $origin_data, $array );
-					}
-				}
-
-				// required option? 'required_opt' - it's field attribute predefined in the field data in code
-				// @todo can be unnecessary. it's used in 1 place (user account).
-				if ( isset( $array['required_opt'] ) ) {
-					$opt = $array['required_opt'];
-					if ( UM()->options()->get( $opt[0] ) !== $opt[1] ) {
-						continue;
-					}
-				}
-
-				// fields that need to be disabled in edit mode (profile) (email, username, etc.)
-				if ( is_array( $arr_restricted_fields ) && in_array( $key, $arr_restricted_fields, true ) ) {
-					continue;
-				}
-
-				if ( ! um_can_edit_field( $array ) || ! um_can_view_field( $array ) ) {
-					continue;
-				}
-
-				// skip saving role here
-				if ( in_array( $key, array( 'role', 'role_select', 'role_radio' ), true ) ) {
-					continue;
-				}
-
-				//the same code in class-validation.php validate_fields_values for registration form
-				//rating field validation
-				if ( 'rating' === $array['type'] && isset( $args['submitted'][ $key ] ) ) {
-					if ( ! is_numeric( $args['submitted'][ $key ] ) ) {
-						continue;
-					} else {
-						if ( $array['number'] == 5 ) {
-							if ( ! in_array( $args['submitted'][ $key ], range( 1, 5 ) ) ) {
-								continue;
-							}
-						} elseif ( $array['number'] == 10 ) {
-							if ( ! in_array( $args['submitted'][ $key ], range( 1, 10 ) ) ) {
-								continue;
-							}
+				} else {
+					if ( $array['number'] == 5 ) {
+						if ( ! in_array( $args['submitted'][ $key ], range( 1, 5 ) ) ) {
+							continue;
+						}
+					} elseif ( $array['number'] == 10 ) {
+						if ( ! in_array( $args['submitted'][ $key ], range( 1, 10 ) ) ) {
+							continue;
 						}
 					}
 				}
+			}
 
-				// Returns dropdown/multi-select options keys from a callback function
-				/** This filter is documented in includes/core/class-fields.php */
-				$has_custom_source = apply_filters( "um_has_dropdown_options_source__$key", false );
-				if ( isset( $array['options'] ) && in_array( $array['type'], array( 'select', 'multiselect' ), true ) ) {
-					$options          = $array['options'];
-					$choices_callback = UM()->fields()->get_custom_dropdown_options_source( $key, $array );
-					if ( ! empty( $choices_callback ) && ! $has_custom_source ) {
-						if ( ! empty( $array['parent_dropdown_relationship'] ) ) {
-							$parent_dropdown_relationship = $array['parent_dropdown_relationship'];
-							// Get parent values from the form's $_POST data or userdata
-							$parent_options = array();
-							if ( isset( UM()->form()->post_form[ $parent_dropdown_relationship ] ) ) {
-								if ( ! is_array( UM()->form()->post_form[ $parent_dropdown_relationship ] ) ) {
-									$parent_options = array( UM()->form()->post_form[ $parent_dropdown_relationship ] );
-								} else {
-									$parent_options = UM()->form()->post_form[ $parent_dropdown_relationship ];
-								}
-							} elseif ( um_user( $parent_dropdown_relationship ) ) {
-								if ( ! is_array( um_user( $parent_dropdown_relationship ) ) ) {
-									$parent_options = array( um_user( $parent_dropdown_relationship ) );
-								} else {
-									$parent_options = um_user( $parent_dropdown_relationship );
-								}
-							}
-
-							$callback_result = $choices_callback( $parent_options, $parent_dropdown_relationship );
-						} else {
-							$callback_result = $choices_callback();
-						}
+			/**
+			 * Returns dropdown/multi-select options keys from a callback function
+			 * @since 2019-05-30
+			 */
+			$has_custom_source = apply_filters( "um_has_dropdown_options_source__{$key}", false );
+			if ( isset( $array['options'] ) && in_array( $array['type'], array( 'select', 'multiselect' ), true ) ) {
+				$options = $array['options'];
+				if ( ! empty( $array['custom_dropdown_options_source'] ) && function_exists( $array['custom_dropdown_options_source'] ) && ! $has_custom_source ) {
+					if ( ! UM()->fields()->is_source_blacklisted( $array['custom_dropdown_options_source'] ) ) {
+						$callback_result = call_user_func( $array['custom_dropdown_options_source'], $array['options'] );
 						if ( is_array( $callback_result ) ) {
 							$options = array_keys( $callback_result );
 						}
 					}
-					$array['options'] = apply_filters( "um_custom_dropdown_options__{$key}", $options );
+				}
+				$array['options'] = apply_filters( "um_custom_dropdown_options__{$key}", $options );
+			}
+
+			//validation of correct values from options in wp-admin
+			$stripslashes = '';
+			if ( isset( $args['submitted'][ $key ] ) && is_string( $args['submitted'][ $key ] ) ) {
+				$stripslashes = wp_unslash( $args['submitted'][ $key ] );
+			}
+
+			if ( 'select' === $array['type'] ) {
+				if ( ! empty( $array['options'] ) && ! empty( $stripslashes ) && ! in_array( $stripslashes, array_map( 'trim', $array['options'] ) ) && ! $has_custom_source  ) {
+					continue;
 				}
 
-				// Validation of correct values from options in wp-admin.
-				$stripslashes = '';
-				if ( isset( $args['submitted'][ $key ] ) && is_string( $args['submitted'][ $key ] ) ) {
-					$stripslashes = wp_unslash( $args['submitted'][ $key ] );
+				//update empty user meta
+				if ( ! isset( $args['submitted'][ $key ] ) || '' === $args['submitted'][ $key ] ) {
+					update_user_meta( $user_id, $key, '' );
 				}
+			}
 
-				if ( 'select' === $array['type'] ) {
-					if ( ! empty( $array['options'] ) && ! empty( $stripslashes ) && ! in_array( $stripslashes, array_map( 'trim', $array['options'] ) ) && ! $has_custom_source ) {
-						continue;
-					}
-
-					//update empty user meta
-					if ( ! isset( $args['submitted'][ $key ] ) || '' === $args['submitted'][ $key ] ) {
-						update_user_meta( $user_id, $key, '' );
-					}
-				}
-
-				//validation of correct values from options in wp-admin
-				//the user cannot set invalid value in the hidden input at the page
-				if ( in_array( $array['type'], array( 'multiselect', 'checkbox', 'radio' ), true ) ) {
-					if ( ! empty( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) ) {
-						if ( is_array( $args['submitted'][ $key ] ) ) {
-							$args['submitted'][ $key ] = array_map( 'stripslashes', array_map( 'trim', $args['submitted'][ $key ] ) );
-							if ( is_array( $array['options'] ) ) {
-								$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array_map( 'trim', $array['options'] ) );
-							} else {
-								$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array( trim( $array['options'] ) ) );
-							}
+			//validation of correct values from options in wp-admin
+			//the user cannot set invalid value in the hidden input at the page
+			if ( in_array( $array['type'], array( 'multiselect', 'checkbox', 'radio' ), true ) ) {
+				if ( ! empty( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) ) {
+					if ( is_array( $args['submitted'][ $key ] ) ) {
+						$args['submitted'][ $key ] = array_map( 'stripslashes', array_map( 'trim', $args['submitted'][ $key ] ) );
+						if ( is_array( $array['options'] ) ) {
+							$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array_map( 'trim', $array['options'] ) );
 						} else {
-							if ( is_array( $array['options'] ) ) {
-								$args['submitted'][ $key ] = array_intersect( array( stripslashes( trim( $args['submitted'][ $key ] ) ) ), array_map( 'trim', $array['options'] ) );
-							} else {
-								$args['submitted'][ $key ] = array_intersect( array( stripslashes( trim( $args['submitted'][ $key ] ) ) ), array( trim( $array['options'] ) ) );
-							}
+							$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array( trim( $array['options'] ) ) );
 						}
-					}
-
-					// update empty user meta
-					if ( ! isset( $args['submitted'][ $key ] ) || '' === $args['submitted'][ $key ] ) {
-						update_user_meta( $user_id, $key, array() );
+					} else {
+						if ( is_array( $array['options'] ) ) {
+							$args['submitted'][ $key ] = array_intersect( array( stripslashes( trim( $args['submitted'][ $key ] ) ) ), array_map( 'trim', $array['options'] ) );
+						} else {
+							$args['submitted'][ $key ] = array_intersect( array( stripslashes( trim( $args['submitted'][ $key ] ) ) ), array( trim( $array['options'] ) ) );
+						}
 					}
 				}
 
-				if ( isset( $args['submitted'][ $key ] ) ) {
-					if ( in_array( $array['type'], array( 'image', 'file' ), true ) ) {
-						if ( ! empty( $args['submitted'][ $key ]['temp_hash'] ) ) {
-							$filepath = UM()->common()->filesystem()->get_file_by_hash( $args['submitted'][ $key ]['temp_hash'] );
-							if ( ! empty( $filepath ) ) {
-								// Delete old file if it's exists.
-								if ( isset( $userinfo[ $key ] ) && file_exists( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] ) ) {
-									wp_delete_file( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] );
-								}
+				// update empty user meta
+				if ( ! isset( $args['submitted'][ $key ] ) || '' === $args['submitted'][ $key ] ) {
+					update_user_meta( $user_id, $key, array() );
+				}
+			}
 
-								if ( 'profile_photo' === $key ) {
-									// Flush user directory from original profile photo thumbnails.
-									$files = scandir( $user_basedir . DIRECTORY_SEPARATOR );
-									if ( ! empty( $files ) ) {
-										foreach ( $files as $file ) {
-											if ( preg_match( '/^profile_photo-(.*?)/', $file ) ) {
-												wp_delete_file( wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR . $file ) );
-											}
-										}
-									}
+			if ( isset( $args['submitted'][ $key ] ) ) {
+				if ( in_array( $array['type'], array( 'image', 'file' ), true ) ) {
+					if ( um_is_temp_file( $args['submitted'][ $key ] ) || 'empty_file' === $args['submitted'][ $key ] ) {
+						$files[ $key ] = $args['submitted'][ $key ];
+					} elseif( um_is_file_owner( UM()->uploader()->get_upload_base_url() . $user_id . '/' . $args['submitted'][ $key ], $user_id ) ) {
 
-									$file_type = wp_check_filetype( $filepath );
-									$filename  = 'profile_photo.' . $file_type['ext'];
-								} elseif ( 'cover_photo' === $key ) {
-									// Flush user directory from original cover photo thumbnails.
-									$files = scandir( $user_basedir . DIRECTORY_SEPARATOR );
-									if ( ! empty( $files ) ) {
-										foreach ( $files as $file ) {
-											if ( preg_match( '/^cover_photo-(.*?)/', $file ) ) {
-												wp_delete_file( wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR . $file ) );
-											}
-										}
-									}
-
-									$file_type = wp_check_filetype( $filepath );
-									$filename  = 'cover_photo.' . $file_type['ext'];
-								} else {
-									$filename = sanitize_file_name( $args['submitted'][ $key ]['filename'] );
-									if ( file_exists( $user_basedir . DIRECTORY_SEPARATOR . $filename ) ) {
-										$filename = wp_unique_filename( $user_basedir . DIRECTORY_SEPARATOR, $filename );
-									}
-								}
-
-								$new_filepath  = $user_basedir . DIRECTORY_SEPARATOR . $filename;
-								$moving_result = $wp_filesystem->move( $filepath, $new_filepath );
-								if ( $moving_result ) {
-									if ( 'profile_photo' === $key ) {
-										$image = wp_get_image_editor( $new_filepath ); // Return an implementation that extends WP_Image_Editor
-										if ( ! is_wp_error( $image ) ) {
-											// Creates new file's thumbnails.
-											$sizes_array = array();
-											$all_sizes   = UM()->config()->get( 'avatar_thumbnail_sizes' );
-											foreach ( $all_sizes as $size ) {
-												$sizes_array[] = array( 'width' => $size );
-											}
-											$image->multi_resize( $sizes_array );
-										}
-									} elseif ( 'cover_photo' === $key ) {
-										$image = wp_get_image_editor( $new_filepath ); // Return an implementation that extends WP_Image_Editor
-										if ( ! is_wp_error( $image ) ) {
-											// Creates new file's thumbnails.
-											$sizes_array = array();
-											$all_sizes   = UM()->options()->get( 'cover_thumb_sizes' );
-											foreach ( $all_sizes as $size ) {
-												$sizes_array[] = array( 'width' => $size );
-											}
-											$image->multi_resize( $sizes_array );
-										}
-									}
-
-									$to_update[ $key ] = $filename;
-
-									if ( 'file' === $array['type'] ) {
-										$file_type = wp_check_filetype( $new_filepath );
-										$size      = filesize( $new_filepath );
-
-										$file_metadata = array(
-											'ext'         => $file_type['ext'],
-											'type'        => $file_type['type'],
-											'size'        => $size,
-											'size_format' => size_format( $size ),
-										);
-
-										$file_metadata = apply_filters( 'um_file_metadata', $file_metadata, $new_filepath, $key, $args['submitted'] );
-
-										$to_update[ $key . '_metadata' ] = $file_metadata;
-									}
-								}
-							}
-						} elseif ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ]['filename'] !== $userinfo[ $key ] ) {
-							// File was deleted on frontend
-							// delete old file if it's exists
-							if ( file_exists( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] ) ) {
-								wp_delete_file( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] );
-							}
-
-							$to_update[ $key ] = '';
-							if ( 'file' === $array['type'] ) {
-								$to_update[ $key . '_metadata' ] = '';
-							}
-						}
-					} elseif ( 'password' === $array['type'] ) {
-						$to_update[ $key ] = wp_hash_password( $args['submitted'][ $key ] );
+					} else {
+						$files[ $key ] = 'empty_file';
+					}
+				} else {
+					if ( 'password' === $array['type'] ) {
+						$to_update[ $key ]         = wp_hash_password( $args['submitted'][ $key ] );
 						// translators: %s: title.
-						$args['submitted'][ $key ] = sprintf( __( 'Your choosed %s', 'ultimate-member' ), $array['title'] );
-					} elseif ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] !== $userinfo[ $key ] ) {
-						$to_update[ $key ] = $args['submitted'][ $key ];
-					} elseif ( '' !== $args['submitted'][ $key ] ) {
-						$to_update[ $key ] = $args['submitted'][ $key ];
-					}
-
-					// use this filter after all validations has been completed, and we can extend data based on key
-					$to_update = apply_filters( 'um_change_usermeta_for_update', $to_update, $args, $fields, $key );
-				}
-			}
-		}
-
-		$description_key = UM()->profile()->get_show_bio_key( $args );
-		if ( ! isset( $to_update[ $description_key ] ) && isset( $args['submitted'][ $description_key ] ) ) {
-			if ( ! empty( $form_data['use_custom_settings'] ) && ! empty( $form_data['show_bio'] ) ) {
-				$to_update[ $description_key ] = $args['submitted'][ $description_key ];
-			} else {
-				if ( UM()->options()->get( 'profile_show_bio' ) ) {
-					$to_update[ $description_key ] = $args['submitted'][ $description_key ];
-				}
-			}
-		}
-
-		// Secure selected role.
-		// It's for a legacy case `array_key_exists( 'editable', $fields['role'] )` and similar.
-		if ( ( isset( $fields['role'] ) && ( ! array_key_exists( 'editable', $fields['role'] ) || ! empty( $fields['role']['editable'] ) ) && um_can_view_field( $fields['role'] ) ) ||
-			 ( isset( $fields['role_select'] ) && ( ! array_key_exists( 'editable', $fields['role_select'] ) || ! empty( $fields['role_select']['editable'] ) ) && um_can_view_field( $fields['role_select'] ) ) ||
-			 ( isset( $fields['role_radio'] ) && ( ! array_key_exists( 'editable', $fields['role_radio'] ) || ! empty( $fields['role_radio']['editable'] ) ) && um_can_view_field( $fields['role_radio'] ) ) ) {
-
-			if ( ! empty( $args['submitted']['role'] ) ) {
-				global $wp_roles;
-				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
-
-				if ( ! in_array( $args['submitted']['role'], $exclude_roles, true ) ) {
-					$to_update['role'] = $args['submitted']['role'];
-				}
-
-				$args['roles_before_upgrade'] = UM()->roles()->get_all_user_roles( $user_id );
-			}
-		}
-
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_user_pre_updating_profile
-		 * @description Some actions before profile submit
-		 * @input_vars
-		 * [{"var":"$userinfo","type":"array","desc":"Submitted User Data"},
-		 * {"var":"$user_id","type":"int","desc":"User ID"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_user_pre_updating_profile', 'function_name', 10, 2 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_user_pre_updating_profile', 'my_user_pre_updating_profile', 10, 2 );
-		 * function my_user_pre_updating_profile( $userinfo, $user_id ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_user_pre_updating_profile', $to_update, $user_id, $form_data );
-
-		/**
-		 * UM hook
-		 *
-		 * @type filter
-		 * @title um_user_pre_updating_profile_array
-		 * @description Change submitted data before update profile
-		 * @input_vars
-		 * [{"var":"$to_update","type":"array","desc":"Profile data upgrade"},
-		 * {"var":"$user_id","type":"int","desc":"User ID"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage
-		 * <?php add_filter( 'um_user_pre_updating_profile_array', 'function_name', 10, 2 ); ?>
-		 * @example
-		 * <?php
-		 * add_filter( 'um_user_pre_updating_profile_array', 'my_user_pre_updating_profile', 10, 2 );
-		 * function my_user_pre_updating_profile( $to_update, $user_id ) {
-		 *     // your code here
-		 *     return $to_update;
-		 * }
-		 * ?>
-		 */
-		$to_update = apply_filters( 'um_user_pre_updating_profile_array', $to_update, $user_id, $form_data );
-
-		if ( is_array( $to_update ) ) {
-			if ( isset( $to_update['first_name'] ) || isset( $to_update['last_name'] ) || isset( $to_update['nickname'] ) ) {
-				$user = get_userdata( $user_id );
-				if ( ! empty( $user ) && ! is_wp_error( $user ) ) {
-					UM()->user()->previous_data['display_name'] = $user->display_name;
-
-					if ( isset( $to_update['first_name'] ) ) {
-						UM()->user()->previous_data['first_name'] = $user->first_name;
-					}
-
-					if ( isset( $to_update['last_name'] ) ) {
-						UM()->user()->previous_data['last_name'] = $user->last_name;
-					}
-
-					if ( isset( $to_update['nickname'] ) ) {
-						UM()->user()->previous_data['nickname'] = $user->nickname;
+						$args['submitted'][ $key ] = sprintf( __( 'Your chose %s', 'ultimate-member' ), $array['title'] );
+					} else {
+						if ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] !== $userinfo[ $key ] ) {
+							$to_update[ $key ] = $args['submitted'][ $key ];
+						} elseif ( '' !== $args['submitted'][ $key ] ) {
+							$to_update[ $key ] = $args['submitted'][ $key ];
+						}
 					}
 				}
+
+				// use this filter after all validations has been completed, and we can extend data based on key
+				$to_update = apply_filters( 'um_change_usermeta_for_update', $to_update, $args, $fields, $key );
 			}
-
-			UM()->user()->update_profile( $to_update );
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_after_user_updated
-			 * @description Some actions after user profile updated
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"},
-			 * {"var":"$args","type":"array","desc":"Form Data"},
-			 * {"var":"$userinfo","type":"array","desc":"Submitted User Data"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_user_updated', 'function_name', 10, 33 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_user_updated', 'my_after_user_updated', 10, 3 );
-			 * function my_after_user_updated( $user_id, $args, $userinfo ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_after_user_updated', $user_id, $args, $to_update );
 		}
-
-		/** This action is documented in ultimate-member/includes/core/um-actions-register.php */
-		do_action( 'um_update_profile_full_name', $user_id, $to_update );
-
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_user_after_updating_profile
-		 * @description After upgrade user's profile
-		 * @input_vars
-		 * [{"var":"$submitted","type":"array","desc":"Form data"},
-		 * {"var":"$user_id","type":"int","desc":"User Id"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_user_after_updating_profile', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_user_after_updating_profile', 'my_user_after_updating_profile'', 10, 2 );
-		 * function my_user_after_updating_profile( $submitted, $user_id ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_user_after_updating_profile', $to_update, $user_id, $args );
-
-		// Finally redirect to profile.
-		$url = um_user_profile_url( $user_id );
-		$url = apply_filters( 'um_update_profile_redirect_after', $url, $user_id, $args );
-		// Not `um_safe_redirect()` because predefined user profile page is situated on the same host.
-		wp_safe_redirect( um_edit_my_profile_cancel_uri( $url ) );
-		exit;
 	}
-} else {
-	/**
-	 * Update user's profile (frontend).
-	 *
-	 * @param array $args
-	 * @param array $form_data
-	 */
-	function um_user_edit_profile( $args, $form_data ) {
-		$to_update = null;
-		$files     = array();
 
-		$user_id = null;
-		if ( isset( $args['user_id'] ) ) {
-			$user_id = $args['user_id'];
-		} elseif ( isset( $args['_user_id'] ) ) {
-			$user_id = $args['_user_id'];
-		}
-
-		if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-			UM()->user()->set( $user_id );
+	$description_key = UM()->profile()->get_show_bio_key( $args );
+	if ( ! isset( $to_update[ $description_key ] ) && isset( $args['submitted'][ $description_key ] ) ) {
+		if ( ! empty( $form_data['use_custom_settings'] ) && ! empty( $form_data['show_bio'] ) ) {
+			$to_update[ $description_key ] = $args['submitted'][ $description_key ];
 		} else {
-			wp_die( esc_html__( 'You are not allowed to edit this user.', 'ultimate-member' ) );
-		}
-
-		$userinfo = UM()->user()->profile;
-
-		/**
-		 * Fires before collecting data to update on profile form submit.
-		 *
-		 * @since 1.3.x
-		 * @hook um_user_before_updating_profile
-		 *
-		 * @param {array} $userinfo Userdata.
-		 *
-		 * @example <caption>Make any custom action before collecting data to update on profile form submit.</caption>
-		 * function my_user_before_updating_profile( $role_key, $role_meta ) {
-		 *     // your code here
-		 * }
-		 * add_action( 'um_user_before_updating_profile', 'my_user_before_updating_profile', 10, 2 );
-		 */
-		do_action( 'um_user_before_updating_profile', $userinfo );
-
-		$fields = maybe_unserialize( $form_data['custom_fields'] );
-		$fields = apply_filters( 'um_user_edit_profile_fields', $fields, $args, $form_data );
-
-		// loop through fields
-		if ( ! empty( $fields ) ) {
-			$arr_restricted_fields = UM()->fields()->get_restricted_fields_for_edit( $user_id );
-
-			foreach ( $fields as $key => $array ) {
-				if ( ! isset( $array['type'] ) ) {
-					continue;
-				}
-
-				if ( isset( $array['edit_forbidden'] ) ) {
-					continue;
-				}
-
-				if ( is_array( $array ) ) {
-					$origin_data = UM()->fields()->get_field( $key );
-					if ( is_array( $origin_data ) ) {
-						// Merge data passed with original field data.
-						$array = array_merge( $origin_data, $array );
-					}
-				}
-
-				// required option? 'required_opt' - it's field attribute predefined in the field data in code
-				// @todo can be unnecessary. it's used in 1 place (user account).
-				if ( isset( $array['required_opt'] ) ) {
-					$opt = $array['required_opt'];
-					if ( UM()->options()->get( $opt[0] ) !== $opt[1] ) {
-						continue;
-					}
-				}
-
-				// fields that need to be disabled in edit mode (profile) (email, username, etc.)
-				if ( is_array( $arr_restricted_fields ) && in_array( $key, $arr_restricted_fields, true ) ) {
-					continue;
-				}
-
-				if ( ! um_can_edit_field( $array ) || ! um_can_view_field( $array ) ) {
-					continue;
-				}
-
-				// skip saving role here
-				if ( in_array( $key, array( 'role', 'role_select', 'role_radio' ), true ) ) {
-					continue;
-				}
-
-				//the same code in class-validation.php validate_fields_values for registration form
-				//rating field validation
-				if ( 'rating' === $array['type'] && isset( $args['submitted'][ $key ] ) ) {
-					if ( ! is_numeric( $args['submitted'][ $key ] ) ) {
-						continue;
-					} else {
-						if ( $array['number'] == 5 ) {
-							if ( ! in_array( $args['submitted'][ $key ], range( 1, 5 ) ) ) {
-								continue;
-							}
-						} elseif ( $array['number'] == 10 ) {
-							if ( ! in_array( $args['submitted'][ $key ], range( 1, 10 ) ) ) {
-								continue;
-							}
-						}
-					}
-				}
-
-				/**
-				 * Returns dropdown/multi-select options keys from a callback function
-				 * @since 2019-05-30
-				 */
-				$has_custom_source = apply_filters( "um_has_dropdown_options_source__{$key}", false );
-				if ( isset( $array['options'] ) && in_array( $array['type'], array( 'select', 'multiselect' ), true ) ) {
-					$options = $array['options'];
-					if ( ! empty( $array['custom_dropdown_options_source'] ) && function_exists( $array['custom_dropdown_options_source'] ) && ! $has_custom_source ) {
-						if ( ! UM()->fields()->is_source_blacklisted( $array['custom_dropdown_options_source'] ) ) {
-							$callback_result = call_user_func( $array['custom_dropdown_options_source'], $array['options'] );
-							if ( is_array( $callback_result ) ) {
-								$options = array_keys( $callback_result );
-							}
-						}
-					}
-					$array['options'] = apply_filters( "um_custom_dropdown_options__{$key}", $options );
-				}
-
-				//validation of correct values from options in wp-admin
-				$stripslashes = '';
-				if ( isset( $args['submitted'][ $key ] ) && is_string( $args['submitted'][ $key ] ) ) {
-					$stripslashes = wp_unslash( $args['submitted'][ $key ] );
-				}
-
-				if ( 'select' === $array['type'] ) {
-					if ( ! empty( $array['options'] ) && ! empty( $stripslashes ) && ! in_array( $stripslashes, array_map( 'trim', $array['options'] ) ) && ! $has_custom_source  ) {
-						continue;
-					}
-
-					//update empty user meta
-					if ( ! isset( $args['submitted'][ $key ] ) || '' === $args['submitted'][ $key ] ) {
-						update_user_meta( $user_id, $key, '' );
-					}
-				}
-
-				//validation of correct values from options in wp-admin
-				//the user cannot set invalid value in the hidden input at the page
-				if ( in_array( $array['type'], array( 'multiselect', 'checkbox', 'radio' ), true ) ) {
-					if ( ! empty( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) ) {
-						if ( is_array( $args['submitted'][ $key ] ) ) {
-							$args['submitted'][ $key ] = array_map( 'stripslashes', array_map( 'trim', $args['submitted'][ $key ] ) );
-							if ( is_array( $array['options'] ) ) {
-								$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array_map( 'trim', $array['options'] ) );
-							} else {
-								$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array( trim( $array['options'] ) ) );
-							}
-						} else {
-							if ( is_array( $array['options'] ) ) {
-								$args['submitted'][ $key ] = array_intersect( array( stripslashes( trim( $args['submitted'][ $key ] ) ) ), array_map( 'trim', $array['options'] ) );
-							} else {
-								$args['submitted'][ $key ] = array_intersect( array( stripslashes( trim( $args['submitted'][ $key ] ) ) ), array( trim( $array['options'] ) ) );
-							}
-						}
-					}
-
-					// update empty user meta
-					if ( ! isset( $args['submitted'][ $key ] ) || '' === $args['submitted'][ $key ] ) {
-						update_user_meta( $user_id, $key, array() );
-					}
-				}
-
-				if ( isset( $args['submitted'][ $key ] ) ) {
-					if ( in_array( $array['type'], array( 'image', 'file' ), true ) ) {
-						if ( um_is_temp_file( $args['submitted'][ $key ] ) || 'empty_file' === $args['submitted'][ $key ] ) {
-							$files[ $key ] = $args['submitted'][ $key ];
-						} elseif( um_is_file_owner( UM()->uploader()->get_upload_base_url() . $user_id . '/' . $args['submitted'][ $key ], $user_id ) ) {
-
-						} else {
-							$files[ $key ] = 'empty_file';
-						}
-					} else {
-						if ( 'password' === $array['type'] ) {
-							$to_update[ $key ]         = wp_hash_password( $args['submitted'][ $key ] );
-							// translators: %s: title.
-							$args['submitted'][ $key ] = sprintf( __( 'Your chose %s', 'ultimate-member' ), $array['title'] );
-						} else {
-							if ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] !== $userinfo[ $key ] ) {
-								$to_update[ $key ] = $args['submitted'][ $key ];
-							} elseif ( '' !== $args['submitted'][ $key ] ) {
-								$to_update[ $key ] = $args['submitted'][ $key ];
-							}
-						}
-					}
-
-					// use this filter after all validations has been completed, and we can extend data based on key
-					$to_update = apply_filters( 'um_change_usermeta_for_update', $to_update, $args, $fields, $key );
-				}
-			}
-		}
-
-		$description_key = UM()->profile()->get_show_bio_key( $args );
-		if ( ! isset( $to_update[ $description_key ] ) && isset( $args['submitted'][ $description_key ] ) ) {
-			if ( ! empty( $form_data['use_custom_settings'] ) && ! empty( $form_data['show_bio'] ) ) {
+			if ( UM()->options()->get( 'profile_show_bio' ) ) {
 				$to_update[ $description_key ] = $args['submitted'][ $description_key ];
-			} else {
-				if ( UM()->options()->get( 'profile_show_bio' ) ) {
-					$to_update[ $description_key ] = $args['submitted'][ $description_key ];
-				}
 			}
 		}
-
-		// Secure selected role.
-		// It's for a legacy case `array_key_exists( 'editable', $fields['role'] )` and similar.
-		if ( ( isset( $fields['role'] ) && ( ! array_key_exists( 'editable', $fields['role'] ) || ! empty( $fields['role']['editable'] ) ) && um_can_view_field( $fields['role'] ) ) ||
-			 ( isset( $fields['role_select'] ) && ( ! array_key_exists( 'editable', $fields['role_select'] ) || ! empty( $fields['role_select']['editable'] ) ) && um_can_view_field( $fields['role_select'] ) ) ||
-			 ( isset( $fields['role_radio'] ) && ( ! array_key_exists( 'editable', $fields['role_radio'] ) || ! empty( $fields['role_radio']['editable'] ) ) && um_can_view_field( $fields['role_radio'] ) ) ) {
-
-			if ( ! empty( $args['submitted']['role'] ) ) {
-				global $wp_roles;
-				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
-
-				if ( ! in_array( $args['submitted']['role'], $exclude_roles, true ) ) {
-					$to_update['role'] = $args['submitted']['role'];
-				}
-
-				$args['roles_before_upgrade'] = UM()->roles()->get_all_user_roles( $user_id );
-			}
-		}
-
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_user_pre_updating_profile
-		 * @description Some actions before profile submit
-		 * @input_vars
-		 * [{"var":"$userinfo","type":"array","desc":"Submitted User Data"},
-		 * {"var":"$user_id","type":"int","desc":"User ID"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_user_pre_updating_profile', 'function_name', 10, 2 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_user_pre_updating_profile', 'my_user_pre_updating_profile', 10, 2 );
-		 * function my_user_pre_updating_profile( $userinfo, $user_id ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_user_pre_updating_profile', $to_update, $user_id, $form_data );
-
-		/**
-		 * UM hook
-		 *
-		 * @type filter
-		 * @title um_user_pre_updating_profile_array
-		 * @description Change submitted data before update profile
-		 * @input_vars
-		 * [{"var":"$to_update","type":"array","desc":"Profile data upgrade"},
-		 * {"var":"$user_id","type":"int","desc":"User ID"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage
-		 * <?php add_filter( 'um_user_pre_updating_profile_array', 'function_name', 10, 2 ); ?>
-		 * @example
-		 * <?php
-		 * add_filter( 'um_user_pre_updating_profile_array', 'my_user_pre_updating_profile', 10, 2 );
-		 * function my_user_pre_updating_profile( $to_update, $user_id ) {
-		 *     // your code here
-		 *     return $to_update;
-		 * }
-		 * ?>
-		 */
-		$to_update = apply_filters( 'um_user_pre_updating_profile_array', $to_update, $user_id, $form_data );
-
-		if ( is_array( $to_update ) ) {
-			if ( isset( $to_update['first_name'] ) || isset( $to_update['last_name'] ) || isset( $to_update['nickname'] ) ) {
-				$user = get_userdata( $user_id );
-				if ( ! empty( $user ) && ! is_wp_error( $user ) ) {
-					UM()->user()->previous_data['display_name'] = $user->display_name;
-
-					if ( isset( $to_update['first_name'] ) ) {
-						UM()->user()->previous_data['first_name'] = $user->first_name;
-					}
-
-					if ( isset( $to_update['last_name'] ) ) {
-						UM()->user()->previous_data['last_name'] = $user->last_name;
-					}
-
-					if ( isset( $to_update['nickname'] ) ) {
-						UM()->user()->previous_data['nickname'] = $user->nickname;
-					}
-				}
-			}
-
-			UM()->user()->update_profile( $to_update );
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_after_user_updated
-			 * @description Some actions after user profile updated
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"},
-			 * {"var":"$args","type":"array","desc":"Form Data"},
-			 * {"var":"$userinfo","type":"array","desc":"Submitted User Data"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_user_updated', 'function_name', 10, 33 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_user_updated', 'my_after_user_updated', 10, 3 );
-			 * function my_after_user_updated( $user_id, $args, $userinfo ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_after_user_updated', $user_id, $args, $to_update );
-		}
-
-		/** This action is documented in ultimate-member/includes/core/um-actions-register.php */
-		$files = apply_filters( 'um_user_pre_updating_files_array', $files, $user_id );
-		if ( ! empty( $files ) && is_array( $files ) ) {
-			UM()->uploader()->replace_upload_dir = true;
-			UM()->uploader()->move_temporary_files( $user_id, $files );
-			UM()->uploader()->replace_upload_dir = false;
-		}
-
-		/** This action is documented in ultimate-member/includes/core/um-actions-register.php */
-		do_action( 'um_update_profile_full_name', $user_id, $to_update );
-
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_user_after_updating_profile
-		 * @description After upgrade user's profile
-		 * @input_vars
-		 * [{"var":"$submitted","type":"array","desc":"Form data"},
-		 * {"var":"$user_id","type":"int","desc":"User Id"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_user_after_updating_profile', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_user_after_updating_profile', 'my_user_after_updating_profile'', 10, 2 );
-		 * function my_user_after_updating_profile( $submitted, $user_id ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_user_after_updating_profile', $to_update, $user_id, $args );
-
-		// Finally redirect to profile.
-		$url = um_user_profile_url( $user_id );
-		$url = apply_filters( 'um_update_profile_redirect_after', $url, $user_id, $args );
-		// Not `um_safe_redirect()` because predefined user profile page is situated on the same host.
-		wp_safe_redirect( um_edit_my_profile_cancel_uri( $url ) );
-		exit;
 	}
+
+	// Secure selected role.
+	// It's for a legacy case `array_key_exists( 'editable', $fields['role'] )` and similar.
+	if ( ( isset( $fields['role'] ) && ( ! array_key_exists( 'editable', $fields['role'] ) || ! empty( $fields['role']['editable'] ) ) && um_can_view_field( $fields['role'] ) ) ||
+		 ( isset( $fields['role_select'] ) && ( ! array_key_exists( 'editable', $fields['role_select'] ) || ! empty( $fields['role_select']['editable'] ) ) && um_can_view_field( $fields['role_select'] ) ) ||
+		 ( isset( $fields['role_radio'] ) && ( ! array_key_exists( 'editable', $fields['role_radio'] ) || ! empty( $fields['role_radio']['editable'] ) ) && um_can_view_field( $fields['role_radio'] ) ) ) {
+
+		if ( ! empty( $args['submitted']['role'] ) ) {
+			global $wp_roles;
+			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
+
+			if ( ! in_array( $args['submitted']['role'], $exclude_roles, true ) ) {
+				$to_update['role'] = $args['submitted']['role'];
+			}
+
+			$args['roles_before_upgrade'] = UM()->roles()->get_all_user_roles( $user_id );
+		}
+	}
+
+	/** This action is documented in ultimate-member/includes/frontend/class-profile.php */
+	do_action( 'um_user_pre_updating_profile', $to_update, $user_id, $form_data );
+
+	/** This filter is documented in ultimate-member/includes/frontend/class-profile.php */
+	$to_update = apply_filters( 'um_user_pre_updating_profile_array', $to_update, $user_id, $form_data );
+
+	if ( is_array( $to_update ) ) {
+		if ( isset( $to_update['first_name'] ) || isset( $to_update['last_name'] ) || isset( $to_update['nickname'] ) ) {
+			$user = get_userdata( $user_id );
+			if ( ! empty( $user ) && ! is_wp_error( $user ) ) {
+				UM()->user()->previous_data['display_name'] = $user->display_name;
+
+				if ( isset( $to_update['first_name'] ) ) {
+					UM()->user()->previous_data['first_name'] = $user->first_name;
+				}
+
+				if ( isset( $to_update['last_name'] ) ) {
+					UM()->user()->previous_data['last_name'] = $user->last_name;
+				}
+
+				if ( isset( $to_update['nickname'] ) ) {
+					UM()->user()->previous_data['nickname'] = $user->nickname;
+				}
+			}
+		}
+
+		UM()->user()->update_profile( $to_update );
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_after_user_updated
+		 * @description Some actions after user profile updated
+		 * @input_vars
+		 * [{"var":"$user_id","type":"int","desc":"User ID"},
+		 * {"var":"$args","type":"array","desc":"Form Data"},
+		 * {"var":"$userinfo","type":"array","desc":"Submitted User Data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_after_user_updated', 'function_name', 10, 33 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_after_user_updated', 'my_after_user_updated', 10, 3 );
+		 * function my_after_user_updated( $user_id, $args, $userinfo ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( 'um_after_user_updated', $user_id, $args, $to_update );
+	}
+
+	/** This action is documented in ultimate-member/includes/core/um-actions-register.php */
+	$files = apply_filters( 'um_user_pre_updating_files_array', $files, $user_id );
+	if ( ! empty( $files ) && is_array( $files ) ) {
+		UM()->uploader()->replace_upload_dir = true;
+		UM()->uploader()->move_temporary_files( $user_id, $files );
+		UM()->uploader()->replace_upload_dir = false;
+	}
+
+	/** This action is documented in ultimate-member/includes/core/um-actions-register.php */
+	do_action( 'um_update_profile_full_name', $user_id, $to_update );
+
+	/** This action is documented in ultimate-member/includes/frontend/class-profile.php */
+	do_action( 'um_user_after_updating_profile', $to_update, $user_id, $args );
+
+	// Finally redirect to profile.
+	$url = um_user_profile_url( $user_id );
+	/** This filter is documented in ultimate-member/includes/frontend/class-profile.php */
+	$url = apply_filters( 'um_update_profile_redirect_after', $url, $user_id, $args );
+	// Not `um_safe_redirect()` because predefined user profile page is situated on the same host.
+	wp_safe_redirect( um_edit_my_profile_cancel_uri( $url ) );
+	exit;
 }
 add_action( 'um_user_edit_profile', 'um_user_edit_profile', 10, 2 );
 
@@ -1437,7 +912,7 @@ add_action( 'um_profile_header_cover_area', 'um_profile_header_cover_area', 9 );
 
 /**
  * Show social links as icons below profile name
- *
+ * @todo remove as soon as new UI is live.
  * @param $args
  */
 function um_social_links_icons( $args = null ) {
@@ -1456,7 +931,7 @@ add_action( 'um_after_profile_header_name', 'um_social_links_icons', 50 );
 
 /**
  * Profile header
- *
+ * @todo remove as soon as new UI is live.
  * @param $args
  */
 function um_profile_header( $args ) {
@@ -1970,100 +1445,66 @@ function um_submit_form_profile( $args, $form_data ) {
 }
 add_action( 'um_submit_form_profile', 'um_submit_form_profile', 10, 2 );
 
-if ( UM()->is_new_ui() ) {
-	/**
-	 * Show the submit button (highest priority)
-	 *
-	 * @param $args
-	 */
-	function um_add_submit_button_to_profile( $args ) {
-		// DO NOT add when reviewing user's details
-		if ( is_admin() && UM()->user()->preview ) {
-			return;
-		}
 
-		// only when editing
-		if ( false === UM()->fields()->editing ) {
-			return;
-		}
-
-		if ( ! isset( $args['primary_btn_word'] ) || '' === $args['primary_btn_word'] ) {
-			$args['primary_btn_word'] = UM()->options()->get( 'profile_primary_btn_word' );
-		}
-		?>
-		<div class="um-form-submit">
-			<?php
-			echo UM()->frontend()::layouts()::button(
-				$args['primary_btn_word'],
-				array(
-					'type'   => 'submit',
-					'design' => 'primary',
-					'width'  => 'full',
-					'id'     => 'um-submit-btn',
-				)
-			);
-			?>
-		</div>
-		<?php
+/**
+ * Show the submit button (highest priority)
+ * @todo remove as soon as new UI is live.
+ * @param $args
+ */
+function um_add_submit_button_to_profile( $args ) {
+	if ( UM()->is_new_ui() ) {
+		return;
 	}
-	add_action( 'um_after_profile_fields', 'um_add_submit_button_to_profile', 1000 );
-} else {
-	/**
-	 * Show the submit button (highest priority)
-	 *
-	 * @param $args
-	 */
-	function um_add_submit_button_to_profile( $args ) {
-		// DO NOT add when reviewing user's details
-		if ( UM()->user()->preview == true && is_admin() ) {
-			return;
-		}
 
-		// only when editing
-		if ( false === UM()->fields()->editing ) {
-			return;
-		}
-
-		if ( ! isset( $args['primary_btn_word'] ) || $args['primary_btn_word'] == '' ){
-			$args['primary_btn_word'] = UM()->options()->get( 'profile_primary_btn_word' );
-		}
-		if ( ! isset( $args['secondary_btn_word'] ) || $args['secondary_btn_word'] == '' ){
-			$args['secondary_btn_word'] = UM()->options()->get( 'profile_secondary_btn_word' );
-		} ?>
-
-		<div class="um-col-alt">
-
-			<?php if ( ! empty( $args['secondary_btn'] ) ) { ?>
-
-				<div class="um-left um-half">
-					<input type="submit" value="<?php esc_attr_e( wp_unslash( $args['primary_btn_word'] ), 'ultimate-member' ); ?>" class="um-button" />
-				</div>
-				<div class="um-right um-half">
-					<a href="<?php echo esc_url( um_edit_my_profile_cancel_uri() ); ?>" class="um-button um-alt">
-						<?php _e( wp_unslash( $args['secondary_btn_word'] ), 'ultimate-member' ); ?>
-					</a>
-				</div>
-
-			<?php } else { ?>
-
-				<div class="um-center">
-					<input type="submit" value="<?php esc_attr_e( wp_unslash( $args['primary_btn_word'] ), 'ultimate-member' ); ?>" class="um-button" />
-				</div>
-
-			<?php } ?>
-
-			<div class="um-clear"></div>
-
-		</div>
-
-		<?php
+	// DO NOT add when reviewing user's details
+	if ( UM()->user()->preview == true && is_admin() ) {
+		return;
 	}
-	add_action( 'um_after_profile_fields', 'um_add_submit_button_to_profile', 1000 );
+
+	// only when editing
+	if ( false === UM()->fields()->editing ) {
+		return;
+	}
+
+	if ( ! isset( $args['primary_btn_word'] ) || $args['primary_btn_word'] == '' ){
+		$args['primary_btn_word'] = UM()->options()->get( 'profile_primary_btn_word' );
+	}
+	if ( ! isset( $args['secondary_btn_word'] ) || $args['secondary_btn_word'] == '' ){
+		$args['secondary_btn_word'] = UM()->options()->get( 'profile_secondary_btn_word' );
+	} ?>
+
+	<div class="um-col-alt">
+
+		<?php if ( ! empty( $args['secondary_btn'] ) ) { ?>
+
+			<div class="um-left um-half">
+				<input type="submit" value="<?php esc_attr_e( wp_unslash( $args['primary_btn_word'] ), 'ultimate-member' ); ?>" class="um-button" />
+			</div>
+			<div class="um-right um-half">
+				<a href="<?php echo esc_url( um_edit_my_profile_cancel_uri() ); ?>" class="um-button um-alt">
+					<?php _e( wp_unslash( $args['secondary_btn_word'] ), 'ultimate-member' ); ?>
+				</a>
+			</div>
+
+		<?php } else { ?>
+
+			<div class="um-center">
+				<input type="submit" value="<?php esc_attr_e( wp_unslash( $args['primary_btn_word'] ), 'ultimate-member' ); ?>" class="um-button" />
+			</div>
+
+		<?php } ?>
+
+		<div class="um-clear"></div>
+
+	</div>
+
+	<?php
 }
+add_action( 'um_after_profile_fields', 'um_add_submit_button_to_profile', 1000 );
 
 /**
  * Display the available profile tabs
- *
+ * @todo remove as soon as new UI is live.
  * @param array $args
  */
 function um_profile_menu( $args ) {
