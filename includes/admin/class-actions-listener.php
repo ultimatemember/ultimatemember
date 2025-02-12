@@ -100,7 +100,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 						if ( $result ) {
 							$redirect = add_query_arg(
 								array(
-									'update' => 'um_reactivated',
+									'update'            => 'um_reactivated',
 									'reactivated_count' => 1,
 								),
 								$redirect
@@ -196,7 +196,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 						if ( $result ) {
 							$redirect = add_query_arg(
 								array(
-									'update' => 'um_deactivate',
+									'update'            => 'um_deactivate',
 									'deactivated_count' => 1,
 								),
 								$redirect
