@@ -2935,9 +2935,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				);
 
 				$request = wp_remote_post(
-					UM()->store_url,
+					UM()::$store_url,
 					array(
-						'timeout'   => UM()->request_timeout,
+						'timeout'   => UM()::$request_timeout,
 						'sslverify' => false,
 						'body'      => $api_params,
 					)
@@ -2947,9 +2947,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					$request = json_decode( wp_remote_retrieve_body( $request ) );
 				} else {
 					$request = wp_remote_post(
-						UM()->store_url,
+						UM()::$store_url,
 						array(
-							'timeout'   => UM()->request_timeout,
+							'timeout'   => UM()::$request_timeout,
 							'sslverify' => true,
 							'body'      => $api_params,
 						)

@@ -1,36 +1,27 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'UM_Functions' ) ) {
-
 
 	/**
 	 * Class UM_Functions
 	 */
 	class UM_Functions {
 
-
 		/**
 		 * Store URL
 		 *
 		 * @var string
 		 */
-		var $store_url = 'https://ultimatemember.com/';
-
+		public static $store_url = 'https://ultimatemember.com/?edd-request=get-info';
 
 		/**
 		 * WP remote Post timeout
 		 * @var int
 		 */
-		var $request_timeout = 60;
-
-
-		/**
-		 * UM_Functions constructor.
-		 */
-		function __construct() {
-		}
-
+		public static $request_timeout = 60;
 
 		/**
 		 * Check if AJAX now
