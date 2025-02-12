@@ -14,9 +14,9 @@ function um_upgrade_usermeta_count280() {
 		"SELECT COUNT(*)
 		FROM {$wpdb->usermeta}
 		WHERE meta_key = 'use_gdpr_agreement' OR
-		      meta_key = 'um_user_blocked__timestamp' OR
-		      meta_key = '_um_last_login' OR
-		      meta_key = 'submitted'"
+			  meta_key = 'um_user_blocked__timestamp' OR
+			  meta_key = '_um_last_login' OR
+			  meta_key = 'submitted'"
 	);
 
 	wp_send_json_success( array( 'count' => $count ) );
@@ -40,9 +40,9 @@ function um_upgrade_metadata_per_user280() {
 			"SELECT *
 			FROM {$wpdb->usermeta}
 			WHERE meta_key = 'use_gdpr_agreement' OR
-			      meta_key = 'um_user_blocked__timestamp' OR
-			      meta_key = '_um_last_login' OR
-			      meta_key = 'submitted'
+				  meta_key = 'um_user_blocked__timestamp' OR
+				  meta_key = '_um_last_login' OR
+				  meta_key = 'submitted'
 			LIMIT %d, %d",
 			( absint( $_POST['page'] ) - 1 ) * $per_page,
 			$per_page

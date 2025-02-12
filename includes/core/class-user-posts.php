@@ -211,7 +211,15 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 				return 0;
 			}
 
-			$count = $wpdb->get_var("SELECT COUNT(comment_ID) FROM " . $wpdb->comments. " WHERE user_id = " . $user_id . " AND comment_approved = '1'");
+			$count = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(comment_ID)
+					FROM {$wpdb->comments}
+					WHERE user_id = %d AND
+						  comment_approved = '1'",
+					$user_id
+				)
+			);
 
 			return $this->pretty_number_formatting( $count );
 		}
