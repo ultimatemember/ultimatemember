@@ -991,7 +991,7 @@ class Filesystem {
 	 * @return string The URL with timestamp added if conditional function allows, original URL otherwise
 	 * @since 3.0.0
 	 */
-	static function add_timestamp_to_url( $url ) {
+	public static function add_timestamp_to_url( $url ) {
 		if ( ! self::can_add_timestamp_to_url() ) {
 			return $url;
 		}
@@ -1007,7 +1007,7 @@ class Filesystem {
 	 * @since 3.0.0
 	 *
 	 */
-	static function can_add_timestamp_to_url() {
+	public static function can_add_timestamp_to_url() {
 		/**
 		 * Filters whether to add a timestamp to the URL.
 		 *
