@@ -152,6 +152,7 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 					'size'        => 'xl',
 					'type'        => 'round',
 					'ignore_caps' => true, // ignore caps because we display in profile and caps checked on lower level
+					'cache'       => false,
 				)
 			),
 			UM()->get_allowed_html( 'templates' )

@@ -757,30 +757,6 @@ class Filesystem {
 	}
 
 	/**
-	 * @todo make this works based on $_COOKIE
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param string $file
-	 * @param int    $user_id
-	 *
-	 * @return bool
-	 */
-//	public function is_file_author( $file, $user_id = false ) {
-//		if ( empty( $user_id ) ) {
-//			$user_id = get_current_user_id();
-//		}
-//
-//		if ( empty( $user_id ) ) {
-//			$user = 'guest';
-//		} else {
-//			$user = get_user_by( 'id', $user_id );
-//		}
-//
-//		return true;
-//	}
-
-	/**
 	 * @param string $file_hash
 	 *
 	 * @return bool|string
@@ -969,6 +945,15 @@ class Filesystem {
 		return number_format( $size / ( 1024 * 1024 ), 2 ) . ' MB';
 	}
 
+	/**
+	 * Generate a temporary file URL for download.
+	 *
+	 * @param array $fileinfo Array containing file information.
+	 *                        - file: The file to generate URL for.
+	 *                        - hash: Hash of the file.
+	 *
+	 * @return string Temporary file URL for download.
+	 */
 	public function get_temp_file_url( $fileinfo ) {
 		$filetype    = wp_check_filetype( $fileinfo['file'] );
 		$field_value = $fileinfo['hash'] . '.' . $filetype['ext'];
@@ -995,6 +980,53 @@ class Filesystem {
 				$url
 			);
 		}
-		return $url;
+		return self::add_timestamp_to_url( $url );
+	}
+
+	/**
+	 * Add timestamp to URL if filter allows
+	 *
+	 * @param string $url The URL to add timestamp to
+	 *
+	 * @return string The URL with timestamp added if conditional function allows, original URL otherwise
+	 * @since 3.0.0
+	 */
+	static function add_timestamp_to_url( $url ) {
+		if ( ! self::can_add_timestamp_to_url() ) {
+			return $url;
+		}
+
+		// Add the timestamp using WordPress's add_query_arg function
+		return add_query_arg( 'timestamp', time(), $url );
+	}
+
+	/**
+	 * Determines if timestamp can be added to URL.
+	 *
+	 * @return bool Whether timestamp can be added to URL.
+	 * @since 3.0.0
+	 *
+	 */
+	static function can_add_timestamp_to_url() {
+		/**
+		 * Filters whether to add a timestamp to the URL.
+		 *
+		 * @param bool $add_timestamp Whether to add a timestamp to the URL. Default true.
+		 *
+		 * @return bool
+		 *
+		 * @since 3.0.0
+		 * @hook um_add_timestamp_to_url
+		 *
+		 * @example <caption>Avoid timestamp in URLs</caption>
+		 * ```php
+		 *  add_filter( 'um_add_timestamp_to_url', '__return_false' );
+		 *  function my_custom_upload_handlers( $handlers ) {
+		 *      $handlers[] = 'my-handler';
+		 *      return $handlers;
+		 *  }
+		 *  ```
+		 */
+		return apply_filters( 'um_add_timestamp_to_url', true );
 	}
 }

@@ -581,6 +581,8 @@ class Layouts {
 	 *     @type string   $size          Avatar size. Uses 'xs', 's', 'm', 'l', 'xl'. Default 'm'.
 	 *     @type string   $type          Avatar type. Uses 'square', 'round'. Default 'round'.
 	 *     @type string[] $wrapper_class Avatar wrapper additional classes.
+	 *     @type bool     $ignore_caps   If `true` just display avatar without checking current user/guest caps to see `$user_id`'s avatar.
+	 *     @type bool     $cache         If `false` timestamp is added to the avatar URL
 	 * }
 	 *
 	 * @return string
@@ -608,6 +610,7 @@ class Layouts {
 			'url_title'     => __( 'Visit profile', 'ultimate-member' ),
 			'ignore_caps'   => false,
 			'tooltip'       => false,
+			'cache'         => true,
 		);
 		/**
 		 * Filters default arguments for displaying single avatar layout.
@@ -720,7 +723,11 @@ class Layouts {
 		 */
 		$thumb_size = apply_filters( 'um_single_avatar_thumbnail_size', $thumb_size, $args, $user_id );
 
-		$avatar = get_avatar( $user_id, $thumb_size, '', '', array( 'loading' => 'lazy' ) );
+		$avatar_args = array( 'loading' => 'lazy' );
+		if ( false === $args['cache'] ) {
+			$avatar_args['um-cache'] = false;
+		}
+		$avatar = get_avatar( $user_id, $thumb_size, '', '', $avatar_args );
 
 		if ( false === $avatar ) {
 			return '';

@@ -156,6 +156,9 @@ class Rewrite {
 		$filename = get_query_var( 'um_filename' );
 		if ( empty( $filename ) ) {
 			$url      = UM()->permalinks()->get_current_url();
+			if ( UM()->common()->filesystem()::can_add_timestamp_to_url() ) {
+				$url = remove_query_arg( 'timestamp', $url );
+			}
 			$filename = wp_basename( $url );
 		}
 
@@ -318,7 +321,7 @@ class Rewrite {
 		header( 'Content-Disposition: inline; filename="' . $originalname . '"' );
 		header( 'Content-Transfer-Encoding: binary' );
 		header( 'Expires: 0' );
-		header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+		header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
 		header( 'Pragma: public' );
 		header( 'Content-Length: ' . $size );
 
@@ -361,7 +364,7 @@ class Rewrite {
 		header( 'Content-Disposition: attachment; filename="' . $originalname . '"' );
 		header( 'Content-Transfer-Encoding: binary' );
 		header( 'Expires: 0' );
-		header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+		header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
 		header( 'Pragma: public' );
 		header( 'Content-Length: ' . $size );
 

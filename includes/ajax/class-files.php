@@ -677,7 +677,12 @@ class Files extends Uploader {
 			wp_send_json_error( __( 'Possible hijacking', 'ultimate-member' ) );
 		}
 
-		$src = esc_url_raw( $_REQUEST['src'] );
+		$src = UM()->common()->filesystem()->get_temp_file_url(
+			array(
+				'file' => $file_path,
+				'hash' => $temp_hash,
+			)
+		);
 
 		/**
 		 * Return an implementation that extends WP_Image_Editor
