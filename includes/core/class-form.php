@@ -556,6 +556,17 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 */
 				do_action( 'um_before_submit_form_post', $this );
 
+				$formdata = wp_unslash( $_POST );
+				if ( isset( $formdata['form_id'] ) ) {
+					$form_id = absint( $formdata['form_id'] );
+					if ( isset( $_POST['user_password-' . $form_id] ) ) {
+						$formdata['user_password-' . $form_id] = trim( $_POST['user_password-' . $form_id] );
+					}
+					if ( isset( $_POST['confirm_user_password-' . $form_id] ) ) {
+						$formdata['confirm_user_password-' . $form_id] = trim( $_POST['confirm_user_password-' . $form_id] );
+					}
+				}
+
 				/* save entire form as global */
 				/**
 				 * Filters $_POST submitted data by the UM login, registration or profile form.
@@ -574,7 +585,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 * }
 				 * add_filter( 'um_submit_post_form', 'my_submit_post_form' );
 				 */
-				$this->post_form = apply_filters( 'um_submit_post_form', wp_unslash( $_POST ) );
+				$this->post_form = apply_filters( 'um_submit_post_form', $formdata );
 
 				// Validate form submission by honeypot.
 				if ( isset( $this->post_form[ UM()->honeypot ] ) && '' !== $this->post_form[ UM()->honeypot ] ) {
