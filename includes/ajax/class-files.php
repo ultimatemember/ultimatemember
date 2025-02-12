@@ -1,6 +1,8 @@
 <?php
 namespace um\ajax;
 
+use um\common\Uploader;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -10,29 +12,27 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package um\ajax
  */
-class Files {
+class Files extends Uploader {
 
 	/**
 	 * Files constructor.
 	 */
 	public function __construct() {
-		if ( UM()->is_new_ui() ) {
-			add_action( 'wp_ajax_um_delete_temp_file', array( $this, 'delete_temp_file' ) );
-			add_action( 'wp_ajax_nopriv_um_delete_temp_file', array( $this, 'delete_temp_file' ) );
+		add_action( 'wp_ajax_um_delete_temp_file', array( $this, 'delete_temp_file' ) );
+		add_action( 'wp_ajax_nopriv_um_delete_temp_file', array( $this, 'delete_temp_file' ) );
 
-			add_action( 'wp_ajax_um_upload', array( $this, 'upload_file' ) );
-			add_action( 'wp_ajax_nopriv_um_upload', array( $this, 'upload_file' ) );  // Enabled image/file upload on registration form.
+		add_action( 'wp_ajax_um_upload', array( $this, 'upload_file' ) );
+		add_action( 'wp_ajax_nopriv_um_upload', array( $this, 'upload_file' ) );  // Enabled image/file upload on registration form.
 
-			add_action( 'um_upload_file_validation', array( $this, 'upload_validation' ), 10, 5 );
-			add_action( 'um_upload_file_temp_uploaded', array( $this, 'temp_uploaded' ), 10, 2 );
-			add_filter( 'um_upload_file_fileinfo', array( $this, 'temp_fileinfo' ), 10, 2 );
+		add_action( 'um_upload_file_validation', array( $this, 'upload_validation' ), 10, 5 );
+		add_action( 'um_upload_file_temp_uploaded', array( $this, 'temp_uploaded' ), 10, 2 );
+		add_filter( 'um_upload_file_fileinfo', array( $this, 'temp_fileinfo' ), 10, 2 );
 
-			add_filter( 'um_upload_file_fileinfo', array( $this, 'uploader_hash' ), 10, 2 );
-			add_filter( 'um_upload_file_fileinfo', array( $this, 'field_image_fileinfo' ), 11, 2 );
+		add_filter( 'um_upload_file_fileinfo', array( $this, 'uploader_hash' ), 10, 2 );
+		add_filter( 'um_upload_file_fileinfo', array( $this, 'field_image_fileinfo' ), 11, 2 );
 
-			add_action( 'wp_ajax_nopriv_um_crop_image', array( $this, 'crop_image' ) ); // Enabled image resize on registration form.
-			add_action( 'wp_ajax_um_crop_image', array( $this, 'crop_image' ) );
-		}
+		add_action( 'wp_ajax_nopriv_um_crop_image', array( $this, 'crop_image' ) ); // Enabled image resize on registration form.
+		add_action( 'wp_ajax_um_crop_image', array( $this, 'crop_image' ) );
 	}
 
 	/**
@@ -60,17 +60,36 @@ class Files {
 	}
 
 	/**
-	 * Returns possible handlers for upload. Trigger invalid handler error base on this.
+	 * Returns an array of possible upload handlers.
 	 *
-	 * @return array
+	 * @return array The array of possible upload handlers.
 	 */
 	private static function get_possible_handlers() {
 		$handlers = array(
-			'common-upload', // @todo maybe remove it before release
-			'field-file',
-			'field-image',
+			self::HANDLER_UPLOAD, // @todo maybe remove it before release
+			self::HANDLER_FIELD_FILE,
+			self::HANDLER_FIELD_IMAGE,
 		);
 
+		/**
+		 * This hook allows you to modify the upload handlers.
+		 *
+		 * @hook um_upload_handlers
+		 * @since 3.0.0
+		 *
+		 * @param {array} $handlers The default handlers for uploads.
+		 *
+		 * @return {array} Return modified upload handlers array.
+		 *
+		 * @example <caption>Adding custom uploader handler with name `my-handler`.</caption>
+		 * ```php
+		 * add_filter( 'um_upload_handlers', 'my_custom_upload_handlers' );
+		 * function my_custom_upload_handlers( $handlers ) {
+		 *     $handlers[] = 'my-handler';
+		 *     return $handlers;
+		 * }
+		 * ```
+		 */
 		return apply_filters( 'um_upload_handlers', $handlers );
 	}
 
@@ -79,7 +98,7 @@ class Files {
 		if ( 'upload-avatar' === $handler ) {
 			// Check the avatar file format.
 			$mimes = UM()->common()->filesystem()::image_mimes( 'allowed' );
-		} elseif ( 'field-file' === $handler || 'field-image' === $handler ) {
+		} elseif ( self::HANDLER_FIELD_FILE === $handler || self::HANDLER_FIELD_IMAGE === $handler ) {
 
 		}
 		return apply_filters( 'um_upload_mimes', $mimes, $handler );
@@ -105,7 +124,7 @@ class Files {
 			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 				$error = esc_html__( 'You can not edit this user.', 'ultimate-member' );
 			}
-		} elseif ( 'field-file' === $handler || 'field-image' === $handler ) {
+		} elseif ( self::HANDLER_FIELD_FILE === $handler || self::HANDLER_FIELD_IMAGE === $handler ) {
 			if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), 'um_upload_' . $handler ) ) {
 				// This nonce is not valid.
 				$error = esc_html__( 'Invalid nonce.', 'ultimate-member' );
@@ -435,7 +454,7 @@ class Files {
 	}
 
 	public function uploader_hash( $fileinfo, $handler ) {
-		if ( 'field-image' !== $handler && 'field-file' !== $handler ) {
+		if ( self::HANDLER_FIELD_FILE !== $handler && self::HANDLER_FIELD_IMAGE !== $handler ) {
 			return $fileinfo;
 		}
 
@@ -449,7 +468,7 @@ class Files {
 	}
 
 	public function field_image_fileinfo( $fileinfo, $handler ) {
-		if ( 'field-image' !== $handler ) {
+		if ( self::HANDLER_FIELD_IMAGE !== $handler ) {
 			return $fileinfo;
 		}
 

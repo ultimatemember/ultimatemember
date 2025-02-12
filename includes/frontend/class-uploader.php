@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package um\frontend
  */
-class Uploader {
+class Uploader extends \um\common\Uploader {
 
 	/**
 	 * Uploader constructor.
@@ -26,7 +26,7 @@ class Uploader {
 	}
 
 	public function add_hiddens( $args, $list_rows = '' ) {
-		if ( ! isset( $args['handler'] ) || ! in_array( $args['handler'], array( 'field-image', 'field-file' ), true ) ) {
+		if ( ! isset( $args['handler'] ) || ! in_array( $args['handler'], array( self::HANDLER_FIELD_IMAGE, self::HANDLER_FIELD_FILE ), true ) ) {
 			return;
 		}
 
@@ -54,7 +54,7 @@ class Uploader {
 	 * @return false|string
 	 */
 	public function field_image_list_item_placeholder( $value, $args ) {
-		if ( ! isset( $args['handler'] ) || 'field-image' !== $args['handler'] ) {
+		if ( ! isset( $args['handler'] ) || self::HANDLER_FIELD_IMAGE !== $args['handler'] ) {
 			return $value;
 		}
 
@@ -99,7 +99,7 @@ class Uploader {
 	 * @return false|string
 	 */
 	public function field_image_edit_list_item_row( $value, $args, $edit_value_row ) {
-		if ( ! isset( $args['handler'] ) || 'field-image' !== $args['handler'] ) {
+		if ( ! isset( $args['handler'] ) || self::HANDLER_FIELD_IMAGE !== $args['handler'] ) {
 			return $value;
 		}
 
@@ -183,7 +183,7 @@ class Uploader {
 	 * @return false|string
 	 */
 	public function field_file_list_item_placeholder( $value, $args ) {
-		if ( ! isset( $args['handler'] ) || 'field-file' !== $args['handler'] ) {
+		if ( ! isset( $args['handler'] ) || self::HANDLER_FIELD_FILE !== $args['handler'] ) {
 			return $value;
 		}
 
@@ -226,7 +226,7 @@ class Uploader {
 	 * @return false|string
 	 */
 	public function field_file_edit_list_item_row( $value, $args, $edit_value_row ) {
-		if ( ! isset( $args['handler'] ) || 'field-file' !== $args['handler'] ) {
+		if ( ! isset( $args['handler'] ) || self::HANDLER_FIELD_FILE !== $args['handler'] ) {
 			return $value;
 		}
 

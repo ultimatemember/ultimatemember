@@ -179,6 +179,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		}
 
 		/**
+		 * @since 3.0.0
+		 *
+		 * @return Uploader
+		 */
+		public function uploader() {
+			if ( empty( UM()->classes['um\common\uploader'] ) ) {
+				UM()->classes['um\common\uploader'] = new Uploader();
+			}
+			return UM()->classes['um\common\uploader'];
+		}
+
+		/**
 		 * @since 2.8.7
 		 *
 		 * @return Users

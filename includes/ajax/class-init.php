@@ -26,10 +26,10 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 				$this->dev();
 				$this->directory();
 				$this->fields();
+				$this->files();
 				$this->profile();
 			}
 
-			$this->files();
 			$this->forms();
 			$this->pages();
 			$this->secure();

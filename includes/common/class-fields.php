@@ -1510,7 +1510,7 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 
 					$uploader_args = array(
 						'async'      => false,
-						'handler'    => 'field-image',
+						'handler'    => UM()->common()->uploader()::HANDLER_FIELD_IMAGE,
 						'multiple'   => false,
 						'types'      => $allowed_types,
 						'name'       => $field_name,
@@ -1621,7 +1621,7 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 
 					$uploader_args = array(
 						'async'      => false,
-						'handler'    => 'field-file',
+						'handler'    => UM()->common()->uploader()::HANDLER_FIELD_FILE,
 						'multiple'   => false,
 						'types'      => $allowed_types,
 						'name'       => $field_name,
