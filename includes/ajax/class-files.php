@@ -71,13 +71,13 @@ class Files {
 			'field-image',
 //			'upload-image',
 		);
-		if ( is_user_logged_in() ) {
-			if ( ! UM()->options()->get( 'disable_profile_photo_upload' ) ) {
-				$handlers[] = 'upload-avatar';
-			}
-		} else {
+//		if ( is_user_logged_in() ) {
+//			if ( ! UM()->options()->get( 'disable_profile_photo_upload' ) ) {
+//				$handlers[] = 'upload-avatar';
+//			}
+//		} else {
 //			$handlers[] = 'nopriv-upload';
-		}
+//		}
 
 		return apply_filters( 'um_upload_handlers', $handlers );
 	}

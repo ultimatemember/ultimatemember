@@ -2348,6 +2348,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				}
 
 				if ( UM()->is_new_ui() ) {
+					// @todo review this section $this->settings_structure['']['sections']['uploads']['form_sections']['profile_photo'] and setting with key="'photo_thumb_sizes'"?
 					unset( $this->settings_structure['appearance']['sections']['']['form_sections']['profile_photo'], $this->settings_structure['']['sections']['uploads']['form_sections']['profile_photo'] );
 
 					if ( ! get_option( 'show_avatars' ) ) {
@@ -2373,19 +2374,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'conditional'        => array( 'use_um_gravatar_default_image', '=', 1 ),
 							),
 							array(
-								'id'          => 'profile_photo_max_size',
-								'type'        => 'text',
-								'size'        => 'small',
-								'label'       => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
-								'description' => __( 'Sets a maximum size for the uploaded photo', 'ultimate-member' ),
-							),
-							array(
 								'id'             => 'disable_profile_photo_upload',
 								'type'           => 'checkbox',
 								'label'          => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
 								'checkbox_label' => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
 								'description'    => __( 'Switch on/off the profile photo uploader', 'ultimate-member' ),
 								'default'        => um_get_metadefault( 'disable_profile_photo_upload' ),
+							),
+							array(
+								'id'          => 'profile_photo_max_size',
+								'type'        => 'text',
+								'size'        => 'small',
+								'label'       => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
+								'description' => __( 'Sets a maximum size for the uploaded photo', 'ultimate-member' ),
+								'conditional' => array( 'disable_profile_photo_upload', '=', 0 ),
 							),
 						);
 					}

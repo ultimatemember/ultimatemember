@@ -148,6 +148,10 @@ add_filter( 'um_predefined_fields_hook', 'um_change_profile_cover_photo_label', 
  * @return array
  */
 function um_change_profile_photo_label( $fields ) {
+	if ( ! isset( $fields['profile_photo'] ) ) {
+		return $fields;
+	}
+
 	$max_size = UM()->common()->filesystem()::format_bytes( $fields['profile_photo']['max_size'] );
 	if ( ! empty( $max_size ) ) {
 		list( $file_size, $unit ) = explode( ' ', $max_size );

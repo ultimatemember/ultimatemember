@@ -1478,7 +1478,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 
 			if ( UM()->is_new_ui() ) {
 				$this->predefined_fields['profile_photo']['private_use'] = false;
-				if ( ! get_option( 'show_avatars' ) ) {
+				if ( ! get_option( 'show_avatars' ) || UM()->options()->get( 'disable_profile_photo_upload' ) ) {
 					// There is no reason to have profile photo as soon as 'show_avatars' is disabled.
 					unset( $this->predefined_fields['profile_photo'] );
 				}

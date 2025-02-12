@@ -1476,6 +1476,12 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 					break;
 				/* Single Image Upload */
 				case 'image':
+					if ( isset( $data['metakey'] ) && 'profile_photo' === $data['metakey'] ) {
+						if ( ! get_option( 'show_avatars' ) || UM()->options()->get( 'disable_profile_photo_upload' ) ) {
+							break;
+						}
+					}
+
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . ' data-mode="' . esc_attr( $this->set_mode ) . '" data-upload-label="' . ( ! empty( $data['button_text'] ) ? esc_attr( $data['button_text'] ) : esc_attr__( 'Upload', 'ultimate-member' ) ) . '">';
 
 					$field_name  = $key . $form_suffix;

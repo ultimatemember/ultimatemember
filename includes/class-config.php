@@ -238,6 +238,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_profile_align'                => 'center',
 				'_um_profile_icons'                => 'label',
 				'_um_profile_disable_photo_upload' => 0,
+				'_um_profile_photo_required'       => 0,
 				'_um_profile_photosize'            => '190',
 				'_um_profile_cover_enabled'        => 1,
 				'_um_profile_coversize'            => 'original',
@@ -276,6 +277,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_directory_header'             => __( '{total_users} Members', 'ultimate-member' ),
 				'_um_directory_header_single'      => __( '{total_users} Member', 'ultimate-member' ),
 			);
+
+			if ( UM()->is_new_ui() ) {
+				unset( $this->core_form_meta_all['_um_profile_disable_photo_upload'], $this->core_form_meta_all['_um_profile_photo_required'] );
+			}
 			/**
 			 * Filters the list of Ultimate Member forms meta.
 			 *

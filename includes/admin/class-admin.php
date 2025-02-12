@@ -543,6 +543,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				)
 			);
 
+			if ( UM()->is_new_ui() ) {
+				unset( $this->form_meta['_um_profile_disable_photo_upload'], $this->form_meta['_um_profile_photo_required'] );
+			}
+
 			$this->builder_input = apply_filters(
 				'um_builder_input_map',
 				array(

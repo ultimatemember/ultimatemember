@@ -16,12 +16,15 @@ foreach ( UM()->roles()->get_roles() as $key => $value ) {
 
 $profile_secondary_btn        = ! isset( $post_id ) ? UM()->options()->get( 'profile_secondary_btn' ) : get_post_meta( $post_id, '_um_profile_secondary_btn', true );
 $profile_cover_enabled        = ! isset( $post_id ) ? true : get_post_meta( $post_id, '_um_profile_cover_enabled', true );
-$profile_disable_photo_upload = ! isset( $post_id ) ? UM()->options()->get( 'disable_profile_photo_upload' ) : get_post_meta( $post_id, '_um_profile_disable_photo_upload', true );
-$profile_photo_required       = ! isset( $post_id ) ? false : get_post_meta( $post_id, '_um_profile_photo_required', true );
 $profile_show_name            = ! isset( $post_id ) ? true : get_post_meta( $post_id, '_um_profile_show_name', true );
 $profile_show_social_links    = ! isset( $post_id ) ? UM()->options()->get( 'profile_show_social_links' ) : get_post_meta( $post_id, '_um_profile_show_social_links', true );
 $profile_show_bio             = ! isset( $post_id ) ? true : get_post_meta( $post_id, '_um_profile_show_bio', true );
-
+$profile_disable_photo_upload = 0;
+$profile_photo_required       = 0;
+if ( ! UM()->is_new_ui() ) {
+	$profile_disable_photo_upload = ! isset( $post_id ) ? UM()->options()->get( 'disable_profile_photo_upload' ) : get_post_meta( $post_id, '_um_profile_disable_photo_upload', true );
+	$profile_photo_required       = ! isset( $post_id ) ? false : get_post_meta( $post_id, '_um_profile_photo_required', true );
+}
 
 // Profile Photo Size
 $fields = array(
@@ -213,11 +216,7 @@ $fields = array(
 );
 
 if ( UM()->is_new_ui() ) {
-	$hide_fields = array( '_um_profile_photosize' );
-	if ( ! get_option( 'show_avatars' ) ) {
-		$hide_fields = array_merge( $hide_fields, array( '_um_profile_photo_required', '_um_profile_disable_photo_upload' ) );
-	}
-
+	$hide_fields = array( '_um_profile_photosize', '_um_profile_photo_required', '_um_profile_disable_photo_upload' );
 	foreach ( $fields as $field_k => $field ) {
 		if ( in_array( $field['id'], $hide_fields, true ) ) {
 			unset( $fields[ $field_k ] );
