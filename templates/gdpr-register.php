@@ -12,7 +12,12 @@
  * @var object $um_content_query
  * @var array  $args
  */
-if ( ! defined( 'ABSPATH' ) ) exit; ?>
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+// The "Privacy Policy" field content can not contain forms.
+$allowed_html = UM()->get_allowed_html( 'templates' );
+unset( $allowed_html['form'] );
+?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <div class="um-field um-field-type_terms_conditions" data-key="use_terms_conditions_agreement" style="display:block;padding:0;">
@@ -22,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; ?>
 				$um_content_query = get_post( $args['use_gdpr_content_id'] );
 				if ( ! empty( $um_content_query ) && ! is_wp_error( $um_content_query ) ) {
 					$content = apply_filters( 'um_gdpr_policies_page_content', $um_content_query->post_content, $args );
-					echo apply_filters( 'the_content', $content, $um_content_query->ID );
+					echo wp_kses( apply_filters( 'the_content', $content, $um_content_query->ID ), $allowed_html );
 				}
 			} ?>
 		</div>
