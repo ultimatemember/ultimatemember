@@ -170,12 +170,16 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 		function get_metadata( $user_id ) {
 			global $wpdb;
 
-			$metadata = $wpdb->get_results( $wpdb->prepare(
-				"SELECT meta_key, meta_value
-				FROM {$wpdb->usermeta}
-				WHERE user_id = %d",
-				$user_id
-			), ARRAY_A );
+			$metadata = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT meta_key,
+						meta_value
+					FROM {$wpdb->usermeta}
+					WHERE user_id = %d",
+					$user_id
+				),
+				ARRAY_A
+			);
 
 			$filtered = array();
 			foreach ( $metadata as $data ) {

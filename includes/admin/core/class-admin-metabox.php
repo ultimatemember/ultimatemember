@@ -1177,7 +1177,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				$where = array( 'ID' => $post_id );
 				// translators: %s: Directory id.
 				$_POST['post_title'] = sprintf( __( 'Directory #%s', 'ultimate-member' ), $post_id );
-				$wpdb->update( $wpdb->posts, array( 'post_title' => sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) ), $where );
+				$wpdb->update(
+					$wpdb->posts,
+					array(
+						'post_title' => sanitize_text_field( wp_unslash( $_POST['post_title'] ) ),
+					),
+					$where,
+					array(
+						'%s',
+					),
+					array(
+						'%d',
+					)
+				);
 			}
 
 			do_action( 'um_before_member_directory_save', $post_id );
@@ -1275,7 +1287,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				$where = array( 'ID' => $post_id );
 				// translators: %s: Form id.
 				$_POST['post_title'] = sprintf( __( 'Form #%s', 'ultimate-member' ), $post_id );
-				$wpdb->update( $wpdb->posts, array( 'post_title' => sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) ), $where );
+				$wpdb->update(
+					$wpdb->posts,
+					array(
+						'post_title' => sanitize_text_field( wp_unslash( $_POST['post_title'] ) ),
+					),
+					$where,
+					array(
+						'%s',
+					),
+					array(
+						'%d',
+					)
+				);
 			}
 
 			// save

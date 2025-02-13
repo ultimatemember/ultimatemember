@@ -109,14 +109,16 @@ if ( ! class_exists( 'um\core\rest\API_v2' ) ) {
 			$user = get_transient( md5( 'um_api_user_' . $key ) );
 
 			if ( false === $user ) {
-				$user = $wpdb->get_var( $wpdb->prepare(
-					"SELECT user_id
-					FROM $wpdb->usermeta
-					WHERE meta_key = 'um_user_public_key' AND
-					      meta_value = %s
-					LIMIT 1",
-					$key
-				) );
+				$user = $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT user_id
+						FROM $wpdb->usermeta
+						WHERE meta_key = 'um_user_public_key' AND
+							  meta_value = %s
+						LIMIT 1",
+						$key
+					)
+				);
 				set_transient( md5( 'um_api_user_' . $key ) , $user, DAY_IN_SECONDS );
 			}
 

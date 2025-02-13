@@ -340,92 +340,99 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			}
 		}
 
-
 		/**
-		 * Submit Account handler
+		 * Process the submission of account details
 		 */
-		function account_submit() {
+		public function account_submit() {
+			if ( ! um_submitting_account_page() ) {
+				return;
+			}
 
-			if ( um_submitting_account_page() ) {
+			$formdata = wp_unslash( $_POST );
 
-				UM()->form()->post_form = wp_unslash( $_POST );
+			// Don't un-slash passwords in manner of WordPress native password field.
+			$fields_map = array(
+				'user_password',
+				'confirm_user_password',
+				'current_user_password',
+				'single_user_password',
+			);
+			$formdata   = UM()->form()::ignore_formdata_unslash( $formdata, $fields_map );
 
+			UM()->form()->post_form = $formdata;
+
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_submit_account_errors_hook
+			 * @description Validate process on account submit
+			 * @input_vars
+			 * [{"var":"$submitted","type":"array","desc":"Account Page Submitted data"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_submit_account_errors_hook', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_submit_account_errors_hook', 'my_submit_account_errors', 10, 1 );
+			 * function my_submit_account_errors( $submitted ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( 'um_submit_account_errors_hook', UM()->form()->post_form );
+
+			if ( um_is_core_page( 'account' ) && get_query_var( 'um_tab' ) ) {
+				$this->current_tab = get_query_var( 'um_tab' );
+			} else {
+				$this->current_tab = UM()->form()->post_form['_um_account_tab'];
+			}
+
+			$this->current_tab = sanitize_key( $this->current_tab );
+
+			if ( ! isset( UM()->form()->errors ) ) {
 				/**
 				 * UM hook
 				 *
 				 * @type action
-				 * @title um_submit_account_errors_hook
-				 * @description Validate process on account submit
+				 * @title um_submit_account_details
+				 * @description On success account submit
 				 * @input_vars
 				 * [{"var":"$submitted","type":"array","desc":"Account Page Submitted data"}]
 				 * @change_log
 				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_submit_account_errors_hook', 'function_name', 10, 1 );
+				 * @usage add_action( 'um_submit_account_details', 'function_name', 10, 1 );
 				 * @example
 				 * <?php
-				 * add_action( 'um_submit_account_errors_hook', 'my_submit_account_errors', 10, 1 );
-				 * function my_submit_account_errors( $submitted ) {
+				 * add_action( 'um_submit_account_details', 'my_submit_account_details', 10, 1 );
+				 * function my_submit_account_details( $submitted ) {
 				 *     // your code here
 				 * }
 				 * ?>
 				 */
-				do_action( 'um_submit_account_errors_hook', UM()->form()->post_form );
+				do_action( 'um_submit_account_details', UM()->form()->post_form );
 
-				if ( um_is_core_page( 'account' ) && get_query_var( 'um_tab' ) ) {
-					$this->current_tab = get_query_var( 'um_tab' );
-				} else {
-					$this->current_tab = UM()->form()->post_form['_um_account_tab'];
-				}
+			} elseif ( UM()->form()->has_error( 'um_account_security' ) ) {
+				$url = '';
+				if ( um_is_core_page( 'account' ) ) {
 
-				$this->current_tab = sanitize_key( $this->current_tab );
+					$url = UM()->account()->tab_link( $this->current_tab );
 
-				if ( ! isset( UM()->form()->errors ) ) {
-					/**
-					 * UM hook
-					 *
-					 * @type action
-					 * @title um_submit_account_details
-					 * @description On success account submit
-					 * @input_vars
-					 * [{"var":"$submitted","type":"array","desc":"Account Page Submitted data"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_action( 'um_submit_account_details', 'function_name', 10, 1 );
-					 * @example
-					 * <?php
-					 * add_action( 'um_submit_account_details', 'my_submit_account_details', 10, 1 );
-					 * function my_submit_account_details( $submitted ) {
-					 *     // your code here
-					 * }
-					 * ?>
-					 */
-					do_action( 'um_submit_account_details', UM()->form()->post_form );
+					$url = add_query_arg( 'err', 'account', $url );
 
-				} elseif ( UM()->form()->has_error( 'um_account_security' ) ) {
-					$url = '';
-					if ( um_is_core_page( 'account' ) ) {
+					if ( function_exists( 'icl_get_current_language' ) ) {
+						if ( icl_get_current_language() != icl_get_default_language() ) {
+							$url = UM()->permalinks()->get_current_url( true );
+							$url = add_query_arg( 'err', 'account', $url );
 
-						$url = UM()->account()->tab_link( $this->current_tab );
-
-						$url = add_query_arg( 'err', 'account', $url );
-
-						if ( function_exists( 'icl_get_current_language' ) ) {
-							if ( icl_get_current_language() != icl_get_default_language() ) {
-								$url = UM()->permalinks()->get_current_url( true );
-								$url = add_query_arg( 'err', 'account', $url );
-
-								exit( wp_redirect( $url ) );
-							}
+							exit( wp_redirect( $url ) );
 						}
 					}
-
-					exit( wp_redirect( $url ) );
 				}
 
+				exit( wp_redirect( $url ) );
 			}
-
 		}
-
 
 		/**
 		 * Filter account fields

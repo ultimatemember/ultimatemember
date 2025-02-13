@@ -630,8 +630,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					'license_key',
 					array(
 						'class'   => 'error',
-						// translators: %1$s is an inactive license number; %2$s is a plugin name; %3$s is a store link.
-						'message' => '<p>' . sprintf( __( 'There are %1$s inactive %2$s license keys for this site. This site is not authorized to get plugin updates. You can active this site on <a href="%3$s">www.ultimatemember.com</a>.', 'ultimate-member' ), count( $arr_inactive_license_keys ), UM_PLUGIN_NAME, UM()->store_url ) . '</p>',
+						// translators: %1$s is an inactive license number; %2$s is a plugin name.
+						'message' => '<p>' . sprintf( __( 'There are %1$s inactive %2$s license keys for this site. This site is not authorized to get plugin updates. You can activate this site on <a href="https://ultimatemember.com/">www.ultimatemember.com</a>.', 'ultimate-member' ), count( $arr_inactive_license_keys ), UM_PLUGIN_NAME ) . '</p>',
 					),
 					3
 				);

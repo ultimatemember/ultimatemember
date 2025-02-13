@@ -35,52 +35,55 @@ jQuery(document).ready(function() {
 	});
 
 	jQuery(document.body).on('click', '.um-reset-profile-photo', function(e) {
+		let $obj = jQuery(this);
+		let user_id = $obj.data('user_id');
 
-		jQuery('.um-profile-photo-img img').attr( 'src', jQuery(this).attr( 'data-default_src' ) );
+		let $dropdownItem = $obj.parents('ul').find('.um-manual-trigger[data-parent=".um-profile-photo"]');
+		let altText = $dropdownItem.data('alt_text');
+		$dropdownItem.data( 'alt_text', $dropdownItem.text() ).text( altText );
 
-		user_id = jQuery(this).attr('data-user_id');
-		metakey = 'profile_photo';
-
-		UM.dropdown.hideAll();
+		jQuery('.um-profile-photo-img img').attr( 'src', $obj.data( 'default_src' ) );
 
 		jQuery.ajax({
 			url: wp.ajax.settings.url,
 			type: 'post',
 			data: {
 				action:'um_delete_profile_photo',
-				metakey: metakey,
 				user_id: user_id,
 				nonce: um_scripts.nonce
+			},
+			success: function() {
+				$obj.removeClass('um-is-visible').hide();
 			}
 		});
 
-		jQuery(this).parents('li').hide();
+		UM.dropdown.hideAll();
 		return false;
 	});
 
 	jQuery(document.body).on('click', '.um-reset-cover-photo', function(e){
-		var obj = jQuery(this);
+		let $obj = jQuery(this);
+		let user_id = $obj.data('user_id');
+
+		let $dropdownItem = $obj.parents('ul').find('.um-manual-trigger[data-parent=".um-cover"]');
+		let altText = $dropdownItem.data('alt_text');
+		$dropdownItem.data( 'alt_text', $dropdownItem.text() ).text( altText );
 
 		jQuery('.um-cover-overlay').hide();
-
-		jQuery('.um-cover-e').html('<a href="javascript:void(0);" class="um-cover-add" style="height: 370px;"><span class="um-cover-add-i"><i class="um-icon-plus um-tip-n" title="Upload a cover photo"></i></span></a>');
+		jQuery('.um-cover-e').html('<a href="javascript:void(0);" class="um-cover-add" style="height: 370px;"><span class="um-cover-add-i"><i class="um-icon-plus um-tip-n" title="' + wp.i18n.__( 'Upload a cover photo', 'ultimate-member' ) + '"></i></span></a>');
 
 		um_responsive();
-
-		user_id = jQuery(this).attr('data-user_id');
-		metakey = 'cover_photo';
 
 		jQuery.ajax({
 			url: wp.ajax.settings.url,
 			type: 'post',
 			data: {
 				action: 'um_delete_cover_photo',
-				metakey: metakey,
 				user_id: user_id,
 				nonce: um_scripts.nonce
 			},
-			success: function( response ) {
-				obj.hide();
+			success: function() {
+				$obj.removeClass('um-is-visible').hide();
 			}
 		});
 

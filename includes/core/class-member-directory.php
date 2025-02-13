@@ -969,14 +969,17 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				default: {
 
-					$meta = $wpdb->get_row( $wpdb->prepare(
-						"SELECT MIN( CONVERT( meta_value, DECIMAL ) ) as min_meta,
-						MAX( CONVERT( meta_value, DECIMAL ) ) as max_meta,
-						COUNT( DISTINCT meta_value ) as amount
-						FROM {$wpdb->usermeta}
-						WHERE meta_key = %s",
-						$filter
-					), ARRAY_A );
+					$meta = $wpdb->get_row(
+						$wpdb->prepare(
+							"SELECT MIN( CONVERT( meta_value, DECIMAL ) ) as min_meta,
+							MAX( CONVERT( meta_value, DECIMAL ) ) as max_meta,
+							COUNT( DISTINCT meta_value ) as amount
+							FROM {$wpdb->usermeta}
+							WHERE meta_key = %s",
+							$filter
+						),
+						ARRAY_A
+					);
 
 					if ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) && isset( $meta['amount'] ) && $meta['amount'] > 1 ) {
 						$range = array( (float) $meta['min_meta'], (float) $meta['max_meta'] );
@@ -988,24 +991,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					break;
 				}
 				case 'birth_date': {
-
-//					$meta = $wpdb->get_col(
-//						"SELECT meta_value
-//						FROM {$wpdb->usermeta}
-//						WHERE meta_key = 'birth_date' AND
-//						      meta_value != ''"
-//					);
-//
-//					if ( empty( $meta ) || count( $meta ) < 2 ) {
-//						$range = false;
-//					} elseif ( is_array( $meta ) ) {
-//						$birth_dates = array_filter( array_map( 'strtotime', $meta ), 'is_numeric' );
-//						sort( $birth_dates );
-//						$min_meta = array_shift( $birth_dates );
-//						$max_meta = array_pop( $birth_dates );
-//						$range = array( $this->borndate( $max_meta ), $this->borndate( $min_meta ) );
-//					}
-
 					$meta = $wpdb->get_row(
 						"SELECT MIN( meta_value ) as min_meta,
 						MAX( meta_value ) as max_meta,
@@ -1013,7 +998,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						FROM {$wpdb->usermeta}
 						WHERE meta_key = 'birth_date' AND
 							  meta_value != ''",
-					ARRAY_A );
+						ARRAY_A
+					);
 
 					if ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) && isset( $meta['amount'] ) && $meta['amount'] > 1 ) {
 						$range = array( $this->borndate( strtotime( $meta['max_meta'] ) ), $this->borndate( strtotime( $meta['min_meta'] ) ) );
@@ -1082,10 +1068,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			switch ( $filter ) {
 				default:
 					global $wpdb;
-					$meta = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value
-						FROM {$wpdb->usermeta}
-						WHERE meta_key = %s
-						ORDER BY meta_value DESC", $filter ) );
+					$meta = $wpdb->get_col(
+						$wpdb->prepare(
+							"SELECT DISTINCT meta_value
+							FROM {$wpdb->usermeta}
+							WHERE meta_key = %s
+							ORDER BY meta_value DESC",
+							$filter
+						)
+					);
 
 					if ( empty( $meta ) || count( $meta ) === 1 ) {
 						$range = false;

@@ -70,12 +70,13 @@ if ( ! empty( $delete_options ) ) {
 
 	global $wp_roles;
 
+	$role_keys = get_option( 'um_roles', array() );
+
 	if ( class_exists( '\WP_Roles' ) ) {
 		if ( ! isset( $wp_roles ) ) {
 			$wp_roles = new \WP_Roles();
 		}
 
-		$role_keys = get_option( 'um_roles', array() );
 		if ( $role_keys ) {
 			foreach ( $role_keys as $roleID ) {
 				$role_meta = get_option( "um_role_{$roleID}_meta" );
@@ -89,7 +90,6 @@ if ( ! empty( $delete_options ) ) {
 	}
 
 	//remove user role meta
-	$role_keys = get_option( 'um_roles', array() );
 	if ( $role_keys ) {
 		foreach ( $role_keys as $role_key ) {
 			delete_option( 'um_role_' . $role_key . '_meta' );
@@ -136,65 +136,59 @@ if ( ! empty( $delete_options ) ) {
 
 	$wpdb->query(
 		"DELETE
-        FROM {$wpdb->usermeta}
-        WHERE meta_key LIKE '_um%' OR
-              meta_key LIKE 'um%' OR
-              meta_key LIKE 'reviews%' OR
-              meta_key = 'submitted' OR
-              meta_key = 'account_status' OR
-              meta_key = 'password_rst_attempts' OR
-              meta_key = 'profile_photo' OR
-              meta_key = '_enable_new_follow' OR
-              meta_key = '_enable_new_friend' OR
-              meta_key = '_mylists' OR
-              meta_key = '_enable_new_pm' OR
-              meta_key = '_hidden_conversations' OR
-              meta_key = '_pm_blocked' OR
-              meta_key = '_notifications_prefs' OR
-              meta_key = '_profile_progress' OR
-              meta_key = '_completed' OR
-              meta_key = '_cannot_add_review' OR
-              meta_key = 'synced_profile_photo' OR
-              meta_key = 'full_name' OR
-              meta_key = '_reviews' OR
-              meta_key = '_reviews_compound' OR
-              meta_key = '_reviews_total' OR
-              meta_key = '_reviews_avg'"
+		FROM {$wpdb->usermeta}
+		WHERE meta_key LIKE '_um%' OR
+			  meta_key LIKE 'um%' OR
+			  meta_key LIKE 'reviews%' OR
+			  meta_key = 'submitted' OR
+			  meta_key = 'account_status' OR
+			  meta_key = 'password_rst_attempts' OR
+			  meta_key = 'profile_photo' OR
+			  meta_key = '_enable_new_follow' OR
+			  meta_key = '_enable_new_friend' OR
+			  meta_key = '_mylists' OR
+			  meta_key = '_enable_new_pm' OR
+			  meta_key = '_hidden_conversations' OR
+			  meta_key = '_pm_blocked' OR
+			  meta_key = '_notifications_prefs' OR
+			  meta_key = '_profile_progress' OR
+			  meta_key = '_completed' OR
+			  meta_key = '_cannot_add_review' OR
+			  meta_key = 'synced_profile_photo' OR
+			  meta_key = 'full_name' OR
+			  meta_key = '_reviews' OR
+			  meta_key = '_reviews_compound' OR
+			  meta_key = '_reviews_total' OR
+			  meta_key = '_reviews_avg'"
 	);
 
 	$wpdb->query(
 		"DELETE
-        FROM {$wpdb->postmeta}
-        WHERE meta_key LIKE '_um%' OR
-              meta_key LIKE 'um%'"
+		FROM {$wpdb->postmeta}
+		WHERE meta_key LIKE '_um%' OR
+			  meta_key LIKE 'um%'"
 	);
 
-	//remove all tables from extensions
-	$all_tables = "SHOW TABLES LIKE '{$wpdb->prefix}um\_%'";
-	$results    = $wpdb->get_results( $all_tables );
+	// Remove all tables from extensions
+	$results = $wpdb->get_results( "SHOW TABLES LIKE '{$wpdb->prefix}um\_%'" );
 	if ( $results ) {
 		foreach ( $results as $index => $value ) {
 			foreach ( $value as $table_name ) {
 				$um_groups_members = $wpdb->prefix . 'um_groups_members';
 				if ( $table_name === $um_groups_members ) {
-					$wpdb->query( "
-						DELETE posts, term_rel, pmeta, terms, tax, commetns
-				        FROM {$wpdb->posts} posts
-				        LEFT JOIN {$wpdb->term_relationships} term_rel
-				        ON (posts.ID = term_rel.object_id)
-				        LEFT JOIN {$wpdb->postmeta} pmeta
-				        ON (posts.ID = pmeta.post_id)
-				        LEFT JOIN {$wpdb->terms} terms
-				        ON (term_rel.term_taxonomy_id = terms.term_id)
-				        LEFT JOIN {$wpdb->term_taxonomy} tax
-				        ON (term_rel.term_taxonomy_id = tax.term_taxonomy_id)
-				        LEFT JOIN {$wpdb->comments} commetns
-				        ON (commetns.comment_post_ID = posts.ID)
-				        WHERE posts.post_type = 'um_groups' OR posts.post_type = 'um_groups_discussion'"
+					$wpdb->query(
+						"DELETE posts, term_rel, pmeta, terms, tax, commetns
+						FROM {$wpdb->posts} posts
+						LEFT JOIN {$wpdb->term_relationships} term_rel ON (posts.ID = term_rel.object_id)
+						LEFT JOIN {$wpdb->postmeta} pmeta ON (posts.ID = pmeta.post_id)
+						LEFT JOIN {$wpdb->terms} terms ON (term_rel.term_taxonomy_id = terms.term_id)
+						LEFT JOIN {$wpdb->term_taxonomy} tax ON (term_rel.term_taxonomy_id = tax.term_taxonomy_id)
+						LEFT JOIN {$wpdb->comments} commetns ON (commetns.comment_post_ID = posts.ID)
+						WHERE posts.post_type = 'um_groups' OR
+							  posts.post_type = 'um_groups_discussion'"
 					);
 				}
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table_name is static variable
-				$wpdb->query( "DROP TABLE IF EXISTS $table_name" );
+				$wpdb->query( $wpdb->prepare( "DROP TABLE IF EXISTS %i", $table_name ) );
 			}
 		}
 	}
@@ -240,13 +234,12 @@ if ( ! empty( $delete_options ) ) {
 		}
 	}
 
-	//user tags
-	$wpdb->query( "
-		DELETE tax, terms
-    	FROM {$wpdb->term_taxonomy} tax
-        LEFT JOIN {$wpdb->terms} terms
-        ON (tax.term_taxonomy_id = terms.term_id)
-    	WHERE tax.taxonomy = 'um_user_tag'"
+	// User tags
+	$wpdb->query(
+		"DELETE tax, terms
+		FROM {$wpdb->term_taxonomy} tax
+		LEFT JOIN {$wpdb->terms} terms ON (tax.term_taxonomy_id = terms.term_id)
+		WHERE tax.taxonomy = 'um_user_tag'"
 	);
 
 	//mailchimp
@@ -259,9 +252,10 @@ if ( ! empty( $delete_options ) ) {
 		"SELECT option_name
 		FROM {$wpdb->options}
 		WHERE option_name LIKE '_um%' OR
-              option_name LIKE 'um_%' OR
-              option_name LIKE 'widget_um%' OR
-              option_name LIKE 'ultimatemember_%'" );
+			  option_name LIKE 'um_%' OR
+			  option_name LIKE 'widget_um%' OR
+			  option_name LIKE 'ultimatemember_%'"
+	);
 
 	foreach ( $um_options as $um_option ) {
 		delete_option( $um_option->option_name );

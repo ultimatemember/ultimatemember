@@ -169,7 +169,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					"SELECT umeta_id
 					FROM {$wpdb->prefix}um_metadata
 					WHERE user_id = %d AND
-					      um_key = %s
+						  um_key = %s
 					LIMIT 1",
 					$object_id,
 					$meta_key

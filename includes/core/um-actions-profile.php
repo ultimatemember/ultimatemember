@@ -673,24 +673,6 @@ function um_profile_dynamic_meta_desc() {
 		$url         = um_user_profile_url( $user_id );
 
 		/**
-		 * Filters the profile SEO image size. Default 190. Available 'original'.
-		 *
-		 * @param {string} $image_size Image size.
-		 * @param {int}    $user_id    User ID.
-		 *
-		 * @return {array} Changed image type
-		 *
-		 * @since 2.5.5
-		 * @hook um_profile_dynamic_meta_image_size
-		 *
-		 * @example <caption>Change meta image to cover photo `cover_photo`.</caption>
-		 * function my_um_profile_dynamic_meta_image_size( $image_size, $user_id ) {
-		 *     return 'original';
-		 * }
-		 * add_filter( 'um_profile_dynamic_meta_image_size', 'my_um_profile_dynamic_meta_image_size', 10, 2 );
-		 */
-		$image_size = apply_filters( 'um_profile_dynamic_meta_image_size', 190, $user_id );
-		/**
 		 * Filters the profile SEO image type. Default 'profile_photo'. Available 'cover_photo', 'profile_photo'.
 		 *
 		 * @param {string} $image_type Image type - cover_photo or profile_photo.
@@ -708,6 +690,29 @@ function um_profile_dynamic_meta_desc() {
 		 * add_filter( 'um_profile_dynamic_meta_image_type', 'my_um_profile_dynamic_meta_image_type', 10, 2 );
 		 */
 		$image_type = apply_filters( 'um_profile_dynamic_meta_image_type', 'profile_photo', $user_id );
+
+		// The minimum size is 200 x 200 px, however, we recommend keeping it to 600 x 315 px.
+		// If your image is smaller than 600 x 315 pixels, it will appear as a small image in the link preview.
+		$default_image_size = 'cover_photo' === $image_type ? 600 : 200;
+
+		/**
+		 * Filters the profile SEO image size. Default 190. Available 'original'.
+		 *
+		 * @param {string} $image_size Image size.
+		 * @param {int}    $user_id    User ID.
+		 *
+		 * @return {array} Changed image type
+		 *
+		 * @since 2.5.5
+		 * @hook um_profile_dynamic_meta_image_size
+		 *
+		 * @example <caption>Change meta image to cover photo `cover_photo`.</caption>
+		 * function my_um_profile_dynamic_meta_image_size( $image_size, $user_id ) {
+		 *     return 'original';
+		 * }
+		 * add_filter( 'um_profile_dynamic_meta_image_size', 'my_um_profile_dynamic_meta_image_size', 10, 2 );
+		 */
+		$image_size = apply_filters( 'um_profile_dynamic_meta_image_size', $default_image_size, $user_id );
 
 		if ( 'cover_photo' === $image_type ) {
 			if ( is_numeric( $image_size ) ) {
@@ -730,10 +735,17 @@ function um_profile_dynamic_meta_desc() {
 		}
 
 		$image      = current( explode( '?', $image ) ); // strip $_GET attributes from photo URL.
-		$image_url  = wp_parse_url( $image );
-		$image_name = explode( '/', $image_url['path'] );
-		$image_name = end( $image_name );
-		$image_info = wp_check_filetype( $image_name );
+		$image_path = wp_normalize_path( ABSPATH . wp_parse_url( $image, PHP_URL_PATH ) );
+		$image_info = wp_check_filetype( $image_path );
+
+		$imagesizes = getimagesize( $image_path );
+		if ( is_array( $imagesizes ) ) {
+			$image_width  = $imagesizes[0];
+			$image_height = $imagesizes[1];
+		} else {
+			$image_width  = $image_size;
+			$image_height = $image_size;
+		}
 
 		$person = array(
 			'@context'     => 'https://schema.org',
@@ -796,10 +808,8 @@ function um_profile_dynamic_meta_desc() {
 		<meta property="og:description" content="<?php echo esc_attr( $description ); ?>"/>
 		<meta property="og:image" content="<?php echo esc_url( $image ); ?>"/>
 		<meta property="og:image:alt" content="<?php esc_attr_e( 'Profile photo', 'ultimate-member' ); ?>"/>
-		<?php if ( is_numeric( $image_size ) ) { ?>
-			<meta property="og:image:height" content="<?php echo absint( $image_size ); ?>"/>
-			<meta property="og:image:width" content="<?php echo absint( $image_size ); ?>"/>
-		<?php } ?>
+		<meta property="og:image:height" content="<?php echo absint( $image_height ); ?>"/>
+		<meta property="og:image:width" content="<?php echo absint( $image_width ); ?>"/>
 		<?php if ( is_ssl() ) { ?>
 			<meta property="og:image:secure_url" content="<?php echo esc_url( $image ); ?>"/>
 		<?php } ?>
@@ -832,149 +842,141 @@ add_action( 'wp_head', 'um_profile_dynamic_meta_desc', 20 );
  * @param $args
  */
 function um_profile_header_cover_area( $args ) {
-	if ( isset( $args['cover_enabled'] ) && $args['cover_enabled'] == 1 ) {
+	if ( empty( $args['cover_enabled'] ) ) {
+		return;
+	}
 
-		$default_cover = UM()->options()->get( 'default_cover' );
+	$default_cover = UM()->options()->get( 'default_cover' );
+	$user_cover    = um_user( 'cover_photo' );
 
-		$overlay = '<span class="um-cover-overlay">
+	$cover_wrapper_classes = array( 'um-cover' );
+	if ( $user_cover || ! empty( $default_cover['url'] ) ) {
+		$cover_wrapper_classes[] = 'has-cover';
+	}
+	?>
+	<div class="<?php echo esc_attr( implode( ' ', $cover_wrapper_classes ) ); ?>"
+		data-user_id="<?php echo esc_attr( um_profile_id() ); ?>" data-ratio="<?php echo esc_attr( $args['cover_ratio'] ); ?>">
+		<?php
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_cover_area_content
+		 * @description Cover area content change
+		 * @input_vars
+		 * [{"var":"$user_id","type":"int","desc":"User ID"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_cover_area_content', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_cover_area_content', 'my_cover_area_content', 10, 1 );
+		 * function my_cover_area_content( $user_id ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( 'um_cover_area_content', um_profile_id() );
+		if ( true === UM()->fields()->editing ) {
+
+			$hide_remove    = ' style="display:none;"';
+			$remove_classes = array( 'um-reset-cover-photo' );
+			if ( $user_cover ) {
+				$hide_remove      = '';
+				$remove_classes[] = 'um-is-visible';
+			}
+
+			$text     = ! $user_cover ? __( 'Upload a cover photo', 'ultimate-member' ) : __( 'Change cover photo', 'ultimate-member' );
+			$alt_text = $user_cover ? __( 'Upload a cover photo', 'ultimate-member' ) : __( 'Change cover photo', 'ultimate-member' );
+
+			$items = array(
+				'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width" data-alt_text="' . esc_attr( $alt_text ) . '">' . esc_html( $text ) . '</a>',
+				'<a href="javascript:void(0);" class="' . esc_attr( implode( ' ', $remove_classes ) ) . '" data-user_id="' . esc_attr( um_profile_id() ) . '" ' . $hide_remove . '>' . esc_html__( 'Remove cover photo', 'ultimate-member' ) . '</a>',
+				'<a href="javascript:void(0);" class="um-dropdown-hide">' . esc_html__( 'Cancel', 'ultimate-member' ) . '</a>',
+			);
+
+			$items = apply_filters( 'um_cover_area_content_dropdown_items', $items, um_profile_id() );
+
+			UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
+		} elseif ( ! $user_cover && ! isset( UM()->user()->cannot_edit ) ) {
+			$items = array(
+				'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . esc_html__( 'Upload a cover photo', 'ultimate-member' ) . '</a>',
+				'<a href="javascript:void(0);" class="um-dropdown-hide">' . esc_html__( 'Cancel', 'ultimate-member' ) . '</a>',
+			);
+
+			$items = apply_filters( 'um_cover_area_content_dropdown_items', $items, um_profile_id() );
+
+			UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
+		}
+
+		UM()->fields()->add_hidden_field( 'cover_photo' );
+		?>
+		<div class="um-cover-e" data-ratio="<?php echo esc_attr( $args['cover_ratio'] ); ?>">
+			<?php
+			if ( $user_cover ) {
+
+				$get_cover_size = $args['coversize'];
+				if ( ! $get_cover_size || 'original' === $get_cover_size ) {
+					$size = null;
+				} else {
+					$size = $get_cover_size;
+				}
+
+				if ( wp_is_mobile() ) {
+					// Set for mobile width = 300 by default but can be changed via filter
+					$size = 300;
+
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_mobile_cover_photo
+					 * @description Add size for mobile device
+					 * @input_vars
+					 * [{"var":"$size","type":"int","desc":"Form's agrument - Cover Photo size"}]
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage
+					 * <?php add_filter( 'um_mobile_cover_photo', 'change_size', 10, 1 ); ?>
+					 * @example
+					 * <?php
+					 * add_filter( 'um_mobile_cover_photo', 'um_change_cover_mobile_size', 10, 1 );
+					 * function um_change_cover_mobile_size( $size ) {
+					 *     // your code here
+					 *     return $size;
+					 * }
+					 * ?>
+					 */
+					$size = apply_filters( 'um_mobile_cover_photo', $size );
+				}
+
+				echo um_user( 'cover_photo', $size );
+
+			} elseif ( ! empty( $default_cover['url'] ) ) {
+
+				echo '<img src="' . esc_url( $default_cover['url'] ) . '" alt="" />';
+
+			} elseif ( ! isset( UM()->user()->cannot_edit ) ) {
+				?>
+				<a href="javascript:void(0);" class="um-cover-add"><span class="um-cover-add-i"><i
+					class="um-icon-plus um-tip-n"
+					title="<?php esc_attr_e( 'Upload a cover photo', 'ultimate-member' ); ?>"></i></span></a>
+				<?php
+			}
+			?>
+		</div>
+		<?php if ( true === UM()->fields()->editing ) { ?>
+			<span class="um-cover-overlay">
 				<span class="um-cover-overlay-s">
 					<ins>
 						<i class="um-faicon-picture-o"></i>
-						<span class="um-cover-overlay-t">' . __( 'Change your cover photo', 'ultimate-member' ) . '</span>
+						<span class="um-cover-overlay-t"><?php esc_html_e( 'Change your cover photo', 'ultimate-member' ); ?></span>
 					</ins>
 				</span>
-			</span>';
-
-		?>
-
-		<div class="um-cover <?php if ( um_user( 'cover_photo' ) || ( $default_cover && $default_cover['url'] ) ) echo 'has-cover'; ?>"
-			 data-user_id="<?php echo esc_attr( um_profile_id() ); ?>" data-ratio="<?php echo esc_attr( $args['cover_ratio'] ); ?>">
-
-			<?php
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_cover_area_content
-			 * @description Cover area content change
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_cover_area_content', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_cover_area_content', 'my_cover_area_content', 10, 1 );
-			 * function my_cover_area_content( $user_id ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_cover_area_content', um_profile_id() );
-			if ( true === UM()->fields()->editing ) {
-
-				$hide_remove = um_user( 'cover_photo' ) ? false : ' style="display:none;"';
-
-				$text = ! um_user( 'cover_photo' ) ? __( 'Upload a cover photo', 'ultimate-member' ) : __( 'Change cover photo', 'ultimate-member' ) ;
-
-				$items = array(
-					'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . $text . '</a>',
-					'<a href="javascript:void(0);" class="um-reset-cover-photo" data-user_id="' . um_profile_id() . '" ' . $hide_remove . '>' . __( 'Remove', 'ultimate-member' ) . '</a>',
-					'<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
-				);
-
-				$items = apply_filters( 'um_cover_area_content_dropdown_items', $items, um_profile_id() );
-
-				UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
-			} else {
-
-				if ( ! isset( UM()->user()->cannot_edit ) && ! um_user( 'cover_photo' ) ) {
-
-					$items = array(
-						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . __( 'Upload a cover photo', 'ultimate-member' ) . '</a>',
-						'<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
-					);
-
-					$items = apply_filters( 'um_cover_area_content_dropdown_items', $items, um_profile_id() );
-
-					UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
-
-				}
-
-			}
-
-			UM()->fields()->add_hidden_field( 'cover_photo' ); ?>
-
-			<div class="um-cover-e" data-ratio="<?php echo esc_attr( $args['cover_ratio'] ); ?>">
-
-				<?php if ( um_user( 'cover_photo' ) ) {
-
-					$get_cover_size = $args['coversize'];
-
-					if ( ! $get_cover_size || $get_cover_size == 'original' ) {
-						$size = null;
-					} else {
-						$size = $get_cover_size;
-					}
-
-					if ( wp_is_mobile() ) {
-						// Set for mobile width = 300 by default but can be changed via filter
-						$size = 300;
-
-						/**
-						 * UM hook
-						 *
-						 * @type filter
-						 * @title um_mobile_cover_photo
-						 * @description Add size for mobile device
-						 * @input_vars
-						 * [{"var":"$size","type":"int","desc":"Form's agrument - Cover Photo size"}]
-						 * @change_log
-						 * ["Since: 2.0"]
-						 * @usage
-						 * <?php add_filter( 'um_mobile_cover_photo', 'change_size', 10, 1 ); ?>
-						 * @example
-						 * <?php
-						 * add_filter( 'um_mobile_cover_photo', 'um_change_cover_mobile_size', 10, 1 );
-						 * function um_change_cover_mobile_size( $size ) {
-						 *     // your code here
-						 *     return $size;
-						 * }
-						 * ?>
-						 */
-						$size = apply_filters( 'um_mobile_cover_photo', $size );
-					}
-
-					echo um_user( 'cover_photo', $size );
-
-				} elseif ( $default_cover && $default_cover['url'] ) {
-
-					$default_cover = $default_cover['url'];
-
-					echo '<img src="' . esc_url( $default_cover ) . '" alt="" />';
-
-				} else {
-
-					if ( ! isset( UM()->user()->cannot_edit ) ) { ?>
-
-						<a href="javascript:void(0);" class="um-cover-add"><span class="um-cover-add-i"><i
-									class="um-icon-plus um-tip-n"
-									title="<?php esc_attr_e( 'Upload a cover photo', 'ultimate-member' ); ?>"></i></span></a>
-
-					<?php }
-
-				} ?>
-
-			</div>
-
-			<?php echo $overlay; ?>
-
-		</div>
-
-		<?php
-
-	}
-
+			</span>
+		<?php } ?>
+	</div>
+	<?php
 }
 add_action( 'um_profile_header_cover_area', 'um_profile_header_cover_area', 9 );
 
@@ -1076,8 +1078,9 @@ function um_profile_header( $args ) {
 				if ( ! um_profile( 'profile_photo' ) ) { // has profile photo
 
 					$items = array(
-						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Upload photo', 'ultimate-member' ) . '</a>',
-						'<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
+						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width" data-alt_text="' . esc_attr__( 'Change photo', 'ultimate-member' ) . '">' . esc_html__( 'Upload photo', 'ultimate-member' ) . '</a>',
+						'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '" style="display:none;">' . esc_html__( 'Remove photo', 'ultimate-member' ) . '</a>',
+						'<a href="javascript:void(0);" class="um-dropdown-hide">' . esc_html__( 'Cancel', 'ultimate-member' ) . '</a>',
 					);
 
 					/**
@@ -1108,9 +1111,9 @@ function um_profile_header( $args ) {
 				} elseif ( true === UM()->fields()->editing ) {
 
 					$items = array(
-						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
-						'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . __( 'Remove photo', 'ultimate-member' ) . '</a>',
-						'<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
+						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width" data-alt_text="' . esc_attr__( 'Upload photo', 'ultimate-member' ) . '">' . esc_html__( 'Change photo', 'ultimate-member' ) . '</a>',
+						'<a href="javascript:void(0);" class="um-reset-profile-photo um-is-visible" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . esc_html__( 'Remove photo', 'ultimate-member' ) . '</a>',
+						'<a href="javascript:void(0);" class="um-dropdown-hide">' . esc_html__( 'Cancel', 'ultimate-member' ) . '</a>',
 					);
 
 					/**

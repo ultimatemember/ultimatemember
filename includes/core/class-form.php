@@ -453,6 +453,11 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					$arr_restricted_fields = UM()->fields()->get_restricted_fields_for_edit();
 				}
 
+				$password_fields = array(
+					'user_password',
+					'confirm_user_password',
+				);
+
 				$field_types_without_metakey = UM()->builtin()->get_fields_without_metakey();
 				foreach ( $custom_fields as $cf_k => $cf_data ) {
 					if ( ! array_key_exists( 'type', $cf_data ) || in_array( $cf_data['type'], $field_types_without_metakey, true ) ) {
@@ -462,6 +467,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					if ( array_key_exists( 'type', $cf_data ) && 'password' === $cf_data['type'] ) {
 						$ignore_keys[] = $cf_k;
 						$ignore_keys[] = 'confirm_' . $cf_k;
+
+						$password_fields[] = $cf_k;
+						$password_fields[] = 'confirm_' . $cf_k;
 					}
 
 					if ( 'profile' === $this->form_data['mode'] ) {
@@ -556,6 +564,18 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 */
 				do_action( 'um_before_submit_form_post', $this );
 
+				$formdata = wp_unslash( $_POST );
+
+				if ( isset( $formdata['form_id'] ) ) {
+					// Don't un-slash passwords in manner of WordPress native password field.
+					$form_id = absint( $formdata['form_id'] );
+					foreach ( $password_fields as &$password_field ) {
+						$password_field .= '-' . $form_id;
+					}
+					unset( $password_field );
+					$formdata = UM()->form()::ignore_formdata_unslash( $formdata, $password_fields );
+				}
+
 				/* save entire form as global */
 				/**
 				 * Filters $_POST submitted data by the UM login, registration or profile form.
@@ -574,7 +594,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 * }
 				 * add_filter( 'um_submit_post_form', 'my_submit_post_form' );
 				 */
-				$this->post_form = apply_filters( 'um_submit_post_form', wp_unslash( $_POST ) );
+				$this->post_form = apply_filters( 'um_submit_post_form', $formdata );
 
 				// Validate form submission by honeypot.
 				if ( isset( $this->post_form[ UM()->honeypot ] ) && '' !== $this->post_form[ UM()->honeypot ] ) {
@@ -1109,7 +1129,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			return $mode;
 		}
 
-
 		/**
 		 * Get custom field roles
 		 *
@@ -1165,6 +1184,25 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			}
 
 			return false;
+		}
+
+		/**
+		 * Ignore of `wp_unslash()` for form data
+		 *
+		 * @param array $formdata   The form data to process
+		 * @param array $fields_map The fields map array
+		 *
+		 * @return array The updated form data
+		 */
+		public static function ignore_formdata_unslash( $formdata, $fields_map ) {
+			foreach ( $fields_map as $field ) {
+				if ( ! isset( $_POST[ $field ] ) ) {
+					continue;
+				}
+				$formdata[ $field ] = trim( $_POST[ $field ] );
+			}
+
+			return $formdata;
 		}
 	}
 }

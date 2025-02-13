@@ -97,20 +97,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$metakeys = apply_filters( 'um_metadata_same_page_update_ajax', $metakeys, UM()->builtin()->all_user_fields );
 
 				if ( is_multisite() ) {
-
 					$sites = get_sites( array( 'fields' => 'ids' ) );
 					foreach ( $sites as $blog_id ) {
 						$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
+						$metakeys[] = 'wc_money_spent_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
+						$metakeys[] = 'wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
 					}
 				} else {
 					$blog_id    = get_current_blog_id();
 					$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
+					$metakeys[] = 'wc_money_spent_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
+					$metakeys[] = 'wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
 				}
 
 				//member directory data
 				$metakeys[] = 'um_member_directory_data';
 				$metakeys[] = '_um_verified';
-				$metakeys[] = '_money_spent';
 				$metakeys[] = '_completed';
 				$metakeys[] = '_reviews_avg';
 
@@ -2239,6 +2241,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			} else {
 				unset( $this->settings_structure['advanced']['sections']['features']['form_sections']['beta_features'] );
 			}
+
+			if ( UM()->account()->current_password_is_required( 'delete' ) ) {
+				unset( $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][2] );
+			} else {
+				unset( $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][1] );
+			}
 		}
 
 		/**
@@ -2927,9 +2935,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				);
 
 				$request = wp_remote_post(
-					UM()->store_url,
+					UM()::$store_url,
 					array(
-						'timeout'   => UM()->request_timeout,
+						'timeout'   => UM()::$request_timeout,
 						'sslverify' => false,
 						'body'      => $api_params,
 					)
@@ -2939,9 +2947,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					$request = json_decode( wp_remote_retrieve_body( $request ) );
 				} else {
 					$request = wp_remote_post(
-						UM()->store_url,
+						UM()::$store_url,
 						array(
-							'timeout'   => UM()->request_timeout,
+							'timeout'   => UM()::$request_timeout,
 							'sslverify' => true,
 							'body'      => $api_params,
 						)
