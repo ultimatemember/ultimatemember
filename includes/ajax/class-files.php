@@ -418,6 +418,21 @@ class Files extends Uploader {
 			// Strip the temp .part suffix off
 			rename( "{$filepath}.part", $filepath ); // Strip the temp .part suffix off
 
+			// Maybe EXIF rotate by default just right after upload to the temp folder.
+			$file_type = wp_check_filetype( $filepath );
+			$mimes     = UM()->common()->filesystem()::image_mimes();
+			if ( isset( $file_type['ext'] ) && in_array( $file_type['ext'], $mimes, true ) ) {
+				if ( ! function_exists( 'wp_get_image_editor' ) ) {
+					require_once ABSPATH . 'wp-admin/includes/media.php';
+				}
+
+				$image = wp_get_image_editor( $filepath ); // Return an implementation that extends WP_Image_Editor
+				if ( ! is_wp_error( $image ) ) {
+					$image->maybe_exif_rotate();
+					$image->save( $filepath );
+				}
+			}
+
 			$name_saved = wp_basename( $filepath );
 
 			$fileinfo                 = ! empty( $_FILES['file'] ) ? wp_unslash( $_FILES['file'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- don't need to sanitize
@@ -684,6 +699,10 @@ class Files extends Uploader {
 			)
 		);
 
+		if ( ! function_exists( 'wp_get_image_editor' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/media.php';
+		}
+
 		/**
 		 * Return an implementation that extends WP_Image_Editor
 		 * @see https://developer.wordpress.org/reference/classes/wp_image_editor/
@@ -706,12 +725,12 @@ class Files extends Uploader {
 
 		// Resize
 		$dimensions = $image->get_size();
-		if ( $dimensions['width'] > $max_w ) {
+		if ( ! empty( $max_w ) && $dimensions['width'] > $max_w ) {
 			$image->resize( $max_w, null );
 		}
 
 		// Quality
-		if ( $image->get_quality() > $quality ) {
+		if ( 100 !== $quality && $image->get_quality() > $quality ) {
 			$image->set_quality( $quality );
 		}
 

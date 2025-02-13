@@ -779,6 +779,10 @@ if ( UM()->is_new_ui() ) {
 			$user_meta_submitted     = get_user_meta( $user_id, 'submitted', true );
 			$user_meta_submitted_old = $user_meta_submitted; // Is used to compare.
 
+			if ( ! function_exists( 'wp_get_image_editor' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/media.php';
+			}
+
 			foreach ( $fields as $key => $array ) {
 				if ( ! array_key_exists( 'type', $array ) || ! in_array( $array['type'], array( 'image', 'file' ), true ) ) {
 					continue;

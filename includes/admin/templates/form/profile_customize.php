@@ -216,7 +216,14 @@ $fields = array(
 );
 
 if ( UM()->is_new_ui() ) {
-	$hide_fields = array( '_um_profile_photosize', '_um_profile_photo_required', '_um_profile_disable_photo_upload' );
+	$hide_fields = array(
+		'_um_profile_photosize',
+		'_um_profile_photo_required',
+		'_um_profile_disable_photo_upload',
+		'_um_profile_cover_enabled', // @todo maybe remove if cover photos backs to user profile
+		'_um_profile_coversize', // @todo maybe remove if cover photos backs to user profile
+		'_um_profile_cover_ratio', // @todo maybe remove if cover photos backs to user profile
+	);
 	foreach ( $fields as $field_k => $field ) {
 		if ( in_array( $field['id'], $hide_fields, true ) ) {
 			unset( $fields[ $field_k ] );

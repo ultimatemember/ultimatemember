@@ -588,6 +588,10 @@ class Profile {
 		if ( ! empty( $fields ) ) {
 			$arr_restricted_fields = UM()->fields()->get_restricted_fields_for_edit( $user_id );
 
+			if ( ! function_exists( 'wp_get_image_editor' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/media.php';
+			}
+
 			foreach ( $fields as $key => $array ) {
 				if ( ! isset( $array['type'] ) ) {
 					continue;

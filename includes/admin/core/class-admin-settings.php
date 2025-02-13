@@ -2348,8 +2348,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				}
 
 				if ( UM()->is_new_ui() ) {
-					// @todo review this section $this->settings_structure['']['sections']['uploads']['form_sections']['profile_photo'] and setting with key="'photo_thumb_sizes'"?
-					unset( $this->settings_structure['appearance']['sections']['']['form_sections']['profile_photo'], $this->settings_structure['']['sections']['uploads']['form_sections']['profile_photo'] );
+					unset(
+						$this->settings_structure['appearance']['sections']['']['form_sections']['profile_photo'],
+						$this->settings_structure['appearance']['sections']['']['form_sections']['cover_photo'], // @todo maybe remove if cover photos backs to user profile
+						$this->settings_structure['']['sections']['uploads']['form_sections']['profile_photo'], // @todo review this section and setting with key="'photo_thumb_sizes'"?
+						$this->settings_structure['']['sections']['uploads']['form_sections']['cover_photo'], // @todo maybe remove if cover photos backs to user profile
+						$this->settings_structure['']['sections']['uploads']['form_sections']['uploads']['fields'][0] // all image mimes are maybe rotated by default in new UI right after completing upload to temp folder
+					);
 
 					if ( ! get_option( 'show_avatars' ) ) {
 						unset( $this->settings_structure['']['sections']['users']['form_sections']['avatar'] );
