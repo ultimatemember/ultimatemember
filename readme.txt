@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 6.7
-Stable tag: 2.9.3
+Stable tag: 2.10.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -39,7 +39,7 @@ Read about all of the plugin's features at [Ultimate Member](https://ultimatemem
 
 = Paid Extensions =
 
-Ultimate Member has a range of extensions that allow you to extend the power of the plugin. You can purchase all of these extensions at a significant discount with our [All Access Pass](https://ultimatemember.com/pricing/) or you can purchase extensions individually.
+Ultimate Member has a range of extensions that allow you to extend the power of the plugin. You can purchase all of these extensions at a significant discount with one of our [paid plans](https://ultimatemember.com/pricing/) or you can purchase extensions individually.
 
 * [Zapier](https://ultimatemember.com/extensions/zapier/) - Allow to integrate the Zapier popular apps with Ultimate Member
 * [Stripe](https://ultimatemember.com/extensions/stripe/) - Sell paid memberships to access your website via Stripe subscriptions
@@ -167,7 +167,7 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.9.3 2025-xx-xx =
+= 2.10.0 2025-02-17 =
 
 
 = 2.9.2 2025-01-14 =
@@ -239,6 +239,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.10.0 =
+Increased the minimum PHP and WordPress requirements. The plugin now requires at least PHP 7.0 and WordPress 6.2. This version fixes a security related bug. Upgrade immediately.
 
 = 2.9.2 =
 This version fixes a security related bug. Upgrade immediately.

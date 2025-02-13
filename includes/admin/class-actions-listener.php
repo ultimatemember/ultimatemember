@@ -44,7 +44,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 		 * Handle wp-admin actions
 		 *
 		 * @since 2.8.7
-		 * @since 2.9.3 User should have 'edit_users' capability instead of 'manage_options'.
+		 * @since 2.10.0 User should have 'edit_users' capability instead of 'manage_options'.
 		 */
 		public function actions_listener() {
 			// phpcs:disable WordPress.Security.NonceVerification -- there is nonce verification below for each case
