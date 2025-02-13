@@ -767,12 +767,17 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @param array $directory_data
 		 */
 		function show_only_with_cover( $directory_data ) {
-			if ( $directory_data['has_cover_photo'] == 1 ) {
-				$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( array(
-					'key'       => 'um_member_directory_data',
-					'value'     => 's:11:"cover_photo";b:1;',
-					'compare'   => 'LIKE'
-				) ) );
+			if ( ! UM()->is_new_ui() && ! empty( $directory_data['has_cover_photo'] ) ) { // @todo maybe remove if cover photos backs to user profile
+				$this->query_args['meta_query'] = array_merge(
+					$this->query_args['meta_query'],
+					array(
+						array(
+							'key'     => 'um_member_directory_data',
+							'value'   => 's:11:"cover_photo";b:1;',
+							'compare' => 'LIKE',
+						),
+					)
+				);
 			}
 		}
 

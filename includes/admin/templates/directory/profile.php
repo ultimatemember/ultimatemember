@@ -96,7 +96,6 @@ $fields = array(
 	),
 );
 
-
 /**
  * UM hook
  *
@@ -117,7 +116,18 @@ $fields = array(
  * }
  * ?>
  */
-$fields = apply_filters( 'um_admin_extend_directory_options_profile', $fields ); ?>
+$fields = apply_filters( 'um_admin_extend_directory_options_profile', $fields );
+if ( UM()->is_new_ui() ) {
+	$hide_fields = array(
+		'_um_cover_photos', // @todo maybe remove if cover photos backs to user profile
+	);
+	foreach ( $fields as $field_k => $field ) {
+		if ( in_array( $field['id'], $hide_fields, true ) ) {
+			unset( $fields[ $field_k ] );
+		}
+	}
+}
+?>
 
 <div class="um-admin-metabox">
 	<?php

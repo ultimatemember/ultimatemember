@@ -211,6 +211,10 @@ class Directory extends \um\common\Directory {
 	 * @param array $directory_data
 	 */
 	private function show_only_with_cover( $directory_data ) {
+		if ( UM()->is_new_ui() ) { // @todo maybe remove if cover photos backs to user profile
+			return;
+		}
+
 		if ( empty( $directory_data['has_cover_photo'] ) ) {
 			return;
 		}
