@@ -310,8 +310,8 @@ KEY meta_value_indx (um_value(191))
 		 * @since 2.4.2
 		 */
 		public function set_default_user_status() {
-			$result = get_transient( 'um_count_users_unassigned' );
-			if ( false === $result ) {
+			$count = get_transient( 'um_count_users_unassigned' );
+			if ( false === $count || 0 < absint( $count ) ) {
 				$args = array(
 					'fields'               => 'ids',
 					'number'               => 0,
@@ -331,15 +331,12 @@ KEY meta_value_indx (um_value(191))
 					$result = $users->get_results();
 				}
 
-				set_transient( 'um_count_users_unassigned', $result, DAY_IN_SECONDS );
-			}
-
-			if ( empty( $result ) ) {
-				return;
-			}
-
-			foreach ( $result as $user_id ) {
-				update_user_meta( $user_id, 'account_status', 'approved' );
+				$count = count( $result );
+				foreach ( $result as $user_id ) {
+					update_user_meta( $user_id, 'account_status', 'approved' );
+					$count--;
+				}
+				set_transient( 'um_count_users_unassigned', $count, DAY_IN_SECONDS );
 			}
 		}
 
