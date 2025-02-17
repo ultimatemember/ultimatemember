@@ -326,15 +326,21 @@
 .um .choices {
   width: 100%;
   font-size: initial;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 .um .choices .choices__inner {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   border-color: var(--um-gray-300, #d0d5dd);
-  font-size: initial;
-  line-height: initial;
+  font-size: var(--um-text-font-size-md, 16px);
+  line-height: var(--um-text-line-height-md, 24px);
+  font-weight: var(--um-text-font-weight-regular, 400);
   box-shadow: 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
+  min-height: 42px;
+  padding: 8px 12px;
 }
 .um .choices[data-type*=select-one]::after {
   content: " ";
@@ -352,10 +358,6 @@
   -webkit-mask: url(../icons/chevron-up.svg);
   margin-top: -10px;
 }
-.um .choices[data-type*=select-one] .choices__inner {
-  padding: 8px 12px;
-  min-height: auto;
-}
 .um .choices[data-type*=select-one] .choices__inner .choices__list--single {
   padding-left: 0;
   padding-top: 0;
@@ -367,8 +369,6 @@
   justify-content: flex-start;
   align-items: baseline;
   flex-wrap: wrap;
-  padding: 8px 12px;
-  min-height: auto;
   gap: 8px;
 }
 .um .choices[data-type*=select-multiple] .choices__inner .choices__list--multiple {
@@ -395,7 +395,7 @@
   line-height: var(--um-text-line-height-sm, 20px);
   font-weight: var(--um-text-font-weight-medium, 500);
   color: var(--um-gray-700, #344054);
-  padding: 2px 6px;
+  padding: 1px 6px;
   margin: 0;
   gap: 6px;
 }

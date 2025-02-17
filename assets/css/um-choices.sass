@@ -29,12 +29,14 @@ $choices-z-index: 3
   .choices
     width: 100%
     font-size: initial
+    +border-box
     .choices__inner
       +border-box
       border-color: $gray-300
-      font-size: initial
-      line-height: initial
+      +typography( text, md, regular )
       box-shadow: $shadow-xs
+      min-height: 42px // get from um text field height
+      padding: $spacing-md $spacing-lg
     &[data-type*=select-one]
       &::after
         content: " "
@@ -52,8 +54,6 @@ $choices-z-index: 3
           -webkit-mask: url(../icons/chevron-up.svg)
           margin-top: -10px
       .choices__inner
-        padding: $spacing-md $spacing-lg
-        min-height: auto
         .choices__list--single
           padding-left: 0
           padding-top: 0
@@ -61,8 +61,6 @@ $choices-z-index: 3
     &[data-type*=select-multiple]
       .choices__inner
         +flex( row, flex-start, baseline, wrap )
-        padding: $spacing-md $spacing-lg
-        min-height: auto
         gap: $spacing-md
         .choices__list--multiple
           +flex( row, flex-start, baseline, wrap )
@@ -77,7 +75,7 @@ $choices-z-index: 3
             background: $um-white
             +typography( text, sm, medium )
             color: $gray-700
-            padding: $spacing-xxs $spacing-sm
+            padding: 1px $spacing-sm
             margin: 0
             gap: $spacing-sm
             button
