@@ -35,7 +35,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_User_Photos User_Photos()
 	 * @method UM_Groups Groups()
 	 * @method UM_Frontend_Posting Frontend_Posting()
-	 * @method UM_Notes Notes()
+	 * @method UM_User_Notes User_Notes()
 	 * @method UM_User_Bookmarks User_Bookmarks()
 	 * @method UM_Unsplash Unsplash()
 	 * @method UM_ForumWP ForumWP()
