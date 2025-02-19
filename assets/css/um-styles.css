@@ -1152,3 +1152,8 @@ small.um-max-filesize span{
 	float: none;
 	height: auto;
 }
+
+/*Makes the honeypot invisible.*/
+.um_request_name {
+	display: none !important;
+}
