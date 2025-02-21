@@ -217,6 +217,15 @@ final class Enqueue extends \um\common\Enqueue {
 
 		$this->load_original();
 
+		// Enqueue the "select2" script earlier to avoid a conflict with "selectWoo".
+		if ( wp_script_is( 'select2' ) && wp_script_is( 'selectWoo' ) ) {
+			$wp_scripts = wp_scripts();
+			if ( ! in_array( 'select2', $wp_scripts->queue, true ) && isset( $wp_scripts->registered[ 'select2' ] ) ) {
+				array_unshift( $wp_scripts->queue, 'select2' );
+				$wp_scripts->add_data( 'selectWoo', 'group', 1 );
+			}
+		}
+
 		// rtl style
 		if ( is_rtl() ) {
 			wp_enqueue_style( 'um_rtl' );
