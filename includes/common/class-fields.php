@@ -1557,17 +1557,7 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 							'design'  => 'secondary-color',
 						)
 					);
-					// @todo easy resize button on field edit
-//						if ( ! empty( $data['crop_data'] ) ) {
-//							$output .= UM()->frontend()::layouts()::button(
-//								__( 'Resize', 'ultimate-member' ),
-//								array(
-//									'size'    => 's',
-//									'classes' => array( 'um-field-image-resize' ),
-//									'design'  => 'secondary-color',
-//								)
-//							);
-//						}
+
 					$output .= UM()->frontend()::layouts()::button(
 						__( 'Remove', 'ultimate-member' ),
 						array(
@@ -1576,9 +1566,8 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 							'design'  => 'tertiary-destructive',
 						)
 					);
-					$output .= '</div>';
 
-					$output .= '</div>';
+					$output .= '</div></div>';
 
 					if ( $this->is_error( $key ) ) {
 						$output .= $this->field_error( $this->show_error( $key ), $field_name );
