@@ -2189,8 +2189,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$scope_count = count( $scope );
 
 			$compare = array(
-				'equal'    => __( 'equal', 'ultimate-member' ),
-				'notequal' => __( 'doesn\'t equal', 'ultimate-member' ),
+				'equal'    => __( 'is equal to', 'ultimate-member' ),
+				'notequal' => __( 'is not equal to', 'ultimate-member' ),
 			);
 
 			$value = $this->get_field_value( $field_data );
