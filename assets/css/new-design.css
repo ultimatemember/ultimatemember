@@ -3175,6 +3175,7 @@
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+  gap: 12px;
 }
 .um .um-list .um-list-item:not(:last-child) {
   border-bottom: 1px solid var(--um-gray-200, #eaecf0);

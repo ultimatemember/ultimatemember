@@ -1353,10 +1353,32 @@ class Shortcodes {
 			</div>
 			<h3>Card component</h3>
 			<div style="display: flex; justify-content: flex-start; flex-wrap: wrap; align-items: start; gap: 24px;">
-				<?php echo UM()->frontend()::layouts()::box( 'CONTENT', array( 'title' => 'Card title' ) ); ?>
-				<?php echo UM()->frontend()::layouts()::box( 'CONTENT2', array( 'title' => 'Card title2', 'footer' => '<a class="um-link" href="#">View</a>' ) ); ?>
-				<?php echo UM()->frontend()::layouts()::box( 'CONTENT3CONTENT3CONTENT3CONTENT3CONTENT3CONTENT3 CONTENT3CONTENT3CONTENT3CONTENT3CONTENT3', array( 'title' => 'Card title3', 'actions' => $items, 'footer' => '<a class="um-link" href="#">View</a>' ) ); ?>
-				<?php echo UM()->frontend()::layouts()::box( 'CONTENT4CONTENT4CONTENT4CONTENT4CONTENT4CONTENT4 CONTENT4CONTENT4CONTENT4CONTENT4CONTENT4', array( 'actions' => $items, 'footer' => '<a class="um-link" href="#">View</a>' ) ); ?>
+				<?php echo UM()->frontend()::layouts()::box(
+					'CONTENT',
+					array( 'title' => 'Card title' )
+				); ?>
+				<?php echo UM()->frontend()::layouts()::box(
+					'CONTENT2',
+					array(
+						'title' => 'Card title2',
+						'footer' => '<a class="um-link" href="#">View</a>'
+					)
+				); ?>
+				<?php echo UM()->frontend()::layouts()::box(
+					'CONTENT3CONTENT3CONTENT3CONTENT3CONTENT3CONTENT3 CONTENT3CONTENT3CONTENT3CONTENT3CONTENT3',
+					array(
+						'title' => 'Card title3',
+						'actions' => $items,
+						'footer' => '<a class="um-link" href="#">View</a>'
+					)
+				); ?>
+				<?php echo UM()->frontend()::layouts()::box(
+					'CONTENT4CONTENT4CONTENT4CONTENT4CONTENT4CONTENT4 CONTENT4CONTENT4CONTENT4CONTENT4CONTENT4',
+					array(
+						'actions' => $items,
+						'footer' => '<a class="um-link" href="#">View</a>'
+					)
+				); ?>
 			</div>
 		</div>
 		<?php

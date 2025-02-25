@@ -301,7 +301,6 @@
   justify-content: flex-start;
   align-items: start;
   flex-wrap: nowrap;
-  gap: 12px;
 }
 .um-profile-body.um-profile-posts .um-user-profile-posts-loop .um-list-item .um-item-img a {
   display: block;
@@ -386,7 +385,6 @@
   justify-content: flex-start;
   align-items: start;
   flex-wrap: nowrap;
-  gap: 12px;
 }
 .um-profile-body.um-profile-comments .um-user-profile-comments-loop .um-list-item .um-item-data {
   display: flex;
