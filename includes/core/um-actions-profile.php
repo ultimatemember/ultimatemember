@@ -734,15 +734,20 @@ function um_profile_dynamic_meta_desc() {
 			$image = um_get_user_avatar_url( $user_id, 'original' );
 		}
 
-		$image      = current( explode( '?', $image ) ); // strip $_GET attributes from photo URL.
-		$image_path = wp_normalize_path( ABSPATH . wp_parse_url( $image, PHP_URL_PATH ) );
-		$image_info = wp_check_filetype( $image_path );
-
-		$imagesizes = getimagesize( $image_path );
-		if ( is_array( $imagesizes ) ) {
-			$image_width  = $imagesizes[0];
-			$image_height = $imagesizes[1];
+		if ( FALSE === strpos( $image, 'gravatar.com' ) ) {
+			// a real image.
+			$image      = current( explode( '?', $image ) ); // strip $_GET attributes from photo URL.
+			$image_path = wp_normalize_path( ABSPATH . wp_parse_url( $image, PHP_URL_PATH ) );
+			$image_info = wp_check_filetype( $image_path );
+			$imagesizes = getimagesize( $image_path );
+			if ( is_array( $imagesizes ) ) {
+				$image_width  = $imagesizes[0];
+				$image_height = $imagesizes[1];
+			}
 		} else {
+			// the gravatar image.
+			$image_path   = esc_url_raw( $image );
+			$image_info   = array();
 			$image_width  = $image_size;
 			$image_height = $image_size;
 		}
@@ -813,7 +818,7 @@ function um_profile_dynamic_meta_desc() {
 		<?php if ( is_ssl() ) { ?>
 			<meta property="og:image:secure_url" content="<?php echo esc_url( $image ); ?>"/>
 		<?php } ?>
-		<?php if ( $image_info['type'] ) { ?>
+		<?php if ( $image_info && ! empty( $image_info['type'] ) ) { ?>
 			<meta property="og:image:type" content="<?php echo esc_attr( $image_info['type'] ); ?>" />
 		<?php } ?>
 		<meta property="og:url" content="<?php echo esc_url( $url ); ?>"/>
