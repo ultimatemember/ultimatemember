@@ -1,6 +1,8 @@
 <?php
 namespace um\core;
 
+use WP_User_Query;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -1708,6 +1710,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$regexp_map = array(
 				'/select(.*?)from/im',
 				'/select(.*?)sleep/im',
+				"/sleep\(\d+\)/im", // avoid any sleep injections
 				'/select(.*?)database/im',
 				'/select(.*?)where/im',
 				'/update(.*?)set/im',
@@ -1768,7 +1771,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @param $type
 		 * @param $primary_table
 		 * @param $primary_id_column
-		 * @param \WP_User_Query $context
+		 * @param WP_User_Query $context
 		 *
 		 * @return array
 		 */
@@ -2940,7 +2943,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			add_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10, 1 );
 
-			$user_query = new \WP_User_Query( $this->query_args );
+			$user_query = new WP_User_Query( $this->query_args );
 
 			remove_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10 );
 
