@@ -134,15 +134,9 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 					exit;
 				}
 
-				$redirect              = um_get_core_page( 'login', 'account_active' );
-				$set_password_required = get_user_meta( $user_id, 'um_set_password_required', true );
-
+				// approve.
 				um_fetch_user( $user_id );
 				UM()->common()->users()->approve( $user_id, true );
-				if ( ! empty( $set_password_required ) ) {
-					$redirect = um_user( 'password_reset_link' );
-				}
-				um_reset_user();
 
 				$user_role      = UM()->roles()->get_priority_user_role( $user_id );
 				$user_role_data = UM()->roles()->role_data( $user_role );
@@ -174,8 +168,15 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 				 */
 				do_action( 'um_after_email_confirmation', $user_id );
 
+				// redirect.
+				$set_password_required = get_user_meta( $user_id, 'um_set_password_required', true );
 				if ( empty( $set_password_required ) ) {
-					$redirect = empty( $user_role_data['url_email_activate'] ) ? um_get_core_page( 'login', 'account_active' ) : trim( $user_role_data['url_email_activate'] ); // Role setting "URL redirect after email activation"
+					// Role setting "URL redirect after email activation".
+					$redirect = empty( $user_role_data['url_email_activate'] ) ? um_get_core_page( 'login', 'account_active' ) : trim( $user_role_data['url_email_activate'] );
+				} else {
+					// Redirect to the change password page if there is no password for this user.
+					um_fetch_user( $user_id );
+					$redirect = um_user( 'password_reset_link' );
 				}
 				$redirect = apply_filters( 'um_after_email_confirmation_redirect', $redirect, $user_id, $login );
 
