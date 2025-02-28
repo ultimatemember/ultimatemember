@@ -698,3 +698,12 @@ jQuery(document).ready(function() {
 		}
 	});
 });
+
+// Makes the honeypot.
+jQuery( window ).on( 'load', function() {
+	let $honeypotField = jQuery('input[name="um_request"]');
+	if ( $honeypotField.length ) {
+		$honeypotField.val('');
+	}
+});
+
