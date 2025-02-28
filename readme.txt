@@ -174,6 +174,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Security issue CVE ID: CVE-2025-1702.
 * Fixed: Activation link redirects to Reset Password after registration without password field and required email activation.
 * Fixed: Honeypot scripts/styles for themes without pre-rendered shortcodes. Enqueue honeypot scripts/styles everytime.
+* Fixed: Profile photo metadata when Gravatar image is used.
 
 **Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
