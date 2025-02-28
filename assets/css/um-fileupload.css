@@ -111,6 +111,10 @@
 	- upload progress
 */
 
+div.um-modal .ajax-file-upload-container {
+	margin: 20px 0 0 0;
+}
+
 div.um-modal .upload-statusbar {
 	margin: 20px 0 0 0;
 }
@@ -155,7 +159,8 @@ div.um-modal .ajax-upload-dragdrop {
 
 div.um-modal .ajax-upload-dragdrop span.str {
 	display: block;
-	margin: 0 0 15px 0;
+	margin: 15px 0 0 0;
+	/*margin: 0 0 15px 0;*/
 }
 
 div.um-modal .ajax-upload-dragdrop span.icon {
@@ -193,7 +198,7 @@ div.um-modal .upload {
 	box-sizing: border-box;
 	transition: 0.2s;
 }
-  
+
 div.um-modal .upload:hover {
 	background: #44b0ec;
 }

@@ -324,6 +324,8 @@ function initImageUpload_UM( trigger ) {
 		showFileCounter: false,
 		showStatusAfterSuccess: true,
 		returnType: 'json',
+		dragdropWidth: 'auto',
+		uploadButtonClass: 'upload',
 		onSubmit:function(files){
 
 			trigger.parents('.um-modal-body').find('.um-error-block').remove();
@@ -422,6 +424,8 @@ function initFileUpload_UM( trigger ) {
 		showDone: false,
 		showFileCounter: false,
 		showStatusAfterSuccess: true,
+		dragdropWidth: 'auto',
+		uploadButtonClass: 'upload',
 		onSubmit:function(files){
 
 			trigger.parents('.um-modal-body').find('.um-error-block').remove();
