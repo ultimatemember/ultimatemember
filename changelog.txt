@@ -1,5 +1,16 @@
 ﻿== Changelog ==
 
+= 2.10.1 March 03, 2025 =
+
+* Bugfixes:
+
+  - Fixed: Security issue CVE ID: CVE-2025-1702.
+  - Fixed: Activation link redirects to Reset Password after registration without password field and required email activation.
+  - Fixed: Honeypot scripts/styles for themes without pre-rendered shortcodes. Enqueue honeypot scripts/styles everytime.
+  - Fixed: Profile photo metadata when Gravatar image is used.
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade *
+
 = 2.10.0 February 18, 2025 =
 
 * Enhancements:

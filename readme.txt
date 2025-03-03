@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 6.7
-Stable tag: 2.10.0
+Stable tag: 2.10.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -167,6 +167,17 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.10.1 2025-03-03 =
+
+**Bugfixes**
+
+* Fixed: Security issue CVE ID: CVE-2025-1702.
+* Fixed: Activation link redirects to Reset Password after registration without password field and required email activation.
+* Fixed: Honeypot scripts/styles for themes without pre-rendered shortcodes. Enqueue honeypot scripts/styles everytime.
+* Fixed: Profile photo metadata when Gravatar image is used.
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
+
 = 2.10.0 2025-02-18 =
 
 **Enhancements**
@@ -266,6 +277,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.10.1 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.10.0 =
 Increased the minimum PHP and WordPress requirements. The plugin now requires at least PHP 7.0 and WordPress 6.2. This version fixes a security related bug. Upgrade immediately.
