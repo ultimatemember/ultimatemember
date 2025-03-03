@@ -1356,6 +1356,8 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * Checks if the new design is enabled.
 		 *
+		 * @since 2.9.2
+		 *
 		 * @return bool
 		 */
 		public function is_new_ui() {
