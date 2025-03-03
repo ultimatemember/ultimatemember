@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Ultimate Member plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Member 2.10.0\n"
+"Project-Id-Version: Ultimate Member 2.10.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ultimate-member\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-02-18T15:29:08+00:00\n"
+"POT-Creation-Date: 2025-03-03T14:11:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: ultimate-member\n"
@@ -69,7 +69,7 @@ msgstr ""
 #: includes/admin/class-admin.php:844
 #: includes/admin/class-site-health.php:2007
 #: includes/admin/templates/directory/sorting.php:68
-#: includes/core/class-member-directory.php:426
+#: includes/core/class-member-directory.php:428
 msgid "Other (Custom Field)"
 msgstr ""
 
@@ -1613,20 +1613,20 @@ msgstr ""
 #: includes/admin/class-site-health.php:1976
 #: includes/core/class-builtin.php:938
 #: includes/core/class-builtin.php:941
-#: includes/core/class-member-directory.php:433
+#: includes/core/class-member-directory.php:435
 msgid "Country"
 msgstr ""
 
 #: includes/admin/class-site-health.php:1977
 #: includes/core/class-builtin.php:924
 #: includes/core/class-builtin.php:927
-#: includes/core/class-member-directory.php:434
+#: includes/core/class-member-directory.php:436
 msgid "Gender"
 msgstr ""
 
 #: includes/admin/class-site-health.php:1978
 #: includes/core/class-builtin.php:1217
-#: includes/core/class-member-directory.php:435
+#: includes/core/class-member-directory.php:437
 msgid "Languages"
 msgstr ""
 
@@ -1634,12 +1634,12 @@ msgstr ""
 #: includes/admin/core/list-tables/roles-list-table.php:26
 #: includes/admin/core/list-tables/roles-list-table.php:117
 #: includes/admin/core/list-tables/roles-list-table.php:466
-#: includes/core/class-member-directory.php:436
+#: includes/core/class-member-directory.php:438
 msgid "Roles"
 msgstr ""
 
 #: includes/admin/class-site-health.php:1980
-#: includes/core/class-member-directory.php:437
+#: includes/core/class-member-directory.php:439
 #: includes/core/um-filters-fields.php:1006
 #: includes/core/um-filters-fields.php:1023
 msgid "Age"
@@ -1648,12 +1648,12 @@ msgstr ""
 #: includes/admin/class-site-health.php:1981
 #: includes/core/class-builtin.php:863
 #: includes/core/class-builtin.php:866
-#: includes/core/class-member-directory.php:438
+#: includes/core/class-member-directory.php:440
 msgid "Last Login"
 msgstr ""
 
 #: includes/admin/class-site-health.php:1982
-#: includes/core/class-member-directory.php:439
+#: includes/core/class-member-directory.php:441
 msgid "User Registered"
 msgstr ""
 
@@ -1662,7 +1662,7 @@ msgstr ""
 #: includes/class-config.php:337
 #: includes/core/class-builtin.php:811
 #: includes/core/class-builtin.php:814
-#: includes/core/class-member-directory.php:440
+#: includes/core/class-member-directory.php:442
 msgid "First Name"
 msgstr ""
 
@@ -1671,7 +1671,7 @@ msgstr ""
 #: includes/class-config.php:351
 #: includes/core/class-builtin.php:821
 #: includes/core/class-builtin.php:824
-#: includes/core/class-member-directory.php:441
+#: includes/core/class-member-directory.php:443
 msgid "Last Name"
 msgstr ""
 
@@ -1679,22 +1679,22 @@ msgstr ""
 #: includes/class-config.php:894
 #: includes/core/class-builtin.php:831
 #: includes/core/class-builtin.php:834
-#: includes/core/class-member-directory.php:373
-#: includes/core/class-member-directory.php:442
+#: includes/core/class-member-directory.php:375
+#: includes/core/class-member-directory.php:444
 msgid "Nickname"
 msgstr ""
 
 #: includes/admin/class-site-health.php:1986
 #: includes/core/class-builtin.php:885
 #: includes/core/class-builtin.php:888
-#: includes/core/class-member-directory.php:443
+#: includes/core/class-member-directory.php:445
 msgid "Secondary Email Address"
 msgstr ""
 
 #: includes/admin/class-site-health.php:1987
 #: includes/core/class-builtin.php:897
 #: includes/core/class-builtin.php:900
-#: includes/core/class-member-directory.php:444
+#: includes/core/class-member-directory.php:446
 msgid "Biography"
 msgstr ""
 
@@ -1702,14 +1702,14 @@ msgstr ""
 #: includes/core/class-builtin.php:1229
 #: includes/core/class-builtin.php:1232
 #: includes/core/class-builtin.php:1588
-#: includes/core/class-member-directory.php:445
+#: includes/core/class-member-directory.php:447
 msgid "Phone Number"
 msgstr ""
 
 #: includes/admin/class-site-health.php:1989
 #: includes/core/class-builtin.php:1241
 #: includes/core/class-builtin.php:1244
-#: includes/core/class-member-directory.php:446
+#: includes/core/class-member-directory.php:448
 msgid "Mobile Number"
 msgstr ""
 
@@ -1776,12 +1776,12 @@ msgid "SoundCloud"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2001
-#: includes/core/class-member-directory.php:370
+#: includes/core/class-member-directory.php:372
 msgid "New users first"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2002
-#: includes/core/class-member-directory.php:371
+#: includes/core/class-member-directory.php:373
 msgid "Old users first"
 msgstr ""
 
@@ -1792,22 +1792,22 @@ msgstr ""
 #: includes/class-config.php:895
 #: includes/core/class-builtin.php:772
 #: includes/core/class-builtin.php:775
-#: includes/core/class-member-directory.php:372
+#: includes/core/class-member-directory.php:374
 msgid "Username"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2004
-#: includes/core/class-member-directory.php:376
+#: includes/core/class-member-directory.php:378
 msgid "Display name"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2005
-#: includes/core/class-member-directory.php:377
+#: includes/core/class-member-directory.php:379
 msgid "Last & First name"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2006
-#: includes/core/class-member-directory.php:425
+#: includes/core/class-member-directory.php:427
 #: templates/members.php:102
 msgid "Random"
 msgstr ""
@@ -4400,8 +4400,8 @@ msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:1440
 #: includes/admin/core/class-admin-settings.php:1646
-#: includes/core/um-actions-profile.php:810
-#: includes/core/um-actions-profile.php:828
+#: includes/core/um-actions-profile.php:815
+#: includes/core/um-actions-profile.php:833
 msgid "Profile photo"
 msgstr ""
 
@@ -6220,12 +6220,12 @@ msgstr ""
 #: includes/class-config.php:231
 #: includes/core/class-fields.php:3048
 #: includes/core/class-fields.php:3173
-#: includes/core/um-actions-profile.php:895
-#: includes/core/um-actions-profile.php:904
-#: includes/core/um-actions-profile.php:1083
-#: includes/core/um-actions-profile.php:1116
-#: includes/core/um-actions-profile.php:1508
-#: includes/core/um-actions-profile.php:1515
+#: includes/core/um-actions-profile.php:900
+#: includes/core/um-actions-profile.php:909
+#: includes/core/um-actions-profile.php:1088
+#: includes/core/um-actions-profile.php:1121
+#: includes/core/um-actions-profile.php:1513
+#: includes/core/um-actions-profile.php:1520
 msgid "Cancel"
 msgstr ""
 
@@ -6819,8 +6819,8 @@ msgstr ""
 #: includes/class-config.php:134
 #: includes/class-config.php:943
 #: includes/class-config.php:1007
-#: includes/core/class-member-directory.php:2642
-#: includes/core/um-actions-profile.php:1514
+#: includes/core/class-member-directory.php:2645
+#: includes/core/um-actions-profile.php:1519
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
 msgstr ""
@@ -7433,7 +7433,7 @@ msgid "Cover Photo"
 msgstr ""
 
 #: includes/core/class-builtin.php:1272
-#: includes/core/um-actions-profile.php:973
+#: includes/core/um-actions-profile.php:978
 msgid "Change your cover photo"
 msgstr ""
 
@@ -9410,8 +9410,8 @@ msgstr ""
 
 #: includes/core/class-fields.php:3003
 #: includes/core/class-fields.php:3047
-#: includes/core/um-actions-profile.php:1081
-#: includes/core/um-actions-profile.php:1114
+#: includes/core/um-actions-profile.php:1086
+#: includes/core/um-actions-profile.php:1119
 msgid "Change photo"
 msgstr ""
 
@@ -9632,114 +9632,114 @@ msgstr ""
 
 #: includes/core/class-member-directory-meta.php:603
 #: includes/core/class-member-directory-meta.php:608
-#: includes/core/class-member-directory.php:2835
-#: includes/core/class-member-directory.php:2841
+#: includes/core/class-member-directory.php:2838
+#: includes/core/class-member-directory.php:2844
 msgid "Wrong member directory data"
 msgstr ""
 
-#: includes/core/class-member-directory.php:364
+#: includes/core/class-member-directory.php:366
 msgid "Grid"
 msgstr ""
 
-#: includes/core/class-member-directory.php:365
+#: includes/core/class-member-directory.php:367
 msgid "List"
 msgstr ""
 
-#: includes/core/class-member-directory.php:374
+#: includes/core/class-member-directory.php:376
 msgid "First name"
 msgstr ""
 
-#: includes/core/class-member-directory.php:375
+#: includes/core/class-member-directory.php:377
 msgid "Last name"
 msgstr ""
 
-#: includes/core/class-member-directory.php:378
+#: includes/core/class-member-directory.php:380
 msgid "Last login"
 msgstr ""
 
-#: includes/core/class-member-directory.php:384
+#: includes/core/class-member-directory.php:386
 msgid "CHAR"
 msgstr ""
 
-#: includes/core/class-member-directory.php:385
+#: includes/core/class-member-directory.php:387
 msgid "NUMERIC"
 msgstr ""
 
-#: includes/core/class-member-directory.php:386
+#: includes/core/class-member-directory.php:388
 msgid "BINARY"
 msgstr ""
 
-#: includes/core/class-member-directory.php:387
+#: includes/core/class-member-directory.php:389
 msgid "DATE"
 msgstr ""
 
-#: includes/core/class-member-directory.php:388
+#: includes/core/class-member-directory.php:390
 msgid "DATETIME"
 msgstr ""
 
-#: includes/core/class-member-directory.php:389
+#: includes/core/class-member-directory.php:391
 msgid "DECIMAL"
 msgstr ""
 
-#: includes/core/class-member-directory.php:390
+#: includes/core/class-member-directory.php:392
 msgid "SIGNED"
 msgstr ""
 
-#: includes/core/class-member-directory.php:391
+#: includes/core/class-member-directory.php:393
 msgid "TIME"
 msgstr ""
 
-#: includes/core/class-member-directory.php:392
+#: includes/core/class-member-directory.php:394
 msgid "UNSIGNED"
 msgstr ""
 
 #. translators: %s: title.
-#: includes/core/class-member-directory.php:405
-#: includes/core/class-member-directory.php:415
+#: includes/core/class-member-directory.php:407
+#: includes/core/class-member-directory.php:417
 msgid "%s DESC"
 msgstr ""
 
 #. translators: %s: title.
-#: includes/core/class-member-directory.php:417
+#: includes/core/class-member-directory.php:419
 msgid "%s ASC"
 msgstr ""
 
 #. translators: %s: Datetime filter label.
 #. translators: %s: Timepicker filter label.
-#: includes/core/class-member-directory.php:889
-#: includes/core/class-member-directory.php:934
+#: includes/core/class-member-directory.php:891
+#: includes/core/class-member-directory.php:936
 msgid "%s From"
 msgstr ""
 
 #. translators: %s: Datetime filter label.
 #. translators: %s: Timepicker filter label.
-#: includes/core/class-member-directory.php:895
-#: includes/core/class-member-directory.php:941
+#: includes/core/class-member-directory.php:897
+#: includes/core/class-member-directory.php:943
 msgid "%s To"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1039
-#: includes/core/class-member-directory.php:1040
+#: includes/core/class-member-directory.php:1041
+#: includes/core/class-member-directory.php:1042
 msgid " stars"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1050
+#: includes/core/class-member-directory.php:1052
 msgid "<strong>Age:</strong>&nbsp;{value} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1051
+#: includes/core/class-member-directory.php:1053
 msgid "<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:2603
-#: includes/core/class-member-directory.php:2631
-#: includes/core/um-actions-profile.php:1481
-#: includes/core/um-actions-profile.php:1512
+#: includes/core/class-member-directory.php:2606
+#: includes/core/class-member-directory.php:2634
+#: includes/core/um-actions-profile.php:1486
+#: includes/core/um-actions-profile.php:1517
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:2637
-#: includes/core/um-actions-profile.php:1513
+#: includes/core/class-member-directory.php:2640
+#: includes/core/um-actions-profile.php:1518
 msgid "My Account"
 msgstr ""
 
@@ -10414,39 +10414,39 @@ msgstr ""
 msgid "Your choosed %s"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:889
-#: includes/core/um-actions-profile.php:890
-#: includes/core/um-actions-profile.php:903
-#: includes/core/um-actions-profile.php:963
+#: includes/core/um-actions-profile.php:894
+#: includes/core/um-actions-profile.php:895
+#: includes/core/um-actions-profile.php:908
+#: includes/core/um-actions-profile.php:968
 #: assets/js/um-profile.js:73
 msgid "Upload a cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:889
-#: includes/core/um-actions-profile.php:890
+#: includes/core/um-actions-profile.php:894
+#: includes/core/um-actions-profile.php:895
 msgid "Change cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:894
+#: includes/core/um-actions-profile.php:899
 msgid "Remove cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1081
-#: includes/core/um-actions-profile.php:1114
+#: includes/core/um-actions-profile.php:1086
+#: includes/core/um-actions-profile.php:1119
 msgid "Upload photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1082
-#: includes/core/um-actions-profile.php:1115
+#: includes/core/um-actions-profile.php:1087
+#: includes/core/um-actions-profile.php:1120
 msgid "Remove photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1316
+#: includes/core/um-actions-profile.php:1321
 msgid "Tell us a bit about yourself..."
 msgstr ""
 
 #. translators: %s: profile status.
-#: includes/core/um-actions-profile.php:1336
+#: includes/core/um-actions-profile.php:1341
 msgid "This user account status is %s"
 msgstr ""
 
