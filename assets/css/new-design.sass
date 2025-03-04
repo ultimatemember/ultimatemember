@@ -2144,7 +2144,24 @@
         border-radius: $radius-md 0 0 $radius-md
       &:last-child
         border-radius: 0 $radius-md $radius-md 0
-
+  .wp-editor-wrap
+    &.#{$prefix}error
+      .wp-editor-container
+        border: 1px solid $error-500
+      &.tmce-active
+        .switch-tmce
+          border-top-color: $error-500
+          border-left-color: $error-500
+          border-right-color: $error-500
+        .switch-html
+          border-color: $error-500
+      &.html-active
+        .switch-tmce
+          border-color: $error-500
+        .switch-html
+          border-top-color: $error-500
+          border-left-color: $error-500
+          border-right-color: $error-500
 
 
 // Field wrapper common styling

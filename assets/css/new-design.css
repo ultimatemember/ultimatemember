@@ -2842,6 +2842,25 @@
 .um .um-time-range-row input:last-child {
   border-radius: 0 8px 8px 0;
 }
+.um .wp-editor-wrap.um-error .wp-editor-container {
+  border: 1px solid var(--um-error-500, #f04438);
+}
+.um .wp-editor-wrap.um-error.tmce-active .switch-tmce {
+  border-top-color: var(--um-error-500, #f04438);
+  border-left-color: var(--um-error-500, #f04438);
+  border-right-color: var(--um-error-500, #f04438);
+}
+.um .wp-editor-wrap.um-error.tmce-active .switch-html {
+  border-color: var(--um-error-500, #f04438);
+}
+.um .wp-editor-wrap.um-error.html-active .switch-tmce {
+  border-color: var(--um-error-500, #f04438);
+}
+.um .wp-editor-wrap.um-error.html-active .switch-html {
+  border-top-color: var(--um-error-500, #f04438);
+  border-left-color: var(--um-error-500, #f04438);
+  border-right-color: var(--um-error-500, #f04438);
+}
 
 .um .um-field-wrapper {
   display: flex;
