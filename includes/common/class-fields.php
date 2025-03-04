@@ -1536,6 +1536,20 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 					if ( ! empty( $field_value ) ) {
 						$uploader_args['classes'][] = 'um-upload-completed';
 					}
+					/**
+					 * Filters the uploader args for image-type field.
+					 *
+					 * @hook um_image_edit_field_uploader_args
+					 * @since 3.0.0
+					 *
+					 * @param {array} $uploader_args The original args.
+					 * @param {array}  $data         The field data.
+					 * @param {string} $field_name   The field name.
+					 * @param {mixed}  $field_value  The field value.
+					 *
+					 * @return {array} The modified args.
+					 */
+					$uploader_args = apply_filters( 'um_image_edit_field_uploader_args', $uploader_args, $data, $field_name, $field_value );
 
 					$uploader_wrapper_classes = array( 'um-field-uploader-wrapper', 'um-field-image-uploader-wrapper' );
 
@@ -1635,6 +1649,20 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 					if ( ! empty( $file_field_value ) ) {
 						$uploader_args['classes'][] = 'um-upload-completed';
 					}
+					/**
+					 * Filters the uploader args for file-type field.
+					 *
+					 * @hook um_file_edit_field_uploader_args
+					 * @since 3.0.0
+					 *
+					 * @param {array} $uploader_args The original args.
+					 * @param {array}  $data         The field data.
+					 * @param {string} $field_name   The field name.
+					 * @param {mixed}  $field_value  The field value.
+					 *
+					 * @return {array} The modified args.
+					 */
+					$uploader_args = apply_filters( 'um_file_edit_field_uploader_args', $uploader_args, $data, $field_name, $file_field_value );
 
 					$uploader_wrapper_classes = array( 'um-field-uploader-wrapper', 'um-field-file-uploader-wrapper' );
 
