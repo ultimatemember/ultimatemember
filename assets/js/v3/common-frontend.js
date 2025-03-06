@@ -802,7 +802,14 @@ UM.frontend = {
 		},
 		deleteURLSearchParam: function( key, reload = false ) {
 			const url = new URL(window.location.href);
-			url.searchParams.delete(key);
+			if ( Array.isArray( key ) ) {
+				for ( let k of key ) {
+					url.searchParams.delete( k );
+				}
+			} else {
+				url.searchParams.delete(key);
+			}
+
 			if ( reload ) {
 				window.location.assign( url );
 			} else {
