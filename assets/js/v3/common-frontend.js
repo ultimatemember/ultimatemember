@@ -791,10 +791,14 @@ UM.frontend = {
 			});
 			return data;
 		},
-		setURLSearchParam: function( key, value ) {
-			const url = new URL(window.location.href);
-			url.searchParams.set(key, value);
-			window.history.pushState({ path: url.href }, '', url.href);
+		setURLSearchParam: function( paramObj ) {
+			if ( paramObj !== null && typeof paramObj === 'object' && ! ( paramObj instanceof Array ) ) {
+				const url = new URL(window.location.href);
+				Object.entries(paramObj).forEach(([key, value]) => {
+					url.searchParams.set( key, value );
+				});
+				window.history.pushState({ path: url.href }, '', url.href);
+			}
 		},
 		deleteURLSearchParam: function( key, reload = false ) {
 			const url = new URL(window.location.href);
