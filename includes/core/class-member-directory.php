@@ -1710,8 +1710,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$regexp_map = array(
 				'/select(.*?)from/im',
 				'/select(.*?)sleep/im',
-				"/sleep\(\s*[\"'`]?\s*\d+\s*[\"'`]?\s*\)/im", // avoid any sleep injections
-				"/benchmark\(\s*[\"'`]?\s*\d+\s*[\"'`]?\s*,.*\)/im", // avoid any benchmark injections
+				"/sleep\([^)]+\)/im", // avoid any sleep injections
+				"/benchmark\([^)]+\)/im", // avoid any benchmark injections
 				'/select(.*?)database/im',
 				'/select(.*?)where/im',
 				'/update(.*?)set/im',
