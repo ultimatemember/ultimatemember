@@ -70,6 +70,13 @@ function um_admin_init_users_select() {
 					params.page = params.page || 1;
 					var options = [];
 
+					if ( restrictions ) {
+						var title = wp.i18n.__( 'All roles', 'ultimate-member' );
+						if ( 'users' === scope ) {
+							title = wp.i18n.__( 'All users', 'ultimate-member' );
+						}
+						options.push( { id: 0, text: title  } );
+					}
 					if ( 'users' === scope ) {
 						if ( response.data.users ) {
 							jQuery.each( response.data.users, function( index, text ) {
@@ -161,7 +168,17 @@ function um_admin_init_pages_select() {
 				var options = [];
 
 				if ( data ) {
-
+					if ( restrictions ) {
+						var title = wp.i18n.__( 'All pages', 'ultimate-member' );
+						if ( 'post' === scope ) {
+							title = wp.i18n.__( 'All posts', 'ultimate-member' );
+						} else if ( 'tags' === scope ) {
+							title = wp.i18n.__( 'All tags', 'ultimate-member' );
+						} else if ( 'category' === scope ) {
+							title = wp.i18n.__( 'All categories', 'ultimate-member' );
+						}
+						options.push( { id: 0, text: title  } );
+					}
 					// data is the array of arrays, and each of them contains ID and the Label of the option
 					jQuery.each( data, function( index, text ) { // do not forget that "index" is just auto incremented value
 						if ( index === 'total_count' ) {

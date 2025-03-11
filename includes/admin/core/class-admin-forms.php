@@ -2056,23 +2056,26 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					if ( ! empty( $entities ) ) {
 						if ( 'site' !== $entity_key ) {
 							foreach ( $entities as $value ) {
-								if ( 'site' !== $entity_key ) {
-									$space = '';
-									if ( strpos( $value, ':' ) !== false ) {
-										$values    = explode( ':', $value );
-										$id        = $values[0];
-										$post_name = $values[1];
-										if ( strpos( $post_name, '|' ) !== false ) {
-											$child_name = explode( '|', $post_name );
-											$space      = $child_name[1];
-											$post_name  = $child_name[0];
-										}
-									} else {
-										$id        = $value;
-										$post_name = get_the_title( $id );
+								$space = '';
+								if ( strpos( $value, ':' ) !== false ) {
+									$values    = explode( ':', $value );
+									$id        = $values[0];
+									$post_name = $values[1];
+									if ( strpos( $post_name, '|' ) !== false ) {
+										$child_name = explode( '|', $post_name );
+										$space      = $child_name[1];
+										$post_name  = $child_name[0];
 									}
-									$html .= '<option value="' . $id . '" ' . selected( in_array( absint( $id ), $ids, true ), true, false ) . '>' . esc_html( $space ) . esc_html__( 'ID#' ) . esc_html( $id ) . ': ' . esc_html( $post_name ) . '</option>';
+								} else {
+									$id        = $value;
+									$post_name = get_the_title( $id );
 								}
+								if ( 0 === absint( $id ) ) {
+									$option_name = $post_name;
+								} else {
+									$option_name = esc_html( $space ) . esc_html__( 'ID#' ) . esc_html( $id ) . ': ' . esc_html( $post_name );
+								}
+								$html .= '<option value="' . $id . '" ' . selected( in_array( absint( $id ), $ids, true ), true, false ) . '>' . $option_name . '</option>';
 							}
 						}
 					}
@@ -2107,18 +2110,31 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		}
 
 		public function get_entites( $entity, $ids ) {
-			$post_types = get_post_types( array( 'public' => true ), 'names' );
+			$post_types    = get_post_types( array( 'public' => true ), 'names' );
+			$post_type_obj = get_post_type_object( $entity );
 			if ( in_array( $entity, $post_types, true ) ) {
 				foreach ( $ids as $id ) {
-					$entities[] = $id . ':' . get_the_title( $id );
+					if ( 0 === absint( $id ) ) {
+						$entities[] = $id . ':' . esc_html__( 'All', 'ultimate-member' ) . ' ' . $post_type_obj->labels->name;
+					} else {
+						$entities[] = $id . ':' . get_the_title( $id );
+					}
 				}
 			} elseif ( 'tags' === $entity ) {
 				foreach ( $ids as $id ) {
-					$entities[] = $id . ':' . get_term( $id )->name;
+					if ( 0 === absint( $id ) ) {
+						$entities[] = $id . ':' . esc_html__( 'All tags', 'ultimate-member' );
+					} else {
+						$entities[] = $id . ':' . get_term( $id )->name;
+					}
 				}
 			} elseif ( 'category' === $entity ) {
 				foreach ( $ids as $id ) {
-					$entities[] = $id . ':' . get_term( $id )->name;
+					if ( 0 === absint( $id ) ) {
+						$entities[] = $id . ':' . esc_html__( 'All categories', 'ultimate-member' );
+					} else {
+						$entities[] = $id . ':' . get_term( $id )->name;
+					}
 				}
 			}
 
@@ -2266,18 +2282,27 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 							if ( 'users' === $rule_key ) {
 								$display_name = '';
 								foreach ( $rule['ids'] as $user_id ) {
-									$user = get_user_by( 'ID', $user_id );
-									if ( ! empty( $user->display_name ) ) {
-										$display_name = $user->display_name;
+									if ( 0 === absint( $user_id ) ) {
+										$display_name = esc_html__( 'All users', 'ultimate-member' );
 									} else {
-										$display_name = $user->user_login;
+										$user = get_user_by( 'ID', $user_id );
+										if ( ! empty( $user->display_name ) ) {
+											$display_name = $user->display_name;
+										} else {
+											$display_name = $user->user_login;
+										}
 									}
 									$html .= '<option value="' . esc_attr( $user_id ) . '" selected>' . esc_html( $display_name ) . '</option>';
 								}
 							} elseif ( 'role' === $rule_key ) {
 								$options = $this->get_roles_options( $rule_key );
 								foreach ( $rule['ids'] as $role_id ) {
-									$html .= '<option value="' . esc_attr( $role_id ) . '" selected>' . esc_html( $options[ $role_id ] ) . '</option>';
+									if ( 0 === absint( $role_id ) ) {
+										$role_name = esc_html__( 'All roles', 'ultimate-member' );
+									} else {
+										$role_name = $options[ $role_id ];
+									}
+									$html .= '<option value="' . esc_attr( $role_id ) . '" selected>' . esc_html( $role_name ) . '</option>';
 								}
 							}
 							$html .= '</select>';

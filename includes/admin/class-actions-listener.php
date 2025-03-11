@@ -343,17 +343,23 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 				$data_rules   = array();
 
 				if ( ! empty( $_POST['um_restriction_rule_content']['_um_include'] ) ) {
+					$_POST['um_restriction_rule_content']['_um_include'] = $this->filter_zero_values( $_POST['um_restriction_rule_content']['_um_include'] );
+
 					$data_include = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rule_content'] );
 				}
 
 				if ( ! empty( $_POST['um_restriction_rule_content']['_um_exclude'] ) ) {
+					$_POST['um_restriction_rule_content']['_um_exclude'] = $this->filter_zero_values( $_POST['um_restriction_rule_content']['_um_exclude'] );
+
 					$data_exclude = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rule_content'] );
 				}
 
 				if ( 'loggedout' !== $_POST['um_restriction_rules_users']['_um_authentification'] ) {
 					if ( ! empty( $_POST['um_restriction_rules_users']['_um_users'] ) ) {
 						$_POST['um_restriction_rules_users']['_um_users'] = array_values( $_POST['um_restriction_rules_users']['_um_users'] );
-						$data_rules                                       = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_users'] );
+						$_POST['um_restriction_rules_users']['_um_users'] = $this->filter_zero_values( $_POST['um_restriction_rules_users']['_um_users'] );
+
+						$data_rules = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_users'] );
 					}
 					$data_rules['_um_authentification'] = 'loggedin';
 				} else {
@@ -453,6 +459,23 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 					exit;
 				}
 			}
+		}
+
+		public function filter_zero_values( array $data ): array {
+			foreach ( $data as &$value ) {
+				if ( is_array( $value ) ) {
+					if ( array_values( $value ) === $value ) {
+						if ( in_array( 0, $value, false ) ) {
+							$value = array( 0 );
+						} else {
+							$value = $this->filter_zero_values( $value );
+						}
+					} else {
+						$value = $this->filter_zero_values( $value );
+					}
+				}
+			}
+			return $data;
 		}
 	}
 }
