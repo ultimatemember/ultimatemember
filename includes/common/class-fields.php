@@ -861,9 +861,11 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 			 * Filters a field type on the edit mode.
 			 *
 			 * @since 1.3.x
+			 * @since 3.0.0 Added field data attribute
 			 * @hook  um_hook_for_field_{$type}
 			 *
 			 * @param {string} $type Field Type.
+			 * @param {array}  $data Field Data.
 			 *
 			 * @return {string} Field Type.
 			 *
@@ -874,7 +876,7 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 			 * }
 			 * add_filter( 'um_hook_for_field_{$type}', 'my_field_type', 10, 1 );
 			 */
-			$type = apply_filters( "um_hook_for_field_{$type}", $type );
+			$type = apply_filters( "um_hook_for_field_{$type}", $type, $data );
 			switch ( $type ) {
 				case 'textarea':
 				case 'multiselect':
