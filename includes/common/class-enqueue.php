@@ -321,7 +321,8 @@ class Enqueue {
 		// Select2 JS.
 		$this->register_select2();
 
-		wp_register_script( 'um_choices', $libs_url . 'choices-js/choices' . $suffix . '.js', array(), '10.2.0', true );
+		// wp_register_script( 'um_choices', $libs_url . 'choices-js/choices' . $suffix . '.js', array(), '10.2.0', true );
+		wp_register_script( 'um_choices', $libs_url . 'choices-js/choices' . $suffix . '.js', array(), '11.1.0', true );
 		wp_register_style( 'um_choices', $css_url . 'um-choices' . $suffix . '.css', array(), UM_VERSION );
 
 		$common_js_deps  = array( 'jquery', 'wp-util', 'wp-hooks', 'wp-i18n', 'um_tipsy', 'um_raty', 'um_choices' );

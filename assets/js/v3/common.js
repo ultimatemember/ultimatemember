@@ -177,7 +177,14 @@ UM.common = {
 					}
 
 				} else if ( jQuery(this).hasClass( 'um-no-search' ) ) {
+					// Search can be only in the single select box.
 					attrs = { searchEnabled: false };
+				}
+
+				if ( jQuery(this).hasClass( 'um-add-choices' ) ) {
+					// Can add choices
+					attrs.addChoices = true;
+					attrs.addItems = true;
 				}
 
 				choices = new Choices(element, attrs);
