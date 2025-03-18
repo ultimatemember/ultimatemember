@@ -1,6 +1,8 @@
 <?php
 namespace um\core;
 
+use Exception;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -53,7 +55,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 *
 		 * @param array $args
 		 *
-		 * @throws \Exception
+		 * @throws Exception
 		 */
 		public function init_tabs( $args ) {
 			$this->tabs = $this->get_tabs();
@@ -168,7 +170,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * @param array $args
 		 *
 		 * @return false|string
-		 * @throws \Exception
+		 * @throws Exception
 		 */
 		public function ultimatemember_account( $args = array() ) {
 			if ( ! is_user_logged_in() ) {
@@ -597,17 +599,16 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			return $secure;
 		}
 
-
 		/**
-		 * Get Tab Output
+		 * Get Account Tab Output
 		 *
-		 * @param $id
-		 * @param $shortcode_args
+		 * @param string $id
+		 * @param array  $shortcode_args
 		 *
 		 * @return mixed|string|null
-		 * @throws \Exception
+		 * @throws Exception
 		 */
-		function get_tab_fields( $id, $shortcode_args ) {
+		public function get_tab_fields( $id, $shortcode_args ) {
 			$output = null;
 
 			UM()->fields()->set_id   = absint( $id );
@@ -620,32 +621,30 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			}
 
 			switch ( $id ) {
-
 				case 'privacy':
-
 					$args = 'profile_privacy,profile_noindex,hide_in_members,um_show_last_login';
 					/**
-					 * UM hook
+					 * Filters the account tab fields.
+					 * Where $is is the account tab slug.
 					 *
-					 * @type filter
-					 * @title um_account_tab_privacy_fields
-					 * @description Extend Account Tab Privacy
-					 * @input_vars
-					 * [{"var":"$args","type":"array","desc":"Account Arguments"},
-					 * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_filter( 'um_account_tab_privacy_fields', 'function_name', 10, 2 );
-					 * @example
-					 * <?php
-					 * add_filter( 'um_account_tab_privacy_fields', 'my_account_tab_privacy_fields', 10, 2 );
-					 * function my_account_tab_privacy_fields( $args, $shortcode_args ) {
-					 *     // your code here
+					 * @hook um_account_tab_{$id}_fields
+					 * @param {array} $args           The existing account tab fields arguments.
+					 * @param {array} $shortcode_args The shortcode arguments.
+					 *
+					 * @return {array} The modified fields that should be displayed in the account tab.
+					 *
+					 * @since 2.0
+					 *
+					 * @example <caption>Add `my_custom_email_notification` checkbox toggle option to the Notifications Account tab. Please note that `_enable_my_custom_email_notification` field has to be registered in builtin fields.</caption>
+					 * ```php
+					 * add_filter( 'um_account_tab_notifications_fields', 'my_account_tab_notifications_fields', 10, 2 );
+					 * function my_account_tab_notifications_fields( $args, $shortcode_args ) {
+					 *     $args .= ',_enable_my_custom_email_notification';
 					 *     return $args;
 					 * }
-					 * ?>
+					 * ```
 					 */
-					$args = apply_filters( 'um_account_tab_privacy_fields', $args, $shortcode_args );
+					$args = apply_filters( "um_account_tab_{$id}_fields", $args, $shortcode_args );
 
 					$fields = UM()->builtin()->get_specific_fields( $args );
 					$fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
@@ -661,40 +660,33 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					break;
 
 				case 'personal-data':
-
-					$output .= UM()->get_template( 'v3/account/personal-data.php', '', array() );
+					$output .= UM()->get_template( 'v3/account/personal-data.php' );
 					break;
 
 				case 'notifications':
 					if ( UM()->is_new_ui() ) {
 						$args = '';
-						/**
-						 * UM hook
-						 *
-						 * @type filter
-						 * @title um_account_tab_notifications_fields
-						 * @description Extend Account Tab Privacy
-						 * @input_vars
-						 * [{"var":"$args","type":"array","desc":"Account Arguments"},
-						 * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
-						 * @change_log
-						 * ["Since: 2.0"]
-						 * @usage add_filter( 'um_account_tab_privacy_fields', 'function_name', 10, 2 );
-						 * @example
-						 * <?php
-						 * add_filter( 'um_account_tab_privacy_fields', 'my_account_tab_privacy_fields', 10, 2 );
-						 * function my_account_tab_privacy_fields( $args, $shortcode_args ) {
-						 *     // your code here
-						 *     return $args;
-						 * }
-						 * ?>
-						 */
-						$args = apply_filters( 'um_account_tab_notifications_fields', $args, $shortcode_args );
+						/** This filter is documented in includes/core/class-account.php */
+						$args = apply_filters( "um_account_tab_{$id}_fields", $args, $shortcode_args );
 
 						$fields = UM()->builtin()->get_specific_fields( $args );
 						$fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
 
 						$this->init_displayed_fields( $fields, $id );
+
+						/**
+						 * Filters the account tab content before the form fields added to content.
+						 * Where $id is the account tab slug.
+						 *
+						 * @hook um_account_{$id}_content_before
+						 * @param {string} $output         The existing content.
+						 * @param {array}  $shortcode_args The shortcode arguments.
+						 *
+						 * @return {string} The modified account content.
+						 *
+						 * @since 3.0.0
+						 */
+						$output = apply_filters( "um_account_{$id}_content_before", $output, $shortcode_args );
 
 						foreach ( $fields as $key => $data ) {
 							if ( ! empty( $shortcode_args['is_block'] ) ) {
@@ -702,60 +694,30 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 							}
 							$output .= UM()->fields()->edit_field( $key, $data );
 						}
-					} else {
 						/**
-						 * UM hook
+						 * Filters the account tab content after the form fields added to content.
+						 * Where $id is the account tab slug.
 						 *
-						 * @type filter
-						 * @title um_account_content_hook_{$id}
-						 * @description Change not default Account tabs content
-						 * @input_vars
-						 * [{"var":"$output","type":"string","desc":"Account Tab Output"},
-						 * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
-						 * @change_log
-						 * ["Since: 2.0"]
-						 * @usage add_filter( 'um_account_content_hook_{$id}', 'function_name', 10, 2 );
-						 * @example
-						 * <?php
-						 * add_filter( 'um_account_content_hook_{$id}', 'my_account_content', 10, 2 );
-						 * function my_account_tab_password_fields( $args, $shortcode_args ) {
-						 *     // your code here
-						 *     return $args;
-						 * }
-						 * ?>
+						 * @hook um_account_{$id}_content_after
+						 * @param {string} $output         The existing content.
+						 * @param {array}  $shortcode_args The shortcode arguments.
+						 *
+						 * @return {string} The modified account content.
+						 *
+						 * @since 3.0.0
 						 */
-						$output = apply_filters( "um_account_content_hook_{$id}", $output, $shortcode_args );
+						$output = apply_filters( "um_account_{$id}_content_after", $output, $shortcode_args );
 					}
 					break;
-				case 'delete':
 
+				case 'delete':
 					$args = '';
 					if ( $this->current_password_is_required( $id ) ) {
 						$args = 'single_user_password';
 					}
 
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_account_tab_delete_fields
-					 * @description Extend Account Tab Delete
-					 * @input_vars
-					 * [{"var":"$args","type":"array","desc":"Account Arguments"},
-					 * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_filter( 'um_account_tab_delete_fields', 'function_name', 10, 2 );
-					 * @example
-					 * <?php
-					 * add_filter( 'um_account_tab_delete_fields', 'my_account_tab_delete_fields', 10, 2 );
-					 * function my_account_tab_delete_fields( $args, $shortcode_args ) {
-					 *     // your code here
-					 *     return $args;
-					 * }
-					 * ?>
-					 */
-					$args = apply_filters( 'um_account_tab_delete_fields', $args, $shortcode_args );
+					/** This filter is documented in includes/core/class-account.php */
+					$args = apply_filters( "um_account_tab_{$id}_fields", $args, $shortcode_args );
 
 					$fields = UM()->builtin()->get_specific_fields( $args );
 					$fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
@@ -776,7 +738,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					break;
 
 				case 'general':
-
 					$args = 'user_login,first_name,last_name,user_email';
 
 					if ( ! UM()->options()->get( 'account_name' ) ) {
@@ -791,28 +752,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						$args .= ',single_user_password';
 					}
 
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_account_tab_general_fields
-					 * @description Extend Account Tab General
-					 * @input_vars
-					 * [{"var":"$args","type":"array","desc":"Account Arguments"},
-					 * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_filter( 'um_account_tab_general_fields', 'function_name', 10, 2 );
-					 * @example
-					 * <?php
-					 * add_filter( 'um_account_tab_general_fields', 'my_account_tab_general_fields', 10, 2 );
-					 * function my_account_tab_general_fields( $args, $shortcode_args ) {
-					 *     // your code here
-					 *     return $args;
-					 * }
-					 * ?>
-					 */
-					$args = apply_filters( 'um_account_tab_general_fields', $args, $shortcode_args );
+					/** This filter is documented in includes/core/class-account.php */
+					$args = apply_filters( "um_account_tab_{$id}_fields", $args, $shortcode_args );
 
 					$fields = UM()->builtin()->get_specific_fields( $args );
 					$fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
@@ -825,35 +766,12 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						}
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
-
 					break;
 
 				case 'password':
-
 					$args = 'user_password';
-
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_account_tab_password_fields
-					 * @description Extend Account Tab Password
-					 * @input_vars
-					 * [{"var":"$args","type":"array","desc":"Account Arguments"},
-					 * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_filter( 'um_account_tab_password_fields', 'function_name', 10, 2 );
-					 * @example
-					 * <?php
-					 * add_filter( 'um_account_tab_password_fields', 'my_account_tab_password_fields', 10, 2 );
-					 * function my_account_tab_password_fields( $args, $shortcode_args ) {
-					 *     // your code here
-					 *     return $args;
-					 * }
-					 * ?>
-					 */
-					$args = apply_filters( 'um_account_tab_password_fields', $args, $shortcode_args );
+					/** This filter is documented in includes/core/class-account.php */
+					$args = apply_filters( "um_account_tab_{$id}_fields", $args, $shortcode_args );
 
 					$fields = UM()->builtin()->get_specific_fields( $args );
 					$fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
@@ -866,37 +784,37 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						}
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
-
 					break;
 
-				default :
-
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_account_content_hook_{$id}
-					 * @description Change not default Account tabs content
-					 * @input_vars
-					 * [{"var":"$output","type":"string","desc":"Account Tab Output"},
-					 * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_filter( 'um_account_content_hook_{$id}', 'function_name', 10, 2 );
-					 * @example
-					 * <?php
-					 * add_filter( 'um_account_content_hook_{$id}', 'my_account_content', 10, 2 );
-					 * function my_account_tab_password_fields( $args, $shortcode_args ) {
-					 *     // your code here
-					 *     return $args;
-					 * }
-					 * ?>
-					 */
-					$output = apply_filters( "um_account_content_hook_{$id}", $output, $shortcode_args );
-					break;
 			}
 
-			$this->tab_output[ $id ] = array( 'content' => $output, 'hash' => md5( json_encode( $shortcode_args ) ) );
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_account_content_hook_{$id}
+			 * @description Change not default Account tabs content
+			 * @input_vars
+			 * [{"var":"$output","type":"string","desc":"Account Tab Output"},
+			 * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_account_content_hook_{$id}', 'function_name', 10, 2 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_account_content_hook_{$id}', 'my_account_content', 10, 2 );
+			 * function my_account_tab_password_fields( $args, $shortcode_args ) {
+			 *     // your code here
+			 *     return $args;
+			 * }
+			 * ?>
+			 */
+			$output = apply_filters( "um_account_content_hook_{$id}", $output, $shortcode_args );
+
+			$this->tab_output[ $id ] = array(
+				'content' => $output,
+				'hash'    => md5( json_encode( $shortcode_args ) ),
+			);
 			return $output;
 		}
 
@@ -908,7 +826,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * @param $tab_data
 		 * @param $args
 		 *
-		 * @throws \Exception
+		 * @throws Exception
 		 */
 		public function render_account_tab( $tab_id, $tab_data, $args ) {
 			$output = $this->get_tab_fields( $tab_id, $args );

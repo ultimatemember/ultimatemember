@@ -596,15 +596,31 @@ function um_after_user_account_updated_permalink( $user_id, $changes ) {
 }
 add_action( 'um_after_user_account_updated', 'um_after_user_account_updated_permalink', 10, 2 );
 
-
 /**
- * Update Account Email Notification
+ * Notify user when account is updated, unless specified tabs are ignored.
  *
- * @param $user_id
- * @param $changed
+ * @param int   $user_id ID of the user whose account is being updated.
+ * @param mixed $changed Any additional information about the user changes.
+ *
+ * @since 1.3.x
  */
 function um_account_updated_notification( $user_id, $changed ) {
 	// phpcs:disable WordPress.Security.NonceVerification
+	/**
+	 * Filters the account tabs list to ignore email notification when user account is updated.
+	 *
+	 * @hook um_account_updated_notification_ignore_tabs
+	 * @param {array} $ignore_tabs Account tabs array.
+	 *
+	 * @return {array} The modified tabs array.
+	 *
+	 * @since 3.0.0
+	 */
+	$ignore_tabs = apply_filters( 'um_account_updated_notification_ignore_tabs', array() );
+	if ( ! empty( $ignore_tabs ) && in_array( sanitize_key( $_POST['_um_account_tab'] ), $ignore_tabs, true ) ) {
+		return;
+	}
+
 	if ( 'password' !== $_POST['_um_account_tab'] || ! UM()->options()->get( 'changedpw_email_on' ) ) {
 		// Avoid email duplicates (account changed and password changed) on the password change tab.
 		um_fetch_user( $user_id );
@@ -613,7 +629,6 @@ function um_account_updated_notification( $user_id, $changed ) {
 	// phpcs:enable WordPress.Security.NonceVerification
 }
 add_action( 'um_after_user_account_updated', 'um_account_updated_notification', 20, 2 );
-
 
 /**
  * Disable WP native email notification when change email on user account
@@ -641,7 +656,6 @@ if ( UM()->is_new_ui() ) {
 	 *
 	 * @param $args
 	 */
-	add_action( 'um_after_account_privacy', 'um_after_account_privacy' );
 	function um_after_account_privacy( $args ) {
 		global $wpdb;
 		$user_id = get_current_user_id();
@@ -828,6 +842,7 @@ if ( UM()->is_new_ui() ) {
 
 		<?php
 	}
+	add_action( 'um_after_account_privacy', 'um_after_account_privacy' );
 
 	function um_request_user_data() {
 		UM()->check_ajax_nonce();
