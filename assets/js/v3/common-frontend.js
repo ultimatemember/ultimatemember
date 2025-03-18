@@ -524,6 +524,8 @@ UM.frontend = {
 				let $uploader = jQuery(this).parents('.um-uploader');
 				let $fileRow  = jQuery(this).parents('.um-uploader-file');
 
+				let $fileList = $uploader.find( '.um-uploader-filelist' );
+
 				let removeRow = function () {
 					let fileID = $fileRow.attr('id');
 					let uploaderObj = UM.frontend.uploaders[ $uploader.data('plupload') ];
@@ -534,6 +536,15 @@ UM.frontend = {
 
 					uploaderObj.removeFile( fileID );
 					$fileRow.remove();
+
+					if ( $fileList.length ) {
+						if ( ! $fileList.find('.um-uploader-file').length ) {
+							$uploader.removeClass('um-upload-completed');
+							$fileList.umHide();
+						}
+					} else {
+						$uploader.removeClass('um-upload-completed');
+					}
 
 					if ( filter && uploaderObj.files.length < filter ) {
 						let button = uploaderObj.getOption( 'browse_button' )[0];
