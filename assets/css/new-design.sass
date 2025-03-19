@@ -1614,6 +1614,18 @@
         color: $gray-600
 
 
+.#{$prefix}tab-content
+  .#{$prefix}field-hint
+    +border-box
+    margin: 0
+    padding: 0
+    width: 100%
+    color: $gray-600
+    +typography( text, sm, regular )
+    &.#{$prefix}field-error
+      color: $error-500
+
+
 //input[type="number"]
 //  color: #8a8383
 //  width: 50px
