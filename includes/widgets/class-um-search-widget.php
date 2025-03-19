@@ -58,12 +58,7 @@ class UM_Search_Widget extends \WP_Widget {
 		}
 
 		// display the search form
-		if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
-			echo do_shortcode( '[ultimatemember_searchform /]' );
-		} else {
-			echo apply_shortcodes( '[ultimatemember_searchform /]' );
-		}
-
+		echo apply_shortcodes( '[ultimatemember_searchform /]' );
 
 		echo $args['after_widget'];
 	}
