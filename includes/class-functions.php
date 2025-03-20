@@ -697,6 +697,22 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'datetime' => true,
 						),
 						'section'  => array(),
+						'table'    => array(
+//							'class' => array(),
+						),
+						'tbody'    => array(),
+						'thead'    => array(),
+						'th'       => array(),
+						'tr'       => array(
+//							'data-order_id' => array(),
+//							'class'         => array(),
+//							'data-title'    => array(),
+						),
+						'td'       => array(
+//							'class' => array(),
+						),
+						'tfoot'    => array(),
+						'noscript' => array(),
 					);
 					break;
 				case 'admin_notice':
@@ -784,9 +800,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			 * }
 			 * add_filter( 'um_late_escaping_allowed_tags', 'add_extra_kses_allowed_tags', 10, 2 );
 			 */
-			$allowed_html = apply_filters( 'um_late_escaping_allowed_tags', $allowed_html, $context );
-
-			return $allowed_html;
+			return apply_filters( 'um_late_escaping_allowed_tags', $allowed_html, $context );
 		}
 
 		/**
