@@ -318,8 +318,11 @@ class Enqueue {
 
 		self::$fonticons_handlers = $fonticons_handlers;
 
-		// Select2 JS.
-		$this->register_select2();
+		// Register select2 script only on wp-admin for new UI.
+		if ( ! UM()->is_new_ui() ) {
+			// Select2 JS.
+			$this->register_select2();
+		}
 
 		// wp_register_script( 'um_choices', $libs_url . 'choices-js/choices' . $suffix . '.js', array(), '10.2.0', true );
 		wp_register_script( 'um_choices', $libs_url . 'choices-js/choices' . $suffix . '.js', array(), '11.1.0', true );

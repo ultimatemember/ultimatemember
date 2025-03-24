@@ -595,6 +595,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'method'         => true,
 							'name'           => true,
 							'target'         => true,
+							'novalidate'     => true,
 						),
 						'label'    => array(
 							'for' => true,

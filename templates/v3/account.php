@@ -26,10 +26,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 		if ( isset( $info['without_setting'] ) || ! empty( $tab_enabled ) || 'general' === $id ) {
 			$current = UM()->account()->current_tab === $id;
 
-			ob_start();
-			$info['with_header'] = true;
-			UM()->account()->render_account_tab( $id, $info, $args );
-			$content = ob_get_clean();
+			// TODO Remove condition for $current if we need all account tabs loaded.
+			$content = '';
+			if ( $current ) {
+				ob_start();
+				$info['with_header'] = true;
+				UM()->account()->render_account_tab( $id, $info, $args );
+				$content = ob_get_clean();
+			}
 
 			$account_tabs[ $id ] = array(
 				'title'       => $info['title'],

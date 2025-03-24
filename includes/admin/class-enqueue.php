@@ -91,7 +91,7 @@ final class Enqueue extends \um\common\Enqueue {
 
 	/**
 	 * Enqueue Gutenberg Block Editor assets.
-	 *
+	 * @todo Block Editor scripts for new UI.
 	 * @since 2.6.1
 	 */
 	public function block_editor() {
@@ -154,7 +154,11 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_enqueue_script( 'um_admin_blocks_shortcodes' );
 
 		wp_register_script( 'um_conditional', $js_url . 'um-conditional' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
-		wp_register_script( 'um_scripts', $js_url . 'um-scripts' . $suffix . '.js', array( 'jquery', 'wp-util', 'um_conditional', 'um_common', self::$select2_handle ), UM_VERSION, true );
+		if ( UM()->is_new_ui() ) {
+			wp_register_script( 'um_scripts', $js_url . 'um-scripts' . $suffix . '.js', array( 'jquery', 'wp-util', 'um_conditional', 'um_common' ), UM_VERSION, true );
+		} else {
+			wp_register_script( 'um_scripts', $js_url . 'um-scripts' . $suffix . '.js', array( 'jquery', 'wp-util', 'um_conditional', 'um_common', self::$select2_handle ), UM_VERSION, true );
+		}
 		$max_upload_size = wp_max_upload_size();
 		if ( ! $max_upload_size ) {
 			$max_upload_size = 0;
@@ -580,6 +584,12 @@ final class Enqueue extends \um\common\Enqueue {
 
 			wp_register_style( 'um_admin_common', $css_url . 'admin/common' . $suffix . '.css', array( 'um_common', 'um_ui', 'dashicons' ), UM_VERSION );
 			wp_enqueue_style( 'um_admin_common' );
+
+			// Register select2 script only on wp-admin for new UI.
+			if ( UM()->is_new_ui() ) {
+				// Select2 JS.
+				$this->register_select2();
+			}
 
 			if ( self::$um_cpt_form_screen ) {
 				if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_form_builder' ) ) {
