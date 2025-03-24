@@ -252,33 +252,42 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 				$this->current_tab = $args['tab'];
 
-				if ( ! empty( $this->tabs[ $args['tab'] ] ) ) { ?>
-					<div class="um um-custom-shortcode-tab">
-						<div class="um-form">
-							<form method="post" action="">
-								<?php
-								/**
-								 * Fires for render account form hidden fields.
-								 *
-								 * @since 1.3.x
-								 * @hook um_account_page_hidden_fields
-								 *
-								 * @param {array} $args Account shortcode arguments.
-								 *
-								 * @example <caption>Make some action before account tab loading.</caption>
-								 * function my_account_page_hidden_fields( $args ) {
-								 *     // your code here
-								 * }
-								 * add_action( 'um_account_page_hidden_fields', 'my_account_page_hidden_fields' );
-								 */
-								do_action( 'um_account_page_hidden_fields', $args, $args['tab'] );
-
-								$this->render_account_tab( $args['tab'], $this->tabs[ $args['tab'] ], $args );
-								?>
-							</form>
+				if ( ! empty( $this->tabs[ $args['tab'] ] ) ) {
+					if ( ! empty( $this->tabs[ $args['tab'] ]['custom'] ) &&  UM()->is_new_ui() ) {
+						?>
+						<div class="um um-account um-custom-account-tab um-tab-<?php echo esc_attr( $args['tab'] ); ?>-content um-custom-account-<?php echo esc_attr( $args['tab'] ); ?>-tab">
+							<?php $this->render_account_tab( $args['tab'], $this->tabs[ $args['tab'] ], $args ); ?>
 						</div>
-					</div>
-					<?php
+						<?php
+					} else {
+						?>
+						<div class="um um-custom-shortcode-tab">
+							<div class="um-form">
+								<form method="post" action="">
+									<?php
+									/**
+									 * Fires for render account form hidden fields.
+									 *
+									 * @since 1.3.x
+									 * @hook um_account_page_hidden_fields
+									 *
+									 * @param {array} $args Account shortcode arguments.
+									 *
+									 * @example <caption>Make some action before account tab loading.</caption>
+									 * function my_account_page_hidden_fields( $args ) {
+									 *     // your code here
+									 * }
+									 * add_action( 'um_account_page_hidden_fields', 'my_account_page_hidden_fields' );
+									 */
+									do_action( 'um_account_page_hidden_fields', $args, $args['tab'] );
+
+									$this->render_account_tab( $args['tab'], $this->tabs[ $args['tab'] ], $args );
+									?>
+								</form>
+							</div>
+						</div>
+						<?php
+					}
 				}
 			} else {
 
