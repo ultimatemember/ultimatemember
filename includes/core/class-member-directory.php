@@ -2686,18 +2686,18 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		public function search_changes( $user_query ) {
 			global $wpdb;
 
-			if ( ! empty( $_POST['search'] ) ) {
-				$directory_id = null;
-				if ( ! empty( $_POST['directory_id'] ) ) {
-					$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
-				}
-
-				$qv = $user_query->query_vars;
-
-				$search = $this->prepare_search( $_POST['search'] );
+			if ( ! empty( $_POST['search'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+				$search = $this->prepare_search( $_POST['search'] ); // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 				if ( empty( $search ) ) {
 					return;
 				}
+
+				$directory_id = null;
+				if ( ! empty( $_POST['directory_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+					$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+				}
+
+				$qv = $user_query->query_vars;
 
 				$exclude_fields = array();
 				$include_fields = array_keys( UM()->builtin()->all_user_fields );
@@ -2754,12 +2754,14 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				if ( ! empty( $custom_fields ) ) {
 					$search_columns[] = 'um_search.meta_value';
+
 					$user_query->query_from .= " INNER JOIN {$wpdb->usermeta} AS um_search ON ( {$wpdb->users}.ID = um_search.user_id AND um_search.meta_key IN('" . implode( "','", $custom_fields ) . "'))";
 				}
 
 				if ( ! empty( $search_columns ) ) {
 					$search_where = $user_query->get_search_sql( $search, $search_columns, 'both' );
 					$search_where = apply_filters( 'um_general_search_custom_search_where', $search_where, $user_query, $search );
+
 					$user_query->query_where .= $search_where;
 				}
 
