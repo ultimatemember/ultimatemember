@@ -72,7 +72,31 @@ final class Enqueue extends \um\common\Enqueue {
 			}
 		}
 
-		return $classes;
+		$shortcodes_map = array(
+			'ultimatemember',
+			'ultimatemember_account',
+			'ultimatemember_password',
+		);
+		/**
+		 * Filters an array of shortcodes that can be specified in the body classes.
+		 *
+		 * @hook um_body_classes_shortcodes_map
+		 *
+		 * @param {array} $shortcodes_map The initial map of shortcodes.
+		 *
+		 * @return {array} The modified map of shortcodes.
+		 *
+		 * @since 3.0.0
+		 */
+		$shortcodes_map = apply_filters( 'um_body_classes_shortcodes_map', $shortcodes_map );
+		foreach ( $shortcodes_map as $shortcode ) {
+			if ( has_shortcode( get_the_content(), $shortcode ) ) {
+				$classes[] = 'um-has-shortcode';
+				$classes[] = 'um-has-shortcode-' . $shortcode;
+			}
+		}
+
+		return array_unique( $classes );
 	}
 
 	/**

@@ -16,6 +16,15 @@
 .um.um-account .um-tabs-wrapper.um-vertical-tabs .um-tabs-content .um-tab-content[data-tab=personal-data] form.um-form-new .um-form-submit .um-ajax-spinner-svg {
   display: none;
 }
+.um.um-account.um-custom-account-tab {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  width: 100%;
+  row-gap: 24px;
+}
 
 .um .um-section-header {
   display: flex;
