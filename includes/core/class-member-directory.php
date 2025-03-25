@@ -2687,18 +2687,27 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			global $wpdb;
 
 			if ( ! empty( $_POST['search'] ) ) {
-				$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
-				$qv           = $user_query->query_vars;
+				$directory_id = null;
+				if ( ! empty( $_POST['directory_id'] ) ) {
+					$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
+				}
+
+				$qv = $user_query->query_vars;
 
 				$search = $this->prepare_search( $_POST['search'] );
 				if ( empty( $search ) ) {
 					return;
 				}
 
-				$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
-				$exclude_fields = ! empty( $exclude_fields ) && is_array( $exclude_fields ) ? $exclude_fields : array();
-				$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
-				$include_fields = ! empty( $include_fields ) && is_array( $include_fields ) ? $include_fields : array_keys( UM()->builtin()->all_user_fields );
+				$exclude_fields = array();
+				$include_fields = array_keys( UM()->builtin()->all_user_fields );
+				if ( ! empty( $directory_id ) ) {
+					$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
+					$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
+
+					$exclude_fields = ! empty( $exclude_fields ) && is_array( $exclude_fields ) ? $exclude_fields : array();
+					$include_fields = ! empty( $include_fields ) && is_array( $include_fields ) ? $include_fields : array_keys( UM()->builtin()->all_user_fields );
+				}
 
 				$custom_fields = array();
 				foreach ( $include_fields as $field_key ) {
@@ -2732,9 +2741,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				$custom_fields = array_values( array_unique( $custom_fields ) );
 
 				$search_columns = $this->get_core_search_fields( $qv, $search );
-				$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
-				if ( ! empty( $include_fields ) ) {
-					$search_columns = array_intersect( $search_columns, $include_fields );
+
+				if ( ! empty( $directory_id ) ) {
+					$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
+					if ( ! empty( $include_fields ) ) {
+						$search_columns = array_intersect( $search_columns, $include_fields );
+					}
 				}
 				if ( ! empty( $exclude_fields ) ) {
 					$search_columns = array_diff( $search_columns, $exclude_fields );
