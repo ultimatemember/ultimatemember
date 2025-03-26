@@ -698,22 +698,15 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'datetime' => true,
 						),
 						'section'  => array(),
-						'table'    => array(
-//							'class' => array(),
-						),
+						'table'    => array(),
 						'tbody'    => array(),
 						'thead'    => array(),
 						'th'       => array(),
-						'tr'       => array(
-//							'data-order_id' => array(),
-//							'class'         => array(),
-//							'data-title'    => array(),
-						),
-						'td'       => array(
-//							'class' => array(),
-						),
+						'tr'       => array(),
+						'td'       => array(),
 						'tfoot'    => array(),
 						'noscript' => array(),
+						'del'      => array(),
 					);
 					break;
 				case 'admin_notice':
