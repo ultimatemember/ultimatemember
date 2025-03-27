@@ -476,7 +476,7 @@ class Profile {
 			'post_type'     => array( 'post' ),
 		);
 
-		if ( get_current_user_id() !== $user_profile_id && ! current_user_can( 'edit_posts' ) ) {
+		if ( get_current_user_id() !== $user_profile_id ) {
 			$query_args['status'] = 'approve';
 		}
 
