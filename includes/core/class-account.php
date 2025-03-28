@@ -392,6 +392,16 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				if ( get_query_var( 'um_tab' ) ) {
 					$this->current_tab = get_query_var( 'um_tab' );
 				}
+
+				/**
+				 * This action is fired after getting the current account tab.
+				 *
+				 * @hook um_account_after_getting_current_tab
+				 * @param {string} $current_tab The current account tab.
+				 *
+				 * @since 3.0.0
+				 */
+				do_action( 'um_account_after_getting_current_tab', $this->current_tab );
 			}
 		}
 
