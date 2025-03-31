@@ -69,8 +69,12 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						continue;
 					}
 
-					$output = $this->get_tab_fields( $id, $args );
+					if ( ! empty( $info['external_url'] ) ) {
+						$tabs_structured[ $id ] = $info;
+						continue;
+					}
 
+					$output = $this->get_tab_fields( $id, $args );
 					if ( ! empty( $output ) ) {
 						$tabs_structured[ $id ] = $info;
 					}
@@ -508,28 +512,32 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			return $predefined_fields;
 		}
 
-
 		/**
 		 * Get Tab Link
 		 * @param  integer $id
 		 * @return string
 		 */
-		function tab_link( $id ) {
-
+		public function tab_link( $id ) {
 			if ( UM()->is_permalinks ) {
-
-				$url = trailingslashit( untrailingslashit( um_get_core_page( 'account' ) ) );
-				$url = $url . $id . '/';
-
+				$url  = trailingslashit( untrailingslashit( um_get_predefined_page_url( 'account' ) ) );
+				$url .= $id . '/';
 			} else {
-
-				$url = add_query_arg( 'um_tab', $id, um_get_core_page( 'account' ) );
-
+				$url = add_query_arg( 'um_tab', $id, um_get_predefined_page_url( 'account' ) );
 			}
 
-			return $url;
+			/**
+			 * Filters the URL of the Ultimate Member > Account tab.
+			 *
+			 * @hook um_account_tab_link
+			 * @since 3.0.0
+			 *
+			 * @param {string} $url The current url
+			 * @param {string} $id  The tab ID.
+			 *
+			 * @return {string} The modified url of the account tab.
+			 */
+			return apply_filters( 'um_account_tab_link', $url, $id );
 		}
-
 
 		/**
 		 * @param $fields

@@ -1272,6 +1272,39 @@ class Layouts {
 		return ob_get_clean();
 	}
 
+	/**
+	 * Overlay layout.
+	 *
+	 * @param array $args {
+	 *     Overlay additional arguments.
+	 *
+	 *     @type string[] $classes Additional classes for the overlay.
+	 *     @type bool     $rounded Whether the overlay should have rounded corners. Default false.
+	 * }
+	 *
+	 * @return string
+	 */
+	public static function overlay( $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'classes' => array(),
+				'rounded' => false,
+			)
+		);
+
+		$classes = array( 'um-overlay', 'um-display-none' );
+		$classes = array_merge( $args['classes'], $classes );
+		if ( false !== $args['rounded'] ) {
+			$classes[] = 'um-rounded';
+		}
+		ob_start();
+		?>
+		<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>"></div>
+		<?php
+		return ob_get_clean();
+	}
+
 	public static function form( $args = array() ) {
 		ob_start();
 

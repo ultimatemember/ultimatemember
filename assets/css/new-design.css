@@ -3414,6 +3414,20 @@
   -webkit-box-sizing: border-box;
 }
 
+.um .um-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--um-gray-200, #eaecf0);
+  opacity: 0.6;
+  z-index: 1;
+}
+.um .um-overlay.um-rounded {
+  border-radius: 8px;
+}
+
 .um .um-users-list:not(.um-grid) {
   display: flex;
   flex-direction: column;
