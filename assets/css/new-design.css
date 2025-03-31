@@ -1302,6 +1302,7 @@
   margin: 0;
   padding: 0;
   row-gap: 24px;
+  position: relative;
 }
 .um .um-form-new .um-form-supporting-text {
   box-sizing: border-box;
