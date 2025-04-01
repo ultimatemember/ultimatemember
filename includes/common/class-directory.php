@@ -756,6 +756,16 @@ class Directory extends Directory_Config {
 		/** This filter is documented in includes/core/class-fields.php */
 		$option_pairs     = apply_filters( 'um_select_options_pair', null, $attrs );
 		$custom_dropdown  = '';
+
+		// Workaround for the first member directory page loading.
+		// Can be required for some cases in the callback functions. E.g. Billing/Shipping Country -> State dependencies.
+		$workaround_unset = false;
+		if ( ! isset( $_POST['member_directory'] ) ) {
+			$_POST['member_directory'] = true;
+			$_POST['child_name']       = $filter;
+			$workaround_unset          = true;
+		}
+
 		$choices_callback = UM()->fields()->get_custom_dropdown_options_source( $filter, $attrs );
 		if ( ! empty( $choices_callback ) ) {
 			$option_pairs     = true;
@@ -908,6 +918,12 @@ class Directory extends Directory_Config {
 					}
 				}
 			}
+		}
+
+		// Workaround for the first member directory page loading.
+		// Can be required for some cases in the callback functions. E.g. Billing/Shipping Country -> State dependencies.
+		if ( $workaround_unset ) {
+			unset( $_POST['member_directory'], $_POST['child_name'] );
 		}
 
 		$options = array_key_exists( 'options', $attrs ) ? $attrs['options'] : array();
