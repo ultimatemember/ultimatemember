@@ -1,6 +1,7 @@
 <?php
 namespace um\core;
 
+use Exception;
 use WP_User_Query;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -70,7 +71,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 * @var string[]
 		 */
-		var $core_search_fields = array(
+		public static $core_search_fields = array(
 			'user_login',
 			'user_url',
 			'display_name',
@@ -127,9 +128,35 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 		/**
 		 * Get the WordPress core searching fields in wp_users query.
+		 * @since 2.6.10
+		 * @version 2.10.2
+		 * @param array|null  $qv     WP_User_Query variables.
+		 * @param string|null $search Search line value.
 		 * @return array
 		 */
-		protected function get_core_search_fields() {
+		protected function get_core_search_fields( $qv = null, $search = null ) {
+			$search_columns = array();
+			if ( ! is_null( $qv ) && ! empty( $search ) ) {
+				// WordPress native code from wp-includes/class-wp-user-query.php is below in this condition.
+				if ( $qv['search_columns'] ) {
+					$search_columns = array_intersect( $qv['search_columns'], array( 'ID', 'user_login', 'user_email', 'user_url', 'user_nicename', 'display_name' ) );
+				}
+				if ( ! $search_columns ) {
+					if ( str_contains( $search, '@' ) ) {
+						$search_columns = array( 'user_email' );
+					} elseif ( is_numeric( $search ) ) {
+						$search_columns = array( 'user_login', 'ID' );
+					} elseif ( preg_match( '|^https?://|', $search ) && ! ( is_multisite() && wp_is_large_network( 'users' ) ) ) {
+						$search_columns = array( 'user_url' );
+					} else {
+						$search_columns = array( 'user_login', 'user_url', 'user_email', 'user_nicename', 'display_name' );
+					}
+				}
+				/** This filter is documented in wp-includes/class-wp-user-query.php */
+				$search_columns = apply_filters( 'user_search_columns', $search_columns, $search, $this );
+			} else {
+				$search_columns = self::$core_search_fields;
+			}
 			/**
 			 * Filters the WordPress core searching fields in wp_users query for UM Member directory query.
 			 *
@@ -149,7 +176,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 * }
 			 * add_filter( 'um_member_directory_core_search_fields', 'my_um_member_directory_core_search_fields' );
 			 */
-			return apply_filters( 'um_member_directory_core_search_fields', $this->core_search_fields );
+			return apply_filters( 'um_member_directory_core_search_fields', $search_columns );
 		}
 
 		/**
@@ -456,7 +483,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			if ( ! empty( UM()->builtin()->all_user_fields() ) ) {
 				foreach ( UM()->builtin()->all_user_fields() as $key => $data ) {
 					if ( in_array( $key, $core_search_keys, true ) ) {
-						if ( isset( $data['title'] ) && array_search( $data['title'], $this->searching_fields, true ) !== false ) {
+						if ( isset( $data['title'] ) && in_array( $data['title'], $this->searching_fields, true ) ) {
 							$data['title'] = $data['title'] . ' (' . $key . ')';
 						}
 
@@ -1705,27 +1732,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			if ( empty( $search ) ) {
 				return '';
 			}
-
-			// Make the search line empty if it contains the mySQL query statements.
-			$regexp_map = array(
-				'/select(.*?)from/im',
-				'/select(.*?)sleep/im',
-				"/sleep\(\d+\)/im", // avoid any sleep injections
-				'/select(.*?)database/im',
-				'/select(.*?)where/im',
-				'/update(.*?)set/im',
-				'/delete(.*?)from/im',
-			);
-
-			foreach ( $regexp_map as $regexp ) {
-				preg_match( $regexp, $search, $matches );
-				if ( ! empty( $matches ) ) {
-					$search = '';
-					break;
-				}
-			}
-			// Early escape of the search line. The same as `$wpdb->prepare()`.
-			return esc_sql( $search );
+			return $search;
 		}
 
 		/**
@@ -1737,153 +1744,16 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				// complex using with change_meta_sql function
 				$search = $this->prepare_search( $_POST['search'] );
 				if ( ! empty( $search ) ) {
-					$meta_query = array(
-						'relation' => 'OR',
-						array(
-							'value'   => $search,
-							'compare' => '=',
-						),
-						array(
-							'value'   => $search,
-							'compare' => 'LIKE',
-						),
-						array(
-							'value'   => serialize( (string) $search ),
-							'compare' => 'LIKE',
-						),
-					);
-
+					$meta_query = array();
 					$meta_query = apply_filters( 'um_member_directory_general_search_meta_query', $meta_query, $search );
 
-					$this->query_args['meta_query'][] = $meta_query;
+					if ( ! empty( $meta_query ) ) {
+						$this->query_args['meta_query'][] = $meta_query;
+					}
 
 					$this->is_search = true;
 				}
 			}
-		}
-
-		/**
-		 * Change mySQL meta query join attribute
-		 * for search only by UM user meta fields and WP core fields in WP Users table
-		 *
-		 * @param array $sql Array containing the query's JOIN and WHERE clauses.
-		 * @param $queries
-		 * @param $type
-		 * @param $primary_table
-		 * @param $primary_id_column
-		 * @param WP_User_Query $context
-		 *
-		 * @return array
-		 */
-		public function change_meta_sql( $sql, $queries, $type, $primary_table, $primary_id_column, $context ) {
-			if ( ! empty( $_POST['search'] ) ) {
-				$search = $this->prepare_search( $_POST['search'] );
-				if ( ! empty( $search ) ) {
-					global $wpdb;
-
-					$meta_value  = '%' . $wpdb->esc_like( $search ) . '%';
-					$search_meta = $wpdb->prepare( '%s', $meta_value );
-
-					preg_match( '~(?<=\{)(.*?)(?=\})~', $search_meta, $matches, PREG_OFFSET_CAPTURE, 0 );
-
-					// workaround for standard mySQL hashes which are used by $wpdb->prepare instead of the %symbol
-					// sometimes it breaks error for strings like that wp_postmeta.meta_value LIKE '{12f209b48a89eeab33424902879d05d503f251ca8812dde03b59484a2991dc74}AMS{12f209b48a89eeab33424902879d05d503f251ca8812dde03b59484a2991dc74}'
-					// {12f209b48a89eeab33424902879d05d503f251ca8812dde03b59484a2991dc74} isn't applied by the `preg_replace()` below
-					if ( $matches[0][0] ) {
-						$search_meta  = str_replace( '{' . $matches[0][0] . '}', '#%&', $search_meta );
-						$sql['where'] = str_replace( '{' . $matches[0][0] . '}', '#%&', $sql['where'] );
-					}
-
-					// str_replace( '/', '\/', wp_slash( $search_meta ) ) means that we add backslashes to special symbols + add backslash to slash(/) symbol for proper regular pattern.
-					preg_match(
-						'/^(.*).meta_value LIKE ' . str_replace( '/', '\/', wp_slash( $search_meta ) ) . '[^\)]/im',
-						$sql['where'],
-						$join_matches
-					);
-
-					$sql['where'] = str_replace( '#%&', '{' . $matches[0][0] . '}', $sql['where'] );
-
-					$directory_id   = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
-					$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
-					$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
-
-					if ( isset( $join_matches[1] ) ) {
-						$meta_join_for_search = trim( $join_matches[1] );
-
-						// skip private invisible fields
-						$custom_fields = array();
-						if ( empty( $include_fields ) ) {
-							foreach ( array_keys( UM()->builtin()->all_user_fields ) as $field_key ) {
-								if ( empty( $field_key ) ) {
-									continue;
-								}
-
-								$data = UM()->fields()->get_field( $field_key );
-								if ( ! um_can_view_field( $data ) ) {
-									continue;
-								}
-
-								$custom_fields[] = $field_key;
-							}
-						} else {
-							foreach ( $include_fields as $field_key ) {
-								if ( empty( $field_key ) ) {
-									continue;
-								}
-
-								$data = UM()->fields()->get_field( $field_key );
-								if ( ! um_can_view_field( $data ) ) {
-									continue;
-								}
-
-								$custom_fields[] = $field_key;
-							}
-						}
-
-						$custom_fields = apply_filters( 'um_general_search_custom_fields', $custom_fields );
-
-						if ( ! empty( $custom_fields ) ) {
-							if ( ! empty( $exclude_fields ) ) {
-								$custom_fields = array_diff( $custom_fields, $exclude_fields );
-							}
-
-							$sql['join'] = preg_replace(
-								'/(' . $meta_join_for_search . ' ON \( ' . $wpdb->users . '\.ID = ' . $meta_join_for_search . '\.user_id )(\))/im',
-								"$1 AND " . $meta_join_for_search . ".meta_key IN( '" . implode( "','", $custom_fields ) . "' ) $2",
-								$sql['join']
-							);
-						}
-					}
-
-					$core_search = $this->get_core_search_fields();
-					if ( ! empty( $include_fields ) ) {
-						$core_search = array_intersect( $core_search, $include_fields );
-					}
-					if ( ! empty( $exclude_fields ) ) {
-						$core_search = array_diff( $core_search, $exclude_fields );
-					}
-
-					if ( ! empty( $core_search ) ) {
-						// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
-						$search_where = $context->get_search_sql( $search, $core_search, 'both' );
-
-						$search_where = preg_replace( '/ AND \((.*?)\)/im', "$1 OR", $search_where );
-
-						// str_replace( '/', '\/', wp_slash( $search ) ) means that we add backslashes to special symbols + add backslash to slash(/) symbol for proper regular pattern.
-						$pattern = $wpdb->prepare( $meta_join_for_search . '.meta_value = %s', $search );
-						$pattern = '/(' . str_replace( '/', '\/', wp_slash( $pattern ) ) . ')/im';
-
-						$sql['where'] = preg_replace(
-							$pattern,
-							trim( $search_where ) . " $1",
-							$sql['where'],
-							1
-						);
-					}
-				}
-			}
-
-			return $sql;
 		}
 
 		/**
@@ -2778,16 +2648,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			return $data_array;
 		}
 
-
 		/**
 		 * Update limit query
 		 *
-		 * @param $user_query
+		 * @param WP_User_Query $user_query
 		 */
-		function pagination_changes( $user_query ) {
+		public function pagination_changes( $user_query ) {
 			global $wpdb;
 
-			$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
+			$directory_id   = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
 			$directory_data = UM()->query()->post_data( $directory_id );
 
 			$qv = $user_query->query_vars;
@@ -2803,6 +2672,102 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$user_query->query_limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $number );
 				} else {
 					$user_query->query_limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['number'] * ( $qv['paged'] - 1 ), $number );
+				}
+			}
+		}
+
+		/**
+		 * Update search query
+		 *
+		 * @param WP_User_Query $user_query
+		 *
+		 * @throws Exception
+		 */
+		public function search_changes( $user_query ) {
+			global $wpdb;
+
+			if ( ! empty( $_POST['search'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+				$search = $this->prepare_search( $_POST['search'] ); // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+				if ( empty( $search ) ) {
+					return;
+				}
+
+				$directory_id = null;
+				if ( ! empty( $_POST['directory_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+					$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+				}
+
+				$qv = $user_query->query_vars;
+
+				$exclude_fields = array();
+				$include_fields = array_keys( UM()->builtin()->all_user_fields );
+				if ( ! empty( $directory_id ) ) {
+					$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
+					$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
+
+					$exclude_fields = ! empty( $exclude_fields ) && is_array( $exclude_fields ) ? $exclude_fields : array();
+					$include_fields = ! empty( $include_fields ) && is_array( $include_fields ) ? $include_fields : array_keys( UM()->builtin()->all_user_fields );
+				}
+
+				$custom_fields = array();
+				foreach ( $include_fields as $field_key ) {
+					if ( empty( $field_key ) ) {
+						continue;
+					}
+
+					$data = UM()->fields()->get_field( $field_key );
+					if ( isset( $data['type'] ) && 'password' === $data['type'] ) {
+						continue;
+					}
+					if ( isset( $data['metakey'] ) && in_array( $data['metakey'], array( 'role_select', 'role_radio' ), true ) ) {
+						continue;
+					}
+					if ( ! empty( $data['account_only'] ) ) {
+						continue;
+					}
+
+					if ( ! um_can_view_field( $data ) ) {
+						continue;
+					}
+
+					$custom_fields[] = $field_key;
+				}
+
+				if ( ! empty( $custom_fields ) && ! empty( $exclude_fields ) ) {
+					$custom_fields = array_diff( $custom_fields, $exclude_fields );
+				}
+
+				$custom_fields = apply_filters( 'um_general_search_custom_fields', $custom_fields );
+				$custom_fields = array_values( array_unique( $custom_fields ) );
+
+				$search_columns = $this->get_core_search_fields( $qv, $search );
+
+				if ( ! empty( $directory_id ) ) {
+					$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
+					if ( ! empty( $include_fields ) ) {
+						$search_columns = array_intersect( $search_columns, $include_fields );
+					}
+				}
+				if ( ! empty( $exclude_fields ) ) {
+					$search_columns = array_diff( $search_columns, $exclude_fields );
+				}
+
+				if ( ! empty( $custom_fields ) ) {
+					$search_columns[] = 'um_search.meta_value';
+
+					$user_query->query_from .= " INNER JOIN {$wpdb->usermeta} AS um_search ON ( {$wpdb->users}.ID = um_search.user_id AND um_search.meta_key IN('" . implode( "','", $custom_fields ) . "'))";
+				}
+
+				if ( ! empty( $search_columns ) ) {
+					$search_where = $user_query->get_search_sql( $search, $search_columns, 'both' );
+					$search_where = apply_filters( 'um_general_search_custom_search_where', $search_where, $user_query, $search );
+
+					$user_query->query_where .= $search_where;
+				}
+
+				// Required `DISTINCT` if not exists, because we add `OR` condition manually.
+				if ( ( ! empty( $custom_fields ) || ! empty( $search_columns ) ) && false === strpos( $user_query->query_fields, 'DISTINCT' ) ) {
+					$user_query->query_fields = 'DISTINCT ' . $user_query->query_fields;
 				}
 			}
 		}
@@ -2939,16 +2904,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 */
 			do_action( 'um_user_before_query', $this->query_args, $this );
 
-			add_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10, 6 );
-
-			add_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10, 1 );
+			add_action( 'pre_user_query', array( &$this, 'search_changes' ) );
+			add_action( 'pre_user_query', array( &$this, 'pagination_changes' ) );
 
 			$user_query = new WP_User_Query( $this->query_args );
 
-			remove_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10 );
-
-			remove_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10 );
-
+			remove_action( 'pre_user_query', array( &$this, 'search_changes' ) );
+			remove_action( 'pre_user_query', array( &$this, 'pagination_changes' ) );
 			/**
 			 * Fires just after the users query for getting users in member directory.
 			 *

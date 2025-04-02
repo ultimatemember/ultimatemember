@@ -1,5 +1,16 @@
 ﻿== Changelog ==
 
+= 2.10.2 April 02, 2025 =
+
+* Enhancements:
+
+  - Added: `UM()->common()-filesystem()::maybe_init_wp_filesystem();` method.
+  - Added: `UM()->common()-filesystem()::remove_dir();` method.
+
+* Bugfixes:
+
+  - Fixed: Security issue CVE ID: CVE-2025-1702. Reviewed general search scripts and suggested another solution that uses only `$wpdb->prepare()`.
+
 = 2.10.1 March 03, 2025 =
 
 * Bugfixes:

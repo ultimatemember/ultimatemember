@@ -59,6 +59,13 @@ class Filesystem {
 		$this->temp_upload_url = $this->get_upload_url( 'ultimatemember/temp' );
 	}
 
+	/**
+	 * Files Age in the temp folder. By default, it's 24 hours.
+	 *
+	 * @return int Temp file age in seconds.
+	 * @since 2.8.7
+	 *
+	 */
 	public function files_age() {
 		/**
 		 * Filters the maximum file age in the temp folder. By default, it's 24 hours.
@@ -73,6 +80,17 @@ class Filesystem {
 		return apply_filters( 'um_filesystem_max_file_age', 24 * HOUR_IN_SECONDS ); // Temp file age in seconds
 	}
 
+	/**
+	 * Image MIME Types
+	 *
+	 * Retrieves a list of image MIME types based on the context.
+	 *
+	 * @param string $context The context in which the MIME types are needed ('list' or 'allowed').
+	 *
+	 * @return array List of image MIME types based on the context.
+	 *
+	 * @since 2.8.7
+	 */
 	public static function image_mimes( $context = 'list' ) {
 		$mimes = array();
 
@@ -148,12 +166,7 @@ class Filesystem {
 	public function clear_temp_dir() {
 		global $wp_filesystem;
 
-		if ( ! $wp_filesystem instanceof WP_Filesystem_Base ) {
-			require_once ABSPATH . 'wp-admin/includes/file.php';
-
-			$credentials = request_filesystem_credentials( site_url() );
-			WP_Filesystem( $credentials );
-		}
+		self::maybe_init_wp_filesystem();
 
 		if ( ! $wp_filesystem->is_dir( $this->temp_upload_dir ) ) {
 			return;
@@ -197,12 +210,7 @@ class Filesystem {
 		// Please add define('FS_METHOD', 'direct'); to avoid question about FTP.
 		global $wp_filesystem;
 
-		if ( ! $wp_filesystem instanceof WP_Filesystem_Base ) {
-			require_once ABSPATH . 'wp-admin/includes/file.php';
-
-			$credentials = request_filesystem_credentials( site_url() );
-			WP_Filesystem( $credentials );
-		}
+		self::maybe_init_wp_filesystem();
 
 		if ( ! $blog_id ) {
 			$blog_id = get_current_blog_id();
@@ -289,5 +297,47 @@ class Filesystem {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Probably define global $wp_filesystem.
+	 *
+	 * @since 2.10.2
+	 *
+	 * @return void
+	 */
+	public static function maybe_init_wp_filesystem() {
+		global $wp_filesystem;
+
+		// If you need to fix this issue on the localhost
+		// https://stackoverflow.com/questions/30688431/wordpress-needs-the-ftp-credentials-to-update-plugins
+		// Please add define('FS_METHOD', 'direct'); to avoid question about FTP.
+		if ( ! $wp_filesystem instanceof WP_Filesystem_Base ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+
+			$credentials = request_filesystem_credentials( site_url() );
+			WP_Filesystem( $credentials );
+		}
+	}
+
+	/**
+	 * Remove a directory using WP Filesystem.
+	 *
+	 * @param string $dir The directory path to be removed. Should end with DIRECTORY_SEPARATOR.
+	 *
+	 * @return bool True on success, false on failure or if directory doesn't exist.
+	 *
+	 * @since 2.10.2
+	 */
+	public static function remove_dir( $dir ) {
+		global $wp_filesystem;
+
+		self::maybe_init_wp_filesystem();
+
+		if ( ! $wp_filesystem->is_dir( $dir ) ) {
+			return false;
+		}
+
+		return $wp_filesystem->delete( $dir, true );
 	}
 }

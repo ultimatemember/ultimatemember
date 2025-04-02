@@ -151,7 +151,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				}
 
 				$skip_fields = UM()->builtin()->get_fields_without_metakey();
-				$skip_fields = array_merge( $skip_fields, UM()->member_directory()->core_search_fields );
+				$skip_fields = array_merge( $skip_fields, UM()->member_directory()::$core_search_fields );
 
 				$real_usermeta = $wpdb->get_col( "SELECT DISTINCT meta_key FROM {$wpdb->usermeta}" );
 				$real_usermeta = ! empty( $real_usermeta ) ? $real_usermeta : array();

@@ -216,6 +216,8 @@ class Users {
 	/**
 	 * Reset User cache
 	 *
+	 * @since 2.8.7
+	 *
 	 * @param int $user_id User ID.
 	 */
 	public function remove_cache( $user_id ) {
