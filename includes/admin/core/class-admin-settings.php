@@ -1010,7 +1010,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'enable_blocks'                        => array(
 						'sanitize' => 'bool',
 					),
-					'enable_action_scheduler'              => array(
+					'enable_as_email_sending'              => array(
 						'sanitize' => 'bool',
 					),
 					'rest_api_version'                     => array(
