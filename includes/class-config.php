@@ -92,6 +92,40 @@ if ( ! class_exists( 'um\Config' ) ) {
 
 		public $display_name_options = array();
 
+
+		public static $extensions = array(
+			'bbpress',
+			'followers',
+			'forumwp',
+			'friends',
+			'groups',
+			'jobboardwp',
+			'mailchimp',
+			'messaging',
+			'mycred',
+			'notices',
+			'notifications',
+			'online',
+			'private-content',
+			'profile-completeness',
+			'profile-tabs',
+			'recaptcha',
+			'reviews',
+			'social-activity',
+			'social-login',
+			'stripe',
+			'terms-conditions',
+			'unsplash',
+			'user-bookmarks',
+			'user-locations',
+			'user-notes',
+			'user-photos',
+			'user-tags',
+			'verified-users',
+			'woocommerce',
+			'zapier',
+		);
+
 		/**
 		 * Config constructor.
 		 */

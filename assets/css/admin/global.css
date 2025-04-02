@@ -76,3 +76,25 @@ ul#adminmenu > li#toplevel_page_ultimatemember.current > a.current:after {
   line-height: 20px;
   color: rgba(0, 0, 0, 0.85) !important;
 }
+
+.um-plugin-upgrade-notice {
+  font-weight: 400;
+  color: #fff;
+  background: #d53221;
+  padding: 1em;
+  margin: 9px 0;
+  display: block;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+.um-plugin-upgrade-notice:before {
+  content: "\f348";
+  display: inline-block;
+  font: 400 18px/1 dashicons;
+  speak: none;
+  margin: 0 8px 0 -2px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: top;
+}
