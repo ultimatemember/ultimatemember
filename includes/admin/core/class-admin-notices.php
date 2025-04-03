@@ -24,8 +24,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 * Admin_Notices constructor.
 		 */
 		public function __construct() {
-			add_action( 'admin_init', array( &$this, 'create_languages_folder' ) );
-
 			add_action( 'admin_init', array( &$this, 'create_list' ) );
 			add_action( 'admin_notices', array( &$this, 'render_notices' ), 1 );
 
@@ -278,24 +276,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				);
 			}
 		}
-
-
-		/**
-		 * To store plugin languages
-		 */
-		function create_languages_folder() {
-			$path = UM()->files()->upload_basedir;
-			$path = str_replace( '/uploads/ultimatemember', '', $path );
-			$path = $path . '/languages/plugins/';
-			$path = str_replace( '//', '/', $path );
-
-			if ( ! file_exists( $path ) ) {
-				$old = umask(0);
-				@mkdir( $path, 0777, true );
-				umask( $old );
-			}
-		}
-
 
 		/**
 		 * Show notice for customers with old extension's versions

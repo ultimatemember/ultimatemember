@@ -45,6 +45,21 @@ PRIMARY KEY  (umeta_id),
 KEY user_id_indx (user_id),
 KEY meta_key_indx (um_key),
 KEY meta_value_indx (um_value(191))
+) $charset_collate;
+CREATE TABLE {$wpdb->prefix}um_guest_tokens (
+id bigint(20) unsigned NOT NULL auto_increment,
+token varchar(64) NOT NULL UNIQUE,
+ip_address varchar(45),
+user_agent text,
+created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY  (id)
+) $charset_collate;
+CREATE TABLE {$wpdb->prefix}um_guest_download_attempts (
+id bigint(20) unsigned NOT NULL auto_increment,
+token varchar(64) NOT NULL,
+ip_address varchar(45),
+request_time timestamp DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY  (id)
 ) $charset_collate;";
 
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -79,13 +94,12 @@ KEY meta_value_indx (um_value(191))
 					// If page does not exist - create it.
 					$page_exists = UM()->query()->find_post_id( 'um_form', '_um_core', $id );
 					if ( ! $page_exists ) {
-
 						if ( 'register' === $id ) {
-							$title = 'Default Registration';
+							$title = __( 'Default Registration', 'ultimate-member' );
 						} elseif ( 'login' === $id ) {
-							$title = 'Default Login';
+							$title = __( 'Default Login', 'ultimate-member' );
 						} else {
-							$title = 'Default Profile';
+							$title = __( 'Default Profile', 'ultimate-member' );
 						}
 
 						$form = array(
@@ -95,11 +109,11 @@ KEY meta_value_indx (um_value(191))
 							'post_author' => get_current_user_id(),
 						);
 
-						$form_id = wp_insert_post( $form );
-
 						foreach ( UM()->config()->core_form_meta[ $id ] as $meta_key => $meta_value ) {
-							update_post_meta( $form_id, $meta_key, $meta_value );
+							$form['meta_input'][ $meta_key ] = $meta_value;
 						}
+
+						$form_id = wp_insert_post( $form );
 
 						$core_forms[ $id ] = $form_id;
 					}
@@ -115,21 +129,18 @@ KEY meta_value_indx (um_value(191))
 					// If page does not exist - create it.
 					$page_exists = UM()->query()->find_post_id( 'um_directory', '_um_core', $id );
 					if ( ! $page_exists ) {
-
-						$title = 'Members';
-
 						$form = array(
 							'post_type'   => 'um_directory',
-							'post_title'  => $title,
+							'post_title'  => __( 'Members', 'ultimate-member' ),
 							'post_status' => 'publish',
 							'post_author' => get_current_user_id(),
 						);
 
-						$form_id = wp_insert_post( $form );
-
 						foreach ( UM()->config()->core_directory_meta[ $id ] as $meta_key => $meta_value ) {
-							update_post_meta( $form_id, $meta_key, $meta_value );
+							$form['meta_input'][ $meta_key ] = $meta_value;
 						}
+
+						$form_id = wp_insert_post( $form );
 
 						$core_directories[ $id ] = $form_id;
 					}

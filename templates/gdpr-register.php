@@ -9,7 +9,6 @@
  *
  * @version 2.10.0
  *
- * @var object $um_content_query
  * @var array  $args
  */
 if ( ! defined( 'ABSPATH' ) ) {

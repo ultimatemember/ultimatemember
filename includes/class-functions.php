@@ -28,7 +28,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 *
 		 * @return bool
 		 */
-		function is_ajax() {
+		public function is_ajax() {
 			return function_exists( 'wp_doing_ajax' ) ? wp_doing_ajax() : defined( 'DOING_AJAX' );
 		}
 
@@ -554,6 +554,28 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'href'  => true,
 							'media' => true,
 						),
+						'svg'      => array(
+							'xmlns'               => true,
+							'height'              => true,
+							'preserveaspectratio' => true,
+							'viewbox'             => true,
+							'width'               => true,
+							'x'                   => true,
+							'y'                   => true,
+							'fill'                => true,
+							'stroke'              => true,
+							'stroke-linecap'      => true,
+							'stroke-linejoin'     => true,
+							'stroke-width'        => true,
+						),
+						'path'     => array(
+							'd'               => true,
+							'stroke'          => true,
+							'stroke-width'    => true,
+							'stroke-linecap'  => true,
+							'stroke-linejoin' => true,
+							'fill'            => true,
+						),
 						'form'     => array(
 							'action'         => true,
 							'accept'         => true,
@@ -562,6 +584,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'method'         => true,
 							'name'           => true,
 							'target'         => true,
+							'novalidate'     => true,
 						),
 						'label'    => array(
 							'for' => true,
@@ -606,6 +629,19 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'readonly'     => true,
 							'required'     => true,
 							'autocomplete' => true,
+							'placeholder'  => true,
+						),
+						'button'   => array(
+							'type'         => true,
+							'name'         => true,
+							'value'        => true,
+							'placeholder'  => true,
+							'readonly'     => true,
+							'disabled'     => true,
+							'checked'      => true,
+							'selected'     => true,
+							'required'     => true,
+							'autocomplete' => true,
 						),
 						'img'      => array(
 							'alt'      => true,
@@ -630,6 +666,15 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 						'h3'       => array(
 							'align' => true,
 						),
+						'h4'       => array(
+							'align' => true,
+						),
+						'h5'       => array(
+							'align' => true,
+						),
+						'h6'       => array(
+							'align' => true,
+						),
 						'p'        => array(
 							'align' => true,
 							'dir'   => true,
@@ -641,6 +686,78 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 						'time'     => array(
 							'datetime' => true,
 						),
+						'section'  => array(),
+						'table'    => array(
+							'align'       => true,
+							'bgcolor'     => true,
+							'border'      => true,
+							'cellpadding' => true,
+							'cellspacing' => true,
+							'dir'         => true,
+							'rules'       => true,
+							'summary'     => true,
+							'width'       => true,
+						),
+						'tbody'    => array(
+							'align'   => true,
+							'char'    => true,
+							'charoff' => true,
+							'valign'  => true,
+						),
+						'thead'    => array(
+							'align'   => true,
+							'char'    => true,
+							'charoff' => true,
+							'valign'  => true,
+						),
+						'th'       => array(
+							'abbr'    => true,
+							'align'   => true,
+							'axis'    => true,
+							'bgcolor' => true,
+							'char'    => true,
+							'charoff' => true,
+							'colspan' => true,
+							'headers' => true,
+							'height'  => true,
+							'nowrap'  => true,
+							'rowspan' => true,
+							'scope'   => true,
+							'valign'  => true,
+							'width'   => true,
+						),
+						'tr'       => array(
+							'align'   => true,
+							'bgcolor' => true,
+							'char'    => true,
+							'charoff' => true,
+							'valign'  => true,
+						),
+						'td'       => array(
+							'abbr'    => true,
+							'align'   => true,
+							'axis'    => true,
+							'bgcolor' => true,
+							'char'    => true,
+							'charoff' => true,
+							'colspan' => true,
+							'dir'     => true,
+							'headers' => true,
+							'height'  => true,
+							'nowrap'  => true,
+							'rowspan' => true,
+							'scope'   => true,
+							'valign'  => true,
+							'width'   => true,
+						),
+						'tfoot'    => array(
+							'align'   => true,
+							'char'    => true,
+							'charoff' => true,
+							'valign'  => true,
+						),
+						'noscript' => array(),
+						'del'      => array(),
 					);
 					break;
 				case 'admin_notice':
@@ -728,9 +845,60 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			 * }
 			 * add_filter( 'um_late_escaping_allowed_tags', 'add_extra_kses_allowed_tags', 10, 2 );
 			 */
-			$allowed_html = apply_filters( 'um_late_escaping_allowed_tags', $allowed_html, $context );
+			return apply_filters( 'um_late_escaping_allowed_tags', $allowed_html, $context );
+		}
 
-			return $allowed_html;
+		/**
+		 * Find the closest number in an array.
+		 *
+		 * @param int[] $array
+		 * @param int   $number
+		 *
+		 * @return int
+		 */
+		public function get_closest_value( $array, $number ) {
+			sort( $array );
+			foreach ( $array as $a ) {
+				if ( $a >= $number ) {
+					return $a;
+				}
+			}
+
+			return end( $array );
+		}
+
+		/**
+		 * Disable page caching and set or clear cookie.
+		 *
+		 * @param string    $name     Required. Specifies the name of the cookie.
+		 * @param string    $value    Optional. Specifies the value of the cookie.
+		 * @param int       $expire   Optional. Specifies when the cookie expires. The value: time()+86400*30, will set the cookie to expire in 30 days. If this parameter is omitted or set to 0, the cookie will expire at the end of the session (when the browser closes). Default is 0
+		 * @param string    $path     Optional. Specifies the server path of the cookie. If set to "/", the cookie will be available within the entire domain. If set to "/php/", the cookie will only be available within the php directory and all sub-directories of php. The default value is the current directory that the cookie is being set in
+		 * @param bool|null $secure   Optional. Specifies whether or not the cookie should only be transmitted over a secure HTTPS connection. TRUE indicates that the cookie will only be set if a secure connection exists. Default is `is_ssl()` function value.
+		 * @param bool      $httponly Optional. If set to TRUE the cookie will be accessible only through the HTTP protocol (the cookie will not be accessible by scripting languages). This setting can help to reduce identity theft through XSS attacks. Default is true.
+		 *
+		 * @since 2.8.4
+		 */
+		public static function setcookie( $name, $value = '', $expire = 0, $path = '', $secure = null, $httponly = true ) {
+			if ( empty( $value ) ) {
+				$expire = absint( time() - YEAR_IN_SECONDS );
+			}
+			if ( empty( $path ) ) {
+				list( $path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
+			}
+
+			if ( is_null( $secure ) ) {
+				$secure = is_ssl();
+			}
+
+			$levels = ob_get_level();
+			for ( $i = 0; $i < $levels; $i++ ) {
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				@ob_end_clean();
+			}
+
+			nocache_headers();
+			setcookie( $name, $value, $expire, $path, COOKIE_DOMAIN, $secure, $httponly );
 		}
 	}
 }

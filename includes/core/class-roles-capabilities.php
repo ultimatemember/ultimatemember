@@ -37,7 +37,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 				return;
 			}
 
-			UM()->user()->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 		}
 
 
