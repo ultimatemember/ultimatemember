@@ -91,7 +91,13 @@ class Directory_Config {
 	 *
 	 * @var string[]
 	 */
-	public $core_search_fields = array();
+	public static $core_search_fields = array(
+		'user_login',
+		'user_url',
+		'display_name',
+		'user_email',
+		'user_nicename',
+	);
 
 	/**
 	 * @var array
@@ -332,38 +338,11 @@ class Directory_Config {
 	}
 
 	private function init_searching() {
-		$this->core_search_fields = array(
-			'user_login',
-			'user_url',
-			'display_name',
-			'user_email',
-			'user_nicename',
-		);
-		/**
-		 * Filters the WordPress core searching fields in wp_users query for UM Member directory query.
-		 *
-		 * @param {array} $core_search_fields Core search fields in wp_users query.
-		 *
-		 * @return {array} Core search fields in wp_users query.
-		 *
-		 * @since 2.6.10
-		 * @hook um_member_directory_core_search_fields
-		 *
-		 * @example <caption>Extends or remove wp_users core search fields.</caption>
-		 * function my_um_member_directory_core_search_fields( $core_search_fields ) {
-		 *     $core_search_fields = array_flip( $core_search_fields );
-		 *     unset( $core_search_fields['user_email'] );
-		 *     $core_search_fields = array_flip( $core_search_fields );
-		 *     return $core_search_fields;
-		 * }
-		 * add_filter( 'um_member_directory_core_search_fields', 'my_um_member_directory_core_search_fields' );
-		 */
-		$this->core_search_fields = apply_filters( 'um_member_directory_core_search_fields', $this->core_search_fields );
-
+		$core_search_keys = $this->get_core_search_fields();
 		if ( ! empty( UM()->builtin()->all_user_fields() ) ) {
 			foreach ( UM()->builtin()->all_user_fields() as $key => $data ) {
-				if ( in_array( $key, $this->core_search_fields, true ) ) {
-					if ( isset( $data['title'] ) && array_search( $data['title'], $this->searching_fields, true ) !== false ) {
+				if ( in_array( $key, $core_search_keys, true ) ) {
+					if ( isset( $data['title'] ) && in_array( $data['title'], $this->searching_fields, true ) ) {
 						$data['title'] = $data['title'] . ' (' . $key . ')';
 					}
 
@@ -393,9 +372,56 @@ class Directory_Config {
 
 	/**
 	 * Get the WordPress core searching fields in wp_users query.
+	 * @since 2.6.10
+	 * @since 2.10.2 Added $qv and $search params
+	 * @version 3.0.0
+	 *
+	 * @param array|null  $qv     WP_User_Query variables.
+	 * @param string|null $search Search line value.
 	 * @return array
 	 */
-	protected function get_core_search_fields() {
-		return $this->core_search_fields;
+	protected function get_core_search_fields( $qv = null, $search = null ) {
+		$search_columns = array();
+		if ( ! is_null( $qv ) && ! empty( $search ) ) {
+			// WordPress native code from wp-includes/class-wp-user-query.php is below in this condition.
+			if ( $qv['search_columns'] ) {
+				$search_columns = array_intersect( $qv['search_columns'], array( 'ID', 'user_login', 'user_email', 'user_url', 'user_nicename', 'display_name' ) );
+			}
+			if ( ! $search_columns ) {
+				if ( str_contains( $search, '@' ) ) {
+					$search_columns = array( 'user_email' );
+				} elseif ( is_numeric( $search ) ) {
+					$search_columns = array( 'user_login', 'ID' );
+				} elseif ( preg_match( '|^https?://|', $search ) && ! ( is_multisite() && wp_is_large_network( 'users' ) ) ) {
+					$search_columns = array( 'user_url' );
+				} else {
+					$search_columns = array( 'user_login', 'user_url', 'user_email', 'user_nicename', 'display_name' );
+				}
+			}
+			/** This filter is documented in wp-includes/class-wp-user-query.php */
+			$search_columns = apply_filters( 'user_search_columns', $search_columns, $search, $this );
+		} else {
+			$search_columns = self::$core_search_fields;
+		}
+		/**
+		 * Filters the WordPress core searching fields in wp_users query for UM Member directory query.
+		 *
+		 * @param {array} $core_search_fields Core search fields in wp_users query.
+		 *
+		 * @return {array} Core search fields in wp_users query.
+		 *
+		 * @since 2.6.10
+		 * @hook um_member_directory_core_search_fields
+		 *
+		 * @example <caption>Extends or remove wp_users core search fields.</caption>
+		 * function my_um_member_directory_core_search_fields( $core_search_fields ) {
+		 *     $core_search_fields = array_flip( $core_search_fields );
+		 *     unset( $core_search_fields['user_email'] );
+		 *     $core_search_fields = array_flip( $core_search_fields );
+		 *     return $core_search_fields;
+		 * }
+		 * add_filter( 'um_member_directory_core_search_fields', 'my_um_member_directory_core_search_fields' );
+		 */
+		return apply_filters( 'um_member_directory_core_search_fields', $search_columns );
 	}
 }
