@@ -176,15 +176,6 @@ if ( ! class_exists( 'UM' ) ) {
 		}
 
 		/**
-		 * UM constructor.
-		 *
-		 * @since 1.0
-		 */
-		function __construct() {
-			parent::__construct();
-		}
-
-		/**
 		 * UM pseudo-constructor.
 		 *
 		 * @since 2.0.18

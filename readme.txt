@@ -3,10 +3,10 @@ Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp, nsinelnikov
 Tags: community, member, membership, user-profile, user-registration
-Requires PHP: 5.6
-Requires at least: 5.5
+Requires PHP: 7.0
+Requires at least: 6.2
 Tested up to: 6.7
-Stable tag: 2.9.2
+Stable tag: 2.10.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -39,7 +39,7 @@ Read about all of the plugin's features at [Ultimate Member](https://ultimatemem
 
 = Paid Extensions =
 
-Ultimate Member has a range of extensions that allow you to extend the power of the plugin. You can purchase all of these extensions at a significant discount with our [All Access Pass](https://ultimatemember.com/pricing/) or you can purchase extensions individually.
+Ultimate Member has a range of extensions that allow you to extend the power of the plugin. You can purchase all of these extensions at a significant discount with one of our [paid plans](https://ultimatemember.com/pricing/) or you can purchase extensions individually.
 
 * [Zapier](https://ultimatemember.com/extensions/zapier/) - Allow to integrate the Zapier popular apps with Ultimate Member
 * [Stripe](https://ultimatemember.com/extensions/stripe/) - Sell paid memberships to access your website via Stripe subscriptions
@@ -228,8 +228,61 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Deprecated function `um_is_temp_image()` because it is unused.
 * Deprecated function `UM()->password()->setcookie()`. Use function `UM()::setcookie()` instead.
 
-= 2.9.3 2025-xx-xx =
+= 2.10.3 2025-04-xx =
 
+
+
+= 2.10.2 2025-04-02 =
+
+**Enhancements**
+
+* Added: `UM()->common()-filesystem()::maybe_init_wp_filesystem();` method.
+* Added: `UM()->common()-filesystem()::remove_dir();` method.
+
+**Bugfixes**
+
+* Fixed: Security issue CVE ID: CVE-2025-1702. Reviewed general search scripts and suggested another solution that uses only `$wpdb->prepare()`.
+
+= 2.10.1 2025-03-03 =
+
+**Bugfixes**
+
+* Fixed: Security issue CVE ID: CVE-2025-1702.
+* Fixed: Activation link redirects to Reset Password after registration without password field and required email activation.
+* Fixed: Honeypot scripts/styles for themes without pre-rendered shortcodes. Enqueue honeypot scripts/styles everytime.
+* Fixed: Profile photo metadata when Gravatar image is used.
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
+
+= 2.10.0 2025-02-18 =
+
+**Enhancements**
+
+* Added: User Profile `form-id` attribute and updated code for Profile/Cover photos actions dropdowns.
+* Added: Honeypot scripts/styles via `wp_add_inline_script()`, `wp_add_inline_style()` changed from direct adding in header and footer.
+* Updated: We've made improvements to requests for extension updates to boost stability.
+* Updated: PHP requirement - the minimum PHP version is now upgraded to 7.0.
+* Updated: Using $wpdb and WPCS for queries. Set minimum required version to 6.2 due to using %i for `$wpdb->prepare()`.
+* Updated: Revised wp-admin user actions handling. Now, the required capability is `edit_users` instead of `manage_options`.
+* Removed: User Profile hidden inputs on view mode.
+* Tweak: WPCS enhancements.
+
+**Bugfixes**
+
+* Fixed: Security issue CVE ID: CVE-2024-12276.
+* Fixed: Custom usermeta table metakeys for filtering in member directory (from `_money_spent` to `wc_money_spent_` and added `wc_order_count_`).
+* Fixed: Layout for "Download your data" and "Erase of your data" fields.
+* Fixed: Image sizes used for Open Graph meta in User Profile headers are now corrected.
+* Fixed: "Delete account text" settings visibility issue in wp-admin.
+* Fixed: The "Privacy Policy" field in the registration form. Disallowed HTML from the "Privacy Policy" content (like `<form>`) is filtered out by the `wp_kses()` function.
+* Fixed: Password fields are now sanitized the WordPress native way, with `wp_unslash()` omitted post-submission.
+
+**Templates required update**
+
+* gdpr-register.php
+* profile.php
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
 = 2.9.2 2025-01-14 =
 
@@ -300,6 +353,15 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.10.2 =
+This version fixes a security related bug. Upgrade immediately.
+
+= 2.10.1 =
+This version fixes a security related bug. Upgrade immediately.
+
+= 2.10.0 =
+Increased the minimum PHP and WordPress requirements. The plugin now requires at least PHP 7.0 and WordPress 6.2. This version fixes a security related bug. Upgrade immediately.
 
 = 2.9.2 =
 This version fixes a security related bug. Upgrade immediately.

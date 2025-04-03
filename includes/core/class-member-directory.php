@@ -2,6 +2,8 @@
 namespace um\core;
 
 use um\common\Directory;
+use Exception;
+use WP_User_Query;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -135,9 +137,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : $default_value;
 					?>
 					<input type="text" autocomplete="off" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?>"
-						placeholder="<?php echo esc_attr( $label ); ?>"
-						value="<?php echo esc_attr( $filter_from_url ); ?>" class="um-form-field"
-						aria-label="<?php echo esc_attr( $label ); ?>" />
+					       placeholder="<?php echo esc_attr( $label ); ?>"
+					       value="<?php echo esc_attr( $filter_from_url ); ?>" class="um-form-field"
+					       aria-label="<?php echo esc_attr( $label ); ?>" />
 					<?php
 					break;
 
@@ -274,9 +276,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					?>
 
 					<select class="um-s1" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
-							data-placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
-							aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
-							<?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>multiple<?php } ?>
+					        data-placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
+					        aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
+					        <?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>multiple<?php } ?>
 						<?php echo $custom_dropdown; ?>>
 
 						<option></option>
@@ -355,16 +357,16 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						?>
 						<input type="text" id="<?php echo esc_attr( $filter ); ?>_from" name="<?php echo esc_attr( $filter ); ?>_from" class="um-datepicker-filter"
 							<?php // translators: %s: Datetime filter label. ?>
-							placeholder="<?php echo esc_attr( sprintf( __( '%s From', 'ultimate-member' ), $label ) ); ?>"
-							data-filter-label="<?php echo esc_attr( $label ); ?>"
-							data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
-							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="from" data-value="<?php echo ! empty( $default_value_min ) ? esc_attr( strtotime( $default_value_min ) ) : ''; ?>" />
+							   placeholder="<?php echo esc_attr( sprintf( __( '%s From', 'ultimate-member' ), $label ) ); ?>"
+							   data-filter-label="<?php echo esc_attr( $label ); ?>"
+							   data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
+							   data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="from" data-value="<?php echo ! empty( $default_value_min ) ? esc_attr( strtotime( $default_value_min ) ) : ''; ?>" />
 						<input type="text" id="<?php echo esc_attr( $filter ); ?>_to" name="<?php echo esc_attr( $filter ); ?>_to" class="um-datepicker-filter"
 							<?php // translators: %s: Datetime filter label. ?>
-							placeholder="<?php echo esc_attr( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?>"
-							data-filter-label="<?php echo esc_attr( $label ); ?>"
-							data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
-							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="to" data-value="<?php echo ! empty( $default_value_max ) ? esc_attr( strtotime( $default_value_max ) ) : ''; ?>" />
+							   placeholder="<?php echo esc_attr( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?>"
+							   data-filter-label="<?php echo esc_attr( $label ); ?>"
+							   data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
+							   data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="to" data-value="<?php echo ! empty( $default_value_max ) ? esc_attr( strtotime( $default_value_max ) ) : ''; ?>" />
 						<?php
 					}
 					break;
@@ -400,18 +402,18 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						?>
 						<input type="text" id="<?php echo esc_attr( $filter ); ?>_from" name="<?php echo esc_attr( $filter ); ?>_from" class="um-timepicker-filter"
 							<?php // translators: %s: Timepicker filter label. ?>
-							placeholder="<?php echo esc_attr( sprintf( __( '%s From', 'ultimate-member' ), $label ) ); ?>"
-							data-filter-label="<?php echo esc_attr( $label ); ?>"
-							data-min="<?php echo esc_attr( $range[0] ); ?>" data-max="<?php echo esc_attr( $range[1] ); ?>"
-							data-format="<?php echo esc_attr( $js_format ); ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ); ?>"
-							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="from" data-value="<?php echo ! empty( $default_value_min ) ? esc_attr( $default_value_min ) : ''; ?>" />
+							   placeholder="<?php echo esc_attr( sprintf( __( '%s From', 'ultimate-member' ), $label ) ); ?>"
+							   data-filter-label="<?php echo esc_attr( $label ); ?>"
+							   data-min="<?php echo esc_attr( $range[0] ); ?>" data-max="<?php echo esc_attr( $range[1] ); ?>"
+							   data-format="<?php echo esc_attr( $js_format ); ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ); ?>"
+							   data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="from" data-value="<?php echo ! empty( $default_value_min ) ? esc_attr( $default_value_min ) : ''; ?>" />
 						<input type="text" id="<?php echo esc_attr( $filter ); ?>_to" name="<?php echo esc_attr( $filter ); ?>_to" class="um-timepicker-filter"
 							<?php // translators: %s: Timepicker filter label. ?>
-							placeholder="<?php echo esc_attr( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?>"
-							data-filter-label="<?php echo esc_attr( $label ); ?>"
-							data-min="<?php echo esc_attr( $range[0] ); ?>" data-max="<?php echo esc_attr( $range[1] ); ?>"
-							data-format="<?php echo esc_attr( $js_format ); ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ); ?>"
-							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="to" data-value="<?php echo ! empty( $default_value_max ) ? esc_attr( $default_value_max ) : ''; ?>" />
+							   placeholder="<?php echo esc_attr( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?>"
+							   data-filter-label="<?php echo esc_attr( $label ); ?>"
+							   data-min="<?php echo esc_attr( $range[0] ); ?>" data-max="<?php echo esc_attr( $range[1] ); ?>"
+							   data-format="<?php echo esc_attr( $js_format ); ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ); ?>"
+							   data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="to" data-value="<?php echo ! empty( $default_value_max ) ? esc_attr( $default_value_max ) : ''; ?>" />
 						<?php
 					}
 
@@ -437,14 +439,17 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				default: {
 
-					$meta = $wpdb->get_row( $wpdb->prepare(
-						"SELECT MIN( CONVERT( meta_value, DECIMAL ) ) as min_meta,
-						MAX( CONVERT( meta_value, DECIMAL ) ) as max_meta,
-						COUNT( DISTINCT meta_value ) as amount
-						FROM {$wpdb->usermeta}
-						WHERE meta_key = %s",
-						$filter
-					), ARRAY_A );
+					$meta = $wpdb->get_row(
+						$wpdb->prepare(
+							"SELECT MIN( CONVERT( meta_value, DECIMAL ) ) as min_meta,
+							MAX( CONVERT( meta_value, DECIMAL ) ) as max_meta,
+							COUNT( DISTINCT meta_value ) as amount
+							FROM {$wpdb->usermeta}
+							WHERE meta_key = %s",
+							$filter
+						),
+						ARRAY_A
+					);
 
 					if ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) && isset( $meta['amount'] ) && $meta['amount'] > 1 ) {
 						$range = array( (float) $meta['min_meta'], (float) $meta['max_meta'] );
@@ -457,23 +462,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				}
 				case 'birth_date': {
 
-//					$meta = $wpdb->get_col(
-//						"SELECT meta_value
-//						FROM {$wpdb->usermeta}
-//						WHERE meta_key = 'birth_date' AND
-//						      meta_value != ''"
-//					);
-//
-//					if ( empty( $meta ) || count( $meta ) < 2 ) {
-//						$range = false;
-//					} elseif ( is_array( $meta ) ) {
-//						$birth_dates = array_filter( array_map( 'strtotime', $meta ), 'is_numeric' );
-//						sort( $birth_dates );
-//						$min_meta = array_shift( $birth_dates );
-//						$max_meta = array_pop( $birth_dates );
-//						$range = array( $this->borndate( $max_meta ), $this->borndate( $min_meta ) );
-//					}
-
 					$meta = $wpdb->get_row(
 						"SELECT MIN( meta_value ) as min_meta,
 						MAX( meta_value ) as max_meta,
@@ -481,7 +469,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						FROM {$wpdb->usermeta}
 						WHERE meta_key = 'birth_date' AND
 							  meta_value != ''",
-					ARRAY_A );
+						ARRAY_A
+					);
 
 					if ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) && isset( $meta['amount'] ) && $meta['amount'] > 1 ) {
 						$range = array( $this->borndate( strtotime( $meta['max_meta'] ) ), $this->borndate( strtotime( $meta['min_meta'] ) ) );
@@ -549,10 +538,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			switch ( $filter ) {
 				default:
 					global $wpdb;
-					$meta = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value
-						FROM {$wpdb->usermeta}
-						WHERE meta_key = %s
-						ORDER BY meta_value DESC", $filter ) );
+					$meta = $wpdb->get_col(
+						$wpdb->prepare(
+							"SELECT DISTINCT meta_value
+							FROM {$wpdb->usermeta}
+							WHERE meta_key = %s
+							ORDER BY meta_value DESC",
+							$filter
+						)
+					);
 
 					if ( empty( $meta ) || count( $meta ) === 1 ) {
 						$range = false;
@@ -1184,26 +1178,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			if ( empty( $search ) ) {
 				return '';
 			}
-
-			// Make the search line empty if it contains the mySQL query statements.
-			$regexp_map = array(
-				'/select(.*?)from/im',
-				'/select(.*?)sleep/im',
-				'/select(.*?)database/im',
-				'/select(.*?)where/im',
-				'/update(.*?)set/im',
-				'/delete(.*?)from/im',
-			);
-
-			foreach ( $regexp_map as $regexp ) {
-				preg_match( $regexp, $search, $matches );
-				if ( ! empty( $matches ) ) {
-					$search = '';
-					break;
-				}
-			}
-			// Early escape of the search line. The same as `$wpdb->prepare()`.
-			return esc_sql( $search );
+			return $search;
 		}
 
 		/**
@@ -1215,153 +1190,16 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				// complex using with change_meta_sql function
 				$search = $this->prepare_search( $_POST['search'] );
 				if ( ! empty( $search ) ) {
-					$meta_query = array(
-						'relation' => 'OR',
-						array(
-							'value'   => $search,
-							'compare' => '=',
-						),
-						array(
-							'value'   => $search,
-							'compare' => 'LIKE',
-						),
-						array(
-							'value'   => serialize( (string) $search ),
-							'compare' => 'LIKE',
-						),
-					);
-
+					$meta_query = array();
 					$meta_query = apply_filters( 'um_member_directory_general_search_meta_query', $meta_query, $search );
 
-					$this->query_args['meta_query'][] = $meta_query;
+					if ( ! empty( $meta_query ) ) {
+						$this->query_args['meta_query'][] = $meta_query;
+					}
 
 					$this->is_search = true;
 				}
 			}
-		}
-
-		/**
-		 * Change mySQL meta query join attribute
-		 * for search only by UM user meta fields and WP core fields in WP Users table
-		 *
-		 * @param array $sql Array containing the query's JOIN and WHERE clauses.
-		 * @param $queries
-		 * @param $type
-		 * @param $primary_table
-		 * @param $primary_id_column
-		 * @param \WP_User_Query $context
-		 *
-		 * @return array
-		 */
-		public function change_meta_sql( $sql, $queries, $type, $primary_table, $primary_id_column, $context ) {
-			if ( ! empty( $_POST['search'] ) ) {
-				$search = $this->prepare_search( $_POST['search'] );
-				if ( ! empty( $search ) ) {
-					global $wpdb;
-
-					$meta_value  = '%' . $wpdb->esc_like( $search ) . '%';
-					$search_meta = $wpdb->prepare( '%s', $meta_value );
-
-					preg_match( '~(?<=\{)(.*?)(?=\})~', $search_meta, $matches, PREG_OFFSET_CAPTURE, 0 );
-
-					// workaround for standard mySQL hashes which are used by $wpdb->prepare instead of the %symbol
-					// sometimes it breaks error for strings like that wp_postmeta.meta_value LIKE '{12f209b48a89eeab33424902879d05d503f251ca8812dde03b59484a2991dc74}AMS{12f209b48a89eeab33424902879d05d503f251ca8812dde03b59484a2991dc74}'
-					// {12f209b48a89eeab33424902879d05d503f251ca8812dde03b59484a2991dc74} isn't applied by the `preg_replace()` below
-					if ( $matches[0][0] ) {
-						$search_meta  = str_replace( '{' . $matches[0][0] . '}', '#%&', $search_meta );
-						$sql['where'] = str_replace( '{' . $matches[0][0] . '}', '#%&', $sql['where'] );
-					}
-
-					// str_replace( '/', '\/', wp_slash( $search_meta ) ) means that we add backslashes to special symbols + add backslash to slash(/) symbol for proper regular pattern.
-					preg_match(
-						'/^(.*).meta_value LIKE ' . str_replace( '/', '\/', wp_slash( $search_meta ) ) . '[^\)]/im',
-						$sql['where'],
-						$join_matches
-					);
-
-					$sql['where'] = str_replace( '#%&', '{' . $matches[0][0] . '}', $sql['where'] );
-
-					$directory_id   = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
-					$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
-					$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
-
-					if ( isset( $join_matches[1] ) ) {
-						$meta_join_for_search = trim( $join_matches[1] );
-
-						// skip private invisible fields
-						$custom_fields = array();
-						if ( empty( $include_fields ) ) {
-							foreach ( array_keys( UM()->builtin()->all_user_fields ) as $field_key ) {
-								if ( empty( $field_key ) ) {
-									continue;
-								}
-
-								$data = UM()->fields()->get_field( $field_key );
-								if ( ! um_can_view_field( $data ) ) {
-									continue;
-								}
-
-								$custom_fields[] = $field_key;
-							}
-						} else {
-							foreach ( $include_fields as $field_key ) {
-								if ( empty( $field_key ) ) {
-									continue;
-								}
-
-								$data = UM()->fields()->get_field( $field_key );
-								if ( ! um_can_view_field( $data ) ) {
-									continue;
-								}
-
-								$custom_fields[] = $field_key;
-							}
-						}
-
-						$custom_fields = apply_filters( 'um_general_search_custom_fields', $custom_fields );
-
-						if ( ! empty( $custom_fields ) ) {
-							if ( ! empty( $exclude_fields ) ) {
-								$custom_fields = array_diff( $custom_fields, $exclude_fields );
-							}
-
-							$sql['join'] = preg_replace(
-								'/(' . $meta_join_for_search . ' ON \( ' . $wpdb->users . '\.ID = ' . $meta_join_for_search . '\.user_id )(\))/im',
-								"$1 AND " . $meta_join_for_search . ".meta_key IN( '" . implode( "','", $custom_fields ) . "' ) $2",
-								$sql['join']
-							);
-						}
-					}
-
-					$core_search = $this->get_core_search_fields();
-					if ( ! empty( $include_fields ) ) {
-						$core_search = array_intersect( $core_search, $include_fields );
-					}
-					if ( ! empty( $exclude_fields ) ) {
-						$core_search = array_diff( $core_search, $exclude_fields );
-					}
-
-					if ( ! empty( $core_search ) ) {
-						// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
-						$search_where = $context->get_search_sql( $search, $core_search, 'both' );
-
-						$search_where = preg_replace( '/ AND \((.*?)\)/im', "$1 OR", $search_where );
-
-						// str_replace( '/', '\/', wp_slash( $search ) ) means that we add backslashes to special symbols + add backslash to slash(/) symbol for proper regular pattern.
-						$pattern = $wpdb->prepare( $meta_join_for_search . '.meta_value = %s', $search );
-						$pattern = '/(' . str_replace( '/', '\/', wp_slash( $pattern ) ) . ')/im';
-
-						$sql['where'] = preg_replace(
-							$pattern,
-							trim( $search_where ) . " $1",
-							$sql['where'],
-							1
-						);
-					}
-				}
-			}
-
-			return $sql;
 		}
 
 		/**
@@ -2260,16 +2098,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			return $data_array;
 		}
 
-
 		/**
 		 * Update limit query
 		 *
 		 * @param $user_query
 		 */
-		function pagination_changes( $user_query ) {
+		public function pagination_changes( $user_query ) {
 			global $wpdb;
 
-			$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
+			$directory_id   = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
 			$directory_data = UM()->query()->post_data( $directory_id );
 
 			$qv = $user_query->query_vars;
@@ -2285,6 +2122,102 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$user_query->query_limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $number );
 				} else {
 					$user_query->query_limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['number'] * ( $qv['paged'] - 1 ), $number );
+				}
+			}
+		}
+
+		/**
+		 * Update search query
+		 *
+		 * @param WP_User_Query $user_query
+		 *
+		 * @throws Exception
+		 */
+		public function search_changes( $user_query ) {
+			global $wpdb;
+
+			if ( ! empty( $_POST['search'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+				$search = $this->prepare_search( $_POST['search'] ); // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+				if ( empty( $search ) ) {
+					return;
+				}
+
+				$directory_id = null;
+				if ( ! empty( $_POST['directory_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+					$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+				}
+
+				$qv = $user_query->query_vars;
+
+				$exclude_fields = array();
+				$include_fields = array_keys( UM()->builtin()->all_user_fields );
+				if ( ! empty( $directory_id ) ) {
+					$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
+					$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
+
+					$exclude_fields = ! empty( $exclude_fields ) && is_array( $exclude_fields ) ? $exclude_fields : array();
+					$include_fields = ! empty( $include_fields ) && is_array( $include_fields ) ? $include_fields : array_keys( UM()->builtin()->all_user_fields );
+				}
+
+				$custom_fields = array();
+				foreach ( $include_fields as $field_key ) {
+					if ( empty( $field_key ) ) {
+						continue;
+					}
+
+					$data = UM()->fields()->get_field( $field_key );
+					if ( isset( $data['type'] ) && 'password' === $data['type'] ) {
+						continue;
+					}
+					if ( isset( $data['metakey'] ) && in_array( $data['metakey'], array( 'role_select', 'role_radio' ), true ) ) {
+						continue;
+					}
+					if ( ! empty( $data['account_only'] ) ) {
+						continue;
+					}
+
+					if ( ! um_can_view_field( $data ) ) {
+						continue;
+					}
+
+					$custom_fields[] = $field_key;
+				}
+
+				if ( ! empty( $custom_fields ) && ! empty( $exclude_fields ) ) {
+					$custom_fields = array_diff( $custom_fields, $exclude_fields );
+				}
+
+				$custom_fields = apply_filters( 'um_general_search_custom_fields', $custom_fields );
+				$custom_fields = array_values( array_unique( $custom_fields ) );
+
+				$search_columns = $this->get_core_search_fields( $qv, $search );
+
+				if ( ! empty( $directory_id ) ) {
+					$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
+					if ( ! empty( $include_fields ) ) {
+						$search_columns = array_intersect( $search_columns, $include_fields );
+					}
+				}
+				if ( ! empty( $exclude_fields ) ) {
+					$search_columns = array_diff( $search_columns, $exclude_fields );
+				}
+
+				if ( ! empty( $custom_fields ) ) {
+					$search_columns[] = 'um_search.meta_value';
+
+					$user_query->query_from .= " INNER JOIN {$wpdb->usermeta} AS um_search ON ( {$wpdb->users}.ID = um_search.user_id AND um_search.meta_key IN('" . implode( "','", $custom_fields ) . "'))";
+				}
+
+				if ( ! empty( $search_columns ) ) {
+					$search_where = $user_query->get_search_sql( $search, $search_columns, 'both' );
+					$search_where = apply_filters( 'um_general_search_custom_search_where', $search_where, $user_query, $search );
+
+					$user_query->query_where .= $search_where;
+				}
+
+				// Required `DISTINCT` if not exists, because we add `OR` condition manually.
+				if ( ( ! empty( $custom_fields ) || ! empty( $search_columns ) ) && false === strpos( $user_query->query_fields, 'DISTINCT' ) ) {
+					$user_query->query_fields = 'DISTINCT ' . $user_query->query_fields;
 				}
 			}
 		}
@@ -2420,15 +2353,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 */
 			do_action( 'um_user_before_query', $this->query_args, $this );
 
-			add_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10, 6 );
+			add_action( 'pre_user_query', array( &$this, 'search_changes' ) );
+			add_action( 'pre_user_query', array( &$this, 'pagination_changes' ) );
 
-			add_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10, 1 );
+			$user_query = new WP_User_Query( $this->query_args );
 
-			$user_query = new \WP_User_Query( $this->query_args );
-
-			remove_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10 );
-
-			remove_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10 );
+			remove_action( 'pre_user_query', array( &$this, 'search_changes' ) );
+			remove_action( 'pre_user_query', array( &$this, 'pagination_changes' ) );
 
 			/**
 			 * Fires just after the users query for getting users in member directory.
@@ -2530,7 +2461,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			<div class="um-new-dropdown" data-element="<?php echo $element; ?>" data-trigger="<?php echo $trigger; ?>" data-parent="<?php echo $parent; ?>">
 				<ul>
 					<# _.each( <?php echo $item; ?>.dropdown_actions, function( action, key, list ) { #>
-						<li><a href="<# if ( typeof action.url != 'undefined' ) { #>{{{action.url}}}<# } else { #>javascript:void(0);<# }#>" class="{{{key}}}"<?php echo $additional_attributes ? " $additional_attributes" : '' ?>>{{{action.title}}}</a></li>
+					<li><a href="<# if ( typeof action.url != 'undefined' ) { #>{{{action.url}}}<# } else { #>javascript:void(0);<# }#>" class="{{{key}}}"<?php echo $additional_attributes ? " $additional_attributes" : '' ?>>{{{action.title}}}</a></li>
 					<# }); #>
 				</ul>
 			</div>

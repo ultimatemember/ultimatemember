@@ -435,9 +435,11 @@ class Filesystem {
 	}
 
 	/**
+	 * Files Age in the temp folder. By default, it's 24 hours.
+	 *
+	 * @return int Temp file age in seconds.
 	 * @since 2.8.7
 	 *
-	 * @return int
 	 */
 	public static function files_age() {
 		/**
@@ -454,11 +456,15 @@ class Filesystem {
 	}
 
 	/**
-	 * @since 3.0.0
+	 * Image MIME Types
 	 *
-	 * @param string $context
+	 * Retrieves a list of image MIME types based on the context.
 	 *
-	 * @return array
+	 * @param string $context The context in which the MIME types are needed ('list' or 'allowed').
+	 *
+	 * @return array List of image MIME types based on the context.
+	 *
+	 * @since 2.8.7
 	 */
 	public static function image_mimes( $context = 'list' ) {
 		$mimes = array();
@@ -638,7 +644,7 @@ class Filesystem {
 	/**
 	 * Probably define global $wp_filesystem.
 	 *
-	 * @since 3.0.0
+	 * @since 2.10.2
 	 *
 	 * @return void
 	 */
@@ -695,11 +701,13 @@ class Filesystem {
 	}
 
 	/**
-	 * @since 3.0.0
+	 * Remove a directory using WP Filesystem.
 	 *
-	 * @param string $dir Should end with DIRECTORY_SEPARATOR
+	 * @param string $dir The directory path to be removed. Should end with DIRECTORY_SEPARATOR.
 	 *
-	 * @return bool
+	 * @return bool True on success, false on failure or if directory doesn't exist.
+	 *
+	 * @since 2.10.2
 	 */
 	public static function remove_dir( $dir ) {
 		global $wp_filesystem;

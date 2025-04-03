@@ -44,8 +44,8 @@ GNU Version 2 or Any Later Version
 
 ### IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-[Official Release Version: 2.9.3](https://github.com/ultimatemember/ultimatemember/releases/tag/2.9.3).
+[Official Release Version: 2.10.3](https://github.com/ultimatemember/ultimatemember/releases/tag/2.10.3).
 
 ## Changelog
 
-[ From v1.0.0 to latest version ](https://wordpress.org/plugins/ultimate-member/changelog/).
+[ From v1.0.0 to latest version ](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).

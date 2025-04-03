@@ -55,15 +55,18 @@ if ( ! empty( $um_roles ) ) {
 			$role_keys[] = $role_key;
 		}
 
-		$all_role_metadata = $wpdb->get_results( $wpdb->prepare(
-			"SELECT pm.meta_key,
-                    pm.meta_value
-            FROM {$wpdb->postmeta} pm
-            WHERE pm.post_id = %d AND
-                  pm.meta_key LIKE %s",
-			$um_role->ID,
-			"_um_%"
-		), ARRAY_A );
+		$all_role_metadata = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT pm.meta_key,
+						pm.meta_value
+				FROM {$wpdb->postmeta} pm
+				WHERE pm.post_id = %d AND
+					  pm.meta_key LIKE %s",
+				$um_role->ID,
+				"_um_%"
+			),
+			ARRAY_A
+		);
 
 		$role_metadata = array();
 		if ( ! empty( $all_role_metadata ) ) {

@@ -28,29 +28,35 @@ function um_upgrade_metadata_per_user213beta3() {
 
 	global $wpdb;
 
-	$min_max = $wpdb->get_row( $wpdb->prepare(
-		"SELECT MIN(ID) AS MinID, MAX(ID) AS MaxID
-		FROM (
-			SELECT u.ID
-			FROM {$wpdb->users} as u
-			ORDER BY u.ID
-			LIMIT %d, %d
-		) as dt",
-		( absint( $_POST['page'] ) - 1 ) * $per_page,
-		$per_page
-	), ARRAY_A );
+	$min_max = $wpdb->get_row(
+		$wpdb->prepare(
+			"SELECT MIN(ID) AS MinID, MAX(ID) AS MaxID
+			FROM (
+				SELECT u.ID
+				FROM {$wpdb->users} as u
+				ORDER BY u.ID
+				LIMIT %d, %d
+			) as dt",
+			( absint( $_POST['page'] ) - 1 ) * $per_page,
+			$per_page
+		),
+		ARRAY_A
+	);
 
-	$metadata = $wpdb->get_results( $wpdb->prepare(
-		"SELECT u.ID as user_id,
-			  um.meta_key as meta_key,
-			  um.meta_value as meta_value
-		FROM {$wpdb->users} u
-		LEFT JOIN {$wpdb->usermeta} um ON ( um.user_id = u.ID AND um.meta_key IN( 'account_status','hide_in_members','synced_gravatar_hashed_id','synced_profile_photo','profile_photo','cover_photo','_um_verified' ) )
-		WHERE u.ID >= %d AND
-		      u.ID <= %d",
-		$min_max['MinID'],
-		$min_max['MaxID']
-	), ARRAY_A );
+	$metadata = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT u.ID as user_id,
+				  um.meta_key as meta_key,
+				  um.meta_value as meta_value
+			FROM {$wpdb->users} u
+			LEFT JOIN {$wpdb->usermeta} um ON ( um.user_id = u.ID AND um.meta_key IN( 'account_status','hide_in_members','synced_gravatar_hashed_id','synced_profile_photo','profile_photo','cover_photo','_um_verified' ) )
+			WHERE u.ID >= %d AND
+				  u.ID <= %d",
+			$min_max['MinID'],
+			$min_max['MaxID']
+		),
+		ARRAY_A
+	);
 
 	$users_map = array();
 	foreach ( $metadata as $metadatarow ) {

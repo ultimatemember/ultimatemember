@@ -89,13 +89,12 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 				"SELECT *
 				FROM {$wpdb->posts}
 				WHERE post_type = 'page' AND
-				      post_status = 'publish'",
-				OBJECT
+					  post_status = 'publish'"
 			);
 
 			$array = array();
-			if( $wpdb->num_rows > 0 ){
-				foreach ($pages as $page_data) {
+			if ( $wpdb->num_rows > 0 ) {
+				foreach ( $pages as $page_data ) {
 					$array[ $page_data->ID ] = $page_data->post_title;
 				}
 			}

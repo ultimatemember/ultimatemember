@@ -718,7 +718,7 @@ if ( UM()->is_new_ui() ) {
 			} else {
 				if ( UM()->account()->current_password_is_required( 'privacy_download_data' ) ) {
 					?>
-					<label name="um-export-data">
+					<label name="um-export-data" for="um-export-data">
 						<?php esc_html_e( 'Enter your current password to confirm a new export of your personal data.', 'ultimate-member' ); ?>
 					</label>
 					<div class="um-field-area">
@@ -808,8 +808,10 @@ if ( UM()->is_new_ui() ) {
 			} else {
 				if ( UM()->account()->current_password_is_required( 'privacy_erase_data' ) ) {
 					?>
-					<label name="um-erase-data">
+					<label name="um-erase-data" for="um-erase-data">
 						<?php esc_html_e( 'Enter your current password to confirm the erasure of your personal data.', 'ultimate-member' ); ?>
+					</label>
+					<div class="um-field-area">
 						<?php if ( UM()->options()->get( 'toggle_password' ) ) { ?>
 							<div class="um-field-area-password">
 								<input id="um-erase-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' ); ?>">
@@ -822,7 +824,7 @@ if ( UM()->is_new_ui() ) {
 							<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
 						</div>
 						<div class="um-field-area-response um-erase-data"></div>
-					</label>
+					</div>
 
 				<?php } else { ?>
 
@@ -898,5 +900,3 @@ if ( UM()->is_new_ui() ) {
 	}
 	add_action( 'wp_ajax_um_request_user_data', 'um_request_user_data' );
 }
-
-

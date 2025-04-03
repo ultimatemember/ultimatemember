@@ -100,19 +100,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					$sites = get_sites( array( 'fields' => 'ids' ) );
 					foreach ( $sites as $blog_id ) {
 						$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
-						$metakeys[] = 'wc_money_spent_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
+						$metakeys[] = 'wc_money_spent_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' ); // Is used since Woocommerce 9.1.0
+						$metakeys[] = 'wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' ); // Is used since Woocommerce 9.1.0 TODO remove as soon as used 'um_wc_order_count_'
 						$metakeys[] = 'um_wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
 					}
 				} else {
 					$blog_id    = get_current_blog_id();
 					$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
-					$metakeys[] = 'wc_money_spent_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
+					$metakeys[] = 'wc_money_spent_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' ); // Is used since Woocommerce 9.1.0
+					$metakeys[] = 'wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' ); // Is used since Woocommerce 9.1.0 TODO remove as soon as used 'um_wc_order_count_'
 					$metakeys[] = 'um_wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
 				}
 
 				//member directory data
 				$metakeys[] = 'um_member_directory_data';
 				$metakeys[] = '_um_verified';
+				$metakeys[] = '_money_spent'; // Legacy since Woocommerce 9.1.0. TODO remove as soon as stop support Woo below 9.1.0 version
 				$metakeys[] = '_completed';
 				$metakeys[] = '_reviews_avg';
 
@@ -151,7 +154,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				}
 
 				$skip_fields = UM()->builtin()->get_fields_without_metakey();
-				$skip_fields = array_merge( $skip_fields, UM()->member_directory()->core_search_fields );
+				$skip_fields = array_merge( $skip_fields, UM()->member_directory()::$core_search_fields );
 
 				$real_usermeta = $wpdb->get_col( "SELECT DISTINCT meta_key FROM {$wpdb->usermeta}" );
 				$real_usermeta = ! empty( $real_usermeta ) ? $real_usermeta : array();
@@ -1071,13 +1074,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			$users_fields = array(
 				array(
-				  'id'          => 'register_role',
-				  'type'        => 'select',
-				  'label'       => __( 'Registration Default Role', 'ultimate-member' ),
-				  'description' => __( 'This will be the role assigned to users registering through Ultimate Member registration forms. By default, this setting will follow the core WordPress setting "New User Default Role" unless you specify a different role.', 'ultimate-member' ),
-				  'default'     => um_get_metadefault( 'register_role' ),
-				  'options'     => UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ),
-				  'size'        => 'small',
+					'id'          => 'register_role',
+					'type'        => 'select',
+					'label'       => __( 'Registration Default Role', 'ultimate-member' ),
+					'description' => __( 'This will be the role assigned to users registering through Ultimate Member registration forms. By default, this setting will follow the core WordPress setting "New User Default Role" unless you specify a different role.', 'ultimate-member' ),
+					'default'     => um_get_metadefault( 'register_role' ),
+					'options'     => UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ),
+					'size'        => 'small',
 				),
 				array(
 					'id'          => 'permalink_base',
@@ -2401,6 +2404,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				unset( $this->settings_structure['advanced']['sections']['features']['form_sections']['beta_features'] );
 			}
 
+			if ( ! UM()->is_new_ui() ) {
+				if ( UM()->account()->current_password_is_required( 'delete' ) ) {
+					unset( $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][2] );
+				} else {
+					unset( $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][1] );
+				}
+			}
+
 			// Hide un-existed API
 			foreach ( $this->settings_structure['advanced']['sections']['apis']['form_sections'] as $api => $section_data ) {
 				if ( ! UM()->common()->apis()::has_api( $api ) ) {
@@ -2546,9 +2557,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			if ( $form_wrapper ) {
 				?>
 				<form method="post" action="" name="um-settings-form" id="um-settings-form">
-					<input type="hidden" value="save" name="um-settings-action" />
+				<input type="hidden" value="save" name="um-settings-action" />
 
-					<?php
+				<?php
 			}
 
 			/**
@@ -2575,10 +2586,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			if ( $form_wrapper ) {
 				$um_settings_nonce = wp_create_nonce( 'um-settings-nonce' );
 				?>
-					<p class="submit">
-						<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Save Changes', 'ultimate-member' ); ?>" />
-						<input type="hidden" name="__umnonce" value="<?php echo esc_attr( $um_settings_nonce ); ?>" />
-					</p>
+				<p class="submit">
+					<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Save Changes', 'ultimate-member' ); ?>" />
+					<input type="hidden" name="__umnonce" value="<?php echo esc_attr( $um_settings_nonce ); ?>" />
+				</p>
 				</form>
 				<?php
 			}
@@ -3101,9 +3112,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				);
 
 				$request = wp_remote_post(
-					UM()->store_url,
+					UM()::$store_url,
 					array(
-						'timeout'   => UM()->request_timeout,
+						'timeout'   => UM()::$request_timeout,
 						'sslverify' => false,
 						'body'      => $api_params,
 					)
@@ -3113,9 +3124,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					$request = json_decode( wp_remote_retrieve_body( $request ) );
 				} else {
 					$request = wp_remote_post(
-						UM()->store_url,
+						UM()::$store_url,
 						array(
-							'timeout'   => UM()->request_timeout,
+							'timeout'   => UM()::$request_timeout,
 							'sslverify' => true,
 							'body'      => $api_params,
 						)
@@ -3286,7 +3297,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										case 'expired':
 											$class      = 'expired';
 											$messages[] = sprintf(
-												// translators: %1$s is an expiry date; %2$s is a renewal link.
+											// translators: %1$s is an expiry date; %2$s is a renewal link.
 												__( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'ultimate-member' ),
 												wp_date( get_option( 'date_format', 'F j, Y' ), strtotime( $license->expires ), new DateTimeZone( 'UTC' ) ),
 												'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
@@ -3297,7 +3308,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										case 'revoked':
 											$class      = 'error';
 											$messages[] = sprintf(
-												// translators: %s: support link name.
+											// translators: %s: support link name.
 												__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'ultimate-member' ),
 												'https://ultimatemember.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
 											);
@@ -3307,7 +3318,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										case 'missing':
 											$class      = 'error';
 											$messages[] = sprintf(
-												// translators: %s: account page.
+											// translators: %s: account page.
 												__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'ultimate-member' ),
 												'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
 											);
@@ -3318,7 +3329,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										case 'site_inactive':
 											$class      = 'error';
 											$messages[] = sprintf(
-												// translators: %1$s is a item name title; %2$s is a account page.
+											// translators: %1$s is a item name title; %2$s is a account page.
 												__( 'Your %1$s is not active for this URL. Please <a href="%2$s" target="_blank">visit your account page</a> to manage your license key URLs.', 'ultimate-member' ),
 												$field_data['item_name'],
 												'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
@@ -3381,7 +3392,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									case 'expired':
 										$class      = 'expired';
 										$messages[] = sprintf(
-											// translators: %1$s is a expiry date; %2$s is a renew link.
+										// translators: %1$s is a expiry date; %2$s is a renew link.
 											__( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'ultimate-member' ),
 											wp_date( get_option( 'date_format', 'F j, Y' ), strtotime( $license->expires ), new DateTimeZone( 'UTC' ) ),
 											'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
@@ -3392,7 +3403,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									case 'revoked':
 										$class      = 'error';
 										$messages[] = sprintf(
-											// translators: %s: support link name.
+										// translators: %s: support link name.
 											__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'ultimate-member' ),
 											'https://ultimatemember.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
 										);
@@ -3402,7 +3413,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									case 'missing':
 										$class      = 'error';
 										$messages[] = sprintf(
-											// translators: %s: account page.
+										// translators: %s: account page.
 											__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'ultimate-member' ),
 											'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
 										);
@@ -3413,7 +3424,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									case 'site_inactive':
 										$class      = 'error';
 										$messages[] = sprintf(
-											// translators: %1$s is a item name title; %2$s is a account page.
+										// translators: %1$s is a item name title; %2$s is a account page.
 											__( 'Your %1$s is not active for this URL. Please <a href="%2$s" target="_blank">visit your account page</a> to manage your license key URLs.', 'ultimate-member' ),
 											$field_data['item_name'],
 											'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
@@ -3457,7 +3468,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										} elseif ( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
 
 											$messages[] = sprintf(
-												// translators: %1$s is an expiry date; %2$s is a renewal link.
+											// translators: %1$s is an expiry date; %2$s is a renewal link.
 												__( 'Your license key expires soon! It expires on %1$s. <a href="%2$s" target="_blank">Renew your license key</a>.', 'ultimate-member' ),
 												wp_date( get_option( 'date_format', 'F j, Y' ), strtotime( $license->expires ), new DateTimeZone( 'UTC' ) ),
 												'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
@@ -3468,7 +3479,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										} else {
 
 											$messages[] = sprintf(
-												// translators: %s: expiry date.
+											// translators: %s: expiry date.
 												__( 'Your license key expires on %s.', 'ultimate-member' ),
 												wp_date( get_option( 'date_format', 'F j, Y' ), strtotime( $license->expires ), new DateTimeZone( 'UTC' ) )
 											);
@@ -3484,7 +3495,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							$class = 'empty';
 
 							$messages[] = sprintf(
-								// translators: %s: item name.
+							// translators: %s: item name.
 								__( 'To receive updates, please enter your valid %s license key.', 'ultimate-member' ),
 								$field_data['item_name']
 							);
@@ -3571,8 +3582,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					<?php esc_html_e( 'Re-check templates', 'ultimate-member' ); ?>
 				</a>
 				<?php
-					// translators: %s: Last checking templates time.
-					echo esc_html( sprintf( __( 'Last update: %s. You could re-check changes manually.', 'ultimate-member' ), wp_date( get_option( 'date_format', 'F j, Y' ) . ' ' . get_option( 'time_format', 'g:i a' ), $um_check_version ) ) );
+				// translators: %s: Last checking templates time.
+				echo esc_html( sprintf( __( 'Last update: %s. You could re-check changes manually.', 'ultimate-member' ), wp_date( get_option( 'date_format', 'F j, Y' ) . ' ' . get_option( 'time_format', 'g:i a' ), $um_check_version ) ) );
 				?>
 			</p>
 			<div class="clear"></div>
