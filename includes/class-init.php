@@ -16,7 +16,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Followers_API Followers_API()
 	 * @method UM_Friends_API Friends_API()
 	 * @method UM_Mailchimp Mailchimp()
-	 * @method UM_Messaging_API Messaging_API()
+	 * @method UM_Messaging Messaging()
 	 * @method UM_myCRED myCRED()
 	 * @method UM_Notices Notices()
 	 * @method UM_Notifications_API Notifications_API()
