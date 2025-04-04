@@ -83,6 +83,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$this->notices();
 			$this->secure();
 			$this->site_health();
+			$this->updater();
 			$this->users_columns();
 		}
 
@@ -2087,6 +2088,18 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				UM()->classes['um\admin\site_health'] = new Site_Health();
 			}
 			return UM()->classes['um\admin\site_health'];
+		}
+
+		/**
+		 * @since 2.11.0
+		 *
+		 * @return Updater
+		 */
+		public function updater() {
+			if ( empty( UM()->classes['um\admin\updater'] ) ) {
+				UM()->classes['um\admin\updater'] = new Updater();
+			}
+			return UM()->classes['um\admin\updater'];
 		}
 
 		/**

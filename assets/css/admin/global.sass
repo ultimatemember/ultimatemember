@@ -64,6 +64,25 @@ ul#adminmenu
     line-height: 20px
     color: $overlay !important
 
+.#{$prefix}plugin-upgrade-notice
+  font-weight: 400
+  color: #fff
+  background: #d53221
+  padding: 1em
+  margin: 9px 0
+  display: block
+  box-sizing: border-box
+  -webkit-box-sizing: border-box
+  -moz-box-sizing: border-box
+  &:before
+    content: "\f348"
+    display: inline-block
+    font: 400 18px/1 dashicons
+    speak: none
+    margin: 0 8px 0 -2px
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
+    vertical-align: top
 // wp.org reviews admin notice: Removed for now to avoid the bad reviews
 //.#{$prefix}hidden-notice
 //  display: none
