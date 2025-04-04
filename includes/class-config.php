@@ -733,7 +733,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'secure_notify_admins_banned_accounts__interval' => 'instant',
 				'secure_allowed_redirect_hosts'         => '',
 				'delete_comments'                       => false,
-				'enable_action_scheduler'               => false,
+				'enable_as_email_sending'               => UM()->options()->get( 'enable_action_scheduler' ), // Use legacy option value by default. It helps during update to set the same value. The last version when we used 'enable_action_scheduler' is 2.10.2
 			);
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );
