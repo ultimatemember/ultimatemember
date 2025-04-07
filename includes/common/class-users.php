@@ -4,6 +4,7 @@ namespace um\common;
 use WP_Error;
 use WP_Session_Tokens;
 use WP_User;
+use WP_User_Query;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,6 +20,68 @@ class Users {
 	public function hooks() {
 		add_filter( 'user_has_cap', array( &$this, 'map_caps_by_role' ), 10, 3 );
 		add_filter( 'editable_roles', array( &$this, 'restrict_roles' ) );
+
+		add_action( 'init', array( &$this, 'um_schedule_account_status_check' ) );
+		add_action( 'um_schedule_account_status_check', array( &$this, 'status_check' ) );
+		add_action( 'um_check_account_status_batch', array( &$this, 'batch_check' ), 10, 2 );
+	}
+
+	public function um_schedule_account_status_check() {
+		$interval = 3600;
+
+		if ( ! as_next_scheduled_action( 'um_schedule_account_status_check' ) ) {
+			UM()->maybe_action_scheduler()->schedule_recurring_action(
+				time() + 60,
+				$interval,
+				'um_schedule_account_status_check'
+			);
+		}
+	}
+
+	public function status_check() {
+		global $wpdb;
+		$batch_size  = 50;
+		$total_users = $wpdb->get_var(
+			"SELECT COUNT(u.ID)
+			FROM {$wpdb->users} u
+			LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'account_status'
+			WHERE um.meta_value IS NULL OR um.meta_value = ''"
+		);
+
+		if ( absint( $total_users ) > 0 ) {
+			for ( $offset = 0; $offset < absint( $total_users ); $offset += $batch_size ) {
+				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_check_account_status_batch', array( $offset, $batch_size ) );
+			}
+		}
+	}
+
+	public function batch_check( $offset, $limit ) {
+		$users = new WP_User_Query(
+			array(
+				'number'     => $limit,
+				'offset'     => $offset,
+				'fields'     => array( 'ID' ),
+				'meta_query' => array(
+					'relation' => 'OR',
+					array(
+						'key'     => 'account_status',
+						'compare' => 'NOT EXISTS',
+					),
+					array(
+						'key'     => 'account_status',
+						'value'   => '',
+						'compare' => '=',
+					),
+				),
+			)
+		);
+		$results = $users->get_results();
+
+		if ( ! empty( $results ) ) {
+			foreach ( $results as $user ) {
+				update_user_meta( $user->ID, 'account_status', 'approved' );
+			}
+		}
 	}
 
 	/**
