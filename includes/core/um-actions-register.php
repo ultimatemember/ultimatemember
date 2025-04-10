@@ -113,6 +113,10 @@ add_action( 'um_user_register', 'um_after_insert_user', 1, 3 );
  * @param $user_id
  */
 function um_send_registration_notification( $user_id ) {
+	if ( is_admin() && UM()->options()->get( 'auto_user_approve' ) ) {
+		return;
+	}
+
 	um_fetch_user( $user_id );
 	$registration_status = um_user( 'status' );
 
@@ -138,6 +142,12 @@ add_action( 'um_registration_complete', 'um_send_registration_notification' );
  */
 function um_check_user_status( $user_id, $args, $form_data = null ) {
 	$registration_status = um_user( 'status' );
+
+	if ( ( is_null( $form_data ) || is_admin() ) && UM()->options()->get( 'auto_user_approve' ) ) {
+		UM()->common()->users()->set_status( $user_id, 'approved' );
+		return;
+	}
+
 	/**
 	 * Fires after complete UM user registration.
 	 * Where $status can be equal to 'approved', 'checkmail' or 'pending'.
