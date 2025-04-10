@@ -753,6 +753,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'use_um_gravatar_default_image'        => array(
 						'sanitize' => 'bool',
 					),
+					'auto_user_approve'                    => array(
+						'sanitize' => 'bool',
+					),
 					'delete_comments'                      => array(
 						'sanitize' => 'bool',
 					),
@@ -1181,6 +1184,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'checkbox_label' => __( 'Set Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
 												'description' => __( 'Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo/avatar).', 'ultimate-member' ),
 												'conditional' => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
+											),
+											array(
+												'id'    => 'auto_user_approve',
+												'type'  => 'checkbox',
+												'label' => __( 'Ignore the "User Role > Registration Options"', 'ultimate-member' ),
+												'checkbox_label' => __( 'Automatically approve users from the wp-admin dashboard', 'ultimate-member' ),
+												'description' => __( 'Ignore registration settings and automatically approve the user if this user is added from the wp-admin dashboard.', 'ultimate-member' ),
 											),
 											array(
 												'id'    => 'delete_comments',
