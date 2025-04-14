@@ -113,7 +113,8 @@ add_action( 'um_user_register', 'um_after_insert_user', 1, 3 );
  * @param $user_id
  */
 function um_send_registration_notification( $user_id ) {
-	if ( is_admin() && UM()->options()->get( 'auto_user_approve' ) ) {
+	if ( is_admin() ) {
+		// Don't send email notifications to administrators about new user registration, because the user was created from wp-admin.
 		return;
 	}
 
@@ -141,11 +142,10 @@ add_action( 'um_registration_complete', 'um_send_registration_notification' );
  * @param null|array $form_data
  */
 function um_check_user_status( $user_id, $args, $form_data = null ) {
-	$registration_status = um_user( 'status' );
-
 	if ( ( is_null( $form_data ) || is_admin() ) && UM()->options()->get( 'auto_user_approve' ) ) {
-		UM()->common()->users()->set_status( $user_id, 'approved' );
-		return;
+		$registration_status = 'approved';
+	} else {
+		$registration_status = um_user( 'status' );
 	}
 
 	/**
@@ -182,6 +182,7 @@ function um_check_user_status( $user_id, $args, $form_data = null ) {
 	if ( is_null( $form_data ) || is_admin() ) {
 		return;
 	}
+	// Code below is running only for registration from the frontend forms.
 
 	/**
 	 * Fires after complete UM user registration. Only for the frontend action which is run before autologin and redirects.
