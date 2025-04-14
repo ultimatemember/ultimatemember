@@ -658,6 +658,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'use_gravatars'                         => false,
 				'use_um_gravatar_default_builtin_image' => 'default',
 				'use_um_gravatar_default_image'         => false,
+				'admin_ignore_user_status'              => false,
 				'toggle_password'                       => false,
 				'require_strongpass'                    => false,
 				'password_min_chars'                    => 8,
