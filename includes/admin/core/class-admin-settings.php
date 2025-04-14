@@ -753,7 +753,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'use_um_gravatar_default_image'        => array(
 						'sanitize' => 'bool',
 					),
-					'auto_user_approve'                    => array(
+					'admin_ignore_user_status'             => array(
 						'sanitize' => 'bool',
 					),
 					'delete_comments'                      => array(
@@ -1186,7 +1186,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'conditional' => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
 											),
 											array(
-												'id'    => 'auto_user_approve',
+												'id'    => 'admin_ignore_user_status',
 												'type'  => 'checkbox',
 												'label' => __( 'Ignore the "User Role > Registration Options"', 'ultimate-member' ),
 												'checkbox_label' => __( 'Automatically approve users from the wp-admin dashboard', 'ultimate-member' ),
