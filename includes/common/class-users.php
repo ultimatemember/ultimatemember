@@ -20,68 +20,6 @@ class Users {
 	public function hooks() {
 		add_filter( 'user_has_cap', array( &$this, 'map_caps_by_role' ), 10, 3 );
 		add_filter( 'editable_roles', array( &$this, 'restrict_roles' ) );
-
-		add_action( 'init', array( &$this, 'um_schedule_account_status_check' ) );
-		add_action( 'um_schedule_account_status_check', array( &$this, 'status_check' ) );
-		add_action( 'um_check_account_status_batch', array( &$this, 'batch_check' ), 10, 2 );
-	}
-
-	public function um_schedule_account_status_check() {
-		$interval = 3600;
-
-		if ( ! as_next_scheduled_action( 'um_schedule_account_status_check' ) ) {
-			UM()->maybe_action_scheduler()->schedule_recurring_action(
-				time() + 60,
-				$interval,
-				'um_schedule_account_status_check'
-			);
-		}
-	}
-
-	public function status_check() {
-		global $wpdb;
-		$batch_size  = 50;
-		$total_users = $wpdb->get_var(
-			"SELECT COUNT(u.ID)
-			FROM {$wpdb->users} u
-			LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'account_status'
-			WHERE um.meta_value IS NULL OR um.meta_value = ''"
-		);
-
-		if ( absint( $total_users ) > 0 ) {
-			for ( $offset = 0; $offset < absint( $total_users ); $offset += $batch_size ) {
-				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_check_account_status_batch', array( $offset, $batch_size ) );
-			}
-		}
-	}
-
-	public function batch_check( $offset, $limit ) {
-		$users = new WP_User_Query(
-			array(
-				'number'     => $limit,
-				'offset'     => $offset,
-				'fields'     => array( 'ID' ),
-				'meta_query' => array(
-					'relation' => 'OR',
-					array(
-						'key'     => 'account_status',
-						'compare' => 'NOT EXISTS',
-					),
-					array(
-						'key'     => 'account_status',
-						'value'   => '',
-						'compare' => '=',
-					),
-				),
-			)
-		);
-		$results = $users->get_results();
-
-		if ( ! empty( $results ) ) {
-			foreach ( $results as $user ) {
-				update_user_meta( $user->ID, 'account_status', 'approved' );
-			}
-		}
 	}
 
 	/**
@@ -721,11 +659,12 @@ class Users {
 	 *
 	 * @param int  $user_id User ID.
 	 * @param bool $force   If true - ignore current user condition.
+	 * @param bool $silent  If true - don't send email notification. E.g. case when user already exists, but doesn't have a status.
 	 *
 	 * @return bool `true` if the user has been approved
 	 *              `false` on failure or if the user already has approved status.
 	 */
-	public function approve( $user_id, $force = false ) {
+	public function approve( $user_id, $force = false, $silent = false ) {
 		if ( ! $this->can_be_approved( $user_id, $force ) ) {
 			return false;
 		}
@@ -746,25 +685,27 @@ class Users {
 
 		// It's `false` on failure or if the user already has approved status.
 		if ( false !== $result ) {
-			$userdata = get_userdata( $user_id );
+			if ( false === $silent ) {
+				$userdata = get_userdata( $user_id );
 
-			$this->reset_activation_link( $user_id );
+				$this->reset_activation_link( $user_id );
 
-			$email_slug = 'welcome_email';
-			if ( 'awaiting_admin_review' === $old_status ) {
-				$email_slug = 'approved_email';
-				$this->maybe_generate_password_reset_key( $userdata );
+				$email_slug = 'welcome_email';
+				if ( 'awaiting_admin_review' === $old_status ) {
+					$email_slug = 'approved_email';
+					$this->maybe_generate_password_reset_key( $userdata );
+				}
+
+				$current_user_id = get_current_user_id();
+				um_fetch_user( $user_id );
+
+				add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ) );
+				add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ) );
+
+				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, $email_slug, array( 'fetch_user_id' => $user_id ) ) );
+
+				um_fetch_user( $current_user_id );
 			}
-
-			$current_user_id = get_current_user_id();
-			um_fetch_user( $user_id );
-
-			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ) );
-			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ) );
-
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, $email_slug, array( 'fetch_user_id' => $user_id ) ) );
-
-			um_fetch_user( $current_user_id );
 			/**
 			 * Fires after User has been approved.
 			 *
