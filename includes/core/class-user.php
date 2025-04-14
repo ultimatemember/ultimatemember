@@ -93,6 +93,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$this->banned_keys = array(
 				'metabox',
+				'user_id',
+				'role',
+				'user_pass',
 				'postbox',
 				'meta-box',
 				'dismissed_wp_pointers',

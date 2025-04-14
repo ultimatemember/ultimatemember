@@ -183,7 +183,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 * @return int|string Empty or error string.
 		 */
 		public function blacklist_field_err( $key ) {
-			if ( in_array( strtolower( $key ), $this->blacklist_fields, true ) ) {
+			if ( in_array( strtolower( $key ), $this->blacklist_fields, true ) || in_array( strtolower( $key ), UM()->user()->banned_keys, true ) ) {
 				return __( 'Your meta key can not be used', 'ultimate-member' );
 			}
 

@@ -48,6 +48,20 @@ class Site_Health {
 			);
 		}
 
+		$custom_fields = get_option( 'um_fields', array() );
+		if ( ! empty( $custom_fields ) ) {
+			$keys = array_merge( UM()->builtin()->blacklist_fields, UM()->user()->banned_keys );
+			foreach ( $keys as $key ) {
+				if ( isset( $custom_fields[ $key ] ) ) {
+					$tests['direct']['um_banned_fields'] = array(
+						'label' => esc_html__( 'Are the banned custom fields?', 'ultimate-member' ),
+						'test'  => array( $this, 'banned_fields_test' ),
+					);
+					break;
+				}
+			}
+		}
+
 		return $tests;
 	}
 
@@ -205,6 +219,127 @@ class Site_Health {
 			$result['badge']['color'] = 'orange';
 			$result['description']    = $outdated_icons['description'];
 			$result['actions']        = $outdated_icons['actions'];
+		}
+
+		return $result;
+	}
+
+	public function get_banned_fields() {
+		$keys = array_merge( UM()->builtin()->blacklist_fields, UM()->user()->banned_keys );
+
+		$result = array(
+			'description' => '',
+			'actions'     => '',
+		);
+
+		$forms = get_posts(
+			array(
+				'post_type'      => 'um_form',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+			)
+		);
+
+		$forms_count = 0;
+		$break_forms = array();
+		if ( ! empty( $forms ) ) {
+			foreach ( $forms as $form_id ) {
+				$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
+				if ( empty( $fields ) ) {
+					continue;
+				}
+				foreach ( $fields as $field ) {
+					if ( empty( $field['metakey'] ) ) {
+						continue;
+					}
+					if ( in_array( $field['metakey'], $keys, true ) ) {
+						$break_forms[] = array(
+							'id'    => $form_id,
+							'title' => get_the_title( $form_id ),
+							'link'  => get_edit_post_link( $form_id ),
+							'key'   => $field['metakey'],
+						);
+						++$forms_count;
+					}
+				}
+			}
+		}
+
+		if ( 0 < $forms_count ) {
+			$result['description'] .= sprintf(
+				'<p>%s</p>',
+				__( 'Your fields in the Ultimate Member Forms are banned.', 'ultimate-member' )
+			);
+
+			if ( ! empty( $break_forms ) ) {
+				$result['description'] .= sprintf(
+					'<p>%s',
+					__( 'Related to Ultimate Member Forms: ', 'ultimate-member' )
+				);
+
+				$form_links = array();
+				foreach ( $break_forms as $break_form ) {
+					$form_links[] = sprintf(
+						'<a href="%s" target="_blank">%s in %s (#ID: %s)</a>',
+						esc_url( $break_form['link'] ),
+						esc_html__( 'field', 'ultimate-member' ) . ' "' . esc_html( $break_form['key'] ) . '"',
+						esc_html( $break_form['title'] ),
+						esc_html( $break_form['id'] )
+					);
+				}
+
+				$result['description'] .= sprintf(
+					'%s</p><hr />',
+					implode( ', ', $form_links )
+				);
+			}
+
+			$result['actions'] .= sprintf(
+				'<p><a href="%s">%s</a></p>',
+				admin_url( 'edit.php?post_type=um_form' ),
+				esc_html__( 'Edit form fields and update', 'ultimate-member' )
+			);
+		}
+
+		$result = apply_filters( 'um_get_banned_fields_result', $result, $keys );
+
+		if ( ! empty( $result['description'] ) ) {
+			$result['description'] .= sprintf(
+				'<p>%s</p>',
+				__( 'Using banned meta keys may break the website\'s functionality.', 'ultimate-member' )
+			);
+		}
+
+		if ( ! empty( $result['description'] ) && ! empty( $result['actions'] ) ) {
+			return $result;
+		}
+
+		return false;
+	}
+
+	public function banned_fields_test() {
+		$result = array(
+			'label'       => __( 'You have correct Ultimate Member fields', 'ultimate-member' ),
+			'status'      => 'good',
+			'badge'       => array(
+				'label' => UM_PLUGIN_NAME,
+				'color' => self::BADGE_COLOR,
+			),
+			'description' => sprintf(
+				'<p>%s</p>',
+				__( 'Your all custom Ultimate Member fields are correct.', 'ultimate-member' )
+			),
+			'actions'     => '',
+			'test'        => 'um_banned_fields',
+		);
+
+		$banned_fields = $this->get_banned_fields();
+		if ( false !== $banned_fields ) {
+			$result['label']          = __( 'Some field from Ultimate Member forms has banned meta key', 'ultimate-member' );
+			$result['status']         = 'recommended';
+			$result['badge']['color'] = 'orange';
+			$result['description']    = $banned_fields['description'];
+			$result['actions']        = $banned_fields['actions'];
 		}
 
 		return $result;
