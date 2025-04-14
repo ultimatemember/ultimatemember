@@ -4,7 +4,6 @@ namespace um\common;
 use WP_Error;
 use WP_Session_Tokens;
 use WP_User;
-use WP_User_Query;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
