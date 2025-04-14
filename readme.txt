@@ -171,6 +171,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Enhancements**
 
+* Added: The `Ignore the "User Role > Registration Options"` setting. It provides an ability to auto-approve users if they were created via wp-admin > Users screen.
+* Tweak: Avoid email notifications to Administrator about user registration via wp-admin > Users screen.
 * Tweak: Updated the Action Scheduler implementation to improve flexibility and clarity. Refactor Action Scheduler for not only email handling.
 
 **Bugfixes**
