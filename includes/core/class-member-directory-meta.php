@@ -340,11 +340,11 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 									// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias and $compare variables are pre-escaped.
 									$values_array[] = $wpdb->prepare( "{$join_alias}.um_value LIKE %s", '%"' . $wpdb->esc_like( $single_val ) . '"%' );
-									$values_array[] = $wpdb->prepare( "{$join_alias}.um_value LIKE %s", '%' . $wpdb->esc_like( maybe_serialize( (string) $single_val ) ) . '%' );
+									$values_array[] = $wpdb->prepare( "{$join_alias}.um_value LIKE %s", '%' . $wpdb->esc_like( serialize( (string) $single_val ) ) . '%' );
 									$values_array[] = $wpdb->prepare( "{$join_alias}.um_value = %s", $single_val );
 
 									if ( is_numeric( $single_val ) ) {
-										$values_array[] = $wpdb->prepare( "{$join_alias}.um_value LIKE %s", '%' . $wpdb->esc_like( maybe_serialize( (int) $single_val ) ) . '%' );
+										$values_array[] = $wpdb->prepare( "{$join_alias}.um_value LIKE %s", '%' . $wpdb->esc_like( serialize( (int) $single_val ) ) . '%' );
 									}
 									// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias is pre-escaped.
 								}
