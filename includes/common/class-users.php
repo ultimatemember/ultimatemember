@@ -843,7 +843,7 @@ class Users {
 			"SELECT COUNT(u.ID)
 			FROM {$wpdb->users} u
 			LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'account_status'
-			LEFT JOIN {$wpdb->usermeta} um2 ON u.ID = um2.user_id AND um2.meta_key = 'um_registration_in_progress'
+			LEFT JOIN {$wpdb->usermeta} um2 ON u.ID = um2.user_id AND um2.meta_key = '_um_registration_in_progress'
 			WHERE ( um.meta_value IS NULL OR um.meta_value = '' ) AND
 				  um2.meta_value IS NULL OR um2.meta_value != '1'"
 		);

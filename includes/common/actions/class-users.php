@@ -62,7 +62,7 @@ if ( ! class_exists( 'um\common\actions\Users' ) ) {
 
 		/**
 		 * Perform batch checking for users based on specific conditions.
-		 * Ignore users with `um_registration_in_progress` that can be in the process of the registration.
+		 * Ignore users with `_um_registration_in_progress` that can be in the process of the registration.
 		 * Get users with empty `account_status` meta.
 		 *
 		 * @param int $page The current page number.
@@ -79,11 +79,11 @@ if ( ! class_exists( 'um\common\actions\Users' ) ) {
 						array(
 							'relation' => 'OR',
 							array(
-								'key'     => 'um_registration_in_progress',
+								'key'     => '_um_registration_in_progress',
 								'compare' => 'NOT EXISTS',
 							),
 							array(
-								'key'     => 'um_registration_in_progress',
+								'key'     => '_um_registration_in_progress',
 								'value'   => '1',
 								'compare' => '!=',
 							),
