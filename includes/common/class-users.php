@@ -830,4 +830,29 @@ class Users {
 		$user = WP_Session_Tokens::get_instance( $user_id );
 		$user->destroy_all();
 	}
+
+	/**
+	 * Retrieve the number of users with empty `account_status` usermeta.
+	 *
+	 * @return int
+	 */
+	public static function get_empty_status_users() {
+		global $wpdb;
+
+		$total_users = $wpdb->get_var(
+			"SELECT COUNT(u.ID)
+			FROM {$wpdb->users} u
+			LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'account_status'
+			LEFT JOIN {$wpdb->usermeta} um2 ON u.ID = um2.user_id AND um2.meta_key = 'um_registration_in_progress'
+			WHERE ( um.meta_value IS NULL OR um.meta_value = '' ) AND
+				  um2.meta_value IS NULL OR um2.meta_value != '1'"
+		);
+
+		$total_users = absint( $total_users );
+		// In WordPress, an underscore prefix before the option name (e.g., _my_option_name) is commonly used to indicate that the option is private.
+		// This option has a format: {updated_users}/{total_users_for_update}.
+		update_option( '_um_log_empty_status_users', array( 0, $total_users ) );
+
+		return $total_users;
+	}
 }

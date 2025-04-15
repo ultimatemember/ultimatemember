@@ -127,7 +127,7 @@ if ( ! empty( $delete_options ) ) {
 		delete_transient( "um_count_users_{$status}" );
 	}
 	delete_transient( 'um_count_users_pending_dot' );
-	delete_transient( 'um_count_users_unassigned' );
+	delete_transient( 'um_count_users_unassigned' ); // legacy but still need to delete while uninstall.
 
 	//remove all users cache
 	UM()->user()->remove_cache_all_users();

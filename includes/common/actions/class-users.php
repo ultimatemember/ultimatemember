@@ -20,16 +20,16 @@ if ( ! class_exists( 'um\common\actions\Users' ) ) {
 
 		const INTERVAL = 3600;
 
-		const SCHEDULE_ACTION = 'um_schedule_account_status_check';
+		const SCHEDULE_ACTION = 'um_schedule_empty_account_status_check';
 
 		const BATCH_SIZE = 50;
 
-		const BATCH_ACTION = 'um_check_account_status_batch';
+		const BATCH_ACTION = 'um_set_default_account_status';
 
 		public function __construct() {
 			add_action( 'init', array( &$this, 'add_recurring_action' ) );
 			add_action( self::SCHEDULE_ACTION, array( &$this, 'status_check' ) );
-			add_action( self::BATCH_ACTION, array( &$this, 'batch_check' ) );
+			add_action( self::BATCH_ACTION, array( &$this, 'batch_check' ), 10, 3 );
 		}
 
 		public function add_recurring_action() {
@@ -45,31 +45,34 @@ if ( ! class_exists( 'um\common\actions\Users' ) ) {
 		}
 
 		public function status_check() {
-			global $wpdb;
-			$total_users = $wpdb->get_var(
-				"SELECT COUNT(u.ID)
-				FROM {$wpdb->users} u
-				LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'account_status'
-				LEFT JOIN {$wpdb->usermeta} um2 ON u.ID = um2.user_id AND um2.meta_key = 'um_registration_in_progress'
-				WHERE ( um.meta_value IS NULL OR um.meta_value = '' ) AND
-					  um2.meta_value IS NULL OR um2.meta_value != '1'"
-			);
-			$total_users = absint( $total_users );
-
+			$total_users = UM()->common()->users()::get_empty_status_users();
 			if ( empty( $total_users ) ) {
 				return;
 			}
 
-			for ( $offset = 0; $offset < $total_users; $offset += self::BATCH_SIZE ) {
-				UM()->maybe_action_scheduler()->enqueue_async_action( self::BATCH_ACTION, array( $offset ) );
-			}
+			UM()->maybe_action_scheduler()->enqueue_async_action(
+				self::BATCH_ACTION,
+				array(
+					'page'  => 1,
+					'total' => $total_users,
+					'pages' => ceil( $total_users / self::BATCH_SIZE ),
+				)
+			);
 		}
 
-		public function batch_check( $offset ) {
+		/**
+		 * Perform batch checking for users based on specific conditions.
+		 * Ignore users with `um_registration_in_progress` that can be in the process of the registration.
+		 * Get users with empty `account_status` meta.
+		 *
+		 * @param int $page The current page number.
+		 * @param int $total The total number of users to process.
+		 * @param int $pages The total number of pages to process.
+		 */
+		public function batch_check( $page, $total, $pages ) {
 			$users = new WP_User_Query(
 				array(
 					'number'     => self::BATCH_SIZE,
-					'offset'     => $offset,
 					'fields'     => 'ids',
 					'meta_query' => array(
 						'relation' => 'AND',
@@ -104,8 +107,34 @@ if ( ! class_exists( 'um\common\actions\Users' ) ) {
 			$results = $users->get_results();
 
 			if ( ! empty( $results ) ) {
+				$um_empty_status_users = get_option( '_um_log_empty_status_users', array( 0, 0 ) );
+				if ( ! is_array( $um_empty_status_users ) ) {
+					$um_empty_status_users = array( 0, count( $results ) );
+				}
+
 				foreach ( $results as $user_id ) {
-					UM()->common()->users()->approve( $user_id, true, true );
+					$res = UM()->common()->users()->approve( $user_id, true, true );
+					if ( $res ) {
+						++$um_empty_status_users[0];
+					}
+				}
+
+				if ( $um_empty_status_users[0] < $um_empty_status_users[1] ) {
+					update_option( '_um_log_empty_status_users', $um_empty_status_users );
+				} else {
+					delete_option( '_um_log_empty_status_users' );
+				}
+
+				$next_page = $page + 1;
+				if ( $next_page <= $pages ) {
+					UM()->maybe_action_scheduler()->enqueue_async_action(
+						self::BATCH_ACTION,
+						array(
+							'page'  => $next_page,
+							'total' => $total,
+							'pages' => $pages,
+						)
+					);
 				}
 			}
 		}
