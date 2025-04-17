@@ -47,6 +47,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$this->lock_registration();
 
+			$this->empty_status_users();
+
 			$this->extensions_page();
 
 			$this->child_theme_required();
@@ -204,17 +206,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			ob_start(); ?>
 
-			<div class="<?php echo esc_attr( $class ) ?> um-admin-notice notice <?php echo $dismissible ? 'is-dismissible' : '' ?>" data-key="<?php echo esc_attr( $key ) ?>">
-				<?php echo ! empty( $notice_data['message'] ) ? $notice_data['message'] : '' ?>
+			<div class="<?php echo esc_attr( $class ); ?> um-admin-notice notice <?php echo $dismissible ? 'is-dismissible' : ''; ?>" data-key="<?php echo esc_attr( $key ); ?>">
+				<?php echo ! empty( $notice_data['message'] ) ? $notice_data['message'] : ''; ?>
 			</div>
 
-			<?php $notice = ob_get_clean();
+			<?php
+			$notice = ob_get_clean();
 			if ( $echo ) {
 				echo $notice;
 				return;
-			} else {
-				return $notice;
 			}
+			return $notice;
 		}
 
 
@@ -249,6 +251,37 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		/**
 		 * Checking if the "Membership - Anyone can register" WordPress general setting is active
 		 */
+		public function empty_status_users() {
+			$empty_status_users = get_option( '_um_log_empty_status_users', array( 0, 0 ) );
+			if ( ! is_array( $empty_status_users ) ) {
+				$empty_status_users = array( 0, 0 );
+			}
+
+			if ( array( 0, 0 ) === $empty_status_users ) {
+				return;
+			}
+
+			$allowed_html = array(
+				'a'      => array(
+					'href' => array(),
+				),
+				'strong' => array(),
+			);
+
+			$this->add_notice(
+				'empty_status_users',
+				array(
+					'class'       => 'info',
+					// translators: %1$d: Background update for users is complete; %2$d: Total users for background update.
+					'message'     => '<p>' . wp_kses( sprintf( __( 'Background process is running: Setting user statuses %1$d/%2$d.', 'ultimate-member' ), $empty_status_users[0], $empty_status_users[1] ), $allowed_html ) . '</p>',
+					'dismissible' => false,
+				)
+			);
+		}
+
+		/**
+		 * Checking if the "Membership - Anyone can register" WordPress general setting is active
+		 */
 		public function extensions_page() {
 			global $pagenow;
 			if ( isset( $pagenow ) && 'admin.php' === $pagenow && isset( $_GET['page'] ) && 'ultimatemember-extensions' === $_GET['page'] ) {
@@ -256,11 +289,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				?>
 
 				<p>
-					<?php _e( '<strong>All Access Pass</strong> – Get access to all Ultimate Member extensions at a significant discount with our All Access Pass.', 'ultimate-member' ) ?>
+					<?php _e( '<strong>All Access Pass</strong> – Get access to all Ultimate Member extensions at a significant discount with our All Access Pass.', 'ultimate-member' ); ?>
 				</p>
 				<p>
 					<a href="https://ultimatemember.com/pricing/" class="button button-primary" target="_blank">
-						<?php _e( 'View Pricing', 'ultimate-member' ) ?>
+						<?php esc_html_e( 'View Pricing', 'ultimate-member' ); ?>
 					</a>
 				</p>
 
@@ -290,7 +323,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$path = str_replace( '//', '/', $path );
 
 			if ( ! file_exists( $path ) ) {
-				$old = umask(0);
+				$old = umask( 0 );
 				@mkdir( $path, 0777, true );
 				umask( $old );
 			}
@@ -326,9 +359,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				'woocommerce',
 			);
 
-			$slugs = array_map( function( $item ) {
-				return 'um-' . $item . '/um-' . $item . '.php';
-			}, $old_extensions );
+			$slugs = array_map(
+				function ( $item ) {
+					return 'um-' . $item . '/um-' . $item . '.php';
+				},
+				$old_extensions
+			);
 
 			$active_plugins = UM()->dependencies()->get_active_plugins();
 			foreach ( $slugs as $slug ) {
@@ -622,7 +658,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					$arr_inactive_license_keys[] = $license->item_name;
 				}
 
-				$invalid_license++;
+				++$invalid_license;
 			}
 
 			if ( ! empty( $arr_inactive_license_keys ) ) {
@@ -676,34 +712,41 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				</p>
 
 				<p>
-					<a href="<?php echo esc_url( $url ) ?>" class="button button-primary"><?php esc_html_e( 'Visit Upgrade Page', 'ultimate-member' ); ?></a>
+					<a href="<?php echo esc_url( $url ); ?>" class="button button-primary"><?php esc_html_e( 'Visit Upgrade Page', 'ultimate-member' ); ?></a>
 					&nbsp;
 				</p>
 
-				<?php $message = ob_get_clean();
+				<?php
+				$message = ob_get_clean();
 
-				$this->add_notice( 'upgrade', array(
-					'class'     => 'error',
-					'message'   => $message,
-				), 4 );
-			} else {
-				if ( isset( $_GET['msg'] ) && 'updated' === sanitize_key( $_GET['msg'] ) ) {
-					if ( isset( $_GET['page'] ) && 'um_options' === sanitize_key( $_GET['page'] ) ) {
-						$this->add_notice( 'settings_upgrade', array(
-							'class'     => 'updated',
-							'message'   => '<p>' . __( 'Settings successfully upgraded', 'ultimate-member' ) . '</p>',
-						), 4 );
-					} else {
-						$this->add_notice(
-							'upgrade',
-							array(
-								'class'   => 'updated',
-								// translators: %1$s is a plugin name title; %2$s is a plugin version.
-								'message' => '<p>' . sprintf( __( '<strong>%1$s %2$s</strong> Successfully Upgraded', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION ) . '</p>',
-							),
-							4
-						);
-					}
+				$this->add_notice(
+					'upgrade',
+					array(
+						'class'   => 'error',
+						'message' => $message,
+					),
+					4
+				);
+			} elseif ( isset( $_GET['msg'] ) && 'updated' === sanitize_key( $_GET['msg'] ) ) {
+				if ( isset( $_GET['page'] ) && 'um_options' === sanitize_key( $_GET['page'] ) ) {
+					$this->add_notice(
+						'settings_upgrade',
+						array(
+							'class'   => 'updated',
+							'message' => '<p>' . __( 'Settings successfully upgraded', 'ultimate-member' ) . '</p>',
+						),
+						4
+					);
+				} else {
+					$this->add_notice(
+						'upgrade',
+						array(
+							'class'   => 'updated',
+							// translators: %1$s is a plugin name title; %2$s is a plugin version.
+							'message' => '<p>' . sprintf( __( '<strong>%1$s %2$s</strong> Successfully Upgraded', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION ) . '</p>',
+						),
+						4
+					);
 				}
 			}
 		}
@@ -734,18 +777,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					?>
 				</p>
 				<p>
-					<a href="javascript:void(0);" id="um_add_review_love"><?php _e( 'I love it!', 'ultimate-member' ) ?></a>&nbsp;|&nbsp;
-					<a href="javascript:void(0);" id="um_add_review_good"><?php _e('It\'s good but could be better', 'ultimate-member' ) ?></a>&nbsp;|&nbsp;
-					<a href="javascript:void(0);" id="um_add_review_bad"><?php _e('I don\'t like the plugin', 'ultimate-member' ) ?></a>
+					<a href="javascript:void(0);" id="um_add_review_love"><?php _e( 'I love it!', 'ultimate-member' ); ?></a>&nbsp;|&nbsp;
+					<a href="javascript:void(0);" id="um_add_review_good"><?php _e( 'It\'s good but could be better', 'ultimate-member' ); ?></a>&nbsp;|&nbsp;
+					<a href="javascript:void(0);" id="um_add_review_bad"><?php _e( 'I don\'t like the plugin', 'ultimate-member' ); ?></a>
 				</p>
 			</div>
 			<div class="um-hidden-notice" data-key="love">
 				<p>
-					<?php printf( __( 'Great! We\'re happy to hear that you love the plugin. It would be amazing if you could let others know why you like %s by leaving a review of the plugin. This will help %s to grow and become more popular and would be massively appreciated by us!' ), UM_PLUGIN_NAME, UM_PLUGIN_NAME ); ?>
+					<?php printf( __( 'Great! We\'re happy to hear that you love the plugin. It would be amazing if you could let others know why you like %1$s by leaving a review of the plugin. This will help %2$s to grow and become more popular and would be massively appreciated by us!' ), UM_PLUGIN_NAME, UM_PLUGIN_NAME ); ?>
 				</p>
 
 				<p>
-					<a href="https://wordpress.org/support/plugin/ultimate-member/reviews/?rate=5#new-post" target="_blank" class="button button-primary um_review_link"><?php _e( 'Leave Review', 'ultimate-member' ) ?></a>
+					<a href="https://wordpress.org/support/plugin/ultimate-member/reviews/?rate=5#new-post" target="_blank" class="button button-primary um_review_link"><?php _e( 'Leave Review', 'ultimate-member' ); ?></a>
 				</p>
 			</div>
 			<div class="um-hidden-notice" data-key="good">
@@ -754,7 +797,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				</p>
 
 				<p>
-					<a href="https://ultimatemember.com/feedback/" target="_blank" class="button button-primary um_review_link"><?php _e( 'Provide Feedback', 'ultimate-member' ) ?></a>
+					<a href="https://ultimatemember.com/feedback/" target="_blank" class="button button-primary um_review_link"><?php _e( 'Provide Feedback', 'ultimate-member' ); ?></a>
 				</p>
 			</div>
 			<div class="um-hidden-notice" data-key="bad">
@@ -763,17 +806,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				</p>
 
 				<p>
-					<a href="https://ultimatemember.com/feedback/" target="_blank" class="button button-primary um_review_link"><?php _e( 'Provide Feedback', 'ultimate-member' ) ?></a>
+					<a href="https://ultimatemember.com/feedback/" target="_blank" class="button button-primary um_review_link"><?php _e( 'Provide Feedback', 'ultimate-member' ); ?></a>
 				</p>
 			</div>
 
-			<?php $message = ob_get_clean();
+			<?php
+			$message = ob_get_clean();
 
-			$this->add_notice( 'reviews_notice', array(
-				'class'         => 'updated',
-				'message'       => $message,
-				'dismissible'   => true
-			), 1 );
+			$this->add_notice(
+				'reviews_notice',
+				array(
+					'class'       => 'updated',
+					'message'     => $message,
+					'dismissible' => true,
+				),
+				1
+			);
 		}
 
 
@@ -782,7 +830,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 */
 		function future_changed() {
 
-			ob_start(); ?>
+			ob_start();
+			?>
 
 			<p>
 				<?php
@@ -791,12 +840,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				?>
 			</p>
 
-			<?php $message = ob_get_clean();
+			<?php
+			$message = ob_get_clean();
 
-			$this->add_notice( 'future_changes', array(
-				'class'         => 'updated',
-				'message'       => $message,
-			), 2 );
+			$this->add_notice(
+				'future_changes',
+				array(
+					'class'   => 'updated',
+					'message' => $message,
+				),
+				2
+			);
 		}
 
 		/**

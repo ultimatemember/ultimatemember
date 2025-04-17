@@ -310,37 +310,21 @@ KEY meta_value_indx (um_value(191))
 		 * @since 2.4.2
 		 */
 		public function set_default_user_status() {
-			$result = get_transient( 'um_count_users_unassigned' );
-			if ( false === $result ) {
-				$args = array(
-					'fields'               => 'ids',
-					'number'               => 0,
-					'meta_query'           => array(
-						array(
-							'key'     => 'account_status',
-							'compare' => 'NOT EXISTS',
-						),
-					),
-					'um_custom_user_query' => true,
-				);
-
-				$users = new WP_User_Query( $args );
-				if ( empty( $users ) || is_wp_error( $users ) ) {
-					$result = array();
-				} else {
-					$result = $users->get_results();
-				}
-
-				set_transient( 'um_count_users_unassigned', $result, DAY_IN_SECONDS );
-			}
-
-			if ( empty( $result ) ) {
+			$total_users = UM()->common()->users()::get_empty_status_users();
+			if ( empty( $total_users ) ) {
 				return;
 			}
 
-			foreach ( $result as $user_id ) {
-				update_user_meta( $user_id, 'account_status', 'approved' );
-			}
+			// If there are some users without `account_status` then run the first async batch for update.
+			$batch_size = 50; // See the class constant value `\um\common\actions\Users::BATCH_ACTION`.
+			UM()->maybe_action_scheduler()->enqueue_async_action(
+				$batch_size,
+				array(
+					'page'  => 1,
+					'total' => $total_users,
+					'pages' => ceil( $total_users / $batch_size ),
+				)
+			);
 		}
 
 		/**

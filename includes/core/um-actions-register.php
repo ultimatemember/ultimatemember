@@ -179,6 +179,8 @@ function um_check_user_status( $user_id, $args, $form_data = null ) {
 	 */
 	do_action( "um_post_registration_{$registration_status}_hook", $user_id, $args, $form_data );
 
+	delete_user_meta( $user_id, '_um_registration_in_progress' ); // Status is set. We can delete this marker.
+
 	if ( is_null( $form_data ) || is_admin() ) {
 		return;
 	}
@@ -513,6 +515,11 @@ function um_submit_form_register( $args, $form_data ) {
 		'user_pass'  => $user_password,
 		'user_email' => $user_email,
 		'role'       => $user_role,
+		'meta_input' => array(
+			// It's used to ignore users who cannot finish the registration process in the scheduled tasks
+			// to set 'approved' status to the users without `account_status` meta.
+			'_um_registration_in_progress' => true,
+		),
 	);
 
 	$user_id = wp_insert_user( $userdata );
