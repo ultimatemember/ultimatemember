@@ -2062,7 +2062,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 						'TO' => __('Tonga','ultimate-member'),
 						'TT' => __('Trinidad and Tobago','ultimate-member'),
 						'TN' => __('Tunisia','ultimate-member'),
-						'TR' => __('Turkey','ultimate-member'),
+						'TR' => __('Türkiye','ultimate-member'),
 						'TM' => __('Turkmenistan','ultimate-member'),
 						'TC' => __('Turks and Caicos Islands','ultimate-member'),
 						'TV' => __('Tuvalu','ultimate-member'),
