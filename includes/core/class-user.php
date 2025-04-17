@@ -640,7 +640,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			UM()->files()->remove_dir( UM()->files()->upload_temp );
 			UM()->files()->remove_dir( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR );
 
-			delete_transient( 'um_count_users_unassigned' );
 			delete_transient( 'um_count_users_pending_dot' );
 		}
 
@@ -959,8 +958,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				/** This action is documented in ultimate-member/includes/common/um-actions-register.php */
 				do_action( 'um_user_register', $user_id, $_POST, null );
 			}
-
-			delete_transient( 'um_count_users_unassigned' );
 		}
 
 

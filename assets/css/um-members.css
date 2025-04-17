@@ -582,6 +582,7 @@ body #content .um-directory a:hover, body #content .um-directory a:focus {
   background-color: #eee;
   box-sizing: border-box;
   position: relative;
+  min-height: 50px;
 }
 .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-cover[data-ratio] {
   overflow-y: hidden;

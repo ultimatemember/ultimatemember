@@ -89,7 +89,9 @@ jQuery(window).on( 'load', function($) {
 			jQuery(mutation.addedNodes).find('.um-member').each(function() {
 				let wrapper = document.querySelector('.um-member');
 				let directory = jQuery(this).parent();
-				UM_Member_Grid(directory);
+				if (directory.hasClass('um-members-grid')) {
+					UM_Member_Grid(directory);
+				}
 
 				if (wrapper) {
 					wrapper.addEventListener('click', (event) => {

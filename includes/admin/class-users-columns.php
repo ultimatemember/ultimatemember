@@ -350,9 +350,6 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 				return;
 			}
 
-			// Set default statuses if not already done.
-			UM()->setup()->set_default_user_status();
-
 			$id = 'um_user_status';
 
 			// need to add there additional nonce field because WordPress native _wpnonce field isn't visible on the users.php screen then custom actions

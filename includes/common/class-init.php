@@ -39,6 +39,10 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			if ( empty( UM()->classes['um\common\actions\emails'] ) ) {
 				UM()->classes['um\common\actions\emails'] = new actions\Emails();
 			}
+
+			if ( empty( UM()->classes['um\common\actions\users'] ) ) {
+				UM()->classes['um\common\actions\users'] = new actions\Users();
+			}
 			// Other classes init here as soon as possible.
 		}
 

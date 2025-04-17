@@ -658,11 +658,12 @@ class Users {
 	 *
 	 * @param int  $user_id User ID.
 	 * @param bool $force   If true - ignore current user condition.
+	 * @param bool $silent  If true - don't send email notification. E.g. case when user already exists, but doesn't have a status.
 	 *
 	 * @return bool `true` if the user has been approved
 	 *              `false` on failure or if the user already has approved status.
 	 */
-	public function approve( $user_id, $force = false ) {
+	public function approve( $user_id, $force = false, $silent = false ) {
 		if ( ! $this->can_be_approved( $user_id, $force ) ) {
 			return false;
 		}
@@ -683,25 +684,27 @@ class Users {
 
 		// It's `false` on failure or if the user already has approved status.
 		if ( false !== $result ) {
-			$userdata = get_userdata( $user_id );
+			if ( false === $silent ) {
+				$userdata = get_userdata( $user_id );
 
-			$this->reset_activation_link( $user_id );
+				$this->reset_activation_link( $user_id );
 
-			$email_slug = 'welcome_email';
-			if ( 'awaiting_admin_review' === $old_status ) {
-				$email_slug = 'approved_email';
-				$this->maybe_generate_password_reset_key( $userdata );
+				$email_slug = 'welcome_email';
+				if ( 'awaiting_admin_review' === $old_status ) {
+					$email_slug = 'approved_email';
+					$this->maybe_generate_password_reset_key( $userdata );
+				}
+
+				$current_user_id = get_current_user_id();
+				um_fetch_user( $user_id );
+
+				add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ) );
+				add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ) );
+
+				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, $email_slug, array( 'fetch_user_id' => $user_id ) ) );
+
+				um_fetch_user( $current_user_id );
 			}
-
-			$current_user_id = get_current_user_id();
-			um_fetch_user( $user_id );
-
-			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ) );
-			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ) );
-
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, $email_slug, array( 'fetch_user_id' => $user_id ) ) );
-
-			um_fetch_user( $current_user_id );
 			/**
 			 * Fires after User has been approved.
 			 *
@@ -826,5 +829,30 @@ class Users {
 	public static function destroy_all_sessions( $user_id ) {
 		$user = WP_Session_Tokens::get_instance( $user_id );
 		$user->destroy_all();
+	}
+
+	/**
+	 * Retrieve the number of users with empty `account_status` usermeta.
+	 *
+	 * @return int
+	 */
+	public static function get_empty_status_users() {
+		global $wpdb;
+
+		$total_users = $wpdb->get_var(
+			"SELECT COUNT(u.ID)
+			FROM {$wpdb->users} u
+			LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'account_status'
+			LEFT JOIN {$wpdb->usermeta} um2 ON u.ID = um2.user_id AND um2.meta_key = '_um_registration_in_progress'
+			WHERE ( um.meta_value IS NULL OR um.meta_value = '' ) AND
+				  um2.meta_value IS NULL OR um2.meta_value != '1'"
+		);
+
+		$total_users = absint( $total_users );
+		// In WordPress, an underscore prefix before the option name (e.g., _my_option_name) is commonly used to indicate that the option is private.
+		// This option has a format: {updated_users}/{total_users_for_update}.
+		update_option( '_um_log_empty_status_users', array( 0, $total_users ) );
+
+		return $total_users;
 	}
 }

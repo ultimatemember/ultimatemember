@@ -737,18 +737,18 @@ function um_profile_dynamic_meta_desc() {
 		$image_info   = array();
 		$image_width  = $image_size;
 		$image_height = $image_size;
-		if ( false === strpos( $image, 'gravatar.com' ) ) {
-			// Ignore Gravatar image here and handler a real image.
+		$upload_dir   = wp_get_upload_dir();
+		if ( false !== strpos( $image, $upload_dir['url'] ) ) {
+			// Get the image size of the real image.
 			$image      = current( explode( '?', $image ) ); // strip $_GET attributes from photo URL.
 			$image_path = wp_normalize_path( ABSPATH . wp_parse_url( $image, PHP_URL_PATH ) );
-			$image_info = wp_check_filetype( $image_path );
-			$imagesizes = getimagesize( $image_path );
-			if ( is_array( $imagesizes ) ) {
-				list( $image_width, $image_height ) = $imagesizes;
+			if ( file_exists( $image_path ) ) {
+				$image_info = wp_check_filetype( $image_path );
+				$imagesizes = @getimagesize( $image_path );
+				if ( is_array( $imagesizes ) ) {
+					list( $image_width, $image_height ) = $imagesizes;
+				}
 			}
-		} else {
-			// Gravatar image.
-			$image_path = esc_url_raw( $image );
 		}
 
 		$person = array(
