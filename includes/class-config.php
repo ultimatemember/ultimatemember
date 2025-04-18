@@ -761,6 +761,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'um_google_lang_as_default'             => true,
 				'um_google_lang'                        => '',
 				'um_google_maps_js_api_key'             => '',
+				'tenor_api_key'                         => '',
 				'primary_color'                         => '#7f56d9',
 			);
 

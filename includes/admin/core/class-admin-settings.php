@@ -2289,6 +2289,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 											),
 										),
 									),
+									'tenor-gif'   => array(
+										'title'       => __( 'Tenor GIF', 'ultimate-member' ),
+										'description' => __( 'This section is designed to help you integrate Ultimate Member functionality with Tenor GIF API.', 'ultimate-member' ),
+										'fields'      => array(
+											array(
+												'id'          => 'tenor_api_key',
+												'type'        => 'text',
+												'label'       => __( 'Tenor API Key', 'ultimate-member' ),
+												// translators: %s is the link ti Tenor API docs.
+												'description' => sprintf( __( 'Used for paste GIF images in content. Get more details <a href="%s" title="Tenor API Docs">here</a>.', 'ultimate-member' ), 'https://tenor.com/gifapi/documentation' ),
+												'size'        => 'medium',
+											),
+										),
+									),
 								),
 							),
 						),
