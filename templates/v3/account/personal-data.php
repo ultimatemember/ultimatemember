@@ -229,3 +229,5 @@ $remove_pending = $wpdb->get_row(
 
 <?php
 UM()->form()->form_suffix = ''; // flush form suffix.
+
+do_action( 'um_account_after_personal_data_form' );

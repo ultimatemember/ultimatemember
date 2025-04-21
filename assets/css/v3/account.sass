@@ -35,3 +35,28 @@
     .#{$prefix}section-supporting-text
       margin: 0
       padding: 0
+
+  .#{$prefix}subsection
+    +flex( column, stretch, start, nowrap )
+    +border-box
+    margin: 0
+    padding: 0
+    row-gap: $spacing-3xl
+    position: relative
+  .#{$prefix}subsection-heading
+    +flex( column, stretch, start, nowrap )
+    +border-box
+    margin: 0
+    padding: 0
+    width: 100%
+    row-gap: $spacing-xxs
+    .#{$prefix}text
+      color: $gray-700
+      +typography( text, sm, semibold )
+  .#{$prefix}subsection-action
+    +border-box
+    +flex( column, stretch, start, nowrap )
+    width: 100%
+    margin: 0
+    padding: 0
+    row-gap: $spacing-xl
