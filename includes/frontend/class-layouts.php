@@ -2556,4 +2556,48 @@ class Layouts {
 		<?php
 		return ob_get_clean();
 	}
+
+	public static function emoji_picker( $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'link_classes' => array(),
+				'size'         => 's',
+			)
+		);
+
+		$args['link_classes'][] = 'um-emoji-picker-link';
+
+		ob_start();
+		?>
+		<div class="um-emoji-picker">
+			<?php
+			$emoji_svg_html = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mood-smile" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+				<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+				<path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+				<path d="M9 10l.01 0" />
+				<path d="M15 10l.01 0" />
+				<path d="M9.5 15a3.5 3.5 0 0 0 5 0" />
+			</svg>';
+
+			echo wp_kses(
+				UM()->frontend()::layouts()::link(
+					$emoji_svg_html,
+					array(
+						'design'        => 'link-color',
+						'type'          => 'link',
+						'size'          => $args['size'],
+						'title'         => __( 'Emoji', 'ultimate-member' ),
+						'classes'       => $args['link_classes'],
+						'icon_position' => 'content',
+					)
+				),
+				UM()->get_allowed_html( 'templates' )
+			);
+			?>
+			<span class="um-emoji-list"></span>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
 }

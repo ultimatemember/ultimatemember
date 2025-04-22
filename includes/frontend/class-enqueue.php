@@ -25,6 +25,11 @@ final class Enqueue extends \um\common\Enqueue {
 	public $css_baseurl = '';
 
 	/**
+	 * @var string
+	 */
+	public static $emoji_version = '5.6.0';
+
+	/**
 	 * Enqueue constructor.
 	 */
 	public function __construct() {
@@ -145,6 +150,9 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_style( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.css', array(), '1.6.1' );
 
 			wp_register_script( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.js', array( 'jquery' ), '1.0', true );
+
+			// Emoji-mart
+			wp_register_script( 'um-emoji-mart', $libs_url . 'emoji-mart/emoji.js', array(), self::$emoji_version, true );
 
 			wp_register_script(
 				'um_frontend_common',

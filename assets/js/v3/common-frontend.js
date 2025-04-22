@@ -982,6 +982,59 @@ UM.frontend = {
 			}
 		}
 	},
+	emojiPicker: {
+		init: function () {
+			const customI18n = {
+				search: wp.i18n.__( 'Search', 'ultimate-member' ),
+				categories: {
+					search: wp.i18n.__( 'Search Results', 'ultimate-member' ),
+					recent: wp.i18n.__( 'Recently Used', 'ultimate-member' ),
+					smileys: wp.i18n.__( 'Smileys & Emotion', 'ultimate-member' ),
+					people: wp.i18n.__( 'People & Body', 'ultimate-member' ),
+					nature: wp.i18n.__( 'Animals & Nature', 'ultimate-member' ),
+					foods: wp.i18n.__( 'Food & Drink', 'ultimate-member' ),
+					activity: wp.i18n.__( 'Activity', 'ultimate-member' ),
+					places: wp.i18n.__( 'Travel & Places', 'ultimate-member' ),
+					objects: wp.i18n.__( 'Objects', 'ultimate-member' ),
+					symbols: wp.i18n.__( 'Symbols', 'ultimate-member' ),
+					flags: wp.i18n.__( 'Flags', 'ultimate-member' ),
+				},
+				notfound: wp.i18n.__( 'No emojis found', 'ultimate-member' ),
+				clear: wp.i18n.__( 'Clear', 'ultimate-member' ),
+			};
+
+			let $emojiPicker = document.querySelectorAll('.um-emoji-picker:not(.um-inited)');
+			for (let $item = 0; $item < $emojiPicker.length; $item++) {
+				$emojiPicker[ $item ].classList.add('um-inited');
+
+				let $emojiList = $emojiPicker[ $item ].querySelector('.um-emoji-list');
+				let $emojiPickerLink = $emojiPicker[ $item ].querySelector('.um-emoji-picker-link');
+
+				$emojiPickerLink.addEventListener('click', function(event) {
+					let display = $emojiList.style.display;
+					if ( 'none' === display ) {
+						$emojiList.style.display = 'block';
+					} else {
+						$emojiList.style.display = 'none';
+					}
+				});
+
+				let args = {
+					onEmojiSelect: function (selectedEmoji) {
+						wp.hooks.doAction( 'um_emoji_picker_on_select', selectedEmoji, $emojiPicker[ $item ] );
+						$emojiList.style.display = 'none';
+					},
+					skinTonePosition: 'none',
+					theme: 'light',
+					i18n: customI18n,
+				};
+
+				const picker = new EmojiMart.Picker( args );
+				$emojiList.appendChild(picker);
+				$emojiList.style.display = 'none';
+			}
+		}
+	}
 }
 
 

@@ -355,7 +355,12 @@ PRIMARY KEY  (id)
 		}
 
 		/**
+		 * Set icons options.
 		 *
+		 * This method retrieves the FontAwesome version and the list of icons from the options.
+		 * If the list of icons is empty or the FontAwesome version has changed, it fetches the icons metadata
+		 * from a JSON file and formats the common icons list based on styles (solid, regular, brands).
+		 * Finally, it updates the FontAwesome version and the common icons list in the options.
 		 */
 		public function set_icons_options() {
 			$fa_version    = get_option( 'um_fa_version' );
@@ -395,6 +400,38 @@ PRIMARY KEY  (id)
 				}
 
 				update_option( 'um_icons_list', $common_icons, false );
+			}
+		}
+
+		/**
+		 * Set emoji options.
+		 *
+		 * This function retrieves and updates emoji options based on emoji version and list.
+		 * If the emoji list is empty or the stored emoji version does not match the current emoji version,
+		 * it fetches the latest emoji list and updates the options accordingly.
+		 */
+		public function set_emoji_options() {
+			$emoji_version = get_option( 'um_emoji_version' );
+			$um_emoji_list = get_option( 'um_emoji_list' );
+
+			if ( empty( $um_emoji_list ) || UM()->frontend()->enqueue()::$emoji_version !== $emoji_version ) {
+				update_option( 'um_emoji_version', UM()->frontend()->enqueue()::$emoji_version, false );
+
+				$lib_content = file_get_contents( UM_PATH . '/assets/libs/emoji-mart/emoji-native.json' );
+				$emoji_list  = json_decode( $lib_content, true );
+
+				$emojis = array();
+				if ( array_key_exists( 'emojis', $emoji_list ) && is_array( $emoji_list['emojis'] ) ) {
+					foreach ( $emoji_list['emojis'] as $key => $emoji_data ) {
+						if ( ! isset( $emoji_data['skins'][0]['native'] ) ) {
+							continue;
+						}
+
+						$emojis[ ':' . $key . ':' ] = $emoji_data['skins'][0]['native'];
+					}
+				}
+
+				update_option( 'um_emoji_list', $emojis, false );
 			}
 		}
 	}
