@@ -43,6 +43,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		public function __construct() {
 			if ( ! $this->can_be_active() ) {
 				add_action( 'init', array( $this, 'add_notice' ) );
+				add_filter( 'um_site_health_extend', array( $this, 'change_site_health' ) );
 			} else {
 				add_filter( 'um_settings_structure', array( $this, 'add_setting' ) );
 				// Since 2.10.3 we load library as soon as there are required library files.
@@ -65,6 +66,18 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 					'message' => '<p>' . sprintf( __( '<strong>%1$s %2$s</strong> The file needed to enable the Action Scheduler is missing. The plugin will continue to function as it did before, but without the new benefits offered by the Action Scheduler.', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION ) . '</p>',
 				)
 			);
+		}
+
+		/**
+		 * Adds the Action Scheduler setting to Ultimate Member feature settings
+		 *
+		 * @param array $settings
+		 *
+		 * @return array
+		 */
+		public function change_site_health( $site_health ) {
+			$site_health['ultimate-member']['fields']['enable_as_email_sending']['value'] = __( 'No', 'ultimate-member' );
+			return $site_health;
 		}
 
 		/**

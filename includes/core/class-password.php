@@ -48,6 +48,10 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			// New reset password key via WordPress native field. It maybe already exists here but generated twice to make sure that emailed with a proper and fresh hash.
 			// But doing that only once in 1 request using static variable. Different email placeholders can use reset_url() and we have to use 1 time generated to avoid invalid keys.
 			$user_data = get_userdata( $user_id );
+			if ( empty( $user_data ) ) {
+				return '';
+			}
+
 			if ( empty( $reset_key ) ) {
 				$reset_key = UM()->user()->maybe_generate_password_reset_key( $user_data );
 			}
@@ -466,7 +470,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				um_fetch_user( $data->ID );
 
 				if ( false === UM()->options()->get( 'only_approved_user_reset_password' ) || UM()->common()->users()->has_status( $data->ID, 'approved' ) ) {
-					UM()->user()->password_reset();
+					UM()->user()->password_reset( $data->ID );
 				}
 			}
 

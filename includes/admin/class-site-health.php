@@ -1238,6 +1238,10 @@ class Site_Health {
 				'label' => __( 'Remove Data on Uninstall?', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'uninstall_on_delete' ) ? $labels['yes'] : $labels['no'],
 			),
+			'enable_as_email_sending'            => array(
+				'label' => __( 'Email sending by Action Scheduler', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'enable_as_email_sending' ) ? $labels['yes'] : $labels['no'],
+			),
 		);
 
 		// Secure settings
@@ -2549,6 +2553,14 @@ class Site_Health {
 			}
 		}
 
-		return $info;
+		/**
+		 * Filters the site health information.
+		 * @hook um_site_health_extend
+		 * @since 2.10.3
+		 * @param {array} info - The site health info to be filtered.
+		 *
+		 * @return {array} The filtered site health info.
+		 */
+		return apply_filters( 'um_site_health_extend', $info );
 	}
 }
