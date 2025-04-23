@@ -32,14 +32,16 @@ class GIF {
 		if ( isset( $_POST['gif_search'] ) ) {
 			$keyword = sanitize_text_field( $_POST['gif_search'] );
 		}
-		$apiUrl       = 'https://tenor.googleapis.com/v2/search?key=' . $api_key . '&q=' . $keyword;
-		$response     = wp_remote_get( $apiUrl );
+		$url  = 'https://tenor.googleapis.com/v2/search?key=' . $api_key . '&q=' . $keyword . '&limit=20';
+		$args = array(
+			'headers' => array(
+				'Referer' => get_site_url(),
+			),
+		);
 
-		var_dump( $response );
-		exit;
+		$response = wp_remote_get( $url, $args );
+		$result   = json_decode( wp_remote_retrieve_body( $response ), true );
 
-		$responseBody = wp_remote_retrieve_body( $response );
-		$result       = json_decode( $responseBody, true );
 		foreach ( $result['results'] as $image ) {
 			$images[] = array(
 				'preview' => $image['media_formats']['nanogif']['url'],
@@ -50,12 +52,17 @@ class GIF {
 		ob_start();
 		echo '<div class="imges">';
 		foreach ( $images as $im ) {
-			echo '<img data-um_gif_img data-image="' . $im['image'] . '" src="' . $im['preview'] . '"/>';
+			echo '<img data-um_gif_img data-image="' . esc_attr( $im['image'] ) . '" src="' . esc_url( $im['preview'] ) . '" />';
 		}
 		echo '</div>';
 
-		$contents = ob_get_contents();
+		$contents = ob_get_clean();
 
-		wp_send_json_success( UM()->ajax()->esc_html_spaces( $contents ) );
+		wp_send_json_success(
+			array(
+				'html' => UM()->ajax()->esc_html_spaces( $contents ),
+				'next' => $result['next'],
+			)
+		);
 	}
 }

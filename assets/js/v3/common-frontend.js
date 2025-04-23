@@ -1067,8 +1067,37 @@ UM.frontend = {
 				return;
 			}
 
+			// jQuery(document.body).on( 'click', '.um-gif-picker-search-btn', function () {
+			// 	let $dropdown = jQuery(this).parents('.um-gif-picker-dropdown');
+			// 	let nonce = jQuery(this).parents('.um-gif-picker-dropdown').data('nonce');
+			// 	let $list = $dropdown.find('.um-gif-list');
+			// 	let $loader = $dropdown.find('.um-gif-list-loader');
+			//
+			// 	console.log( $list );
+			//
+			// 	wp.ajax.send(
+			// 		'um_get_gif_images',
+			// 		{
+			// 			data: {
+			// 				search: '',
+			// 				nonce: nonce
+			// 			},
+			// 			success: function (response) {
+			// 				console.log( response.next );
+			// 				$list.append( response.html ).removeClass('um-display-none');
+			// 				$loader.addClass('um-display-none');
+			// 			},
+			// 			error: function (data) {
+			// 				console.log(data);
+			// 			}
+			// 		}
+			// 	);
+			// });
+
 			for (let $item = 0; $item < $gifPickerSearch.length; $item++) {
 				$gifPickerSearch[ $item ].classList.add('um-inited');
+
+
 
 				$gifPickerSearch[ $item ].addEventListener('click', function(event) {
 					let $btn = event.target;
@@ -1081,6 +1110,14 @@ UM.frontend = {
 
 					let nonce = $dropdown.dataset.nonce;
 
+					let $loader = $dropdown.querySelector('.um-gif-list-loader');
+					let $list = $dropdown.querySelector('.um-gif-list');
+
+					console.log( $list );
+
+					$loader.classList.remove('um-display-none');
+					$list.classList.add('um-display-none');
+
 					wp.ajax.send(
 						'um_get_gif_images',
 						{
@@ -1089,7 +1126,9 @@ UM.frontend = {
 								nonce: nonce
 							},
 							success: function (data) {
-
+								$list.innerHTML = data.html;
+								$list.classList.remove('um-display-none');
+								$loader.classList.add('um-display-none');
 							},
 							error: function (data) {
 								console.log(data);
