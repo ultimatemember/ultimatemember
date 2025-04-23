@@ -113,6 +113,11 @@ add_action( 'um_user_register', 'um_after_insert_user', 1, 3 );
  * @param $user_id
  */
 function um_send_registration_notification( $user_id ) {
+	if ( is_admin() ) {
+		// Don't send email notifications to administrators about new user registration, because the user was created from wp-admin.
+		return;
+	}
+
 	um_fetch_user( $user_id );
 	$registration_status = um_user( 'status' );
 
@@ -137,7 +142,12 @@ add_action( 'um_registration_complete', 'um_send_registration_notification' );
  * @param null|array $form_data
  */
 function um_check_user_status( $user_id, $args, $form_data = null ) {
-	$registration_status = um_user( 'status' );
+	if ( ( is_null( $form_data ) || is_admin() ) && UM()->options()->get( 'admin_ignore_user_status' ) ) {
+		$registration_status = 'approved';
+	} else {
+		$registration_status = um_user( 'status' );
+	}
+
 	/**
 	 * Fires after complete UM user registration.
 	 * Where $status can be equal to 'approved', 'checkmail' or 'pending'.
@@ -169,9 +179,12 @@ function um_check_user_status( $user_id, $args, $form_data = null ) {
 	 */
 	do_action( "um_post_registration_{$registration_status}_hook", $user_id, $args, $form_data );
 
+	delete_user_meta( $user_id, '_um_registration_in_progress' ); // Status is set. We can delete this marker.
+
 	if ( is_null( $form_data ) || is_admin() ) {
 		return;
 	}
+	// Code below is running only for registration from the frontend forms.
 
 	/**
 	 * Fires after complete UM user registration. Only for the frontend action which is run before autologin and redirects.
@@ -502,6 +515,11 @@ function um_submit_form_register( $args, $form_data ) {
 		'user_pass'  => $user_password,
 		'user_email' => $user_email,
 		'role'       => $user_role,
+		'meta_input' => array(
+			// It's used to ignore users who cannot finish the registration process in the scheduled tasks
+			// to set 'approved' status to the users without `account_status` meta.
+			'_um_registration_in_progress' => true,
+		),
 	);
 
 	$user_id = wp_insert_user( $userdata );

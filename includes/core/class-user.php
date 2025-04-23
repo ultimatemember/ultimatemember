@@ -640,7 +640,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			UM()->files()->remove_dir( UM()->files()->upload_temp );
 			UM()->files()->remove_dir( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR );
 
-			delete_transient( 'um_count_users_unassigned' );
 			delete_transient( 'um_count_users_pending_dot' );
 		}
 
@@ -959,8 +958,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				/** This action is documented in ultimate-member/includes/common/um-actions-register.php */
 				do_action( 'um_user_register', $user_id, $_POST, null );
 			}
-
-			delete_transient( 'um_count_users_unassigned' );
 		}
 
 
@@ -1487,21 +1484,33 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			return get_password_reset_key( $userdata );
 		}
 
-
 		/**
 		 * Password reset email
+		 *
+		 * @param int|null $user_id
+		 *
+		 * @return void
 		 */
-		function password_reset() {
-			$userdata = get_userdata( um_user( 'ID' ) );
+		public function password_reset( $user_id = null ) {
+			if ( is_null( $user_id ) ) {
+				$user_id = um_user( 'ID' );
+			}
+			$userdata = get_userdata( $user_id );
 
 			$this->maybe_generate_password_reset_key( $userdata );
 
-			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ) );
-			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ) );
+			$mail_args = array(
+				'fetch_user_id' => $user_id,
+				'tags'          => array(
+					'{password_reset_link}',
+				),
+				'tags_replace'  => array(
+					UM()->password()->reset_url( $user_id ),
+				),
+			);
 
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'resetpw_email', array( 'fetch_user_id' => um_user( 'ID' ) ) ) );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'resetpw_email', $mail_args ) );
 		}
-
 
 		/**
 		 * Password changed email

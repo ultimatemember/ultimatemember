@@ -34,6 +34,9 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		public $saved_fields = array();
 
 		/**
+		 * Field keys that cannot be used as metakey when add new custom field to UM Form.
+		 * Note: They are used both with function `UM()->user()->is_metakey_banned()` to avoid using unsecure metakeys.
+		 *
 		 * @var array
 		 */
 		public $blacklist_fields = array();
@@ -183,7 +186,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 * @return int|string Empty or error string.
 		 */
 		public function blacklist_field_err( $key ) {
-			if ( in_array( strtolower( $key ), $this->blacklist_fields, true ) ) {
+			if ( in_array( strtolower( $key ), $this->blacklist_fields, true ) || UM()->user()->is_metakey_banned( $key ) ) {
 				return __( 'Your meta key can not be used', 'ultimate-member' );
 			}
 
@@ -1426,6 +1429,9 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		public function set_blacklist_fields() {
 			$this->blacklist_fields = array(
 				'id',
+				'role',
+				'user_id',
+				'user_pass',
 			);
 
 			/**
@@ -2056,7 +2062,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 						'TO' => __('Tonga','ultimate-member'),
 						'TT' => __('Trinidad and Tobago','ultimate-member'),
 						'TN' => __('Tunisia','ultimate-member'),
-						'TR' => __('Turkey','ultimate-member'),
+						'TR' => __('Türkiye','ultimate-member'),
 						'TM' => __('Turkmenistan','ultimate-member'),
 						'TC' => __('Turks and Caicos Islands','ultimate-member'),
 						'TV' => __('Tuvalu','ultimate-member'),

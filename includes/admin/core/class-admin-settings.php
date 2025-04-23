@@ -100,19 +100,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					$sites = get_sites( array( 'fields' => 'ids' ) );
 					foreach ( $sites as $blog_id ) {
 						$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
-						$metakeys[] = 'wc_money_spent_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
-						$metakeys[] = 'wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
+						$metakeys[] = 'wc_money_spent_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' ); // Is used since Woocommerce 9.1.0
+						$metakeys[] = 'wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' ); // Is used since Woocommerce 9.1.0 TODO remove as soon as used 'um_wc_order_count_'
 					}
 				} else {
 					$blog_id    = get_current_blog_id();
 					$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
-					$metakeys[] = 'wc_money_spent_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
-					$metakeys[] = 'wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
+					$metakeys[] = 'wc_money_spent_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' ); // Is used since Woocommerce 9.1.0
+					$metakeys[] = 'wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' ); // Is used since Woocommerce 9.1.0 TODO remove as soon as used 'um_wc_order_count_'
 				}
 
-				//member directory data
+				// Member directory data
 				$metakeys[] = 'um_member_directory_data';
 				$metakeys[] = '_um_verified';
+				$metakeys[] = '_money_spent'; // Legacy since Woocommerce 9.1.0. TODO remove as soon as stop support Woo below 9.1.0 version
 				$metakeys[] = '_completed';
 				$metakeys[] = '_reviews_avg';
 
@@ -752,6 +753,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'use_um_gravatar_default_image'        => array(
 						'sanitize' => 'bool',
 					),
+					'admin_ignore_user_status'             => array(
+						'sanitize' => 'bool',
+					),
 					'delete_comments'                      => array(
 						'sanitize' => 'bool',
 					),
@@ -1010,7 +1014,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'enable_blocks'                        => array(
 						'sanitize' => 'bool',
 					),
-					'enable_action_scheduler'              => array(
+					'enable_as_email_sending'              => array(
 						'sanitize' => 'bool',
 					),
 					'rest_api_version'                     => array(
@@ -1180,6 +1184,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'checkbox_label' => __( 'Set Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
 												'description' => __( 'Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo/avatar).', 'ultimate-member' ),
 												'conditional' => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
+											),
+											array(
+												'id'    => 'admin_ignore_user_status',
+												'type'  => 'checkbox',
+												'label' => __( 'Ignore the "User Role > Registration Options"', 'ultimate-member' ),
+												'checkbox_label' => __( 'Automatically approve users from the wp-admin dashboard', 'ultimate-member' ),
+												'description' => __( 'Ignore registration settings and automatically approve the user if this user is added from the wp-admin dashboard.', 'ultimate-member' ),
 											),
 											array(
 												'id'    => 'delete_comments',

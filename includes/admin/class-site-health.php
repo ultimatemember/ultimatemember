@@ -1,6 +1,8 @@
 <?php
 namespace um\admin;
 
+use WP_Query;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -46,6 +48,20 @@ class Site_Health {
 				'label' => esc_html__( 'Are the icons in Ultimate Member Forms and Settings out of date?', 'ultimate-member' ),
 				'test'  => array( $this, 'outdated_icons_test' ),
 			);
+		}
+
+		// Searching in the global registered custom fields banned or blacklisted fields.
+		$custom_fields = get_option( 'um_fields', array() );
+		if ( ! empty( $custom_fields ) ) {
+			foreach ( array_keys( $custom_fields ) as $key ) {
+				if ( self::field_is_banned( $key ) ) {
+					$tests['direct']['um_banned_fields'] = array(
+						'label' => esc_html__( 'Are the banned custom fields?', 'ultimate-member' ),
+						'test'  => array( $this, 'banned_fields_test' ),
+					);
+					break;
+				}
+			}
 		}
 
 		return $tests;
@@ -210,6 +226,132 @@ class Site_Health {
 		return $result;
 	}
 
+	private static function field_is_banned( $metakey ) {
+		return UM()->user()->is_metakey_banned( $metakey ) || in_array( strtolower( $metakey ), UM()->builtin()->blacklist_fields, true );
+	}
+
+	public function get_banned_fields() {
+		$result = array(
+			'description' => '',
+			'actions'     => '',
+		);
+
+		$forms = get_posts(
+			array(
+				'post_type'      => 'um_form',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+			)
+		);
+
+		$forms_count = 0;
+		$break_forms = array();
+		if ( ! empty( $forms ) ) {
+			foreach ( $forms as $form_id ) {
+				$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
+				if ( empty( $fields ) ) {
+					continue;
+				}
+				foreach ( $fields as $field ) {
+					if ( empty( $field['metakey'] ) ) {
+						continue;
+					}
+
+					if ( self::field_is_banned( $field['metakey'] ) ) {
+						if ( ! array_key_exists( $form_id, $break_forms ) ) {
+							$break_forms[ $form_id ] = array(
+								'title'  => get_the_title( $form_id ),
+								'link'   => get_edit_post_link( $form_id ),
+								'fields' => array(
+									$field['metakey'] => isset( $field['title'] ) ? $field['title'] : __( 'Unknown title', 'ultimate-member' ),
+								),
+							);
+
+							++$forms_count;
+						} else {
+							$break_forms[ $form_id ]['fields'][ $field['metakey'] ] = isset( $field['title'] ) ? $field['title'] : __( 'Unknown title', 'ultimate-member' );
+						}
+					}
+				}
+			}
+		}
+
+		if ( 0 < $forms_count ) {
+			$result['description'] .= sprintf(
+				'<p>%s</p>',
+				__( 'Please note that some fields in your Ultimate Member Forms are currently on a restricted list that disallows their use. This is particularly related to the Ultimate Member Forms and their fields below.', 'ultimate-member' )
+			);
+
+			if ( ! empty( $break_forms ) ) {
+				$forms_description = array();
+				foreach ( $break_forms as $form_id => $form_data ) {
+					$fields = array();
+					foreach ( $form_data['fields'] as $metakey => $field_title ) {
+						$fields[] = sprintf( __( '%s (<code>%s</code>)', 'ultimate-member' ), $field_title, $metakey );
+					}
+
+					$forms_description[] = '<h4>' . sprintf(
+						__( 'Fields in <a href="%s" target="_blank">%s (#ID: %s)</a>:', 'ultimate-member' ),
+						esc_url( $form_data['link'] ),
+						esc_html( $form_data['title'] ),
+						esc_html( $form_id )
+					) . '</h4><ul><li>' . implode( '</li><li>', $fields ) . '</li></ul>';
+				}
+
+				$result['description'] .= implode( ' ', $forms_description );
+			}
+
+			$result['actions'] .= sprintf(
+				'<p><a href="%s">%s</a></p>',
+				admin_url( 'edit.php?post_type=um_form' ),
+				esc_html__( 'Edit form fields and update', 'ultimate-member' )
+			);
+		}
+
+		$result = apply_filters( 'um_get_banned_fields_result', $result );
+
+		if ( ! empty( $result['description'] ) ) {
+			$result['description'] .= sprintf(
+				'<p>%s</p>',
+				__( 'The using meta keys from restricted list in Ultimate Member Forms may break the website\'s functionality and is unsecure.', 'ultimate-member' )
+			);
+		}
+
+		if ( ! empty( $result['description'] ) && ! empty( $result['actions'] ) ) {
+			return $result;
+		}
+
+		return false;
+	}
+
+	public function banned_fields_test() {
+		$result = array(
+			'label'       => __( 'You have correct Ultimate Member fields', 'ultimate-member' ),
+			'status'      => 'good',
+			'badge'       => array(
+				'label' => UM_PLUGIN_NAME,
+				'color' => self::BADGE_COLOR,
+			),
+			'description' => sprintf(
+				'<p>%s</p>',
+				__( 'Your all custom Ultimate Member fields are correct.', 'ultimate-member' )
+			),
+			'actions'     => '',
+			'test'        => 'um_banned_fields',
+		);
+
+		$banned_fields = $this->get_banned_fields();
+		if ( false !== $banned_fields ) {
+			$result['label']          = __( 'Some field from Ultimate Member forms has banned meta key', 'ultimate-member' );
+			$result['status']         = 'critical';
+			$result['badge']['color'] = 'red';
+			$result['description']    = $banned_fields['description'];
+			$result['actions']        = $banned_fields['actions'];
+		}
+
+		return $result;
+	}
+
 	private function get_roles() {
 		return UM()->roles()->get_roles();
 	}
@@ -240,7 +382,7 @@ class Site_Health {
 	}
 
 	private function get_field_data( $info, $key, $field_key, $field ) {
-		$row        = isset( $field['metakey'] ) ? false : true;
+		$row        = array_key_exists( 'type', $field ) && 'row' === $field['type'];
 		$title      = $row ? __( 'Row: ', 'ultimate-member' ) . $field['id'] : __( 'Field: ', 'ultimate-member' ) . $field['metakey'];
 		$field      = array_map( array( &$this, 'array_map' ), $field );
 		$field_info = array(
@@ -254,7 +396,7 @@ class Site_Health {
 	}
 
 	private function get_member_directories() {
-		$query              = new \WP_Query();
+		$query              = new WP_Query();
 		$member_directories = $query->query(
 			array(
 				'post_type'      => 'um_directory',
@@ -371,6 +513,10 @@ class Site_Health {
 			'um-use_gravatars'               => array(
 				'label' => __( 'Use Gravatars?', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'use_gravatars' ) ? $labels['yes'] : $labels['no'],
+			),
+			'um-admin_ignore_user_status'    => array(
+				'label' => __( 'Ignore the "User Role > Registration Options" if this user is added from the wp-admin dashboard', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'admin_ignore_user_status' ) ? $labels['yes'] : $labels['no'],
 			),
 			'um-delete_comments'             => array(
 				'label' => __( 'Deleting user comments after deleting a user', 'ultimate-member' ),
@@ -1080,6 +1226,10 @@ class Site_Health {
 				'label' => __( 'Enable Gutenberg Blocks', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'enable_blocks' ) ? $labels['yes'] : $labels['no'],
 			),
+			'um-enable_as_email_sending'         => array(
+				'label' => __( 'Email sending by Action Scheduler', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'enable_as_email_sending' ) ? $labels['yes'] : $labels['no'],
+			),
 			'um-rest_api_version'                => array(
 				'label' => __( 'REST API version', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'rest_api_version' ),
@@ -1627,10 +1777,8 @@ class Site_Health {
 						),
 					)
 				);
-			}
 
-			if ( array_key_exists( '_um_login_redirect_url', $rolemeta ) && 'redirect_url' === $rolemeta['_um_login_redirect_url'] ) {
-				if ( array_key_exists( '_um_pending_url', $rolemeta ) ) {
+				if ( 'redirect_url' === $rolemeta['_um_after_login'] && array_key_exists( '_um_login_redirect_url', $rolemeta ) ) {
 					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
 						$info[ 'ultimate-member-' . $key ]['fields'],
 						array(
@@ -1660,10 +1808,8 @@ class Site_Health {
 						),
 					)
 				);
-			}
 
-			if ( 'redirect_url' === $rolemeta['_um_after_logout'] ) {
-				if ( array_key_exists( '_um_logout_redirect_url', $rolemeta ) ) {
+				if ( 'redirect_url' === $rolemeta['_um_after_logout'] && array_key_exists( '_um_logout_redirect_url', $rolemeta ) ) {
 					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
 						$info[ 'ultimate-member-' . $key ]['fields'],
 						array(
@@ -1689,10 +1835,8 @@ class Site_Health {
 						),
 					)
 				);
-			}
 
-			if ( 'redirect_url' === $rolemeta['_um_after_delete'] ) {
-				if ( array_key_exists( '_um_delete_redirect_url', $rolemeta ) ) {
+				if ( 'redirect_url' === $rolemeta['_um_after_delete'] && array_key_exists( '_um_delete_redirect_url', $rolemeta ) ) {
 					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
 						$info[ 'ultimate-member-' . $key ]['fields'],
 						array(
@@ -1706,17 +1850,15 @@ class Site_Health {
 			}
 
 			if ( ! empty( $rolemeta['wp_capabilities'] ) ) {
-				if ( array_key_exists( 'wp_capabilities', $rolemeta ) ) {
-					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
-						$info[ 'ultimate-member-' . $key ]['fields'],
-						array(
-							'um-wp_capabilities' => array(
-								'label' => __( 'WP Capabilities', 'ultimate-member' ),
-								'value' => $rolemeta['wp_capabilities'],
-							),
-						)
-					);
-				}
+				$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+					$info[ 'ultimate-member-' . $key ]['fields'],
+					array(
+						'um-wp_capabilities' => array(
+							'label' => __( 'WP Capabilities', 'ultimate-member' ),
+							'value' => $rolemeta['wp_capabilities'],
+						),
+					)
+				);
 			}
 
 			$info = apply_filters( 'um_debug_information_user_role', $info, $key );
@@ -2160,11 +2302,7 @@ class Site_Health {
 									)
 								);
 							} else {
-								if ( isset( $options[ $field ] ) ) {
-									$sortby_label = $options[ $field ];
-								} else {
-									$sortby_label = $field;
-								}
+								$sortby_label = isset( $options[ $field ] ) ? $options[ $field ] : $field;
 								$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
 									$info[ 'ultimate-member-directory-' . $key ]['fields'],
 									array(
@@ -2419,6 +2557,17 @@ class Site_Health {
 			}
 		}
 
-		return $info;
+		/**
+		 * Filters the site health information.
+		 *
+		 * @hook um_site_health_extend
+		 *
+		 * @since 2.10.3
+		 *
+		 * @param {array} $info The site health info to be filtered.
+		 *
+		 * @return {array} The filtered site health info.
+		 */
+		return apply_filters( 'um_site_health_extend', $info );
 	}
 }

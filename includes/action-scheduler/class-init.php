@@ -43,13 +43,13 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		public function __construct() {
 			if ( ! $this->can_be_active() ) {
 				add_action( 'init', array( $this, 'add_notice' ) );
+				add_filter( 'um_site_health_extend', array( $this, 'change_site_health' ) );
 			} else {
 				add_filter( 'um_settings_structure', array( $this, 'add_setting' ) );
-
-				if ( UM()->options()->get( 'enable_action_scheduler' ) ) {
-					$this->enabled = true;
-					$this->load_library( true );
-				}
+				// Since 2.10.3 we load library as soon as there are required library files.
+				// Options above are used for enable/disable some Action Scheduler hooks e.g. um_dispatch_email.
+				$this->enabled = true;
+				$this->load_library( true );
 			}
 		}
 
@@ -75,13 +75,25 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 *
 		 * @return array
 		 */
+		public function change_site_health( $site_health ) {
+			$site_health['ultimate-member']['fields']['enable_as_email_sending']['value'] = __( 'No', 'ultimate-member' );
+			return $site_health;
+		}
+
+		/**
+		 * Adds the Action Scheduler setting to Ultimate Member feature settings
+		 *
+		 * @param array $settings
+		 *
+		 * @return array
+		 */
 		public function add_setting( $settings ) {
 			$settings['advanced']['sections']['features']['form_sections']['features']['fields'][] = array(
-				'id'             => 'enable_action_scheduler',
+				'id'             => 'enable_as_email_sending',
 				'type'           => 'checkbox',
-				'label'          => __( 'Action Scheduler', 'ultimate-member' ),
-				'checkbox_label' => __( 'Enable Action Scheduler', 'ultimate-member' ),
-				'description'    => __( 'Check this box if you want to use the Ultimate Member action scheduler. By enabling it, certain tasks like sending system emails will be scheduled to run at optimal times, which can help reduce the load on your server', 'ultimate-member' ),
+				'label'          => __( 'Email sending by Action Scheduler', 'ultimate-member' ),
+				'checkbox_label' => __( 'Enable Action Scheduler for Ultimate Member emails sending', 'ultimate-member' ),
+				'description'    => __( 'Check this box if you want to use the Action Scheduler for Ultimate Member emails sending. By enabling it, sending system emails will be scheduled to run at optimal times, which can help reduce the load on your server', 'ultimate-member' ),
 			);
 
 			return $settings;
@@ -131,6 +143,10 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 			return $this->verify_wc_action_scheduler() || $this->load_library();
 		}
 
+		public function is_hook_enabled( $hook ) {
+			return apply_filters( 'um_action_scheduler_is_hook_enabled', $this->is_enabled(), $hook );
+		}
+
 		/**
 		 * Enqueue an action to run one time, as soon as possible.
 		 * If Action Scheduler is disabled then do_action_ref_array is called to run action right away.
@@ -144,11 +160,12 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 * @return int Еhe action’s ID. Zero if there was an error scheduling the action. The error will be sent to error_log
 		 */
 		public function enqueue_async_action( $hook, $args = array(), $group = '', $unique = false, $priority = 10 ) {
-			if ( $this->enabled ) {
+			if ( $this->is_hook_enabled( $hook ) ) {
 				$group = $this->set_group( $group );
 				return as_enqueue_async_action( $hook, $args, $group, $unique, $priority );
 			}
 
+			// Make then standard action without Action Scheduler.
 			do_action_ref_array( $hook, $args );
 			return 0;
 		}
@@ -166,11 +183,12 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 * @return int The action’s ID. Zero if there was an error scheduling the action. The error will be sent to error_log.
 		 */
 		public function schedule_single_action( $timestamp, $hook, $args = array(), $group = '', $unique = false, $priority = 10 ) {
-			if ( $this->enabled ) {
+			if ( $this->is_hook_enabled( $hook ) ) {
 				$group = $this->set_group( $group );
 				return as_schedule_single_action( $timestamp, $hook, $args, $group, $unique, $priority );
 			}
 
+			// Make then standard action without Action Scheduler.
 			do_action_ref_array( $hook, $args );
 			return 0;
 		}

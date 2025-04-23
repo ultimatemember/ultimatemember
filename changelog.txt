@@ -1,5 +1,23 @@
 ﻿== Changelog ==
 
+= 2.10.3 April 24, 2025 =
+
+* Enhancements:
+
+  - Added: The `Ignore the "User Role > Registration Options"` setting. It provides an ability to auto-approve users if they were created via wp-admin > Users screen.
+  - Tweak: Avoid email notifications to Administrator about user registration via wp-admin > Users screen.
+  - Tweak: Updated the Action Scheduler implementation to improve flexibility and clarity. Refactor Action Scheduler for not only email handling.
+
+* Bugfixes:
+
+  - Fixed: Member Directory styles when it's rendered on the Gutenberg builder page.
+  - Fixed: Member Directory filtering query when the custom users metatable is used.
+  - Fixed: PHP Warning that occurs when using the `getimagesize` function with an image from an external source.
+  - Fixed: Reset Password email notification's the {password_reset_link}` placeholder.
+  - Fixed: Changed "Turkey" to the current official term "Türkiye".
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade *
+
 = 2.10.2 April 02, 2025 =
 
 * Enhancements:
