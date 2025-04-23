@@ -939,6 +939,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			} elseif ( isset( UM()->user()->profile[ $key ] ) ) {
 
+				if ( 'register' === $this->set_mode ) {
+					return $default;
+				}
+
 				$value = UM()->user()->profile[ $key ];
 				/**
 				 * UM hook
