@@ -514,6 +514,10 @@ class Site_Health {
 				'label' => __( 'Use Gravatars?', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'use_gravatars' ) ? $labels['yes'] : $labels['no'],
 			),
+			'um-admin_ignore_user_status'    => array(
+				'label' => __( 'Ignore the "User Role > Registration Options" if this user is added from the wp-admin dashboard', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'admin_ignore_user_status' ) ? $labels['yes'] : $labels['no'],
+			),
 			'um-delete_comments'             => array(
 				'label' => __( 'Deleting user comments after deleting a user', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'delete_comments' ) ? $labels['yes'] : $labels['no'],
@@ -1222,6 +1226,10 @@ class Site_Health {
 				'label' => __( 'Enable Gutenberg Blocks', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'enable_blocks' ) ? $labels['yes'] : $labels['no'],
 			),
+			'um-enable_as_email_sending'         => array(
+				'label' => __( 'Email sending by Action Scheduler', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'enable_as_email_sending' ) ? $labels['yes'] : $labels['no'],
+			),
 			'um-rest_api_version'                => array(
 				'label' => __( 'REST API version', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'rest_api_version' ),
@@ -1237,10 +1245,6 @@ class Site_Health {
 			'um-uninstall_on_delete'             => array(
 				'label' => __( 'Remove Data on Uninstall?', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'uninstall_on_delete' ) ? $labels['yes'] : $labels['no'],
-			),
-			'enable_as_email_sending'            => array(
-				'label' => __( 'Email sending by Action Scheduler', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'enable_as_email_sending' ) ? $labels['yes'] : $labels['no'],
 			),
 		);
 
