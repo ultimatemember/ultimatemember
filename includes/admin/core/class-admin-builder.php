@@ -546,6 +546,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 														<?php echo ! empty( $field_title ) ? esc_html( $field_title ) : esc_html__( '(no title)', 'ultimate-member' ); ?>
 													</div>
 													<div class="um-admin-drag-fld-type um-field-type-<?php echo esc_attr( $field_type ); ?>"><?php echo esc_html( $field_name ); ?></div>
+													<?php if ( UM()->user()->is_metakey_banned( $key ) || in_array( strtolower( $key ), UM()->builtin()->blacklist_fields, true ) ) { ?>
+														<div class="um-admin-drag-fld-banned um-field-type-<?php echo esc_attr( $field_type ); ?>"><?php esc_html_e( 'This is not permitted for security reasons. For your safety, please remove it.', 'ultimate-member' ); ?></div>
+													<?php } ?>
 													<div class="um-admin-drag-fld-icons um-field-type-<?php echo esc_attr( $field_type ); ?>">
 														<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Edit', 'ultimate-member' ); ?>" data-modal="UM_edit_field" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="<?php echo esc_attr( $field_type ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>" data-arg3="<?php echo esc_attr( $key ); ?>"><i class="um-faicon-pencil"></i></a>
 														<a href="javascript:void(0);" class="um-tip-n um_admin_duplicate_field" title="<?php esc_attr_e( 'Duplicate', 'ultimate-member' ); ?>" data-silent_action="um_admin_duplicate_field" data-arg1="<?php echo esc_attr( $key ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>"><i class="um-faicon-files-o"></i></a>

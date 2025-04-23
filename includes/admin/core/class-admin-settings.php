@@ -755,6 +755,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'use_um_gravatar_default_image'        => array(
 						'sanitize' => 'bool',
 					),
+					'admin_ignore_user_status'             => array(
+						'sanitize' => 'bool',
+					),
 					'delete_comments'                      => array(
 						'sanitize' => 'bool',
 					),
@@ -1016,7 +1019,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'enable_blocks'                        => array(
 						'sanitize' => 'bool',
 					),
-					'enable_action_scheduler'              => array(
+					'enable_as_email_sending'              => array(
 						'sanitize' => 'bool',
 					),
 					'um_google_lang_as_default'            => array(
@@ -1130,6 +1133,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'label'          => __( 'Members Directory', 'ultimate-member' ),
 					'checkbox_label' => __( 'Enable Members Directory', 'ultimate-member' ),
 					'description'    => __( 'Control whether to enable or disable member directories on this site', 'ultimate-member' ),
+				),
+				array(
+					'id'             => 'admin_ignore_user_status',
+					'type'           => 'checkbox',
+					'label'          => __( 'Ignore the "User Role > Registration Options"', 'ultimate-member' ),
+					'checkbox_label' => __( 'Automatically approve users from the wp-admin dashboard', 'ultimate-member' ),
+					'description'    => __( 'Ignore registration settings and automatically approve the user if this user is added from the wp-admin dashboard.', 'ultimate-member' ),
 				),
 				array(
 					'id'             => 'delete_comments',

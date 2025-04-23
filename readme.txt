@@ -5,7 +5,7 @@ Contributors: ultimatemember, champsupertramp, nsinelnikov
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
-Tested up to: 6.7
+Tested up to: 6.8
 Stable tag: 2.10.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -228,9 +228,23 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Deprecated function `um_is_temp_image()` because it is unused.
 * Deprecated function `UM()->password()->setcookie()`. Use function `UM()::setcookie()` instead.
 
-= 2.10.3 2025-04-xx =
+= 2.10.3 2025-04-24 =
 
+**Enhancements**
 
+* Added: The `Ignore the "User Role > Registration Options"` setting. It provides an ability to auto-approve users if they were created via wp-admin > Users screen.
+* Tweak: Avoid email notifications to Administrator about user registration via wp-admin > Users screen.
+* Tweak: Updated the Action Scheduler implementation to improve flexibility and clarity. Refactor Action Scheduler for not only email handling.
+
+**Bugfixes**
+
+* Fixed: Member Directory styles when it's rendered on the Gutenberg builder page.
+* Fixed: Member Directory filtering query when the custom users metatable is used.
+* Fixed: PHP Warning that occurs when using the `getimagesize` function with an image from an external source.
+* Fixed: Reset Password email notification's the {password_reset_link}` placeholder.
+* Fixed: Changed "Turkey" to the current official term "Türkiye".
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
 = 2.10.2 2025-04-02 =
 
