@@ -167,7 +167,7 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.10.3 2025-04-15 =
+= 2.10.3 2025-04-24 =
 
 **Enhancements**
 
@@ -180,6 +180,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Member Directory styles when it's rendered on the Gutenberg builder page.
 * Fixed: Member Directory filtering query when the custom users metatable is used.
 * Fixed: PHP Warning that occurs when using the `getimagesize` function with an image from an external source.
+* Fixed: Reset Password email notification's the {password_reset_link}` placeholder.
+* Fixed: Changed "Turkey" to the current official term "Türkiye".
 
 **Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 

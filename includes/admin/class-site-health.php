@@ -2555,9 +2555,12 @@ class Site_Health {
 
 		/**
 		 * Filters the site health information.
+		 *
 		 * @hook um_site_health_extend
+		 *
 		 * @since 2.10.3
-		 * @param {array} info - The site health info to be filtered.
+		 *
+		 * @param {array} $info The site health info to be filtered.
 		 *
 		 * @return {array} The filtered site health info.
 		 */
