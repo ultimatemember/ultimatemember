@@ -32,14 +32,6 @@
 					$( document.body ).append( self.$dropdown );
 				}
 
-				/* trigger event */
-				self.$element.trigger('um_new_dropdown_render', {
-					dropdown_layout: self.$dropdown,
-					trigger: self.data.trigger,
-					element: self.data.element,
-					obj: self.$element
-				});
-
 				wp.hooks.doAction( 'um_dropdown_render', self.$dropdown, self.data.trigger, self.data.element, self.$element );
 
 				/* set styles and show */

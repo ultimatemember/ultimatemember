@@ -1008,21 +1008,21 @@ UM.frontend = {
 				$emojiPicker[ $item ].classList.add('um-inited');
 
 				let $emojiList = $emojiPicker[ $item ].querySelector('.um-emoji-list');
-				let $emojiPickerLink = $emojiPicker[ $item ].querySelector('.um-emoji-picker-link');
+				// let $emojiPickerLink = $emojiPicker[ $item ].querySelector('.um-emoji-picker-link');
 
-				$emojiPickerLink.addEventListener('click', function(event) {
-					let display = $emojiList.style.display;
-					if ( 'none' === display ) {
-						$emojiList.style.display = 'block';
-					} else {
-						$emojiList.style.display = 'none';
-					}
-				});
+				// $emojiPickerLink.addEventListener('click', function(event) {
+				// 	let display = $emojiList.style.display;
+				// 	if ( 'none' === display ) {
+				// 		$emojiList.style.display = 'block';
+				// 	} else {
+				// 		$emojiList.style.display = 'none';
+				// 	}
+				// });
 
 				let args = {
 					onEmojiSelect: function (selectedEmoji) {
 						wp.hooks.doAction( 'um_emoji_picker_on_select', selectedEmoji, $emojiPicker[ $item ] );
-						$emojiList.style.display = 'none';
+						// $emojiList.style.display = 'none';
 					},
 					skinTonePosition: 'none',
 					theme: 'light',
@@ -1031,7 +1031,80 @@ UM.frontend = {
 
 				const picker = new EmojiMart.Picker( args );
 				$emojiList.appendChild(picker);
-				$emojiList.style.display = 'none';
+				// $emojiList.style.display = 'none';
+			}
+		}
+	},
+	gifPicker: {
+		init: function ( $parent ) {
+			// $(document).on('click','.um-gif-picker-search-btn',function(e){
+			//
+			// 	e.preventDefault();
+			// 	var input = $('input[name="um_messaging_gif_search"]');
+			// 	if( input.val() == ''){
+			// 		return;
+			// 	}
+			//
+			// 	console.log( input.val() );
+			//
+			// 	var el = $(document).find('a[data-target="um-gif-options"]');
+			// 	var action = el.attr('data-action');
+			// 	$.post(action,{
+			// 		gif_search:input.val()
+			// 	},function( response ){
+			// 		jQuery('span.um-message-gif-list').find( '.um-gif-options' ).html(response);
+			// 	});
+			//
+			//
+			// });
+
+			if ( 'undefined' === typeof $parent ) {
+				$parent = document;
+			}
+
+			let $gifPickerSearch = $parent.querySelectorAll('.um-gif-picker-search-btn:not(.um-inited)');
+			if ( ! $gifPickerSearch.length ) {
+				return;
+			}
+
+			for (let $item = 0; $item < $gifPickerSearch.length; $item++) {
+				$gifPickerSearch[ $item ].classList.add('um-inited');
+
+				$gifPickerSearch[ $item ].addEventListener('click', function(event) {
+					let $btn = event.target;
+					let $dropdown = $btn.closest('.um-gif-picker-dropdown');
+					let search = '';
+					let $searchInput = $btn.previousElementSibling;
+					if( $searchInput && $searchInput.matches(".um-gif-picker-search")) {
+						search = $searchInput.value;
+					}
+
+					let nonce = $dropdown.dataset.nonce;
+
+					wp.ajax.send(
+						'um_get_gif_images',
+						{
+							data: {
+								search: search,
+								nonce: nonce
+							},
+							success: function (data) {
+
+							},
+							error: function (data) {
+								console.log(data);
+							}
+						}
+					);
+					//
+					// var el = $(document).find('a[data-target="um-gif-options"]');
+					// var action = el.attr('data-action');
+					// $.post(action,{
+					// 	gif_search:input.val()
+					// },function( response ){
+					// 	jQuery('span.um-message-gif-list').find( '.um-gif-options' ).html(response);
+					// });
+				});
 			}
 		}
 	}
@@ -1056,6 +1129,12 @@ wp.hooks.addAction( 'um_member_directory_loaded', 'um_common_frontend', function
 
 wp.hooks.addAction( 'um_member_directory_build_template', 'um_common_frontend', function() {
 	UM.frontend.dropdown.init();
+});
+
+wp.hooks.addAction( 'um_dropdown_render', 'um_common_frontend', function( $dropdown, trigger, element, $element ) {
+	if ( '.um-gif-picker-toggle' === element ) {
+		UM.frontend.gifPicker.init( $dropdown[0] );
+	}
 });
 
 jQuery(document).ready(function($) {

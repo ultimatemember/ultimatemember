@@ -25,6 +25,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 			if ( UM()->is_new_ui() ) {
 				$this->dev();
 				$this->directory();
+				$this->gif();
 				$this->fields();
 				$this->files();
 				$this->profile();
@@ -77,6 +78,18 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 			}
 
 			return UM()->classes['um\ajax\directory'];
+		}
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return GIF
+		 */
+		public function gif() {
+			if ( empty( UM()->classes['um\ajax\gif'] ) ) {
+				UM()->classes['um\ajax\gif'] = new GIF();
+			}
+			return UM()->classes['um\ajax\gif'];
 		}
 
 		/**

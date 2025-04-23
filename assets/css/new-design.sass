@@ -2591,3 +2591,40 @@
     margin: 0
     padding: 0
     +border-box
+
+
+// Emoji Picker
+.um
+  .#{$prefix}emoji-picker
+    position: relative
+
+
+
+// GIF Picker
+.um
+  .#{$prefix}gif-picker
+    position: relative
+
+
+.#{$prefix}gif-picker-dropdown
+  padding: $spacing-lg
+  margin: 0
+  .#{$prefix}gif-picker-search-box
+    +flex(row, flex-start, center, nowrap)
+    width: 100%
+    margin: 0
+    padding: 0 0 $spacing-lg 0
+    gap: $spacing-md
+    .#{$prefix}gif-picker-search
+      flex: 1
+  .#{$prefix}gif-list
+    min-height: 100px
+    width: 100%
+    margin: 0
+    padding: 0
+  .#{$prefix}gif-list-loader
+    +flex(row, center, center, nowrap)
+    min-height: 100px
+    width: 100%
+    margin: 0
+    padding: 0
