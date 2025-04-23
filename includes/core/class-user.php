@@ -1499,10 +1499,17 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$this->maybe_generate_password_reset_key( $userdata );
 
-			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ) );
-			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ) );
+			$mail_args = array(
+				'fetch_user_id' => $user_id,
+				'tags'          => array(
+					'{password_reset_link}',
+				),
+				'tags_replace'  => array(
+					UM()->password()->reset_url( $user_id ),
+				),
+			);
 
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'resetpw_email', array( 'fetch_user_id' => $user_id ) ) );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'resetpw_email', $mail_args ) );
 		}
 
 		/**

@@ -36,12 +36,16 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		/**
 		 * Get Reset URL
 		 *
-		 * @return bool|string
+		 * @param int|null $user_id
+		 *
+		 * @return string
 		 */
-		public function reset_url() {
+		public function reset_url( $user_id = null ) {
 			static $reset_key = null;
 
-			$user_id = um_user( 'ID' );
+			if ( is_null( $user_id ) ) {
+				$user_id = um_user( 'ID' );
+			}
 
 			delete_option( "um_cache_userdata_{$user_id}" );
 
