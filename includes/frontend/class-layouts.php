@@ -1148,12 +1148,13 @@ class Layouts {
 				'size'          => 's', // s, m
 				'tabs'          => array(
 					'id' => array(
-						'title'        => __( 'Tab title', 'ultimate-member' ),
-						'content'      => __( 'Tab content', 'ultimate-member' ),
-						'url'          => '#',
-						'current'      => true,
-						'notifier'     => 0,
-						'max_notifier' => 10,
+						'title'         => __( 'Tab title', 'ultimate-member' ),
+						'content'       => __( 'Tab content', 'ultimate-member' ),
+						'url'           => '#',
+						'current'       => true,
+						'notifier'      => 0,
+						'notifier_type' => 'gray',
+						'max_notifier'  => 10,
 					),
 				),
 			)
@@ -1199,8 +1200,9 @@ class Layouts {
 					echo esc_html( $tab_data['title'] );
 					if ( array_key_exists( 'notifier', $tab_data ) ) {
 						$badge_args       = array(
-							'size' => 's',
-							'type' => 'pill-color',
+							'size'  => 's',
+							'type'  => 'pill-color',
+							'color' => array_key_exists( 'notifier_type', $tab_data ) ? $tab_data['notifier_type'] : 'gray',
 						);
 						$notifier         = 0;
 						$notifier_classes = array( 'um-' . $tab_id . '-tab-notifier' );

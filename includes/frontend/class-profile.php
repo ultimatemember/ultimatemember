@@ -310,6 +310,9 @@ class Profile {
 			if ( array_key_exists( 'max_notifier', $tab ) ) {
 				$new_tab['max_notifier'] = $tab['max_notifier'];
 			}
+			if ( array_key_exists( 'notifier_type', $tab ) ) {
+				$new_tab['notifier_type'] = $tab['notifier_type'];
+			}
 			$tab = $new_tab;
 		}
 		unset( $tab );
