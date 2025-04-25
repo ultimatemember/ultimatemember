@@ -470,58 +470,118 @@ class Site_Health {
 		$display_name   = UM()->config()->display_name_options;
 
 		$user_settings = array(
-			'um-permalink_base'              => array(
+			'um-user_separator'  => array(
+				'label' => __( 'User settings', 'ultimate-member' ),
+				'value' => '---------------------------------------------------------------------',
+			),
+			'um-register_role'   => array(
+				'label' => __( 'Registration Default Role', 'ultimate-member' ),
+				'value' => ! empty( UM()->options()->get( 'register_role' ) ) ? UM()->options()->get( 'register_role' ) : __( 'Default', 'ultimate-member' ),
+			),
+			'um-permalink_base'  => array(
 				'label' => __( 'Profile Permalink Base', 'ultimate-member' ),
 				'value' => isset( $permalink_base[ UM()->options()->get( 'permalink_base' ) ] ) ? $permalink_base[ UM()->options()->get( 'permalink_base' ) ] : $labels['no'],
 			),
-			'um-display_name'                => array(
+			'um-display_name'    => array(
 				'label' => __( 'User Display Name', 'ultimate-member' ),
 				'value' => isset( $display_name[ UM()->options()->get( 'display_name' ) ] ) ? $display_name[ UM()->options()->get( 'display_name' ) ] : $labels['no'],
 			),
-			'um-author_redirect'             => array(
-				'label' => __( 'Automatically redirect author page to their profile?', 'ultimate-member' ),
+			'um-author_redirect' => array(
+				'label' => __( 'Hide author pages (enable author page redirect to user profile)', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'author_redirect' ) ? $labels['yes'] : $labels['no'],
 			),
-			'um-members_page'                => array(
+			'um-members_page'    => array(
 				'label' => __( 'Enable Members Directory', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'members_page' ) ? $labels['yes'] : $labels['no'],
 			),
-			'um-toggle_password'             => array(
-				'label' => __( 'Show/hide password button', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'toggle_password' ) ? $labels['yes'] : $labels['no'],
-			),
-			'um-require_strongpass'          => array(
-				'label' => __( 'Require Strong Passwords', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'require_strongpass' ) ? $labels['yes'] : $labels['no'],
-			),
-			'um-password_min_chars'          => array(
-				'label' => __( 'Require Strong Passwords', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'password_min_chars' ),
-			),
-			'um-password_max_chars'          => array(
-				'label' => __( 'Require Strong Passwords', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'password_max_chars' ),
-			),
-			'um-profile_noindex'             => array(
-				'label' => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'profile_noindex' ) ? $labels['yes'] : $labels['no'],
-			),
-			'um-activation_link_expiry_time' => array(
-				'label' => __( 'Activation link lifetime', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'activation_link_expiry_time' ),
-			),
-			'um-use_gravatars'               => array(
+			'um-use_gravatars'   => array(
 				'label' => __( 'Use Gravatars?', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'use_gravatars' ) ? $labels['yes'] : $labels['no'],
 			),
-			'um-admin_ignore_user_status'    => array(
-				'label' => __( 'Ignore the "User Role > Registration Options" if this user is added from the wp-admin dashboard', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'admin_ignore_user_status' ) ? $labels['yes'] : $labels['no'],
-			),
-			'um-delete_comments'             => array(
-				'label' => __( 'Deleting user comments after deleting a user', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'delete_comments' ) ? $labels['yes'] : $labels['no'],
-			),
+		);
+
+		if ( UM()->options()->get( 'use_gravatars' ) ) {
+			$gravatar_options = array(
+				'default'   => __( 'Default', 'ultimate-member' ),
+				'404'       => __( '404 ( File Not Found response )', 'ultimate-member' ),
+				'mm'        => __( 'Mystery Man', 'ultimate-member' ),
+				'identicon' => __( 'Identicon', 'ultimate-member' ),
+				'monsterid' => __( 'Monsterid', 'ultimate-member' ),
+				'wavatar'   => __( 'Wavatar', 'ultimate-member' ),
+				'retro'     => __( 'Retro', 'ultimate-member' ),
+				'blank'     => __( 'Blank ( a transparent PNG image )', 'ultimate-member' ),
+			);
+
+			$user_settings['um-use_um_gravatar_default_builtin_image'] = array(
+				'label' => __( 'Use Gravatar builtin image', 'ultimate-member' ),
+				'value' => $gravatar_options[ UM()->options()->get( 'use_um_gravatar_default_builtin_image' ) ],
+			);
+			if ( 'default' === UM()->options()->get( 'use_um_gravatar_default_builtin_image' ) ) {
+				$user_settings['um-use_um_gravatar_default_image'] = array(
+					'label' => __( 'Replace Gravatar\'s Default avatar (Set Default plugin avatar as Gravatar\'s Default avatar)', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'use_um_gravatar_default_image' ) ? $labels['yes'] : $labels['no'],
+				);
+			}
+		}
+
+		$user_settings = array_merge(
+			$user_settings,
+			array(
+				'um-admin_ignore_user_status' => array(
+					'label' => __( 'Ignore the "User Role > Registration Options" if this user is added from the wp-admin dashboard', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'admin_ignore_user_status' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-delete_comments'          => array(
+					'label' => __( 'Delete user comments (enable deleting user comments after deleting a user)', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'delete_comments' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-toggle_password'          => array(
+					'label' => __( 'Toggle Password Visibility (enable password show/hide icon on password field)', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'toggle_password' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-require_strongpass'       => array(
+					'label' => __( 'Require Strong Passwords', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'require_strongpass' ) ? $labels['yes'] : $labels['no'],
+				),
+			)
+		);
+
+		if ( UM()->options()->get( 'require_strongpass' ) ) {
+			$user_settings = array_merge(
+				$user_settings,
+				array(
+					'um-password_min_chars' => array(
+						'label' => __( 'Password minimum length', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'password_min_chars' ),
+					),
+					'um-password_max_chars' => array(
+						'label' => __( 'Password maximum length', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'password_max_chars' ),
+					),
+				)
+			);
+		}
+
+		$user_settings = array_merge(
+			$user_settings,
+			array(
+				'um-activation_link_expiry_time' => array(
+					'label' => __( 'Email activation link expiration (days)', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'activation_link_expiry_time' ),
+				),
+				'um-profile_noindex'             => array(
+					'label' => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_noindex' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-profile_title'               => array(
+					'label' => __( 'User Profile Title', 'ultimate-member' ),
+					'value' => stripslashes( UM()->options()->get( 'profile_title' ) ),
+				),
+				'um-profile_desc'                => array(
+					'label' => __( 'User Profile Dynamic Meta Description', 'ultimate-member' ),
+					'value' => stripslashes( UM()->options()->get( 'profile_desc' ) ),
+				),
+			)
 		);
 
 		if ( 'custom_meta' === UM()->options()->get( 'permalink_base' ) ) {
@@ -550,47 +610,70 @@ class Site_Health {
 			);
 		}
 
-		if ( UM()->options()->get( 'use_gravatars' ) ) {
-			$gravatar_options = array(
-				'default'   => __( 'Default', 'ultimate-member' ),
-				'404'       => __( '404 ( File Not Found response )', 'ultimate-member' ),
-				'mm'        => __( 'Mystery Man', 'ultimate-member' ),
-				'identicon' => __( 'Identicon', 'ultimate-member' ),
-				'monsterid' => __( 'Monsterid', 'ultimate-member' ),
-				'wavatar'   => __( 'Wavatar', 'ultimate-member' ),
-				'retro'     => __( 'Retro', 'ultimate-member' ),
-				'blank'     => __( 'Blank ( a transparent PNG image )', 'ultimate-member' ),
-			);
-
-			$user_settings['um-use_um_gravatar_default_builtin_image'] = array(
-				'label' => __( 'Use Gravatar builtin image', 'ultimate-member' ),
-				'value' => $gravatar_options[ UM()->options()->get( 'use_um_gravatar_default_builtin_image' ) ],
-			);
-			if ( 'default' === UM()->options()->get( 'use_um_gravatar_default_builtin_image' ) ) {
-				$user_settings['um-use_um_gravatar_default_image'] = array(
-					'label' => __( 'Use Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
-					'value' => UM()->options()->get( 'use_um_gravatar_default_image' ) ? $labels['yes'] : $labels['no'],
-				);
-			}
-		}
-
 		// Account settings
 		$account_settings = array(
-			'um-account_tab_password' => array(
+			'um-account_separator'        => array(
+				'label' => __( 'Account settings', 'ultimate-member' ),
+				'value' => '---------------------------------------------------------------------',
+			),
+			'um-account_name'             => array(
+				'label' => __( 'Display First & Last name fields (enable to display First & Last name fields)', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'account_name' ) ? $labels['yes'] : $labels['no'],
+			),
+			'um-account_email'            => array(
+				'label' => __( 'Allow users to change email (enable changing email via the account page)', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'account_email' ) ? $labels['yes'] : $labels['no'],
+			),
+			'um-account_general_password' => array(
+				'label' => __( 'Require password to update account (enable required password)', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'account_general_password' ) ? $labels['yes'] : $labels['no'],
+			),
+			'um-account_tab_password'     => array(
 				'label' => __( 'Password Account Tab', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'account_tab_password' ) ? $labels['yes'] : $labels['no'],
 			),
-			'um-account_tab_privacy'  => array(
+			'um-account_tab_privacy'      => array(
 				'label' => __( 'Privacy Account Tab', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'account_tab_privacy' ) ? $labels['yes'] : $labels['no'],
 			),
 		);
+
+		if ( UM()->options()->get( 'account_name' ) ) {
+			$account_settings = UM()->array_insert_before(
+				$account_settings,
+				'um-account_email',
+				array(
+					'um-account_name_disable' => array(
+						'label' => __( 'Disable First & Last name field editing', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'account_name_disable' ) ? $labels['yes'] : $labels['no'],
+					),
+					'um-account_name_require' => array(
+						'label' => __( 'Require First & Last Name', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'account_name_require' ) ? $labels['yes'] : $labels['no'],
+					),
+				)
+			);
+		}
 
 		if ( false !== UM()->account()->is_notifications_tab_visible() ) {
 			$account_settings['um-account_tab_notifications'] = array(
 				'label' => __( 'Notifications Account Tab', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'account_tab_notifications' ) ? $labels['yes'] : $labels['no'],
 			);
+		}
+
+		if ( UM()->options()->get( 'account_tab_privacy' ) ) {
+			$account_settings['um-account_hide_in_directory'] = array(
+				'label' => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'account_hide_in_directory' ) ? $labels['yes'] : $labels['no'],
+			);
+
+			if ( UM()->options()->get( 'account_hide_in_directory' ) ) {
+				$account_settings['um-account_hide_in_directory_default'] = array(
+					'label' => __( 'Hide profiles from directory by default', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'account_hide_in_directory_default' ),
+				);
+			}
 		}
 
 		$account_settings = array_merge(
@@ -601,52 +684,15 @@ class Site_Health {
 					'value' => UM()->options()->get( 'account_tab_delete' ) ? $labels['yes'] : $labels['no'],
 				),
 				'um-delete_account_text'                  => array(
-					'label' => __( 'Account Deletion Custom Text', 'ultimate-member' ),
+					'label' => __( 'Account Deletion Text', 'ultimate-member' ),
 					'value' => UM()->options()->get( 'delete_account_text' ),
 				),
 				'um-delete_account_no_pass_required_text' => array(
-					'label' => __( 'Account Deletion without password Custom Text', 'ultimate-member' ),
+					'label' => __( 'Account Deletion without password Text', 'ultimate-member' ),
 					'value' => UM()->options()->get( 'delete_account_no_pass_required_text' ),
-				),
-				'um-account_name'                         => array(
-					'label' => __( 'Add a First & Last Name fields', 'ultimate-member' ),
-					'value' => UM()->options()->get( 'account_name' ) ? $labels['yes'] : $labels['no'],
 				),
 			)
 		);
-
-		if ( UM()->options()->get( 'account_name' ) ) {
-			$account_settings['um-account_name_disable'] = array(
-				'label' => __( 'Disable First & Last name field editing', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'account_name_disable' ) ? $labels['yes'] : $labels['no'],
-			);
-			$account_settings['um-account_name_require'] = array(
-				'label' => __( 'Require First & Last Name', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'account_name_require' ) ? $labels['yes'] : $labels['no'],
-			);
-		}
-
-		$account_settings['um-account_email'] = array(
-			'label' => __( 'Allow users to change email', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'account_email' ) ? $labels['yes'] : $labels['no'],
-		);
-
-		$account_settings['um-account_general_password'] = array(
-			'label' => __( 'Password is required?', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'account_general_password' ) ? $labels['yes'] : $labels['no'],
-		);
-
-		$account_settings['um-account_hide_in_directory'] = array(
-			'label' => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'account_hide_in_directory' ) ? $labels['yes'] : $labels['no'],
-		);
-
-		if ( UM()->options()->get( 'account_hide_in_directory' ) ) {
-			$account_settings['um-account_hide_in_directory_default'] = array(
-				'label' => __( 'Hide profiles from directory by default', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'account_hide_in_directory_default' ),
-			);
-		}
 
 		// Uploads settings
 		$profile_sizes_list = '';
@@ -664,21 +710,9 @@ class Site_Health {
 			}
 		}
 		$uploads_settings = array(
-			'um-profile_photo_max_size'    => array(
-				'label' => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'profile_photo_max_size' ),
-			),
-			'um-cover_photo_max_size'      => array(
-				'label' => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'cover_photo_max_size' ),
-			),
-			'um-photo_thumb_sizes'         => array(
-				'label' => __( 'Profile Photo Thumbnail Sizes (px)', 'ultimate-member' ),
-				'value' => $profile_sizes_list,
-			),
-			'um-cover_thumb_sizes'         => array(
-				'label' => __( 'Cover Photo Thumbnail Sizes (px)', 'ultimate-member' ),
-				'value' => $cover_sizes_list,
+			'um-account_separator'         => array(
+				'label' => __( 'Upload settings', 'ultimate-member' ),
+				'value' => '---------------------------------------------------------------------',
 			),
 			'um-image_orientation_by_exif' => array(
 				'label' => __( 'Change image orientation', 'ultimate-member' ),
@@ -692,9 +726,25 @@ class Site_Health {
 				'label' => __( 'Image Upload Maximum Width (px)', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'image_max_width' ),
 			),
+			'um-profile_photo_max_size'    => array(
+				'label' => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'profile_photo_max_size' ),
+			),
+			'um-photo_thumb_sizes'         => array(
+				'label' => __( 'Profile Photo Thumbnail Sizes (px)', 'ultimate-member' ),
+				'value' => $profile_sizes_list,
+			),
+			'um-cover_photo_max_size'      => array(
+				'label' => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'cover_photo_max_size' ),
+			),
 			'um-cover_min_width'           => array(
 				'label' => __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'cover_min_width' ),
+			),
+			'um-cover_thumb_sizes'         => array(
+				'label' => __( 'Cover Photo Thumbnail Sizes (px)', 'ultimate-member' ),
+				'value' => $cover_sizes_list,
 			),
 		);
 
@@ -1149,10 +1199,6 @@ class Site_Health {
 				'value' => UM()->options()->get( 'register_secondary_btn_url' ),
 			);
 		}
-		$appearance_settings['um-register_role'] = array(
-			'label' => __( 'Registration Default Role', 'ultimate-member' ),
-			'value' => ! empty( UM()->options()->get( 'register_role' ) ) ? UM()->options()->get( 'register_role' ) : __( 'Default', 'ultimate-member' ),
-		);
 
 		// > Login Form section.
 		$login_templates      = UM()->shortcodes()->get_templates( 'login' );
@@ -1209,14 +1255,6 @@ class Site_Health {
 			'um-form_asterisk'                   => array(
 				'label' => __( 'Show an asterisk for required fields', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'form_asterisk' ) ? $labels['yes'] : $labels['no'],
-			),
-			'um-profile_title'                   => array(
-				'label' => __( 'User Profile Title', 'ultimate-member' ),
-				'value' => stripslashes( UM()->options()->get( 'profile_title' ) ),
-			),
-			'um-profile_desc'                    => array(
-				'label' => __( 'User Profile Dynamic Meta Description', 'ultimate-member' ),
-				'value' => stripslashes( UM()->options()->get( 'profile_desc' ) ),
 			),
 			'um-um_profile_object_cache_stop'    => array(
 				'label' => __( 'Disable Cache User Profile', 'ultimate-member' ),
