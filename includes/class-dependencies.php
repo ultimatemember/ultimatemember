@@ -68,6 +68,8 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'user-exporter'        => '1.0.0',
 			'google-authenticator' => '1.0.0',
 			'frontend-posting'     => '1.0.0',
+			'ai-assistant'         => '1.0.0',
+			'ai-moderation'        => '1.0.0',
 			/*in development*/
 			'filesharing'          => '1.0.0',
 			'beaver-builder'       => '2.0',
