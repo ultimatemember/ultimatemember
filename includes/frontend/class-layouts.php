@@ -1028,7 +1028,7 @@ class Layouts {
 			if ( empty( $args['header'] ) ) {
 				if ( ! empty( $args['clickable'] ) ) {
 					?>
-					<a class="um-user-display-name um-link um-header-link" href="<?php echo esc_url( $args['url'] ); ?>" href="<?php echo esc_attr( $args['url_title'] ); ?>"><?php echo esc_html( um_user( 'display_name' ) ); ?></a>
+					<a class="um-user-display-name um-link um-header-link" href="<?php echo esc_url( $args['url'] ); ?>" title="<?php echo esc_attr( $args['url_title'] ); ?>"><?php echo esc_html( um_user( 'display_name' ) ); ?></a>
 					<?php
 				} else {
 					?>
