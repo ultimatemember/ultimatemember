@@ -16,7 +16,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Followers_API Followers_API()
 	 * @method UM_Friends_API Friends_API()
 	 * @method UM_Mailchimp Mailchimp()
-	 * @method UM_Messaging_API Messaging_API()
+	 * @method UM_Messaging Messaging()
 	 * @method UM_myCRED myCRED()
 	 * @method UM_Notices Notices()
 	 * @method UM_Notifications_API Notifications_API()
@@ -28,14 +28,14 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Social_Login_API Social_Login_API()
 	 * @method UM_User_Tags User_Tags()
 	 * @method UM_Verified_Users_API Verified_Users_API()
-	 * @method UM_WooCommerce_API WooCommerce_API()
+	 * @method UM_WooCommerce WooCommerce()
 	 * @method UM_Terms_Conditions Terms_Conditions()
 	 * @method UM_Private_Content Private_Content()
 	 * @method UM_User_Locations User_Locations()
 	 * @method UM_User_Photos User_Photos()
 	 * @method UM_Groups Groups()
 	 * @method UM_Frontend_Posting Frontend_Posting()
-	 * @method UM_Notes Notes()
+	 * @method UM_User_Notes User_Notes()
 	 * @method UM_User_Bookmarks User_Bookmarks()
 	 * @method UM_Unsplash Unsplash()
 	 * @method UM_ForumWP ForumWP()
@@ -456,7 +456,6 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return void
 		 */
 		public function includes() {
-
 			$this->maybe_action_scheduler();
 
 			$this->common()->includes();
@@ -493,7 +492,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->frontend()->includes();
 				$this->login();
 				$this->register();
-				$this->user_posts();
 				$this->logout();
 			}
 
@@ -507,7 +505,10 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->user();
 			$this->profile();
 			$this->builtin();
-			$this->files();
+			if ( ! $this->is_new_ui() ) {
+				$this->files();
+				$this->user_posts();
+			}
 			$this->form()->hooks();
 			$this->permalinks();
 			$this->cron();
@@ -515,6 +516,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->gdpr();
 			$this->member_directory();
 			$this->blocks();
+			$this->validation();
 
 			// If multisite networks active
 			if ( is_multisite() ) {
@@ -527,26 +529,29 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 		}
 
-
 		/**
-		 * @since 2.1.0
+		 * It handles only old UI. Use directory() instead.
 		 *
-		 * @return um\core\Member_Directory()
+		 * @since 2.1.0
+		 * @since 3.0.0 added um\common\Directory for new UI
+		 *
+		 * @return um\core\Member_Directory | um\common\Directory | um\core\Member_Directory_Meta
 		 */
-		function member_directory() {
+		public function member_directory() {
 			if ( empty( $this->classes['member_directory'] ) ) {
-
-				$search_in_table = $this->options()->get( 'member_directory_own_table' );
-
-				if ( ! empty( $search_in_table ) ) {
-					$this->classes['member_directory'] = new um\core\Member_Directory_Meta();
+				if ( $this->is_new_ui() ) {
+					$this->classes['member_directory'] = new um\common\Directory();
 				} else {
-					$this->classes['member_directory'] = new um\core\Member_Directory();
+					$search_in_table = $this->options()->get( 'member_directory_own_table' );
+					if ( ! empty( $search_in_table ) ) {
+						$this->classes['member_directory'] = new um\core\Member_Directory_Meta();
+					} else {
+						$this->classes['member_directory'] = new um\core\Member_Directory();
+					}
 				}
 			}
 			return $this->classes['member_directory'];
 		}
-
 
 		/**
 		 * @since 2.6.1
@@ -1023,29 +1028,14 @@ if ( ! class_exists( 'UM' ) ) {
 		}
 
 		/**
+		 * @return um\common\Shortcodes
 		 * @since 2.0
-		 * @todo Make it deprecated and review extensions.
+		 * @todo deprecate and use UM()->common()->shortcodes() instead
 		 *
-		 * @return um\frontend\Enqueue
 		 */
-		public function enqueue() {
-			_deprecated_function( __METHOD__, '2.7.0', 'UM()->frontend()->enqueue()' );
-			return $this->frontend()->enqueue();
+		public function shortcodes() {
+			return $this->common()->shortcodes();
 		}
-
-		/**
-		 * @since 2.0
-		 *
-		 * @return um\core\Shortcodes
-		 */
-		function shortcodes() {
-			if ( empty( $this->classes['shortcodes'] ) ) {
-				$this->classes['shortcodes'] = new um\core\Shortcodes();
-			}
-
-			return $this->classes['shortcodes'];
-		}
-
 
 		/**
 		 * @since 2.0
@@ -1088,20 +1078,25 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['form'];
 		}
 
-
 		/**
-		 * @since 2.0
+		 * Fields class instance. Different base on UI version.
 		 *
-		 * @return um\core\Fields
+		 * @since 2.0
+		 * @since 3.0.0 added um\common\Fields for new UI
+		 *
+		 * @return um\core\Fields | um\common\Fields
 		 */
-		function fields() {
+		public function fields() {
 			if ( empty( $this->classes['fields'] ) ) {
-				$this->classes['fields'] = new um\core\Fields();
+				if ( $this->is_new_ui() ) {
+					$this->classes['fields'] = new um\common\Fields();
+				} else {
+					$this->classes['fields'] = new um\core\Fields();
+				}
 			}
 
 			return $this->classes['fields'];
 		}
-
 
 		/**
 		 * @since 2.0
@@ -1129,21 +1124,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 			return $this->classes['roles'];
 		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * @return um\core\User_posts
-		 */
-		function user_posts() {
-			if ( empty( $this->classes['user_posts'] ) ) {
-				$this->classes['user_posts'] = new um\core\User_posts();
-			}
-
-			return $this->classes['user_posts'];
-		}
-
 
 		/**
 		 * @since 2.0
@@ -1200,47 +1180,60 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['builtin'];
 		}
 
+		/**
+		 * IMPORTANT: It's not used in since 3.0.0 when UM new UI is active.
+		 * @return um\legacy\User_posts
+		 * @todo deprecate since old UI is deprecated
+		 *
+		 * @since 2.0
+		 */
+		public function user_posts() {
+			if ( empty( $this->classes['user_posts'] ) ) {
+				$this->classes['user_posts'] = new um\legacy\User_Posts();
+			}
+
+			return $this->classes['user_posts'];
+		}
 
 		/**
+		 * IMPORTANT: It's not used in since 3.0.0 when UM new UI is active.
 		 * @since 2.0
-		 *
-		 * @return um\core\Files
+		 * @todo deprecate since old UI is deprecated
+		 * @return um\legacy\Files
 		 */
 		public function files() {
 			if ( empty( $this->classes['files'] ) ) {
-				$this->classes['files'] = new um\core\Files();
+				$this->classes['files'] = new um\legacy\Files();
 			}
 
 			return $this->classes['files'];
 		}
 
-
 		/**
+		 * IMPORTANT: It's not used in since 3.0.0 when UM new UI is active.
 		 * @since 2.0.21
-		 *
-		 * @return um\core\Uploader
+		 * @todo deprecate since old UI is deprecated
+		 * @return um\legacy\Uploader
 		 */
-		function uploader() {
+		public function uploader() {
 			if ( empty( $this->classes['uploader'] ) ) {
-				$this->classes['uploader'] = new um\core\Uploader();
+				$this->classes['uploader'] = new um\legacy\Uploader();
 			}
 			return $this->classes['uploader'];
 		}
-
 
 		/**
 		 * @since 2.0
 		 *
 		 * @return um\core\Validation
 		 */
-		function validation() {
+		public function validation() {
 			if ( empty( $this->classes['validation'] ) ) {
 				$this->classes['validation'] = new um\core\Validation();
 			}
 
 			return $this->classes['validation'];
 		}
-
 
 		/**
 		 * @since 2.0
@@ -1354,6 +1347,8 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * Checks if the new design is enabled.
 		 *
+		 * @since 2.9.2
+		 *
 		 * @return bool
 		 */
 		public function is_new_ui() {
@@ -1365,7 +1360,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @since 2.0
 		 */
-		function init() {
+		public function init() {
 
 			ob_start();
 
@@ -1384,16 +1379,15 @@ if ( ! class_exists( 'UM' ) ) {
 
 			require_once 'core/um-filters-login.php';
 			require_once 'core/um-filters-fields.php';
-			require_once 'core/um-filters-files.php';
 			require_once 'core/um-filters-navmenu.php';
-			require_once 'core/um-filters-avatars.php';
 			require_once 'core/um-filters-user.php';
-
 			require_once 'core/um-filters-profile.php';
 			require_once 'core/um-filters-account.php';
-			require_once 'core/um-filters-misc.php';
 			require_once 'core/um-filters-commenting.php';
 
+			if ( ! UM()->is_new_ui() ) {
+				require_once 'core/um-filters-avatars.php';
+			}
 		}
 
 		/**

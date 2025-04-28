@@ -14,8 +14,12 @@ function um_add_form_identifier( $args ) {
 		return;
 	}
 
-	// Ignore UM:Profile in view mode.
+	// If profile form then display only when edit mode.
 	if ( 'profile' === UM()->fields()->set_mode && true !== UM()->fields()->editing ) {
+		return;
+	}
+
+	if ( UM()->is_new_ui() && ! array_key_exists( 'form_id', $args ) ) {
 		return;
 	}
 	?>
@@ -23,6 +27,7 @@ function um_add_form_identifier( $args ) {
 	<?php
 }
 add_action( 'um_after_form_fields', 'um_add_form_identifier' );
+
 
 /**
  * Adds a spam timestamp
@@ -39,11 +44,16 @@ function um_add_security_checks( $args ) {
 	if ( 'profile' === UM()->fields()->set_mode && true !== UM()->fields()->editing ) {
 		return;
 	}
+
+	if ( UM()->is_new_ui() && ! array_key_exists( 'form_id', $args ) ) {
+		return;
+	}
 	?>
 	<p class="<?php echo esc_attr( UM()->honeypot ); ?>_name">
-		<label for="<?php echo esc_attr( UM()->honeypot . '_' . $args['form_id'] ); ?>"><?php esc_html_e( 'Only fill in if you are not human' ); ?></label>
+		<label for="<?php echo esc_attr( UM()->honeypot . '_' . $args['form_id'] ); ?>"><?php esc_html_e( 'Only fill in if you are not human', 'ultimate-member' ); ?></label>
 		<input type="hidden" name="<?php echo esc_attr( UM()->honeypot ); ?>" id="<?php echo esc_attr( UM()->honeypot . '_' . $args['form_id'] ); ?>" class="input" value="" size="25" autocomplete="off" />
 	</p>
+
 	<?php
 }
 add_action( 'um_after_form_fields', 'um_add_security_checks' );
