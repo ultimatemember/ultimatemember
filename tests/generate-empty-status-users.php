@@ -5,12 +5,36 @@ function um_test_generate_random_string( $length = 10 ) {
 	return substr( str_shuffle( str_repeat( $x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil( $length / strlen( $x ) ) ) ), 1, $length );
 }
 
+function api_call() {
+	$response = wp_remote_get( 'https://randomuser.me/api/?results=1000' );
+
+	if ( is_wp_error( $response ) ) {
+		return 'Something went wrong!';
+	}
+
+	$body = wp_remote_retrieve_body( $response );
+
+	$data = json_decode( $body );
+
+	$users = array();
+	foreach ( $data->results as $user ) {
+		$users[] = array(
+			'first'    => $user->name->first,
+			'last'     => $user->name->last,
+			'email'    => $user->email,
+			'username' => $user->login->username,
+		);
+	}
+
+	return $users;
+}
+
+$users = api_call();
 for ( $i = 0; $i < 1000; $i++ ) {
-	$random_user_name  = um_test_generate_random_string( 8 ); // Generate a random user name
-	$random_user_email = $random_user_name . '@example.com'; // Append the user name to a dummy email domain
-	$random_user_pass  = um_test_generate_random_string( 12 ); // Generate a random user password
-	$random_first_name = um_test_generate_random_string( 5 ); // Generate a random first name
-	$random_last_name  = um_test_generate_random_string( 8 ); // Generate a random last name
+	$random_user_name  = $users[ $i ]['username'] ?? um_test_generate_random_string( 8 );
+	$random_user_email = $users[ $i ]['email'] ?? $random_user_name . '@example.com';
+	$random_first_name = $users[ $i ]['first'] ?? um_test_generate_random_string( 5 );
+	$random_last_name  = $users[ $i ]['last'] ?? um_test_generate_random_string( 8 );
 
 	$userdata = array(
 		'user_login' => $random_user_name,

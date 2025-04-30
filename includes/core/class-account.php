@@ -676,8 +676,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						$args = 'user_login,user_email';
 					}
 
-					if ( ! UM()->options()->get( 'account_email' ) && ! um_user( 'can_edit_everyone' ) ) {
-						$args = str_replace(',user_email','', $args );
+					if ( ! UM()->options()->get( 'account_email' ) ) {
+						$args = str_replace( ',user_email', '', $args );
 					}
 
 					if ( $this->current_password_is_required( $id ) ) {
