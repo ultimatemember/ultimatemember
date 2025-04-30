@@ -438,14 +438,6 @@ class Site_Health {
 	 * @return array The updated Site Health information.
 	 */
 	public function debug_information( $info ) {
-		$labels = array(
-			'yes'     => __( 'Yes', 'ultimate-member' ),
-			'no'      => __( 'No', 'ultimate-member' ),
-			'all'     => __( 'All', 'ultimate-member' ),
-			'default' => __( 'Default', 'ultimate-member' ),
-			'nopages' => __( 'No predefined page', 'ultimate-member' ),
-		);
-
 		$info['ultimate-member'] = array(
 			'label'       => __( 'Ultimate Member', 'ultimate-member' ),
 			'description' => __( 'This debug information for your Ultimate Member installation can assist you in getting support.', 'ultimate-member' ),
