@@ -1008,21 +1008,114 @@ UM.frontend = {
 				$emojiPicker[ $item ].classList.add('um-inited');
 
 				let $emojiList = $emojiPicker[ $item ].querySelector('.um-emoji-list');
-				// let $emojiPickerLink = $emojiPicker[ $item ].querySelector('.um-emoji-picker-link');
+				let $emojiPickerLink = $emojiPicker[ $item ].querySelector('.um-emoji-picker-link');
 
-				// $emojiPickerLink.addEventListener('click', function(event) {
-				// 	let display = $emojiList.style.display;
-				// 	if ( 'none' === display ) {
-				// 		$emojiList.style.display = 'block';
-				// 	} else {
-				// 		$emojiList.style.display = 'none';
-				// 	}
-				// });
+				document.addEventListener('click', function(event) {
+					if ($emojiList.style.display === 'block') {
+						// Check if the click is outside $emojiPickerLink and $emojiList
+						if (!$emojiPickerLink.contains(event.target) && !$emojiList.contains(event.target)) {
+							$emojiList.style.display = 'none';
+							wp.hooks.doAction( 'um_emoji_picker_on_close', $emojiPickerLink, $emojiList, $emojiPicker[ $item ] );
+						}
+					}
+				});
+
+				$emojiPickerLink.addEventListener('click', function(event) {
+					event.preventDefault();
+					let display = $emojiList.style.display;
+					if ( 'none' === display ) {
+						$emojiList.style.display = 'block';
+
+						wp.hooks.doAction( 'um_emoji_picker_on_open', $emojiPickerLink, $emojiList, $emojiPicker[ $item ] );
+
+						// Rectangle of the $emojiPickerLink and $emojiList
+						let linkRect = $emojiPickerLink.getBoundingClientRect();
+						let emojiListRect = $emojiList.getBoundingClientRect();
+
+						// Set the initial position of $emojiList to the bottom-right of the $emojiPickerLink
+						let top = $emojiPickerLink.offsetHeight;
+						let left = 0;
+
+						let parentSelector = $emojiPickerLink.getAttribute('data-position_parent');
+						if ( parentSelector ) {
+							let positionParent = document.querySelector(parentSelector);
+							if(positionParent) {
+								let parentRect = positionParent.getBoundingClientRect();
+
+								// Check if 'emojiList' might end up outside the visible area of 'positionParent'
+								// If it does, adjust 'top' to position 'emojiList' above 'emojiPickerLink'
+								if (parentRect && linkRect.bottom - parentRect.top + emojiListRect.height > positionParent.clientHeight) {
+									top = -emojiListRect.height;
+								}
+							}
+
+							// Check if 'emojiList' might end up outside the right edge of the window
+							// If it does, adjust 'left' to align 'emojiList' right edge with 'emojiPickerLink' right edge
+							if (linkRect.right + emojiListRect.width > window.innerWidth){
+								left = -emojiListRect.width + linkRect.width;
+							}
+						} else {
+							// If there's not enough space at the bottom, adjust the top position of the emoji list above $emojiPickerLink
+							if (linkRect.bottom + emojiListRect.height > window.innerHeight) {
+								top = -emojiListRect.height;
+							}
+
+							// If there's not enough space at the right, adjust the left position of the emoji list to align with the left edge of $emojiPickerLink
+							if (linkRect.right + emojiListRect.width > window.innerWidth) {
+								left = linkRect.width - emojiListRect.width;
+							}
+						}
+
+						let defaultPosition = $emojiPickerLink.getAttribute('data-default-position');
+						if (defaultPosition) {
+							let linkRect = $emojiPickerLink.getBoundingClientRect();
+							let emojiListRect = $emojiList.getBoundingClientRect();
+
+							switch (defaultPosition) {
+								case 'top left':
+									top = -emojiListRect.height;
+									left = 0;
+									break;
+								case 'top right':
+									top = -emojiListRect.height;
+									left = linkRect.width - emojiListRect.width;
+									break;
+								case 'bottom left':
+									top = linkRect.height;
+									left = 0;
+									break;
+								case 'bottom right':
+									top = linkRect.height;
+									left = linkRect.width - emojiListRect.width;
+									break;
+								case 'left':
+									left = -emojiListRect.width + linkRect.width;
+									break;
+								case 'right':
+									left = 0;
+									break;
+								case 'top':
+									top = -emojiListRect.height;
+									break;
+								case 'bottom':
+									top = linkRect.height;
+									break;
+							}
+						}
+
+						// Apply the new position
+						$emojiList.style.position = 'absolute';
+						$emojiList.style.top = `${top}px`;
+						$emojiList.style.left = `${left}px`;
+					} else {
+						$emojiList.style.display = 'none';
+					}
+				});
 
 				let args = {
 					onEmojiSelect: function (selectedEmoji) {
-						wp.hooks.doAction( 'um_emoji_picker_on_select', selectedEmoji, $emojiPicker[ $item ] );
-						// $emojiList.style.display = 'none';
+						wp.hooks.doAction( 'um_emoji_picker_on_select', selectedEmoji, $emojiPicker[ $item ], $emojiPickerLink );
+						$emojiList.style.display = 'none';
 					},
 					skinTonePosition: 'none',
 					theme: 'light',
@@ -1031,7 +1124,7 @@ UM.frontend = {
 
 				const picker = new EmojiMart.Picker( args );
 				$emojiList.appendChild(picker);
-				// $emojiList.style.display = 'none';
+				$emojiList.style.display = 'none';
 			}
 		}
 	},
@@ -1186,6 +1279,8 @@ jQuery(document).ready(function($) {
 	UM.frontend.slider.init();
 
 	UM.frontend.image.lazyload.init();
+
+	UM.frontend.emojiPicker.init();
 
 	$( window ).on( 'resize', function() {
 		UM.frontend.responsive.setClass();

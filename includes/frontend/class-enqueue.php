@@ -157,7 +157,7 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_script(
 				'um_frontend_common',
 				$js_url . 'v3/common-frontend' . $suffix . '.js',
-				array( 'um_common', 'um_crop', 'um_dropdown', 'um_choices', 'um_confirm' ),
+				array( 'um_common', 'um_crop', 'um_dropdown', 'um_choices', 'um_confirm', 'um-emoji-mart' ),
 				UM_VERSION,
 				array(
 					'strategy'  => 'defer',

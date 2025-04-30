@@ -3446,6 +3446,9 @@
 .um .um-emoji-picker {
   position: relative;
 }
+.um .um-emoji-picker .um-emoji-list {
+  position: absolute;
+}
 
 .um .um-gif-picker {
   position: relative;

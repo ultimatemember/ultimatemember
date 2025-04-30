@@ -582,6 +582,23 @@ class Shortcodes {
 		ob_start();
 		?>
 		<div class="um">
+			<h3>Emoji Piker</h3>
+			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:flex-start; gap: 8px;">
+			<?php
+			echo wp_kses(
+				UM()->frontend()::layouts()::emoji_picker(),
+				UM()->get_allowed_html( 'templates' )
+			);
+			?>
+			</div>
+			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:flex-end; gap: 8px;">
+			<?php
+			echo wp_kses(
+				UM()->frontend()::layouts()::emoji_picker(),
+				UM()->get_allowed_html( 'templates' )
+			);
+			?>
+			</div>
 			<h3>Users list</h3>
 			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:flex-start; gap: 8px;">
 				<?php

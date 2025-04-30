@@ -2563,6 +2563,66 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
+				'link_classes'     => array(),
+				'size'             => 's',
+				'position_parent'  => '',
+				'default-position' => '',
+				'nonce'            => '',
+			)
+		);
+
+		$args['link_classes'][] = 'um-emoji-picker-link';
+		ob_start();
+		?>
+		<div class="um-emoji-picker">
+			<?php
+			$emoji_svg_html = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mood-smile" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+				<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+				<path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+				<path d="M9 10l.01 0" />
+				<path d="M15 10l.01 0" />
+				<path d="M9.5 15a3.5 3.5 0 0 0 5 0" />
+			</svg>';
+
+			$link_args = array(
+				'design'        => 'link-color',
+				'type'          => 'link',
+				'size'          => $args['size'],
+				'title'         => __( 'Emoji', 'ultimate-member' ),
+				'classes'       => $args['link_classes'],
+				'icon_position' => 'content',
+			);
+
+			if ( ! empty( $args['position_parent'] ) ) {
+				$link_args['data']['position_parent'] = $args['position_parent'];
+			}
+
+			if ( ! empty( $args['default-position'] ) ) {
+				$link_args['data']['default-position'] = $args['default-position'];
+			}
+
+			if ( ! empty( $args['nonce'] ) ) {
+				$link_args['data']['nonce'] = $args['nonce'];
+			}
+
+			echo wp_kses(
+				UM()->frontend()::layouts()::link(
+					$emoji_svg_html,
+					$link_args
+				),
+				UM()->get_allowed_html( 'templates' )
+			);
+			?>
+			<div class="um-emoji-list"></div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	public static function emoji_picker2( $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
 				'link_classes' => array(),
 				'size'         => 's',
 			)
