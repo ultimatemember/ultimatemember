@@ -1317,7 +1317,7 @@ class Site_Health {
 					// translators: %1$s - login template name, %2$s - login template filename
 					'value' => sprintf( __( '%1$s (filename: %2$s.php)', 'ultimate-member' ), $login_template_title, $login_template_key ),
 				),
-				'um-login_max_width'     => array(
+				'um-login_max_width'        => array(
 					'label' => __( 'Login Maximum Width', 'ultimate-member' ),
 					'value' => UM()->options()->get( 'login_max_width' ),
 				),
@@ -1689,7 +1689,7 @@ class Site_Health {
 					$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
 						$info[ 'ultimate-member-directory-' . $key ]['fields'],
 						array(
-							'um-directory-sortby_custom'          => array(
+							'um-directory-um_sortby_custom'       => array(
 								'label' => __( 'Meta key', 'ultimate-member' ),
 								'value' => get_post_meta( $key, '_um_sortby_custom', true ),
 							),
@@ -1701,7 +1701,7 @@ class Site_Health {
 								'label' => __( 'Order', 'ultimate-member' ),
 								'value' => 'ASC' === get_post_meta( $key, '_um_sortby_custom_order', true ) ? __( 'Ascending', 'ultimate-member' ) : __( 'Descending', 'ultimate-member' ),
 							),
-							'um-directory-sortby_custom_label'    => array(
+							'um-directory-um_sortby_custom_label' => array(
 								'label' => __( 'Label of custom sort', 'ultimate-member' ),
 								'value' => get_post_meta( $key, '_um_sortby_custom_label', true ),
 							),
@@ -1985,39 +1985,39 @@ class Site_Health {
 				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
 					$info[ 'ultimate-member-directory-' . $key ]['fields'],
 					array(
-						'um-directory-show_social'              => array(
+						'um-directory-um_show_social'              => array(
 							'label' => __( 'Show social connect icons in extra user information section', 'ultimate-member' ),
 							'value' => get_post_meta( $key, '_um_show_social', true ) ? $labels['yes'] : $labels['no'],
 						),
-						'um-directory-um_userinfo_animate'      => array(
+						'um-directory-um_userinfo_animate'         => array(
 							'label' => __( 'Hide extra user information to the reveal section', 'ultimate-member' ),
 							'value' => get_post_meta( $key, '_um_userinfo_animate', true ) ? $labels['yes'] : $labels['no'],
 						),
-						'um-directory-must_search'              => array(
+						'um-directory-um_must_search'              => array(
 							'label' => __( 'Show results only after search/filtration', 'ultimate-member' ),
 							'value' => get_post_meta( $key, '_um_must_search', true ) ? $labels['yes'] : $labels['no'],
 						),
-						'um-directory-max_users'                => array(
+						'um-directory-um_max_users'                => array(
 							'label' => __( 'Maximum number of profiles', 'ultimate-member' ),
 							'value' => get_post_meta( $key, '_um_max_users', true ),
 						),
-						'um-directory-profiles_per_page'        => array(
+						'um-directory-profiles_per_page'           => array(
 							'label' => __( 'Number of profiles per page', 'ultimate-member' ),
 							'value' => get_post_meta( $key, '_um_profiles_per_page', true ),
 						),
-						'um-directory-profiles_per_page_mobile' => array(
+						'um-directory-um_profiles_per_page_mobile' => array(
 							'label' => __( 'Maximum number of profiles', 'ultimate-member' ),
 							'value' => get_post_meta( $key, '_um_profiles_per_page_mobile', true ),
 						),
-						'um-directory-directory_header'         => array(
+						'um-directory-um_directory_header'         => array(
 							'label' => __( 'Results Text', 'ultimate-member' ),
 							'value' => get_post_meta( $key, '_um_directory_header', true ),
 						),
-						'um-directory-directory_header_single'  => array(
+						'um-directory-um_directory_header_single'  => array(
 							'label' => __( 'Single Result Text', 'ultimate-member' ),
 							'value' => get_post_meta( $key, '_um_directory_header_single', true ),
 						),
-						'um-directory-directory_no_users'       => array(
+						'um-directory-um_directory_no_users'       => array(
 							'label' => __( 'Custom text if no users were found', 'ultimate-member' ),
 							'value' => get_post_meta( $key, '_um_directory_no_users', true ),
 						),
@@ -2839,11 +2839,11 @@ class Site_Health {
 						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
 							$info[ 'ultimate-member-' . $key ]['fields'],
 							array(
-								'um-profile_role'             => array(
+								'um-profile_role'              => array(
 									'label' => __( 'Make this profile form role-specific', 'ultimate-member' ),
 									'value' => ! empty( get_post_meta( $key, '_um_profile_role', true ) ) ? get_post_meta( $key, '_um_profile_role', true ) : $labels['all'],
 								),
-								'um-profile_template'         => array(
+								'um-profile_template'          => array(
 									'label' => __( 'Template', 'ultimate-member' ),
 									'value' => 0 === absint( get_post_meta( $key, '_um_profile_template', true ) ) ? $labels['default'] : get_post_meta( $key, '_um_profile_template', true ),
 								),
@@ -2863,7 +2863,7 @@ class Site_Health {
 									'label' => __( 'Primary Button Text', 'ultimate-member' ),
 									'value' => ! get_post_meta( $key, '_um_profile_primary_btn_word', true ) ? $labels['default'] : get_post_meta( $key, '_um_profile_primary_btn_word', true ),
 								),
-								'um-um_profile_secondary_btn' => array(
+								'um-um_profile_secondary_btn'  => array(
 									'label' => __( 'Show Secondary Button', 'ultimate-member' ),
 									'value' => get_post_meta( $key, '_um_profile_secondary_btn', true ) ? $labels['yes'] : $labels['no'],
 								),
