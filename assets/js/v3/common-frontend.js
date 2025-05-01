@@ -1010,6 +1010,8 @@ UM.frontend = {
 				let $emojiList = $emojiPicker[ $item ].querySelector('.um-emoji-list');
 				let $emojiPickerLink = $emojiPicker[ $item ].querySelector('.um-emoji-picker-link');
 
+				wp.hooks.doAction( 'um_emoji_picker_init', $emojiPickerLink, $emojiList, $emojiPicker[ $item ] );
+
 				document.addEventListener('click', function(event) {
 					if ($emojiList.style.display === 'block') {
 						// Check if the click is outside $emojiPickerLink and $emojiList
