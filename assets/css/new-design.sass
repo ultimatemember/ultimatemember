@@ -1806,10 +1806,32 @@
     hr
       margin: 0
       padding: 0
-      color: $gray-200
-      border: 1px solid $gray-200
       +border-box
       height: 1px
+    &.#{$prefix}divider-has-label
+      overflow: visible
+      +typography( text, sm, bold )
+      +flex( row, flex-start, center, nowrap )
+      gap: $spacing-md
+      height: auto
+      hr
+        flex: 1
+      &.#{$prefix}divider-label-position-right
+        +flex( row, flex-end, center, nowrap )
+      &.#{$prefix}divider-label-position-center
+        +flex( row, space-between, center, nowrap )
+        hr
+          flex: 1 / 2
+    &.#{$prefix}divider-color-gray
+      color: $gray-700
+      hr
+        color: $gray-200
+        border: 1px solid $gray-200
+    &.#{$prefix}divider-color-brand
+      color: $primary-900
+      hr
+        color: $primary-900
+        border: 1px solid $primary-900
 
 
 

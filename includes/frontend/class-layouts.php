@@ -1613,10 +1613,45 @@ class Layouts {
 		return ob_get_clean();
 	}
 
-	public static function divider() {
+	public static function divider( $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'label'          => '',
+				'label-position' => 'center',
+				'color'          => 'gray',
+				'classes'        => array(),
+			)
+		);
+
+		$classes = array( 'um-divider' );
+		if ( ! empty( $args['label'] ) ) {
+			$classes[] = 'um-divider-has-label';
+			$classes[] = 'um-divider-label-position-' . $args['label-position'];
+		}
+		$classes[] = 'um-divider-color-' . $args['color'];
+
+		$classes = array_merge( $args['classes'], $classes );
+
 		ob_start();
 		?>
-		<div class="um-divider"><hr /></div>
+		<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
+			<?php
+			if ( 'right' === $args['label-position'] || 'center' === $args['label-position'] ) {
+				?>
+				<hr />
+				<?php
+			}
+			if ( ! empty( $args['label'] ) ) {
+				echo esc_html( $args['label'] );
+			}
+			if ( 'left' === $args['label-position'] || 'center' === $args['label-position'] ) {
+				?>
+				<hr />
+				<?php
+			}
+			?>
+		</div>
 		<?php
 		return ob_get_clean();
 	}

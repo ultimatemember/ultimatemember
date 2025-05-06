@@ -2259,12 +2259,57 @@
 .um .um-divider hr {
   margin: 0;
   padding: 0;
-  color: var(--um-gray-200, #eaecf0);
-  border: 1px solid var(--um-gray-200, #eaecf0);
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   height: 1px;
+}
+.um .um-divider.um-divider-has-label {
+  overflow: visible;
+  font-size: var(--um-text-font-size-sm, 14px);
+  line-height: var(--um-text-line-height-sm, 20px);
+  font-weight: var(--um-text-font-weight-bold, 700);
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  height: auto;
+}
+.um .um-divider.um-divider-has-label hr {
+  flex: 1;
+}
+.um .um-divider.um-divider-has-label.um-divider-label-position-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.um .um-divider.um-divider-has-label.um-divider-label-position-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.um .um-divider.um-divider-has-label.um-divider-label-position-center hr {
+  flex: 1/2;
+}
+.um .um-divider.um-divider-color-gray {
+  color: var(--um-gray-700, #344054);
+}
+.um .um-divider.um-divider-color-gray hr {
+  color: var(--um-gray-200, #eaecf0);
+  border: 1px solid var(--um-gray-200, #eaecf0);
+}
+.um .um-divider.um-divider-color-brand {
+  color: var(--um-primary-900-bg, #42307d);
+}
+.um .um-divider.um-divider-color-brand hr {
+  color: var(--um-primary-900-bg, #42307d);
+  border: 1px solid var(--um-primary-900-bg, #42307d);
 }
 
 .um .um-small-data {
