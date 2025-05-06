@@ -1111,6 +1111,7 @@ UM.frontend = {
 						$emojiList.style.left = `${left}px`;
 					} else {
 						$emojiList.style.display = 'none';
+						wp.hooks.doAction( 'um_emoji_picker_on_close', $emojiPickerLink, $emojiList, $emojiPicker[ $item ] );
 					}
 				});
 
