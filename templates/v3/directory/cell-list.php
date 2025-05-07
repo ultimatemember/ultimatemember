@@ -213,6 +213,8 @@ ob_start();
 		),
 		UM()->get_allowed_html( 'templates' )
 	);
+
+	do_action( 'um_members_after_view_profile', $member['id'], $directory_data );
 	?>
 </div>
 

@@ -475,6 +475,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin_navmenu();
 				$this->plugin_updater();
 				$this->theme_updater();
+				$this->login(); // is necessary to load login form via AJAX (e.g. Private Messages)
 			} elseif ( $this->is_request( 'admin' ) ) {
 				$this->admin()->includes();
 				$this->admin();

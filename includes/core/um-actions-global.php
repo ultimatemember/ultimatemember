@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function um_add_form_identifier( $args ) {
 	// Ignore wp-admin preview.
-	if ( is_admin() ) {
+	if ( ! empty( $_POST['act_id'] ) && 'um_admin_preview_form' === sanitize_key( $_POST['act_id'] ) ) {
 		return;
 	}
 
@@ -36,7 +36,7 @@ add_action( 'um_after_form_fields', 'um_add_form_identifier' );
  */
 function um_add_security_checks( $args ) {
 	// Ignore wp-admin preview.
-	if ( is_admin() ) {
+	if ( ! empty( $_POST['act_id'] ) && 'um_admin_preview_form' === sanitize_key( $_POST['act_id'] ) ) {
 		return;
 	}
 
