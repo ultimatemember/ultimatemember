@@ -196,6 +196,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		/**
 		 * Checks for a blacklist function in the custom callback field error.
 		 *
+		 * @since 2.10.4
+		 *
 		 * @param array $args Custom field submission data.
 		 *
 		 * @return int|string Empty or error string.

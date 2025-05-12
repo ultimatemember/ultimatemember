@@ -1402,6 +1402,16 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$blacklist = array_merge( $blacklist, $um_wp_native_functions_list );
 			}
 
+			/**
+			 * Filters the blacklist of the functions that cannot be used as custom callback for dropdown field to populate the options.
+			 *
+			 * @since 2.5.1
+			 * @hook um_dropdown_options_source_blacklist
+			 *
+			 * @param {array} $blacklist Functions blacklist.
+			 *
+			 * @return {array} Functions blacklist.
+			 */
 			return apply_filters( 'um_dropdown_options_source_blacklist', $blacklist );
 		}
 
