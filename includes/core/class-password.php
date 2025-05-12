@@ -217,8 +217,9 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 *
 		 * @return bool
 		 */
-		function is_reset_request() {
-			if ( um_is_core_page( 'password-reset' ) && isset( $_POST['_um_password_reset'] ) ) {
+		public function is_reset_request() {
+			// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+			if ( isset( $_POST['_um_password_reset'] ) && 1 === absint( $_POST['_um_password_reset'] ) ) {
 				return true;
 			}
 
