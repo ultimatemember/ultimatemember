@@ -1376,20 +1376,15 @@ function um_get_metadefault( $id ) {
 	return isset( $core_form_meta_all[ '_um_' . $id ] ) ? $core_form_meta_all[ '_um_' . $id ] : '';
 }
 
-
 /**
  * boolean for account page editing
  *
  * @return bool
  */
 function um_submitting_account_page() {
-	if ( isset( $_POST['_um_account'] ) && $_POST['_um_account'] == 1 && is_user_logged_in() ) {
-		return true;
-	}
-
-	return false;
+	// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+	return ( ! empty( $_POST['_um_account'] ) && is_user_logged_in() );
 }
-
 
 /**
  * Get a user's display name

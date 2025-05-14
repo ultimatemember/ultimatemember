@@ -217,14 +217,10 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 *
 		 * @return bool
 		 */
-		function is_reset_request() {
-			if ( um_is_core_page( 'password-reset' ) && isset( $_POST['_um_password_reset'] ) ) {
-				return true;
-			}
-
-			return false;
+		public function is_reset_request() {
+			// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+			return ! empty( $_POST['_um_password_reset'] );
 		}
-
 
 		/**
 		 * Check if a legitimate password change request is in action
@@ -233,16 +229,18 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 *
 		 * @return bool
 		 */
-		function is_change_request() {
-			if ( isset( $_POST['_um_account'] ) == 1 && isset( $_POST['_um_account_tab'] ) && sanitize_key( $_POST['_um_account_tab'] ) === 'password' ) {
+		public function is_change_request() {
+			// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+			if ( ! empty( $_POST['_um_account'] ) && isset( $_POST['_um_account_tab'] ) && 'password' === sanitize_key( $_POST['_um_account_tab'] ) ) {
 				return true;
-			} elseif ( isset( $_POST['_um_password_change'] ) && $_POST['_um_password_change'] == 1 ) {
+			}
+
+			if ( ! empty( $_POST['_um_password_change'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 				return true;
 			}
 
 			return false;
 		}
-
 
 		/**
 		 * Password page form
@@ -482,7 +480,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			exit;
 		}
 
-
 		/**
 		 * Error handler: changing password
 		 *
@@ -495,7 +492,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				wp_die( esc_html__( 'Hello, spam bot!', 'ultimate-member' ) );
 			}
 
-			if ( isset( $args['_um_account'] ) == 1 && isset( $args['_um_account_tab'] ) && 'password' === sanitize_key( $args['_um_account_tab'] ) ) {
+			if ( ! empty( $args['_um_account'] ) && isset( $args['_um_account_tab'] ) && 'password' === sanitize_key( $args['_um_account_tab'] ) ) {
 				// validate for security on the account change password page
 				if ( ! is_user_logged_in() ) {
 					wp_die( esc_html__( 'This is not possible for security reasons.', 'ultimate-member' ) );
