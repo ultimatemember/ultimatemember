@@ -2654,57 +2654,19 @@ class Layouts {
 		return ob_get_clean();
 	}
 
-	public static function emoji_picker2( $args = array() ) {
-		$args = wp_parse_args(
-			$args,
-			array(
-				'link_classes' => array(),
-				'size'         => 's',
-			)
-		);
-
-		$parent = '.um-emoji-picker';
-
-		$args['link_classes'][] = 'um-emoji-picker-link';
-
-		$toggle_classes   = array( 'um-dropdown-toggle', 'um-dropdown-toggle-button', 'um-emoji-picker-toggle' );
-		$dropdown_classes = array( 'um-dropdown', 'um-dropdown-no-header', 'um-emoji-list' );
-		ob_start();
-		?>
-		<div class="um-dropdown-wrapper um-emoji-picker">
-			<div class="<?php echo esc_attr( implode( ' ', $toggle_classes ) ); ?>">
-				<?php
-				$emoji_svg_html = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mood-smile" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-					<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-					<path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-					<path d="M9 10l.01 0" />
-					<path d="M15 10l.01 0" />
-					<path d="M9.5 15a3.5 3.5 0 0 0 5 0" />
-				</svg>';
-
-				echo wp_kses(
-					UM()->frontend()::layouts()::link(
-						$emoji_svg_html,
-						array(
-							'design'        => 'link-color',
-							'type'          => 'link',
-							'size'          => $args['size'],
-							'title'         => __( 'Emoji', 'ultimate-member' ),
-							'classes'       => $args['link_classes'],
-							'icon_position' => 'content',
-						)
-					),
-					UM()->get_allowed_html( 'templates' )
-				);
-				?>
-			</div>
-			<div class="<?php echo esc_attr( implode( ' ', $dropdown_classes ) ); ?>" data-element=".um-emoji-picker-toggle" data-trigger="click" data-parent="<?php echo esc_attr( $parent ); ?>" data-width="360">
-			</div>
-		</div>
-		<?php
-		return ob_get_clean();
-	}
-
+	/**
+	 * Gif picker.
+	 *
+	 * @param array $args {
+	 *     Gif picker additional arguments.
+	 *
+	 * @type string[] $classes Classes for the gif picker link.
+	 * @type string   $size    Gif picker size. Uses 's', 'm', 'l'. Default 's'.
+	 * @type array    $data    Gif picker data.
+	 * }
+	 *
+	 * @return string
+	 */
 	public static function gif_picker( $args = array() ) {
 		$api_key = UM()->options()->get( 'tenor_api_key' );
 		if ( empty( $api_key ) ) {
@@ -2714,12 +2676,13 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'link_classes' => array(),
-				'size'         => 's',
+				'classes' => array(),
+				'size'    => 's',
+				'data'    => array(),
 			)
 		);
 
-		$args['link_classes'][] = 'um-gif-picker-link';
+		$args['classes'][] = 'um-gif-picker-link';
 
 		$gif_svg_html = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-gif" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
 			<path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -2736,8 +2699,9 @@ class Layouts {
 				'type'          => 'link',
 				'size'          => $args['size'],
 				'title'         => __( 'GIF', 'ultimate-member' ),
-				'classes'       => $args['link_classes'],
+				'classes'       => $args['classes'],
 				'icon_position' => 'content',
+				'data'          => $args['data'],
 			)
 		);
 	}
