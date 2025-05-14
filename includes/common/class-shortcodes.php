@@ -582,6 +582,24 @@ class Shortcodes {
 		ob_start();
 		?>
 		<div class="um">
+			<h3>GIF Piker async</h3>
+			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:flex-start; gap: 8px;">
+			<?php
+			echo wp_kses(
+				UM()->frontend()::layouts()::gif_picker() . UM()->frontend()::layouts()::gif_list( array( 'async' => true ) ),
+				UM()->get_allowed_html( 'templates' )
+			);
+			?>
+			</div>
+			<h3>GIF Piker</h3>
+			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:flex-start; gap: 8px;">
+			<?php
+			echo wp_kses(
+				UM()->frontend()::layouts()::gif_picker() . UM()->frontend()::layouts()::gif_list(),
+				UM()->get_allowed_html( 'templates' )
+			);
+			?>
+			</div>
 			<h3>Emoji Piker</h3>
 			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:flex-start; gap: 8px;">
 			<?php

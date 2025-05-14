@@ -1132,7 +1132,117 @@ UM.frontend = {
 		}
 	},
 	gifPicker: {
-		init: function ( $parent ) {
+		init: function() {
+			jQuery(document.body).on( 'click', '.um-gif-list-search-btn', function () {
+				let $btn = jQuery(this);
+				let $wrapper = jQuery(this).parents('.um-gif-list-wrapper');
+				let per_page = $wrapper.data('per_page');
+				let $search = $wrapper.find('.um-gif-list-search');
+
+				let search = $search.val();
+
+				if ( '' === search || $search.data('pre-search') === search ) {
+					return;
+				}
+
+				let nonce = $wrapper.data('nonce');
+
+				let $loader = $wrapper.find('.um-gif-list-loader');
+				let $list = $wrapper.find('.um-gif-list');
+
+				$loader.umShow();
+				$btn.prop('disabled', true).umHide();
+				$search.prop('disabled', true);
+
+				wp.ajax.send(
+					'um_get_gif_images',
+					{
+						data: {
+							search: search,
+							per_page: per_page,
+							nonce: nonce
+						},
+						success: function (response) {
+							$list.find('.um-gif-img').remove();
+							$list.prepend( response.html );
+							$list.find( '.um-gif-list-pagination-loader-wrapper' ).umHide();
+							$list.parents('.um-gif-list-wrapper').data( 'next', response.next );
+							$loader.umHide();
+							$btn.prop('disabled', false).umShow();
+							$search.prop('disabled', false);
+							$search.data('pre-search', search);
+						},
+						error: function (data) {
+							console.log(data);
+							$loader.umHide();
+							$btn.prop('disabled', false).umShow();
+							$search.prop('disabled', false);
+						}
+					}
+				);
+			});
+
+			// Search on the ENTER keypress.
+			jQuery( document.body ).on( 'keypress', '.um-gif-list-search', function ( event ) {
+				if ( event.keyCode && event.keyCode === 13 || event.which === 13 ) {
+					event.preventDefault();
+					let $sendBtn = jQuery( event.target ).parents( '.um-gif-list-search-box' ).find( '.um-gif-list-search-btn' );
+					$sendBtn.trigger( 'click' );
+				}
+			});
+
+			let pickerObj = this;
+
+			jQuery( '.um-gif-list' ).scroll(function(e) {
+				let $list  = jQuery(this);
+
+				// Check if we scrolled to the bottom of the container
+				if ( $list.scrollTop() + $list.innerHeight() >= $list[0].scrollHeight ) {
+					let nextHash = $list.parents('.um-gif-list-wrapper').data('next');
+
+					// Check if we've loaded all pages already
+					if ( ! $list.data( 'um-loading' ) && nextHash ) {
+						// Load more content
+						$list.data( 'um-loading', true );
+						pickerObj.loading($list, nextHash);
+					}
+				}
+			});
+		},
+		loading: function($list, hash) {
+			$list.find('.um-gif-list-pagination-loader-wrapper').umShow();
+
+			let $wrapper = $list.parents('.um-gif-list-wrapper');
+
+			let per_page = $wrapper.data('per_page');
+			let $search = $wrapper.find('.um-gif-list-search');
+
+			let search = $search.data('pre-search');
+			let nonce = $wrapper.data('nonce');
+
+			return wp.ajax.send(
+				'um_get_gif_images',
+				{
+					data: {
+						search: search,
+						per_page: per_page,
+						next: hash,
+						nonce: nonce
+					},
+					success: function (response) {
+						$list.find('.um-gif-list-pagination-loader-wrapper').umHide().before( response.html );
+						$wrapper.data( 'next', response.next );
+					},
+					error: function (data) {
+						console.log(data);
+					},
+					complete: function() {
+						$list.data( 'um-loading', false ); // We're done loading, allow starting a new load
+					}
+				}
+			);
+		},
+/*		init: function ( $parent ) {
 			// $(document).on('click','.um-gif-picker-search-btn',function(e){
 			//
 			// 	e.preventDefault();
@@ -1154,94 +1264,67 @@ UM.frontend = {
 			//
 			// });
 
-			if ( 'undefined' === typeof $parent ) {
-				$parent = document;
-			}
-
-			let $gifPickerSearch = $parent.querySelectorAll('.um-gif-picker-search-btn:not(.um-inited)');
-			if ( ! $gifPickerSearch.length ) {
-				return;
-			}
-
-			// jQuery(document.body).on( 'click', '.um-gif-picker-search-btn', function () {
-			// 	let $dropdown = jQuery(this).parents('.um-gif-picker-dropdown');
-			// 	let nonce = jQuery(this).parents('.um-gif-picker-dropdown').data('nonce');
-			// 	let $list = $dropdown.find('.um-gif-list');
-			// 	let $loader = $dropdown.find('.um-gif-list-loader');
+			// if ( 'undefined' === typeof $parent ) {
+			// 	$parent = document;
+			// }
 			//
-			// 	console.log( $list );
+			// let $gifPickerSearch = $parent.querySelectorAll('.um-gif-picker-search-btn:not(.um-inited)');
+			// if ( ! $gifPickerSearch.length ) {
+			// 	return;
+			// }
+
+			// for (let $item = 0; $item < $gifPickerSearch.length; $item++) {
+			// 	$gifPickerSearch[ $item ].classList.add('um-inited');
 			//
-			// 	wp.ajax.send(
-			// 		'um_get_gif_images',
-			// 		{
-			// 			data: {
-			// 				search: '',
-			// 				nonce: nonce
-			// 			},
-			// 			success: function (response) {
-			// 				console.log( response.next );
-			// 				$list.append( response.html ).removeClass('um-display-none');
-			// 				$loader.addClass('um-display-none');
-			// 			},
-			// 			error: function (data) {
-			// 				console.log(data);
-			// 			}
+			//
+			//
+			// 	$gifPickerSearch[ $item ].addEventListener('click', function(event) {
+			// 		let $btn = event.target;
+			// 		let $dropdown = $btn.closest('.um-gif-picker-dropdown');
+			// 		let search = '';
+			// 		let $searchInput = $btn.previousElementSibling;
+			// 		if( $searchInput && $searchInput.matches(".um-gif-picker-search")) {
+			// 			search = $searchInput.value;
 			// 		}
-			// 	);
-			// });
-
-			for (let $item = 0; $item < $gifPickerSearch.length; $item++) {
-				$gifPickerSearch[ $item ].classList.add('um-inited');
-
-
-
-				$gifPickerSearch[ $item ].addEventListener('click', function(event) {
-					let $btn = event.target;
-					let $dropdown = $btn.closest('.um-gif-picker-dropdown');
-					let search = '';
-					let $searchInput = $btn.previousElementSibling;
-					if( $searchInput && $searchInput.matches(".um-gif-picker-search")) {
-						search = $searchInput.value;
-					}
-
-					let nonce = $dropdown.dataset.nonce;
-
-					let $loader = $dropdown.querySelector('.um-gif-list-loader');
-					let $list = $dropdown.querySelector('.um-gif-list');
-
-					console.log( $list );
-
-					$loader.classList.remove('um-display-none');
-					$list.classList.add('um-display-none');
-
-					wp.ajax.send(
-						'um_get_gif_images',
-						{
-							data: {
-								search: search,
-								nonce: nonce
-							},
-							success: function (data) {
-								$list.innerHTML = data.html;
-								$list.classList.remove('um-display-none');
-								$loader.classList.add('um-display-none');
-							},
-							error: function (data) {
-								console.log(data);
-							}
-						}
-					);
-					//
-					// var el = $(document).find('a[data-target="um-gif-options"]');
-					// var action = el.attr('data-action');
-					// $.post(action,{
-					// 	gif_search:input.val()
-					// },function( response ){
-					// 	jQuery('span.um-message-gif-list').find( '.um-gif-options' ).html(response);
-					// });
-				});
-			}
-		}
+			//
+			// 		let nonce = $dropdown.dataset.nonce;
+			//
+			// 		let $loader = $dropdown.querySelector('.um-gif-list-loader');
+			// 		let $list = $dropdown.querySelector('.um-gif-list');
+			//
+			// 		console.log( $list );
+			//
+			// 		$loader.classList.remove('um-display-none');
+			// 		$list.classList.add('um-display-none');
+			//
+			// 		wp.ajax.send(
+			// 			'um_get_gif_images',
+			// 			{
+			// 				data: {
+			// 					search: search,
+			// 					nonce: nonce
+			// 				},
+			// 				success: function (data) {
+			// 					$list.innerHTML = data.html;
+			// 					$list.classList.remove('um-display-none');
+			// 					$loader.classList.add('um-display-none');
+			// 				},
+			// 				error: function (data) {
+			// 					console.log(data);
+			// 				}
+			// 			}
+			// 		);
+			// 		//
+			// 		// var el = $(document).find('a[data-target="um-gif-options"]');
+			// 		// var action = el.attr('data-action');
+			// 		// $.post(action,{
+			// 		// 	gif_search:input.val()
+			// 		// },function( response ){
+			// 		// 	jQuery('span.um-message-gif-list').find( '.um-gif-options' ).html(response);
+			// 		// });
+			// 	});
+			// }
+		}*/
 	}
 }
 
@@ -1284,6 +1367,7 @@ jQuery(document).ready(function($) {
 	UM.frontend.image.lazyload.init();
 
 	UM.frontend.emojiPicker.init();
+	UM.frontend.gifPicker.init();
 
 	$( window ).on( 'resize', function() {
 		UM.frontend.responsive.setClass();

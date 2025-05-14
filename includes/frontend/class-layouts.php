@@ -2716,77 +2716,120 @@ class Layouts {
 			array(
 				'link_classes' => array(),
 				'size'         => 's',
-				'search'       => true,
 			)
 		);
 
-		$parent = '.um-gif-picker';
-
 		$args['link_classes'][] = 'um-gif-picker-link';
 
-		$toggle_classes   = array( 'um-dropdown-toggle', 'um-dropdown-toggle-button', 'um-gif-picker-toggle' );
-		$dropdown_classes = array( 'um-dropdown', 'um-dropdown-no-header', 'um-gif-picker-dropdown' );
+		$gif_svg_html = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-gif" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+			<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+			<path d="M8 8h-2a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2v-4h-1" />
+			<path d="M12 8v8" />
+			<path d="M16 12h3" />
+			<path d="M20 8h-4v8" />
+		</svg>';
+
+		return UM()->frontend()::layouts()::link(
+			$gif_svg_html,
+			array(
+				'design'        => 'link-color',
+				'type'          => 'link',
+				'size'          => $args['size'],
+				'title'         => __( 'GIF', 'ultimate-member' ),
+				'classes'       => $args['link_classes'],
+				'icon_position' => 'content',
+			)
+		);
+	}
+
+	public static function gif_list( $args = array() ) {
+		$api_key = UM()->options()->get( 'tenor_api_key' );
+		if ( empty( $api_key ) ) {
+			return '';
+		}
+
+		$args = wp_parse_args(
+			$args,
+			array(
+				'classes'  => array(),
+				'keyword'  => 'Hello',
+				'async'    => false,
+				'per_page' => 20,
+			)
+		);
+
+		$classes = array( 'um-gif-list-wrapper' );
+
+		$pagination_loader_classes = array( 'um-gif-list-pagination-loader-wrapper', 'um-display-none' );
+
+		$pagination   = '';
+		$gifs_content = '';
+		if ( false === $args['async'] ) {
+			$classes[] = 'um-gif-list-async';
+
+			$url = 'https://tenor.googleapis.com/v2/search?key=' . $api_key . '&q=' . esc_attr( $args['keyword'] ) . '&limit=' . esc_attr( $args['per_page'] );
+
+			$request_args = array(
+				'headers' => array(
+					'Referer' => get_site_url(),
+				),
+			);
+
+			$response = wp_remote_get( $url, $request_args );
+			$result   = json_decode( wp_remote_retrieve_body( $response ), true );
+
+			$images = array();
+			foreach ( $result['results'] as $image ) {
+				$images[] = array(
+					'preview' => $image['media_formats']['nanogif']['url'],
+					'image'   => $image['media_formats']['gif']['url'],
+				);
+			}
+
+			$pagination = ! empty( $result['next'] ) ? $result['next'] : '';
+
+			foreach ( $images as $im ) {
+				$gifs_content .= '<img class="um-gif-img" data-um_gif_img data-image="' . esc_attr( $im['image'] ) . '" src="' . esc_url( $im['preview'] ) . '" />';
+			}
+		}
+
+		$classes = array_merge( $classes, $args['classes'] );
 		ob_start();
 		?>
-		<div class="um-dropdown-wrapper um-gif-picker">
-			<div class="<?php echo esc_attr( implode( ' ', $toggle_classes ) ); ?>">
+		<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_get_gif_list' ) ); ?>" data-next="<?php echo esc_attr( $pagination ); ?>" data-per_page="<?php echo esc_attr( $args['per_page'] ); ?>">
+			<?php
+			$search_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+				<path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+				<path d="M21 21l-6 -6" />
+			</svg>';
+			?>
+			<div class="um-gif-list-search-box">
+				<span class="screen-reader-text"><?php esc_html_e( 'Search..', 'ultimate-member' ); ?></span>
+				<input type="search" class="um-gif-list-search" placeholder="<?php esc_attr_e( 'Search..', 'ultimate-member' ); ?>" />
 				<?php
-				$gif_svg_html = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-gif" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-					<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-					<path d="M8 8h-2a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2v-4h-1" />
-					<path d="M12 8v8" />
-					<path d="M16 12h3" />
-					<path d="M20 8h-4v8" />
-				</svg>';
-
 				echo wp_kses(
-					UM()->frontend()::layouts()::link(
-						$gif_svg_html,
+					self::button(
+						$search_icon,
 						array(
 							'design'        => 'link-color',
-							'type'          => 'link',
-							'size'          => $args['size'],
-							'title'         => __( 'GIF', 'ultimate-member' ),
-							'classes'       => $args['link_classes'],
+							'size'          => 's',
+							'title'         => __( 'Search', 'ultimate-member' ),
+							'classes'       => array( 'um-gif-list-search-btn' ),
 							'icon_position' => 'content',
 						)
-					),
+					) . self::ajax_loader( 's', array( 'classes' => array( 'um-gif-list-loader', 'um-display-none' ) ) ),
 					UM()->get_allowed_html( 'templates' )
 				);
 				?>
 			</div>
-			<div class="<?php echo esc_attr( implode( ' ', $dropdown_classes ) ); ?>" data-element=".um-gif-picker-toggle" data-trigger="click" data-parent="<?php echo esc_attr( $parent ); ?>" data-width="360" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_get_gif_list' ) ); ?>">
-				<?php
-				if ( ! empty( $args['search'] ) ) {
-					$search_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-						<path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-						<path d="M21 21l-6 -6" />
-					</svg>';
-					?>
-					<div class="um-gif-picker-search-box">
-						<span class="screen-reader-text"><?php esc_html_e( 'Search..', 'ultimate-member' ); ?></span>
-						<input type="search" class="um-gif-picker-search" placeholder="<?php esc_attr_e( 'Search..', 'ultimate-member' ); ?>" />
-						<?php
-						echo wp_kses(
-							UM()->frontend()::layouts()::button(
-								$search_icon,
-								array(
-									'design'        => 'link-color',
-									'size'          => 's',
-									'title'         => __( 'Search', 'ultimate-member' ),
-									'classes'       => array( 'um-gif-picker-search-btn' ),
-									'icon_position' => 'content',
-								)
-							),
-							UM()->get_allowed_html( 'templates' )
-						);
-						?>
-					</div>
-				<?php } ?>
-				<div class="um-gif-list um-display-none"></div>
-				<div class="um-gif-list-loader">
+			<div class="um-gif-list">
+				<?php echo wp_kses( $gifs_content, UM()->get_allowed_html( 'templates' ) ); ?>
+				<div class="<?php echo esc_attr( implode( ' ', $pagination_loader_classes ) ); ?>">
 					<?php
-					echo wp_kses( self::ajax_loader( 's', array( 'classes' => array( 'um-gif-list-loader-spinner' ) ) ), UM()->get_allowed_html( 'templates' ) );
+					echo wp_kses(
+						self::ajax_loader( 's', array( 'classes' => array( 'um-gif-list-pagination-loader' ) ) ),
+						UM()->get_allowed_html( 'templates' )
+					);
 					?>
 				</div>
 			</div>

@@ -2630,25 +2630,40 @@
     position: relative
 
 
-.#{$prefix}gif-picker-dropdown
-  padding: $spacing-lg
+.#{$prefix}gif-list-wrapper
+  +flex(column, flex-start, stretch, nowrap)
+  padding: 0
   margin: 0
-  .#{$prefix}gif-picker-search-box
-    +flex(row, flex-start, center, nowrap)
+  min-width: 360px
+  +border-box
+  .#{$prefix}gif-list-search-box
+    +flex(row, space-between, center, nowrap)
     width: 100%
     margin: 0
     padding: 0 0 $spacing-lg 0
     gap: $spacing-md
-    .#{$prefix}gif-picker-search
+    .#{$prefix}gif-list-search
       flex: 1
+    .#{$prefix}gif-list-loader
+      margin: $spacing-md
   .#{$prefix}gif-list
-    min-height: 100px
+    position: relative
     width: 100%
     margin: 0
     padding: 0
-  .#{$prefix}gif-list-loader
-    +flex(row, center, center, nowrap)
-    min-height: 100px
-    width: 100%
-    margin: 0
-    padding: 0
+    gap: $spacing-md
+    overflow-y: auto
+    max-height: 150px
+    +flex(row, flex-start, center, wrap)
+    .#{$prefix}gif-list-pagination-loader-wrapper
+      +flex(row, center, center, nowrap)
+      width: 90px
+      height: 90px
+      .#{$prefix}gif-list-loader
+        +flex(row, center, center, nowrap)
+        min-height: 100px
+        width: 100%
+        margin: 0
+        padding: 0
+    .#{$prefix}gif-img
+      cursor: pointer

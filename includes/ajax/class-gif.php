@@ -27,12 +27,24 @@ class GIF {
 
 		check_ajax_referer( 'um_get_gif_list', 'nonce' );
 
-		$images  = array();
-		$keyword = 'Hello';
-		if ( isset( $_POST['gif_search'] ) ) {
-			$keyword = sanitize_text_field( $_POST['gif_search'] );
+		$images = array();
+
+		$keyword = 'hello';
+		if ( ! empty( $_POST['search'] ) ) {
+			$keyword = sanitize_text_field( $_POST['search'] );
 		}
-		$url  = 'https://tenor.googleapis.com/v2/search?key=' . $api_key . '&q=' . $keyword . '&limit=20';
+
+		$per_page = 20;
+		if ( ! empty( $_POST['per_page'] ) ) {
+			$per_page = absint( $_POST['per_page'] );
+		}
+
+		$url = 'https://tenor.googleapis.com/v2/search?key=' . $api_key . '&q=' . $keyword . '&limit=' . esc_attr( $per_page );
+
+		if ( isset( $_POST['next'] ) ) {
+			$url = add_query_arg( 'pos', sanitize_text_field( $_POST['next'] ), $url );
+		}
+
 		$args = array(
 			'headers' => array(
 				'Referer' => get_site_url(),
@@ -50,11 +62,9 @@ class GIF {
 		}
 
 		ob_start();
-		echo '<div class="imges">';
 		foreach ( $images as $im ) {
-			echo '<img data-um_gif_img data-image="' . esc_attr( $im['image'] ) . '" src="' . esc_url( $im['preview'] ) . '" />';
+			echo '<img class="um-gif-img" data-um_gif_img data-image="' . esc_attr( $im['image'] ) . '" src="' . esc_url( $im['preview'] ) . '" />';
 		}
-		echo '</div>';
 
 		$contents = ob_get_clean();
 
