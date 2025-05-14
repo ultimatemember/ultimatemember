@@ -126,6 +126,11 @@ UM.frontend = {
 				$toggleButton.toggleClass('um-toggle-button-active');
 
 				let toggleCb = function ( force ) {
+					if ( $toggleBlock.find('.um-toggle-block-inner').hasClass('um-visible') ) {
+						wp.hooks.doAction( 'um_toggle_block_on_hide', $toggleBlock, $toggleButton );
+					} else {
+						wp.hooks.doAction( 'um_toggle_block_on_show', $toggleBlock, $toggleButton );
+					}
 					$toggleBlock.find('.um-toggle-block-inner').toggleClass('um-visible');
 					if ( ! force ) {
 						$toggleButton.data('um-toggle-ignore', false);
@@ -1141,7 +1146,7 @@ UM.frontend = {
 
 				let search = $search.val();
 
-				if ( '' === search || $search.data('pre-search') === search ) {
+				if ( '' === search || $search.data('prev-search') === search ) {
 					return;
 				}
 
@@ -1170,7 +1175,7 @@ UM.frontend = {
 							$loader.umHide();
 							$btn.prop('disabled', false).umShow();
 							$search.prop('disabled', false);
-							$search.data('pre-search', search);
+							$search.data('prev-search', search);
 						},
 						error: function (data) {
 							console.log(data);
@@ -1217,7 +1222,7 @@ UM.frontend = {
 			let per_page = $wrapper.data('per_page');
 			let $search = $wrapper.find('.um-gif-list-search');
 
-			let search = $search.data('pre-search');
+			let search = $search.data('prev-search');
 			let nonce = $wrapper.data('nonce');
 
 			return wp.ajax.send(
