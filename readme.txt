@@ -167,10 +167,11 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.10.4 2025-05-xx =
+= 2.10.4 2025-05-14 =
 
 **Bugfixes**
 
+* Fixed: Security issue CVE ID: CVE-2025-47691. Used "sniccowp/php-scoper-wordpress-excludes" for getting the recent WordPress functions list and added them to the dynamic blacklist based on the WordPress version.
 * Fixed: The Action Scheduler action `um_set_default_account_status`. Case when some users were approved manually or deleted, and we need to reset the admin notice. Added `error_log()` to the wrong conditions.
 * Fixed: Reset Password request from not a predefined password reset page. It's possible to submit reset password form sitewide using block or shortcode.
 
@@ -247,6 +248,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.10.4 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.10.2 =
 This version fixes a security related bug. Upgrade immediately.

@@ -194,6 +194,27 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		}
 
 		/**
+		 * Checks for a blacklist function in the custom callback field error.
+		 *
+		 * @since 2.10.4
+		 *
+		 * @param array $args Custom field submission data.
+		 *
+		 * @return int|string Empty or error string.
+		 */
+		public function functions_blacklist_field_err( $args ) {
+			if ( empty( $args['_custom_dropdown_options_source'] ) ) {
+				return 0;
+			}
+
+			if ( UM()->fields()->is_source_blacklisted( $args['_custom_dropdown_options_source'] ) ) {
+				return __( 'This is not possible for security reasons.', 'ultimate-member' );
+			}
+
+			return 0;
+		}
+
+		/**
 		 * Check date range errors (start date)
 		 *
 		 * @param $date

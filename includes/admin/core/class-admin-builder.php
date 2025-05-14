@@ -55,6 +55,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				return $errors;
 			}
 
+			$functions_blacklist_error = UM()->builtin()->functions_blacklist_field_err( $submission_data['post'] );
+			if ( ! empty( $functions_blacklist_error ) ) {
+				$errors['_custom_dropdown_options_source'] = $functions_blacklist_error;
+				return $errors;
+			}
+
 			$field_attr = UM()->builtin()->get_core_field_attrs( $submission_data['field_type'] );
 			if ( ! array_key_exists( 'validate', $field_attr ) ) {
 				return $errors;
@@ -1151,7 +1157,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 * @return boolean
 		 */
 		public function skip_field_validation( $skip, $post_input, $array ) {
-			if ( $post_input === '_options' && isset( $array['post']['_custom_dropdown_options_source'] ) ) {
+			if ( '_options' === $post_input && isset( $array['post']['_custom_dropdown_options_source'] ) ) {
 				$skip = function_exists( wp_unslash( $array['post']['_custom_dropdown_options_source'] ) );
 			}
 
