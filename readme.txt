@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 6.8
-Stable tag: 2.10.3
+Stable tag: 2.10.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -167,13 +167,14 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.10.4 2025-05-14 =
+= 2.10.4 2025-05-15 =
 
 **Bugfixes**
 
 * Fixed: Security issue CVE ID: CVE-2025-47691. Used "sniccowp/php-scoper-wordpress-excludes" for getting the recent WordPress functions list and added them to the dynamic blacklist based on the WordPress version.
 * Fixed: The Action Scheduler action `um_set_default_account_status`. Case when some users were approved manually or deleted, and we need to reset the admin notice. Added `error_log()` to the wrong conditions.
 * Fixed: Reset Password request from not a predefined password reset page. It's possible to submit reset password form sitewide using block or shortcode.
+* Fixed: Setting 'Allow users to change email' for the Account page. It works now for any role instead of only the roles with 'Can edit other member accounts?' capability enabled.
 
 = 2.10.3 2025-04-24 =
 

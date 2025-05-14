@@ -1,5 +1,14 @@
 ﻿== Changelog ==
 
+= 2.10.4 May 15, 2025 =
+
+* Bugfixes:
+
+  - Fixed: Security issue CVE ID: CVE-2025-47691. Used "sniccowp/php-scoper-wordpress-excludes" for getting the recent WordPress functions list and added them to the dynamic blacklist based on the WordPress version.
+  - Fixed: The Action Scheduler action `um_set_default_account_status`. Case when some users were approved manually or deleted, and we need to reset the admin notice. Added `error_log()` to the wrong conditions.
+  - Fixed: Reset Password request from not a predefined password reset page. It's possible to submit reset password form sitewide using block or shortcode.
+  - Fixed: Setting 'Allow users to change email' for the Account page. It works now for any role instead of only the roles with 'Can edit other member accounts?' capability enabled.
+
 = 2.10.3 April 24, 2025 =
 
 * Enhancements:
