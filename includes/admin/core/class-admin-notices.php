@@ -249,16 +249,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		}
 
 		/**
-		 * Checking if the "Membership - Anyone can register" WordPress general setting is active
+		 * Show notice if batch checking for users with empty `account_status` usermeta is active.
+		 *
+		 * @see \um\common\actions\Users
 		 */
 		public function empty_status_users() {
-			$empty_status_users = get_option( '_um_log_empty_status_users', array( 0, 0 ) );
+			$empty_status_users = get_option( '_um_log_empty_status_users' );
+			if ( false === $empty_status_users ) {
+				return;
+			}
 			if ( ! is_array( $empty_status_users ) ) {
 				$empty_status_users = array( 0, 0 );
 			}
 
-			if ( array( 0, 0 ) === $empty_status_users ) {
-				return;
+			// Schedule a batch action if it has not been scheduled previously.
+			if ( ! UM()->maybe_action_scheduler()->has_scheduled_action( \um\common\actions\Users::BATCH_ACTION ) ) {
+				do_action( \um\common\actions\Users::SCHEDULE_ACTION );
 			}
 
 			$allowed_html = array(
