@@ -2486,12 +2486,16 @@ class Layouts {
 			array(
 				'alt'   => '',
 				'width' => '',
+				'max-width' => '',
 			)
 		);
 
 		$style = '';
 		if ( ! empty( $args['width'] ) ) {
 			$style .= 'width: ' . $args['width'] . ';';
+		}
+		if ( ! empty( $args['max-width'] ) ) {
+			$style .= 'max-width: ' . $args['max-width'] . ';';
 		}
 		ob_start();
 		?>
