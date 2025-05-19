@@ -370,16 +370,18 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 		}
 
-
 		/**
 		 * Plugin Deactivation
 		 *
 		 * @since 2.3
 		 */
-		function deactivation() {
+		public function deactivation() {
 			$this->cron()->unschedule_events();
-		}
 
+			$this->maybe_action_scheduler()->unschedule_all_actions( 'um_dispatch_email' );
+			$this->maybe_action_scheduler()->unschedule_all_actions( 'um_schedule_empty_account_status_check' );
+			$this->maybe_action_scheduler()->unschedule_all_actions( 'um_set_default_account_status' );
+		}
 
 		/**
 		 * Maybe need multisite activation process
