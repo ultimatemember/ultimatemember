@@ -42,6 +42,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Profile_Tabs Profile_Tabs()
 	 * @method UM_JobBoardWP JobBoardWP()
 	 * @method UM_Zapier Zapier()
+	 * @method UM_Stripe_API Stripe_API()
 	 * @method UM_Google_Authenticator Google_Authenticator()
 	 */
 	final class UM extends UM_Functions {
@@ -370,16 +371,18 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 		}
 
-
 		/**
 		 * Plugin Deactivation
 		 *
 		 * @since 2.3
 		 */
-		function deactivation() {
+		public function deactivation() {
 			$this->cron()->unschedule_events();
-		}
 
+			$this->maybe_action_scheduler()->unschedule_all_actions( 'um_dispatch_email' );
+			$this->maybe_action_scheduler()->unschedule_all_actions( 'um_schedule_empty_account_status_check' );
+			$this->maybe_action_scheduler()->unschedule_all_actions( 'um_set_default_account_status' );
+		}
 
 		/**
 		 * Maybe need multisite activation process
