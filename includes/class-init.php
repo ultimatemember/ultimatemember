@@ -42,6 +42,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Profile_Tabs Profile_Tabs()
 	 * @method UM_JobBoardWP JobBoardWP()
 	 * @method UM_Zapier Zapier()
+	 * @method UM_Stripe_API Stripe_API()
 	 * @method UM_Google_Authenticator Google_Authenticator()
 	 */
 	final class UM extends UM_Functions {
