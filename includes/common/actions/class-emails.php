@@ -19,7 +19,6 @@ if ( ! class_exists( 'um\common\actions\Emails' ) ) {
 		public function __construct() {
 			add_filter( 'um_action_scheduler_is_hook_enabled', array( $this, 'is_enabled' ), 10, 2 );
 			add_action( 'um_dispatch_email', array( $this, 'send' ), 10, 3 );
-			add_action( 'um_before_email_notification_sending', array( $this, 'before_email_send' ), 10, 2 );
 		}
 
 		public function is_enabled( $is_enabled, $hook ) {
@@ -51,30 +50,6 @@ if ( ! class_exists( 'um\common\actions\Emails' ) ) {
 			}
 
 			UM()->mail()->send( $user_email, $template, $args );
-		}
-
-		/**
-		 * Add some custom placeholders when sending via Action Scheduler.
-		 *
-		 * @todo Workaround for now. Maybe we need to handle email placeholders in email class where $user_id is fetched everytime
-		 *
-		 * @param string $email
-		 * @param string $template
-		 *
-		 * @return void
-		 */
-		public function before_email_send( $email, $template ) {
-			if ( ! UM()->maybe_action_scheduler()->is_hook_enabled( 'um_dispatch_email' ) ) {
-				return;
-			}
-
-			if ( 'checkmail_email' === $template ) {
-				add_filter( 'um_template_tags_patterns_hook', array( UM()->user(), 'add_activation_placeholder' ) );
-				add_filter( 'um_template_tags_replaces_hook', array( UM()->user(), 'add_activation_replace_placeholder' ) );
-			} elseif ( 'welcome_email' === $template || 'approved_email' === $template || 'resetpw_email' === $template ) {
-				add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ) );
-				add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ) );
-			}
 		}
 	}
 }

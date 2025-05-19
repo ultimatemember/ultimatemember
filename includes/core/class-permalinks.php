@@ -172,8 +172,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 					$redirect = empty( $user_role_data['url_email_activate'] ) ? um_get_core_page( 'login', 'account_active' ) : trim( $user_role_data['url_email_activate'] );
 				} else {
 					// Redirect to the change password page if there is no password for this user.
-					um_fetch_user( $user_id );
-					$redirect = um_user( 'password_reset_link' );
+					$redirect = UM()->password()->reset_url( $user_id );
 				}
 				/**
 				 * Filter to change the redirect URL after email confirmation.
@@ -204,40 +203,44 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		/**
 		 * Makes an activate link for any user
 		 *
-		 * @return bool|string
+		 * @return string
 		 */
-		public function activate_url() {
-			if ( ! um_user( 'account_secret_hash' ) ) {
-				return false;
+		public function activate_url( $user_id = null ) {
+			if ( is_null( $user_id ) ) {
+				$user_id = um_user( 'ID' );
+			}
+
+			$account_secret_hash = get_user_meta( $user_id, 'account_secret_hash', true );
+			if ( empty( $account_secret_hash ) ) {
+				return '';
 			}
 
 			/**
-			 * UM hook
+			 * Filter to change the base URL for the user activation link.
 			 *
-			 * @type filter
-			 * @title um_activate_url
-			 * @description Change activate user URL
-			 * @input_vars
-			 * [{"var":"$url","type":"string","desc":"Activate URL"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_activate_url', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_activate_url', 'my_activate_url', 10, 1 );
-			 * function my_activate_url( $url ) {
+			 * @hook um_activate_url
+			 *
+			 * @param {string} $url The base URL. `home_url()` by default
+			 *
+			 * @since 1.3.x
+			 *
+			 * @example <caption>Change activate user base URL.</caption>
+			 * function my_after_email_confirmation_redirect( $url ) {
 			 *     // your code here
 			 *     return $url;
 			 * }
-			 * ?>
+			 * add_filter( 'um_activate_url', 'my_um_activate_url' );
 			 */
-			$url =  apply_filters( 'um_activate_url', home_url() );
-			$url =  add_query_arg( 'act', 'activate_via_email', $url );
-			$url =  add_query_arg( 'hash', um_user( 'account_secret_hash' ), $url );
-			$url =  add_query_arg( 'user_id', um_user( 'ID' ), $url );
+			$base_url = apply_filters( 'um_activate_url', home_url() );
 
-			return $url;
+			return add_query_arg(
+				array(
+					'act'     => 'activate_via_email',
+					'hash'    => $account_secret_hash,
+					'user_id' => $user_id,
+				),
+				$base_url
+			);
 		}
 
 		/**
