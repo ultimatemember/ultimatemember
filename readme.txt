@@ -169,7 +169,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 = 2.10.5 2025-05-xx =
 
-
+* Fixed: Refactor deactivation logic to un-schedule Action Scheduler actions
 
 = 2.10.4 2025-05-15 =
 
