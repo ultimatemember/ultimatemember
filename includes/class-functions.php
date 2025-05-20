@@ -356,21 +356,18 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			return $array;
 		}
 
-
 		/**
 		 * @since 2.1.0
 		 *
 		 * @param $var
 		 * @return array|string
 		 */
-		function clean_array( $var ) {
+		public function clean_array( $var ) {
 			if ( is_array( $var ) ) {
 				return array_map( array( $this, 'clean_array' ), $var );
-			} else {
-				return ! is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
 			}
+			return ! is_scalar( $var ) ? sanitize_text_field( wp_unslash( $var ) ) : $var;
 		}
-
 
 		/**
 		 * Replace the first match in the string, alternative for the `str_replace()` function
