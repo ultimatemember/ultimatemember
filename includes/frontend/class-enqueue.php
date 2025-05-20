@@ -596,6 +596,12 @@ final class Enqueue extends \um\common\Enqueue {
 			}
 
 			wp_add_inline_style( $stylesheet, $dynamic_styles );
+
+			/* TODO Make block editor scripts/styles review for new UI.
+			 * $suffix   = self::get_suffix();
+			$css_url  = self::get_url( 'css' );
+
+			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array( 'um_common' ), UM_VERSION );*/
 		}
 	}
 
