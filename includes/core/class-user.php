@@ -1,6 +1,9 @@
 <?php
 namespace um\core;
 
+use WP_Error;
+use WP_User;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -965,7 +968,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * On wp_update_user function complete
 		 *
 		 * @param int $user_id
-		 * @param \WP_User $old_data
+		 * @param WP_User $old_data
 		 */
 		function profile_update( $user_id, $old_data ) {
 			// Bail if no user ID was passed
@@ -1018,7 +1021,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		/**
 		 * Additional section for WP Profile page with UM data fields
 		 *
-		 * @param \WP_User $userdata User data
+		 * @param WP_User $userdata User data
 		 * @return void
 		 */
 		function profile_form_additional_section( $userdata ) {
@@ -1063,7 +1066,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * Default interface for setting a ultimatemember role
 		 *
 		 * @param string $content Section HTML
-		 * @param \WP_User $userdata User data
+		 * @param WP_User $userdata User data
 		 * @return string
 		 */
 		public function secondary_role_field( $content, $userdata ) {
@@ -1103,7 +1106,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 			}
 
-			$class = ( $userdata == 'add-existing-user' ) ? 'um_role_existing_selector_wrapper' : 'um_role_selector_wrapper';
+			$class = 'add-existing-user' === $userdata ? 'um_role_existing_selector_wrapper' : 'um_role_selector_wrapper';
 
 			ob_start();
 			?>
@@ -1469,22 +1472,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		}
 
 		/**
-		 * Set last login for new registered users
-		 */
-		public function set_last_login() {
-			update_user_meta( $this->id, '_um_last_login', current_time( 'mysql', true ) );
-		}
-
-		/**
-		 * @param \WP_User $userdata
-		 *
-		 * @return string|\WP_Error
-		 */
-		function maybe_generate_password_reset_key( $userdata ) {
-			return get_password_reset_key( $userdata );
-		}
-
-		/**
 		 * Password reset email
 		 *
 		 * @param int|null $user_id
@@ -1497,19 +1484,22 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 			$userdata = get_userdata( $user_id );
 
-			$this->maybe_generate_password_reset_key( $userdata );
-
-			$mail_args = array(
-				'fetch_user_id' => $user_id,
-				'tags'          => array(
-					'{password_reset_link}',
-				),
-				'tags_replace'  => array(
-					UM()->password()->reset_url( $user_id ),
-				),
+			UM()->maybe_action_scheduler()->enqueue_async_action(
+				'um_dispatch_email',
+				array(
+					$userdata->user_email,
+					'resetpw_email',
+					array(
+						'fetch_user_id' => $user_id,
+						'tags'          => array(
+							'{password_reset_link}',
+						),
+						'tags_replace'  => array(
+							UM()->password()->reset_url( $user_id ),
+						),
+					),
+				)
 			);
-
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'resetpw_email', $mail_args ) );
 		}
 
 		/**
@@ -2122,30 +2112,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		}
 
 		/**
-		 * UM Placeholders for activation link in email
-		 *
-		 * @param $placeholders
-		 *
-		 * @return array
-		 */
-		public function add_activation_placeholder( $placeholders ) {
-			$placeholders[] = '{account_activation_link}';
-			return $placeholders;
-		}
-
-		/**
-		 * UM Replace Placeholders for activation link in email
-		 *
-		 * @param $replace_placeholders
-		 *
-		 * @return array
-		 */
-		public function add_activation_replace_placeholder( $replace_placeholders ) {
-			$replace_placeholders[] = um_user( 'account_activation_link' );
-			return $replace_placeholders;
-		}
-
-		/**
 		 * Set user's account status
 		 *
 		 * @deprecated 2.8.7
@@ -2239,6 +2205,54 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		public function deactivate() {
 			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->deactivate()' );
 			UM()->common()->users()->deactivate( um_user( 'ID' ) );
+		}
+
+		/**
+		 * @deprecated 2.10.5
+		 *
+		 * @param WP_User $userdata
+		 *
+		 * @return string|WP_Error
+		 */
+		public function maybe_generate_password_reset_key( $userdata ) {
+			_deprecated_function( __METHOD__, '2.10.5', 'UM()->common()->users()->maybe_generate_password_reset_key()' );
+			return UM()->common()->users()->maybe_generate_password_reset_key( $userdata );
+		}
+
+		/**
+		 * Set last login for new registered users
+		 *
+		 * @deprecated 2.10.5
+		 *
+		 * @return void
+		 */
+		public function set_last_login() {
+			_deprecated_function( __METHOD__, '2.10.5', 'UM()->common()->users()->set_last_login()' );
+			UM()->common()->users()->set_last_login( $this->id );
+		}
+
+		/**
+		 * UM Placeholders for activation link in email
+		 * @deprecated 2.10.5
+		 * @param $placeholders
+		 *
+		 * @return array
+		 */
+		public function add_activation_placeholder( $placeholders ) {
+			_deprecated_function( __METHOD__, '2.10.5' );
+			return $placeholders;
+		}
+
+		/**
+		 * UM Replace Placeholders for activation link in email
+		 * @deprecated 2.10.5
+		 * @param $replace_placeholders
+		 *
+		 * @return array
+		 */
+		public function add_activation_replace_placeholder( $replace_placeholders ) {
+			_deprecated_function( __METHOD__, '2.10.5' );
+			return $replace_placeholders;
 		}
 	}
 }

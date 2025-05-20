@@ -120,15 +120,27 @@ function um_send_registration_notification( $user_id ) {
 
 	um_fetch_user( $user_id );
 	$registration_status = um_user( 'status' );
+	$email_template      = 'pending' !== $registration_status ? 'notification_new_user' : 'notification_review';
+	$sending_args        = array(
+		'admin'         => true,
+		'fetch_user_id' => $user_id,
+		'tags'          => array(
+			'{submitted_registration}',
+		),
+		'tags_replace'  => um_user_submitted_registration_formatted(),
+	);
 
 	$emails = um_multi_admin_email();
 	if ( ! empty( $emails ) ) {
 		foreach ( $emails as $email ) {
-			if ( 'pending' !== $registration_status ) {
-				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $email, 'notification_new_user', array( 'admin' => true, 'fetch_user_id' => $user_id ) ) );
-			} else {
-				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $email, 'notification_review', array( 'admin' => true, 'fetch_user_id' => $user_id ) ) );
-			}
+			UM()->maybe_action_scheduler()->enqueue_async_action(
+				'um_dispatch_email',
+				array(
+					$email,
+					$email_template,
+					$sending_args,
+				)
+			);
 		}
 	}
 }

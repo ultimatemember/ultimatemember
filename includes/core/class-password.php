@@ -57,11 +57,11 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			}
 
 			if ( empty( $reset_key ) ) {
-				$reset_key = UM()->user()->maybe_generate_password_reset_key( $user_data );
+				$reset_key = UM()->common()->users()->maybe_generate_password_reset_key( $user_data );
 			}
 
-			// this link looks like WordPress native link e.g. wp-login.php?action=rp&key={hash}&login={user_login}
-			$url = add_query_arg(
+			// This link looks like WordPress native link e.g. wp-login.php?action=rp&key={hash}&login={user_login}
+			return add_query_arg(
 				array(
 					'act'   => 'reset_password',
 					'hash'  => $reset_key,
@@ -69,7 +69,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				),
 				um_get_core_page( 'password-reset' )
 			);
-			return $url;
 		}
 
 
@@ -695,31 +694,27 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			setcookie( $name, $value, $expire, $path, COOKIE_DOMAIN, is_ssl(), true );
 		}
 
-
 		/**
 		 * UM Placeholders for reset password
-		 *
+		 * @depreated 2.10.5
 		 * @param $placeholders
 		 *
 		 * @return array
 		 */
-		function add_placeholder( $placeholders ) {
-			$placeholders[] = '{password_reset_link}';
-			$placeholders[] = '{password}';
+		public function add_placeholder( $placeholders ) {
+			_deprecated_function( __METHOD__, '2.10.5' );
 			return $placeholders;
 		}
 
-
 		/**
 		 * UM Replace Placeholders for reset password
-		 *
+		 * @depreated 2.10.5
 		 * @param $replace_placeholders
 		 *
 		 * @return array
 		 */
-		function add_replace_placeholder( $replace_placeholders ) {
-			$replace_placeholders[] = um_user( 'password_reset_link' );
-			$replace_placeholders[] = esc_html__( 'Your set password', 'ultimate-member' );
+		public function add_replace_placeholder( $replace_placeholders ) {
+			_deprecated_function( __METHOD__, '2.10.5' );
 			return $replace_placeholders;
 		}
 	}
