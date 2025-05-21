@@ -126,13 +126,17 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 			$output = '';
 			$label  = $this->prepare_label( $label, $key, $data );
 
+			if ( ! $this->viewing && ! empty( $data['required'] ) && UM()->options()->get( 'form_asterisk' ) ) {
+				$label .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
+			}
+
 			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
 			$for_attr               = '';
 			if ( ! in_array( $data['type'], $fields_without_metakey, true ) ) {
 				$for_attr = ' for="' . esc_attr( $key . UM()->form()->form_suffix ) . '"';
 			}
 
-			$output .= '<label' . $for_attr . '>' . wp_kses_post( $label ) . '</label>';
+			$output .= '<label' . $for_attr . '>' . wp_kses( $label, UM()->get_allowed_html( 'templates' ) ) . '</label>';
 
 			return $output;
 		}
