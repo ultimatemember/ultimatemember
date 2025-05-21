@@ -1556,10 +1556,10 @@
   position: absolute;
   top: 16px;
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_image .um-field-uploader-wrapper .um-uploader.um-upload-failed .um-uploader-file-preview {
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_image .um-field-uploader-wrapper .um-uploader .um-uploader-file.um-upload-failed .um-uploader-file-preview {
   display: none;
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_image .um-field-uploader-wrapper .um-uploader.um-upload-failed .um-uploader-file-data .um-uploader-file-uploading-process .um-supporting-text {
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_image .um-field-uploader-wrapper .um-uploader .um-uploader-file.um-upload-failed .um-uploader-file-data .um-uploader-file-uploading-process .um-supporting-text {
   position: unset;
   text-align: center;
   width: 100%;
