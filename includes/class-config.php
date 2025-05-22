@@ -237,6 +237,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_profile_area_max_width'       => '600px',
 				'_um_profile_align'                => 'center',
 				'_um_profile_icons'                => 'label',
+				'_um_profile_photo_enabled'        => 1,
 				'_um_profile_disable_photo_upload' => 0,
 				'_um_profile_photo_required'       => 0,
 				'_um_profile_photosize'            => '190',
@@ -764,12 +765,12 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'um_google_maps_js_api_key'             => '',
 				'tenor_api_key'                         => '',
 				'primary_color'                         => '#7f56d9',
+				// NEW UI default settings.
+				'files_secure_links'                    => true,
+				'profile_photo_enabled'                 => true,
+				'enable_user_cover'                     => true,
+				'disable_cover_photo_upload'            => false,
 			);
-
-			if ( UM()->is_new_ui() ) {
-				$this->settings_defaults['account_tab_personal-data'] = true;
-				$this->settings_defaults['files_secure_links']        = true;
-			}
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );
 

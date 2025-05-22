@@ -911,6 +911,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'profile_photosize'                    => array(
 						'sanitize' => array( UM()->admin(), 'sanitize_photosize' ),
 					),
+					'profile_photo_enabled'                => array(
+						'sanitize' => 'bool',
+					),
 					'profile_cover_enabled'                => array(
 						'sanitize' => 'bool',
 					),
@@ -1064,6 +1067,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'files_secure_links'                 => array(
 						'sanitize' => 'bool',
 					),
+					'enable_user_cover'                  => array(
+						'sanitize' => 'bool',
+					),
+					'disable_cover_photo_upload'         => array(
+						'sanitize' => 'bool',
+					),
 				)
 			);
 
@@ -1195,6 +1204,53 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				),
 			);
 
+			$cover_photos_fields = array();
+			if ( UM()->is_new_ui() ) {
+				$cover_photos_fields = array(
+					array(
+						'id'             => 'enable_user_cover',
+						'type'           => 'checkbox',
+						'label'          => __( 'User Cover Photos', 'ultimate-member' ),
+						'checkbox_label' => __( 'Enable User Cover Photos', 'ultimate-member' ),
+						'description'    => __( 'Control whether to enable or disable user cover photos on this site.', 'ultimate-member' ),
+					),
+					array(
+						'id'      => 'default_cover',
+						'type'    => 'media',
+						'url'     => true,
+						'preview' => false,
+						'label'   => __( 'Default Cover Photo', 'ultimate-member' ),
+						'description' => __( 'You can change the default cover photo globally here. Please make sure that the default cover is large enough and respects the ratio you are using for cover photos.', 'ultimate-member' ),
+						'upload_frame_title' => __( 'Select Default Cover Photo', 'ultimate-member' ),
+						'conditional' => array( 'enable_user_cover', '=', '1' ),
+					),
+					array(
+						'id'             => 'disable_cover_photo_upload',
+						'type'           => 'checkbox',
+						'label'          => __( 'Disable Cover Photo Upload', 'ultimate-member' ),
+						'checkbox_label' => __( 'Disable Cover Photo Upload', 'ultimate-member' ),
+						'description'    => __( 'Switch on/off the cover photo uploader.', 'ultimate-member' ),
+						'conditional' => array( 'enable_user_cover', '=', '1' ),
+					),
+					array(
+						'id'    => 'cover_photo_max_size',
+						'type'  => 'text',
+						'size'  => 'small',
+						'label' => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
+						'description' => __( 'Sets a maximum size for the uploaded cover.', 'ultimate-member' ),
+						'conditional' => array( 'disable_cover_photo_upload', '!=', '1' ),
+					),
+					array(
+						'id'    => 'cover_min_width',
+						'type'  => 'text',
+						'size'  => 'small',
+						'label' => __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
+						'description' => __( 'This will be the minimum width for cover photo uploads.', 'ultimate-member' ),
+						'conditional' => array( 'disable_cover_photo_upload', '!=', '1' ),
+					)
+				);
+			}
+
 			/**
 			 * UM hook
 			 *
@@ -1239,6 +1295,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'title'       => __( 'Avatar', 'ultimate-member' ),
 										'description' => __( 'User avatar settings.', 'ultimate-member' ),
 										'fields'      => $avatar_fields,
+									),
+									'cover'   => array(
+										'title'       => __( 'Cover Photo', 'ultimate-member' ),
+										'description' => __( 'User cover photo settings.', 'ultimate-member' ),
+										'fields'      => $cover_photos_fields,
 									),
 									'password' => array(
 										'title'       => __( 'Password', 'ultimate-member' ),
@@ -1727,7 +1788,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									),
 									'cover_photo'   => array(
 										'title'       => __( 'Cover photo', 'ultimate-member' ),
-										'description' => __( 'This section allows you to customize the profile photo component on the user profile.', 'ultimate-member' ),
+										'description' => __( 'This section allows you to customize the profile cover photo component on the user profile.', 'ultimate-member' ),
 										'fields'      => array(
 											array(
 												'id'      => 'default_cover',
@@ -1738,7 +1799,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'description' => __( 'You can change the default cover photo globally here. Please make sure that the default cover is large enough and respects the ratio you are using for cover photos.', 'ultimate-member' ),
 												'upload_frame_title' => __( 'Select Default Cover Photo', 'ultimate-member' ),
 											),
-
 											array(
 												'id'      => 'profile_cover_enabled',
 												'type'    => 'checkbox',
@@ -2373,10 +2433,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				if ( UM()->is_new_ui() ) {
 					unset(
-						$this->settings_structure['appearance']['sections']['']['form_sections']['profile_photo'],
-						$this->settings_structure['appearance']['sections']['']['form_sections']['cover_photo'], // @todo maybe remove if cover photos backs to user profile
+						$this->settings_structure['appearance']['sections']['']['form_sections']['profile_photo']['fields'],
+						$this->settings_structure['appearance']['sections']['']['form_sections']['cover_photo']['fields'][0],
+//						$this->settings_structure['appearance']['sections']['']['form_sections']['cover_photo']['fields'][2], // @todo uncomment as soon as make the cover photos and their sizes clear.
+//						$this->settings_structure['appearance']['sections']['']['form_sections']['cover_photo']['fields'][3], // @todo uncomment as soon as make the cover photos and their sizes clear.
 						$this->settings_structure['']['sections']['uploads']['form_sections']['profile_photo'], // @todo review this section and setting with key="'photo_thumb_sizes'"?
-						$this->settings_structure['']['sections']['uploads']['form_sections']['cover_photo'], // @todo maybe remove if cover photos backs to user profile
+						$this->settings_structure['']['sections']['uploads']['form_sections']['cover_photo'], // @todo review this section and setting with key="'cover_thumb_sizes'"?
 						$this->settings_structure['']['sections']['uploads']['form_sections']['uploads']['fields'][0] // all image mimes are maybe rotated by default in new UI right after completing upload to temp folder
 					);
 
@@ -2417,6 +2479,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'label'       => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
 								'description' => __( 'Sets a maximum size for the uploaded photo', 'ultimate-member' ),
 								'conditional' => array( 'disable_profile_photo_upload', '=', 0 ),
+							),
+						);
+
+						$this->settings_structure['appearance']['sections']['']['form_sections']['profile_photo']['fields'] = array(
+							array(
+								'id'             => 'profile_photo_enabled',
+								'type'           => 'checkbox',
+								'label'          => __( 'Profile Photos', 'ultimate-member' ),
+								'checkbox_label' => __( 'Enable Profile Photos', 'ultimate-member' ),
+								'description'    => __( 'Switch on/off the profile user photos.', 'ultimate-member' ),
+								'default'        => um_get_metadefault( 'profile_photo_enabled' ),
 							),
 						);
 					}

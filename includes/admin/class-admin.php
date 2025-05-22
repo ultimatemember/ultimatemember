@@ -512,6 +512,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					'_um_profile_secondary_btn_word'    => array(
 						'sanitize' => 'text',
 					),
+					'_um_profile_photo_enabled'         => array(
+						'sanitize' => 'bool',
+					),
 					'_um_profile_cover_enabled'         => array(
 						'sanitize' => 'bool',
 					),
