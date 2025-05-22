@@ -26,6 +26,15 @@ if ( ! UM()->is_new_ui() ) {
 	$profile_photo_required       = ! isset( $post_id ) ? false : get_post_meta( $post_id, '_um_profile_photo_required', true );
 }
 
+$icons_position = array(
+	'field' => __( 'Show inside text field', 'ultimate-member' ),
+	'label' => __( 'Show with label', 'ultimate-member' ),
+	'off'   => __( 'Turn off', 'ultimate-member' ),
+);
+if ( UM()->is_new_ui() ) {
+	unset( $icons_position['field'] );
+}
+
 // Profile Photo Size
 $fields = array(
 	array(
@@ -79,11 +88,7 @@ $fields = array(
 		'label'       => __( 'Field Icons', 'ultimate-member' ),
 		'tooltip'     => __( 'Whether to show field icons and where to show them relative to the field', 'ultimate-member' ),
 		'value'       => UM()->query()->get_meta_value( '_um_profile_icons', null, UM()->options()->get( 'profile_icons' ) ),
-		'options'     => array(
-			'field' => __( 'Show inside text field', 'ultimate-member' ),
-			'label' => __( 'Show with label', 'ultimate-member' ),
-			'off'   => __( 'Turn off', 'ultimate-member' ),
-		),
+		'options'     => $icons_position,
 		'conditional' => array( '_um_profile_use_custom_settings', '=', 1 ),
 	),
 	array(

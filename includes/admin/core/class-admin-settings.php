@@ -1150,6 +1150,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				),
 			);
 
+			$icons_position = array(
+				'field' => __( 'Show inside text field', 'ultimate-member' ),
+				'label' => __( 'Show with label', 'ultimate-member' ),
+				'off'   => __( 'Turn off', 'ultimate-member' ),
+			);
+			if ( UM()->is_new_ui() ) {
+				unset( $icons_position['field'] );
+			}
+
 			$avatar_fields = array(
 				array(
 					'id'             => 'use_gravatars',
@@ -1864,13 +1873,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'id'      => 'profile_icons',
 												'type'    => 'select',
 												'label'   => __( 'Profile Field Icons', 'ultimate-member' ),
-												'description' => __( 'This is applicable for edit mode only.', 'ultimate-member' ),
+												'description' => __( 'This controls the display of field icons in the user profile form.', 'ultimate-member' ),
 												'default' => um_get_metadefault( 'profile_icons' ),
-												'options' => array(
-													'field' => __( 'Show inside text field', 'ultimate-member' ),
-													'label' => __( 'Show with label', 'ultimate-member' ),
-													'off' => __( 'Turn off', 'ultimate-member' ),
-												),
+												'options' => $icons_position,
 												'size'    => 'small',
 											),
 											array(
@@ -1982,11 +1987,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'label'   => __( 'Registration Field Icons', 'ultimate-member' ),
 												'description' => __( 'This controls the display of field icons in the registration form.', 'ultimate-member' ),
 												'default' => um_get_metadefault( 'register_icons' ),
-												'options' => array(
-													'field' => __( 'Show inside text field', 'ultimate-member' ),
-													'label' => __( 'Show with label', 'ultimate-member' ),
-													'off' => __( 'Turn off', 'ultimate-member' ),
-												),
+												'options' => $icons_position,
 												'size'    => 'small',
 											),
 										),
@@ -2092,11 +2093,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'label'   => __( 'Login Field Icons', 'ultimate-member' ),
 												'description' => __( 'This controls the display of field icons in the login form.', 'ultimate-member' ),
 												'default' => um_get_metadefault( 'login_icons' ),
-												'options' => array(
-													'field' => __( 'Show inside text field', 'ultimate-member' ),
-													'label' => __( 'Show with label', 'ultimate-member' ),
-													'off' => __( 'Turn off', 'ultimate-member' ),
-												),
+												'options' => $icons_position,
 												'size'    => 'small',
 											),
 										),

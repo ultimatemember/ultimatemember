@@ -1743,6 +1743,12 @@
   row-gap: 16px;
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col label {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 6px;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -1758,6 +1764,9 @@
   color: #a00;
   margin: 0 0 0 3px;
   font-weight: normal;
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col label .um-field-label-icon i {
+  font-size: 20px;
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col label.um-radio-label {
   display: flex;
