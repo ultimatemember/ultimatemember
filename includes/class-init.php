@@ -1353,7 +1353,15 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return bool
 		 */
 		public function is_new_ui() {
-			return defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && $this->options()->get( 'enable_new_ui' );
+			static $is_new = null;
+
+			if ( ! is_null( $is_new ) ) {
+				return $is_new;
+			}
+
+			$is_new = defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && $this->options()->get( 'enable_new_ui' );
+
+			return $is_new;
 		}
 
 		/**

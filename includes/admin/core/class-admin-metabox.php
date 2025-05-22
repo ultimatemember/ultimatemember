@@ -2168,16 +2168,35 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_crop':
+					if ( UM()->is_new_ui() ) {
+						if ( array_key_exists( 'metakey', $field_args ) && 'profile_photo' === $field_args['metakey'] ) {
+							?>
+							<input type="hidden" name="_crop" id="_hidden" value="1" />
+							<?php
+						} elseif ( array_key_exists( 'metakey', $field_args ) && 'cover_photo' === $field_args['metakey'] ) {
+							// Note: The value 2 is used for cover photo crop that set up from UM settings.
+							?>
+							<input type="hidden" name="_crop" id="_hidden" value="2" />
+							<?php
+						}
+					}
 					?>
-
-					<p><label for="_crop"><?php _e( 'Crop Feature', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Enable/disable crop feature for this image upload and define ratio', 'ultimate-member' ) ); ?></label>
-						<select name="_crop" id="_crop" style="width: 100%">
-							<option value="0" <?php selected( '0', $this->edit_mode_value ); ?>><?php _e( 'Turn Off (Default)', 'ultimate-member' ) ?></option>
-							<option value="1" <?php selected( '1', $this->edit_mode_value ); ?>><?php _e( 'Crop and force 1:1 ratio', 'ultimate-member' ) ?></option>
-							<option value="3" <?php selected( '3', $this->edit_mode_value ); ?>><?php _e( 'Crop and force user-defined ratio', 'ultimate-member' ) ?></option>
+					<p>
+						<label for="_crop"><?php esc_html_e( 'Crop Feature', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Enable/disable crop feature for this image upload and define ratio', 'ultimate-member' ) ); ?></label>
+						<select name="_crop" id="_crop" style="width: 100%" <?php disabled( UM()->is_new_ui() && array_key_exists( 'metakey', $field_args ) && ( 'profile_photo' === $field_args['metakey'] || 'cover_photo' === $field_args['metakey'] ) ); ?>>
+							<option value="0" <?php selected( '0', $this->edit_mode_value ); ?>><?php esc_html_e( 'Turn Off (Default)', 'ultimate-member' ); ?></option>
+							<option value="1" <?php selected( '1', $this->edit_mode_value ); ?>><?php esc_html_e( 'Crop and force 1:1 ratio', 'ultimate-member' ); ?></option>
+							<?php
+							if ( UM()->is_new_ui() && array_key_exists( 'metakey', $field_args ) && 'cover_photo' === $field_args['metakey'] ) {
+								// translators: %s is the cover photo ratio value.
+								?>
+								<option value="2" selected><?php echo esc_html( sprintf( __( 'Crop and force %s ratio', 'ultimate-member' ), UM()->options()->get( 'profile_cover_ratio' ) ) ); ?></option>
+								<?php
+							}
+							?>
+							<option value="3" <?php selected( '3', $this->edit_mode_value ); ?>><?php esc_html_e( 'Crop and force user-defined ratio', 'ultimate-member' ); ?></option>
 						</select>
 					</p>
-
 					<?php
 					break;
 

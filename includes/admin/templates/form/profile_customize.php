@@ -139,7 +139,7 @@ $fields = array(
 		'options'     => UM()->options()->get_profile_photo_size( 'cover_thumb_sizes' ),
 		'conditional' => array( '_um_profile_cover_enabled', '=', 1 ),
 	),
-	array(
+	array( // Old UI field.
 		'id'          => '_um_profile_cover_ratio',
 		'type'        => 'select',
 		'label'       => __( 'Cover photo ratio', 'ultimate-member' ),
@@ -238,7 +238,9 @@ if ( UM()->is_new_ui() ) {
 		'_um_profile_photo_required',
 		'_um_profile_disable_photo_upload',
 //		'_um_profile_coversize',  // @todo uncomment as soon as make the cover photos and their sizes clear.
-//		'_um_profile_cover_ratio', // @todo uncomment as soon as make the cover photos and their sizes clear.
+		'_um_profile_cover_ratio', // @todo Maybe comment, but for now there is a lot of the conditions for custom User Profile ratio and
+		// it's not clear what ratio to use for displaying this photo. Also it's complicated to set field settings and form settings.
+		// So using sitewide cover photo ratio as soon as cover photo is enabled
 	);
 
 
@@ -250,7 +252,6 @@ if ( UM()->is_new_ui() ) {
 	if ( ! UM()->options()->get( 'enable_user_cover' ) ) {
 		$hide_fields[] = '_um_profile_cover_enabled';
 		$hide_fields[] = '_um_profile_coversize';
-		$hide_fields[] = '_um_profile_cover_ratio';
 	}
 } else {
 	$hide_fields = array(

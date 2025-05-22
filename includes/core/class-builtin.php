@@ -1482,10 +1482,15 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			if ( UM()->is_new_ui() ) {
 				$this->predefined_fields['profile_photo']['private_use'] = false;
 				if ( ! get_option( 'show_avatars' ) || UM()->options()->get( 'disable_profile_photo_upload' ) ) {
-					// There is no reason to have profile photo as soon as 'show_avatars' is disabled.
+					// There is no reason to have profile photo as soon as 'show_avatars' is disabled or `disable_profile_photo_upload` is enabled via UM settings.
 					unset( $this->predefined_fields['profile_photo'] );
 				}
-				// $this->predefined_fields['cover_photo']['private_use'] = false;
+
+				$this->predefined_fields['cover_photo']['private_use'] = false;
+				if ( ! UM()->options()->get( 'enable_user_cover' ) || UM()->options()->get( 'disable_cover_photo_upload' ) ) {
+					// There is no reason to have cover photo as soon as it is disabled or `disable_profile_photo_upload` is enabled via UM settings.
+					unset( $this->predefined_fields['cover_photo'] );
+				}
 			}
 
 			/**
