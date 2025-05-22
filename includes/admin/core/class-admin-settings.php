@@ -1292,8 +1292,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'fields'      => $users_fields,
 									),
 									'avatar'   => array(
-										'title'       => __( 'Avatar', 'ultimate-member' ),
-										'description' => __( 'User avatar settings.', 'ultimate-member' ),
+										'title'       => __( 'Avatar/Profile Photo', 'ultimate-member' ),
+										'description' => __( 'User avatar (profile photo) settings.', 'ultimate-member' ),
 										'fields'      => $avatar_fields,
 									),
 									'cover'   => array(
@@ -2442,6 +2442,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						$this->settings_structure['']['sections']['uploads']['form_sections']['uploads']['fields'][0] // all image mimes are maybe rotated by default in new UI right after completing upload to temp folder
 					);
 
+					// Hide Profile > Appearance > Cover Photo section as soon as Cover Photo functionality is disabled.
+					if ( ! UM()->options()->get( 'enable_user_cover' ) ) {
+						unset( $this->settings_structure['appearance']['sections']['']['form_sections']['cover_photo'] );
+					}
+
 					if ( ! get_option( 'show_avatars' ) ) {
 						unset( $this->settings_structure['']['sections']['users']['form_sections']['avatar'] );
 					} else {
@@ -2488,9 +2493,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'type'           => 'checkbox',
 								'label'          => __( 'Profile Photos', 'ultimate-member' ),
 								'checkbox_label' => __( 'Enable Profile Photos', 'ultimate-member' ),
-								'description'    => __( 'Switch on/off the profile user photos.', 'ultimate-member' ),
+								'description'    => __( 'The global switch on/off the profile user photos. This can be overridden by individual form settings.', 'ultimate-member' ),
 								'default'        => um_get_metadefault( 'profile_photo_enabled' ),
 							),
+							array(
+								'id'      => 'profile_photosize',
+								'type'    => 'select',
+								'label'   => __( 'Profile Photo Size', 'ultimate-member' ),
+								'default' => um_get_metadefault( 'profile_photosize' ),
+								'options' => UM()->options()->get_profile_photo_size( 'photo_thumb_sizes' ),
+								'description' => __( 'The global default of profile photo size. This can be overridden by individual form settings.', 'ultimate-member' ),
+								'size'        => 'small',
+								'conditional' => array( 'profile_photo_enabled', '=', 1 ),
+							), // @todo comment as soon as make the profile photos and their sizes clear.
 						);
 					}
 				}

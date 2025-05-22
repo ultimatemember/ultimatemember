@@ -123,9 +123,16 @@ $fields = array(
 $fields = apply_filters( 'um_admin_extend_directory_options_general', $fields );
 
 if ( UM()->is_new_ui() ) {
-	$hide_fields = array(
-		'_um_has_cover_photo', // @todo maybe remove if cover photos backs to user profile
-	);
+	$hide_fields = array();
+
+	if ( ! get_option( 'show_avatars' ) ) {
+		$hide_fields[] = '_um_has_profile_photo';
+	}
+
+	if ( ! UM()->options()->get( 'enable_user_cover' ) ) {
+		$hide_fields[] = '_um_has_cover_photo';
+	}
+
 	foreach ( $fields as $field_k => $field ) {
 		if ( in_array( $field['id'], $hide_fields, true ) ) {
 			unset( $fields[ $field_k ] );

@@ -16,6 +16,7 @@ foreach ( UM()->roles()->get_roles() as $key => $value ) {
 
 $profile_secondary_btn        = ! isset( $post_id ) ? UM()->options()->get( 'profile_secondary_btn' ) : get_post_meta( $post_id, '_um_profile_secondary_btn', true );
 $profile_cover_enabled        = ! isset( $post_id ) ? true : get_post_meta( $post_id, '_um_profile_cover_enabled', true );
+$profile_photo_enabled        = ! isset( $post_id ) ? true : get_post_meta( $post_id, '_um_profile_photo_enabled', true );
 $profile_show_name            = ! isset( $post_id ) ? true : get_post_meta( $post_id, '_um_profile_show_name', true );
 $profile_show_social_links    = ! isset( $post_id ) ? UM()->options()->get( 'profile_show_social_links' ) : get_post_meta( $post_id, '_um_profile_show_social_links', true );
 $profile_show_bio             = ! isset( $post_id ) ? true : get_post_meta( $post_id, '_um_profile_show_bio', true );
@@ -152,6 +153,17 @@ $fields = array(
 		),
 		'conditional' => array( '_um_profile_cover_enabled', '=', 1 ),
 	),
+	array( // New UI field.
+		'id'          => '_um_profile_photo_enabled',
+		'label'       => __( 'Enable Profile Photo', 'ultimate-member' ),
+		'type'        => 'select',
+		'value'       => $profile_photo_enabled,
+		'options'     => array(
+			0 => __( 'No', 'ultimate-member' ),
+			1 => __( 'Yes', 'ultimate-member' ),
+		),
+		'conditional' => array( '_um_profile_use_custom_settings', '=', 1 ),
+	),
 	array(
 		'id'          => '_um_profile_photosize',
 		'type'        => 'select',
@@ -159,9 +171,9 @@ $fields = array(
 		'tooltip'     => __( 'Set the profile photo size in pixels here', 'ultimate-member' ),
 		'value'       => UM()->query()->get_meta_value( '_um_profile_photosize', null, UM()->options()->get( 'profile_photosize' ) ),
 		'options'     => UM()->options()->get_profile_photo_size( 'photo_thumb_sizes' ),
-		'conditional' => array( '_um_profile_use_custom_settings', '=', 1 ),
+		'conditional' => array( '_um_profile_photo_enabled', '=', 1 ), // Changed to `array( '_um_profile_use_custom_settings', '=', 1 )` for old UI in loop below.
 	),
-	array(
+	array( // Old UI field.
 		'id'          => '_um_profile_disable_photo_upload',
 		'type'        => 'select',
 		'label'       => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
@@ -173,7 +185,7 @@ $fields = array(
 			1 => __( 'Yes', 'ultimate-member' ),
 		),
 	),
-	array(
+	array( // Old UI field.
 		'id'          => '_um_profile_photo_required',
 		'type'        => 'select',
 		'label'       => __( 'Make Profile Photo Required', 'ultimate-member' ),
@@ -222,13 +234,36 @@ $fields = array(
 
 if ( UM()->is_new_ui() ) {
 	$hide_fields = array(
-		'_um_profile_photosize',
+//		'_um_profile_photosize', // @todo uncomment as soon as make the profile photos and their sizes clear.
 		'_um_profile_photo_required',
 		'_um_profile_disable_photo_upload',
-		'_um_profile_cover_enabled', // @todo maybe remove if cover photos backs to user profile
-		'_um_profile_coversize', // @todo maybe remove if cover photos backs to user profile
-		'_um_profile_cover_ratio', // @todo maybe remove if cover photos backs to user profile
+//		'_um_profile_coversize',  // @todo uncomment as soon as make the cover photos and their sizes clear.
+//		'_um_profile_cover_ratio', // @todo uncomment as soon as make the cover photos and their sizes clear.
 	);
+
+
+	if ( ! get_option( 'show_avatars' ) ) {
+		$hide_fields[] = '_um_profile_photo_enabled';
+		$hide_fields[] = '_um_profile_photosize';
+	}
+
+	if ( ! UM()->options()->get( 'enable_user_cover' ) ) {
+		$hide_fields[] = '_um_profile_cover_enabled';
+		$hide_fields[] = '_um_profile_coversize';
+		$hide_fields[] = '_um_profile_cover_ratio';
+	}
+} else {
+	$hide_fields = array(
+		'_um_profile_photo_enabled',
+	);
+
+	foreach ( $fields as $field_k => $field ) {
+		if ( '_um_profile_photosize' === $field['id'] ) {
+			$fields[ $field_k ]['conditional'] = array( '_um_profile_use_custom_settings', '=', 1 );
+		}
+	}
+}
+if ( $hide_fields ) {
 	foreach ( $fields as $field_k => $field ) {
 		if ( in_array( $field['id'], $hide_fields, true ) ) {
 			unset( $fields[ $field_k ] );
