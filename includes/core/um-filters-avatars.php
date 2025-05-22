@@ -1,4 +1,5 @@
 <?php
+// Old UI file. Avatars are handled in WordPress native way or ignore it based on UM setting.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

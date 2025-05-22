@@ -18,11 +18,11 @@ class User {
 	 * User constructor.
 	 */
 	public function __construct() {
-		if ( UM()->is_new_ui() ) {
-			add_action( 'wp_ajax_um_delete_profile_photo', array( $this, 'delete_avatar' ) );
-			add_action( 'wp_ajax_um_decline_profile_photo_change', array( $this, 'decline_profile_photo_change' ) );
-			add_action( 'wp_ajax_um_apply_profile_photo_change', array( $this, 'apply_profile_photo_change' ) );
-		}
+//		if ( UM()->is_new_ui() ) {
+//			add_action( 'wp_ajax_um_delete_profile_photo', array( $this, 'delete_avatar' ) );
+//			add_action( 'wp_ajax_um_decline_profile_photo_change', array( $this, 'decline_profile_photo_change' ) );
+//			add_action( 'wp_ajax_um_apply_profile_photo_change', array( $this, 'apply_profile_photo_change' ) );
+//		}
 	}
 
 	/**

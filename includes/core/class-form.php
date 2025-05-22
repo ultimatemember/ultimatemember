@@ -488,13 +488,15 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					// Hidden for edit fields
 					$cf_metakeys = array_values( array_diff( $cf_metakeys, $arr_restricted_fields ) );
 
-					$cf_metakeys[] = 'profile_photo';
-					$cf_metakeys[] = 'cover_photo';
+					if ( ! UM()->is_new_ui() ) {
+						$cf_metakeys[] = 'profile_photo';
+						$cf_metakeys[] = 'cover_photo';
+					}
 
 					if ( ! empty( $this->form_data['use_custom_settings'] ) && ! empty( $this->form_data['show_bio'] ) ) {
 						$cf_metakeys[] = UM()->profile()->get_show_bio_key( $this->form_data );
 					} elseif ( UM()->options()->get( 'profile_show_bio' ) ) {
-							$cf_metakeys[] = UM()->profile()->get_show_bio_key( $this->form_data );
+						$cf_metakeys[] = UM()->profile()->get_show_bio_key( $this->form_data );
 					}
 				}
 				// Add required usermeta for register.

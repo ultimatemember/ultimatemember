@@ -672,12 +672,10 @@ class Files extends Uploader {
 
 		$custom_fields = maybe_unserialize( $post_data['custom_fields'] );
 		if ( ! is_array( $custom_fields ) || ! array_key_exists( $field_id, $custom_fields ) ) {
-			if ( ! ( 'profile' === $mode && in_array( $field_id, array( 'cover_photo', 'profile_photo' ), true ) ) ) {
-				wp_send_json_error( __( 'Invalid field metakey', 'ultimate-member' ) );
-			}
+			wp_send_json_error( __( 'Invalid field metakey', 'ultimate-member' ) );
 		}
 
-		if ( empty( $custom_fields[ $field_id ]['crop'] ) && ! in_array( $field_id, array( 'cover_photo', 'profile_photo' ), true ) ) {
+		if ( empty( $custom_fields[ $field_id ]['crop'] ) ) {
 			wp_send_json_error( __( 'This field doesn\'t support image crop', 'ultimate-member' ) );
 		}
 

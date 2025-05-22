@@ -1487,9 +1487,16 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 					break;
 				/* Single Image Upload */
 				case 'image':
-					if ( isset( $data['metakey'] ) && 'profile_photo' === $data['metakey'] ) {
-						if ( ! get_option( 'show_avatars' ) || UM()->options()->get( 'disable_profile_photo_upload' ) ) {
-							break;
+					if ( isset( $data['metakey'] ) ) {
+						// Hide image uploader if disabled based on predefined fields and their options.
+						if ( 'profile_photo' === $data['metakey'] ) {
+							if ( ! get_option( 'show_avatars' ) || UM()->options()->get( 'disable_profile_photo_upload' ) ) {
+								break;
+							}
+						} elseif ( 'cover_photo' === $data['metakey'] ) {
+							if ( ! UM()->options()->get( 'enable_user_cover' ) || UM()->options()->get( 'disable_cover_photo_upload' ) ) {
+								break;
+							}
 						}
 					}
 

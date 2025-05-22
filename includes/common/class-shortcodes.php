@@ -1016,10 +1016,6 @@ class Shortcodes {
 				<?php echo UM()->frontend()::layouts()::progress_bar( array( 'value' => 100 ) ); ?>
 			</div>
 
-			<h3>Avatar uploader</h3>
-
-			<?php echo UM()->frontend()::layouts()::avatar_uploader(); ?>
-
 			<h3>Uploader</h3>
 			<div>
 				<p>Common upload</p>
