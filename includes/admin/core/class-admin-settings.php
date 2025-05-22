@@ -785,10 +785,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'account_tab_privacy'                  => array(
 						'sanitize' => 'bool',
 					),
-					'account_tab_personal-data'             => array(
+					'account_tab_personal-data'            => array(
 						'sanitize' => 'bool',
 					),
-					'account_tab_delete'                    => array(
+					'account_tab_delete'                   => array(
 						'sanitize' => 'bool',
 					),
 					'delete_account_text'                  => array(
@@ -1061,16 +1061,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'secure_allowed_redirect_hosts'        => array(
 						'sanitize' => 'textarea',
 					),
-					'primary_color'                      => array(
+					'primary_color'                        => array(
 						'sanitize' => 'color',
 					),
-					'files_secure_links'                 => array(
+					'files_secure_links'                   => array(
 						'sanitize' => 'bool',
 					),
-					'enable_user_cover'                  => array(
+					'enable_user_cover'                    => array(
 						'sanitize' => 'bool',
 					),
-					'disable_cover_photo_upload'         => array(
+					'disable_cover_photo_upload'           => array(
 						'sanitize' => 'bool',
 					),
 				)
@@ -1215,14 +1215,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'description'    => __( 'Control whether to enable or disable user cover photos on this site.', 'ultimate-member' ),
 					),
 					array(
-						'id'      => 'default_cover',
-						'type'    => 'media',
-						'url'     => true,
-						'preview' => false,
-						'label'   => __( 'Default Cover Photo', 'ultimate-member' ),
-						'description' => __( 'You can change the default cover photo globally here. Please make sure that the default cover is large enough and respects the ratio you are using for cover photos.', 'ultimate-member' ),
+						'id'                 => 'default_cover',
+						'type'               => 'media',
+						'url'                => true,
+						'preview'            => false,
+						'label'              => __( 'Default Cover Photo', 'ultimate-member' ),
+						'description'        => __( 'You can change the default cover photo globally here. Please make sure that the default cover is large enough and respects the ratio you are using for cover photos.', 'ultimate-member' ),
 						'upload_frame_title' => __( 'Select Default Cover Photo', 'ultimate-member' ),
-						'conditional' => array( 'enable_user_cover', '=', '1' ),
+						'conditional'        => array( 'enable_user_cover', '=', '1' ),
 					),
 					array(
 						'id'             => 'disable_cover_photo_upload',
@@ -1230,24 +1230,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'label'          => __( 'Disable Cover Photo Upload', 'ultimate-member' ),
 						'checkbox_label' => __( 'Disable Cover Photo Upload', 'ultimate-member' ),
 						'description'    => __( 'Switch on/off the cover photo uploader.', 'ultimate-member' ),
-						'conditional' => array( 'enable_user_cover', '=', '1' ),
+						'conditional'    => array( 'enable_user_cover', '=', '1' ),
 					),
 					array(
-						'id'    => 'cover_photo_max_size',
-						'type'  => 'text',
-						'size'  => 'small',
-						'label' => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
+						'id'          => 'cover_photo_max_size',
+						'type'        => 'text',
+						'size'        => 'small',
+						'label'       => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
 						'description' => __( 'Sets a maximum size for the uploaded cover.', 'ultimate-member' ),
 						'conditional' => array( 'disable_cover_photo_upload', '!=', '1' ),
 					),
 					array(
-						'id'    => 'cover_min_width',
-						'type'  => 'text',
-						'size'  => 'small',
-						'label' => __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
+						'id'          => 'cover_min_width',
+						'type'        => 'text',
+						'size'        => 'small',
+						'label'       => __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
 						'description' => __( 'This will be the minimum width for cover photo uploads.', 'ultimate-member' ),
 						'conditional' => array( 'disable_cover_photo_upload', '!=', '1' ),
-					)
+					),
 				);
 			}
 
@@ -1296,7 +1296,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'description' => __( 'User avatar (profile photo) settings.', 'ultimate-member' ),
 										'fields'      => $avatar_fields,
 									),
-									'cover'   => array(
+									'cover'    => array(
 										'title'       => __( 'Cover Photo', 'ultimate-member' ),
 										'description' => __( 'User cover photo settings.', 'ultimate-member' ),
 										'fields'      => $cover_photos_fields,
@@ -1808,14 +1808,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'description' => __( 'Switch on/off the profile cover photos.', 'ultimate-member' ),
 											),
 											array(
-												'id'          => 'profile_coversize',
-												'type'        => 'select',
-												'label'       => __( 'Profile Cover Size', 'ultimate-member' ),
-												'default'     => um_get_metadefault( 'profile_coversize' ),
-												'options'     => UM()->options()->get_profile_photo_size( 'cover_thumb_sizes' ),
+												'id'      => 'profile_coversize',
+												'type'    => 'select',
+												'label'   => __( 'Profile Cover Size', 'ultimate-member' ),
+												'default' => um_get_metadefault( 'profile_coversize' ),
+												'options' => UM()->options()->get_profile_photo_size( 'cover_thumb_sizes' ),
 												'description' => __( 'The global default width of cover photo size. This can be overridden by individual form settings.', 'ultimate-member' ),
 												'conditional' => array( 'profile_cover_enabled', '=', 1 ),
-												'size'        => 'small',
+												'size'    => 'small',
 											),
 											array(
 												'id'      => 'profile_cover_ratio',
@@ -2243,15 +2243,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'description' => __( 'Check this box if you would like to enable new UI.', 'ultimate-member' ),
 											),
 											array(
-												'id'          => 'primary_color',
-												'type'        => 'color',
-												'label'       => __( 'Primary Color', 'ultimate-member' ),
+												'id'    => 'primary_color',
+												'type'  => 'color',
+												'label' => __( 'Primary Color', 'ultimate-member' ),
 												'conditional' => array( 'enable_new_ui', '=', '1' ),
 											),
 											array(
-												'id'             => 'enable_new_form_builder',
-												'type'           => 'checkbox',
-												'label'          => __( 'Form Builder', 'ultimate-member' ),
+												'id'    => 'enable_new_form_builder',
+												'type'  => 'checkbox',
+												'label' => __( 'Form Builder', 'ultimate-member' ),
 												'checkbox_label' => __( 'Enable new Form Builder (for developers only)', 'ultimate-member' ),
 												'description' => __( 'Check this box if you would like to enable new Form Builder.', 'ultimate-member' ),
 											),
@@ -2278,11 +2278,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'description' => __( 'Please enable this option only in the cases when you have big or unnecessary queries on your site with active restriction logic. If you want to exclude posts only from the results queries instead of pre_get_posts and fully-hidden post logic also please enable this option. It activates the restriction content logic until 2.2.x version without latest security enhancements.', 'ultimate-member' ),
 											),
 											array(
-												'id'             => 'enable_custom_emoji',
-												'type'           => 'checkbox',
-												'label'          => __( 'Custom UM emoji', 'ultimate-member' ),
+												'id'    => 'enable_custom_emoji',
+												'type'  => 'checkbox',
+												'label' => __( 'Custom UM emoji', 'ultimate-member' ),
 												'checkbox_label' => __( 'Enable outdated emoji', 'ultimate-member' ),
-												'description'    => __( 'Back support UM custom emoji additionally to WordPress native emotize.', 'ultimate-member' ),
+												'description' => __( 'Back support UM custom emoji additionally to WordPress native emotize.', 'ultimate-member' ),
 											),
 										),
 									),
@@ -2361,12 +2361,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'description' => __( 'This section is designed to help you integrate Ultimate Member functionality with Tenor GIF API.', 'ultimate-member' ),
 										'fields'      => array(
 											array(
-												'id'          => 'tenor_api_key',
-												'type'        => 'text',
-												'label'       => __( 'Tenor API Key', 'ultimate-member' ),
+												'id'    => 'tenor_api_key',
+												'type'  => 'text',
+												'label' => __( 'Tenor API Key', 'ultimate-member' ),
 												// translators: %s is the link ti Tenor API docs.
 												'description' => sprintf( __( 'Used for paste GIF images in content. Get more details <a href="%s" title="Tenor API Docs">here</a>.', 'ultimate-member' ), 'https://tenor.com/gifapi/documentation' ),
-												'size'        => 'medium',
+												'size'  => 'medium',
 											),
 										),
 									),
@@ -2435,8 +2435,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					unset(
 						$this->settings_structure['appearance']['sections']['']['form_sections']['profile_photo']['fields'],
 						$this->settings_structure['appearance']['sections']['']['form_sections']['cover_photo']['fields'][0],
-//						$this->settings_structure['appearance']['sections']['']['form_sections']['cover_photo']['fields'][2], // @todo uncomment as soon as make the cover photos and their sizes clear.
-//						$this->settings_structure['appearance']['sections']['']['form_sections']['cover_photo']['fields'][3], // @todo uncomment as soon as make the cover photos and their sizes clear.
+						//                      $this->settings_structure['appearance']['sections']['']['form_sections']['cover_photo']['fields'][2], // @todo uncomment as soon as make the cover photos and their sizes clear.
+						//                      $this->settings_structure['appearance']['sections']['']['form_sections']['cover_photo']['fields'][3], // @todo uncomment as soon as make the cover photos and their sizes clear.
 						$this->settings_structure['']['sections']['uploads']['form_sections']['profile_photo'], // @todo review this section and setting with key="'photo_thumb_sizes'"?
 						$this->settings_structure['']['sections']['uploads']['form_sections']['cover_photo'], // @todo review this section and setting with key="'cover_thumb_sizes'"?
 						$this->settings_structure['']['sections']['uploads']['form_sections']['uploads']['fields'][0] // all image mimes are maybe rotated by default in new UI right after completing upload to temp folder
@@ -2497,11 +2497,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'default'        => um_get_metadefault( 'profile_photo_enabled' ),
 							),
 							array(
-								'id'      => 'profile_photosize',
-								'type'    => 'select',
-								'label'   => __( 'Profile Photo Size', 'ultimate-member' ),
-								'default' => um_get_metadefault( 'profile_photosize' ),
-								'options' => UM()->options()->get_profile_photo_size( 'photo_thumb_sizes' ),
+								'id'          => 'profile_photosize',
+								'type'        => 'select',
+								'label'       => __( 'Profile Photo Size', 'ultimate-member' ),
+								'default'     => um_get_metadefault( 'profile_photosize' ),
+								'options'     => UM()->options()->get_profile_photo_size( 'photo_thumb_sizes' ),
 								'description' => __( 'The global default of profile photo size. This can be overridden by individual form settings.', 'ultimate-member' ),
 								'size'        => 'small',
 								'conditional' => array( 'profile_photo_enabled', '=', 1 ),
