@@ -128,8 +128,8 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 			$wpdb->insert(
 				"{$wpdb->prefix}um_guest_download_attempts",
 				array(
-					'guest_token' => $guest_token,
-					'ip_address'  => $ip_address,
+					'token'      => $guest_token,
+					'ip_address' => $ip_address,
 				),
 				array(
 					'%s',
@@ -159,7 +159,7 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 				$wpdb->prepare(
 					"SELECT COUNT(*)
 					FROM {$wpdb->prefix}um_guest_download_attempts
-					WHERE guest_token = %s AND
+					WHERE token = %s AND
 						  ip_address = %s AND
 						  request_time > NOW() - INTERVAL %d MINUTE",
 					$guest_token,
