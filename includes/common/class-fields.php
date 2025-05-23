@@ -127,11 +127,11 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 			$label  = $this->prepare_label( $label, $key, $data );
 
 			// Display icons before the label only for the new UI.
-			if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'off' !== $this->field_icons ) {
+			if ( ! empty( $label ) && ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'off' !== $this->field_icons ) {
 				$label = '<span class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></span>' . $label;
 			}
 
-			if ( ! $this->viewing && ! empty( $data['required'] ) && UM()->options()->get( 'form_asterisk' ) ) {
+			if ( ! empty( $label ) && ! $this->viewing && ! empty( $data['required'] ) && UM()->options()->get( 'form_asterisk' ) ) {
 				$label .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
 			}
 
