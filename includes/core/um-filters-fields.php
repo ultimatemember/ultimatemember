@@ -393,10 +393,10 @@ if ( UM()->is_new_ui() ) {
 		if ( ! $value ) {
 			return '';
 		}
-
-		if ( 'profile_photo' === $data['metakey'] || 'cover_photo' === $data['metakey'] ) {
-			$value = um_profile( $data['metakey'] );
-		}
+//		TODO Maybe remove these lines or uncomment, based on the testing. In the new UI we don't have displayed profile/cover photo on the forms (view mode).
+//		if ( 'profile_photo' === $data['metakey'] || 'cover_photo' === $data['metakey'] ) {
+//			$value = um_profile( $data['metakey'] );
+//		}
 
 		$uri   = UM()->fields()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ), $value );
 		$title = isset( $data['title'] ) ? $data['title'] : __( 'Untitled photo', 'ultimate-member' );

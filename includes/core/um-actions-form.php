@@ -400,9 +400,11 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 		return;
 	}
 
-	$um_profile_photo = um_profile( 'profile_photo' );
-	if ( empty( $submitted_data['profile_photo'] ) && empty( $um_profile_photo ) && get_post_meta( $form_id, '_um_profile_photo_required', true ) ) {
-		UM()->form()->add_error( 'profile_photo', __( 'Profile Photo is required.', 'ultimate-member' ) );
+	if ( ! UM()->is_new_ui() ) {
+		$um_profile_photo = um_profile( 'profile_photo' );
+		if ( empty( $submitted_data['profile_photo'] ) && empty( $um_profile_photo ) && get_post_meta( $form_id, '_um_profile_photo_required', true ) ) {
+			UM()->form()->add_error( 'profile_photo', __( 'Profile Photo is required.', 'ultimate-member' ) );
+		}
 	}
 
 	$can_edit           = false;

@@ -1,5 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Fix for plugin "The SEO Framework", dynamic profile page title
@@ -38,7 +40,6 @@ add_filter( 'the_seo_framework_pro_add_title', 'um_dynamic_user_profile_pagetitl
 add_filter( 'wp_title', 'um_dynamic_user_profile_pagetitle', 100000, 2 );
 add_filter( 'pre_get_document_title', 'um_dynamic_user_profile_pagetitle', 100000, 2 );
 
-
 /**
  * Try and modify the page title in page
  *
@@ -69,7 +70,6 @@ function um_dynamic_user_profile_title( $title, $id = '' ) {
 	return ( strlen( $title ) !== mb_strlen( $title ) ) ? $title : mb_convert_encoding( $title, 'UTF-8' );
 }
 add_filter( 'the_title', 'um_dynamic_user_profile_title', 100000, 2 );
-
 
 /**
  * Fix SEO canonical for the profile page
@@ -118,48 +118,48 @@ function um_get_canonical_url( $canonical_url, $post ) {
 }
 add_filter( 'get_canonical_url', 'um_get_canonical_url', 20, 2 );
 
+if ( ! UM()->is_new_ui() ) {
+	/**
+	 * Add cover photo label of file size limit
+	 *
+	 * @param array $fields Predefined fields
+	 *
+	 * @return array
+	 */
+	function um_change_profile_cover_photo_label( $fields ) {
+		$max_size = UM()->common()->filesystem()::format_bytes( $fields['cover_photo']['max_size'] );
+		if ( ! empty( $max_size ) ) {
+			list( $file_size, $unit ) = explode( ' ', $max_size );
 
-/**
- * Add cover photo label of file size limit
- *
- * @param array $fields Predefined fields
- *
- * @return array
- */
-function um_change_profile_cover_photo_label( $fields ) {
-	$max_size = UM()->common()->filesystem()::format_bytes( $fields['cover_photo']['max_size'] );
-	if ( ! empty( $max_size ) ) {
-		list( $file_size, $unit ) = explode( ' ', $max_size );
-
-		if ( $file_size < 999999999 ) {
-			$fields['cover_photo']['upload_text'] .= '<small class="um-max-filesize">( ' . __( 'max', 'ultimate-member' ) . ': <span>' . $file_size . $unit . '</span> )</small>';
+			if ( $file_size < 999999999 ) {
+				$fields['cover_photo']['upload_text'] .= '<small class="um-max-filesize">( ' . __( 'max', 'ultimate-member' ) . ': <span>' . $file_size . $unit . '</span> )</small>';
+			}
 		}
-	}
-	return $fields;
-}
-add_filter( 'um_predefined_fields_hook', 'um_change_profile_cover_photo_label', 10, 1 );
-
-
-/**
- * Add profile photo label of file size limit
- *
- * @param array $fields Predefined fields
- *
- * @return array
- */
-function um_change_profile_photo_label( $fields ) {
-	if ( ! isset( $fields['profile_photo'] ) ) {
 		return $fields;
 	}
+	add_filter( 'um_predefined_fields_hook', 'um_change_profile_cover_photo_label' );
 
-	$max_size = UM()->common()->filesystem()::format_bytes( $fields['profile_photo']['max_size'] );
-	if ( ! empty( $max_size ) ) {
-		list( $file_size, $unit ) = explode( ' ', $max_size );
-
-		if ( $file_size < 999999999 ) {
-			$fields['profile_photo']['upload_text'] .= '<small class="um-max-filesize">( ' . __( 'max', 'ultimate-member' ) . ': <span>' . $file_size . $unit . '</span> )</small>';
+	/**
+	 * Add profile photo label of file size limit
+	 *
+	 * @param array $fields Predefined fields
+	 *
+	 * @return array
+	 */
+	function um_change_profile_photo_label( $fields ) {
+		if ( ! isset( $fields['profile_photo'] ) ) {
+			return $fields;
 		}
+
+		$max_size = UM()->common()->filesystem()::format_bytes( $fields['profile_photo']['max_size'] );
+		if ( ! empty( $max_size ) ) {
+			list( $file_size, $unit ) = explode( ' ', $max_size );
+
+			if ( $file_size < 999999999 ) {
+				$fields['profile_photo']['upload_text'] .= '<small class="um-max-filesize">( ' . __( 'max', 'ultimate-member' ) . ': <span>' . $file_size . $unit . '</span> )</small>';
+			}
+		}
+		return $fields;
 	}
-	return $fields;
+	add_filter( 'um_predefined_fields_hook', 'um_change_profile_photo_label' );
 }
-add_filter( 'um_predefined_fields_hook', 'um_change_profile_photo_label', 10, 1 );
