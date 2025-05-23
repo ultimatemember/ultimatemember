@@ -34,11 +34,12 @@ $card_classes = array(
 	'um-member-status-' . $member['account_status'],
 );
 
-if ( $directory_data['cover_photos'] && $member['cover_photo'] ) {
-	$card_classes[] = 'um-member-with-cover';
-} else {
-	$card_classes[] = 'um-member-no-cover';
-}
+// TODO Maybe remove after testing. Because no cover photos on the list view.
+//if ( $directory_data['cover_photos'] && $member['cover_photo'] ) {
+//	$card_classes[] = 'um-member-with-cover';
+//} else {
+//	$card_classes[] = 'um-member-no-cover';
+//}
 
 if ( ! $directory_data['profile_photo'] ) {
 	$card_classes[] = 'um-member-no-photo';
