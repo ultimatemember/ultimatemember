@@ -739,6 +739,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'image_orientation_by_exif'             => false,
 				'image_compression'                     => 60,
 				'image_max_width'                       => 1000,
+				'profile_photo_min_width'               => 256, // 2 x xl size of the single_avatar layout.
 				'cover_min_width'                       => 1000,
 				'profile_photo_max_size'                => 999999999,
 				'cover_photo_max_size'                  => 999999999,
