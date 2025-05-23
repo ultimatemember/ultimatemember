@@ -1,4 +1,5 @@
 <?php
+// Old UI class.
 namespace um\core;
 
 use um\common\Directory;

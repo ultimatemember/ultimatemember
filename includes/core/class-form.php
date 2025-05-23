@@ -488,6 +488,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					// Hidden for edit fields
 					$cf_metakeys = array_values( array_diff( $cf_metakeys, $arr_restricted_fields ) );
 
+					// These fields are added to the form in the new UI, so no need a hardcode to add them to custom fields.
 					if ( ! UM()->is_new_ui() ) {
 						$cf_metakeys[] = 'profile_photo';
 						$cf_metakeys[] = 'cover_photo';

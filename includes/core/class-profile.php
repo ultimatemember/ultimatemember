@@ -52,7 +52,8 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		}
 
 		/**
-		 * Delete profile avatar AJAX handler
+		 * Delete profile avatar AJAX handler.
+		 * Note: Old UI only method.
 		 */
 		public function ajax_delete_profile_photo() {
 			UM()->check_ajax_nonce();
@@ -67,15 +68,12 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 				die( esc_html__( 'You can not edit this user', 'ultimate-member' ) );
 			}
 
-			if ( UM()->is_new_ui() ) {
-				UM()->common()->users()->delete_photo( $user_id, 'profile_photo' );
-			} else {
-				UM()->files()->delete_core_user_photo( $user_id, 'profile_photo' );
-			}
+			UM()->files()->delete_core_user_photo( $user_id, 'profile_photo' );
 		}
 
 		/**
 		 * Delete cover photo AJAX handler
+		 * Note: Old UI only method.
 		 */
 		public function ajax_delete_cover_photo() {
 			UM()->check_ajax_nonce();
@@ -90,11 +88,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 				die( esc_html__( 'You can not edit this user', 'ultimate-member' ) );
 			}
 
-			if ( UM()->is_new_ui() ) {
-				UM()->common()->users()->delete_photo( $user_id, 'cover_photo' );
-			} else {
-				UM()->files()->delete_core_user_photo( $user_id, 'cover_photo' );
-			}
+			UM()->files()->delete_core_user_photo( $user_id, 'cover_photo' );
 		}
 
 		/**
