@@ -819,10 +819,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sanitize' => 'text',
 					),
 					'profile_photo_max_size'               => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'empty_absint',
 					),
 					'cover_photo_max_size'                 => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'empty_absint',
 					),
 					'photo_thumb_sizes'                    => array(
 						'sanitize' => 'absint',
@@ -839,8 +839,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'image_max_width'                      => array(
 						'sanitize' => 'absint',
 					),
+					'profile_photo_min_width'              => array(
+						'sanitize' => 'empty_absint',
+					),
 					'cover_min_width'                      => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'empty_absint',
 					),
 					'enable_reset_password_limit'          => array(
 						'sanitize' => 'bool',
@@ -1234,7 +1237,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					),
 					array(
 						'id'          => 'cover_photo_max_size',
-						'type'        => 'text',
+						'type'        => 'number',
 						'size'        => 'small',
 						'label'       => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
 						'description' => __( 'Sets a maximum size for the uploaded cover.', 'ultimate-member' ),
@@ -1242,7 +1245,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					),
 					array(
 						'id'          => 'cover_min_width',
-						'type'        => 'text',
+						'type'        => 'number',
 						'size'        => 'small',
 						'label'       => __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
 						'description' => __( 'This will be the minimum width for cover photo uploads.', 'ultimate-member' ),
@@ -2477,11 +2480,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							),
 							array(
 								'id'          => 'profile_photo_max_size',
-								'type'        => 'text',
+								'type'        => 'number',
 								'size'        => 'small',
 								'label'       => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
 								'description' => __( 'Sets a maximum size for the uploaded photo', 'ultimate-member' ),
 								'conditional' => array( 'disable_profile_photo_upload', '=', 0 ),
+							),
+							array(
+								'id'          => 'profile_photo_min_width',
+								'type'        => 'number',
+								'size'        => 'small',
+								'label'       => __( 'Profile Photo Minimum Width (px)', 'ultimate-member' ),
+								'description' => __( 'This will be the minimum width for cover photo uploads.', 'ultimate-member' ),
+								'conditional' => array( 'disable_cover_photo_upload', '!=', '1' ),
 							),
 						);
 

@@ -2188,9 +2188,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 							<option value="1" <?php selected( '1', $this->edit_mode_value ); ?>><?php esc_html_e( 'Crop and force 1:1 ratio', 'ultimate-member' ); ?></option>
 							<?php
 							if ( UM()->is_new_ui() && array_key_exists( 'metakey', $field_args ) && 'cover_photo' === $field_args['metakey'] ) {
-								// translators: %s is the cover photo ratio value.
 								?>
-								<option value="2" selected><?php echo esc_html( sprintf( __( 'Crop and force %s ratio', 'ultimate-member' ), UM()->options()->get( 'profile_cover_ratio' ) ) ); ?></option>
+								<option value="2" selected>
+									<?php
+									// translators: %s is the cover photo ratio value.
+									echo esc_html( sprintf( __( 'Crop and force %s ratio', 'ultimate-member' ), UM()->options()->get( 'profile_cover_ratio' ) ) );
+									?>
+								</option>
 								<?php
 							}
 							?>
@@ -2278,7 +2282,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p><label for="_max_size"><?php _e( 'Maximum Size in bytes', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'The maximum size for image that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_max_size" id="_max_size" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="number" name="_max_size" id="_max_size" value="<?php echo $this->edit_mode_value; ?>" />
 					</p>
 
 					<?php

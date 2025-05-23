@@ -785,11 +785,20 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			 */
 			$profile_privacy = apply_filters( 'um_profile_privacy_options', $profile_privacy );
 
+			$wp_max_size            = wp_max_upload_size();
+			$profile_photo_max_size = UM()->options()->get( 'profile_photo_max_size' );
+			if ( empty( $profile_photo_max_size ) ) {
+				$profile_photo_max_size = $wp_max_size;
+			}
+			$cover_photo_max_size = UM()->options()->get( 'cover_photo_max_size' );
+			if ( empty( $cover_photo_max_size ) ) {
+				$cover_photo_max_size = $wp_max_size;
+			}
+
 			/*
 			 * it's important create key for array equals value of 'metakey'.
 			 *
 			 */
-
 			$this->predefined_fields = array(
 
 				'user_login'           => array(
@@ -1279,13 +1288,13 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'title'       => __( 'Profile Photo', 'ultimate-member' ),
 					'metakey'     => 'profile_photo',
 					'type'        => 'image',
-					'label'       => __( 'Change your profile photo', 'ultimate-member' ),
+					'label'       => UM()->is_new_ui() ? __( 'Profile photo', 'ultimate-member' ) : __( 'Change your profile photo', 'ultimate-member' ),
 					'upload_text' => __( 'Upload your photo here', 'ultimate-member' ),
 					'icon'        => 'fas fa-camera',
 					'crop'        => 1,
-					'max_size'    => ( UM()->options()->get( 'profile_photo_max_size' ) ) ? UM()->options()->get( 'profile_photo_max_size' ) : 999999999,
-					'min_width'   => str_replace( 'px', '', UM()->options()->get( 'profile_photosize' ) ),
-					'min_height'  => str_replace( 'px', '', UM()->options()->get( 'profile_photosize' ) ),
+					'max_size'    => $profile_photo_max_size,
+					'min_width'   => UM()->is_new_ui() ? UM()->options()->get( 'profile_photo_min_width' ) : str_replace( 'px', '', UM()->options()->get( 'profile_photosize' ) ),
+					'min_height'  => UM()->is_new_ui() ? UM()->options()->get( 'profile_photo_min_width' ) : str_replace( 'px', '', UM()->options()->get( 'profile_photosize' ) ),
 					'private_use' => true,
 				),
 
@@ -1293,11 +1302,11 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'title'       => __( 'Cover Photo', 'ultimate-member' ),
 					'metakey'     => 'cover_photo',
 					'type'        => 'image',
-					'label'       => __( 'Change your cover photo', 'ultimate-member' ),
+					'label'       => UM()->is_new_ui() ? __( 'Cover photo', 'ultimate-member' ) : __( 'Change your cover photo', 'ultimate-member' ),
 					'upload_text' => __( 'Upload profile cover here', 'ultimate-member' ),
 					'icon'        => 'far fa-image',
 					'crop'        => 2,
-					'max_size'    => ( UM()->options()->get( 'cover_photo_max_size' ) ) ? UM()->options()->get( 'cover_photo_max_size' ) : 999999999,
+					'max_size'    => $cover_photo_max_size,
 					'modal_size'  => 'large',
 					'ratio'       => str_replace( ':1', '', UM()->options()->get( 'profile_cover_ratio' ) ),
 					'min_width'   => UM()->options()->get( 'cover_min_width' ),
