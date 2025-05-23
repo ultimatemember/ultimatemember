@@ -49,8 +49,11 @@ class Profile {
 		$t_args['profile_args']    = $args;
 		$t_args['wrapper_classes'] = array(
 			'um-profile-header',
-			'um-profile-no-cover', // @todo add condition as soon as cover will be enabled in new UI.
 		);
+
+		if ( ! UM()->options()->get( 'enable_user_cover' ) || UM()->options()->get( 'disable_cover_photo_upload' ) || ! UM()->common()->users()->has_photo( $t_args['user_profile_id'], 'cover_photo' ) ) {
+			$t_args['wrapper_classes'][] = 'um-profile-no-cover';
+		}
 
 		$t_args['account_status'] = um_user( 'account_status' );
 

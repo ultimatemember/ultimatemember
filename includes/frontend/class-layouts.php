@@ -899,6 +899,37 @@ class Layouts {
 		return ob_get_clean();
 	}
 
+	public static function cover_photo( $user_id = false, $args = array() ) {
+		if ( false === $user_id && is_user_logged_in() ) {
+			$user_id = get_current_user_id();
+		}
+
+		if ( empty( $user_id ) ) {
+			return '';
+		}
+
+		if ( false === get_userdata( $user_id ) ) {
+			return '';
+		}
+
+		$args = wp_parse_args(
+			$args,
+			array(
+				'size'    => 'm',
+				'classes' => array(),
+			)
+		);
+
+		$classes = array();
+		$classes = array_merge( $classes, $args['classes'] );
+
+		ob_start();
+		?>
+		<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
+		<?php
+		return ob_get_clean();
+	}
+
 	public static function users_list( $user_ids, $args = array() ) {
 		if ( empty( $user_ids ) ) {
 			return '';

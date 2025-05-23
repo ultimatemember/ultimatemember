@@ -4317,7 +4317,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			// Disable these fields in profile view only.
-			if ( ( 'profile_photo' === $key || 'cover_photo' === $key ) && 'profile' === $this->set_mode && UM()->is_new_ui() ) {
+			if ( ( 'profile_photo' === $key || 'cover_photo' === $key ) && 'profile' === $this->set_mode ) {
 				return '';
 			}
 			if ( 'user_password' === $key && 'profile' === $this->set_mode ) {

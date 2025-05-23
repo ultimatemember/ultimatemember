@@ -2435,8 +2435,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					unset(
 						$this->settings_structure['appearance']['sections']['']['form_sections']['profile_photo']['fields'],
 						$this->settings_structure['appearance']['sections']['']['form_sections']['cover_photo']['fields'][0],
-						//                      $this->settings_structure['appearance']['sections']['']['form_sections']['cover_photo']['fields'][2], // @todo uncomment as soon as make the cover photos and their sizes clear.
-						//                      $this->settings_structure['appearance']['sections']['']['form_sections']['cover_photo']['fields'][3], // @todo uncomment as soon as make the cover photos and their sizes clear.
 						$this->settings_structure['']['sections']['uploads']['form_sections']['profile_photo'], // @todo review this section and setting with key="'photo_thumb_sizes'"?
 						$this->settings_structure['']['sections']['uploads']['form_sections']['cover_photo'], // @todo review this section and setting with key="'cover_thumb_sizes'"?
 						$this->settings_structure['']['sections']['uploads']['form_sections']['uploads']['fields'][0] // all image mimes are maybe rotated by default in new UI right after completing upload to temp folder
