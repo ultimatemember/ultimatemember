@@ -64,6 +64,11 @@ class Site_Health {
 			}
 		}
 
+		$tests['direct']['um_show_avatars'] = array(
+			'label' => esc_html__( 'Is the WordPress "Avatar Display" option enabled?', 'ultimate-member' ),
+			'test'  => array( $this, 'show_avatars_test' ),
+		);
+
 		return $tests;
 	}
 
@@ -347,6 +352,38 @@ class Site_Health {
 			$result['badge']['color'] = 'red';
 			$result['description']    = $banned_fields['description'];
 			$result['actions']        = $banned_fields['actions'];
+		}
+
+		return $result;
+	}
+
+	public function show_avatars_test() {
+		$result = array(
+			'label'       => __( 'You have enabled "Avatar Display" option', 'ultimate-member' ),
+			'status'      => 'good',
+			'badge'       => array(
+				'label' => UM_PLUGIN_NAME,
+				'color' => self::BADGE_COLOR,
+			),
+			'description' => sprintf(
+				'<p>%s</p>',
+				__( 'The setting is properly set. Ultimate Member users\' avatars will be properly displayed.', 'ultimate-member' )
+			),
+			'actions'     => '',
+			'test'        => 'um_show_avatars',
+		);
+
+		$show_avatars = get_option( 'show_avatars' );
+		if ( empty( $show_avatars ) ) {
+			$result['label']          = __( 'You have disabled "Avatar Display" option', 'ultimate-member' );
+			$result['status']         = 'recommended';
+			$result['badge']['color'] = 'orange';
+			$result['description']    = __( 'Please visit "Settings > Discussion" screen and enable "Avatar Display" option for properly displaying the users\' avatars.', 'ultimate-member' );
+			$result['actions']        = sprintf(
+				'<p><a href="%s">%s</a></p>',
+				admin_url( 'options-discussion.php' ),
+				esc_html__( 'Visit settings page', 'ultimate-member' )
+			);
 		}
 
 		return $result;

@@ -577,3 +577,19 @@ function um_is_temp_upload( $url ) {
 	_deprecated_function( __FUNCTION__, '3.0.0', 'UM()->files()->is_temp_upload()' );
 	return UM()->files()->is_temp_upload( $url );
 }
+
+/**
+ * Get server protocol
+ * @deprecated 3.0.0 It's the not used helper.
+ * @return  string
+ */
+function um_get_domain_protocol() {
+	_deprecated_function( __FUNCTION__, '3.0.0' );
+	if ( is_ssl() ) {
+		$protocol = 'https://';
+	} else {
+		$protocol = 'http://';
+	}
+
+	return $protocol;
+}

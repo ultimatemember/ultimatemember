@@ -419,11 +419,6 @@ if ( ! class_exists( 'UM' ) ) {
 				update_option( 'um_last_version_upgrade', UM_VERSION );
 
 				add_option( 'um_first_activation_date', time() );
-
-				//show avatars on first install
-				if ( ! get_option( 'show_avatars' ) ) {
-					update_option( 'show_avatars', 1 );
-				}
 			} else {
 				UM()->options()->update( 'rest_api_version', '1.0' );
 			}

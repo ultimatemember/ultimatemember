@@ -226,6 +226,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Deprecated variable `UM()->files()->default_file_fonticon`. Use private variable `UM()->fonticon()->default_file_fonticon` instead.
 * Deprecated function `um_is_temp_upload()` use function 'UM()->files()->is_temp_upload()' instead in old UI.
 * Deprecated function `um_is_temp_image()` because it is unused.
+* Deprecated function `um_get_domain_protocol()` because it is unused helper.
 * Deprecated function `UM()->password()->setcookie()`. Use function `UM()::setcookie()` instead.
 
 = 2.10.3 2025-04-24 =
