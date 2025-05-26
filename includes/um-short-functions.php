@@ -2321,42 +2321,6 @@ function um_get_user_avatar_url( $user_id = '', $size = '96' ) {
 }
 
 /**
- * default cover
- *
- * @return mixed|string|void
- */
-function um_get_default_cover_uri() {
-	$uri = UM()->options()->get( 'default_cover' );
-	$uri = ! empty( $uri['url'] ) ? $uri['url'] : '';
-	if ( $uri ) {
-
-		/**
-		 * UM hook
-		 *
-		 * @type filter
-		 * @title um_get_default_cover_uri_filter
-		 * @description Change Default Cover URL
-		 * @input_vars
-		 * [{"var":"$uri","type":"string","desc":"Default Cover URL"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_filter( 'um_get_default_cover_uri_filter', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_filter( 'um_get_default_cover_uri_filter', 'my_default_cover_uri', 10, 1 );
-		 * function my_default_cover_uri( $uri ) {
-		 *     // your code here
-		 *     return $uri;
-		 * }
-		 * ?>
-		 */
-		return apply_filters( 'um_get_default_cover_uri_filter', $uri );
-	}
-
-	return '';
-}
-
-/**
  * @param $data
  * @param null $attrs
  *
@@ -2592,7 +2556,7 @@ function um_user( $data, $attrs = null ) {
 			} elseif ( um_profile( 'synced_cover_photo' ) ) {
 				$cover_uri = um_profile( 'synced_cover_photo' );
 			} else {
-				$cover_uri  = um_get_default_cover_uri();
+				$cover_uri  = UM()->options()->get_default_cover_url();
 				$is_default = true;
 			}
 

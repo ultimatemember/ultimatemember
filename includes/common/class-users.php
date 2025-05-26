@@ -209,11 +209,11 @@ class Users {
 				$default_avatar = UM()->options()->get( 'default_avatar' );
 				$url            = ! empty( $default_avatar['url'] ) ? $default_avatar['url'] : '';
 				if ( empty( $url ) ) {
+					// Force set default value of the default avatar URL as soon as the option is empty.
 					$url = UM_URL . 'assets/img/default_avatar.jpg';
 				}
 
 				$args['url'] = set_url_scheme( $url );
-				//$args['um_default'] = true;
 				if ( ! empty( $args['class'] ) ) {
 					$args['class'][] = 'um-avatar-default';
 				} else {
@@ -225,8 +225,7 @@ class Users {
 				$url = add_query_arg( array( 't' => time() ), $url );
 			}
 
-			$args['url'] = set_url_scheme( $url );
-			//$args['um_uploaded']  = true;
+			$args['url']          = set_url_scheme( $url );
 			$args['found_avatar'] = true;
 			if ( ! empty( $args['class'] ) ) {
 				if ( is_array( $args['class'] ) ) {
@@ -252,6 +251,10 @@ class Users {
 	 */
 	public function delete_photo( $user_id, $type ) {
 		global $wp_filesystem;
+
+		if ( ! self::user_exists( $user_id ) ) {
+			return false;
+		}
 
 		delete_user_meta( $user_id, $type );
 		delete_user_meta( $user_id, $type . '_metadata_temp' );
@@ -324,8 +327,41 @@ class Users {
 		return ! $this->has_photo( $user_id, $type );
 	}
 
+	/**
+	 * Check if the user has a photo of a specific type.
+	 *
+	 * @param int    $user_id User ID of the user.
+	 * @param string $type    Type of the photo. Can be 'profile_photo' or 'cover_photo'.
+	 *
+	 * @return bool Returns true if the user has a photo of the specified type, false otherwise.
+	 */
 	public function has_photo( $user_id, $type ) {
+		if ( ! self::user_exists( $user_id ) ) {
+			return false;
+		}
+
 		$meta = get_user_meta( $user_id, $type, true );
+		/**
+		 * Filters the `has_photo` condition value for the selected user.
+		 *
+		 * @param {mixed}  $meta_value Meta value of the selected photo type.
+		 * @param {int}    $user_id    User ID.
+		 * @param {string} $type       Photo type. Equals `profile_photo` or `cover_photo`.
+		 *
+		 * @since 3.0.0
+		 * @hook  um_user_has_photo
+		 *
+		 * @example <caption>Custom checking if the user has cover photo using `_custom_cover_photo_metakey` usermeta when default meta value is empty.</caption>
+		 * function my_um_user_has_photo( $meta, $user_id, $type ) {
+		 *     if ( empty( $meta ) && 'cover_photo' === $type ) {
+		 *         $meta = get_user_meta( $user_id, '_custom_cover_photo_metakey', true );
+		 *     }
+		 *     return $meta;
+		 * }
+		 * add_filter( 'um_user_has_photo', 'my_um_user_has_photo', 10, 3 );
+		 */
+		$meta = apply_filters( 'um_user_has_photo', $meta, $user_id, $type );
+
 		return ! empty( $meta );
 	}
 
@@ -1088,5 +1124,100 @@ class Users {
 		update_option( '_um_log_empty_status_users', array( 0, $total_users ) );
 
 		return $total_users;
+	}
+
+	public function get_cover_photo_url( $user_id, $args = array() ) {
+		$url = '';
+
+		if ( ! self::user_exists( $user_id ) ) {
+			return $url;
+		}
+
+		$args = wp_parse_args(
+			$args,
+			array(
+				'size'  => null, // is null for original size, set int in pixels for getting the closest size.
+				'cache' => true,
+			)
+		);
+
+		$has_cover         = $this->has_photo( $user_id, 'cover_photo' );
+		$default_cover_url = UM()->options()->get_default_cover_url();
+
+		if ( $has_cover ) {
+			$external_cover_photo_url = apply_filters( 'um_user_cover_photo_external_url', false, $user_id, $args );
+
+			if ( false === $external_cover_photo_url ) {
+				$cover_photo = get_user_meta( $user_id, 'cover_photo', true );
+
+				if ( ! empty( $cover_photo ) ) {
+					$user_dir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
+					$user_url = UM()->common()->filesystem()->get_user_uploads_url( $user_id );
+
+					$ext = '.' . pathinfo( $cover_photo, PATHINFO_EXTENSION );
+
+					if ( empty( $args['size'] ) ) {
+						$files_map = array(
+							"cover_photo{$ext}",
+						);
+					} else {
+						$all_sizes = UM()->options()->get( 'cover_thumb_sizes' );
+						sort( $all_sizes );
+						$size = UM()->get_closest_value( $all_sizes, $args['size'] );
+
+						$ratio  = str_replace( ':1', '', UM()->options()->get( 'profile_cover_ratio' ) );
+						$height = round( $size / $ratio );
+						$files_map = array(
+							"cover_photo-{$size}{$ext}",
+							"cover_photo-{$size}x{$height}{$ext}",
+							"cover_photo{$ext}",
+						);
+					}
+
+					foreach ( $files_map as $filename ) {
+						if ( file_exists( $user_dir . DIRECTORY_SEPARATOR . $filename ) ) {
+							$url = $user_url . '/' . $filename;
+							break;
+						}
+					}
+				}
+
+				if ( ! empty( $url ) && array_key_exists( 'cache', $args ) && false === $args['cache'] ) {
+					$url = add_query_arg( array( 't' => time() ), $url );
+				}
+
+				if ( ! empty( $url ) ) {
+					$url = set_url_scheme( $url );
+				}
+			} else {
+				$url = $external_cover_photo_url;
+			}
+		} elseif ( ! empty( $default_cover_url ) ) {
+			$url = set_url_scheme( $default_cover_url );
+		}
+
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_user_cover_photo_uri__filter
+		 * @description Change user avatar URL
+		 * @input_vars
+		 * [{"var":"$cover_uri","type":"string","desc":"Cover URL"},
+		 * {"var":"$is_default","type":"bool","desc":"Default or not"},
+		 * {"var":"$attrs","type":"array","desc":"Attributes"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_filter( 'um_user_cover_photo_uri__filter', 'function_name', 10, 3 );
+		 * @example
+		 * <?php
+		 * add_filter( 'um_user_cover_photo_uri__filter', 'my_user_cover_photo_uri', 10, 3 );
+		 * function my_user_cover_photo_uri( $cover_uri, $is_default, $attrs ) {
+		 *     // your code here
+		 *     return $cover_uri;
+		 * }
+		 * ?>
+		 */
+		return apply_filters( 'um_user_cover_photo_url', $url, $user_id, $args );
 	}
 }

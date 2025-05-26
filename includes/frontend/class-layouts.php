@@ -899,6 +899,20 @@ class Layouts {
 		return ob_get_clean();
 	}
 
+	/**
+	 * Cover photo display function.
+	 *
+	 * @param int|bool $user_id The user ID of the user for whom the cover photo should be displayed. Default false.
+	 * @param array    $args    {
+	 *     Optional arguments for cover photo display.
+	 *
+	 *     @type string   $size    Size of the cover photo. Default null.
+	 *     @type bool     $cache   Whether to cache the cover photo. Default true.
+	 *     @type string[] $classes Additional classes for the cover photo container.
+	 * }
+	 *
+	 * @return string The HTML markup for the cover photo container.
+	 */
 	public static function cover_photo( $user_id = false, $args = array() ) {
 		if ( false === $user_id && is_user_logged_in() ) {
 			$user_id = get_current_user_id();
@@ -908,24 +922,50 @@ class Layouts {
 			return '';
 		}
 
-		if ( false === get_userdata( $user_id ) ) {
+		if ( ! UM()->options()->get( 'enable_user_cover' ) ) {
 			return '';
 		}
 
 		$args = wp_parse_args(
 			$args,
 			array(
-				'size'    => 'm',
+				'size'    => null,
+				'cache'   => true,
 				'classes' => array(),
 			)
 		);
 
-		$classes = array();
+		$url = UM()->common()->users()->get_cover_photo_url( $user_id, $args );
+		if ( empty( $url ) ) {
+			return '';
+		}
+
+		$srcset = empty( $args['size'] ) ? '' : UM()->common()->users()->get_cover_photo_url( $user_id, $args['size'] * 2 );
+		if ( $srcset ) {
+			$srcset = sprintf( ' srcset="%s 2x"', esc_attr( $srcset ) );
+		}
+
+		$display_name = um_user( 'display_name' );
+		if ( absint( um_user( 'ID' ) ) !== $user_id ) {
+			$temp_id = um_user( 'ID' );
+			um_fetch_user( $user_id );
+			$display_name = um_user( 'display_name' );
+		}
+
+		if ( ! empty( $temp_id ) ) {
+			um_fetch_user( $temp_id );
+		}
+
+		// translators: %s is the user display name.
+		$alt   = sprintf( __( '%s\'s cover photo', 'ultimate-member' ), $display_name );
+		$ratio = UM()->options()->get( 'profile_cover_ratio' );
+
+		$classes = array( 'um-cover-photo' );
 		$classes = array_merge( $classes, $args['classes'] );
 
 		ob_start();
 		?>
-		<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
+		<img class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" src="<?php echo esc_url( $url ); ?>" <?php echo $srcset; ?> alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" data-ratio="<?php echo esc_attr( $ratio ); ?>" />
 		<?php
 		return ob_get_clean();
 	}

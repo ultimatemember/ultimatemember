@@ -71,11 +71,9 @@ if ( $directory_data['cover_photos'] && $member['cover_photo'] ) {
 		<div class="um-member-photos">
 		<?php
 	}
-	?>
-	<div class="um-member-cover">
-		<?php echo wp_kses( $member['cover_photo'], UM()->get_allowed_html( 'templates' ) ); ?>
-	</div>
-	<?php
+
+	echo wp_kses( $member['cover_photo'], UM()->get_allowed_html( 'templates' ) );
+
 	if ( $directory_data['profile_photo'] ) {
 		echo wp_kses( UM()->frontend()::layouts()::single_avatar( $member['id'], array( 'size' => 'xl' ) ), UM()->get_allowed_html( 'templates' ) );
 		do_action( 'um_members_in_profile_photo_tmpl', $t_args );

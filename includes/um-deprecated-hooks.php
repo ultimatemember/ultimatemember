@@ -151,3 +151,23 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @depecated 3.0.0 Please use 'um_allowed_default_file_types' hook instead.
  * @hook  um_allowed_file_types
  */
+
+/**
+ * Filters the default cover URL.
+ *
+ * @param {string} $url Default cover URL.
+ *
+ * @since 1.3.67
+ * @depecated 3.0.0 Please use 'um_default_cover_url' hook instead.
+ * @hook  um_get_default_cover_uri_filter
+ */
+
+/**
+ * Filters the cover photo size for mobile device.
+ *
+ * @param {string} $size Default cover photo size for mobile device.
+ *
+ * @since 2.0.0
+ * @depecated 3.0.0 Please use 'um_cover_photo_size' hook instead with checking `wp_is_mobile()` inside the callback.
+ * @hook  um_mobile_cover_photo
+ */

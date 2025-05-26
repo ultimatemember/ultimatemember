@@ -519,7 +519,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'bool',
 					),
 					'_um_profile_coversize'             => array(
-						'sanitize' => 'absint',
+						'sanitize' => array( UM()->admin(), 'sanitize_cover_photosize' ),
 					),
 					'_um_profile_cover_ratio'           => array(
 						'sanitize' => 'text',

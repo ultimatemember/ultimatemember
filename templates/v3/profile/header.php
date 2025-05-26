@@ -121,6 +121,27 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 <div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>">
 	<?php
 	/**
+	 * Fires for displaying User Profile cover area.
+	 *
+	 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+	 * 9 - `um_profile_header_cover_area()` displays User Profile cover photo.
+	 *
+	 * @param {array} $profile_args User Profile data.
+	 * @param {int}   $user_id User Profile ID. Since 3.0.0.
+	 *
+	 * @since 1.3.x
+	 * @since 3.0.0 added $user_id attribute
+	 * @hook  um_profile_header_cover_area
+	 *
+	 * @example <caption>Display some content before or after User Profile cover.</caption>
+	 * function my_um_profile_header_cover_area( $args, $user_id ) {
+	 *     // your code here
+	 *     echo $content;
+	 * }
+	 * add_action( 'um_profile_header_cover_area', 'my_um_profile_header_cover_area', 10, 2 );
+	 */
+	do_action( 'um_profile_header_cover_area', $profile_args, $user_profile_id );
+	/**
 	 * Fires for displaying content in header wrapper on User Profile.
 	 *
 	 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):

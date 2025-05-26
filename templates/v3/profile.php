@@ -40,25 +40,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 */
 	do_action( 'um_profile_before_header', $args );
 	/**
-	 * Fires for displaying User Profile cover area.
-	 *
-	 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
-	 * 9 - `um_profile_header_cover_area()` displays User Profile cover photo.
-	 *
-	 * @param {array} $args User Profile data.
-	 *
-	 * @since 1.3.x
-	 * @hook  um_profile_header_cover_area
-	 *
-	 * @example <caption>Display some content before or after User Profile cover.</caption>
-	 * function my_um_profile_header_cover_area( $args ) {
-	 *     // your code here
-	 *     echo $content;
-	 * }
-	 * add_action( 'um_profile_header_cover_area', 'my_um_profile_header_cover_area' );
-	 */
-	do_action( 'um_profile_header_cover_area', $args );
-	/**
 	 * Fires for displaying User Profile header.
 	 *
 	 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):

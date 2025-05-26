@@ -581,7 +581,7 @@ function um_is_temp_upload( $url ) {
 /**
  * Get server protocol
  * @deprecated 3.0.0 It's the not used helper. Because WordPress native `set_url_scheme()` function can be used instead.
- * @return  string
+ * @return string
  */
 function um_get_domain_protocol() {
 	_deprecated_function( __FUNCTION__, '3.0.0' );
@@ -592,4 +592,15 @@ function um_get_domain_protocol() {
 	}
 
 	return $protocol;
+}
+
+/**
+ * default cover
+ * @deprecated 3.0.0
+ * @return string
+ */
+function um_get_default_cover_uri() {
+	_deprecated_function( __FUNCTION__, '3.0.0', 'UM()->options()->get_default_cover_url()' );
+
+	return UM()->options()->get_default_cover_url();
 }

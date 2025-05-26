@@ -199,6 +199,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Action hook 'um_after_profile_header_name_args' use action hook 'um_after_profile_header_name' instead.
 * Filter hook 'um_allowed_image_types' use filter hook 'um_allowed_default_image_types' instead.
 * Filter hook 'um_allowed_file_types' use filter hook 'um_allowed_default_file_types' instead.
+* Filter hook 'um_cover_area_content_dropdown_items' because there is used standard image uploader field on the User Profile form.
+* Filter hook 'um_mobile_cover_photo' use filter hook 'um_cover_photo_size' instead with checking `wp_is_mobile()` inside the callback.
 * Deleted permanently function `um_user_uploads_dir()` deprecated since 2.0.26
 * Deleted permanently function `um_user_uploads_uri()` deprecated since 2.0.26
 * Deleted permanently function `um_user_submitted_registration` deprecated since 2.1.3

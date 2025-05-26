@@ -488,37 +488,26 @@
   bottom: -64px;
   z-index: 2;
 }
-.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-photos .um-member-cover {
+.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-photos .um-cover-photo {
   z-index: 1;
 }
-.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-cover {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: nowrap;
-  width: 100%;
-  height: auto;
-  margin: 0;
-  padding: 0;
-}
-.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-cover img {
+.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-cover-photo {
   width: 100%;
   height: auto;
   margin: 0;
   padding: 0;
   object-fit: cover;
 }
-.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-cover img[data-ratio="1.6:1"] {
+.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-cover-photo[data-ratio="1.6:1"] {
   aspect-ratio: 1.6/1;
 }
-.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-cover img[data-ratio="2.7:1"] {
+.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-cover-photo[data-ratio="2.7:1"] {
   aspect-ratio: 2.7/1;
 }
-.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-cover img[data-ratio="2.2:1"] {
+.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-cover-photo[data-ratio="2.2:1"] {
   aspect-ratio: 2.2/1;
 }
-.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-cover img[data-ratio="3.2:1"] {
+.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-cover-photo[data-ratio="3.2:1"] {
   aspect-ratio: 3.2/1;
 }
 .um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-dropdown-wrapper {

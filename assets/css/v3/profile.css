@@ -14,6 +14,37 @@
   flex-wrap: nowrap;
   row-gap: 12px;
 }
+.um.um-profile .um-profile-header .um-cover-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+.um.um-profile .um-profile-header .um-cover-wrapper .um-cover-photo {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  object-fit: cover;
+}
+.um.um-profile .um-profile-header .um-cover-wrapper .um-cover-photo[data-ratio="1.6:1"] {
+  aspect-ratio: 1.6/1;
+}
+.um.um-profile .um-profile-header .um-cover-wrapper .um-cover-photo[data-ratio="2.7:1"] {
+  aspect-ratio: 2.7/1;
+}
+.um.um-profile .um-profile-header .um-cover-wrapper .um-cover-photo[data-ratio="2.2:1"] {
+  aspect-ratio: 2.2/1;
+}
+.um.um-profile .um-profile-header .um-cover-wrapper .um-cover-photo[data-ratio="3.2:1"] {
+  aspect-ratio: 3.2/1;
+}
 .um.um-profile .um-profile-header .um-profile-header-core {
   display: flex;
   flex-direction: row;

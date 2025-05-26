@@ -648,15 +648,11 @@ function um_profile_dynamic_meta_desc() {
 		$image_size = apply_filters( 'um_profile_dynamic_meta_image_size', $default_image_size, $user_id );
 
 		if ( 'cover_photo' === $image_type ) {
+			$cover_args = array();
 			if ( is_numeric( $image_size ) ) {
-				$sizes = UM()->options()->get( 'cover_thumb_sizes' );
-				if ( is_array( $sizes ) ) {
-					$image_size = um_closest_num( $sizes, $image_size );
-				}
-				$image = um_get_cover_uri( um_profile( 'cover_photo' ), $image_size );
-			} else {
-				$image = um_get_cover_uri( um_profile( 'cover_photo' ), null );
+				$cover_args = array( 'size' => $image_size );
 			}
+			$image = UM()->common()->users()->get_cover_photo_url( $user_id, $cover_args );
 		} elseif ( is_numeric( $image_size ) ) {
 			$sizes = UM()->options()->get( 'photo_thumb_sizes' );
 			if ( is_array( $sizes ) ) {
@@ -776,12 +772,11 @@ add_action( 'wp_head', 'um_profile_dynamic_meta_desc', 20 );
 
 /**
  * Profile header cover
- *
- * @param $args
+ * @todo remove as soon as new UI is live.
+ * @param array $args
  */
 function um_profile_header_cover_area( $args ) {
-	// Disabled for now in new UI.
-	// @todo enable for new UI soon.
+	// Transferred to Frontend > Profile class for new UI.
 	if ( UM()->is_new_ui() ) {
 		return;
 	}
@@ -790,37 +785,19 @@ function um_profile_header_cover_area( $args ) {
 		return;
 	}
 
-	$default_cover = UM()->options()->get( 'default_cover' );
-	$user_cover    = um_user( 'cover_photo' );
+	$default_cover_url = UM()->options()->get_default_cover_url();
+	$user_cover        = um_user( 'cover_photo' );
 
 	$cover_wrapper_classes = array( 'um-cover' );
-	if ( $user_cover || ! empty( $default_cover['url'] ) ) {
+	if ( $user_cover || ! empty( $default_cover_url ) ) {
 		$cover_wrapper_classes[] = 'has-cover';
 	}
 	?>
 	<div class="<?php echo esc_attr( implode( ' ', $cover_wrapper_classes ) ); ?>"
 		 data-user_id="<?php echo esc_attr( um_profile_id() ); ?>" data-ratio="<?php echo esc_attr( $args['cover_ratio'] ); ?>">
 		<?php
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_cover_area_content
-		 * @description Cover area content change
-		 * @input_vars
-		 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_cover_area_content', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_cover_area_content', 'my_cover_area_content', 10, 1 );
-		 * function my_cover_area_content( $user_id ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_cover_area_content', um_profile_id() );
+		/** This action is documented in ultimate-member/includes/frontend/class-profile.php */
+		do_action( 'um_cover_area_content', $args, um_profile_id() );
 		if ( true === UM()->fields()->editing ) {
 
 			$hide_remove    = ' style="display:none;"';
@@ -859,46 +836,21 @@ function um_profile_header_cover_area( $args ) {
 			<?php
 			if ( $user_cover ) {
 
-				$get_cover_size = $args['coversize'];
-				if ( ! $get_cover_size || 'original' === $get_cover_size ) {
-					$size = null;
-				} else {
-					$size = $get_cover_size;
+				$cover_size = null; // Means original.
+				if ( ! empty( $args['coversize'] ) ) {
+					$cover_size = $args['coversize']; // Gets from form setting and if empty goes to global UM > Appearance settings.
 				}
 
-				if ( wp_is_mobile() ) {
-					// Set for mobile width = 300 by default but can be changed via filter
-					$size = 300;
+				// Set for mobile width = 300 by default but can be changed via filter below.
+				$cover_size = wp_is_mobile() ? 300 : $cover_size;
+				/** This filter is documented in ultimate-member/includes/frontend/class-profile.php */
+				$cover_size = apply_filters( 'um_cover_photo_size', $cover_size, $args );
 
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_mobile_cover_photo
-					 * @description Add size for mobile device
-					 * @input_vars
-					 * [{"var":"$size","type":"int","desc":"Form's agrument - Cover Photo size"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage
-					 * <?php add_filter( 'um_mobile_cover_photo', 'change_size', 10, 1 ); ?>
-					 * @example
-					 * <?php
-					 * add_filter( 'um_mobile_cover_photo', 'um_change_cover_mobile_size', 10, 1 );
-					 * function um_change_cover_mobile_size( $size ) {
-					 *     // your code here
-					 *     return $size;
-					 * }
-					 * ?>
-					 */
-					$size = apply_filters( 'um_mobile_cover_photo', $size );
-				}
+				echo um_user( 'cover_photo', $cover_size );
 
-				echo um_user( 'cover_photo', $size );
+			} elseif ( ! empty( $default_cover_url ) ) {
 
-			} elseif ( ! empty( $default_cover['url'] ) ) {
-
-				echo '<img src="' . esc_url( $default_cover['url'] ) . '" alt="" />';
+				echo '<img src="' . esc_url( $default_cover_url ) . '" alt="" />';
 
 			} elseif ( ! isset( UM()->user()->cannot_edit ) ) {
 				?>

@@ -172,6 +172,8 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 					foreach ( $sizes as $key => $value ) {
 						$sizes[ $key ] = $value . 'px';
 					}
+
+					$sizes = array( 'original' => __( 'Original size', 'ultimate-member' ) ) + $sizes;
 				} elseif ( 'photo_thumb_sizes' === $type ) {
 					foreach ( $sizes as $key => $value ) {
 						$sizes[ $key ] = $value . 'x' . $value . 'px';
@@ -182,6 +184,32 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 			}
 
 			return $sizes;
+		}
+
+		/**
+		 * Get default cover URL.
+		 *
+		 * @return string
+		 */
+		public function get_default_cover_url() {
+			$default_cover = UM()->options()->get( 'default_cover' );
+
+			$url = ! empty( $default_cover['url'] ) ? $default_cover['url'] : '';
+			/**
+			 * Filters the default cover URL.
+			 *
+			 * @param {string} $url Default cover URL.
+			 *
+			 * @since 3.0.0
+			 * @hook  um_default_cover_url
+			 * @example <caption>Change the default cover URL.</caption>
+			 * function my_default_cover_uri( $url ) {
+			 *     // your code here
+			 *     return $url;
+			 * }
+			 * add_filter( 'um_default_cover_url', 'my_default_cover_uri' );
+			 */
+			return apply_filters( 'um_default_cover_url', $url );
 		}
 
 		/**
