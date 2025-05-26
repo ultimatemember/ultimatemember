@@ -27,14 +27,8 @@ UM.frontend = {
 
 			var crop_data = target_img.parent().data('crop');
 			var min_width = target_img.parent().data('min_width');
-			var min_height= target_img.parent().data('min_height');
+			var min_height = target_img.parent().data('min_height');
 			var ratio     = target_img.parent().data('ratio');
-
-			let singleUploadRatio = jQuery('.um-modal').find('#um_upload_single').data('ratio');
-			if ( singleUploadRatio ) {
-				let ratioSplit = singleUploadRatio.split(':');
-				ratio = ratioSplit[0];
-			}
 
 			var max_height = jQuery(window).height() - ( jQuery('.um-modal-buttons-wrapper').height() + 20 ) - 80 - ( jQuery('.um-modal-header:visible').height() );
 

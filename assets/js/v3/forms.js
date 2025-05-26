@@ -128,7 +128,7 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 			fileRow.data('filename', response.data[0].name_saved).data('temp_hash', response.data[0].temp_hash).data('nonce', response.data[0].delete_nonce);
 
 			return true;
-		} else if ( 'square' === cropSetting ) {
+		} else if ( 'square' === cropSetting || 'cover' === cropSetting ) {
 			let settings = {
 				// These are the defaults.
 				classes:  'um-field-image-modal',

@@ -531,7 +531,7 @@ class Files extends Uploader {
 			$user_id = ! empty( $_REQUEST['user_id'] ) ? absint( $_REQUEST['user_id'] ) : false;
 			ob_start();
 			?>
-			<div class="um-modal-crop-wrapper" data-crop="<?php echo esc_attr( $crop ); ?>" data-field="<?php echo esc_attr( $real_id ); ?>" data-min_width="256" data-min_height="256">
+			<div class="um-modal-crop-wrapper" data-crop="<?php echo esc_attr( $crop ); ?>" data-ratio="<?php echo 'cover' === $crop ? esc_attr( str_replace( ':1', '', UM()->options()->get( 'profile_cover_ratio' ) ) ) : ''; ?>" data-field="<?php echo esc_attr( $real_id ); ?>" data-min_width="256" data-min_height="256">
 				<img src="<?php echo esc_url( $fileinfo['url'] ); ?>" class="um-field-image-crop fusion-lazyload-ignore" alt="" />
 			</div>
 			<div class="um-modal-buttons-wrapper">

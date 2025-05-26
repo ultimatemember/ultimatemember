@@ -1547,6 +1547,11 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 						'field_data' => $data,
 					);
 
+					// Hardcode for the User Cover Photo ratio.
+					if ( 'cover' === $uploader_args['data']['crop'] ) {
+						$uploader_args['data']['ratio'] = str_replace( ':1', '', UM()->options()->get( 'profile_cover_ratio' ) );
+					}
+
 					if ( ! empty( $data['max_size'] ) ) {
 						$uploader_args['max_upload_size'] = $data['max_size'];
 					}
