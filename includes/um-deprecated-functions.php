@@ -580,7 +580,7 @@ function um_is_temp_upload( $url ) {
 
 /**
  * Get server protocol
- * @deprecated 3.0.0 It's the not used helper.
+ * @deprecated 3.0.0 It's the not used helper. Because WordPress native `set_url_scheme()` function can be used instead.
  * @return  string
  */
 function um_get_domain_protocol() {

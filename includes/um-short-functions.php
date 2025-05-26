@@ -1944,25 +1944,21 @@ function um_youtube_id_from_url( $url ) {
 }
 
 /**
- * Find closest number in an array
+ * Find the closest number in an array helper.
+ * @todo Maybe deprecate soon.
  *
- * @param $array
- * @param $number
+ * @param int[] $array
+ * @param int   $number
  *
- * @return mixed
+ * @return int
  */
 function um_closest_num( $array, $number ) {
-	sort( $array );
-	foreach ( $array as $a ) {
-		if ( $a >= $number ) return $a;
-	}
-
-	return end( $array );
+	return UM()->get_closest_value( $array, $number );
 }
 
 /**
  * get cover uri
- *
+ * @todo Review for new UI
  * @param $image
  * @param $attrs
  *
@@ -2039,7 +2035,7 @@ function um_get_cover_uri( $image, $attrs ) {
 
 /**
  * get avatar URL instead of image
- *
+ * @todo can be marked as legacy for new UI as soon as reviewed Real-time Notifications extension for new UI.
  * @param $get_avatar
  *
  * @return mixed
@@ -2052,6 +2048,7 @@ function um_get_avatar_url( $get_avatar ) {
 
 /**
  * get avatar uri
+ * @todo can be marked as legacy for new UI as soon as 'um_get_user_avatar_url' is legacy.
  *
  * @param $image
  * @param string|array $attrs
@@ -2183,7 +2180,7 @@ function um_get_avatar_uri( $image, $attrs ) {
 
 /**
  * Default avatar URL
- *
+ * @todo can be marked as legacy for new UI as soon as 'um_get_user_avatar_data' is legacy.
  * @return string
  */
 function um_get_default_avatar_uri() {
@@ -2198,7 +2195,7 @@ function um_get_default_avatar_uri() {
 
 /**
  * get user avatar url
- *
+ * @todo can be marked as legacy for new UI as soon as 'um_get_user_avatar_url' is legacy.
  * @param $user_id
  * @param $size
  *
@@ -2312,7 +2309,7 @@ function um_get_user_avatar_data( $user_id = '', $size = '96' ) {
 
 /**
  * get user avatar url
- *
+ * @todo can be marked as legacy for new UI as soon as don't use in SEO and REST API
  * @param $user_id
  * @param $size
  *
@@ -2572,6 +2569,7 @@ function um_user( $data, $attrs = null ) {
 			return UM()->permalinks()->activate_url();
 
 		case 'profile_photo':
+			// Please don't use since new UI.
 			$data = um_get_user_avatar_data( um_user( 'ID' ), $attrs );
 
 			return sprintf(
@@ -2586,6 +2584,7 @@ function um_user( $data, $attrs = null ) {
 			);
 
 		case 'cover_photo':
+			// Please don't use since new UI.
 			$is_default = false;
 
 			if ( um_profile( 'cover_photo' ) ) {
@@ -2634,24 +2633,6 @@ function um_user( $data, $attrs = null ) {
 
 	}
 }
-
-
-/**
- * Get server protocol
- *
- * @return  string
- */
-function um_get_domain_protocol() {
-
-	if (is_ssl()) {
-		$protocol = 'https://';
-	} else {
-		$protocol = 'http://';
-	}
-
-	return $protocol;
-}
-
 
 /**
  * Set SSL to media URI
