@@ -319,72 +319,86 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 			?>
 			<div class="um-profile-header-supporting-rows">
 				<?php
-				if ( 'approved' !== $account_status ) {
-					$status_badge = array(
-						'class' => array( 'um-member-status' ),
-						'color' => 'error',
-					);
-					if ( 'awaiting_admin_review' === $account_status ) {
-						$status_badge['color'] = 'warning';
-					}
-					// translators: %s: profile status.
-					$badge_text = sprintf( __( 'This user account status is %s', 'ultimate-member' ), um_user( 'account_status_name' ) );
-					?>
-					<div class="um-profile-header-account-status-row">
-						<?php echo wp_kses( UM()->frontend()::layouts()::badge( $badge_text, $status_badge ), UM()->get_allowed_html( 'templates' ) ); ?>
-					</div>
-					<?php
-				}
-
-				if ( ! empty( $social_links ) ) {
-					?>
-					<div class="um-profile-header-social-row">
-						<?php echo wp_kses( $social_links, UM()->get_allowed_html( 'templates' ) ); ?>
-					</div>
-					<?php
-				}
-
-				/**
-				 * Fires for displaying content in supporting header row on User Profile.
-				 *
-				 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
-				 * 10 - `add_um_user_bookmarks_button_profile_nocover()` displays User Bookmarks button.
-				 * 50 - `um_social_links_icons()` displays social URLs.
-				 * 60 - `um_friends_add_button_nocover()` displays Friends buttons.
-				 * 70 - `um_mycred_show_user_badges_profile_header()` displays myCRED badges.
-				 *
-				 * @param {array} $args    User Profile data. Since 3.0.0.
-				 * @param {int}   $user_id User Profile ID. Since 3.0.0.
-				 *
-				 * @since 1.3.x
-				 * @since 3.0.0 added $profile_args, $user_id attributes
-				 * @hook  um_after_profile_header_name
-				 *
-				 * @example <caption>Display some content in supporting header row on User Profile.</caption>
-				 * function my_um_after_profile_header_name( $args, $user_id ) {
-				 *     // your code here
-				 *     echo $content;
-				 * }
-				 * add_action( 'um_after_profile_header_name', 'my_um_after_profile_header_name', 10, 2 );
-				 */
-				do_action( 'um_after_profile_header_name', $profile_args, $user_profile_id );
-
-				if ( ! empty( $profile_args['metafields'] ) ) {
-					?>
-					<div class="um-profile-header-supporting-row">
-						<?php echo wp_kses( UM()->profile()->show_meta( $profile_args['metafields'], $profile_args ), UM()->get_allowed_html( 'templates' ) ); ?>
-					</div>
-					<?php
-				}
-
-				if ( $show_bio ) {
-					?>
-					<div class="um-profile-header-supporting-row">
-						<?php
-						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- early escaped variable because need different escape based on options.
-						echo $user_bio;
+				if ( true !== UM()->fields()->editing ) {
+					if ( 'approved' !== $account_status ) {
+						$status_badge = array(
+							'class' => array( 'um-member-status' ),
+							'color' => 'error',
+						);
+						if ( 'awaiting_admin_review' === $account_status ) {
+							$status_badge['color'] = 'warning';
+						}
+						// translators: %s: profile status.
+						$badge_text = sprintf( __( 'This user account status is %s', 'ultimate-member' ), um_user( 'account_status_name' ) );
 						?>
-					</div>
+						<div class="um-profile-header-account-status-row">
+							<?php echo wp_kses( UM()->frontend()::layouts()::badge( $badge_text, $status_badge ), UM()->get_allowed_html( 'templates' ) ); ?>
+						</div>
+						<?php
+					}
+
+					if ( ! empty( $social_links ) ) {
+						?>
+						<div class="um-profile-header-social-row">
+							<?php echo wp_kses( $social_links, UM()->get_allowed_html( 'templates' ) ); ?>
+						</div>
+						<?php
+					}
+
+					/**
+					 * Fires for displaying content in supporting header row on User Profile.
+					 *
+					 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+					 * 10 - `add_um_user_bookmarks_button_profile_nocover()` displays User Bookmarks button.
+					 * 50 - `um_social_links_icons()` displays social URLs.
+					 * 60 - `um_friends_add_button_nocover()` displays Friends buttons.
+					 * 70 - `um_mycred_show_user_badges_profile_header()` displays myCRED badges.
+					 *
+					 * @param {array} $args    User Profile data. Since 3.0.0.
+					 * @param {int}   $user_id User Profile ID. Since 3.0.0.
+					 *
+					 * @since 1.3.x
+					 * @since 3.0.0 added $profile_args, $user_id attributes
+					 * @hook  um_after_profile_header_name
+					 *
+					 * @example <caption>Display some content in supporting header row on User Profile.</caption>
+					 * function my_um_after_profile_header_name( $args, $user_id ) {
+					 *     // your code here
+					 *     echo $content;
+					 * }
+					 * add_action( 'um_after_profile_header_name', 'my_um_after_profile_header_name', 10, 2 );
+					 */
+					do_action( 'um_after_profile_header_name', $profile_args, $user_profile_id );
+
+					if ( ! empty( $profile_args['metafields'] ) ) {
+						?>
+						<div class="um-profile-header-supporting-row">
+							<?php echo wp_kses( UM()->profile()->show_meta( $profile_args['metafields'], $profile_args ), UM()->get_allowed_html( 'templates' ) ); ?>
+						</div>
+						<?php
+					}
+
+					if ( $show_bio ) {
+						?>
+						<div class="um-profile-header-supporting-row">
+							<?php
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- early escaped variable because need different escape based on options.
+							echo $user_bio;
+							?>
+						</div>
+						<?php
+					}
+				} else {
+					?>
+					<span class="um-supporting-text">
+						<?php
+						if ( um_is_myprofile() ) {
+							esc_html_e( 'Update your photo and personal details.', 'ultimate-member' );
+						} else {
+							esc_html_e( 'Update user\'s photo and personal details.', 'ultimate-member' );
+						}
+						?>
+					</span>
 					<?php
 				}
 				?>
