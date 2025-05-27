@@ -21,7 +21,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 	<?php
-	$account_tabs = array();
+	$account_tabs = array(
+		'back_to_profile' => array(
+			'title'   => __( 'Back to Profile', 'ultimate-member' ),
+			'content' => '',
+			'url'     => um_user_profile_url( get_current_user_id() ),
+		),
+	);
 	foreach ( UM()->account()->tabs as $id => $info ) {
 		$tab_enabled = UM()->options()->get( 'account_tab_' . $id );
 
