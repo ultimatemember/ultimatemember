@@ -191,32 +191,35 @@
   border-bottom: 1px solid var(--um-gray-200, #eaecf0);
   padding-bottom: 12px;
 }
-.um.um-profile.um-profile-cover-enabled .um-profile-header .um-profile-header-core {
-  position: relative;
+.um.um-profile.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core {
   padding: 0 32px;
 }
-.um.um-profile.um-profile-cover-enabled .um-profile-header .um-profile-header-core .um-avatar {
+.um.um-profile.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-nav,
+.um.um-profile.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-subnav {
+  padding: 0 32px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+.um.um-profile.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-body {
+  padding: 0 32px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+.um.um-profile.um-profile-cover-enabled:not(.um-profile-no-cover).um-profile-avatar-enabled .um-profile-header .um-profile-header-core {
+  position: relative;
+}
+.um.um-profile.um-profile-cover-enabled:not(.um-profile-no-cover).um-profile-avatar-enabled .um-profile-header .um-profile-header-core .um-avatar {
   position: absolute;
   top: -48px;
 }
-.um.um-profile.um-profile-cover-enabled .um-profile-header .um-profile-header-core .um-profile-header-content {
+.um.um-profile.um-profile-cover-enabled:not(.um-profile-no-cover).um-profile-avatar-enabled .um-profile-header .um-profile-header-core .um-profile-header-content {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   margin-left: 148px;
   min-height: 80px;
-}
-.um.um-profile.um-profile-cover-enabled .um-profile-nav {
-  padding: 0 32px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-}
-.um.um-profile.um-profile-cover-enabled .um-profile-body {
-  padding: 0 32px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
 }
 
 .um-profile-body .um-profile-note {

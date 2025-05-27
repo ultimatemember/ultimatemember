@@ -108,23 +108,29 @@
       border-bottom: 1px solid $gray-200
       padding-bottom: $spacing-lg
   &.#{$prefix}profile-cover-enabled
-    .#{$prefix}profile-header
-      .#{$prefix}profile-header-core
-        position: relative
+    &:not(.#{$prefix}profile-no-cover)
+      .#{$prefix}profile-header
+        .#{$prefix}profile-header-core
+          padding: 0 $spacing-4xl
+      .#{$prefix}profile-nav,
+      .#{$prefix}profile-subnav
         padding: 0 $spacing-4xl
-        .#{$prefix}avatar
-          position: absolute
-          top: -$spacing-6xl
-        .#{$prefix}profile-header-content
-          +border-box
-          margin-left: $spacing-10xl + $spacing-2xl
-          min-height: $spacing-10xl - $spacing-6xl
-    .#{$prefix}profile-nav
-      padding: 0 $spacing-4xl
-      +border-box
-    .#{$prefix}profile-body
-      padding: 0 $spacing-4xl
-      +border-box
+        +border-box
+      .#{$prefix}profile-body
+        padding: 0 $spacing-4xl
+        +border-box
+      &.#{$prefix}profile-avatar-enabled
+        .#{$prefix}profile-header
+          .#{$prefix}profile-header-core
+            position: relative
+            .#{$prefix}avatar
+              position: absolute
+              top: -$spacing-6xl
+            .#{$prefix}profile-header-content
+              +border-box
+              margin-left: $spacing-10xl + $spacing-2xl
+              min-height: $spacing-10xl - $spacing-6xl
+
 
 
 .#{$prefix}profile-body
