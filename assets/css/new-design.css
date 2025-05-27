@@ -1691,6 +1691,15 @@
   padding: 0;
   column-gap: 6px;
 }
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_block[data-key=gdpr_details] {
+  row-gap: 0;
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_block[data-key=gdpr_details] .um-gdpr-post-content-wrap:not(.um-toggle-block-collapsed) {
+  padding-top: 6px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-hint {
   box-sizing: border-box;
   -moz-box-sizing: border-box;

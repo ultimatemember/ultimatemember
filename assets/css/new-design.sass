@@ -1246,6 +1246,11 @@
                   margin: 0
                   padding: 0
                   column-gap: $spacing-sm
+              &.#{$prefix}field-type_block[data-key="gdpr_details"]
+                row-gap: 0
+                .#{$prefix}gdpr-post-content-wrap:not(.#{$prefix}toggle-block-collapsed)
+                  padding-top: $spacing-sm
+                  +border-box
             //.#{$prefix}field
             //  & > input[type="date"],
             //  & > input[type="datetime"],
