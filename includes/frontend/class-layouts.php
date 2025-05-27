@@ -495,7 +495,7 @@ class Layouts {
 					if ( empty( $args['actions'] ) ) {
 						$header_classes[] = 'um-box-header-no-actions';
 					} else {
-						$header_classes[] = 'um-box-header' . $args['actions_position'] . '-actions';
+						$header_classes[] = 'um-box-header-' . $args['actions_position'] . '-actions';
 					}
 				}
 				?>
