@@ -127,7 +127,9 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 		<div class="um-cover-wrapper">
 			<?php
 			if ( $has_cover || ! empty( $default_cover_url ) ) {
-				$cover_args = array();
+				$cover_args = array(
+					'cache' => false,
+				);
 				if ( $has_cover ) {
 					$cover_size = null; // Means original.
 					if ( ! empty( $profile_args['coversize'] ) ) {
