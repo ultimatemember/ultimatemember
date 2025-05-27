@@ -246,7 +246,7 @@ if ( UM()->is_new_ui() ) {
 
 	if ( ! get_option( 'show_avatars' ) ) {
 		$hide_fields[] = '_um_profile_photo_enabled';
-		$hide_fields[] = '_um_profile_photosize';
+//		$hide_fields[] = '_um_profile_photosize';
 	}
 
 	if ( ! UM()->options()->get( 'enable_user_cover' ) ) {
