@@ -228,6 +228,9 @@
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
 }
+.um.um-profile .um-profile-body .um-form-new {
+  width: 100% !important;
+}
 
 .um-profile-body .um-profile-note {
   text-align: center;
