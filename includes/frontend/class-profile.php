@@ -26,7 +26,6 @@ class Profile {
 	 */
 	public function __construct() {
 		add_action( 'um_profile_header', array( &$this, 'header' ), 9 );
-		add_action( 'um_profile_header_cover_area', array( &$this, 'cover_photo' ), 9 );
 		add_action( 'um_profile_navbar', array( &$this, 'navbar' ), 9 );
 		add_action( 'um_profile_menu', array( &$this, 'menu' ), 9 );
 		add_action( 'um_profile_content_main', array( &$this, 'about' ) );
@@ -51,10 +50,6 @@ class Profile {
 		$t_args['wrapper_classes'] = array(
 			'um-profile-header',
 		);
-
-		if ( ! UM()->options()->get( 'enable_user_cover' ) || UM()->options()->get( 'disable_cover_photo_upload' ) || ! UM()->common()->users()->has_photo( $t_args['user_profile_id'], 'cover_photo' ) ) {
-			$t_args['wrapper_classes'][] = 'um-profile-no-cover';
-		}
 
 		$t_args['account_status'] = um_user( 'account_status' );
 
@@ -102,88 +97,6 @@ class Profile {
 		}
 
 		UM()->get_template( 'v3/profile/header.php', '', $t_args, true );
-	}
-
-	/**
-	 * Display cover photo for the user profile.
-	 *
-	 * @param array $args
-	 */
-	public function cover_photo( $args ) {
-		if ( ! UM()->options()->get( 'enable_user_cover' ) || empty( $args['cover_enabled'] ) ) {
-			return;
-		}
-
-		$user_profile_id = um_profile_id();
-
-		$has_cover         = UM()->common()->users()->has_photo( $user_profile_id, 'cover_photo' );
-		$default_cover_url = UM()->options()->get_default_cover_url();
-
-		$wrapper_classes = array( 'um-cover-wrapper' );
-		if ( $has_cover ) {
-			$wrapper_classes[] = 'um-has-cover';
-		} elseif ( ! empty( $default_cover_url ) ) {
-			$wrapper_classes[] = 'um-default-cover';
-		}
-		?>
-		<div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>">
-			<?php
-			if ( $has_cover || ! empty( $default_cover_url ) ) {
-				$cover_args = array();
-				if ( $has_cover ) {
-					$cover_size = null; // Means original.
-					if ( ! empty( $args['coversize'] ) ) {
-						$cover_size = $args['coversize']; // Gets from form setting and if empty goes to global UM > Appearance settings.
-					}
-					// Set for mobile width = 300 by default but can be changed via filter below.
-					$cover_size = wp_is_mobile() ? 300 : $cover_size;
-					/**
-					 * Filters the cover photo size.
-					 *
-					 * @param {string} $cover_size Default cover photo size.
-					 * @param {array}  $args       Profile form data arguments.
-					 *
-					 * @since 3.0.0
-					 * @hook  um_cover_photo_size
-					 *
-					 * @example <caption>Change the mobile cover size to 600 px.</caption>
-					 * function my_default_cover_uri( $cover_size, $args ) {
-					 *     if ( wp_is_mobile() ) {
-					 *         $cover_size = 600;
-					 *     }
-					 *     return $cover_size;
-					 * }
-					 * add_filter( 'um_cover_photo_size', 'my_cover_photo_size', 10, 2 );
-					 */
-					$cover_args['size'] = apply_filters( 'um_cover_photo_size', $cover_size, $args );
-				}
-
-				/**
-				 * UM hook
-				 *
-				 * @type action
-				 * @title um_cover_area_content
-				 * @description Cover area content change
-				 * @input_vars
-				 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_cover_area_content', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_cover_area_content', 'my_cover_area_content', 10, 1 );
-				 * function my_cover_area_content( $user_id ) {
-				 *     // your code here
-				 * }
-				 * ?>
-				 */
-				do_action( 'um_cover_area_content', $args, $user_profile_id );
-
-				echo wp_kses( UM()->frontend()::layouts()::cover_photo( $user_profile_id, $cover_args ), UM()->get_allowed_html( 'templates' ) );
-			}
-			?>
-		</div>
-		<?php
 	}
 
 	public function navbar( $args ) {

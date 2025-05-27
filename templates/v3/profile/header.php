@@ -120,48 +120,69 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 ?>
 <div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>">
 	<?php
-	/**
-	 * Fires for displaying User Profile cover area.
-	 *
-	 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
-	 * 9 - `um_profile_header_cover_area()` displays User Profile cover photo.
-	 *
-	 * @param {array} $profile_args User Profile data.
-	 * @param {int}   $user_id User Profile ID. Since 3.0.0.
-	 *
-	 * @since 1.3.x
-	 * @since 3.0.0 added $user_id attribute
-	 * @hook  um_profile_header_cover_area
-	 *
-	 * @example <caption>Display some content before or after User Profile cover.</caption>
-	 * function my_um_profile_header_cover_area( $args, $user_id ) {
-	 *     // your code here
-	 *     echo $content;
-	 * }
-	 * add_action( 'um_profile_header_cover_area', 'my_um_profile_header_cover_area', 10, 2 );
-	 */
-	do_action( 'um_profile_header_cover_area', $profile_args, $user_profile_id );
-	/**
-	 * Fires for displaying content in header wrapper on User Profile.
-	 *
-	 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
-	 * 10 - `um_add_edit_icon()` displays User Profile edit button.
-	 *
-	 * @param {array} $args    User Profile data.
-	 * @param {int}   $user_id User Profile ID. Since 3.0.0.
-	 *
-	 * @since 1.3.x
-	 * @since 3.0.0 added $user_id attribute
-	 * @hook  um_pre_header_editprofile
-	 *
-	 * @example <caption>Display some content in User Profile header wrapper.</caption>
-	 * function my_um_pre_header_editprofile( $args, $user_id ) {
-	 *     // your code here
-	 *     echo $content;
-	 * }
-	 * add_action( 'um_pre_header_editprofile', 'my_um_pre_header_editprofile', 10, 2 );
-	 */
-	do_action( 'um_pre_header_editprofile', $profile_args, $user_profile_id );
+	if ( ! empty( $profile_args['cover_enabled'] ) && UM()->options()->get( 'enable_user_cover' ) ) {
+		$has_cover         = UM()->common()->users()->has_photo( $user_profile_id, 'cover_photo' );
+		$default_cover_url = UM()->options()->get_default_cover_url();
+		?>
+		<div class="um-cover-wrapper">
+			<?php
+			if ( $has_cover || ! empty( $default_cover_url ) ) {
+				$cover_args = array();
+				if ( $has_cover ) {
+					$cover_size = null; // Means original.
+					if ( ! empty( $profile_args['coversize'] ) ) {
+						$cover_size = $profile_args['coversize']; // Gets from form setting and if empty goes to global UM > Appearance settings.
+					}
+					// Set for mobile width = 300 by default but can be changed via filter below.
+					$cover_size = wp_is_mobile() ? 300 : $cover_size;
+					/**
+					 * Filters the cover photo size.
+					 *
+					 * @param {string} $cover_size   Default cover photo size.
+					 * @param {array}  $profile_args Profile form data arguments.
+					 *
+					 * @since 3.0.0
+					 * @hook  um_cover_photo_size
+					 *
+					 * @example <caption>Change the mobile cover size to 600 px.</caption>
+					 * function my_default_cover_uri( $cover_size, $profile_args ) {
+					 *     if ( wp_is_mobile() ) {
+					 *         $cover_size = 600;
+					 *     }
+					 *     return $cover_size;
+					 * }
+					 * add_filter( 'um_cover_photo_size', 'my_cover_photo_size', 10, 2 );
+					 */
+					$cover_args['size'] = apply_filters( 'um_cover_photo_size', $cover_size, $profile_args );
+				}
+
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_cover_area_content
+				 * @description Cover area content change
+				 * @input_vars
+				 * [{"var":"$user_id","type":"int","desc":"User ID"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_action( 'um_cover_area_content', 'function_name', 10, 1 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_cover_area_content', 'my_cover_area_content', 10, 1 );
+				 * function my_cover_area_content( $user_id ) {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
+				do_action( 'um_cover_area_content', $profile_args, $user_profile_id );
+
+				echo wp_kses( UM()->frontend()::layouts()::cover_photo( $user_profile_id, $cover_args ), UM()->get_allowed_html( 'templates' ) );
+			}
+			?>
+		</div>
+		<?php
+	}
 	?>
 	<div class="um-profile-header-core">
 		<?php

@@ -197,6 +197,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 **Deprecated**
 
 * Action hook 'um_after_profile_header_name_args' use action hook 'um_after_profile_header_name' instead.
+* Action hook 'um_pre_header_editprofile' for new UI profile templates.
+* Action hook 'um_profile_header_cover_area' for new UI profile templates.
 * Filter hook 'um_allowed_image_types' use filter hook 'um_allowed_default_image_types' instead.
 * Filter hook 'um_allowed_file_types' use filter hook 'um_allowed_default_file_types' instead.
 * Filter hook 'um_cover_area_content_dropdown_items' because there is used standard image uploader field on the User Profile form.

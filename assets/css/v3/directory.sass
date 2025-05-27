@@ -344,6 +344,10 @@
           &.#{$prefix}member
             +flex( column, flex-start, center, nowrap )
             position: relative
+            .#{$prefix}avatar
+              border: $spacing-xs solid $um-white
+              +border-box
+              box-shadow: $shadow-lg
             .#{$prefix}member-box-main
               .#{$prefix}member-meta
                 .#{$prefix}member-connect

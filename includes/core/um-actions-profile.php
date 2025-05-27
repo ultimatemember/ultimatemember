@@ -934,23 +934,23 @@ function um_profile_header( $args ) {
 
 		<?php
 		/**
-		 * UM hook
+		 * Fires for displaying content in header wrapper on User Profile.
 		 *
-		 * @type action
-		 * @title um_pre_header_editprofile
-		 * @description Insert some content before edit profile header
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_pre_header_editprofile', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_pre_header_editprofile', 'my_pre_header_editprofile', 10, 1 );
-		 * function my_pre_header_editprofile( $args ) {
+		 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+		 * 10 - `um_add_edit_icon()` displays User Profile edit button.
+		 *
+		 * @param {array} $args    User Profile data.
+		 * @param {int}   $user_id User Profile ID. Since 3.0.0.
+		 *
+		 * @since 1.3.x
+		 * @hook  um_pre_header_editprofile
+		 *
+		 * @example <caption>Display some content in User Profile header wrapper.</caption>
+		 * function my_um_pre_header_editprofile( $args ) {
 		 *     // your code here
+		 *     echo $content;
 		 * }
-		 * ?>
+		 * add_action( 'um_pre_header_editprofile', 'my_um_pre_header_editprofile' );
 		 */
 		do_action( 'um_pre_header_editprofile', $args ); ?>
 

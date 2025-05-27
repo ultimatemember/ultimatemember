@@ -10,6 +10,10 @@
   .#{$prefix}profile-header
     +flex( column,flex-start,stretch,nowrap )
     row-gap: $spacing-lg
+    .#{$prefix}avatar
+      border: $spacing-xs solid $um-white
+      +border-box
+      box-shadow: $shadow-lg
     .#{$prefix}cover-wrapper
       +flex( column, flex-start, stretch, nowrap )
       margin: 0
@@ -32,6 +36,7 @@
     .#{$prefix}profile-header-core
       +flex( row,space-between,start,nowrap )
       column-gap: $spacing-3xl
+      +border-box
       .#{$prefix}profile-header-content
         +flex( column,flex-start,stretch,nowrap )
         flex: 1
@@ -102,6 +107,25 @@
     .#{$prefix}profile-header
       border-bottom: 1px solid $gray-200
       padding-bottom: $spacing-lg
+  &.#{$prefix}profile-cover-enabled
+    .#{$prefix}profile-header
+      .#{$prefix}profile-header-core
+        position: relative
+        padding: 0 $spacing-4xl
+        .#{$prefix}avatar
+          position: absolute
+          top: -$spacing-6xl
+        .#{$prefix}profile-header-content
+          +border-box
+          margin-left: $spacing-10xl + $spacing-2xl
+          min-height: $spacing-10xl - $spacing-6xl
+    .#{$prefix}profile-nav
+      padding: 0 $spacing-4xl
+      +border-box
+    .#{$prefix}profile-body
+      padding: 0 $spacing-4xl
+      +border-box
+
 
 .#{$prefix}profile-body
   .#{$prefix}profile-note

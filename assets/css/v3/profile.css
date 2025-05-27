@@ -14,6 +14,13 @@
   flex-wrap: nowrap;
   row-gap: 12px;
 }
+.um.um-profile .um-profile-header .um-avatar {
+  border: 4px solid #fff;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-shadow: 0 4px 6px -2px var(--um-gray-900-a-3, rgba(16, 24, 40, 0.03)), 0 12px 16px -4px var(--um-gray-900-a-8, rgba(16, 24, 40, 0.08));
+}
 .um.um-profile .um-profile-header .um-cover-wrapper {
   display: flex;
   flex-direction: column;
@@ -52,6 +59,9 @@
   align-items: start;
   flex-wrap: nowrap;
   column-gap: 24px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 .um.um-profile .um-profile-header .um-profile-header-core .um-profile-header-content {
   display: flex;
@@ -180,6 +190,33 @@
 .um.um-profile.um-editing .um-profile-header {
   border-bottom: 1px solid var(--um-gray-200, #eaecf0);
   padding-bottom: 12px;
+}
+.um.um-profile.um-profile-cover-enabled .um-profile-header .um-profile-header-core {
+  position: relative;
+  padding: 0 32px;
+}
+.um.um-profile.um-profile-cover-enabled .um-profile-header .um-profile-header-core .um-avatar {
+  position: absolute;
+  top: -48px;
+}
+.um.um-profile.um-profile-cover-enabled .um-profile-header .um-profile-header-core .um-profile-header-content {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  margin-left: 148px;
+  min-height: 80px;
+}
+.um.um-profile.um-profile-cover-enabled .um-profile-nav {
+  padding: 0 32px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+.um.um-profile.um-profile-cover-enabled .um-profile-body {
+  padding: 0 32px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 .um-profile-body .um-profile-note {

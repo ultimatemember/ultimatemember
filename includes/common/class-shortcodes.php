@@ -1532,6 +1532,37 @@ class Shortcodes {
 
 			$args = apply_filters( 'um_template_load_args', $args, $tpl );
 
+			if ( UM()->is_new_ui() && 'profile' === $tpl ) {
+				$args['wrapper_classes'] = array(
+					'um',
+					$this->get_class( $args['mode'] ),
+					'um-' . $args['form_id'],
+					'um-role-' . um_user( 'role' ),
+				);
+
+				if ( ! UM()->options()->get( 'enable_user_cover' ) || empty( $args['cover_enabled'] ) ) {
+					$args['wrapper_classes'][] = 'um-profile-cover-disabled';
+				} else {
+					$args['wrapper_classes'][] = 'um-profile-cover-enabled';
+
+					$has_cover         = UM()->common()->users()->has_photo( um_profile_id(), 'cover_photo' );
+					$default_cover_url = UM()->options()->get_default_cover_url();
+					if ( $has_cover ) {
+						$args['wrapper_classes'][] = 'um-profile-has-cover';
+					} elseif ( ! empty( $default_cover_url ) ) {
+						$args['wrapper_classes'][] = 'um-profile-default-cover';
+					} else {
+						$args['wrapper_classes'][] = 'um-profile-no-cover';
+					}
+				}
+
+				if ( get_option( 'show_avatars' ) ) {
+					$args['wrapper_classes'][] = 'um-profile-avatar-enabled';
+				} else {
+					$args['wrapper_classes'][] = 'um-profile-avatar-disabled';
+				}
+			}
+
 			/**
 			 * This use of extract() cannot be removed. There are many possible ways that
 			 * templates could depend on variables that it creates existing, and no way to

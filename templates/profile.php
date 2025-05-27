@@ -28,7 +28,24 @@ $description_key = UM()->profile()->get_show_bio_key( $args );
 		<form method="post" action="" data-description_key="<?php echo esc_attr( $description_key ); ?>">
 			<?php
 			}
-			/** This action is documented in ultimate-member/templates/v3/profile.php */
+			/**
+			 * Fires for displaying User Profile cover area.
+			 *
+			 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+			 * 9 - `um_profile_header_cover_area()` displays User Profile cover photo.
+			 *
+			 * @param {array} $profile_args User Profile data.
+			 *
+			 * @since 1.3.x
+			 * @hook  um_profile_header_cover_area
+			 *
+			 * @example <caption>Display some content before or after User Profile cover.</caption>
+			 * function my_um_profile_header_cover_area( $args ) {
+			 *     // your code here
+			 *     echo $content;
+			 * }
+			 * add_action( 'um_profile_header_cover_area', 'my_um_profile_header_cover_area' );
+			 */
 			do_action( 'um_profile_header_cover_area', $args );
 			/** This action is documented in ultimate-member/templates/v3/profile.php */
 			do_action( 'um_profile_header', $args );
