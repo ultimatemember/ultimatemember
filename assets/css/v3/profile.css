@@ -221,6 +221,13 @@
   margin-left: 148px;
   min-height: 80px;
 }
+.um.um-profile .um-profile-body {
+  max-width: none !important;
+  width: 100%;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
 
 .um-profile-body .um-profile-note {
   text-align: center;

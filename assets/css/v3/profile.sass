@@ -130,9 +130,13 @@
               +border-box
               margin-left: $spacing-10xl + $spacing-2xl
               min-height: $spacing-10xl - $spacing-6xl
-
+  .#{$prefix}profile-body // TODO Maybe remove as soon as decide to use max-width for profile body.
+    max-width: none !important
+    width: 100%
+    +border-box
 
 .#{$prefix}profile-body
+  // Profile > Empty content note in the profile tab.
   .#{$prefix}profile-note
     text-align: center
     color: $gray-700
