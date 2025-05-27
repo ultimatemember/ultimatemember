@@ -2505,7 +2505,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'description'    => __( 'The global switch on/off the profile user photos. This can be overridden by individual form settings.', 'ultimate-member' ),
 								'default'        => um_get_metadefault( 'profile_photo_enabled' ),
 							),
-							array(
+							/*array(
 								'id'          => 'profile_photosize',
 								'type'        => 'select',
 								'label'       => __( 'Profile Photo Size', 'ultimate-member' ),
@@ -2514,7 +2514,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'description' => __( 'The global default of profile photo size. This can be overridden by individual form settings.', 'ultimate-member' ),
 								'size'        => 'small',
 								'conditional' => array( 'profile_photo_enabled', '=', 1 ),
-							), // @todo comment as soon as make the profile photos and their sizes clear.
+							),*/ // @todo comment as soon as make the profile photos and their sizes clear.
 						);
 					}
 				}

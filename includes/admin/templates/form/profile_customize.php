@@ -234,7 +234,7 @@ $fields = array(
 
 if ( UM()->is_new_ui() ) {
 	$hide_fields = array(
-//		'_um_profile_photosize', // @todo uncomment as soon as make the profile photos and their sizes clear.
+		'_um_profile_photosize', // @todo uncomment as soon as make the profile photos and their sizes clear.
 		'_um_profile_photo_required',
 		'_um_profile_disable_photo_upload',
 //		'_um_profile_coversize',  // @todo uncomment as soon as make the cover photos and their sizes clear.

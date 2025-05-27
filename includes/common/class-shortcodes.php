@@ -1556,10 +1556,10 @@ class Shortcodes {
 					}
 				}
 
-				if ( get_option( 'show_avatars' ) ) {
-					$args['wrapper_classes'][] = 'um-profile-avatar-enabled';
-				} else {
+				if ( ! get_option( 'show_avatars' ) || empty( $args['photo_enabled'] ) ) {
 					$args['wrapper_classes'][] = 'um-profile-avatar-disabled';
+				} else {
+					$args['wrapper_classes'][] = 'um-profile-avatar-enabled';
 				}
 			}
 

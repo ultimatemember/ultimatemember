@@ -186,19 +186,21 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 	?>
 	<div class="um-profile-header-core">
 		<?php
-		// Don't remove um-profile-header-core wrapper if you have 3rd-party integrations via `pre` and `after` header hooks.
-		echo wp_kses(
-			UM()->frontend()::layouts()::single_avatar(
-				$user_profile_id,
-				array(
-					'size'        => 'xl',
-					'type'        => 'round',
-					'ignore_caps' => true, // ignore caps because we display in profile and caps checked on lower level
-					'cache'       => false,
-				)
-			),
-			UM()->get_allowed_html( 'templates' )
-		);
+		if ( get_option( 'show_avatars' ) && ! empty( $profile_args['photo_enabled'] ) ) {
+			// Don't remove um-profile-header-core wrapper if you have 3rd-party integrations via `pre` and `after` header hooks.
+			echo wp_kses(
+				UM()->frontend()::layouts()::single_avatar(
+					$user_profile_id,
+					array(
+						'size'        => 'xl',
+						'type'        => 'round',
+						'ignore_caps' => true, // ignore caps because we display in profile and caps checked on lower level
+						'cache'       => false,
+					)
+				),
+				UM()->get_allowed_html( 'templates' )
+			);
+		}
 		?>
 		<div class="um-profile-header-content">
 			<?php
