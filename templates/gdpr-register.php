@@ -38,7 +38,7 @@ $error_message = ! empty( $args['use_gdpr_error_text'] ) ? $args['use_gdpr_error
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
-<div class="um-field um-field-type_terms_conditions" data-key="use_terms_conditions_agreement" style="display:block;padding:0;">
+<div class="um-field um-field-type_gdpr_agreement" data-key="use_gdpr_agreement" style="display:block;padding:0;">
 	<div class="um-field-area">
 		<div class="um-gdpr-content" style="display:none;">
 			<?php
