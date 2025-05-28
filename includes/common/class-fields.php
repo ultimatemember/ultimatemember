@@ -28,7 +28,7 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 		 * @param  string $title
 		 * @param  bool   $checked
 		 */
-		public function checkbox( $id, $title, $checked = true ) {
+		public function checkbox( $id, $title, $checked = true, $disabled = false ) {
 			/**
 			 * Set value on form submission
 			 */
@@ -37,7 +37,7 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 			<div id="um_field_0_<?php echo esc_attr( $id ); ?>" class="um-field um-field-bool um-field-<?php echo esc_attr( $id ); ?> um-field-bool um-field-type_bool" data-key="<?php echo esc_attr( $id ); ?>">
 				<input type="hidden" name="<?php echo esc_attr( $id ); ?>" value="0" />
 				<div class="um-field-checkbox-area">
-					<label class="um-checkbox-label um-size-md"><input name="<?php echo esc_attr( $id ); ?>" type="checkbox" value="1" <?php checked( $checked ); ?>><?php echo esc_html( $title ); ?></label>
+					<label class="um-checkbox-label um-size-md"><input name="<?php echo esc_attr( $id ); ?>" type="checkbox" value="1" <?php checked( $checked ); ?> <?php disabled( $disabled ); ?>><?php echo esc_html( $title ); ?></label>
 				</div>
 			</div>
 			<?php

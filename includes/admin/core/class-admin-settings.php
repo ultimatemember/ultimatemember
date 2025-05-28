@@ -1496,7 +1496,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'type'  => 'checkbox',
 												'label' => __( 'Delete Account Tab', 'ultimate-member' ),
 												'checkbox_label' => __( 'Display delete account tab', 'ultimate-member' ),
-												'description' => __( 'Enable/disable the Delete account tab in account page.', 'ultimate-member' ),
+												'description' => __( 'Enable or disable the Delete account tab in account page.', 'ultimate-member' ),
 											),
 											array(
 												'id'    => 'delete_account_text',
