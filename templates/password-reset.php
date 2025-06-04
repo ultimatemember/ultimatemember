@@ -6,17 +6,18 @@
  *
  * Call: function ultimatemember_password()
  *
- * @version 2.7.0
+ * @version 2.10.5
  *
  * @var string $mode
  * @var int    $form_id
  * @var array  $args
+ *
+ * phpcs:disable WordPress.Security.NonceVerification
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
-
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 	<div class="um-form">
 		<form method="post" action="">
@@ -62,19 +63,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 				 */
 				do_action( 'um_reset_password_page_hidden_fields', $args );
 
-				if ( ! empty( $_GET['updated'] ) ) { ?>
+				if ( ! empty( $_GET['updated'] ) ) {
+					?>
 					<div class="um-field um-field-block um-field-type_block">
 						<div class="um-field-block">
 							<div style="text-align:center;">
-								<?php if ( 'expiredkey' === sanitize_key( $_GET['updated'] ) ) {
+								<?php
+								if ( 'expiredkey' === sanitize_key( $_GET['updated'] ) ) {
 									esc_html_e( 'Your password reset link has expired. Please request a new link below.', 'ultimate-member' );
 								} elseif ( 'invalidkey' === sanitize_key( $_GET['updated'] ) ) {
 									esc_html_e( 'Your password reset link appears to be invalid. Please request a new link below.', 'ultimate-member' );
-								} ?>
+								}
+								?>
 							</div>
 						</div>
 					</div>
-				<?php } else { ?>
+					<?php
+				} else {
+					?>
 					<div class="um-field um-field-block um-field-type_block">
 						<div class="um-field-block">
 							<div style="text-align:center;">
@@ -82,7 +88,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 							</div>
 						</div>
 					</div>
-				<?php }
+					<?php
+				}
 
 				$fields = UM()->builtin()->get_specific_fields( 'username_b' );
 
@@ -111,18 +118,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 				 * }
 				 * ?>
 				 */
-				do_action( 'um_after_password_reset_fields', $args ); ?>
+				do_action( 'um_after_password_reset_fields', $args );
 
+				$primary_btn_classes = apply_filters( 'um_password_reset_form_primary_btn_classes', array( 'um-button' ), $args );
+				?>
 				<div class="um-col-alt um-col-alt-b">
-
 					<div class="um-center">
-						<input type="submit" value="<?php esc_attr_e( 'Reset password', 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+						<input type="submit" value="<?php esc_attr_e( 'Reset password', 'ultimate-member' ); ?>" class="<?php echo esc_attr( implode( ' ', $primary_btn_classes ) ); ?>" id="um-submit-btn" />
 					</div>
-
 					<div class="um-clear"></div>
-
 				</div>
-
 				<?php
 				/**
 				 * UM hook
