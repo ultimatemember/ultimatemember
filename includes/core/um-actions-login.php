@@ -362,6 +362,27 @@ function um_add_submit_button_to_login( $args ) {
 	if ( ! isset( $primary_btn_word ) || $primary_btn_word == '' ){
 		$primary_btn_word = UM()->options()->get( 'login_primary_btn_word' );
 	}
+	/**
+	 * Filters the classes applied to the primary button on the login form.
+	 *
+	 * @hook um_login_form_primary_btn_classes
+	 * @since 2.10.5
+	 *
+	 * @param {array} $classes An array of CSS classes applied to the primary button.
+	 * @param {array} $args    An array of arguments or configurations used in the login form.
+	 *
+	 * @return {array} Button CSS classes.
+	 *
+	 * @example <caption>Extend the classes applied to the primary button on the login form.</caption>
+	 * function my_custom_classes( $classes, $args ) {
+	 *     // Add a new class to the button
+	 *     $classes[] = 'new-button-class';
+	 *
+	 *     return $classes;
+	 * }
+	 * add_filter( 'um_login_form_primary_btn_classes', 'my_custom_classes', 10, 2 );
+	 */
+	$primary_btn_classes = apply_filters( 'um_login_form_primary_btn_classes', array( 'um-button' ), $args );
 
 	/**
 	 * UM hook
@@ -426,7 +447,7 @@ function um_add_submit_button_to_login( $args ) {
 		if ( ! empty( $args['secondary_btn'] ) ) { ?>
 
 			<div class="um-left um-half">
-				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ); ?>" class="<?php echo esc_attr( implode( ' ', $primary_btn_classes ) ); ?>" id="um-submit-btn" />
 			</div>
 			<div class="um-right um-half">
 				<a href="<?php echo esc_url( $secondary_btn_url ); ?>" class="um-button um-alt">
@@ -437,7 +458,7 @@ function um_add_submit_button_to_login( $args ) {
 		<?php } else { ?>
 
 			<div class="um-center">
-				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ); ?>" class="<?php echo esc_attr( implode( ' ', $primary_btn_classes ) ); ?>" id="um-submit-btn" />
 			</div>
 
 		<?php } ?>
