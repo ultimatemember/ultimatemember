@@ -513,35 +513,28 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			<?php
 		}
 
-
 		/**
 		 * UM Placeholders for user link, avatar link
-		 *
+		 * @depreacated 2.10.5
 		 * @param $placeholders
 		 *
 		 * @return array
 		 */
-		function add_placeholder( $placeholders ) {
-			$placeholders[] = '{user_profile_link}';
-			$placeholders[] = '{user_avatar_url}';
-			$placeholders[] = '{password}';
+		public function add_placeholder( $placeholders ) {
+			_deprecated_function( __METHOD__, '2.10.5' );
 			return $placeholders;
 		}
 
-
 		/**
 		 * UM Replace Placeholders for user link, avatar link
-		 *
+		 * @deprecated 2.10.5
 		 * @param $replace_placeholders
 		 *
 		 * @return array
 		 */
-		function add_replace_placeholder( $replace_placeholders ) {
-			$replace_placeholders[] = um_get_user_avatar_url();
-			$replace_placeholders[] = um_user_profile_url();
-			$replace_placeholders[] = esc_html__( 'Your set password', 'ultimate-member' );
+		public function add_replace_placeholder( $replace_placeholders ) {
+			_deprecated_function( __METHOD__, '2.10.5' );
 			return $replace_placeholders;
 		}
-
 	}
 }

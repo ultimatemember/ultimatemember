@@ -387,10 +387,22 @@ class Users {
 			$current_user_id = get_current_user_id();
 			um_fetch_user( $user_id );
 
-			add_filter( 'um_template_tags_patterns_hook', array( UM()->user(), 'add_activation_placeholder' ) );
-			add_filter( 'um_template_tags_replaces_hook', array( UM()->user(), 'add_activation_replace_placeholder' ) );
-
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'checkmail_email', array( 'fetch_user_id' => $user_id ) ) );
+			UM()->maybe_action_scheduler()->enqueue_async_action(
+				'um_dispatch_email',
+				array(
+					$userdata->user_email,
+					'checkmail_email',
+					array(
+						'fetch_user_id' => $user_id,
+						'tags'          => array(
+							'{account_activation_link}',
+						),
+						'tags_replace'  => array(
+							UM()->permalinks()->activate_url( $user_id ),
+						),
+					),
+				)
+			);
 
 			um_fetch_user( $current_user_id );
 			/**
@@ -689,19 +701,48 @@ class Users {
 
 				$this->reset_activation_link( $user_id );
 
-				$email_slug = 'welcome_email';
-				if ( 'awaiting_admin_review' === $old_status ) {
-					$email_slug = 'approved_email';
-					$this->maybe_generate_password_reset_key( $userdata );
+				$email_slug = 'awaiting_admin_review' === $old_status ? 'approved_email' : 'welcome_email';
+
+				$reset_pw_link = UM()->password()->reset_url( $user_id );
+
+				$tags         = array(
+					'{password_reset_link}',
+					'{password}',
+				);
+				$tags_replace = array(
+					$reset_pw_link,
+					__( 'Your set password', 'ultimate-member' ),
+				);
+
+				if ( 'welcome_email' === $email_slug ) {
+					$tags[] = '{action_url}';
+					$tags[] = '{action_title}';
+
+					$set_password_required = get_user_meta( $user_id, 'um_set_password_required', true );
+					if ( empty( $set_password_required ) || $this->has_status( $user_id, 'pending' ) ) {
+						$tags_replace[] = um_get_core_page( 'login' );
+						$tags_replace[] = esc_html__( 'Login to our site', 'ultimate-member' );
+					} else {
+						$tags_replace[] = $reset_pw_link;
+						$tags_replace[] = esc_html__( 'Set your password', 'ultimate-member' );
+					}
 				}
 
 				$current_user_id = get_current_user_id();
 				um_fetch_user( $user_id );
 
-				add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ) );
-				add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ) );
-
-				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, $email_slug, array( 'fetch_user_id' => $user_id ) ) );
+				UM()->maybe_action_scheduler()->enqueue_async_action(
+					'um_dispatch_email',
+					array(
+						$userdata->user_email,
+						$email_slug,
+						array(
+							'fetch_user_id' => $user_id,
+							'tags'          => $tags,
+							'tags_replace'  => $tags_replace,
+						),
+					)
+				);
 
 				um_fetch_user( $current_user_id );
 			}
@@ -776,10 +817,39 @@ class Users {
 			$current_user_id = get_current_user_id();
 			um_fetch_user( $user_id );
 
-			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ) );
-			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ) );
+			$reset_pw_link = UM()->password()->reset_url( $user_id );
 
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'welcome_email', array( 'fetch_user_id' => $user_id ) ) );
+			$tags_replace = array(
+				$reset_pw_link,
+				__( 'Your set password', 'ultimate-member' ),
+			);
+
+			$set_password_required = get_user_meta( $user_id, 'um_set_password_required', true );
+			if ( empty( $set_password_required ) || $this->has_status( $user_id, 'pending' ) ) {
+				$tags_replace[] = um_get_core_page( 'login' );
+				$tags_replace[] = esc_html__( 'Login to our site', 'ultimate-member' );
+			} else {
+				$tags_replace[] = $reset_pw_link;
+				$tags_replace[] = esc_html__( 'Set your password', 'ultimate-member' );
+			}
+
+			UM()->maybe_action_scheduler()->enqueue_async_action(
+				'um_dispatch_email',
+				array(
+					$userdata->user_email,
+					'welcome_email',
+					array(
+						'fetch_user_id' => $user_id,
+						'tags'          => array(
+							'{password_reset_link}',
+							'{password}',
+							'{action_url}',
+							'{action_title}',
+						),
+						'tags_replace'  => $tags_replace,
+					),
+				)
+			);
 
 			um_fetch_user( $current_user_id );
 
@@ -859,5 +929,16 @@ class Users {
 		}
 
 		return $total_users;
+	}
+
+	/**
+	 * Set last login timestamp.
+	 *
+	 * @param int $user_id User ID.
+	 */
+	public function set_last_login( $user_id ) {
+		update_user_meta( $user_id, '_um_last_login', current_time( 'mysql', true ) );
+		// Flush user cache after updating last_login timestamp.
+		UM()->user()->remove_cache( $user_id );
 	}
 }
