@@ -597,6 +597,26 @@ function um_add_submit_button_to_register( $args ) {
 		$primary_btn_word = UM()->options()->get( 'register_primary_btn_word' );
 	}
 
+	/**
+	 * Filters the classes applied to the primary button on the registration form.
+	 *
+	 * @hook um_register_form_primary_btn_classes
+	 * @since 2.10.5
+	 *
+	 * @param {array} $classes An array of CSS classes applied to the primary button.
+	 * @param {array} $args    An array of arguments or configurations used in the registration form.
+	 *
+	 * @return {array} Button CSS classes.
+	 *
+	 * @example <caption>Extend the classes applied to the primary button on the registration form.</caption>
+	 * function my_custom_classes( $classes, $args ) {
+	 *     // Add a new class to the button
+	 *     $classes[] = 'new-button-class';
+	 *
+	 *     return $classes;
+	 * }
+	 * add_filter( 'um_register_form_primary_btn_classes', 'my_custom_classes', 10, 2 );
+	 */
 	$primary_btn_classes = apply_filters( 'um_register_form_primary_btn_classes', array( 'um-button' ), $args );
 
 	$secondary_btn_word = $args['secondary_btn_word'];

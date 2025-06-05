@@ -120,6 +120,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 				 */
 				do_action( 'um_after_password_reset_fields', $args );
 
+				/**
+				 * Filters the classes applied to the primary button on the password reset form.
+				 *
+				 * @hook um_password_reset_form_primary_btn_classes
+				 * @since 2.10.5
+				 *
+				 * @param {array} $classes An array of CSS classes applied to the primary button.
+				 * @param {array} $args    An array of arguments or configurations used in the password reset form.
+				 *
+				 * @return {array} Button CSS classes.
+				 *
+				 * @example <caption>Extend the classes applied to the primary button on the password reset form.</caption>
+				 * function my_custom_classes( $classes, $args ) {
+				 *     // Add a new class to the button
+				 *     $classes[] = 'new-button-class';
+				 *
+				 *     return $classes;
+				 * }
+				 * add_filter( 'um_password_reset_form_primary_btn_classes', 'my_custom_classes', 10, 2 );
+				 */
 				$primary_btn_classes = apply_filters( 'um_password_reset_form_primary_btn_classes', array( 'um-button' ), $args );
 				?>
 				<div class="um-col-alt um-col-alt-b">
