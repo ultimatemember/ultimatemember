@@ -52,6 +52,7 @@ if ( ! class_exists( 'um\core\GDPR' ) ) {
 						'sub_rows' => 1,
 						'cols'     => 1,
 						'origin'   => $gdpr_row_key,
+						'margin'   => '0px',
 					);
 
 					$gdpr_fields = UM()->builtin()->get_specific_fields( 'gdpr_details,use_gdpr_agreement' );
