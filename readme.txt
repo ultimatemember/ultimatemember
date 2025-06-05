@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 6.8
-Stable tag: 2.10.4
+Stable tag: 2.10.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -169,7 +169,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 = 2.10.5 2025-05-xx =
 
-* Fixed: Refactor deactivation logic to un-schedule Action Scheduler actions
+* Added: Filter hooks for primary button classes in UM forms.
+* Fixed: Refactor deactivation logic to un-schedule Action Scheduler actions.
+* Fixed: Action Scheduler library errors. Updated to the recent 3.9.2 version.
 
 = 2.10.4 2025-05-15 =
 
