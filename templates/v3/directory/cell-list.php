@@ -83,7 +83,18 @@ ob_start();
 	);
 
 	if ( $directory_data['profile_photo'] ) {
-		echo wp_kses( UM()->frontend()::layouts()::single_avatar( $member['id'], array( 'size' => 'l' ) ), UM()->get_allowed_html( 'templates' ) );
+		echo wp_kses(
+			UM()->frontend()::layouts()::single_avatar(
+				$member['id'],
+				array(
+					'size'    => 'l',
+					'context' => array(
+						'member_directory' => $directory_data,
+					),
+				)
+			),
+			UM()->get_allowed_html( 'templates' )
+		);
 		do_action( 'um_members_list_in_profile_photo_tmpl', $t_args );
 	}
 	?>

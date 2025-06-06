@@ -1464,7 +1464,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'type'           => 'bool',
 					'label'          => __( 'Show my last login', 'ultimate-member' ),
 					'checkbox_label' => __( 'Show my last login', 'ultimate-member' ),
-					'help'           => __( 'Here you can hide last login field on profile page and card in member directory', 'ultimate-member' ),
+					'help'           => __( 'Here you can hide last login field on profile page and card in member directory.', 'ultimate-member' ),
 					'required'       => 0,
 					'public'         => 1,
 					'editable'       => true,

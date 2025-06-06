@@ -75,7 +75,18 @@ if ( $directory_data['cover_photos'] && $member['cover_photo'] ) {
 	echo wp_kses( $member['cover_photo'], UM()->get_allowed_html( 'templates' ) );
 
 	if ( $directory_data['profile_photo'] ) {
-		echo wp_kses( UM()->frontend()::layouts()::single_avatar( $member['id'], array( 'size' => 'xl' ) ), UM()->get_allowed_html( 'templates' ) );
+		echo wp_kses(
+			UM()->frontend()::layouts()::single_avatar(
+				$member['id'],
+				array(
+					'size'    => 'xl',
+					'context' => array(
+						'member_directory' => $directory_data,
+					),
+				)
+			),
+			UM()->get_allowed_html( 'templates' )
+		);
 		do_action( 'um_members_in_profile_photo_tmpl', $t_args );
 		?>
 		</div>
@@ -95,7 +106,18 @@ echo wp_kses(
 <div class="um-member-box-main">
 	<?php
 	if ( ! ( $directory_data['cover_photos'] && $member['cover_photo'] ) && $directory_data['profile_photo'] ) {
-		echo wp_kses( UM()->frontend()::layouts()::single_avatar( $member['id'], array( 'size' => 'xl' ) ), UM()->get_allowed_html( 'templates' ) );
+		echo wp_kses(
+			UM()->frontend()::layouts()::single_avatar(
+				$member['id'],
+				array(
+					'size'    => 'xl',
+					'context' => array(
+						'member_directory' => $directory_data,
+					),
+				)
+			),
+			UM()->get_allowed_html( 'templates' )
+		);
 		do_action( 'um_members_in_profile_photo_tmpl', $t_args );
 	}
 

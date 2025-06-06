@@ -611,6 +611,7 @@ class Layouts {
 			'ignore_caps'   => false,
 			'tooltip'       => false,
 			'cache'         => true,
+			'context'       => '',
 		);
 		/**
 		 * Filters default arguments for displaying single avatar layout.
@@ -634,6 +635,26 @@ class Layouts {
 		$default_args = apply_filters( 'um_user_single_avatar_default_args', $default_args, $user_id );
 
 		$args = wp_parse_args( $args, $default_args );
+		/**
+		 * Filters arguments for displaying single avatar layout.
+		 *
+		 * @param {array} $args    Parsed and merged with default arguments.
+		 * @param {int}   $user_id User ID.
+		 *
+		 * @return {array} Single avatar layout arguments.
+		 *
+		 * @since 3.0.0
+		 * @hook um_user_single_avatar_args
+		 *
+		 * @example <caption>Extends arguments for displaying single avatar layout.</caption>
+		 * function my_user_single_avatar_args( $args, $user_id ) {
+		 *     // your code here
+		 *     $default_args['custom_key'] = 'custom_value';
+		 *     return $args;
+		 * }
+		 * add_filter( 'um_user_single_avatar_args', 'my_user_single_avatar_args', 10, 2 );
+		 */
+		$args = apply_filters( 'um_user_single_avatar_args', $args, $user_id );
 
 		$user_id = absint( $user_id );
 
