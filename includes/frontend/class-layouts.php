@@ -1072,6 +1072,7 @@ class Layouts {
 				'supporting'  => '',
 				'ignore_caps' => false,
 				'classes'     => array(),
+				'context'     => '',
 			)
 		);
 
@@ -1095,6 +1096,7 @@ class Layouts {
 			'clickable' => $args['clickable'],
 			'url'       => $args['url'],
 			'url_title' => $args['url_title'],
+			'context'   => $args['context'],
 		);
 
 		$wrapper_classes = array( 'um-small-data' );
