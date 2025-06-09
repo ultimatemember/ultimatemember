@@ -895,6 +895,7 @@ class Layouts {
 					'size'    => $args['size'],
 					'wrapper' => $args['wrapper'],
 					'tooltip' => $args['tooltip'],
+					'context' => array( 'avatars_list' => $args ),
 				)
 			);
 
