@@ -531,6 +531,22 @@ class Profile {
 					'id'     => 'um-submit-btn',
 				)
 			);
+
+			/**
+			 * Fires after rendering a profile form submit button.
+			 *
+			 * @since 3.0
+			 * @hook um_user_before_updating_profile
+			 *
+			 * @param {array} $userinfo Userdata.
+			 *
+			 * @example <caption>Кутвук custom action before collecting data to update on profile form submit.</caption>
+			 * function my_after_profile_submit_button( $args ) {
+			 *     // your code here
+			 * }
+			 * add_action( 'um_after_profile_submit_button', 'my_after_profile_submit_button' );
+			 */
+			do_action( 'um_after_profile_submit_button', $args );
 			?>
 		</div>
 		<?php
