@@ -32,7 +32,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Verified_Users_API Verified_Users_API()
 	 * @method UM_WooCommerce WooCommerce() Partially Reviewed
 	 * @method UM_Terms_Conditions Terms_Conditions() Reviewed
-	 * @method UM_Private_Content Private_Content()
+	 * @method UM_Private_Content Private_Content() Reviewed
 	 * @method UM_User_Locations User_Locations()
 	 * @method UM_User_Photos User_Photos() Reviewed
 	 * @method UM_Groups Groups()
@@ -40,7 +40,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_User_Notes User_Notes() Reviewed
 	 * @method UM_User_Bookmarks User_Bookmarks()
 	 * @method UM_Unsplash Unsplash()
-	 * @method UM_Profile_Tabs Profile_Tabs()
+	 * @method UM_Profile_Tabs Profile_Tabs() Reviewed
 	 * @method UM_Zapier Zapier()
 	 * @method UM_Google_Authenticator Google_Authenticator()
 	 */
