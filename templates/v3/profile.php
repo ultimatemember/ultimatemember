@@ -60,6 +60,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 */
 	do_action( 'um_profile_header', $args );
 
+	$nav = null;
+
 	// @todo find the proper place for "um-profile-navbar" block. It's removed for now but there is displayed followers and messages buttons.
 	$content_wrapper_classes = array( 'um-profile-body' );
 	if ( um_is_on_edit_profile() || UM()->user()->preview ) {
@@ -208,6 +210,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 		$content = ob_get_clean();
 	}
 	if ( ! empty( $content ) ) {
+		/**
+		 * Filters User Profile Body wrapper classes.
+		 *
+		 * @param {array}  $classes User Profile body classes.
+		 * @param {array}  $args    User Profile data.
+		 * @param {string} $nav     Profile menu slug.
+		 *
+		 * @since 3.0
+		 * @hook  um_profile_body_wrapper_classes
+		 *
+		 * @example <caption>Extends profile body classes.</caption>
+		 * function my_profile_body_wrapper_classes( $classes, $args, $nav ) {
+		 *     // your code here
+		 *     $classes[] = 'my-class';
+		 *     return $classes;
+		 * }
+		 * add_action( 'um_profile_body_wrapper_classes', 'my_profile_body_wrapper_classes', 10, 2 );
+		 */
+		$content_wrapper_classes = apply_filters( 'um_profile_body_wrapper_classes', $content_wrapper_classes, $args, $nav );
 		?>
 		<div class="<?php echo esc_attr( implode( ' ', $content_wrapper_classes ) ); ?>">
 			<?php echo wp_kses( $content, UM()->get_allowed_html( 'templates' ) ); ?>

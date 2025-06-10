@@ -144,7 +144,8 @@
     color: $gray-700
     +typography( text, sm, regular )
   // Profile > About
-  &.#{$prefix}profile-main
+  &.#{$prefix}profile-main,
+  &.#{$prefix}profile-custom-form // Hardcode for Profile Tabs extension.
     +flex( column, stretch, start, nowrap )
     +border-box
     width: 100%
@@ -198,8 +199,18 @@
               //&.#{$prefix}field-type_file
               //  width: auto
               label
+                +flex( row, flex-start, center, nowrap )
+                gap: $spacing-sm
+                +border-box
+                width: 100%
+                margin: 0
+                padding: 0
                 color: $gray-900
                 +typography( text, md, medium )
+                .#{$prefix}field-label-icon
+                  +flex( row, flex-start, center, nowrap )
+                  i
+                    font-size: $spacing-2xl
           &.#{$prefix}profile-cols-1
             .#{$prefix}profile-col
               width: 100%
