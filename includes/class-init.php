@@ -14,33 +14,33 @@ if ( ! class_exists( 'UM' ) ) {
 	 *
 	 * @method UM_bbPress_API bbPress_API()
 	 * @method UM_Followers_API Followers_API()
+	 * @method UM_ForumWP ForumWP() Reviewed
 	 * @method UM_Friends_API Friends_API()
-	 * @method UM_Mailchimp Mailchimp()
-	 * @method UM_Messaging Messaging()
+	 * @method UM_JobBoardWP JobBoardWP() Reviewed
+	 * @method UM_Mailchimp Mailchimp() Partially Reviewed
+	 * @method UM_Messaging Messaging() Reviewed
 	 * @method UM_myCRED myCRED()
 	 * @method UM_Notices Notices()
 	 * @method UM_Notifications_API Notifications_API()
-	 * @method UM_Online Online()
+	 * @method UM_Online Online() Reviewed
 	 * @method UM_Profile_Completeness_API Profile_Completeness_API()
-	 * @method UM_ReCAPTCHA ReCAPTCHA()
+	 * @method UM_ReCAPTCHA ReCAPTCHA() Reviewed
 	 * @method UM_Reviews Reviews()
 	 * @method UM_Activity_API Activity_API()
 	 * @method UM_Social_Login_API Social_Login_API()
 	 * @method UM_User_Tags User_Tags()
 	 * @method UM_Verified_Users_API Verified_Users_API()
-	 * @method UM_WooCommerce WooCommerce()
-	 * @method UM_Terms_Conditions Terms_Conditions()
+	 * @method UM_WooCommerce WooCommerce() Partially Reviewed
+	 * @method UM_Terms_Conditions Terms_Conditions() Reviewed
 	 * @method UM_Private_Content Private_Content()
 	 * @method UM_User_Locations User_Locations()
-	 * @method UM_User_Photos User_Photos()
+	 * @method UM_User_Photos User_Photos() Reviewed
 	 * @method UM_Groups Groups()
 	 * @method UM_Frontend_Posting Frontend_Posting()
-	 * @method UM_User_Notes User_Notes()
+	 * @method UM_User_Notes User_Notes() Reviewed
 	 * @method UM_User_Bookmarks User_Bookmarks()
 	 * @method UM_Unsplash Unsplash()
-	 * @method UM_ForumWP ForumWP()
 	 * @method UM_Profile_Tabs Profile_Tabs()
-	 * @method UM_JobBoardWP JobBoardWP()
 	 * @method UM_Zapier Zapier()
 	 * @method UM_Google_Authenticator Google_Authenticator()
 	 */
