@@ -12,7 +12,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @class UM
 	 * @version 2.0
 	 *
-	 * @method UM_bbPress_API bbPress_API()
+	 * @method UM_bbPress bbPress()
 	 * @method UM_Followers_API Followers_API()
 	 * @method UM_ForumWP ForumWP() Reviewed
 	 * @method UM_Friends_API Friends_API()
