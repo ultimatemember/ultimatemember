@@ -329,7 +329,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				add_action( 'save_post', array( &$this, 'save_metabox_directory' ), 10, 2 );
 			}
 
-			//restrict content metabox
+			// Restrict content metabox
 			$post_types = UM()->options()->get( 'restricted_access_post_metabox' );
 			if ( ! empty( $post_types[ $current_screen->id ] ) ) {
 
@@ -360,16 +360,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					add_action( 'save_post', array( &$this, 'save_metabox_restrict_content' ), 10, 2 );
 				}
 
-				if ( $current_screen->id == 'attachment' ) {
+				if ( 'attachment' === $current_screen->id ) {
 					add_action( 'add_attachment', array( &$this, 'save_attachment_metabox_restrict_content' ), 10, 2 );
 					add_action( 'edit_attachment', array( &$this, 'save_attachment_metabox_restrict_content' ), 10, 2 );
 				}
 			}
 
-
+			// Any custom metabox save process.
 			add_action( 'save_post', array( &$this, 'save_metabox_custom' ), 10, 2 );
 		}
-
 
 		/**
 		 * @param $post_id
@@ -381,35 +380,28 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				 ! wp_verify_nonce( $_POST['um_admin_save_metabox_custom_nonce'], basename( __FILE__ ) ) ) {
 				return;
 			}
-
 			/**
-			 * UM hook
+			 * Fires to save UM custom metabox rendered via `UM()->metabox()-load_metabox_custom()` function.
 			 *
-			 * @type action
-			 * @title um_admin_custom_restrict_content_metaboxes
-			 * @description Save metabox custom with restrict content
-			 * @input_vars
-			 * [{"var":"$post_id","type":"int","desc":"Post ID"},
-			 * {"var":"$post","type":"array","desc":"Post data"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_admin_custom_restrict_content_metaboxes', 'function_name', 10, 2 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_admin_custom_restrict_content_metaboxes', 'my_admin_custom_restrict_content', 10, 2 );
-			 * function my_admin_custom_restrict_content( $post_id, $post ) {
+			 * @param {int}    $post_id Post ID.
+			 * @param {object} $post    Post object.
+			 *
+			 * @since 2.0
+			 * @hook um_admin_save_custom_metabox
+			 *
+			 * @example <caption>Make some action during save UM custom metabox.</caption>
+			 * function my_admin_save_custom_metabox( $post_id, $post ) {
 			 *     // your code here
 			 * }
-			 * ?>
+			 * add_action( 'um_admin_save_custom_metabox', 'my_admin_save_custom_metabox', 10, 2 );
 			 */
-			do_action( 'um_admin_custom_restrict_content_metaboxes', $post_id, $post );
+			do_action( 'um_admin_save_custom_metabox', $post_id, $post );
 		}
-
 
 		/**
 		 *
 		 */
-		function add_metabox_restrict_content() {
+		public function add_metabox_restrict_content() {
 			global $current_screen;
 
 			add_meta_box(
@@ -417,8 +409,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				__( 'Ultimate Member: Content Restriction', 'ultimate-member' ),
 				array( &$this, 'restrict_content_cb' ),
 				$current_screen->id,
-				'normal',
-				'default'
+				'normal'
 			);
 
 			/**
@@ -949,14 +940,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			}
 		}
 
-
 		/**
 		 * Load admin custom metabox
 		 *
 		 * @param $object
 		 * @param $box
 		 */
-		function load_metabox_custom( $object, $box ) {
+		public function load_metabox_custom( $object, $box ) {
 			global $post;
 
 			$box['id'] = str_replace('um-admin-custom-','', $box['id']);
