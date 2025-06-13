@@ -1107,6 +1107,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						)
 					);
 
+					$meta = array_filter(
+						$meta,
+						function ( $date ) {
+							return ! empty( $date );
+						}
+					);
+
 					if ( empty( $meta ) || count( $meta ) === 1 ) {
 						$range = false;
 					} elseif ( ! empty( $meta ) ) {
@@ -1125,6 +1132,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						WHERE meta_key = '_um_last_login'",
 						ARRAY_A
 					);
+					$meta = array_filter(
+						$meta,
+						function ( $date ) {
+							return ! empty( $date );
+						}
+					);
 					if ( empty( $meta['total'] ) || 1 === absint( $meta['total'] ) ) {
 						$range = false;
 					} elseif ( array_key_exists( 'min', $meta ) && array_key_exists( 'max', $meta ) ) {
@@ -1136,6 +1149,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						"SELECT DISTINCT user_registered
 						FROM {$wpdb->users}
 						ORDER BY user_registered DESC"
+					);
+					$meta = array_filter(
+						$meta,
+						function ( $date ) {
+							return ! empty( $date );
+						}
 					);
 
 					if ( empty( $meta ) || count( $meta ) === 1 ) {
