@@ -174,6 +174,8 @@ class Layouts {
 			'um-button',
 			'um-button-' . $args['design'],
 			'um-button-size-' . $args['size'],
+			'has-background', // WordPress themes native.
+			'has-text-color', // WordPress themes native.
 		);
 
 		if ( 'full' === $args['width'] ) {

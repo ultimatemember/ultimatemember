@@ -303,6 +303,22 @@ function defaultTask( done ) {
 		.pipe( rename({ suffix: '.min' }) )
 		.pipe( dest( 'assets/libs/um-confirm/' ) );
 
+	// UM Notice lib
+	// full CSS files
+	src(['assets/libs/um-notice/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( dest( 'assets/libs/um-notice/' ) );
+	// min CSS files
+	src(['assets/libs/um-notice/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( cleanCSS() )
+		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( dest( 'assets/libs/um-notice/' ) );
+	src(['assets/libs/um-notice/*.js', '!assets/libs/um-notice/*.min.js',])
+		.pipe( uglify() )
+		.pipe( rename({ suffix: '.min' }) )
+		.pipe( dest( 'assets/libs/um-notice/' ) );
+
 	// Pickadate lib
 	src(['assets/libs/pickadate/*.css', '!assets/libs/pickadate/*.min.css',])
 		.pipe( cleanCSS() )
