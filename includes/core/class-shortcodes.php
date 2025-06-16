@@ -403,7 +403,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		public function um_loggedin( $args = array(), $content = '' ) {
 			$args = shortcode_atts(
 				array(
-					'lock_text' => __( 'This content has been restricted to logged-in users only. Please <a href="{login_referrer}">login</a> to view this content.', 'ultimate-member' ),
+					'lock_text' => __( 'This content has been restricted to logged-in users only. Please <a href="{login_referrer}">log in</a> to view this content.', 'ultimate-member' ),
 					'show_lock' => 'yes',
 				),
 				$args,
