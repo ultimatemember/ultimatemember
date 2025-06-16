@@ -42,6 +42,10 @@ class Profile {
 			wp_send_json_error( __( 'Wrong nonce', 'ultimate-member' ) );
 		}
 
+		if ( ! um_can_view_profile( $author ) ) {
+			wp_send_json_error( __( 'You cannot view this user.', 'ultimate-member' ) );
+		}
+
 		if ( empty( $_POST['last_id'] ) ) {
 			wp_send_json_error( __( 'Invalid last post ID', 'ultimate-member' ) );
 		}
@@ -104,6 +108,10 @@ class Profile {
 
 		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'um_user_profile_comments' . $author ) ) {
 			wp_send_json_error( __( 'Wrong nonce', 'ultimate-member' ) );
+		}
+
+		if ( ! um_can_view_profile( $author ) ) {
+			wp_send_json_error( __( 'You cannot view this user.', 'ultimate-member' ) );
 		}
 
 		if ( empty( $_POST['last_id'] ) ) {
