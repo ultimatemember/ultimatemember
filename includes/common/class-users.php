@@ -384,8 +384,11 @@ class Users {
 
 			$userdata = get_userdata( $user_id );
 
-			$current_user_id = get_current_user_id();
-			um_fetch_user( $user_id );
+			$temp_id = null;
+			if ( um_user( 'ID' ) !== $user_id ) {
+				$temp_id = um_user( 'ID' );
+				um_fetch_user( $user_id );
+			}
 
 			UM()->maybe_action_scheduler()->enqueue_async_action(
 				'um_dispatch_email',
@@ -404,7 +407,10 @@ class Users {
 				)
 			);
 
-			um_fetch_user( $current_user_id );
+			if ( $temp_id ) {
+				um_fetch_user( $temp_id );
+			}
+
 			/**
 			 * Fires after User has been set as pending email confirmation.
 			 *
@@ -470,7 +476,25 @@ class Users {
 			$this->reset_activation_link( $user_id );
 
 			$userdata = get_userdata( $user_id );
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'inactive_email', array( 'fetch_user_id' => $user_id ) ) );
+
+			$temp_id = null;
+			if ( um_user( 'ID' ) !== $user_id ) {
+				$temp_id = um_user( 'ID' );
+				um_fetch_user( $user_id );
+			}
+
+			UM()->maybe_action_scheduler()->enqueue_async_action(
+				'um_dispatch_email',
+				array(
+					$userdata->user_email,
+					'inactive_email',
+					array( 'fetch_user_id' => $user_id ),
+				)
+			);
+
+			if ( $temp_id ) {
+				um_fetch_user( $temp_id );
+			}
 
 			/**
 			 * Fires after User has been deactivated.
@@ -542,7 +566,25 @@ class Users {
 			$this->reset_activation_link( $user_id );
 
 			$userdata = get_userdata( $user_id );
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'rejected_email', array( 'fetch_user_id' => $user_id ) ) );
+
+			$temp_id = null;
+			if ( um_user( 'ID' ) !== $user_id ) {
+				$temp_id = um_user( 'ID' );
+				um_fetch_user( $user_id );
+			}
+
+			UM()->maybe_action_scheduler()->enqueue_async_action(
+				'um_dispatch_email',
+				array(
+					$userdata->user_email,
+					'rejected_email',
+					array( 'fetch_user_id' => $user_id ),
+				)
+			);
+
+			if ( $temp_id ) {
+				um_fetch_user( $temp_id );
+			}
 
 			/**
 			 * Fires after User has been rejected.
@@ -620,7 +662,25 @@ class Users {
 			$this->reset_activation_link( $user_id );
 
 			$userdata = get_userdata( $user_id );
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'pending_email', array( 'fetch_user_id' => $user_id ) ) );
+
+			$temp_id = null;
+			if ( um_user( 'ID' ) !== $user_id ) {
+				$temp_id = um_user( 'ID' );
+				um_fetch_user( $user_id );
+			}
+
+			UM()->maybe_action_scheduler()->enqueue_async_action(
+				'um_dispatch_email',
+				array(
+					$userdata->user_email,
+					'pending_email',
+					array( 'fetch_user_id' => $user_id ),
+				)
+			);
+
+			if ( $temp_id ) {
+				um_fetch_user( $temp_id );
+			}
 
 			/**
 			 * Fires after User has been set as pending admin review.
@@ -728,8 +788,11 @@ class Users {
 					}
 				}
 
-				$current_user_id = get_current_user_id();
-				um_fetch_user( $user_id );
+				$temp_id = null;
+				if ( um_user( 'ID' ) !== $user_id ) {
+					$temp_id = um_user( 'ID' );
+					um_fetch_user( $user_id );
+				}
 
 				UM()->maybe_action_scheduler()->enqueue_async_action(
 					'um_dispatch_email',
@@ -744,7 +807,9 @@ class Users {
 					)
 				);
 
-				um_fetch_user( $current_user_id );
+				if ( $temp_id ) {
+					um_fetch_user( $temp_id );
+				}
 			}
 			/**
 			 * Fires after User has been approved.
@@ -814,8 +879,11 @@ class Users {
 
 			$userdata = get_userdata( $user_id );
 
-			$current_user_id = get_current_user_id();
-			um_fetch_user( $user_id );
+			$temp_id = null;
+			if ( um_user( 'ID' ) !== $user_id ) {
+				$temp_id = um_user( 'ID' );
+				um_fetch_user( $user_id );
+			}
 
 			$reset_pw_link = UM()->password()->reset_url( $user_id );
 
@@ -851,7 +919,9 @@ class Users {
 				)
 			);
 
-			um_fetch_user( $current_user_id );
+			if ( $temp_id ) {
+				um_fetch_user( $temp_id );
+			}
 
 			/**
 			 * Fires after User has been reactivated.
