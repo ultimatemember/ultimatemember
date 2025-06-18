@@ -923,6 +923,7 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 					$email_exists = email_exists( $submitted_data[ $key ] );
 
 					if ( '' === $submitted_data[ $key ] ) {
+						// Primary email should be required everytime.
 						UM()->form()->add_error( $key, __( 'You must provide your email', 'ultimate-member' ) );
 					} elseif ( 'register' === $mode && $email_exists ) {
 						UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
@@ -936,16 +937,28 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 					break;
 				}
 
-				if ( '' === $submitted_data[ $key ] ) {
+				if ( ! empty( $array['required'] ) && '' === $submitted_data[ $key ] ) {
 					UM()->form()->add_error( $key, __( 'You must provide your email', 'ultimate-member' ) );
 				} elseif ( ! is_email( $submitted_data[ $key ] ) || email_exists( $submitted_data[ $key ] ) ) {
 					UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
+				} elseif ( 'secondary_user_email' === $key && ! empty( $submitted_data[ $key ] ) && ! empty( $submitted_data['user_email'] ) && $submitted_data[ $key ] === $submitted_data['user_email'] ) {
+					UM()->form()->add_error( $key, __( 'The secondary email cannot be the same as primary', 'ultimate-member' ) );
 				} else {
 					// There we have valid and unique user_email. But need to check in usermeta table for other users.
-					$users = get_users( 'meta_value=' . $submitted_data[ $key ] );
-					foreach ( $users as $user ) {
-						if ( $user->ID !== $submitted_data['user_id'] ) {
+					$args = array(
+						'meta_query' => array(
+							array(
+								'key'   => $key,
+								'value' => sanitize_email( $submitted_data[ $key ] ),
+							),
+						),
+					);
+
+					$the_similar_users = get_users( $args );
+					foreach ( $the_similar_users as $user ) {
+						if ( empty( $submitted_data['user_id'] ) || $user->ID !== $submitted_data['user_id'] ) {
 							UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
+							break;
 						}
 					}
 				}
