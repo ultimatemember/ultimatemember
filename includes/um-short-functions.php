@@ -208,7 +208,7 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 	// Support for all usermeta keys
 	if ( ! empty( $matches[1] ) && is_array( $matches[1] ) ) {
 		foreach ( $matches[1] as $match ) {
-			$key = str_replace( 'usermeta:', '', $match );
+			$key   = str_replace( 'usermeta:', '', $match );
 			$value = um_user( $key );
 			if ( is_array( $value ) ) {
 				$value = implode( ', ', $value );
@@ -218,32 +218,6 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 	}
 	return $content;
 }
-
-
-/**
- * UM Placeholders for activation link in email
- *
- * @param $placeholders
- *
- * @return array
- */
-function account_activation_link_tags_patterns( $placeholders ) {
-	$placeholders[] = '{account_activation_link}';
-	return $placeholders;
-}
-
-/**
- * UM Replace Placeholders for activation link in email
- *
- * @param $replace_placeholders
- *
- * @return array
- */
-function account_activation_link_tags_replaces( $replace_placeholders ) {
-	$replace_placeholders[] = um_user( 'account_activation_link' );
-	return $replace_placeholders;
-}
-
 
 /**
  * @function um_user_ip()
@@ -2583,12 +2557,12 @@ function um_user( $data, $attrs = null ) {
 			break;
 
 		case 'password_reset_link':
+			// Avoid using and make it directly with `UM()->password()->reset_url( $user_id )`
 			return UM()->password()->reset_url();
-			break;
 
 		case 'account_activation_link':
+			// Avoid using and make it directly with `UM()->permalinks()->activate_url( $user_id )`
 			return UM()->permalinks()->activate_url();
-			break;
 
 		case 'profile_photo':
 			$data = um_get_user_avatar_data( um_user( 'ID' ), $attrs );

@@ -348,9 +348,6 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			 */
 			$message = apply_filters( 'um_email_send_message_content', $message, $slug, $args );
 
-//			add_filter( 'um_template_tags_patterns_hook', array( &$this, 'add_placeholder' ) );
-//			add_filter( 'um_template_tags_replaces_hook', array( &$this, 'add_replace_placeholder' ) );
-
 			// Convert tags in email template.
 			return um_convert_tags( $message, $args );
 		}
@@ -616,12 +613,8 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			$placeholders[] = '{user_profile_link}';
 			$placeholders[] = '{site_url}';
 			$placeholders[] = '{admin_email}';
-			$placeholders[] = '{submitted_registration}';
 			$placeholders[] = '{login_url}';
 			$placeholders[] = '{password}';
-			$placeholders[] = '{account_activation_link}';
-			$placeholders[] = '{action_url}';
-			$placeholders[] = '{action_title}';
 			return $placeholders;
 		}
 
@@ -636,20 +629,8 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			$replace_placeholders[] = um_user_profile_url();
 			$replace_placeholders[] = get_bloginfo( 'url' );
 			$replace_placeholders[] = um_admin_email();
-			$replace_placeholders[] = um_user_submitted_registration_formatted();
 			$replace_placeholders[] = um_get_core_page( 'login' );
 			$replace_placeholders[] = esc_html__( 'Your set password', 'ultimate-member' );
-			$replace_placeholders[] = um_user( 'account_activation_link' );
-
-			$set_password_required = get_user_meta( um_user( 'ID' ), 'um_set_password_required', true );
-			if ( empty( $set_password_required ) || 'pending' === um_user( 'status' ) ) {
-				$replace_placeholders[] = um_get_core_page( 'login' );
-				$replace_placeholders[] = esc_html__( 'Login to our site', 'ultimate-member' );
-			} else {
-				$replace_placeholders[] = um_user( 'password_reset_link' );
-				$replace_placeholders[] = esc_html__( 'Set your password', 'ultimate-member' );
-			}
-
 			return $replace_placeholders;
 		}
 	}

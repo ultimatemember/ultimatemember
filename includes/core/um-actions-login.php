@@ -157,11 +157,9 @@ add_action( 'um_submit_form_errors_hook_logincheck', 'um_submit_form_errors_hook
  * @param $user_id
  */
 function um_store_lastlogin_timestamp( $user_id ) {
-	update_user_meta( $user_id, '_um_last_login', current_time( 'mysql', true ) );
-	// Flush user cache after updating last_login timestamp.
-	UM()->user()->remove_cache( $user_id );
+	UM()->common()->users()->set_last_login( $user_id );
 }
-add_action( 'um_on_login_before_redirect', 'um_store_lastlogin_timestamp', 10, 1 );
+add_action( 'um_on_login_before_redirect', 'um_store_lastlogin_timestamp' );
 
 
 /**
@@ -171,7 +169,7 @@ function um_store_lastlogin_timestamp_( $login ) {
 	$user = get_user_by( 'login', $login );
 
 	if ( false !== $user ) {
-		um_store_lastlogin_timestamp( $user->ID );
+		UM()->common()->users()->set_last_login( $user->ID );
 
 		$attempts = (int) get_user_meta( $user->ID, 'password_rst_attempts', true );
 		if ( $attempts ) {
