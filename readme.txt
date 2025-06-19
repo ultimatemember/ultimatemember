@@ -167,11 +167,25 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.10.5 2025-05-xx =
+= 2.10.5 2025-06-25 =
+
+**Enhancements**
 
 * Added: Filter hooks for primary button classes in UM forms.
+
+**Bugfixes**
+
+* Fixed: Email placeholders values.
 * Fixed: Refactor deactivation logic to un-schedule Action Scheduler actions.
 * Fixed: Action Scheduler library errors. Updated to the recent 3.9.2 version.
+* Fixed: Secondary email field validation.
+* Fixed: Action Scheduler batch actions with users who have Undefined status.
+
+**Templates required update**
+
+* password-reset.php
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
 = 2.10.4 2025-05-15 =
 
