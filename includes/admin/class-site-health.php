@@ -24,12 +24,28 @@ class Site_Health {
 	 */
 	const BADGE_COLOR = 'blue';
 
+	private static $labels = array();
+
 	/**
 	 * Site_Health constructor.
 	 */
 	public function __construct() {
 		add_filter( 'debug_information', array( $this, 'debug_information' ), 20 );
 		add_filter( 'site_status_tests', array( $this, 'register_site_status_tests' ) );
+	}
+
+	public static function get_labels() {
+		if ( empty( self::$labels ) ) {
+			self::$labels = array(
+				'yes'     => __( 'Yes', 'ultimate-member' ),
+				'no'      => __( 'No', 'ultimate-member' ),
+				'all'     => __( 'All', 'ultimate-member' ),
+				'default' => __( 'Default', 'ultimate-member' ),
+				'nopages' => __( 'No predefined page', 'ultimate-member' ),
+			);
+		}
+
+		return self::$labels;
 	}
 
 	public function register_site_status_tests( $tests ) {
@@ -422,19 +438,57 @@ class Site_Health {
 	 * @return array The updated Site Health information.
 	 */
 	public function debug_information( $info ) {
-		$labels = array(
-			'yes'     => __( 'Yes', 'ultimate-member' ),
-			'no'      => __( 'No', 'ultimate-member' ),
-			'all'     => __( 'All', 'ultimate-member' ),
-			'default' => __( 'Default', 'ultimate-member' ),
-			'nopages' => __( 'No predefined page', 'ultimate-member' ),
-		);
-
 		$info['ultimate-member'] = array(
 			'label'       => __( 'Ultimate Member', 'ultimate-member' ),
 			'description' => __( 'This debug information for your Ultimate Member installation can assist you in getting support.', 'ultimate-member' ),
 			'fields'      => array(),
 		);
+
+		// General settings sitehealth
+		$general_sitehealth = $this->general_siteheath();
+
+		// Access settings sitehealth
+		$access_sitehealth = $this->access_sitehealth();
+
+		// Emails settings sitehealth
+		$emails_sitehealth = $this->emails_sitehealth();
+
+		// Appearance settings sitehealth
+		$appearance_sitehealth = $this->appearance_sitehealth();
+
+		// Advanced settings sitehealth
+		$advanced_sitehealth = $this->advanced_sitehealth();
+
+		// License settings sitehealth
+		$license_sitehealth = $this->license_sitehealth();
+
+		$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $general_sitehealth, $access_sitehealth, $emails_sitehealth, $appearance_sitehealth, $advanced_sitehealth, $license_sitehealth );
+
+		// User roles settings sitehealth
+		$info = $this->roles_sitehealth( $info );
+
+		// Forms settings sitehealth
+		$info = $this->forms_sitehealth( $info );
+
+		// Members directory sitehealth
+		$info = $this->get_member_directories_sitehealth( $info );
+
+		/**
+		 * Filters the site health information.
+		 *
+		 * @hook um_site_health_extend
+		 *
+		 * @since 2.10.3
+		 *
+		 * @param {array} $info The site health info to be filtered.
+		 *
+		 * @return {array} The filtered site health info.
+		 */
+		return apply_filters( 'um_site_health_extend', $info );
+	}
+
+	public function general_siteheath() {
+		$labels = self::get_labels();
 
 		// Pages settings.
 		$pages            = array();
@@ -470,58 +524,118 @@ class Site_Health {
 		$display_name   = UM()->config()->display_name_options;
 
 		$user_settings = array(
-			'um-permalink_base'              => array(
+			'um-user_separator'  => array(
+				'label' => __( 'User settings', 'ultimate-member' ),
+				'value' => '---------------------------------------------------------------------',
+			),
+			'um-register_role'   => array(
+				'label' => __( 'Registration Default Role', 'ultimate-member' ),
+				'value' => ! empty( UM()->options()->get( 'register_role' ) ) ? UM()->options()->get( 'register_role' ) : __( 'Default', 'ultimate-member' ),
+			),
+			'um-permalink_base'  => array(
 				'label' => __( 'Profile Permalink Base', 'ultimate-member' ),
 				'value' => isset( $permalink_base[ UM()->options()->get( 'permalink_base' ) ] ) ? $permalink_base[ UM()->options()->get( 'permalink_base' ) ] : $labels['no'],
 			),
-			'um-display_name'                => array(
+			'um-display_name'    => array(
 				'label' => __( 'User Display Name', 'ultimate-member' ),
 				'value' => isset( $display_name[ UM()->options()->get( 'display_name' ) ] ) ? $display_name[ UM()->options()->get( 'display_name' ) ] : $labels['no'],
 			),
-			'um-author_redirect'             => array(
-				'label' => __( 'Automatically redirect author page to their profile?', 'ultimate-member' ),
+			'um-author_redirect' => array(
+				'label' => __( 'Hide author pages (enable author page redirect to user profile)', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'author_redirect' ) ? $labels['yes'] : $labels['no'],
 			),
-			'um-members_page'                => array(
+			'um-members_page'    => array(
 				'label' => __( 'Enable Members Directory', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'members_page' ) ? $labels['yes'] : $labels['no'],
 			),
-			'um-toggle_password'             => array(
-				'label' => __( 'Show/hide password button', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'toggle_password' ) ? $labels['yes'] : $labels['no'],
-			),
-			'um-require_strongpass'          => array(
-				'label' => __( 'Require Strong Passwords', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'require_strongpass' ) ? $labels['yes'] : $labels['no'],
-			),
-			'um-password_min_chars'          => array(
-				'label' => __( 'Require Strong Passwords', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'password_min_chars' ),
-			),
-			'um-password_max_chars'          => array(
-				'label' => __( 'Require Strong Passwords', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'password_max_chars' ),
-			),
-			'um-profile_noindex'             => array(
-				'label' => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'profile_noindex' ) ? $labels['yes'] : $labels['no'],
-			),
-			'um-activation_link_expiry_time' => array(
-				'label' => __( 'Activation link lifetime', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'activation_link_expiry_time' ),
-			),
-			'um-use_gravatars'               => array(
+			'um-use_gravatars'   => array(
 				'label' => __( 'Use Gravatars?', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'use_gravatars' ) ? $labels['yes'] : $labels['no'],
 			),
-			'um-admin_ignore_user_status'    => array(
-				'label' => __( 'Ignore the "User Role > Registration Options" if this user is added from the wp-admin dashboard', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'admin_ignore_user_status' ) ? $labels['yes'] : $labels['no'],
-			),
-			'um-delete_comments'             => array(
-				'label' => __( 'Deleting user comments after deleting a user', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'delete_comments' ) ? $labels['yes'] : $labels['no'],
-			),
+		);
+
+		if ( UM()->options()->get( 'use_gravatars' ) ) {
+			$gravatar_options = array(
+				'default'   => __( 'Default', 'ultimate-member' ),
+				'404'       => __( '404 ( File Not Found response )', 'ultimate-member' ),
+				'mm'        => __( 'Mystery Man', 'ultimate-member' ),
+				'identicon' => __( 'Identicon', 'ultimate-member' ),
+				'monsterid' => __( 'Monsterid', 'ultimate-member' ),
+				'wavatar'   => __( 'Wavatar', 'ultimate-member' ),
+				'retro'     => __( 'Retro', 'ultimate-member' ),
+				'blank'     => __( 'Blank ( a transparent PNG image )', 'ultimate-member' ),
+			);
+
+			$user_settings['um-use_um_gravatar_default_builtin_image'] = array(
+				'label' => __( 'Use Gravatar builtin image', 'ultimate-member' ),
+				'value' => $gravatar_options[ UM()->options()->get( 'use_um_gravatar_default_builtin_image' ) ],
+			);
+			if ( 'default' === UM()->options()->get( 'use_um_gravatar_default_builtin_image' ) ) {
+				$user_settings['um-use_um_gravatar_default_image'] = array(
+					'label' => __( 'Replace Gravatar\'s Default avatar (Set Default plugin avatar as Gravatar\'s Default avatar)', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'use_um_gravatar_default_image' ) ? $labels['yes'] : $labels['no'],
+				);
+			}
+		}
+
+		$user_settings = array_merge(
+			$user_settings,
+			array(
+				'um-admin_ignore_user_status' => array(
+					'label' => __( 'Ignore the "User Role > Registration Options" if this user is added from the wp-admin dashboard', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'admin_ignore_user_status' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-delete_comments'          => array(
+					'label' => __( 'Delete user comments (enable deleting user comments after deleting a user)', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'delete_comments' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-toggle_password'          => array(
+					'label' => __( 'Toggle Password Visibility (enable password show/hide icon on password field)', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'toggle_password' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-require_strongpass'       => array(
+					'label' => __( 'Require Strong Passwords', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'require_strongpass' ) ? $labels['yes'] : $labels['no'],
+				),
+			)
+		);
+
+		if ( UM()->options()->get( 'require_strongpass' ) ) {
+			$user_settings = array_merge(
+				$user_settings,
+				array(
+					'um-password_min_chars' => array(
+						'label' => __( 'Password minimum length', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'password_min_chars' ),
+					),
+					'um-password_max_chars' => array(
+						'label' => __( 'Password maximum length', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'password_max_chars' ),
+					),
+				)
+			);
+		}
+
+		$user_settings = array_merge(
+			$user_settings,
+			array(
+				'um-activation_link_expiry_time' => array(
+					'label' => __( 'Email activation link expiration (days)', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'activation_link_expiry_time' ),
+				),
+				'um-profile_noindex'             => array(
+					'label' => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_noindex' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-profile_title'               => array(
+					'label' => __( 'User Profile Title', 'ultimate-member' ),
+					'value' => stripslashes( UM()->options()->get( 'profile_title' ) ),
+				),
+				'um-profile_desc'                => array(
+					'label' => __( 'User Profile Dynamic Meta Description', 'ultimate-member' ),
+					'value' => stripslashes( UM()->options()->get( 'profile_desc' ) ),
+				),
+			)
 		);
 
 		if ( 'custom_meta' === UM()->options()->get( 'permalink_base' ) ) {
@@ -550,47 +664,70 @@ class Site_Health {
 			);
 		}
 
-		if ( UM()->options()->get( 'use_gravatars' ) ) {
-			$gravatar_options = array(
-				'default'   => __( 'Default', 'ultimate-member' ),
-				'404'       => __( '404 ( File Not Found response )', 'ultimate-member' ),
-				'mm'        => __( 'Mystery Man', 'ultimate-member' ),
-				'identicon' => __( 'Identicon', 'ultimate-member' ),
-				'monsterid' => __( 'Monsterid', 'ultimate-member' ),
-				'wavatar'   => __( 'Wavatar', 'ultimate-member' ),
-				'retro'     => __( 'Retro', 'ultimate-member' ),
-				'blank'     => __( 'Blank ( a transparent PNG image )', 'ultimate-member' ),
-			);
-
-			$user_settings['um-use_um_gravatar_default_builtin_image'] = array(
-				'label' => __( 'Use Gravatar builtin image', 'ultimate-member' ),
-				'value' => $gravatar_options[ UM()->options()->get( 'use_um_gravatar_default_builtin_image' ) ],
-			);
-			if ( 'default' === UM()->options()->get( 'use_um_gravatar_default_builtin_image' ) ) {
-				$user_settings['um-use_um_gravatar_default_image'] = array(
-					'label' => __( 'Use Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
-					'value' => UM()->options()->get( 'use_um_gravatar_default_image' ) ? $labels['yes'] : $labels['no'],
-				);
-			}
-		}
-
 		// Account settings
 		$account_settings = array(
-			'um-account_tab_password' => array(
+			'um-account_separator'        => array(
+				'label' => __( 'Account settings', 'ultimate-member' ),
+				'value' => '---------------------------------------------------------------------',
+			),
+			'um-account_name'             => array(
+				'label' => __( 'Display First & Last name fields (enable to display First & Last name fields)', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'account_name' ) ? $labels['yes'] : $labels['no'],
+			),
+			'um-account_email'            => array(
+				'label' => __( 'Allow users to change email (enable changing email via the account page)', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'account_email' ) ? $labels['yes'] : $labels['no'],
+			),
+			'um-account_general_password' => array(
+				'label' => __( 'Require password to update account (enable required password)', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'account_general_password' ) ? $labels['yes'] : $labels['no'],
+			),
+			'um-account_tab_password'     => array(
 				'label' => __( 'Password Account Tab', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'account_tab_password' ) ? $labels['yes'] : $labels['no'],
 			),
-			'um-account_tab_privacy'  => array(
+			'um-account_tab_privacy'      => array(
 				'label' => __( 'Privacy Account Tab', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'account_tab_privacy' ) ? $labels['yes'] : $labels['no'],
 			),
 		);
+
+		if ( UM()->options()->get( 'account_name' ) ) {
+			$account_settings = UM()->array_insert_before(
+				$account_settings,
+				'um-account_email',
+				array(
+					'um-account_name_disable' => array(
+						'label' => __( 'Disable First & Last name field editing', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'account_name_disable' ) ? $labels['yes'] : $labels['no'],
+					),
+					'um-account_name_require' => array(
+						'label' => __( 'Require First & Last Name', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'account_name_require' ) ? $labels['yes'] : $labels['no'],
+					),
+				)
+			);
+		}
 
 		if ( false !== UM()->account()->is_notifications_tab_visible() ) {
 			$account_settings['um-account_tab_notifications'] = array(
 				'label' => __( 'Notifications Account Tab', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'account_tab_notifications' ) ? $labels['yes'] : $labels['no'],
 			);
+		}
+
+		if ( UM()->options()->get( 'account_tab_privacy' ) ) {
+			$account_settings['um-account_hide_in_directory'] = array(
+				'label' => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'account_hide_in_directory' ) ? $labels['yes'] : $labels['no'],
+			);
+
+			if ( UM()->options()->get( 'account_hide_in_directory' ) ) {
+				$account_settings['um-account_hide_in_directory_default'] = array(
+					'label' => __( 'Hide profiles from directory by default', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'account_hide_in_directory_default' ),
+				);
+			}
 		}
 
 		$account_settings = array_merge(
@@ -601,52 +738,15 @@ class Site_Health {
 					'value' => UM()->options()->get( 'account_tab_delete' ) ? $labels['yes'] : $labels['no'],
 				),
 				'um-delete_account_text'                  => array(
-					'label' => __( 'Account Deletion Custom Text', 'ultimate-member' ),
+					'label' => __( 'Account Deletion Text', 'ultimate-member' ),
 					'value' => UM()->options()->get( 'delete_account_text' ),
 				),
 				'um-delete_account_no_pass_required_text' => array(
-					'label' => __( 'Account Deletion without password Custom Text', 'ultimate-member' ),
+					'label' => __( 'Account Deletion without password Text', 'ultimate-member' ),
 					'value' => UM()->options()->get( 'delete_account_no_pass_required_text' ),
-				),
-				'um-account_name'                         => array(
-					'label' => __( 'Add a First & Last Name fields', 'ultimate-member' ),
-					'value' => UM()->options()->get( 'account_name' ) ? $labels['yes'] : $labels['no'],
 				),
 			)
 		);
-
-		if ( UM()->options()->get( 'account_name' ) ) {
-			$account_settings['um-account_name_disable'] = array(
-				'label' => __( 'Disable First & Last name field editing', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'account_name_disable' ) ? $labels['yes'] : $labels['no'],
-			);
-			$account_settings['um-account_name_require'] = array(
-				'label' => __( 'Require First & Last Name', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'account_name_require' ) ? $labels['yes'] : $labels['no'],
-			);
-		}
-
-		$account_settings['um-account_email'] = array(
-			'label' => __( 'Allow users to change email', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'account_email' ) ? $labels['yes'] : $labels['no'],
-		);
-
-		$account_settings['um-account_general_password'] = array(
-			'label' => __( 'Password is required?', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'account_general_password' ) ? $labels['yes'] : $labels['no'],
-		);
-
-		$account_settings['um-account_hide_in_directory'] = array(
-			'label' => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'account_hide_in_directory' ) ? $labels['yes'] : $labels['no'],
-		);
-
-		if ( UM()->options()->get( 'account_hide_in_directory' ) ) {
-			$account_settings['um-account_hide_in_directory_default'] = array(
-				'label' => __( 'Hide profiles from directory by default', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'account_hide_in_directory_default' ),
-			);
-		}
 
 		// Uploads settings
 		$profile_sizes_list = '';
@@ -664,21 +764,9 @@ class Site_Health {
 			}
 		}
 		$uploads_settings = array(
-			'um-profile_photo_max_size'    => array(
-				'label' => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'profile_photo_max_size' ),
-			),
-			'um-cover_photo_max_size'      => array(
-				'label' => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'cover_photo_max_size' ),
-			),
-			'um-photo_thumb_sizes'         => array(
-				'label' => __( 'Profile Photo Thumbnail Sizes (px)', 'ultimate-member' ),
-				'value' => $profile_sizes_list,
-			),
-			'um-cover_thumb_sizes'         => array(
-				'label' => __( 'Cover Photo Thumbnail Sizes (px)', 'ultimate-member' ),
-				'value' => $cover_sizes_list,
+			'um-account_separator'         => array(
+				'label' => __( 'Upload settings', 'ultimate-member' ),
+				'value' => '---------------------------------------------------------------------',
 			),
 			'um-image_orientation_by_exif' => array(
 				'label' => __( 'Change image orientation', 'ultimate-member' ),
@@ -692,11 +780,33 @@ class Site_Health {
 				'label' => __( 'Image Upload Maximum Width (px)', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'image_max_width' ),
 			),
+			'um-profile_photo_max_size'    => array(
+				'label' => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'profile_photo_max_size' ),
+			),
+			'um-photo_thumb_sizes'         => array(
+				'label' => __( 'Profile Photo Thumbnail Sizes (px)', 'ultimate-member' ),
+				'value' => $profile_sizes_list,
+			),
+			'um-cover_photo_max_size'      => array(
+				'label' => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'cover_photo_max_size' ),
+			),
 			'um-cover_min_width'           => array(
 				'label' => __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'cover_min_width' ),
 			),
+			'um-cover_thumb_sizes'         => array(
+				'label' => __( 'Cover Photo Thumbnail Sizes (px)', 'ultimate-member' ),
+				'value' => $cover_sizes_list,
+			),
 		);
+
+		return array_merge( $pages_settings, $user_settings, $account_settings, $uploads_settings );
+	}
+
+	public function access_sitehealth() {
+		$labels = self::get_labels();
 
 		// Content Restriction settings
 		$restricted_posts      = UM()->options()->get( 'restricted_access_post_metabox' );
@@ -717,7 +827,11 @@ class Site_Health {
 		$accessible = absint( UM()->options()->get( 'accessible' ) );
 
 		$restrict_settings = array(
-			'um-accessible' => array(
+			'um-accessible_separator' => array(
+				'label' => __( 'Access settings', 'ultimate-member' ),
+				'value' => '---------------------------------------------------------------------',
+			),
+			'um-accessible'           => array(
 				'label' => __( 'Global Site Access', 'ultimate-member' ),
 				'value' => 0 === $accessible ? __( 'Site accessible to Everyone', 'ultimate-member' ) : __( 'Site accessible to Logged In Users', 'ultimate-member' ),
 			),
@@ -748,12 +862,12 @@ class Site_Health {
 		}
 
 		$restrict_settings['um-restricted_post_title_replace'] = array(
-			'label' => __( 'Restricted Content Titles', 'ultimate-member' ),
+			'label' => __( 'Restricted Post Title', 'ultimate-member' ),
 			'value' => UM()->options()->get( 'restricted_post_title_replace' ) ? $labels['yes'] : $labels['no'],
 		);
 		if ( UM()->options()->get( 'restricted_post_title_replace' ) ) {
 			$restrict_settings['um-restricted_access_post_title'] = array(
-				'label' => __( 'Restricted Content Title Text', 'ultimate-member' ),
+				'label' => __( 'Restricted Access Post Title', 'ultimate-member' ),
 				'value' => stripslashes( UM()->options()->get( 'restricted_access_post_title' ) ),
 			);
 		}
@@ -763,7 +877,7 @@ class Site_Health {
 			'value' => stripslashes( UM()->options()->get( 'restricted_access_message' ) ),
 		);
 		$restrict_settings['um-restricted_blocks']         = array(
-			'label' => __( 'Enable the "Content Restriction" settings for the Gutenberg Blocks', 'ultimate-member' ),
+			'label' => __( 'Restricted Gutenberg Blocks (enable the "Content Restriction" settings for the Gutenberg Blocks)', 'ultimate-member' ),
 			'value' => UM()->options()->get( 'restricted_blocks' ) ? $labels['yes'] : $labels['no'],
 		);
 		if ( UM()->options()->get( 'restricted_blocks' ) ) {
@@ -782,9 +896,8 @@ class Site_Health {
 		);
 
 		// Access other settings
-		$blocked_emails    = str_replace( '<br />', ', ', nl2br( UM()->options()->get( 'blocked_emails' ) ) );
-		$blocked_words     = str_replace( '<br />', ', ', nl2br( UM()->options()->get( 'blocked_words' ) ) );
-		$allowed_callbacks = str_replace( '<br />', ', ', nl2br( UM()->options()->get( 'allowed_choice_callbacks' ) ) );
+		$blocked_emails = str_replace( '<br />', ', ', nl2br( UM()->options()->get( 'blocked_emails' ) ) );
+		$blocked_words  = str_replace( '<br />', ', ', nl2br( UM()->options()->get( 'blocked_words' ) ) );
 
 		$access_other_settings = array(
 			'um-enable_reset_password_limit' => array(
@@ -794,17 +907,17 @@ class Site_Health {
 		);
 		if ( UM()->options()->get( 'enable_reset_password_limit' ) ) {
 			$access_other_settings['um-reset_password_limit_number'] = array(
-				'label' => __( 'Reset Password Limit ', 'ultimate-member' ),
+				'label' => __( 'Password Limit (maximum reset password limit)', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'reset_password_limit_number' ),
 			);
 		}
 		$access_other_settings['um-change_password_request_limit']     = array(
 			'label' => __( 'Change Password request limit ', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'change_password_request_limit' ),
+			'value' => UM()->options()->get( 'change_password_request_limit' ) ? $labels['yes'] : $labels['no'],
 		);
 		$access_other_settings['um-only_approved_user_reset_password'] = array(
 			'label' => __( 'Only approved user Reset Password', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'only_approved_user_reset_password' ),
+			'value' => UM()->options()->get( 'only_approved_user_reset_password' ) ? $labels['yes'] : $labels['no'],
 		);
 		$access_other_settings['um-blocked_emails']                    = array(
 			'label' => __( 'Blocked Email Addresses', 'ultimate-member' ),
@@ -814,30 +927,32 @@ class Site_Health {
 			'label' => __( 'Blacklist Words', 'ultimate-member' ),
 			'value' => stripslashes( $blocked_words ),
 		);
-		$access_other_settings['um-allowed_choice_callbacks']          = array(
-			'label' => __( 'Allowed Choice Callbacks', 'ultimate-member' ),
-			'value' => stripslashes( $allowed_callbacks ),
-		);
-		$access_other_settings['um-allow_url_redirect_confirm']        = array(
-			'label' => __( 'Allow external link redirect confirm ', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'allow_url_redirect_confirm' ) ? $labels['yes'] : $labels['no'],
-		);
+
+		return array_merge( $restrict_settings, $access_other_settings );
+	}
+
+	public function emails_sitehealth() {
+		$labels = self::get_labels();
 
 		// Email settings
 		$email_settings = array(
-			'um-admin_email'    => array(
+			'um-email_separator' => array(
+				'label' => __( 'Emails settings', 'ultimate-member' ),
+				'value' => '---------------------------------------------------------------------',
+			),
+			'um-admin_email'     => array(
 				'label' => __( 'Admin Email Address', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'admin_email' ),
 			),
-			'um-mail_from'      => array(
+			'um-mail_from'       => array(
 				'label' => __( 'Mail appears from', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'mail_from' ),
 			),
-			'um-mail_from_addr' => array(
+			'um-mail_from_addr'  => array(
 				'label' => __( 'Mail appears from address', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'mail_from_addr' ),
 			),
-			'um-email_html'     => array(
+			'um-email_html'      => array(
 				'label' => __( 'Use HTML for Emails?', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'email_html' ) ? $labels['yes'] : $labels['no'],
 			),
@@ -860,7 +975,12 @@ class Site_Health {
 			}
 		}
 
-		// Appearance settings.
+		return $email_settings;
+	}
+
+	public function appearance_sitehealth() {
+		$labels = self::get_labels();
+
 		// > Profile section.
 		$icons_display_options       = array(
 			'field' => __( 'Show inside text field', 'ultimate-member' ),
@@ -878,64 +998,49 @@ class Site_Health {
 		$profile_secondary_btn  = UM()->options()->get( 'profile_secondary_btn' );
 		$profile_cover_enabled  = UM()->options()->get( 'profile_cover_enabled' );
 		$profile_empty_text     = UM()->options()->get( 'profile_empty_text' );
+		$default_avatar         = UM()->options()->get( 'default_avatar' );
+		$default_cover          = UM()->options()->get( 'default_cover' );
 
 		$appearance_settings = array(
-			'um-profile_template'         => array(
+			'um-appearance_separator'         => array(
+				'label' => __( 'Appearance settings', 'ultimate-member' ),
+				'value' => '---------------------------------------------------------------------',
+			),
+			'um-profile_template'             => array(
 				'label' => __( 'Profile Default Template', 'ultimate-member' ),
 				// translators: %1$s - profile template name, %2$s - profile template filename
 				'value' => sprintf( __( '%1$s (filename: %2$s.php)', 'ultimate-member' ), $profile_template_title, $profile_template_key ),
 			),
-			'um-profile_max_width'        => array(
+			'um-profile_max_width'            => array(
 				'label' => __( 'Profile Maximum Width', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'profile_max_width' ),
 			),
-			'um-profile_area_max_width'   => array(
+			'um-profile_area_max_width'       => array(
 				'label' => __( 'Profile Area Maximum Width', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'profile_area_max_width' ),
 			),
-			'um-profile_icons'            => array(
-				'label' => __( 'Profile Field Icons', 'ultimate-member' ),
-				'value' => $icons_display_options[ UM()->options()->get( 'profile_icons' ) ],
+			'um-default_avatar'               => array(
+				'label' => __( 'Default Profile Photo', 'ultimate-member' ),
+				'value' => ! empty( $default_avatar['url'] ) ? $default_avatar['url'] : '',
 			),
-			'um-profile_primary_btn_word' => array(
-				'label' => __( 'Profile Primary Button Text', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'profile_primary_btn_word' ),
+			'um-disable_profile_photo_upload' => array(
+				'label' => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'disable_profile_photo_upload' ) ? $labels['yes'] : $labels['no'],
 			),
-			'um-profile_secondary_btn'    => array(
-				'label' => __( 'Profile Secondary Button', 'ultimate-member' ),
-				'value' => $profile_secondary_btn ? $labels['yes'] : $labels['no'],
+			'um-profile_photosize'            => array(
+				'label' => __( 'Profile Photo Size', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'profile_photosize' ) . 'x' . UM()->options()->get( 'profile_photosize' ) . 'px',
+			),
+			'um-default_cover'                => array(
+				'label' => __( 'Default Cover Photo', 'ultimate-member' ),
+				'value' => ! empty( $default_cover['url'] ) ? $default_cover['url'] : '',
+			),
+			'um-profile_cover_enabled'        => array(
+				'label' => __( 'Profile Cover Photos', 'ultimate-member' ),
+				'value' => $profile_cover_enabled ? $labels['yes'] : $labels['no'],
 			),
 		);
-		if ( ! empty( $profile_secondary_btn ) ) {
-			$appearance_settings['um-profile_secondary_btn_word'] = array(
-				'label' => __( 'Profile Secondary Button Text ', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'profile_secondary_btn_word' ),
-			);
-		}
 
-		$default_avatar = UM()->options()->get( 'default_avatar' );
-		$default_cover  = UM()->options()->get( 'default_cover' );
-
-		$appearance_settings['um-default_avatar']               = array(
-			'label' => __( 'Default Profile Photo', 'ultimate-member' ),
-			'value' => ! empty( $default_avatar['url'] ) ? $default_avatar['url'] : '',
-		);
-		$appearance_settings['um-default_cover']                = array(
-			'label' => __( 'Default Cover Photo', 'ultimate-member' ),
-			'value' => ! empty( $default_cover['url'] ) ? $default_cover['url'] : '',
-		);
-		$appearance_settings['um-disable_profile_photo_upload'] = array(
-			'label' => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'disable_profile_photo_upload' ) ? $labels['yes'] : $labels['no'],
-		);
-		$appearance_settings['um-profile_photosize']            = array(
-			'label' => __( 'Profile Photo Size', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'profile_photosize' ) . 'x' . UM()->options()->get( 'profile_photosize' ) . 'px',
-		);
-		$appearance_settings['um-profile_cover_enabled']        = array(
-			'label' => __( 'Profile Cover Photos', 'ultimate-member' ),
-			'value' => $profile_cover_enabled ? $labels['yes'] : $labels['no'],
-		);
 		if ( ! empty( $profile_cover_enabled ) ) {
 			$appearance_settings['um-profile_coversize']   = array(
 				'label' => __( 'Profile Cover Size', 'ultimate-member' ),
@@ -946,38 +1051,79 @@ class Site_Health {
 				'value' => UM()->options()->get( 'profile_cover_ratio' ),
 			);
 		}
-		$appearance_settings['um-profile_show_metaicon']     = array(
-			'label' => __( 'Profile Header Meta Text Icon', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'profile_show_metaicon' ) ? $labels['yes'] : $labels['no'],
+
+		$appearance_settings = array_merge(
+			$appearance_settings,
+			array(
+				'um-profile_show_metaicon'     => array(
+					'label' => __( 'Profile Header Meta Text Icon', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_show_metaicon' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-profile_show_name'         => array(
+					'label' => __( 'Show display name in profile header', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_show_name' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-profile_show_social_links' => array(
+					'label' => __( 'Show social links in profile header', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_show_social_links' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-profile_show_bio'          => array(
+					'label' => __( 'Show user description in profile header', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_show_bio' ) ? $labels['yes'] : $labels['no'],
+				),
+			)
 		);
-		$appearance_settings['um-profile_show_name']         = array(
-			'label' => __( 'Show display name in profile header', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'profile_show_name' ) ? $labels['yes'] : $labels['no'],
+
+		if ( UM()->options()->get( 'profile_show_bio' ) ) {
+			$appearance_settings['um-profile_bio_maxchars'] = array(
+				'label' => __( 'User description maximum chars', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'profile_bio_maxchars' ),
+			);
+		}
+
+		$appearance_settings = array_merge(
+			$appearance_settings,
+			array(
+				'um-profile_show_html_bio'    => array(
+					'label' => __( 'Enable HTML support for user description', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_show_html_bio' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-profile_header_menu'      => array(
+					'label' => __( 'Profile Header Menu Position', 'ultimate-member' ),
+					'value' => $profile_header_menu_options[ UM()->options()->get( 'profile_header_menu' ) ],
+				),
+				'um-profile_primary_btn_word' => array(
+					'label' => __( 'Profile Primary Button Text', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_primary_btn_word' ),
+				),
+				'um-profile_secondary_btn'    => array(
+					'label' => __( 'Profile Secondary Button', 'ultimate-member' ),
+					'value' => $profile_secondary_btn ? $labels['yes'] : $labels['no'],
+				),
+			)
 		);
-		$appearance_settings['um-profile_show_social_links'] = array(
-			'label' => __( 'Show social links in profile header', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'profile_show_social_links' ) ? $labels['yes'] : $labels['no'],
+
+		if ( ! empty( $profile_secondary_btn ) ) {
+			$appearance_settings['um-profile_secondary_btn_word'] = array(
+				'label' => __( 'Profile Secondary Button Text ', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'profile_secondary_btn_word' ),
+			);
+		}
+
+		$appearance_settings = array_merge(
+			$appearance_settings,
+			array(
+				'um-profile_icons'      => array(
+					'label' => __( 'Profile Field Icons', 'ultimate-member' ),
+					'value' => $icons_display_options[ UM()->options()->get( 'profile_icons' ) ],
+				),
+				'um-profile_empty_text' => array(
+					'label' => __( 'Show a custom message if profile is empty', 'ultimate-member' ),
+					'value' => $profile_empty_text ? $labels['yes'] : $labels['no'],
+				),
+			)
 		);
-		$appearance_settings['um-profile_show_bio']          = array(
-			'label' => __( 'Show user description in header', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'profile_show_bio' ) ? $labels['yes'] : $labels['no'],
-		);
-		$appearance_settings['um-profile_show_html_bio']     = array(
-			'label' => __( 'Enable HTML support for user description', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'profile_show_html_bio' ) ? $labels['yes'] : $labels['no'],
-		);
-		$appearance_settings['um-profile_bio_maxchars']      = array(
-			'label' => __( 'User description maximum chars', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'profile_bio_maxchars' ),
-		);
-		$appearance_settings['um-profile_header_menu']       = array(
-			'label' => __( 'Profile Header Menu Position', 'ultimate-member' ),
-			'value' => $profile_header_menu_options[ UM()->options()->get( 'profile_header_menu' ) ],
-		);
-		$appearance_settings['um-profile_empty_text']        = array(
-			'label' => __( 'Show a custom message if profile is empty', 'ultimate-member' ),
-			'value' => $profile_empty_text ? $labels['yes'] : $labels['no'],
-		);
+
 		if ( ! empty( $profile_empty_text ) ) {
 			$appearance_settings['um-profile_empty_text_emo'] = array(
 				'label' => __( 'Show the emoticon', 'ultimate-member' ),
@@ -1114,31 +1260,33 @@ class Site_Health {
 			'right'  => __( 'Right aligned', 'ultimate-member' ),
 		);
 
-		$appearance_settings['um-register_template']         = array(
-			'label' => __( 'Registration Default Template', 'ultimate-member' ),
-			// translators: %1$s - register template name, %2$s - register template filename
-			'value' => sprintf( __( '%1$s (filename: %2$s.php)', 'ultimate-member' ), $register_template_title, $register_template_key ),
+		$appearance_settings = array_merge(
+			$appearance_settings,
+			array(
+				'um-register_template'         => array(
+					'label' => __( 'Registration Default Template', 'ultimate-member' ),
+					// translators: %1$s - register template name, %2$s - register template filename
+					'value' => sprintf( __( '%1$s (filename: %2$s.php)', 'ultimate-member' ), $register_template_title, $register_template_key ),
+				),
+				'um-register_max_width'        => array(
+					'label' => __( 'Registration Maximum Width', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'register_max_width' ),
+				),
+				'um-register_align'            => array(
+					'label' => __( 'Registration Shortcode Alignment', 'ultimate-member' ),
+					'value' => $form_align_options[ UM()->options()->get( 'register_align' ) ],
+				),
+				'um-register_primary_btn_word' => array(
+					'label' => __( 'Registration Primary Button Text ', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'register_primary_btn_word' ),
+				),
+				'um-register_secondary_btn'    => array(
+					'label' => __( 'Registration Secondary Button', 'ultimate-member' ),
+					'value' => $register_secondary_btn ? $labels['yes'] : $labels['no'],
+				),
+			)
 		);
-		$appearance_settings['um-register_max_width']        = array(
-			'label' => __( 'Registration Maximum Width', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'register_max_width' ),
-		);
-		$appearance_settings['um-register_align']            = array(
-			'label' => __( 'Registration Shortcode Alignment', 'ultimate-member' ),
-			'value' => $form_align_options[ UM()->options()->get( 'register_align' ) ],
-		);
-		$appearance_settings['um-register_icons']            = array(
-			'label' => __( 'Registration Field Icons', 'ultimate-member' ),
-			'value' => $icons_display_options[ UM()->options()->get( 'register_icons' ) ],
-		);
-		$appearance_settings['um-register_primary_btn_word'] = array(
-			'label' => __( 'Registration Primary Button Text ', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'register_primary_btn_word' ),
-		);
-		$appearance_settings['um-register_secondary_btn']    = array(
-			'label' => __( 'Registration Secondary Button', 'ultimate-member' ),
-			'value' => $register_secondary_btn ? $labels['yes'] : $labels['no'],
-		);
+
 		if ( ! empty( $register_secondary_btn ) ) {
 			$appearance_settings['um-register_secondary_btn_word'] = array(
 				'label' => __( 'Registration Secondary Button Text', 'ultimate-member' ),
@@ -1149,9 +1297,10 @@ class Site_Health {
 				'value' => UM()->options()->get( 'register_secondary_btn_url' ),
 			);
 		}
-		$appearance_settings['um-register_role'] = array(
-			'label' => __( 'Registration Default Role', 'ultimate-member' ),
-			'value' => ! empty( UM()->options()->get( 'register_role' ) ) ? UM()->options()->get( 'register_role' ) : __( 'Default', 'ultimate-member' ),
+
+		$appearance_settings['um-register_icons'] = array(
+			'label' => __( 'Registration Field Icons', 'ultimate-member' ),
+			'value' => $icons_display_options[ UM()->options()->get( 'register_icons' ) ],
 		);
 
 		// > Login Form section.
@@ -1160,31 +1309,33 @@ class Site_Health {
 		$login_template_title = array_key_exists( $login_template_key, $login_templates ) ? $login_templates[ $login_template_key ] : __( 'No template name', 'ultimate-member' );
 		$login_secondary_btn  = UM()->options()->get( 'login_secondary_btn' );
 
-		$appearance_settings['um-login_template']         = array(
-			'label' => __( 'Login Default Template', 'ultimate-member' ),
-			// translators: %1$s - login template name, %2$s - login template filename
-			'value' => sprintf( __( '%1$s (filename: %2$s.php)', 'ultimate-member' ), $login_template_title, $login_template_key ),
+		$appearance_settings = array_merge(
+			$appearance_settings,
+			array(
+				'um-login_template'         => array(
+					'label' => __( 'Login Default Template', 'ultimate-member' ),
+					// translators: %1$s - login template name, %2$s - login template filename
+					'value' => sprintf( __( '%1$s (filename: %2$s.php)', 'ultimate-member' ), $login_template_title, $login_template_key ),
+				),
+				'um-login_max_width'        => array(
+					'label' => __( 'Login Maximum Width', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'login_max_width' ),
+				),
+				'um-login_align'            => array(
+					'label' => __( 'Login Shortcode Alignment', 'ultimate-member' ),
+					'value' => $form_align_options[ UM()->options()->get( 'login_align' ) ],
+				),
+				'um-login_primary_btn_word' => array(
+					'label' => __( 'Login Primary Button Text', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'login_primary_btn_word' ),
+				),
+				'um-login_secondary_btn'    => array(
+					'label' => __( 'Login Secondary Button', 'ultimate-member' ),
+					'value' => $login_secondary_btn ? $labels['yes'] : $labels['no'],
+				),
+			)
 		);
-		$appearance_settings['um-login_max_width']        = array(
-			'label' => __( 'Login Maximum Width', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'login_max_width' ),
-		);
-		$appearance_settings['um-login_align']            = array(
-			'label' => __( 'Login Shortcode Alignment', 'ultimate-member' ),
-			'value' => $form_align_options[ UM()->options()->get( 'login_align' ) ],
-		);
-		$appearance_settings['um-login_icons']            = array(
-			'label' => __( 'Login Field Icons', 'ultimate-member' ),
-			'value' => $icons_display_options[ UM()->options()->get( 'login_icons' ) ],
-		);
-		$appearance_settings['um-login_primary_btn_word'] = array(
-			'label' => __( 'Login Primary Button Text', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'login_primary_btn_word' ),
-		);
-		$appearance_settings['um-login_secondary_btn']    = array(
-			'label' => __( 'Login Secondary Button', 'ultimate-member' ),
-			'value' => $login_secondary_btn ? $labels['yes'] : $labels['no'],
-		);
+
 		if ( ! empty( $login_secondary_btn ) ) {
 			$appearance_settings['um-login_secondary_btn_word'] = array(
 				'label' => __( 'Login Secondary Button Text', 'ultimate-member' ),
@@ -1195,56 +1346,66 @@ class Site_Health {
 				'value' => UM()->options()->get( 'login_secondary_btn_url' ),
 			);
 		}
-		$appearance_settings['um-login_forgot_pass_link'] = array(
-			'label' => __( 'Login Forgot Password Link', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'login_forgot_pass_link' ) ? $labels['yes'] : $labels['no'],
-		);
-		$appearance_settings['um-login_show_rememberme']  = array(
-			'label' => __( 'Show "Remember Me"', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'login_show_rememberme' ) ? $labels['yes'] : $labels['no'],
+
+		$appearance_settings = array_merge(
+			$appearance_settings,
+			array(
+				'um-login_forgot_pass_link' => array(
+					'label' => __( 'Login Forgot Password Link', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'login_forgot_pass_link' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-login_show_rememberme'  => array(
+					'label' => __( 'Login Maximum Width', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'login_max_width' ),
+				),
+				'um-login_icons'            => array(
+					'label' => __( 'Login Field Icons', 'ultimate-member' ),
+					'value' => $icons_display_options[ UM()->options()->get( 'login_icons' ) ],
+				),
+			)
 		);
 
-		// Misc settings.
-		$misc_settings = array(
-			'um-form_asterisk'                   => array(
-				'label' => __( 'Show an asterisk for required fields', 'ultimate-member' ),
+		return $appearance_settings;
+	}
+
+	public function advanced_sitehealth() {
+		$labels = self::get_labels();
+
+		$general = array(
+			'um-advanced_separator'           => array(
+				'label' => __( 'Advanced settings', 'ultimate-member' ),
+				'value' => '---------------------------------------------------------------------',
+			),
+			'um-form_asterisk'                => array(
+				'label' => __( 'Required fields\' asterisk (Show an asterisk for required fields)', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'form_asterisk' ) ? $labels['yes'] : $labels['no'],
 			),
-			'um-profile_title'                   => array(
-				'label' => __( 'User Profile Title', 'ultimate-member' ),
-				'value' => stripslashes( UM()->options()->get( 'profile_title' ) ),
-			),
-			'um-profile_desc'                    => array(
-				'label' => __( 'User Profile Dynamic Meta Description', 'ultimate-member' ),
-				'value' => stripslashes( UM()->options()->get( 'profile_desc' ) ),
-			),
-			'um-um_profile_object_cache_stop'    => array(
+			'um-um_profile_object_cache_stop' => array(
 				'label' => __( 'Disable Cache User Profile', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'um_profile_object_cache_stop' ) ? $labels['yes'] : $labels['no'],
 			),
+			'um-uninstall_on_delete'          => array(
+				'label' => __( 'Remove Data on Uninstall?', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'uninstall_on_delete' ) ? $labels['yes'] : $labels['no'],
+			),
+		);
+
+		$feature = array(
 			'um-enable_blocks'                   => array(
 				'label' => __( 'Enable Gutenberg Blocks', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'enable_blocks' ) ? $labels['yes'] : $labels['no'],
-			),
-			'um-enable_as_email_sending'         => array(
-				'label' => __( 'Email sending by Action Scheduler', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'enable_as_email_sending' ) ? $labels['yes'] : $labels['no'],
-			),
-			'um-rest_api_version'                => array(
-				'label' => __( 'REST API version', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'rest_api_version' ),
-			),
-			'um-disable_restriction_pre_queries' => array(
-				'label' => __( 'Disable pre-queries for restriction content logic (advanced)', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? $labels['yes'] : $labels['no'],
 			),
 			'um-member_directory_own_table'      => array(
 				'label' => __( 'Enable custom table for usermeta', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'member_directory_own_table' ) ? $labels['yes'] : $labels['no'],
 			),
-			'um-uninstall_on_delete'             => array(
-				'label' => __( 'Remove Data on Uninstall?', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'uninstall_on_delete' ) ? $labels['yes'] : $labels['no'],
+			'um-enable_as_email_sending'         => array(
+				'label' => __( 'Email sending by Action Scheduler', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'enable_as_email_sending' ) ? $labels['yes'] : $labels['no'],
+			),
+			'um-disable_restriction_pre_queries' => array(
+				'label' => __( 'Disable pre-queries for restriction content logic (advanced)', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? $labels['yes'] : $labels['no'],
 			),
 		);
 
@@ -1275,7 +1436,7 @@ class Site_Health {
 				'value' => UM()->options()->get( 'display_login_form_notice' ) ? $labels['yes'] : $labels['no'],
 			),
 			'um-secure_ban_admins_accounts' => array(
-				'label' => __( 'Enable ban for administrative capabilities', 'ultimate-member' ),
+				'label' => __( 'Administrative capabilities ban (enable ban for administrative capabilities)', 'ultimate-member' ),
 				'value' => $secure_ban_admins_accounts ? $labels['yes'] : $labels['no'],
 			),
 		);
@@ -1308,6 +1469,25 @@ class Site_Health {
 			'value' => $secure_allowed_redirect_hosts,
 		);
 
+		$developers = array(
+			'um-allowed_choice_callbacks'   => array(
+				'label' => __( 'Allowed Choice Callbacks', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'allowed_choice_callbacks' ),
+			),
+			'um-rest_api_version'           => array(
+				'label' => __( 'REST API version', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'rest_api_version' ),
+			),
+			'um-allow_url_redirect_confirm' => array(
+				'label' => __( 'Allow external link redirect confirm (enable JS.confirm for external links)', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'allow_url_redirect_confirm' ) ? $labels['yes'] : $labels['no'],
+			),
+		);
+
+		return array_merge( $general, $feature, $secure_settings, $developers );
+	}
+
+	public function license_sitehealth() {
 		// Licenses settings.
 		$license_settings = array(
 			'um-licenses' => array(
@@ -1335,7 +1515,524 @@ class Site_Health {
 		 */
 		$license_settings = apply_filters( 'um_licenses_site_health', $license_settings );
 
-		$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $pages_settings, $user_settings, $account_settings, $uploads_settings, $restrict_settings, $access_other_settings, $email_settings, $appearance_settings, $misc_settings, $secure_settings, $license_settings );
+		return $license_settings;
+	}
+
+	public function get_member_directories_sitehealth( $info ) {
+		$labels  = self::get_labels();
+		$options = array(
+			'country'              => __( 'Country', 'ultimate-member' ),
+			'gender'               => __( 'Gender', 'ultimate-member' ),
+			'languages'            => __( 'Languages', 'ultimate-member' ),
+			'role'                 => __( 'Roles', 'ultimate-member' ),
+			'birth_date'           => __( 'Age', 'ultimate-member' ),
+			'last_login'           => __( 'Last Login', 'ultimate-member' ),
+			'user_registered'      => __( 'User Registered', 'ultimate-member' ),
+			'first_name'           => __( 'First Name', 'ultimate-member' ),
+			'last_name'            => __( 'Last Name', 'ultimate-member' ),
+			'nickname'             => __( 'Nickname', 'ultimate-member' ),
+			'secondary_user_email' => __( 'Secondary Email Address', 'ultimate-member' ),
+			'description'          => __( 'Biography', 'ultimate-member' ),
+			'phone_number'         => __( 'Phone Number', 'ultimate-member' ),
+			'mobile_number'        => __( 'Mobile Number', 'ultimate-member' ),
+			'role_select'          => __( 'Roles (Dropdown)', 'ultimate-member' ),
+			'role_radio'           => __( 'Roles (Radio)', 'ultimate-member' ),
+			'whatsapp'             => __( 'WhatsApp number', 'ultimate-member' ),
+			'facebook'             => __( 'Facebook', 'ultimate-member' ),
+			'twitter'              => __( 'X (formerly Twitter)', 'ultimate-member' ),
+			'viber'                => __( 'Viber number', 'ultimate-member' ),
+			'skype'                => __( 'Skype ID', 'ultimate-member' ),
+			'telegram'             => __( 'Telegram', 'ultimate-member' ),
+			'discord'              => __( 'Discord', 'ultimate-member' ),
+			'youtube'              => __( 'Youtube', 'ultimate-member' ),
+			'soundcloud'           => __( 'SoundCloud', 'ultimate-member' ),
+			'user_registered_desc' => __( 'New users first', 'ultimate-member' ),
+			'user_registered_asc'  => __( 'Old users first', 'ultimate-member' ),
+			'username'             => __( 'Username', 'ultimate-member' ),
+			'display_name'         => __( 'Display name', 'ultimate-member' ),
+			'last_first_name'      => __( 'Last & First name', 'ultimate-member' ),
+			'random'               => __( 'Random', 'ultimate-member' ),
+			'other'                => __( 'Other (Custom Field)', 'ultimate-member' ),
+		);
+
+		$info['ultimate-member-directories'] = array(
+			'label'       => __( 'Ultimate Member Directories', 'ultimate-member' ),
+			'description' => __( 'This debug information about Ultimate Member directories.', 'ultimate-member' ),
+			'fields'      => array(
+				'um-directory' => array(
+					'label' => __( 'Member directories', 'ultimate-member' ),
+					'value' => ! empty( $this->get_member_directories() ) ? $this->get_member_directories() : $labels['no-dir'],
+				),
+			),
+		);
+
+		if ( ! empty( $this->get_member_directories() ) ) {
+			foreach ( $this->get_member_directories() as $key => $directory ) {
+				if ( 0 === strpos( $key, 'ID#' ) ) {
+					$key = substr( $key, 3 );
+				}
+
+				$_um_view_types_value = get_post_meta( $key, '_um_view_types', true );
+				$_um_view_types_value = empty( $_um_view_types_value ) ? array( 'grid', 'list' ) : $_um_view_types_value;
+				$_um_view_types_value = is_string( $_um_view_types_value ) ? array( $_um_view_types_value ) : $_um_view_types_value;
+
+				$info[ 'ultimate-member-directory-' . $key ] = array(
+					'label'       => ' - ' . $directory . __( ' directory settings', 'ultimate-member' ),
+					'description' => __( 'This debug information for your Ultimate Member directory.', 'ultimate-member' ),
+					'fields'      => array(
+						'um-directory-shortcode'    => array(
+							'label' => __( 'Shortcode', 'ultimate-member' ),
+							'value' => '[ultimatemember_directory id="' . $key . '"]',
+						),
+						'um-directory_template'     => array(
+							'label' => __( 'Template', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_directory_template', true ) ? get_post_meta( $key, '_um_directory_template', true ) : $labels['default'],
+						),
+						'um-directory-view_types'   => array(
+							'label' => __( 'View types', 'ultimate-member' ),
+							'value' => implode( ', ', $_um_view_types_value ),
+						),
+						'um-directory-default_view' => array(
+							'label' => __( 'Default view type', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_default_view', true ),
+						),
+					),
+				);
+
+				if ( isset( $options[ get_post_meta( $key, '_um_sortby', true ) ] ) ) {
+					$sortby_label = $options[ get_post_meta( $key, '_um_sortby', true ) ];
+				} else {
+					$sortby_label = get_post_meta( $key, '_um_sortby', true );
+				}
+
+				$directory_roles_meta = get_post_meta( $key, '_um_roles', true );
+				$directory_roles      = array();
+				if ( ! empty( $directory_roles_meta ) ) {
+					if ( is_string( $directory_roles_meta ) ) {
+						$directory_roles = array( $directory_roles_meta );
+					} else {
+						$directory_roles = $directory_roles_meta;
+					}
+				}
+
+				$directory_show_these_users_meta = get_post_meta( $key, '_um_show_these_users', true );
+				$show_these_users                = array();
+				if ( ! empty( $directory_show_these_users_meta ) ) {
+					if ( is_string( $directory_show_these_users_meta ) ) {
+						$show_these_users = array( $directory_show_these_users_meta );
+					} else {
+						$show_these_users = $directory_show_these_users_meta;
+					}
+				}
+
+				$directory_exclude_these_users_meta = get_post_meta( $key, '_um_exclude_these_users', true );
+				$exclude_these_users                = array();
+				if ( ! empty( $directory_exclude_these_users_meta ) ) {
+					if ( is_string( $directory_exclude_these_users_meta ) ) {
+						$exclude_these_users = array( $directory_exclude_these_users_meta );
+					} else {
+						$exclude_these_users = $directory_exclude_these_users_meta;
+					}
+				}
+
+				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+					$info[ 'ultimate-member-directory-' . $key ]['fields'],
+					array(
+						'um-directory-roles'               => array(
+							'label' => __( 'User Roles to display', 'ultimate-member' ),
+							'value' => ! empty( $directory_roles ) ? implode( ', ', $directory_roles ) : $labels['all'],
+						),
+						'um-directory-has_profile_photo'   => array(
+							'label' => __( 'Only show members who have uploaded a profile photo', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_has_profile_photo', true ) ? $labels['yes'] : $labels['no'],
+						),
+						'um-directory-has_cover_photo'     => array(
+							'label' => __( 'Only show members who have uploaded a cover photo', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_has_cover_photo', true ) ? $labels['yes'] : $labels['no'],
+						),
+						'um-directory-show_these_users'    => array(
+							'label' => __( 'Only show specific users', 'ultimate-member' ),
+							'value' => ! empty( $show_these_users ) ? implode( ', ', $show_these_users ) : '',
+						),
+						'um-directory-exclude_these_users' => array(
+							'label' => __( 'Exclude specific users', 'ultimate-member' ),
+							'value' => ! empty( $exclude_these_users ) ? implode( ', ', $exclude_these_users ) : '',
+						),
+					)
+				);
+
+				$info = apply_filters( 'um_debug_member_directory_general_extend', $info, $key );
+
+				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+					$info[ 'ultimate-member-directory-' . $key ]['fields'],
+					array(
+						'um-directory-sortby' => array(
+							'label' => __( 'Default sort users by', 'ultimate-member' ),
+							'value' => $sortby_label,
+						),
+					)
+				);
+
+				if ( 'other' === get_post_meta( $key, '_um_sortby', true ) ) {
+					$sort_type_opts = array(
+						'CHAR'     => __( 'CHAR', 'ultimate-member' ),
+						'NUMERIC'  => __( 'NUMERIC', 'ultimate-member' ),
+						'BINARY'   => __( 'BINARY', 'ultimate-member' ),
+						'DATE'     => __( 'DATE', 'ultimate-member' ),
+						'DATETIME' => __( 'DATETIME', 'ultimate-member' ),
+						'DECIMAL'  => __( 'DECIMAL', 'ultimate-member' ),
+						'SIGNED'   => __( 'SIGNED', 'ultimate-member' ),
+						'TIME'     => __( 'TIME', 'ultimate-member' ),
+						'UNSIGNED' => __( 'UNSIGNED', 'ultimate-member' ),
+					);
+
+					$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-directory-' . $key ]['fields'],
+						array(
+							'um-directory-um_sortby_custom'       => array(
+								'label' => __( 'Meta key', 'ultimate-member' ),
+								'value' => get_post_meta( $key, '_um_sortby_custom', true ),
+							),
+							'um-directory-um_sortby_custom_type'  => array(
+								'label' => __( 'Data type', 'ultimate-member' ),
+								'value' => $sort_type_opts[ get_post_meta( $key, '_um_sortby_custom_type', true ) ],
+							),
+							'um-directory-um_sortby_custom_order' => array(
+								'label' => __( 'Order', 'ultimate-member' ),
+								'value' => 'ASC' === get_post_meta( $key, '_um_sortby_custom_order', true ) ? __( 'Ascending', 'ultimate-member' ) : __( 'Descending', 'ultimate-member' ),
+							),
+							'um-directory-um_sortby_custom_label' => array(
+								'label' => __( 'Label of custom sort', 'ultimate-member' ),
+								'value' => get_post_meta( $key, '_um_sortby_custom_label', true ),
+							),
+						)
+					);
+				}
+
+				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+					$info[ 'ultimate-member-directory-' . $key ]['fields'],
+					array(
+						'um-directory-enable_sorting' => array(
+							'label' => __( 'Enable custom sorting', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_enable_sorting', true ) ? $labels['yes'] : $labels['no'],
+						),
+					)
+				);
+
+				if ( 1 === absint( get_post_meta( $key, '_um_enable_sorting', true ) ) ) {
+					$sorting_fields = get_post_meta( $key, '_um_sorting_fields', true );
+					if ( ! empty( $sorting_fields ) ) {
+						foreach ( $sorting_fields as $k => $field ) {
+							if ( is_array( $field ) ) {
+								$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+									$info[ 'ultimate-member-directory-' . $key ]['fields'],
+									array(
+										'um-directory-sorting_fields-' . $k => array(
+											'label' => __( 'Field(s) to enable in sorting', 'ultimate-member' ),
+											'value' => __( 'Label: ', 'ultimate-member' ) . array_values( $field )[0] . ' | ' . __( 'Meta key: ', 'ultimate-member' ) . stripslashes( array_keys( $field )[0] ),
+										),
+									)
+								);
+							} else {
+								$sortby_label = isset( $options[ $field ] ) ? $options[ $field ] : $field;
+								$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+									$info[ 'ultimate-member-directory-' . $key ]['fields'],
+									array(
+										'um-directory-sorting_fields-' . $k => array(
+											'label' => __( 'Field to enable in sorting', 'ultimate-member' ),
+											'value' => $sortby_label,
+										),
+									)
+								);
+							}
+						}
+					}
+				}
+
+				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+					$info[ 'ultimate-member-directory-' . $key ]['fields'],
+					array(
+						'um-directory-search' => array(
+							'label' => __( 'Enable Search feature', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_search', true ) ? $labels['yes'] : $labels['no'],
+						),
+					)
+				);
+
+				if ( 1 === absint( get_post_meta( $key, '_um_search', true ) ) ) {
+					$directory_roles_can_search_meta = get_post_meta( $key, '_um_roles_can_search', true );
+					$roles_can_search                = array();
+					if ( ! empty( $directory_roles_can_search_meta ) ) {
+						if ( is_string( $directory_roles_can_search_meta ) ) {
+							$roles_can_search = array( $directory_roles_can_search_meta );
+						} else {
+							$roles_can_search = $directory_roles_can_search_meta;
+						}
+					}
+
+					$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-directory-' . $key ]['fields'],
+						array(
+							'um-directory-roles_can_search' => array(
+								'label' => __( 'User Roles that can use search', 'ultimate-member' ),
+								'value' => ! empty( $roles_can_search ) ? implode( ', ', $roles_can_search ) : $labels['all'],
+							),
+						)
+					);
+				}
+
+				if ( ! empty( get_post_meta( $key, '_um_search_exclude_fields', true ) ) ) {
+					$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-directory-' . $key ]['fields'],
+						array(
+							'um-directory-um_search_exclude_fields' => array(
+								'label' => __( 'Exclude fields from search', 'ultimate-member' ),
+								'value' => get_post_meta( $key, '_um_search_exclude_fields', true ),
+							),
+						)
+					);
+				}
+
+				if ( ! empty( get_post_meta( $key, '_um_search_include_fields', true ) ) ) {
+					$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-directory-' . $key ]['fields'],
+						array(
+							'um-directory-um_search_include_fields' => array(
+								'label' => __( 'Fields to search by', 'ultimate-member' ),
+								'value' => get_post_meta( $key, '_um_search_include_fields', true ),
+							),
+						)
+					);
+				}
+
+				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+					$info[ 'ultimate-member-directory-' . $key ]['fields'],
+					array(
+						'um-directory-filters' => array(
+							'label' => __( 'Enable Filters feature', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_filters', true ) ? $labels['yes'] : $labels['no'],
+						),
+					)
+				);
+
+				if ( 1 === absint( get_post_meta( $key, '_um_filters', true ) ) ) {
+					$directory_roles_can_filter_meta = get_post_meta( $key, '_um_roles_can_filter', true );
+					$roles_can_filter                = array();
+					if ( ! empty( $directory_roles_can_filter_meta ) ) {
+						if ( is_string( $directory_roles_can_filter_meta ) ) {
+							$roles_can_filter = array( $directory_roles_can_filter_meta );
+						} else {
+							$roles_can_filter = $directory_roles_can_filter_meta;
+						}
+					}
+
+					$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-directory-' . $key ]['fields'],
+						array(
+							'um-directory-roles_can_filter' => array(
+								'label' => __( 'User Roles that can use filters', 'ultimate-member' ),
+								'value' => ! empty( $roles_can_filter ) ? implode( ', ', $roles_can_filter ) : $labels['all'],
+							),
+						)
+					);
+
+					$search_fields = get_post_meta( $key, '_um_search_fields', true );
+					if ( ! empty( $search_fields ) && is_array( $search_fields ) ) {
+						$field_labels = array();
+						foreach ( $search_fields as $k => $field ) {
+							$field_label    = isset( $options[ $field ] ) ? $options[ $field ] : $field;
+							$field_labels[] = $field_label;
+						}
+						$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-directory-' . $key ]['fields'],
+							array(
+								'um-directory-search_fields-' . $k => array(
+									'label' => __( 'Filter meta to enable', 'ultimate-member' ),
+									'value' => $field_labels,
+								),
+							)
+						);
+					}
+
+					$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-directory-' . $key ]['fields'],
+						array(
+							'um-directory-filters_expanded' => array(
+								'label' => __( 'Expand the filter bar by default', 'ultimate-member' ),
+								'value' => get_post_meta( $key, '_um_filters_expanded', true ) ? $labels['yes'] : $labels['no'],
+							),
+						)
+					);
+
+					if ( 1 === absint( get_post_meta( $key, '_um_filters_expanded', true ) ) ) {
+						$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-directory-' . $key ]['fields'],
+							array(
+								'um-directory-filters_is_collapsible' => array(
+									'label' => __( 'Can filter bar be collapsed', 'ultimate-member' ),
+									'value' => get_post_meta( $key, '_um_filters_is_collapsible', true ) ? $labels['yes'] : $labels['no'],
+								),
+							)
+						);
+					}
+				}
+
+				$search_filters = get_post_meta( $key, '_um_search_filters', true );
+				if ( ! empty( $search_filters ) && is_array( $search_filters ) ) {
+					$field_labels = array();
+					foreach ( $search_filters as $k => $field ) {
+						$field_label = isset( $options[ $k ] ) ? $options[ $k ] : $k;
+						$value       = $field;
+						if ( is_array( $field ) ) {
+							// @todo: check if field 'From' and 'To' is set. $value = __( 'From ', 'ultimate-member' ) . $field[0] . __( ' to ', 'ultimate-member' ) . $field[1];
+							$value = implode( ', ', $field );
+						}
+						$field_labels[] = $field_label . ' - ' . $value;
+					}
+					$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-directory-' . $key ]['fields'],
+						array(
+							'um-directory-search_filters-' . $k => array(
+								'label' => __( 'Admin filtering', 'ultimate-member' ),
+								'value' => $field_labels,
+							),
+						)
+					);
+				}
+
+				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+					$info[ 'ultimate-member-directory-' . $key ]['fields'],
+					array(
+						'um-directory-profile_photo' => array(
+							'label' => __( 'Enable Profile Photo', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_profile_photo', true ) ? $labels['yes'] : $labels['no'],
+						),
+						'um-directory-cover_photos'  => array(
+							'label' => __( 'Enable Cover Photo', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_cover_photos', true ) ? $labels['yes'] : $labels['no'],
+						),
+						'um-directory-show_name'     => array(
+							'label' => __( 'Show display name', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_show_name', true ) ? $labels['yes'] : $labels['no'],
+						),
+					)
+				);
+
+				$info = apply_filters( 'um_debug_member_directory_profile_extend', $info, $key );
+
+				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+					$info[ 'ultimate-member-directory-' . $key ]['fields'],
+					array(
+						'um-directory-show_tagline' => array(
+							'label' => __( 'Show tagline below profile name', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_show_tagline', true ) ? $labels['yes'] : $labels['no'],
+						),
+					)
+				);
+
+				if ( 1 === absint( get_post_meta( $key, '_um_show_tagline', true ) ) ) {
+					$tagline_fields = get_post_meta( $key, '_um_tagline_fields', true );
+					if ( ! empty( $tagline_fields ) && is_array( $tagline_fields ) ) {
+						$field_labels = array();
+						foreach ( $tagline_fields as $k => $field ) {
+							$label          = isset( $options[ $field ] ) ? $options[ $field ] : $field;
+							$field_labels[] = $label;
+						}
+
+						$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-directory-' . $key ]['fields'],
+							array(
+								'um-directory-tagline_fields-' . $k => array(
+									'label' => __( 'Field to display in tagline', 'ultimate-member' ),
+									'value' => $field_labels,
+								),
+							)
+						);
+					}
+				}
+
+				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+					$info[ 'ultimate-member-directory-' . $key ]['fields'],
+					array(
+						'um-directory-show_userinfo' => array(
+							'label' => __( 'Show extra user information below tagline?', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_show_userinfo', true ) ? $labels['yes'] : $labels['no'],
+						),
+					)
+				);
+
+				if ( 1 === absint( get_post_meta( $key, '_um_show_userinfo', true ) ) ) {
+					$reveal_fields = get_post_meta( $key, '_um_reveal_fields', true );
+					if ( ! empty( $reveal_fields ) && is_array( $reveal_fields ) ) {
+						$field_labels = array();
+						foreach ( $reveal_fields as $k => $field ) {
+							$label          = isset( $options[ $field ] ) ? $options[ $field ] : $field;
+							$field_labels[] = $label;
+						}
+
+						$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-directory-' . $key ]['fields'],
+							array(
+								'um-directory-reveal_fields-' . $k => array(
+									'label' => __( 'Field to display in extra user information section', 'ultimate-member' ),
+									'value' => $field_labels,
+								),
+							)
+						);
+					}
+				}
+
+				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+					$info[ 'ultimate-member-directory-' . $key ]['fields'],
+					array(
+						'um-directory-um_show_social'              => array(
+							'label' => __( 'Show social connect icons in extra user information section', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_show_social', true ) ? $labels['yes'] : $labels['no'],
+						),
+						'um-directory-um_userinfo_animate'         => array(
+							'label' => __( 'Hide extra user information to the reveal section', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_userinfo_animate', true ) ? $labels['yes'] : $labels['no'],
+						),
+						'um-directory-um_must_search'              => array(
+							'label' => __( 'Show results only after search/filtration', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_must_search', true ) ? $labels['yes'] : $labels['no'],
+						),
+						'um-directory-um_max_users'                => array(
+							'label' => __( 'Maximum number of profiles', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_max_users', true ),
+						),
+						'um-directory-profiles_per_page'           => array(
+							'label' => __( 'Number of profiles per page', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_profiles_per_page', true ),
+						),
+						'um-directory-um_profiles_per_page_mobile' => array(
+							'label' => __( 'Maximum number of profiles', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_profiles_per_page_mobile', true ),
+						),
+						'um-directory-um_directory_header'         => array(
+							'label' => __( 'Results Text', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_directory_header', true ),
+						),
+						'um-directory-um_directory_header_single'  => array(
+							'label' => __( 'Single Result Text', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_directory_header_single', true ),
+						),
+						'um-directory-um_directory_no_users'       => array(
+							'label' => __( 'Custom text if no users were found', 'ultimate-member' ),
+							'value' => get_post_meta( $key, '_um_directory_no_users', true ),
+						),
+					)
+				);
+
+				$info = apply_filters( 'um_debug_member_directory_extend', $info, $key );
+			}
+		}
+
+		return $info;
+	}
+
+	public function roles_sitehealth( $info ) {
+		$labels = self::get_labels();
 
 		// User roles settings
 		$roles_array = array();
@@ -1864,7 +2561,18 @@ class Site_Health {
 			$info = apply_filters( 'um_debug_information_user_role', $info, $key );
 		}
 
-		// Forms settings
+		return $info;
+	}
+
+	public function forms_sitehealth( $info ) {
+		$labels = self::get_labels();
+
+		$icons_display_options       = array(
+			'field' => __( 'Show inside text field', 'ultimate-member' ),
+			'label' => __( 'Show with label', 'ultimate-member' ),
+			'off'   => __( 'Turn off', 'ultimate-member' ),
+		);
+
 		if ( ! empty( $this->get_forms() ) ) {
 			$info['ultimate-member-forms'] = array(
 				'label'       => __( 'Ultimate Member Forms', 'ultimate-member' ),
@@ -1901,26 +2609,68 @@ class Site_Health {
 					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
 						$info[ 'ultimate-member-' . $key ]['fields'],
 						array(
-							'um-register_role'             => array(
-								'label' => __( 'User registration role', 'ultimate-member' ),
-								'value' => 0 === absint( get_post_meta( $key, '_um_register_role', true ) ) ? $labels['default'] : get_post_meta( $key, '_um_register_role', true ),
+							'um-um_register_use_custom_settings' => array(
+								'label' => __( 'Apply custom settings to this form', 'ultimate-member' ),
+								'value' => get_post_meta( $key, '_um_register_use_custom_settings', true ) ? $labels['yes'] : $labels['no'],
 							),
-							'um-register_template'         => array(
-								'label' => __( 'Template', 'ultimate-member' ),
-								'value' => 0 === absint( get_post_meta( $key, '_um_register_template', true ) ) ? $labels['default'] : get_post_meta( $key, '_um_register_template', true ),
-							),
-							'um-register_primary_btn_word' => array(
-								'label' => __( 'Primary Button Text', 'ultimate-member' ),
-								'value' => ! get_post_meta( $key, '_um_register_primary_btn_word', true ) ? $labels['default'] : get_post_meta( $key, '_um_register_primary_btn_word', true ),
-							),
-							'um-register_use_gdpr'         => array(
+						)
+					);
+
+					if ( get_post_meta( $key, '_um_register_use_custom_settings', true ) ) {
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
+							array(
+								'um-register_role'             => array(
+									'label' => __( 'User registration role', 'ultimate-member' ),
+									'value' => 0 === absint( get_post_meta( $key, '_um_register_role', true ) ) ? $labels['default'] : get_post_meta( $key, '_um_register_role', true ),
+								),
+								'um-register_template'         => array(
+									'label' => __( 'Template', 'ultimate-member' ),
+									'value' => 0 === absint( get_post_meta( $key, '_um_register_template', true ) ) ? $labels['default'] : get_post_meta( $key, '_um_register_template', true ),
+								),
+								'um-um_register_max_width'     => array(
+									'label' => __( 'Max. Width (px)', 'ultimate-member' ),
+									'value' => get_post_meta( $key, '_um_register_max_width', true ),
+								),
+								'um-um_register_icons'         => array(
+									'label' => __( 'Field Icons', 'ultimate-member' ),
+									'value' => $icons_display_options[ get_post_meta( $key, '_um_register_icons', true ) ],
+								),
+								'um-register_primary_btn_word' => array(
+									'label' => __( 'Primary Button Text', 'ultimate-member' ),
+									'value' => ! get_post_meta( $key, '_um_register_primary_btn_word', true ) ? $labels['default'] : get_post_meta( $key, '_um_register_primary_btn_word', true ),
+								),
+								'um-um_register_secondary_btn' => array(
+									'label' => __( 'Show Secondary Button', 'ultimate-member' ),
+									'value' => get_post_meta( $key, '_um_register_secondary_btn', true ) ? $labels['yes'] : $labels['no'],
+								),
+							)
+						);
+
+						if ( get_post_meta( $key, '_um_register_secondary_btn', true ) ) {
+							$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+								$info[ 'ultimate-member-' . $key ]['fields'],
+								array(
+									'um-um_register_secondary_btn_word' => array(
+										'label' => __( 'Secondary Button Text', 'ultimate-member' ),
+										'value' => get_post_meta( $key, '_um_register_secondary_btn_word', true ),
+									),
+								)
+							);
+						}
+					}
+
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-register_use_gdpr' => array(
 								'label' => __( 'Enable privacy policy agreement', 'ultimate-member' ),
 								'value' => get_post_meta( $key, '_um_register_use_gdpr', true ) ? $labels['yes'] : $labels['no'],
 							),
 						)
 					);
 
-					if ( 1 === absint( get_post_meta( $key, '_um_register_use_gdpr', true ) ) ) {
+					if ( get_post_meta( $key, '_um_register_use_gdpr', true ) ) {
 						$gdpr_content_id = get_post_meta( $key, '_um_register_use_gdpr_content_id', true );
 
 						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
@@ -1928,7 +2678,7 @@ class Site_Health {
 							array(
 								'um-register_use_gdpr_content_id' => array(
 									'label' => __( 'Privacy policy content', 'ultimate-member' ),
-									'value' => $gdpr_content_id ? get_the_title( $gdpr_content_id ) . '(' . $gdpr_content_id . ')' . get_the_permalink( $gdpr_content_id ) : '',
+									'value' => $gdpr_content_id ? get_the_title( $gdpr_content_id ) . ' (ID#' . $gdpr_content_id . ') ' . get_the_permalink( $gdpr_content_id ) : '',
 								),
 								'um-register_use_gdpr_toggle_show' => array(
 									'label' => __( 'Toggle Show text', 'ultimate-member' ),
@@ -1978,23 +2728,71 @@ class Site_Health {
 					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
 						$info[ 'ultimate-member-' . $key ]['fields'],
 						array(
-							'um-login_template'         => array(
-								'label' => __( 'Template', 'ultimate-member' ),
-								'value' => 0 === absint( get_post_meta( $key, '_um_login_template', true ) ) ? $labels['default'] : get_post_meta( $key, '_um_login_template', true ),
+							'um-um_login_use_custom_settings' => array(
+								'label' => __( 'Apply custom settings to this form', 'ultimate-member' ),
+								'value' => get_post_meta( $key, '_um_login_use_custom_settings', true ) ? $labels['yes'] : $labels['no'],
 							),
-							'um-login_primary_btn_word' => array(
-								'label' => __( 'Primary Button Text', 'ultimate-member' ),
-								'value' => ! get_post_meta( $key, '_um_login_primary_btn_word', true ) ? $labels['default'] : get_post_meta( $key, '_um_login_primary_btn_word', true ),
-							),
-							'um-login_forgot_pass_link' => array(
-								'label' => __( 'Show Forgot Password Link?', 'ultimate-member' ),
-								'value' => get_post_meta( $key, '_um_login_forgot_pass_link', true ) ? $labels['yes'] : $labels['no'],
-							),
-							'um-login_show_rememberme'  => array(
-								'label' => __( 'Show "Remember Me"?', 'ultimate-member' ),
-								'value' => get_post_meta( $key, '_um_login_show_rememberme', true ) ? $labels['yes'] : $labels['no'],
-							),
-							'um-login_after_login'      => array(
+						)
+					);
+
+					if ( get_post_meta( $key, '_um_login_use_custom_settings', true ) ) {
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
+							array(
+								'um-login_template'         => array(
+									'label' => __( 'Template', 'ultimate-member' ),
+									'value' => 0 === absint( get_post_meta( $key, '_um_login_template', true ) ) ? $labels['default'] : get_post_meta( $key, '_um_login_template', true ),
+								),
+								'um-um_login_max_width'     => array(
+									'label' => __( 'Max. Width (px)', 'ultimate-member' ),
+									'value' => get_post_meta( $key, '_um_login_max_width', true ),
+								),
+								'um-um_login_icons'         => array(
+									'label' => __( 'Field Icons', 'ultimate-member' ),
+									'value' => $icons_display_options[ get_post_meta( $key, '_um_login_icons', true ) ],
+								),
+								'um-login_primary_btn_word' => array(
+									'label' => __( 'Primary Button Text', 'ultimate-member' ),
+									'value' => ! get_post_meta( $key, '_um_login_primary_btn_word', true ) ? $labels['default'] : get_post_meta( $key, '_um_login_primary_btn_word', true ),
+								),
+								'um-um_login_secondary_btn' => array(
+									'label' => __( 'Show Secondary Button', 'ultimate-member' ),
+									'value' => get_post_meta( $key, '_um_login_secondary_btn', true ) ? $labels['yes'] : $labels['no'],
+								),
+							)
+						);
+
+						if ( get_post_meta( $key, '_um_login_secondary_btn', true ) ) {
+							$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+								$info[ 'ultimate-member-' . $key ]['fields'],
+								array(
+									'um-um_login_secondary_btn_word' => array(
+										'label' => __( 'Secondary Button Text', 'ultimate-member' ),
+										'value' => get_post_meta( $key, '_um_login_secondary_btn_word', true ),
+									),
+								)
+							);
+						}
+
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
+							array(
+								'um-login_forgot_pass_link' => array(
+									'label' => __( 'Show Forgot Password Link?', 'ultimate-member' ),
+									'value' => get_post_meta( $key, '_um_login_forgot_pass_link', true ) ? $labels['yes'] : $labels['no'],
+								),
+								'um-login_show_rememberme'  => array(
+									'label' => __( 'Show "Remember Me"?', 'ultimate-member' ),
+									'value' => get_post_meta( $key, '_um_login_show_rememberme', true ) ? $labels['yes'] : $labels['no'],
+								),
+							)
+						);
+					}
+
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-login_after_login' => array(
 								'label' => __( 'Redirection after Login', 'ultimate-member' ),
 								'value' => $login_redirect_options[ $login_after_login ],
 							),
@@ -2030,58 +2828,130 @@ class Site_Health {
 					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
 						$info[ 'ultimate-member-' . $key ]['fields'],
 						array(
-							'um-profile_role'             => array(
-								'label' => __( 'Make this profile form role-specific', 'ultimate-member' ),
-								'value' => ! empty( get_post_meta( $key, '_um_profile_role', true ) ) ? get_post_meta( $key, '_um_profile_role', true ) : $labels['all'],
-							),
-							'um-profile_template'         => array(
-								'label' => __( 'Template', 'ultimate-member' ),
-								'value' => 0 === absint( get_post_meta( $key, '_um_profile_template', true ) ) ? $labels['default'] : get_post_meta( $key, '_um_profile_template', true ),
-							),
-							'um-profile_primary_btn_word' => array(
-								'label' => __( 'Primary Button Text', 'ultimate-member' ),
-								'value' => ! get_post_meta( $key, '_um_profile_primary_btn_word', true ) ? $labels['default'] : get_post_meta( $key, '_um_profile_primary_btn_word', true ),
-							),
-							'um-profile_cover_enabled'    => array(
-								'label' => __( 'Enable Cover Photos', 'ultimate-member' ),
-								'value' => get_post_meta( $key, '_um_profile_cover_enabled', true ) ? $labels['yes'] : $labels['no'],
-							),
-							'um-profile_disable_photo_upload' => array(
-								'label' => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
-								'value' => get_post_meta( $key, '_um_profile_disable_photo_upload', true ) ? $labels['yes'] : $labels['no'],
+							'um-um_profile_use_custom_settings' => array(
+								'label' => __( 'Apply custom settings to this form', 'ultimate-member' ),
+								'value' => get_post_meta( $key, '_um_profile_use_custom_settings', true ) ? $labels['yes'] : $labels['no'],
 							),
 						)
 					);
 
-					if ( 0 === absint( get_post_meta( $key, '_um_profile_disable_photo_upload', true ) ) ) {
+					if ( get_post_meta( $key, '_um_profile_use_custom_settings', true ) ) {
 						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
 							$info[ 'ultimate-member-' . $key ]['fields'],
 							array(
-								'um-profile_photo_required' => array(
-									'label' => __( 'Make Profile Photo Required', 'ultimate-member' ),
-									'value' => get_post_meta( $key, '_um_profile_photo_required', true ) ? $labels['yes'] : $labels['no'],
+								'um-profile_role'              => array(
+									'label' => __( 'Make this profile form role-specific', 'ultimate-member' ),
+									'value' => ! empty( get_post_meta( $key, '_um_profile_role', true ) ) ? get_post_meta( $key, '_um_profile_role', true ) : $labels['all'],
+								),
+								'um-profile_template'          => array(
+									'label' => __( 'Template', 'ultimate-member' ),
+									'value' => 0 === absint( get_post_meta( $key, '_um_profile_template', true ) ) ? $labels['default'] : get_post_meta( $key, '_um_profile_template', true ),
+								),
+								'um-um_profile_max_width'      => array(
+									'label' => __( 'Max. Width (px)', 'ultimate-member' ),
+									'value' => get_post_meta( $key, '_um_profile_max_width', true ),
+								),
+								'um-um_profile_area_max_width' => array(
+									'label' => __( 'Profile Area Max. Width (px)', 'ultimate-member' ),
+									'value' => get_post_meta( $key, '_um_profile_area_max_width', true ),
+								),
+								'um-um_profile_icons'          => array(
+									'label' => __( 'Field Icons', 'ultimate-member' ),
+									'value' => $icons_display_options[ get_post_meta( $key, '_um_profile_icons', true ) ],
+								),
+								'um-profile_primary_btn_word'  => array(
+									'label' => __( 'Primary Button Text', 'ultimate-member' ),
+									'value' => ! get_post_meta( $key, '_um_profile_primary_btn_word', true ) ? $labels['default'] : get_post_meta( $key, '_um_profile_primary_btn_word', true ),
+								),
+								'um-um_profile_secondary_btn'  => array(
+									'label' => __( 'Show Secondary Button', 'ultimate-member' ),
+									'value' => get_post_meta( $key, '_um_profile_secondary_btn', true ) ? $labels['yes'] : $labels['no'],
+								),
+							)
+						);
+
+						if ( get_post_meta( $key, '_um_profile_secondary_btn', true ) ) {
+							$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+								$info[ 'ultimate-member-' . $key ]['fields'],
+								array(
+									'um-um_profile_secondary_btn_word' => array(
+										'label' => __( 'Secondary Button Text', 'ultimate-member' ),
+										'value' => get_post_meta( $key, '_um_profile_secondary_btn_word', true ),
+									),
+								)
+							);
+						}
+
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
+							array(
+								'um-profile_cover_enabled' => array(
+									'label' => __( 'Enable Cover Photos', 'ultimate-member' ),
+									'value' => get_post_meta( $key, '_um_profile_cover_enabled', true ) ? $labels['yes'] : $labels['no'],
+								),
+							)
+						);
+
+						if ( get_post_meta( $key, '_um_profile_cover_enabled', true ) ) {
+							$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+								$info[ 'ultimate-member-' . $key ]['fields'],
+								array(
+									'um-um_profile_coversize'   => array(
+										'label' => __( 'Cover Photo Size', 'ultimate-member' ),
+										'value' => get_post_meta( $key, '_um_profile_coversize', true ),
+									),
+									'um-um_profile_cover_ratio' => array(
+										'label' => __( 'Cover photo ratio', 'ultimate-member' ),
+										'value' => get_post_meta( $key, '_um_profile_cover_ratio', true ),
+									),
+								)
+							);
+						}
+
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
+							array(
+								'um-profile_disable_photo_upload' => array(
+									'label' => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
+									'value' => get_post_meta( $key, '_um_profile_disable_photo_upload', true ) ? $labels['yes'] : $labels['no'],
+								),
+							)
+						);
+
+						if ( 0 === absint( get_post_meta( $key, '_um_profile_disable_photo_upload', true ) ) ) {
+							$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+								$info[ 'ultimate-member-' . $key ]['fields'],
+								array(
+									'um-profile_photosize'      => array(
+										'label' => __( 'Profile Photo Size', 'ultimate-member' ),
+										'value' => get_post_meta( $key, '_um_profile_photosize', true ),
+									),
+									'um-profile_photo_required' => array(
+										'label' => __( 'Make Profile Photo Required', 'ultimate-member' ),
+										'value' => get_post_meta( $key, '_um_profile_photo_required', true ) ? $labels['yes'] : $labels['no'],
+									),
+								)
+							);
+						}
+
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
+							array(
+								'um-profile_show_name'         => array(
+									'label' => __( 'Show display name in profile header?', 'ultimate-member' ),
+									'value' => get_post_meta( $key, '_um_profile_show_name', true ) ? $labels['yes'] : $labels['no'],
+								),
+								'um-profile_show_social_links' => array(
+									'label' => __( 'Show social links in profile header?', 'ultimate-member' ),
+									'value' => get_post_meta( $key, '_um_profile_show_social_links', true ) ? $labels['yes'] : $labels['no'],
+								),
+								'um-profile_show_bio'          => array(
+									'label' => __( 'Show user description in profile header?', 'ultimate-member' ),
+									'value' => get_post_meta( $key, '_um_profile_show_bio', true ) ? $labels['yes'] : $labels['no'],
 								),
 							)
 						);
 					}
-
-					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
-						$info[ 'ultimate-member-' . $key ]['fields'],
-						array(
-							'um-profile_show_name'         => array(
-								'label' => __( 'Show display name in profile header?', 'ultimate-member' ),
-								'value' => get_post_meta( $key, '_um_profile_show_name', true ) ? $labels['yes'] : $labels['no'],
-							),
-							'um-profile_show_social_links' => array(
-								'label' => __( 'Show social links in profile header?', 'ultimate-member' ),
-								'value' => get_post_meta( $key, '_um_profile_show_social_links', true ) ? $labels['yes'] : $labels['no'],
-							),
-							'um-profile_show_bio'          => array(
-								'label' => __( 'Show user description in profile header?', 'ultimate-member' ),
-								'value' => get_post_meta( $key, '_um_profile_show_bio', true ) ? $labels['yes'] : $labels['no'],
-							),
-						)
-					);
 
 					$fields = get_post_meta( $key, '_um_custom_fields', true );
 					if ( ! empty( $fields ) && is_array( $fields ) ) {
@@ -2113,461 +2983,6 @@ class Site_Health {
 			}
 		}
 
-		// Members directory
-		$options = array(
-			'country'              => __( 'Country', 'ultimate-member' ),
-			'gender'               => __( 'Gender', 'ultimate-member' ),
-			'languages'            => __( 'Languages', 'ultimate-member' ),
-			'role'                 => __( 'Roles', 'ultimate-member' ),
-			'birth_date'           => __( 'Age', 'ultimate-member' ),
-			'last_login'           => __( 'Last Login', 'ultimate-member' ),
-			'user_registered'      => __( 'User Registered', 'ultimate-member' ),
-			'first_name'           => __( 'First Name', 'ultimate-member' ),
-			'last_name'            => __( 'Last Name', 'ultimate-member' ),
-			'nickname'             => __( 'Nickname', 'ultimate-member' ),
-			'secondary_user_email' => __( 'Secondary Email Address', 'ultimate-member' ),
-			'description'          => __( 'Biography', 'ultimate-member' ),
-			'phone_number'         => __( 'Phone Number', 'ultimate-member' ),
-			'mobile_number'        => __( 'Mobile Number', 'ultimate-member' ),
-			'role_select'          => __( 'Roles (Dropdown)', 'ultimate-member' ),
-			'role_radio'           => __( 'Roles (Radio)', 'ultimate-member' ),
-			'whatsapp'             => __( 'WhatsApp number', 'ultimate-member' ),
-			'facebook'             => __( 'Facebook', 'ultimate-member' ),
-			'twitter'              => __( 'X (formerly Twitter)', 'ultimate-member' ),
-			'viber'                => __( 'Viber number', 'ultimate-member' ),
-			'skype'                => __( 'Skype ID', 'ultimate-member' ),
-			'telegram'             => __( 'Telegram', 'ultimate-member' ),
-			'discord'              => __( 'Discord', 'ultimate-member' ),
-			'youtube'              => __( 'Youtube', 'ultimate-member' ),
-			'soundcloud'           => __( 'SoundCloud', 'ultimate-member' ),
-			'user_registered_desc' => __( 'New users first', 'ultimate-member' ),
-			'user_registered_asc'  => __( 'Old users first', 'ultimate-member' ),
-			'username'             => __( 'Username', 'ultimate-member' ),
-			'display_name'         => __( 'Display name', 'ultimate-member' ),
-			'last_first_name'      => __( 'Last & First name', 'ultimate-member' ),
-			'random'               => __( 'Random', 'ultimate-member' ),
-			'other'                => __( 'Other (Custom Field)', 'ultimate-member' ),
-		);
-
-		$info['ultimate-member-directories'] = array(
-			'label'       => __( 'Ultimate Member Directories', 'ultimate-member' ),
-			'description' => __( 'This debug information about Ultimate Member directories.', 'ultimate-member' ),
-			'fields'      => array(
-				'um-directory' => array(
-					'label' => __( 'Member directories', 'ultimate-member' ),
-					'value' => ! empty( $this->get_member_directories() ) ? $this->get_member_directories() : $labels['no-dir'],
-				),
-			),
-		);
-
-		if ( ! empty( $this->get_member_directories() ) ) {
-			foreach ( $this->get_member_directories() as $key => $directory ) {
-				if ( 0 === strpos( $key, 'ID#' ) ) {
-					$key = substr( $key, 3 );
-				}
-
-				$_um_view_types_value = get_post_meta( $key, '_um_view_types', true );
-				$_um_view_types_value = empty( $_um_view_types_value ) ? array( 'grid', 'list' ) : $_um_view_types_value;
-				$_um_view_types_value = is_string( $_um_view_types_value ) ? array( $_um_view_types_value ) : $_um_view_types_value;
-
-				$info[ 'ultimate-member-directory-' . $key ] = array(
-					'label'       => ' - ' . $directory . __( ' directory settings', 'ultimate-member' ),
-					'description' => __( 'This debug information for your Ultimate Member directory.', 'ultimate-member' ),
-					'fields'      => array(
-						'um-directory-shortcode'    => array(
-							'label' => __( 'Shortcode', 'ultimate-member' ),
-							'value' => '[ultimatemember_directory id="' . $key . '"]',
-						),
-						'um-directory_template'     => array(
-							'label' => __( 'Template', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_directory_template', true ) ? get_post_meta( $key, '_um_directory_template', true ) : $labels['default'],
-						),
-						'um-directory-view_types'   => array(
-							'label' => __( 'View types', 'ultimate-member' ),
-							'value' => implode( ', ', $_um_view_types_value ),
-						),
-						'um-directory-default_view' => array(
-							'label' => __( 'Default view type', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_default_view', true ),
-						),
-					),
-				);
-
-				if ( isset( $options[ get_post_meta( $key, '_um_sortby', true ) ] ) ) {
-					$sortby_label = $options[ get_post_meta( $key, '_um_sortby', true ) ];
-				} else {
-					$sortby_label = get_post_meta( $key, '_um_sortby', true );
-				}
-
-				$directory_roles_meta = get_post_meta( $key, '_um_roles', true );
-				$directory_roles      = array();
-				if ( ! empty( $directory_roles_meta ) ) {
-					if ( is_string( $directory_roles_meta ) ) {
-						$directory_roles = array( $directory_roles_meta );
-					} else {
-						$directory_roles = $directory_roles_meta;
-					}
-				}
-
-				$directory_show_these_users_meta = get_post_meta( $key, '_um_show_these_users', true );
-				$show_these_users                = array();
-				if ( ! empty( $directory_show_these_users_meta ) ) {
-					if ( is_string( $directory_show_these_users_meta ) ) {
-						$show_these_users = array( $directory_show_these_users_meta );
-					} else {
-						$show_these_users = $directory_show_these_users_meta;
-					}
-				}
-
-				$directory_exclude_these_users_meta = get_post_meta( $key, '_um_exclude_these_users', true );
-				$exclude_these_users                = array();
-				if ( ! empty( $directory_exclude_these_users_meta ) ) {
-					if ( is_string( $directory_exclude_these_users_meta ) ) {
-						$exclude_these_users = array( $directory_exclude_these_users_meta );
-					} else {
-						$exclude_these_users = $directory_exclude_these_users_meta;
-					}
-				}
-
-				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-					$info[ 'ultimate-member-directory-' . $key ]['fields'],
-					array(
-						'um-directory-roles'               => array(
-							'label' => __( 'User Roles to display', 'ultimate-member' ),
-							'value' => ! empty( $directory_roles ) ? implode( ', ', $directory_roles ) : $labels['all'],
-						),
-						'um-directory-has_profile_photo'   => array(
-							'label' => __( 'Only show members who have uploaded a profile photo', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_has_profile_photo', true ) ? $labels['yes'] : $labels['no'],
-						),
-						'um-directory-has_cover_photo'     => array(
-							'label' => __( 'Only show members who have uploaded a profile photo', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_has_cover_photo', true ) ? $labels['yes'] : $labels['no'],
-						),
-						'um-directory-show_these_users'    => array(
-							'label' => __( 'Only show specific users (Enter one username per line)', 'ultimate-member' ),
-							'value' => ! empty( $show_these_users ) ? implode( ', ', $show_these_users ) : '',
-						),
-						'um-directory-exclude_these_users' => array(
-							'label' => __( 'Exclude specific users (Enter one username per line)', 'ultimate-member' ),
-							'value' => ! empty( $exclude_these_users ) ? implode( ', ', $exclude_these_users ) : '',
-						),
-					)
-				);
-
-				$info = apply_filters( 'um_debug_member_directory_general_extend', $info, $key );
-
-				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-					$info[ 'ultimate-member-directory-' . $key ]['fields'],
-					array(
-						'um-directory-sortby' => array(
-							'label' => __( 'Default sort users by', 'ultimate-member' ),
-							'value' => $sortby_label,
-						),
-					)
-				);
-
-				if ( 'other' === get_post_meta( $key, '_um_sortby', true ) ) {
-					$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-						$info[ 'ultimate-member-directory-' . $key ]['fields'],
-						array(
-							'um-directory-enable_sorting' => array(
-								'label' => __( 'Enable custom sorting', 'ultimate-member' ),
-								'value' => get_post_meta( $key, '_um_enable_sorting', true ) ? $labels['yes'] : $labels['no'],
-							),
-							'um-directory-sortby_custom'  => array(
-								'label' => __( 'Custom sorting meta key', 'ultimate-member' ),
-								'value' => get_post_meta( $key, '_um_sortby_custom', true ),
-							),
-							'um-directory-sortby_custom_label' => array(
-								'label' => __( 'Label of custom sort', 'ultimate-member' ),
-								'value' => get_post_meta( $key, '_um_sortby_custom_label', true ),
-							),
-						)
-					);
-				}
-
-				if ( 1 === absint( get_post_meta( $key, '_um_enable_sorting', true ) ) ) {
-					$sorting_fields = get_post_meta( $key, '_um_sorting_fields', true );
-					if ( ! empty( $sorting_fields ) ) {
-						foreach ( $sorting_fields as $k => $field ) {
-							if ( is_array( $field ) ) {
-								$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-									$info[ 'ultimate-member-directory-' . $key ]['fields'],
-									array(
-										'um-directory-sorting_fields-' . $k => array(
-											'label' => __( 'Field(s) to enable in sorting', 'ultimate-member' ),
-											'value' => __( 'Label: ', 'ultimate-member' ) . array_values( $field )[0] . ' | ' . __( 'Meta key: ', 'ultimate-member' ) . stripslashes( array_keys( $field )[0] ),
-										),
-									)
-								);
-							} else {
-								$sortby_label = isset( $options[ $field ] ) ? $options[ $field ] : $field;
-								$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-									$info[ 'ultimate-member-directory-' . $key ]['fields'],
-									array(
-										'um-directory-sorting_fields-' . $k => array(
-											'label' => __( 'Field to enable in sorting', 'ultimate-member' ),
-											'value' => $sortby_label,
-										),
-									)
-								);
-							}
-						}
-					}
-				}
-
-				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-					$info[ 'ultimate-member-directory-' . $key ]['fields'],
-					array(
-						'um-directory-profile_photo' => array(
-							'label' => __( 'Enable Profile Photo', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_profile_photo', true ) ? $labels['yes'] : $labels['no'],
-						),
-						'um-directory-cover_photos'  => array(
-							'label' => __( 'Enable Cover Photo', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_cover_photos', true ) ? $labels['yes'] : $labels['no'],
-						),
-						'um-directory-show_name'     => array(
-							'label' => __( 'Show display name', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_show_name', true ) ? $labels['yes'] : $labels['no'],
-						),
-					)
-				);
-
-				$info = apply_filters( 'um_debug_member_directory_profile_extend', $info, $key );
-
-				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-					$info[ 'ultimate-member-directory-' . $key ]['fields'],
-					array(
-						'um-directory-show_tagline' => array(
-							'label' => __( 'Show tagline below profile name', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_show_tagline', true ) ? $labels['yes'] : $labels['no'],
-						),
-					)
-				);
-
-				if ( 1 === absint( get_post_meta( $key, '_um_show_tagline', true ) ) ) {
-					$tagline_fields = get_post_meta( $key, '_um_tagline_fields', true );
-					if ( ! empty( $tagline_fields ) && is_array( $tagline_fields ) ) {
-						foreach ( $tagline_fields as $k => $field ) {
-							$label = isset( $options[ $field ] ) ? $options[ $field ] : $field;
-							$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-								$info[ 'ultimate-member-directory-' . $key ]['fields'],
-								array(
-									'um-directory-tagline_fields-' . $k => array(
-										'label' => __( 'Field to display in tagline', 'ultimate-member' ),
-										'value' => $label,
-									),
-								)
-							);
-						}
-					}
-				}
-
-				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-					$info[ 'ultimate-member-directory-' . $key ]['fields'],
-					array(
-						'um-directory-show_userinfo' => array(
-							'label' => __( 'Show extra user information below tagline?', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_show_userinfo', true ) ? $labels['yes'] : $labels['no'],
-						),
-					)
-				);
-
-				if ( 1 === absint( get_post_meta( $key, '_um_show_userinfo', true ) ) ) {
-					$reveal_fields = get_post_meta( $key, '_um_reveal_fields', true );
-					if ( ! empty( $reveal_fields ) && is_array( $reveal_fields ) ) {
-						foreach ( $reveal_fields as $k => $field ) {
-							$label = isset( $options[ $field ] ) ? $options[ $field ] : $field;
-							$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-								$info[ 'ultimate-member-directory-' . $key ]['fields'],
-								array(
-									'um-directory-reveal_fields-' . $k => array(
-										'label' => __( 'Field to display in extra user information section', 'ultimate-member' ),
-										'value' => $label,
-									),
-								)
-							);
-						}
-					}
-				}
-
-				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-					$info[ 'ultimate-member-directory-' . $key ]['fields'],
-					array(
-						'um-directory-show_social' => array(
-							'label' => __( 'Show social connect icons in extra user information section', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_show_social', true ) ? $labels['yes'] : $labels['no'],
-						),
-						'um-directory-search'      => array(
-							'label' => __( 'Enable Search feature', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_search', true ) ? $labels['yes'] : $labels['no'],
-						),
-					)
-				);
-
-				if ( 1 === absint( get_post_meta( $key, '_um_search', true ) ) ) {
-					$directory_roles_can_search_meta = get_post_meta( $key, '_um_roles_can_search', true );
-					$roles_can_search                = array();
-					if ( ! empty( $directory_roles_can_search_meta ) ) {
-						if ( is_string( $directory_roles_can_search_meta ) ) {
-							$roles_can_search = array( $directory_roles_can_search_meta );
-						} else {
-							$roles_can_search = $directory_roles_can_search_meta;
-						}
-					}
-
-					$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-						$info[ 'ultimate-member-directory-' . $key ]['fields'],
-						array(
-							'um-directory-roles_can_search' => array(
-								'label' => __( 'User Roles that can use search', 'ultimate-member' ),
-								'value' => ! empty( $roles_can_search ) ? implode( ', ', $roles_can_search ) : $labels['all'],
-							),
-						)
-					);
-				}
-
-				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-					$info[ 'ultimate-member-directory-' . $key ]['fields'],
-					array(
-						'um-directory-filters' => array(
-							'label' => __( 'Enable Filters feature', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_filters', true ) ? $labels['yes'] : $labels['no'],
-						),
-					)
-				);
-
-				if ( 1 === absint( get_post_meta( $key, '_um_filters', true ) ) ) {
-					$directory_roles_can_filter_meta = get_post_meta( $key, '_um_roles_can_filter', true );
-					$roles_can_filter                = array();
-					if ( ! empty( $directory_roles_can_filter_meta ) ) {
-						if ( is_string( $directory_roles_can_filter_meta ) ) {
-							$roles_can_filter = array( $directory_roles_can_filter_meta );
-						} else {
-							$roles_can_filter = $directory_roles_can_filter_meta;
-						}
-					}
-
-					$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-						$info[ 'ultimate-member-directory-' . $key ]['fields'],
-						array(
-							'um-directory-roles_can_filter' => array(
-								'label' => __( 'User Roles that can use filters', 'ultimate-member' ),
-								'value' => ! empty( $roles_can_filter ) ? implode( ', ', $roles_can_filter ) : $labels['all'],
-							),
-						)
-					);
-
-					$search_fields = get_post_meta( $key, '_um_search_fields', true );
-					if ( ! empty( $search_fields ) && is_array( $search_fields ) ) {
-						foreach ( $search_fields as $k => $field ) {
-							$label = isset( $options[ $field ] ) ? $options[ $field ] : $field;
-							$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-								$info[ 'ultimate-member-directory-' . $key ]['fields'],
-								array(
-									'um-directory-search_fields-' . $k => array(
-										'label' => __( 'Filter meta to enable', 'ultimate-member' ),
-										'value' => $label,
-									),
-								)
-							);
-						}
-					}
-				}
-
-				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-					$info[ 'ultimate-member-directory-' . $key ]['fields'],
-					array(
-						'um-directory-filters_expanded' => array(
-							'label' => __( 'Expand the filter bar by default', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_filters_expanded', true ) ? $labels['yes'] : $labels['no'],
-						),
-					)
-				);
-
-				if ( 1 === absint( get_post_meta( $key, '_um_filters_expanded', true ) ) ) {
-					$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-						$info[ 'ultimate-member-directory-' . $key ]['fields'],
-						array(
-							'um-directory-filters_is_collapsible' => array(
-								'label' => __( 'Can filter bar be collapsed', 'ultimate-member' ),
-								'value' => get_post_meta( $key, '_um_filters_is_collapsible', true ) ? $labels['yes'] : $labels['no'],
-							),
-						)
-					);
-				}
-
-				$search_filters = get_post_meta( $key, '_um_search_filters', true );
-				if ( ! empty( $search_filters ) && is_array( $search_filters ) ) {
-					foreach ( $search_filters as $k => $field ) {
-						$label = isset( $options[ $k ] ) ? $options[ $k ] : $k;
-						$value = $field;
-						if ( is_array( $field ) ) {
-							$value = __( 'From ', 'ultimate-member' ) . $field[0] . __( ' to ', 'ultimate-member' ) . $field[1];
-						}
-						$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-							$info[ 'ultimate-member-directory-' . $key ]['fields'],
-							array(
-								'um-directory-search_filters-' . $k => array(
-									'label' => __( 'Admin filtering', 'ultimate-member' ),
-									'value' => $label . ' - ' . $value,
-								),
-							)
-						);
-					}
-				}
-
-				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
-					$info[ 'ultimate-member-directory-' . $key ]['fields'],
-					array(
-						'um-directory-must_search'        => array(
-							'label' => __( 'Show results only after search/filtration', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_must_search', true ) ? $labels['yes'] : $labels['no'],
-						),
-						'um-directory-max_users'          => array(
-							'label' => __( 'Maximum number of profiles', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_max_users', true ),
-						),
-						'um-directory-profiles_per_page'  => array(
-							'label' => __( 'Number of profiles per page', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_profiles_per_page', true ),
-						),
-						'um-directory-profiles_per_page_mobile' => array(
-							'label' => __( 'Maximum number of profiles', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_profiles_per_page_mobile', true ),
-						),
-						'um-directory-directory_header'   => array(
-							'label' => __( 'Results Text', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_directory_header', true ),
-						),
-						'um-directory-directory_header_single' => array(
-							'label' => __( 'Single Result Text', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_directory_header_single', true ),
-						),
-						'um-directory-directory_no_users' => array(
-							'label' => __( 'Custom text if no users were found', 'ultimate-member' ),
-							'value' => get_post_meta( $key, '_um_directory_no_users', true ),
-						),
-					)
-				);
-
-				$info = apply_filters( 'um_debug_member_directory_extend', $info, $key );
-			}
-		}
-
-		/**
-		 * Filters the site health information.
-		 *
-		 * @hook um_site_health_extend
-		 *
-		 * @since 2.10.3
-		 *
-		 * @param {array} $info The site health info to be filtered.
-		 *
-		 * @return {array} The filtered site health info.
-		 */
-		return apply_filters( 'um_site_health_extend', $info );
+		return $info;
 	}
 }
