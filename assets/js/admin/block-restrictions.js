@@ -8,6 +8,40 @@ var um_components     = wp.components,
 function um_admin_blocks_custom_fields( um_condition_fields, props ) {
 	return wp.hooks.applyFilters( 'um_admin_blocks_custom_fields', [], um_condition_fields, props );
 }
+function um_add_restriction_attributes( settings, name ) {
+	// add attributes for all blocks
+	const restrictionAttributes = {
+		um_is_restrict: {
+			type: 'boolean',
+			default: false,
+		},
+		um_who_access: {
+			type: 'string',
+			default: '0',
+		},
+		um_roles_access: {
+			type: 'array',
+			default: [],
+		},
+		um_message_type: {
+			type: 'string',
+			default: '0',
+		},
+		um_message_content: {
+			type: 'string',
+			default: '',
+		},
+	};
+
+	settings.attributes = Object.assign( settings.attributes, restrictionAttributes );
+	return settings;
+}
+
+wp.hooks.addFilter(
+	'blocks.registerBlockType',
+	'um-block/add-restriction-attributes',
+	um_add_restriction_attributes
+);
 
 var um_block_restriction = wp.compose.createHigherOrderComponent(
 	function( BlockEdit ) {
