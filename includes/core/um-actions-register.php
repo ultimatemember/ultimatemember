@@ -120,15 +120,27 @@ function um_send_registration_notification( $user_id ) {
 
 	um_fetch_user( $user_id );
 	$registration_status = um_user( 'status' );
+	$email_template      = 'pending' !== $registration_status ? 'notification_new_user' : 'notification_review';
+	$sending_args        = array(
+		'admin'         => true,
+		'fetch_user_id' => $user_id,
+		'tags'          => array(
+			'{submitted_registration}',
+		),
+		'tags_replace'  => um_user_submitted_registration_formatted(),
+	);
 
 	$emails = um_multi_admin_email();
 	if ( ! empty( $emails ) ) {
 		foreach ( $emails as $email ) {
-			if ( 'pending' !== $registration_status ) {
-				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $email, 'notification_new_user', array( 'admin' => true, 'fetch_user_id' => $user_id ) ) );
-			} else {
-				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $email, 'notification_review', array( 'admin' => true, 'fetch_user_id' => $user_id ) ) );
-			}
+			UM()->maybe_action_scheduler()->enqueue_async_action(
+				'um_dispatch_email',
+				array(
+					$email,
+					$email_template,
+					$sending_args,
+				)
+			);
 		}
 	}
 }
@@ -597,6 +609,28 @@ function um_add_submit_button_to_register( $args ) {
 		$primary_btn_word = UM()->options()->get( 'register_primary_btn_word' );
 	}
 
+	/**
+	 * Filters the classes applied to the primary button on the registration form.
+	 *
+	 * @hook um_register_form_primary_btn_classes
+	 * @since 2.10.5
+	 *
+	 * @param {array} $classes An array of CSS classes applied to the primary button.
+	 * @param {array} $args    An array of arguments or configurations used in the registration form.
+	 *
+	 * @return {array} Button CSS classes.
+	 *
+	 * @example <caption>Extend the classes applied to the primary button on the registration form.</caption>
+	 * function my_custom_classes( $classes, $args ) {
+	 *     // Add a new class to the button
+	 *     $classes[] = 'new-button-class';
+	 *
+	 *     return $classes;
+	 * }
+	 * add_filter( 'um_register_form_primary_btn_classes', 'my_custom_classes', 10, 2 );
+	 */
+	$primary_btn_classes = apply_filters( 'um_register_form_primary_btn_classes', array( 'um-button' ), $args );
+
 	$secondary_btn_word = $args['secondary_btn_word'];
 	/**
 	 * UM hook
@@ -656,7 +690,7 @@ function um_add_submit_button_to_register( $args ) {
 		<?php if ( ! empty( $args['secondary_btn'] ) ) { ?>
 
 			<div class="um-left um-half">
-				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" />
+				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="<?php echo esc_attr( implode( ' ', $primary_btn_classes ) ); ?>" id="um-submit-btn" />
 			</div>
 			<div class="um-right um-half">
 				<a href="<?php echo esc_url( $secondary_btn_url ); ?>" class="um-button um-alt">
@@ -667,7 +701,7 @@ function um_add_submit_button_to_register( $args ) {
 		<?php } else { ?>
 
 			<div class="um-center">
-				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" />
+				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="<?php echo esc_attr( implode( ' ', $primary_btn_classes ) ); ?>" id="um-submit-btn" />
 			</div>
 
 		<?php } ?>

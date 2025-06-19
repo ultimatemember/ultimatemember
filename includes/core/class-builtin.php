@@ -1987,7 +1987,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 						'LT' => __('Lithuania','ultimate-member'),
 						'LU' => __('Luxembourg','ultimate-member'),
 						'MO' => __('Macao','ultimate-member'),
-						'MK' => __('Macedonia, the former Yugoslav Republic of','ultimate-member'),
+						'MK' => __('North Macedonia','ultimate-member'),
 						'MG' => __('Madagascar','ultimate-member'),
 						'MW' => __('Malawi','ultimate-member'),
 						'MY' => __('Malaysia','ultimate-member'),

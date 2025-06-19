@@ -1,6 +1,8 @@
 <?php
 namespace um\admin\core;
 
+use um\common\actions\Users;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -259,6 +261,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			if ( array( 0, 0 ) === $empty_status_users ) {
 				return;
+			}
+
+			// Alternative method of checking and maybe schedule a batch action if it has not been scheduled previously.
+			// Avoid case when the option with the empty user statuses isn't empty.
+			// We need to recalculate option value and re-schedule the Batch action.
+			if ( ! UM()->maybe_action_scheduler()->has_scheduled_action( Users::BATCH_ACTION ) ) {
+				do_action( Users::SCHEDULE_ACTION );
 			}
 
 			$allowed_html = array(

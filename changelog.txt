@@ -1,5 +1,25 @@
 ﻿== Changelog ==
 
+= 2.10.5 June 25, 2025 =
+
+* Enhancements:
+
+  - Added: Filter hooks for primary button classes in UM forms.
+
+* Bugfixes:
+
+  - Fixed: Email placeholders values.
+  - Fixed: Refactor deactivation logic to un-schedule Action Scheduler actions.
+  - Fixed: Action Scheduler library errors. Updated to the recent 3.9.2 version.
+  - Fixed: Secondary email field validation.
+  - Fixed: Action Scheduler batch actions with users who have Undefined status.
+
+* Templates required update:
+
+  - password-reset.php
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade *
+
 = 2.10.4 May 15, 2025 =
 
 * Bugfixes:
