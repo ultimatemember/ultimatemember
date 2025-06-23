@@ -1808,7 +1808,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'label'   => __( 'Profile Cover Photos', 'ultimate-member' ),
 												'checkbox_label' => __( 'Enable Cover Photos', 'ultimate-member' ),
 												'default' => um_get_metadefault( 'profile_cover_enabled' ),
-												'description' => __( 'Switch on/off the profile cover photos.', 'ultimate-member' ),
+												'description' => __( 'Switch on/off the profile cover photos. This can be overridden by individual form settings.', 'ultimate-member' ),
 											),
 											array(
 												'id'      => 'profile_coversize',
@@ -2395,7 +2395,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			}
 
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE ) {
-				if ( UM()->options()->get( 'enable_new_ui' ) ) {
+				if ( UM()->is_new_ui() ) {
 					$this->settings_structure['']['sections']['account']['form_sections'] = UM()->array_insert_before(
 						$this->settings_structure['']['sections']['account']['form_sections'],
 						'delete_tab',
@@ -2427,14 +2427,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					// removed "Account deletion text".
 					unset( $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][1], $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][2] );
 
+					// removed "Profile Header Menu Position"
+					unset( $this->settings_structure['appearance']['sections']['']['form_sections']['header']['fields'][6] );
+
 					// removed "Custom message on empty profile", "Custom message emoticon".
 					unset( $this->settings_structure['appearance']['sections']['']['form_sections']['fields']['fields'][4], $this->settings_structure['appearance']['sections']['']['form_sections']['fields']['fields'][5] );
 
 					// removed "Menu icons in desktop view".
 					unset( $this->settings_structure['appearance']['sections']['profile_menu']['fields'][ count( $this->settings_structure['appearance']['sections']['profile_menu']['fields'] ) - 1 ] );
-				}
 
-				if ( UM()->is_new_ui() ) {
 					unset(
 						$this->settings_structure['appearance']['sections']['']['form_sections']['profile_photo']['fields'],
 						$this->settings_structure['appearance']['sections']['']['form_sections']['cover_photo']['fields'][0],
@@ -2491,8 +2492,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'type'        => 'number',
 								'size'        => 'small',
 								'label'       => __( 'Profile Photo Minimum Width (px)', 'ultimate-member' ),
-								'description' => __( 'This will be the minimum width for cover photo uploads.', 'ultimate-member' ),
-								'conditional' => array( 'disable_cover_photo_upload', '!=', '1' ),
+								'description' => __( 'This will be the minimum width for profile photo uploads.', 'ultimate-member' ),
+								'conditional' => array( 'disable_profile_photo_upload', '=', 0 ),
 							),
 						);
 
