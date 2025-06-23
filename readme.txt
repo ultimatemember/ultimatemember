@@ -180,6 +180,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Action Scheduler library errors. Updated to the recent 3.9.2 version.
 * Fixed: Secondary email field validation.
 * Fixed: Action Scheduler batch actions with users who have Undefined status.
+* Fixed: Restrictions for 3rd-party Gutenberg Blocks.
+* Fixed: Date/time picker filter-types range query on Member Directories.
 
 **Templates required update**
 
