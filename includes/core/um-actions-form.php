@@ -956,7 +956,7 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 
 					$the_similar_users = get_users( $args );
 					foreach ( $the_similar_users as $user ) {
-						if ( empty( $submitted_data['user_id'] ) || $user->ID !== $submitted_data['user_id'] ) {
+						if ( empty( $submitted_data['user_id'] ) || absint( $user->ID ) !== absint( $submitted_data['user_id'] ) ) {
 							UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 							break;
 						}
