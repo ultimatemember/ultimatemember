@@ -329,11 +329,11 @@ function um_submit_account_details( $args ) {
 		}
 
 		if ( 'first_name' === $k || 'last_name' === $k || 'user_password' === $k ) {
-			$v = sanitize_text_field( $v );
+			$v = sanitize_text_field( strip_shortcodes( $v ) );
 		} elseif ( 'user_email' === $k ) {
-			$v = sanitize_email( $v );
+			$v = sanitize_email( strip_shortcodes( $v ) );
 		} elseif ( 'hide_in_members' === $k || 'um_show_last_login' === $k ) {
-			$v = array_map( 'sanitize_text_field', $v );
+			$v = array_map( 'sanitize_text_field', array_map( 'strip_shortcodes', $v ) );
 		}
 
 		$changes[ $k ] = $v;

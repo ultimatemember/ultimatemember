@@ -857,10 +857,10 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 														'allowfullscreen' => true,
 													);
 												}
-												$form[ $k ] = wp_kses( $form[ $k ], $allowed_html );
+												$form[ $k ] = wp_kses( strip_shortcodes( $form[ $k ] ), $allowed_html );
 												add_filter( 'wp_kses_allowed_html', array( &$this, 'wp_kses_user_desc' ), 10, 2 );
 											} else {
-												$form[ $k ] = sanitize_textarea_field( $form[ $k ] );
+												$form[ $k ] = sanitize_textarea_field( strip_shortcodes( $form[ $k ] ) );
 											}
 											break;
 										case 'oembed':
@@ -915,9 +915,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 													}
 												}
 
-												$form[ $k ] = esc_url_raw( $v );
+												$form[ $k ] = esc_url_raw( strip_shortcodes( $v ) );
 											} else {
-												$form[ $k ] = esc_url_raw( $form[ $k ] );
+												$form[ $k ] = esc_url_raw( strip_shortcodes( $form[ $k ] ) );
 											}
 											break;
 										case 'password':
@@ -939,12 +939,12 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										case 'soundcloud_track':
 										case 'spotify':
 										case 'tel':
-											$form[ $k ] = sanitize_text_field( $form[ $k ] );
+											$form[ $k ] = sanitize_text_field( strip_shortcodes( $form[ $k ] ) );
 											break;
 										case 'multiselect':
 										case 'radio':
 										case 'checkbox':
-											$form[ $k ] = is_array( $form[ $k ] ) ? array_map( 'sanitize_text_field', $form[ $k ] ) : sanitize_text_field( $form[ $k ] );
+											$form[ $k ] = is_array( $form[ $k ] ) ? array_map( 'sanitize_text_field', array_map( 'strip_shortcodes', $form[ $k ] ) ) : sanitize_text_field( strip_shortcodes( $form[ $k ] ) );
 											break;
 									}
 								}
@@ -997,11 +997,11 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										'allowfullscreen' => true,
 									);
 								}
-								$form[ $description_key ] = wp_kses( $form[ $description_key ], $allowed_html );
+								$form[ $description_key ] = wp_kses( strip_shortcodes( $form[ $description_key ] ), $allowed_html );
 
 								add_filter( 'wp_kses_allowed_html', array( &$this, 'wp_kses_user_desc' ), 10, 2 );
 							} else {
-								$form[ $description_key ] = sanitize_textarea_field( $form[ $description_key ] );
+								$form[ $description_key ] = sanitize_textarea_field( strip_shortcodes( $form[ $description_key ] ) );
 							}
 						}
 					}
@@ -1025,11 +1025,11 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 									'allowfullscreen' => true,
 								);
 							}
-							$form[ $description_key ] = wp_kses( $form[ $description_key ], $allowed_html );
+							$form[ $description_key ] = wp_kses( strip_shortcodes( $form[ $description_key ] ), $allowed_html );
 
 							add_filter( 'wp_kses_allowed_html', array( &$this, 'wp_kses_user_desc' ), 10, 2 );
 						} else {
-							$form[ $description_key ] = sanitize_textarea_field( $form[ $description_key ] );
+							$form[ $description_key ] = sanitize_textarea_field( strip_shortcodes( $form[ $description_key ] ) );
 						}
 					}
 				}
