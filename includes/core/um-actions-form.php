@@ -994,7 +994,7 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 					UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 				} elseif ( 'secondary_user_email' === $key && ! empty( $submitted_data[ $key ] ) && ! empty( $submitted_data['user_email'] ) && $submitted_data[ $key ] === $submitted_data['user_email'] ) {
 					UM()->form()->add_error( $key, __( 'The secondary email cannot be the same as primary', 'ultimate-member' ) );
-				} else {
+				} elseif ( ! empty( $submitted_data[ $key ] ) ) {
 					// There we have valid and unique user_email. But need to check in usermeta table for other users.
 					$args = array(
 						'meta_query' => array(
