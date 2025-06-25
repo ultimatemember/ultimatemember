@@ -171,8 +171,12 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Enhancements**
 
-* Added: Filter hooks for primary button classes in UM forms.
+* Added: Filter hook [`um_password_reset_form_primary_btn_classes`](https://ultimatemember.github.io/ultimatemember/hooks/um_password_reset_form_primary_btn_classes.html) for primary button classes in UM Password Reset form.
+* Added: Filter hook [`um_login_form_primary_btn_classes`](https://ultimatemember.github.io/ultimatemember/hooks/um_login_form_primary_btn_classes.html) for primary button classes in UM Login form.
+* Added: Filter hook [`um_register_form_primary_btn_classes`](https://ultimatemember.github.io/ultimatemember/hooks/um_register_form_primary_btn_classes.html) for primary button classes in UM Registration form.
 * Tweak: Refactored Site Health data, added hooks for 3rd-party integration.
+* Tweak: Avoid using `um_user( 'password_reset_link' )` and make it directly with `UM()->password()->reset_url( $user_id )` for getting a proper reset URL.
+* Tweak: Avoid using `um_user( 'account_activation_link' )` and make it directly with `UM()->permalinks()->activate_url( $user_id )` for getting a proper activation URL.
 
 **Bugfixes**
 
@@ -185,6 +189,17 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Restrictions for 3rd-party Gutenberg Blocks.
 * Fixed: Date/time picker filter-types range query on Member Directories.
 * Fixed: Renamed "Macedonia, the former Yugoslav Republic of" to the official "North Macedonia".
+
+**Deprecated**
+
+* Fully deprecated `account_activation_link_tags_patterns( $placeholders )` function. It's not used previously. Used email function arguments instead.
+* Fully deprecated `account_activation_link_tags_replaces( $replace_placeholders )` function. It's not used previously. Used email function arguments instead.
+* Fully deprecated `UM()->profile()->add_placeholder()` function. Used email function arguments instead.
+* Fully deprecated `UM()->profile()->add_replace_placeholder()` function. Used email function arguments instead.
+* Fully deprecated `UM()->user()->add_activation_placeholder()` function. Used email function arguments instead.
+* Fully deprecated `UM()->user()->add_activation_replace_placeholder()` function. Used email function arguments instead.
+* Deprecated `UM()->user()->maybe_generate_password_reset_key( $userdata )` function. Use `UM()->common()->users()->maybe_generate_password_reset_key( $userdata )` instead.
+* Deprecated `UM()->user()->set_last_login()` function. Use `UM()->common()->users()->set_last_login( $user_id )` instead.
 
 **Templates required update**
 
