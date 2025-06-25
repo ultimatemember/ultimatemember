@@ -327,9 +327,9 @@ PRIMARY KEY  (id)
 			}
 
 			// If there are some users without `account_status` then run the first async batch for update.
-			$batch_size = 50; // See the class constant value `\um\common\actions\Users::BATCH_ACTION`.
+			$batch_size = 50; // See the class constant value `\um\common\actions\Users::BATCH_SIZE`.
 			UM()->maybe_action_scheduler()->enqueue_async_action(
-				$batch_size,
+				'um_set_default_account_status', // See the class constant value `\um\common\actions\Users::BATCH_ACTION`.
 				array(
 					'page'  => 1,
 					'total' => $total_users,

@@ -543,7 +543,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$wpdb->prepare(
 							"SELECT DISTINCT meta_value
 							FROM {$wpdb->usermeta}
-							WHERE meta_key = %s
+							WHERE meta_key = %s AND
+								  meta_value != ''
 							ORDER BY meta_value DESC",
 							$filter
 						)
@@ -564,7 +565,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							MIN(meta_value) AS min,
 							MAX(meta_value) AS max
 						FROM {$wpdb->usermeta}
-						WHERE meta_key = '_um_last_login'",
+						WHERE meta_key = '_um_last_login' AND
+							  meta_value != ''",
 						ARRAY_A
 					);
 					if ( empty( $meta['total'] ) || 1 === absint( $meta['total'] ) ) {
@@ -603,7 +605,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				$wpdb->prepare(
 					"SELECT DISTINCT meta_value
 					FROM {$wpdb->usermeta}
-					WHERE meta_key = %s
+					WHERE meta_key = %s AND
+						  meta_value != ''
 					ORDER BY meta_value DESC",
 					$filter
 				)

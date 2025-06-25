@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 6.8
-Stable tag: 2.10.2
+Stable tag: 2.10.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -233,6 +233,44 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Deprecated function `um_get_domain_protocol()` because it is unused helper.
 * Deprecated function `UM()->password()->setcookie()`. Use function `UM()::setcookie()` instead.
 
+= 2.10.6 2025-07-xx =
+
+
+
+= 2.10.5 2025-06-25 =
+
+**Enhancements**
+
+* Added: Filter hooks for primary button classes in UM forms.
+* Tweak: Refactored Site Health data, added hooks for 3rd-party integration.
+
+**Bugfixes**
+
+* Fixed: Stripped shortcodes in the user data during the Account, Registration and Profile forms submission. (Thanks to [MissVeronica](https://github.com/MissVeronica))
+* Fixed: Email placeholders values.
+* Fixed: Refactor deactivation logic to un-schedule Action Scheduler actions.
+* Fixed: Action Scheduler library errors. Updated to the recent 3.9.2 version.
+* Fixed: Secondary email field validation.
+* Fixed: Action Scheduler batch actions with users who have Undefined status.
+* Fixed: Restrictions for 3rd-party Gutenberg Blocks.
+* Fixed: Date/time picker filter-types range query on Member Directories.
+* Fixed: Renamed "Macedonia, the former Yugoslav Republic of" to the official "North Macedonia".
+
+**Templates required update**
+
+* password-reset.php
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
+
+= 2.10.4 2025-05-15 =
+
+**Bugfixes**
+
+* Fixed: Security issue CVE ID: CVE-2025-47691. Used "sniccowp/php-scoper-wordpress-excludes" for getting the recent WordPress functions list and added them to the dynamic blacklist based on the WordPress version.
+* Fixed: The Action Scheduler action `um_set_default_account_status`. Case when some users were approved manually or deleted, and we need to reset the admin notice. Added `error_log()` to the wrong conditions.
+* Fixed: Reset Password request from not a predefined password reset page. It's possible to submit reset password form sitewide using block or shortcode.
+* Fixed: Setting 'Allow users to change email' for the Account page. It works now for any role instead of only the roles with 'Can edit other member accounts?' capability enabled.
+
 = 2.10.3 2025-04-24 =
 
 **Enhancements**
@@ -303,75 +341,12 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
-= 2.9.2 2025-01-14 =
-
-**Enhancements**
-
-* Added: Compatibility with the new [Ultimate Member - Zapier](https://ultimatemember.com/extensions/zapier/) extension
-* Added: Only approved user Reset Password setting defined as true by default
-* Added: `UM()->is_new_ui()` function for future enhancements related to new UI
-* Added: Filter hook `um_before_user_submitted_registration_data`
-* Tweak: Changed hook's priority for initialization of email templates paths
-* Tweak: Removed `load_plugin_textdomain` due to (article)[https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/#Enhanced-support-for-only-using-PHP-translation-files]
-
-**Bugfixes**
-
-* Fixed: Security issue CVE ID: CVE-2025-0308
-* Fixed: Security issue CVE ID: CVE-2025-0318
-* Fixed: Using placeholders in email templates when Action Scheduler is active. Using `fetch_user_id` attribute for fetching necessary user before sending email
-* Fixed: PHP 8.4 compatibility. Using WordPress native `wp_is_mobile()` instead of MobileDetect library
-* Fixed: PHP errors related to `UM()->localize()` function
-* Fixed: PHP errors in user meta header when `last_update` meta is empty
-* Fixed: Small CSS changes and avoid duplicates
-* Fixed: Removed ms-native show password button for type="password" field in UM forms
-* Fixed: Define scalable attribute for cropper
-
-**Deprecated**
-
-* Fully deprecated `UM()->mobile()` function
-* Fully deprecated `UM()->localize()` function
-* Fully deprecated `um_language_textdomain` filter hook
-
-**Templates required update**
-
-* account.php
-
-**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
-
-= 2.9.1 2024-11-15 =
-
-**Enhancements**
-
-* Added: `um_image_upload_validation` hook for 3rd-party validation during upload images
-
-**Bugfixes**
-
-* Fixed: "Load textdomain just in time" issue
-* Fixed: Capabilities checking in the wp-admin > Users list table
-* Fixed: File/image upload on the role specific profile form
-* Fixed: Issues when the form's custom fields meta has a wrong format
-* Fixed: Validation of the "Registration Default Role" slug
-* Fixed: Allowed query variables via registered REST API class only when REST_REQUEST is defined
-
-= 2.9.0 2024-11-12 =
-
-**Enhancements**
-
-* Added: Action Scheduler (version 3.8.1) for email sending. More info is [here](https://actionscheduler.org/).
-* Added: Supporting new `wp_register_block_metadata_collection()` function for registering WP Blocks
-
-**Bugfixes**
-
-* Fixed: `ajax_image_upload()` and `ajax_resize_image()` handlers vulnerability. CVE ID: CVE-2024-10528
-* Fixed: Disabling user status column wp-admin > Users screen
-* Fixed: User status filter on wp-admin > Users on mobile devices
-* Fixed: Extra unwrapping of the WP Editor field's value
-
-**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
-
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.10.4 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.10.2 =
 This version fixes a security related bug. Upgrade immediately.

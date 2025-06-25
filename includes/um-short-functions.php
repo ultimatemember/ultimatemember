@@ -208,7 +208,7 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 	// Support for all usermeta keys
 	if ( ! empty( $matches[1] ) && is_array( $matches[1] ) ) {
 		foreach ( $matches[1] as $match ) {
-			$key = str_replace( 'usermeta:', '', $match );
+			$key   = str_replace( 'usermeta:', '', $match );
 			$value = um_user( $key );
 			if ( is_array( $value ) ) {
 				$value = implode( ', ', $value );
@@ -218,32 +218,6 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 	}
 	return $content;
 }
-
-
-/**
- * UM Placeholders for activation link in email
- *
- * @param $placeholders
- *
- * @return array
- */
-function account_activation_link_tags_patterns( $placeholders ) {
-	$placeholders[] = '{account_activation_link}';
-	return $placeholders;
-}
-
-/**
- * UM Replace Placeholders for activation link in email
- *
- * @param $replace_placeholders
- *
- * @return array
- */
-function account_activation_link_tags_replaces( $replace_placeholders ) {
-	$replace_placeholders[] = um_user( 'account_activation_link' );
-	return $replace_placeholders;
-}
-
 
 /**
  * @function um_user_ip()
@@ -1334,20 +1308,15 @@ function um_get_metadefault( $id ) {
 	return isset( $core_form_meta_all[ '_um_' . $id ] ) ? $core_form_meta_all[ '_um_' . $id ] : '';
 }
 
-
 /**
  * boolean for account page editing
  *
  * @return bool
  */
 function um_submitting_account_page() {
-	if ( isset( $_POST['_um_account'] ) && $_POST['_um_account'] == 1 && is_user_logged_in() ) {
-		return true;
-	}
-
-	return false;
+	// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+	return ( ! empty( $_POST['_um_account'] ) && is_user_logged_in() );
 }
-
 
 /**
  * Get a user's display name
@@ -2527,9 +2496,11 @@ function um_user( $data, $attrs = null ) {
 			return maybe_unserialize( $array );
 
 		case 'password_reset_link':
+			// Avoid using and make it directly with `UM()->password()->reset_url( $user_id )`
 			return UM()->password()->reset_url();
 
 		case 'account_activation_link':
+			// Avoid using and make it directly with `UM()->permalinks()->activate_url( $user_id )`
 			return UM()->permalinks()->activate_url();
 
 		case 'profile_photo':

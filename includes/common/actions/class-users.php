@@ -45,6 +45,8 @@ if ( ! class_exists( 'um\common\actions\Users' ) ) {
 		}
 
 		public function status_check() {
+			// Make the control checking of the empty user statuses inside the function `get_empty_status_users`.
+			// Maybe some users were approved manually or deleted and we need to reset the admin notice.
 			$total_users = UM()->common()->users()::get_empty_status_users();
 			if ( empty( $total_users ) ) {
 				return;
@@ -114,8 +116,11 @@ if ( ! class_exists( 'um\common\actions\Users' ) ) {
 
 				foreach ( $results as $user_id ) {
 					$res = UM()->common()->users()->approve( $user_id, true, true );
-					if ( $res ) {
+					if ( $res || UM()->common()->users()->has_status( $user_id, 'approved' ) ) {
 						++$um_empty_status_users[0];
+					} else {
+						// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+						error_log( 'Cannot set `approved` status for the user with ID:' . $user_id );
 					}
 				}
 
@@ -135,7 +140,19 @@ if ( ! class_exists( 'um\common\actions\Users' ) ) {
 							'pages' => $pages,
 						)
 					);
+				} else {
+					// Make the control checking of the empty user statuses.
+					// Maybe some users were approved manually or deleted and we need to reset the admin notice.
+					$total_users = UM()->common()->users()::get_empty_status_users();
+					if ( empty( $total_users ) ) {
+						// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+						error_log( 'There aren\'t users with empty `account_status`. Maybe some users were approved manually or deleted.' );
+					}
 				}
+			} else {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( 'There aren\'t users with empty `account_status`. Maybe some users were approved manually or deleted.' );
+				delete_option( '_um_log_empty_status_users' );
 			}
 		}
 	}

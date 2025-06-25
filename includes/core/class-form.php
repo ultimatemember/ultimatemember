@@ -214,8 +214,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				if ( ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] ) ) {
 					// If the requested callback function is added in the form or added in the field option, execute it with call_user_func.
 					if ( isset( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
-						! empty( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
-						$form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] === $ajax_source_func ) {
+					     ! empty( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
+					     $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] === $ajax_source_func ) {
 
 						$arr_options['field'] = $form_fields[ $_POST['child_name'] ];
 
@@ -609,7 +609,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 								$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
 
 								if ( ! empty( $role ) &&
-									( ! in_array( $role, $custom_field_roles, true ) || in_array( $role, $exclude_roles, true ) ) ) {
+								     ( ! in_array( $role, $custom_field_roles, true ) || in_array( $role, $exclude_roles, true ) ) ) {
 									// High level escape if hacking.
 									wp_die( esc_html__( 'This is not possible for security reasons.', 'ultimate-member' ) );
 								}
@@ -850,10 +850,10 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 													'allowfullscreen' => true,
 												);
 											}
-											$form[ $k ] = wp_kses( $form[ $k ], $allowed_html );
+											$form[ $k ] = wp_kses( strip_shortcodes( $form[ $k ] ), $allowed_html );
 											add_filter( 'wp_kses_allowed_html', array( &$this, 'wp_kses_user_desc' ), 10, 2 );
 										} else {
-											$form[ $k ] = sanitize_textarea_field( $form[ $k ] );
+											$form[ $k ] = sanitize_textarea_field( strip_shortcodes( $form[ $k ] ) );
 										}
 										break;
 
@@ -895,23 +895,23 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 															$v = $replace_match . $v;
 														} else {
 															$v = 'https://' . trim(
-																strtr(
-																	$v,
-																	array(
-																		'https://' => '',
-																		'http://'  => '',
-																	)
-																),
-																' /'
-															);
+																	strtr(
+																		$v,
+																		array(
+																			'https://' => '',
+																			'http://'  => '',
+																		)
+																	),
+																	' /'
+																);
 														}
 													}
 												}
 											}
 
-											$form[ $k ] = esc_url_raw( $v );
+											$form[ $k ] = esc_url_raw( strip_shortcodes( $v ) );
 										} else {
-											$form[ $k ] = esc_url_raw( $form[ $k ] );
+											$form[ $k ] = esc_url_raw( strip_shortcodes( $form[ $k ] ) );
 										}
 										break;
 
@@ -929,7 +929,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 											$form[ $k ]['hash']      = isset( $form[ $k ]['hash'] ) ? sanitize_key( $form[ $k ]['hash'] ) : '';
 											$form[ $k ]['temp_hash'] = isset( $form[ $k ]['temp_hash'] ) ? sanitize_key( $form[ $k ]['temp_hash'] ) : '';
 										} else {
-											$form[ $k ] = sanitize_text_field( $form[ $k ] );
+											$form[ $k ] = sanitize_text_field( strip_shortcodes( $form[ $k ] ) );
 										}
 										break;
 
@@ -944,13 +944,13 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 									case 'soundcloud_track':
 									case 'spotify':
 									case 'tel':
-										$form[ $k ] = sanitize_text_field( $form[ $k ] );
+										$form[ $k ] = sanitize_text_field( strip_shortcodes( $form[ $k ] ) );
 										break;
 
 									case 'multiselect':
 									case 'radio':
 									case 'checkbox':
-										$form[ $k ] = is_array( $form[ $k ] ) ? array_map( 'sanitize_text_field', $form[ $k ] ) : sanitize_text_field( $form[ $k ] );
+										$form[ $k ] = is_array( $form[ $k ] ) ? array_map( 'sanitize_text_field', array_map( 'strip_shortcodes', $form[ $k ] ) ) : sanitize_text_field( strip_shortcodes( $form[ $k ] ) );
 										break;
 
 								}
@@ -1003,11 +1003,11 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										'allowfullscreen' => true,
 									);
 								}
-								$form[ $description_key ] = wp_kses( $form[ $description_key ], $allowed_html );
+								$form[ $description_key ] = wp_kses( strip_shortcodes( $form[ $description_key ] ), $allowed_html );
 
 								add_filter( 'wp_kses_allowed_html', array( &$this, 'wp_kses_user_desc' ), 10, 2 );
 							} else {
-								$form[ $description_key ] = sanitize_textarea_field( $form[ $description_key ] );
+								$form[ $description_key ] = sanitize_textarea_field( strip_shortcodes( $form[ $description_key ] ) );
 							}
 						}
 					}
