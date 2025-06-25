@@ -3,9 +3,11 @@
  * Plugin Name: Ultimate Member
  * Plugin URI: http://ultimatemember.com/
  * Description: The easiest way to create powerful online communities and beautiful user profiles with WordPress
- * Version: 2.10.4
+ * Version: 2.10.5
  * Author: Ultimate Member
  * Author URI: http://ultimatemember.com/
+ * License: GPLv3
+ * License URI: http://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain: ultimate-member
  * Domain Path: /languages
  * Requires at least: 6.2

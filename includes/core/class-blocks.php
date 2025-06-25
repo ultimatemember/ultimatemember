@@ -37,27 +37,33 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 
 			if ( empty( $settings['attributes']['um_is_restrict'] ) ) {
 				$settings['attributes']['um_is_restrict'] = array(
-					'type' => 'boolean',
+					'type'    => 'boolean',
+					'default' => false,
 				);
 			}
 			if ( empty( $settings['attributes']['um_who_access'] ) ) {
 				$settings['attributes']['um_who_access'] = array(
-					'type' => 'string',
+					'type'    => 'string',
+					'default' => 0,
 				);
 			}
 			if ( empty( $settings['attributes']['um_roles_access'] ) ) {
 				$settings['attributes']['um_roles_access'] = array(
-					'type' => 'array',
+					'type'    => 'array',
+					'default' => array(),
+					'items'   => array( 'type' => 'string' ),
 				);
 			}
 			if ( empty( $settings['attributes']['um_message_type'] ) ) {
 				$settings['attributes']['um_message_type'] = array(
-					'type' => 'string',
+					'type'    => 'string',
+					'default' => 0,
 				);
 			}
 			if ( empty( $settings['attributes']['um_message_content'] ) ) {
 				$settings['attributes']['um_message_content'] = array(
-					'type' => 'string',
+					'type'    => 'string',
+					'default' => '',
 				);
 			}
 
