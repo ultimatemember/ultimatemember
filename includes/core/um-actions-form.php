@@ -988,9 +988,9 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 					break;
 				}
 
-				if ( ! empty( $array['required'] ) && '' === $submitted_data[ $key ] ) {
+				if ( ! empty( $array['required'] ) && empty( $submitted_data[ $key ] ) ) {
 					UM()->form()->add_error( $key, __( 'You must provide your email', 'ultimate-member' ) );
-				} elseif ( ! is_email( $submitted_data[ $key ] ) || email_exists( $submitted_data[ $key ] ) ) {
+				} elseif ( ! empty( $submitted_data[ $key ] ) && ( ! is_email( $submitted_data[ $key ] ) || email_exists( $submitted_data[ $key ] ) ) ) {
 					UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 				} elseif ( 'secondary_user_email' === $key && ! empty( $submitted_data[ $key ] ) && ! empty( $submitted_data['user_email'] ) && $submitted_data[ $key ] === $submitted_data['user_email'] ) {
 					UM()->form()->add_error( $key, __( 'The secondary email cannot be the same as primary', 'ultimate-member' ) );
