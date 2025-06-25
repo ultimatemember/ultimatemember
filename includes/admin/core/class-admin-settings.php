@@ -3197,7 +3197,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				$edd_action  = '';
 				$license_key = '';
-				if ( empty( $this->previous_licenses[ $key ] ) && ! empty( $value ) || ( ! empty( $this->previous_licenses[ $key ] ) && ! empty( $value ) && $this->previous_licenses[ $key ] != $value ) ) {
+				if ( ( empty( $this->previous_licenses[ $key ] ) && ! empty( $value ) ) || ( ! empty( $this->previous_licenses[ $key ] ) && ! empty( $value ) && $this->previous_licenses[ $key ] != $value ) ) {
 					$edd_action  = 'activate_license';
 					$license_key = $value;
 				} elseif ( ! empty( $this->previous_licenses[ $key ] ) && empty( $value ) ) {
