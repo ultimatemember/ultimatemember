@@ -545,6 +545,7 @@ class Layouts {
 				'classes' => array(),
 				'data'    => array(),
 				'url'     => '',
+				'title'   => '',
 			)
 		);
 
@@ -567,7 +568,7 @@ class Layouts {
 
 		ob_start();
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- $data_atts has been already escaped above. ?>
-		<span class="<?php echo esc_attr( $classes ); ?>" <?php echo $data_atts; ?>>
+		<span class="<?php echo esc_attr( $classes ); ?>" title="<?php echo esc_attr( $args['title'] ); ?>" <?php echo $data_atts; ?>>
 			<?php
 			if ( ! empty( $args['url'] ) ) {
 				?>
