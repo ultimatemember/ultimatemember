@@ -162,16 +162,18 @@ wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( pr
 
 			UM.frontend.image.lazyload.init();
 
-			let fileRow = $fileList.find( '#' + file.id );
-			fileRow.find( '.um-uploaded-value' ).val( response.data[0].name_saved );
-			fileRow.find( '.um-uploaded-value-hash' ).val( response.data[0].hash );
-			fileRow.find( '.um-uploaded-value-temp-hash' ).val( response.data[0].temp_hash );
+			let $fileRow = $fileList.find( '#' + file.id );
+			$fileRow.find( '.um-uploaded-value' ).val( response.data[0].name_saved );
+			$fileRow.find( '.um-uploaded-value-hash' ).val( response.data[0].hash );
+			$fileRow.find( '.um-uploaded-value-temp-hash' ).val( response.data[0].temp_hash );
 
 			$uploader.find('.um-uploaded-value-hidden').prop('disabled', true);
 			$uploader.find('.um-uploaded-value-hash-hidden').prop('disabled', true);
 			$uploader.find('.um-uploaded-value-temp-hash-hidden').prop('disabled', true);
 
-			fileRow.data('filename', response.data[0].name_saved).data('temp_hash', response.data[0].temp_hash).data('nonce', response.data[0].delete_nonce);
+			$fileRow.data('filename', response.data[0].name_saved).data('temp_hash', response.data[0].temp_hash).data('nonce', response.data[0].delete_nonce);
+
+			wp.hooks.doAction( 'um_uploader_image_file_uploaded', $uploader, $wrapper, $fileRow );
 		}
 	}
 
@@ -378,6 +380,8 @@ jQuery(document).ready(function() {
 								$wrapper.find('.um-uploaded-value-temp-hash-hidden').prop('disabled', true);
 
 								UM.frontend.image.lazyload.init();
+
+								wp.hooks.doAction( 'um_uploader_image_file_cropped', $wrapper, $fileRow, response );
 							}
 
 							$loader.hide();

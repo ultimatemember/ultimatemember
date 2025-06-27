@@ -922,7 +922,7 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 			 * }
 			 * add_filter( 'um_completeness_field_id', 'function_name', 10, 3 );
 			 */
-			$field_id = apply_filters( 'um_completeness_field_id', $field_id, $data, $args );
+			$field_id = apply_filters( 'um_completeness_field_id', $field_id, $data, $args ); // todo check where did it used.
 
 			/* Begin by field type */
 			switch ( $type ) {
@@ -1565,10 +1565,10 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 					 * @hook um_image_edit_field_uploader_args
 					 * @since 3.0.0
 					 *
-					 * @param {array} $uploader_args The original args.
-					 * @param {array}  $data         The field data.
-					 * @param {string} $field_name   The field name.
-					 * @param {mixed}  $field_value  The field value.
+					 * @param {array}  $uploader_args The original args.
+					 * @param {array}  $data          The field data.
+					 * @param {string} $field_name    The field name.
+					 * @param {mixed}  $field_value   The field value.
 					 *
 					 * @return {array} The modified args.
 					 */
@@ -1577,34 +1577,90 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 					$uploader_wrapper_classes = array( 'um-field-uploader-wrapper', 'um-field-image-uploader-wrapper' );
 
 					$output .= '<div class="' . implode( ' ', $uploader_wrapper_classes ) . '">';
+					/**
+					 * Filters the content displayed before uploader wrapper for image-type field.
+					 *
+					 * @hook um_image_edit_field_before_uploader_content
+					 * @since 3.0.0
+					 *
+					 * @param {string} $content     Content before uploader. Empty by default.
+					 * @param {array}  $data        The field data.
+					 * @param {string} $field_name  The field name.
+					 * @param {mixed}  $field_value The field value.
+					 *
+					 * @return {string} Content before uploader.
+					 */
+					$output .= apply_filters( 'um_image_edit_field_before_uploader_content', '', $data, $field_name, $field_value );
 
 					$output .= UM()->frontend()::layouts()::uploader( $uploader_args );
+					/**
+					 * Filters the content displayed after uploader wrapper for image-type field.
+					 *
+					 * @hook um_image_edit_field_after_uploader_content
+					 * @since 3.0.0
+					 *
+					 * @param {string} $content     Content after uploader. Empty by default.
+					 * @param {array}  $data        The field data.
+					 * @param {string} $field_name  The field name.
+					 * @param {mixed}  $field_value The field value.
+					 *
+					 * @return {string} Content after uploader.
+					 */
+					$output .= apply_filters( 'um_image_edit_field_after_uploader_content', '', $data, $field_name, $field_value );
 
 					$control_classes = array( 'um-field-image-controls' );
 					if ( empty( $field_value ) ) {
 						$control_classes[] = 'um-display-none';
 					}
+					/**
+					 * Filters the image-type field uploader controls.
+					 *
+					 * @hook um_field_image_control_wrapper_classes
+					 * @since 3.0.0
+					 *
+					 * @param {array}  $control_classes The control buttons wrapper classes.
+					 * @param {array}  $data            The field data.
+					 * @param {string} $field_name      The field name.
+					 * @param {mixed}  $field_value     The field value.
+					 *
+					 * @return {array} The modified wrapper classes.
+					 */
+					$control_classes = apply_filters( 'um_field_image_control_wrapper_classes', $control_classes, $data, $field_name, $field_value );
 
-					$output .= '<div class="' . implode( ' ', $control_classes ) . '">';
-					$output .= UM()->frontend()::layouts()::button(
-						__( 'Change', 'ultimate-member' ),
-						array(
-							'size'    => 's',
-							'classes' => array( 'um-field-image-change' ),
-							'design'  => 'secondary-color',
-						)
+					$control_buttons = array(
+						'change' => UM()->frontend()::layouts()::button(
+							__( 'Change', 'ultimate-member' ),
+							array(
+								'size'    => 's',
+								'classes' => array( 'um-field-image-change' ),
+								'design'  => 'secondary-color',
+							)
+						),
+						'remove' => UM()->frontend()::layouts()::button(
+							__( 'Remove', 'ultimate-member' ),
+							array(
+								'size'    => 's',
+								'classes' => array( 'um-field-image-remove' ),
+								'design'  => 'tertiary-destructive',
+							)
+						),
 					);
+					/**
+					 * Filters the image-type field uploader controls.
+					 *
+					 * @hook um_field_image_control_buttons
+					 * @since 3.0.0
+					 *
+					 * @param {array}  $control_buttons The control buttons.
+					 * @param {array}  $data            The field data.
+					 * @param {string} $field_name      The field name.
+					 * @param {mixed}  $field_value     The field value.
+					 *
+					 * @return {array} The modified buttons.
+					 */
+					$control_buttons = apply_filters( 'um_field_image_control_buttons', $control_buttons, $data, $field_name, $field_value );
 
-					$output .= UM()->frontend()::layouts()::button(
-						__( 'Remove', 'ultimate-member' ),
-						array(
-							'size'    => 's',
-							'classes' => array( 'um-field-image-remove' ),
-							'design'  => 'tertiary-destructive',
-						)
-					);
-
-					$output .= '</div></div>';
+					$output .= '<div class="' . esc_attr( implode( ' ', $control_classes ) ) . '">' . implode( '', array_values( $control_buttons ) ) . '</div></div>';
 
 					if ( $this->is_error( $key ) ) {
 						$output .= $this->field_error( $this->show_error( $key ), $field_name );
