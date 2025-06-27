@@ -544,6 +544,7 @@ class Layouts {
 				'color'   => 'gray', // gray, brand,error,warning,success
 				'classes' => array(),
 				'data'    => array(),
+				'url'     => '',
 			)
 		);
 
@@ -567,7 +568,19 @@ class Layouts {
 		ob_start();
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- $data_atts has been already escaped above. ?>
 		<span class="<?php echo esc_attr( $classes ); ?>" <?php echo $data_atts; ?>>
-			<?php echo esc_html( $label ); ?>
+			<?php
+			if ( ! empty( $args['url'] ) ) {
+				?>
+				<a href="<?php echo esc_url( $args['url'] ); ?>" class="um-link um-link-secondary">
+				<?php
+			}
+			echo esc_html( $label );
+			if ( ! empty( $args['url'] ) ) {
+				?>
+				</a>
+				<?php
+			}
+			?>
 		</span>
 		<?php
 		return ob_get_clean();
