@@ -1419,6 +1419,14 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 							$sanitized[ $k ] = ( '' !== $v ) ? absint( $v ) : '';
 						}
 						break;
+					case 'sanitize_array_key_int':
+						if ( ! array_key_exists( 'default', $this->builder_input[ $k ] ) || ! array_key_exists( 'array', $this->builder_input[ $k ] ) ) {
+							continue 2;
+						}
+
+						$sanitized[ $k ] = ! in_array( absint( $v ), $this->builder_input[ $k ]['array'], true ) ? $this->builder_input[ $k ]['default'] : absint( $v );
+						break;
+
 				}
 			}
 
