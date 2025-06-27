@@ -898,7 +898,7 @@
 .um.um-directory .um-members-wrapper.um-display-none {
   display: none;
 }
-.um.um-directory.um-ui-xs .um-member-directory-header .um-member-directory-filters-bar {
+.um.um-directory.um-ui-xs .um-member-directory-header .um-member-directory-filters-bar .um-filters-form {
   grid-template-columns: repeat(1, 1fr);
   -ms-grid-template-columns: repeat(1, 1fr);
 }
@@ -910,7 +910,7 @@
   grid-template-columns: repeat(1, 1fr);
   -ms-grid-template-columns: repeat(1, 1fr);
 }
-.um.um-directory.um-ui-m .um-member-directory-header .um-member-directory-filters-bar {
+.um.um-directory.um-ui-m .um-member-directory-header .um-member-directory-filters-bar .um-filters-form {
   grid-template-columns: repeat(2, 1fr);
   -ms-grid-template-columns: repeat(2, 1fr);
 }
@@ -922,7 +922,7 @@
   grid-template-columns: repeat(3, 1fr);
   -ms-grid-template-columns: repeat(3, 1fr);
 }
-.um.um-directory.um-ui-l .um-member-directory-header .um-member-directory-filters-bar {
+.um.um-directory.um-ui-l .um-member-directory-header .um-member-directory-filters-bar .um-filters-form {
   grid-template-columns: repeat(3, 1fr);
   -ms-grid-template-columns: repeat(3, 1fr);
 }
@@ -934,7 +934,7 @@
   grid-template-columns: repeat(3, 1fr);
   -ms-grid-template-columns: repeat(3, 1fr);
 }
-.um.um-directory.um-ui-xl .um-member-directory-header .um-member-directory-filters-bar {
+.um.um-directory.um-ui-xl .um-member-directory-header .um-member-directory-filters-bar .um-filters-form {
   grid-template-columns: repeat(3, 1fr);
   -ms-grid-template-columns: repeat(3, 1fr);
 }
