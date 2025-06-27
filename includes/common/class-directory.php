@@ -753,13 +753,14 @@ class Directory extends Directory_Config {
 		$filter_from_url = array();
 		if ( ! $admin ) {
 			$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? explode( '||', sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ) : $filter_from_url;
+			$filter_from_url = apply_filters( 'um_member_directory_filter_value_from_url', $filter_from_url, $attrs, $filter, $directory_data );
 		}
 
 		$disable_filters_pre_query = (bool) get_post_meta( $directory_id, '_um_disable_filters_pre_query', true );
 
 		/** This filter is documented in includes/core/class-fields.php */
-		$option_pairs     = apply_filters( 'um_select_options_pair', null, $attrs );
-		$custom_dropdown  = '';
+		$option_pairs    = apply_filters( 'um_select_options_pair', null, $attrs );
+		$custom_dropdown = '';
 
 		// Workaround for the first member directory page loading.
 		// Can be required for some cases in the callback functions. E.g. Billing/Shipping Country -> State dependencies.
