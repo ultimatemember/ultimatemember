@@ -379,7 +379,8 @@ class Directory extends Directory_Config {
 						MAX( CONVERT( meta_value, DECIMAL ) ) as max_meta,
 						COUNT( DISTINCT meta_value ) as amount
 						FROM {$wpdb->usermeta}
-						WHERE meta_key = %s",
+						WHERE meta_key = %s AND
+							  meta_value != ''",
 						$filter
 					),
 					ARRAY_A
@@ -473,7 +474,8 @@ class Directory extends Directory_Config {
 					$wpdb->prepare(
 						"SELECT DISTINCT meta_value
 						FROM {$wpdb->usermeta}
-						WHERE meta_key = %s
+						WHERE meta_key = %s AND
+							  meta_value != ''
 						ORDER BY meta_value DESC",
 						$filter
 					)
@@ -492,7 +494,8 @@ class Directory extends Directory_Config {
 							MIN(meta_value) AS min,
 							MAX(meta_value) AS max
 					FROM {$wpdb->usermeta}
-					WHERE meta_key = '_um_last_login'",
+					WHERE meta_key = '_um_last_login' AND
+						  meta_value != ''",
 					ARRAY_A
 				);
 
@@ -538,7 +541,8 @@ class Directory extends Directory_Config {
 			$wpdb->prepare(
 				"SELECT DISTINCT meta_value
 				FROM {$wpdb->usermeta}
-				WHERE meta_key = %s
+				WHERE meta_key = %s AND
+					  meta_value != ''
 				ORDER BY meta_value DESC",
 				$filter
 			)
