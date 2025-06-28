@@ -217,6 +217,8 @@
 }
 .um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .um-field-wrapper .um-date-range-row input {
   max-width: 140px;
+  border: none;
+  padding: 7px 12px;
 }
 .um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .um-field-wrapper .um-time-range-row {
   width: 100%;
@@ -228,6 +230,8 @@
 }
 .um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .um-field-wrapper .um-time-range-row input {
   max-width: 140px;
+  border: none;
+  padding: 7px 12px;
 }
 .um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .um-field-wrapper input[type=search].choices__input {
   width: 10px;
