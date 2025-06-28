@@ -189,17 +189,6 @@ UM.common = {
 
 				choices = new Choices(element, attrs);
 				self.choicesInstances[ element.id ] = choices;
-
-				// Workaround for form reset https://github.com/Choices-js/Choices/issues/1053#issuecomment-1810488521
-				const form = jQuery(this).closest('form')[0];
-				if ( ! form ) {
-					return;
-				}
-
-				form.addEventListener( 'reset', () => {
-					choices.destroy();
-					choices.init();
-				});
 			});
 		},
 		initChild: function() {
