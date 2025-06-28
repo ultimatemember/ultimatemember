@@ -1202,7 +1202,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 * }
 				 * ?>
 				 */
-				$field_value = apply_filters( 'um_is_selected_filter_value', $field_value, $key, $value );
+				$field_value = apply_filters( 'um_is_selected_filter_value', $field_value, $key, $value, $data );
 
 				/**
 				 * UM hook
@@ -1287,7 +1287,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 					}
 				}
-
 			}
 
 			return false;

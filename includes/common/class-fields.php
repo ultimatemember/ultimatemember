@@ -2138,6 +2138,8 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 
 					$class = 'js-choice';
 
+					$output .= $this->disabled_hidden_field( $key, '' ); // hidden field for the case when there aren't any selected values for multiselect.
+
 					$output .= '<select multiple data-default="' . esc_attr( $default ) . '" ' . $disabled . '  name="' . esc_attr( $field_name ) . '[]" data-orig-name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_id ) . '" data-validate="' . esc_attr( $validate ) . '" data-max_selections="' . esc_attr( $max_selections ) . '" data-min_selections="' . esc_attr( $min_selections ) . '" data-key="' . esc_attr( $key ) . '" class="' . esc_attr( $this->get_class( $key, $data, $class ) ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $atts_ajax . ' ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>';
 
 					// add options
