@@ -9,12 +9,13 @@ if ( ! class_exists( 'UM' ) ) {
 	 * Main UM Class
 	 *
 	 * @class UM
-	 * @version 2.0
+	 * @version 3.0
 	 *
 	 * @method UM_bbPress bbPress() Reviewed branch: master
 	 * @method UM_Followers_API Followers_API()
 	 * @method UM_ForumWP ForumWP() Reviewed branch: master
 	 * @method UM_Friends_API Friends_API()
+	 * @method UM_Groups Groups()
 	 * @method UM_JobBoardWP JobBoardWP() Reviewed branch: master
 	 * @method UM_Mailchimp Mailchimp() Reviewed branch: master
 	 * @method UM_Messaging Messaging() Reviewed branch: feature/new_ui
@@ -22,26 +23,26 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Notices Notices()
 	 * @method UM_Notifications_API Notifications_API()
 	 * @method UM_Online Online() Reviewed branch: master
+	 * @method UM_Private_Content Private_Content() Reviewed branch: master
 	 * @method UM_Profile_Completeness_API Profile_Completeness_API()
+	 * @method UM_Profile_Tabs Profile_Tabs() Reviewed branch: master
 	 * @method UM_ReCAPTCHA ReCAPTCHA() Reviewed branch: master
 	 * @method UM_Reviews Reviews()
 	 * @method UM_Activity_API Activity_API()
 	 * @method UM_Social_Login_API Social_Login_API()
-	 * @method UM_User_Tags User_Tags()
+	 * @method UM_Stripe_API Stripe_API()
+	 * @method UM_Terms_Conditions Terms_Conditions() Reviewed branch: master
+	 * @method UM_Unsplash Unsplash()
+	 * @method UM_User_Bookmarks User_Bookmarks()
+	 * @method UM_User_Locations User_Locations()
+	 * @method UM_User_Notes User_Notes() Reviewed branch: master
+	 * @method UM_User_Photos User_Photos() Reviewed branch: master
+	 * @method UM_User_Tags User_Tags() Reviewed branch: master
 	 * @method UM_Verified_Users_API Verified_Users_API()
 	 * @method UM_WooCommerce WooCommerce() Partially Reviewed branch: dev/new_ui
-	 * @method UM_Terms_Conditions Terms_Conditions() Reviewed branch: master
-	 * @method UM_Private_Content Private_Content() Reviewed branch: master
-	 * @method UM_User_Locations User_Locations()
-	 * @method UM_User_Photos User_Photos() Reviewed branch: master
-	 * @method UM_Groups Groups()
-	 * @method UM_Frontend_Posting Frontend_Posting()
-	 * @method UM_User_Notes User_Notes() Reviewed branch: master
-	 * @method UM_User_Bookmarks User_Bookmarks()
-	 * @method UM_Unsplash Unsplash()
-	 * @method UM_Profile_Tabs Profile_Tabs() Reviewed branch: master
 	 * @method UM_Zapier Zapier()
-	 * @method UM_Stripe_API Stripe_API()
+	 *
+	 * @method UM_Frontend_Posting Frontend_Posting()
 	 * @method UM_Google_Authenticator Google_Authenticator()
 	 */
 	final class UM extends UM_Functions {
