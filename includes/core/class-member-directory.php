@@ -138,9 +138,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : $default_value;
 					?>
 					<input type="text" autocomplete="off" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?>"
-					       placeholder="<?php echo esc_attr( $label ); ?>"
-					       value="<?php echo esc_attr( $filter_from_url ); ?>" class="um-form-field"
-					       aria-label="<?php echo esc_attr( $label ); ?>" />
+						   placeholder="<?php echo esc_attr( $label ); ?>"
+						   value="<?php echo esc_attr( $filter_from_url ); ?>" class="um-form-field"
+						   aria-label="<?php echo esc_attr( $label ); ?>" />
 					<?php
 					break;
 
@@ -277,9 +277,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					?>
 
 					<select class="um-s1" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
-					        data-placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
-					        aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
-					        <?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>multiple<?php } ?>
+							data-placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
+							aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
+							<?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>multiple<?php } ?>
 						<?php echo $custom_dropdown; ?>>
 
 						<option></option>
@@ -431,22 +431,21 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 * @return mixed
 		 */
-		function slider_filters_range( $filter, $directory_data ) {
+		public function slider_filters_range( $filter, $directory_data ) {
 			global $wpdb;
 
 			$range = false;
 
 			switch ( $filter ) {
-
-				default: {
-
+				default:
 					$meta = $wpdb->get_row(
 						$wpdb->prepare(
 							"SELECT MIN( CONVERT( meta_value, DECIMAL ) ) as min_meta,
 							MAX( CONVERT( meta_value, DECIMAL ) ) as max_meta,
 							COUNT( DISTINCT meta_value ) as amount
 							FROM {$wpdb->usermeta}
-							WHERE meta_key = %s",
+							WHERE meta_key = %s AND
+								  meta_value != ''",
 							$filter
 						),
 						ARRAY_A
@@ -458,11 +457,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					$range = apply_filters( 'um_member_directory_filter_slider_common', $range, $directory_data, $filter );
 					$range = apply_filters( "um_member_directory_filter_{$filter}_slider", $range, $directory_data );
-
 					break;
-				}
-				case 'birth_date': {
 
+				case 'birth_date':
 					$meta = $wpdb->get_row(
 						"SELECT MIN( meta_value ) as min_meta,
 						MAX( meta_value ) as max_meta,
@@ -476,9 +473,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					if ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) && isset( $meta['amount'] ) && $meta['amount'] > 1 ) {
 						$range = array( $this->borndate( strtotime( $meta['max_meta'] ) ), $this->borndate( strtotime( $meta['min_meta'] ) ) );
 					}
-
 					break;
-				}
 
 			}
 
