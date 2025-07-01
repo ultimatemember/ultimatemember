@@ -16,7 +16,7 @@ class Extensions_Updater {
 	private $updater_data;
 
 	/**
-	 * @param $args
+	 * @param false|array $args
 	 */
 	public function __construct( $args = false ) {
 		if ( empty( $args ) ) {
