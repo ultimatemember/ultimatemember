@@ -13,7 +13,7 @@ class Extensions_Updater {
 	/**
 	 * @var array
 	 */
-	private static $updater_data;
+	private $updater_data;
 
 	/**
 	 * @param $args
@@ -23,7 +23,7 @@ class Extensions_Updater {
 			return;
 		}
 
-		self::$updater_data = wp_parse_args(
+		$this->updater_data = wp_parse_args(
 			$args,
 			array(
 				'slug'    => '',
@@ -39,21 +39,21 @@ class Extensions_Updater {
 	 * Maybe run upgrade if needed.
 	 */
 	public function maybe_run_updater() {
-		$last_version_upgrade = self::get_last_version_upgrade();
-		if ( ! empty( $last_version_upgrade ) && version_compare( $last_version_upgrade, self::$updater_data['version'], '>=' ) ) {
+		$last_version_upgrade = $this->get_last_version_upgrade();
+		if ( ! empty( $last_version_upgrade ) && version_compare( $last_version_upgrade, $this->updater_data['version'], '>=' ) ) {
 			// Don't need update.
 			return;
 		}
 
-		$packages = self::get_packages();
+		$packages = $this->get_packages();
 		if ( ! empty( $packages ) ) {
-			$packages_dir = self::get_packages_dir();
+			$packages_dir = $this->get_packages_dir();
 			foreach ( $packages as $package_version ) {
 				if ( version_compare( $package_version, $last_version_upgrade, '<=' ) ) {
 					continue;
 				}
 
-				if ( version_compare( $package_version, self::$updater_data['version'], '>' ) ) {
+				if ( version_compare( $package_version, $this->updater_data['version'], '>' ) ) {
 					continue;
 				}
 
@@ -63,20 +63,20 @@ class Extensions_Updater {
 				}
 
 				include_once $file_path;
-				self::set_last_version_upgrade( $package_version );
+				$this->set_last_version_upgrade( $package_version );
 			}
 		}
 
-		self::set_last_version_upgrade( self::$updater_data['version'] );
+		$this->set_last_version_upgrade( $this->updater_data['version'] );
 	}
 
 	/**
 	 * Get packages list, based on the files in packages dir.
 	 */
-	private static function get_packages() {
+	private function get_packages() {
 		$packages = array();
 
-		$handle = opendir( self::get_packages_dir() );
+		$handle = opendir( $this->get_packages_dir() );
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition, WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition -- reading folder's content here
 		while ( false !== ( $filename = readdir( $handle ) ) ) {
 			if ( '.' !== $filename && '..' !== $filename ) {
@@ -100,8 +100,8 @@ class Extensions_Updater {
 	 *
 	 * @return string The normalized path to the packages' directory.
 	 */
-	private static function get_packages_dir() {
-		return wp_normalize_path( self::$updater_data['path'] . 'includes/updates/' );
+	private function get_packages_dir() {
+		return wp_normalize_path( $this->updater_data['path'] . 'includes/updates/' );
 	}
 
 	/**
@@ -109,8 +109,8 @@ class Extensions_Updater {
 	 *
 	 * @return string The last version upgrade.
 	 */
-	private static function get_last_version_upgrade() {
-		return get_option( 'um_' . self::$updater_data['slug'] . '_last_version_upgrade', '0.0.0' );
+	private function get_last_version_upgrade() {
+		return get_option( 'um_' . $this->updater_data['slug'] . '_last_version_upgrade', '0.0.0' );
 	}
 
 	/**
@@ -118,7 +118,7 @@ class Extensions_Updater {
 	 *
 	 * @param string $version The version to set as the last upgrade version.
 	 */
-	private static function set_last_version_upgrade( $version ) {
-		update_option( 'um_' . self::$updater_data['slug'] . '_last_version_upgrade', $version );
+	private function set_last_version_upgrade( $version ) {
+		update_option( 'um_' . $this->updater_data['slug'] . '_last_version_upgrade', $version );
 	}
 }
