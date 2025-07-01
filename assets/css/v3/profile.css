@@ -32,6 +32,7 @@
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+  position: relative;
 }
 .um.um-profile .um-profile-header .um-cover-wrapper .um-cover-photo {
   width: 100%;
