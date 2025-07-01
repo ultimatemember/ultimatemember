@@ -2124,5 +2124,22 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			}
 			return UM()->classes['um\admin\users_columns'];
 		}
+
+		/**
+		 * @since 3.0.0
+		 *
+		 * @param bool|array $data
+		 * @return null|Extensions_Updater
+		 */
+		public function extension_updater( $data = false ) {
+			if ( empty( $data['slug'] ) ) {
+				return null;
+			}
+			$class_index = 'um\admin\extensions_updater_' . $data['slug'];
+			if ( ! isset( UM()->classes[ $class_index ] ) || empty( UM()->classes[ $class_index ] ) ) {
+				UM()->classes[ $class_index ] = new Extensions_Updater( $data );
+			}
+			return UM()->classes[ $class_index ];
+		}
 	}
 }
