@@ -371,6 +371,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					'_um_filters_is_collapsible'   => array(
 						'sanitize' => 'bool',
 					),
+					'_um_disable_filters_pre_query' => array(
+						'sanitize' => 'bool',
+					),
 					'_um_search_filters'           => array(
 						'sanitize' => array( $this, 'sanitize_filter_fields' ),
 					),
@@ -509,11 +512,14 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					'_um_profile_secondary_btn_word'    => array(
 						'sanitize' => 'text',
 					),
+					'_um_profile_photo_enabled'         => array(
+						'sanitize' => 'bool',
+					),
 					'_um_profile_cover_enabled'         => array(
 						'sanitize' => 'bool',
 					),
 					'_um_profile_coversize'             => array(
-						'sanitize' => 'absint',
+						'sanitize' => array( UM()->admin(), 'sanitize_cover_photosize' ),
 					),
 					'_um_profile_cover_ratio'           => array(
 						'sanitize' => 'text',
@@ -539,6 +545,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 				)
 			);
+
+			if ( UM()->is_new_ui() ) {
+				unset( $this->form_meta['_um_profile_disable_photo_upload'], $this->form_meta['_um_profile_photo_required'] );
+			}
 
 			$this->builder_input = apply_filters(
 				'um_builder_input_map',
@@ -937,18 +947,22 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * @return array|string
 		 */
 		public function sanitize_md_view_types( $value ) {
-			$view_types = array_map(
-				function ( $item ) {
-					return $item['title'];
-				},
-				UM()->member_directory()->view_types
-			);
+			if ( UM()->is_new_ui() ) {
+				$view_types = UM()->member_directory()->view_types;
+			} else {
+				$view_types = array_map(
+					function ( $item ) {
+						return $item['title'];
+					},
+					UM()->member_directory()->view_types
+				);
+			}
 			$view_types = array_keys( $view_types );
 
 			if ( '' !== $value ) {
 				$value = array_filter(
 					$value,
-					function( $v, $k ) use ( $view_types ) {
+					function ( $v, $k ) use ( $view_types ) {
 						return in_array( sanitize_key( $k ), $view_types, true ) && 1 === (int) $v;
 					},
 					ARRAY_FILTER_USE_BOTH
@@ -961,12 +975,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 		/**
-		 * @param array|string $value
+		 * @param int|string $value
 		 *
-		 * @return array|string
+		 * @return string|int
 		 */
 		public function sanitize_photosize( $value ) {
-			$sizes = UM()->files()->get_profile_photo_size( 'photo_thumb_sizes' );
+			$sizes = UM()->options()->get_profile_photo_size( 'photo_thumb_sizes' );
 			$sizes = array_keys( $sizes );
 
 			if ( '' !== $value ) {
@@ -977,12 +991,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 		/**
-		 * @param array|string $value
+		 * @param int|string $value
 		 *
-		 * @return array|string
+		 * @return string|int
 		 */
 		public function sanitize_cover_photosize( $value ) {
-			$sizes = UM()->files()->get_profile_photo_size( 'cover_thumb_sizes' );
+			$sizes = UM()->options()->get_profile_photo_size( 'cover_thumb_sizes' );
 			$sizes = array_keys( $sizes );
 
 			if ( '' !== $value ) {
@@ -1405,6 +1419,14 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 							$sanitized[ $k ] = ( '' !== $v ) ? absint( $v ) : '';
 						}
 						break;
+					case 'sanitize_array_key_int':
+						if ( ! array_key_exists( 'default', $this->builder_input[ $k ] ) || ! array_key_exists( 'array', $this->builder_input[ $k ] ) ) {
+							continue 2;
+						}
+
+						$sanitized[ $k ] = ! in_array( absint( $v ), $this->builder_input[ $k ]['array'], true ) ? $this->builder_input[ $k ]['default'] : absint( $v );
+						break;
+
 				}
 			}
 
@@ -1564,6 +1586,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						break;
 					case 'text':
 						$sanitized[ $k ] = sanitize_text_field( $v );
+						break;
+					case 'color':
+						$sanitized[ $k ] = sanitize_hex_color( $v );
 						break;
 				}
 			}
@@ -1786,8 +1811,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * Purge temp uploads dir.
 		 */
 		public function purge_temp() {
-			UM()->files()->remove_dir( UM()->files()->upload_temp );
-
+			UM()->common()->filesystem()::remove_dir( UM()->common()->filesystem()->get_tempdir() );
 			$url = add_query_arg(
 				array(
 					'page'   => 'ultimatemember',
@@ -2099,6 +2123,23 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				UM()->classes['um\admin\users_columns'] = new Users_Columns();
 			}
 			return UM()->classes['um\admin\users_columns'];
+		}
+
+		/**
+		 * @since 3.0.0
+		 *
+		 * @param bool|array $data
+		 * @return null|Extensions_Updater
+		 */
+		public function extension_updater( $data = false ) {
+			if ( empty( $data['slug'] ) ) {
+				return null;
+			}
+			$class_index = 'um\admin\extensions_updater_' . $data['slug'];
+			if ( ! isset( UM()->classes[ $class_index ] ) || empty( UM()->classes[ $class_index ] ) ) {
+				UM()->classes[ $class_index ] = new Extensions_Updater( $data );
+			}
+			return UM()->classes[ $class_index ];
 		}
 	}
 }

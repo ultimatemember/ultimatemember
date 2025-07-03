@@ -1,0 +1,148 @@
+/**
+ * Ultimate Member modal styles
+ */
+
+@import "../../css/box"
+@import "../../css/colors"
+@import "../../css/mixins"
+@import "../../css/selectors"
+@import "../../css/typography"
+
+/* body */
+.#{$prefix}overflow-hidden
+  overflow-x: hidden
+  overflow-y: hidden
+
+/* hidden content */
+.#{$prefix}modal-hidden-content
+  display: none
+
+/* overlay */
+.#{$prefix}modal-overlay
+  background: rgba( 0, 0, 0, 0.85 )
+  width: 100%
+  height: 100%
+  position: fixed
+  left: 0
+  top: 0
+  z-index: 99999
+
+/* modal */
+.#{$prefix}modal
+  border-radius: $radius-sm
+  bottom: -50px
+  +border-box
+  display: block
+  left: 50%
+  margin-left: -170px
+  min-width: 340px
+  opacity: 0
+  overflow: hidden
+  position: fixed
+  transition: bottom 0.5s ease-out 0.1s
+  z-index: 100000
+
+  &.full-width
+    bottom: 50px
+    top: 50px
+    left: 50px
+    right: 50px
+    min-width: auto
+    margin: 0
+    padding: 0
+  &.large
+    margin-left: -450px
+    width: 900px
+  &.normal
+    margin-left: -300px
+    width: 600px
+  &.small
+    margin-left: -200px
+    width: 400px
+
+  *
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
+
+  & > .#{$prefix}modal-close
+    color: $primary-fg
+    cursor: pointer
+    display: block
+    font-size: 24px
+    line-height: 20px
+    right: 0
+    padding: 10px
+    position: absolute
+    text-decoration: none
+    top: 0
+    z-index: 10
+    &.#{$prefix}modal-close-fixed
+      position: fixed
+      color: $um-white
+
+
+  .#{$prefix}modal-header
+    & + .#{$prefix}modal-body
+      background: $um-white
+      box-sizing: border-box
+      min-height: 3px
+      max-height: inherit
+      padding: 20px
+      width: 100%
+      overflow: auto
+
+  .#{$prefix}modal-body
+    .#{$prefix}modal-crop-wrapper
+      width: 100%
+      margin: 0
+      padding: 0
+      img
+        float: left
+        width: 100%
+        height: auto
+        margin: 0
+        padding: 0
+    .#{$prefix}single-image-preview.crop
+      img
+        float: left
+
+  &.loading
+    background-color: $um-white
+    //.#{$prefix}modal-body
+    //  background: #fff url(images/loading.gif) no-repeat center
+    //  min-height: 100px
+    //  & > *
+    //    opacity: 0.5
+
+
+  .#{$prefix}modal-header
+    +flex( row, flex-start, center, nowrap )
+    background-color: $primary-600
+    border-radius: $radius-sm $radius-sm 0 0
+    height: 44px
+    +typography( text, lg, medium )
+    color: $primary-fg
+    padding: 2px 20px
+    +border-box
+
+  .#{$prefix}modal-body
+    +flex( column, flex-start, stretch, nowrap )
+    row-gap: $spacing-md
+    .#{$prefix}photo-modal-img
+      object-fit: contain
+
+  .#{$prefix}modal-footer
+    background-color: $um-white
+    border-radius: 0 0 $radius-sm $radius-sm
+    padding: 0.5em
+    text-align: right
+
+  .#{$prefix}modal-buttons-wrapper
+    +flex( row, flex-start, center, nowrap )
+    column-gap: $spacing-md
+    margin: 0
+    padding: 0
+    width: 100%
+    .#{$prefix}ajax-spinner-svg
+      display: none
+

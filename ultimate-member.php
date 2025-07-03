@@ -3,11 +3,9 @@
  * Plugin Name: Ultimate Member
  * Plugin URI: http://ultimatemember.com/
  * Description: The easiest way to create powerful online communities and beautiful user profiles with WordPress
- * Version: 2.10.6-alpha
+ * Version: 3.0.0-alpha-20250703
  * Author: Ultimate Member
  * Author URI: http://ultimatemember.com/
- * License: GPLv3
- * License URI: http://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain: ultimate-member
  * Domain Path: /languages
  * Requires at least: 6.2
@@ -35,7 +33,7 @@ define( 'UM_PLUGIN', plugin_basename( __FILE__ ) );
 define( 'UM_VERSION', $plugin_data['Version'] );
 define( 'UM_PLUGIN_NAME', $plugin_data['Name'] );
 define( 'UM_WP_FUNCTIONS_VERSION', '6.8.0' ); // Updates every major WordPress release.
-// define( 'UM_DEV_MODE', true );
+define( 'UM_DEV_MODE', true );
 
 require_once 'includes/class-functions.php';
 require_once 'includes/class-init.php';
