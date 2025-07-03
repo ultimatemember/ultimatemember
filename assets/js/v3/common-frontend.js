@@ -629,6 +629,8 @@ UM.frontend = {
 						$controls.umHide();
 						$fileList.html('').umHide();
 						$uploader.removeClass('um-upload-completed');
+
+						wp.hooks.doAction( 'um_uploader_empty_file_row_removed', $uploader );
 						return;
 					}
 
