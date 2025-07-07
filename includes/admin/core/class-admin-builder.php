@@ -1078,7 +1078,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					}
 					um_fetch_user( $arg1 );
 					UM()->user()->preview = true;
-					$output               = um_user_submitted_registration_formatted( true );
+					$output               = um_user_submitted_registration_formatted( $arg1, true );
 					um_reset_user();
 					break;
 			}
