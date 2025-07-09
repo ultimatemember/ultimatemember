@@ -62,14 +62,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			add_action( 'um_settings_before_save', array( $this, 'check_permalinks_changes' ) );
 			add_action( 'um_settings_save', array( $this, 'on_settings_save' ) );
 
-			add_filter( 'um_change_settings_before_save', array( $this, 'save_email_templates' ) );
-
 			//save licenses options
 			add_action( 'um_settings_before_save', array( $this, 'before_licenses_save' ) );
 			add_action( 'um_settings_save', array( $this, 'licenses_save' ) );
 
-			add_filter( 'um_change_settings_before_save', array( $this, 'set_default_if_empty' ), 9, 1 );
-			add_filter( 'um_change_settings_before_save', array( $this, 'remove_empty_values' ), 10, 1 );
+			add_filter( 'um_change_settings_before_save', array( $this, 'set_default_if_empty' ), 9 );
+			add_filter( 'um_change_settings_before_save', array( $this, 'remove_empty_values' ) );
+			add_filter( 'um_change_settings_before_save', array( $this, 'save_email_templates' ), 11 );
 		}
 
 

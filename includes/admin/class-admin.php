@@ -1590,6 +1590,22 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					case 'color':
 						$sanitized[ $k ] = sanitize_hex_color( $v );
 						break;
+					case 'sanitize_array_key':
+						if ( ! array_key_exists( 'default', UM()->admin_settings()->settings_map[ $k ] ) || ! array_key_exists( 'array', UM()->admin_settings()->settings_map[ $k ] ) ) {
+							continue 2;
+						}
+
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array();
+							foreach ( $v as $v_v ) {
+								if ( in_array( sanitize_key( $v_v ), UM()->admin_settings()->settings_map[ $k ]['array'], true ) ) {
+									$sanitized[ $k ][] = sanitize_key( $v_v );
+								}
+							}
+						} else {
+							$sanitized[ $k ] = ! in_array( sanitize_key( $v ), UM()->admin_settings()->settings_map[ $k ]['array'], true ) ? UM()->admin_settings()->settings_map[ $k ]['default'] : sanitize_key( $v );
+						}
+						break;
 				}
 			}
 
