@@ -2160,19 +2160,44 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'id'    => '',
-				'label' => 'none', // right, bottom
-				'value' => 0, // 0 - 100% absint
+				'id'              => '',
+				'label'           => 'none', // right, bottom
+				'value'           => 0, // 0 - 100% absint
+				'tip'             => '',
+				'classes'         => array(),
+				'wrapper_classes' => array(),
+				'animate'         => false,
 			)
 		);
 
 		// translators: %d is the progress percents.
-		$title = sprintf( __( '%d%%', 'ultimate-member' ), $args['value'] );
+		$title       = sprintf( __( '%d%%', 'ultimate-member' ), $args['value'] );
+		$bar_label   = $title;
+		$bar_classes = array(
+			'um-progress-bar',
+		);
+		if ( ! empty( $args['tip'] ) ) {
+			$bar_classes[] = 'um-tip-n';
+			$title         = $args['tip'];
+		}
+		if ( ! empty( $args['classes'] ) ) {
+			$bar_classes = array_merge( $bar_classes, $args['classes'] );
+		}
+
+		$inner_classes = array(
+			'um-progress-bar-inner',
+		);
+		if ( ! empty( $args['animate'] ) ) {
+			$inner_classes[] = 'um-animated';
+			$style           = 'width:0%;';
+		} else {
+			$style = 'width:' . $args['value'] . '%;';
+		}
 
 		ob_start();
 		?>
-		<div id="<?php echo esc_attr( $args['id'] ); ?>" class="um-progress-bar" data-value="<?php echo esc_attr( $args['value'] ); ?>" title="<?php echo esc_attr( $title ); ?>">
-			<div class="um-progress-bar-inner" style="width:<?php echo esc_attr( $args['value'] ); ?>%;" title="<?php echo esc_attr( $title ); ?>"></div>
+		<div id="<?php echo esc_attr( $args['id'] ); ?>" class="<?php echo esc_attr( implode( ' ', $bar_classes ) ); ?>" data-value="<?php echo esc_attr( $args['value'] ); ?>" title="<?php echo esc_attr( $title ); ?>">
+			<div class="<?php echo esc_attr( implode( ' ', $inner_classes ) ); ?>" style="<?php echo esc_attr( $style ); ?>" title="<?php echo empty( $args['tip'] ) ? esc_attr( $title ) : ''; ?>"></div>
 		</div>
 		<?php
 		$progress_bar = ob_get_clean();
@@ -2180,11 +2205,18 @@ class Layouts {
 		if ( 'none' === $args['label'] ) {
 			$content = $progress_bar;
 		} else {
+			$wrapper_classes = array(
+				'um-progress-bar-wrapper',
+				'um-progress-bar-label-' . $args['label'],
+			);
+			if ( ! empty( $args['wrapper_classes'] ) ) {
+				$wrapper_classes = array_merge( $wrapper_classes, $args['wrapper_classes'] );
+			}
 			ob_start();
 			?>
-			<div class="um-progress-bar-wrapper um-progress-bar-label-<?php echo esc_attr( $args['label'] ); ?>">
+			<div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>">
 				<?php echo wp_kses( $progress_bar, UM()->get_allowed_html( 'templates' ) ); ?>
-				<div class="um-progress-bar-label"><?php echo esc_html( $title ); ?></div>
+				<div class="um-progress-bar-label"><?php echo esc_html( $bar_label ); ?></div>
 			</div>
 			<?php
 			$content = ob_get_clean();

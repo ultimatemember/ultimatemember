@@ -147,7 +147,13 @@ UM.frontend = {
 	progressBar: {
 		init: function () {
 			jQuery( '.um-progress-bar' ).each( function() {
-				jQuery(this).find('.um-progress-bar-inner').css('width', jQuery(this).data('value') + '%');
+				let $inner = jQuery(this).find('.um-progress-bar-inner');
+				let width = jQuery(this).data('value');
+				if ( $inner.hasClass( 'um-animated' ) ) {
+					$inner.animate({ width: width + '%' }, 300);
+				} else {
+					$inner.css('width', width + '%');
+				}
 			});
 		},
 		set: function( $bar, value ) {

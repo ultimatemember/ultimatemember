@@ -650,6 +650,7 @@ function um_build_template( directoryObj, data ) {
 		wp.hooks.doAction( 'um_member_directory_build_template', directoryObj.wrapper );
 
 		UM.common.tipsy.init();
+		UM.frontend.progressBar.init();
 	}
 }
 
