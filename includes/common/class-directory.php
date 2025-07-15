@@ -913,8 +913,7 @@ class Directory extends Directory_Config {
 								$values_array = array_unique( array_merge( ...$values_array ) );
 							}
 
-							// @todo find the way how to remove `mycred_rank` from there
-							if ( empty( $option_pairs ) && 'mycred_rank' !== $attrs['metakey'] ) {
+							if ( empty( $option_pairs ) ) {
 								$attrs['options'] = array_intersect( array_map( 'stripslashes', array_map( 'trim', $attrs['options'] ) ), $values_array );
 							} else {
 								$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
@@ -931,7 +930,7 @@ class Directory extends Directory_Config {
 			unset( $_POST['member_directory'], $_POST['child_name'] );
 		}
 
-		$options = array_key_exists( 'options', $attrs ) ? $attrs['options'] : array();
+		$options          = array_key_exists( 'options', $attrs ) ? $attrs['options'] : array();
 		$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options', $options, $values_array, $attrs, $directory_data );
 		if ( empty( $attrs['options'] ) || ! is_array( $attrs['options'] ) ) {
 			return '';

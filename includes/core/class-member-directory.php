@@ -235,8 +235,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$option_pairs = apply_filters( 'um_select_options_pair', null, $attrs );
 					}
 
-					if ( $attrs['metakey'] != 'online_status' ) {
-						if ( $attrs['metakey'] != 'role_select' && $attrs['metakey'] != 'mycred_rank' && empty( $custom_dropdown ) && empty( $option_pairs ) ) {
+					if ( 'online_status' !== $attrs['metakey'] ) {
+						if ( 'role_select' !== $attrs['metakey'] && empty( $custom_dropdown ) && empty( $option_pairs ) ) {
 							$attrs['options'] = array_intersect( array_map( 'stripslashes', array_map( 'trim', $attrs['options'] ) ), $values_array );
 						} elseif ( ! empty( $custom_dropdown ) ) {
 							$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
