@@ -24,7 +24,7 @@
     "ext-iconv": "*",
     "ext-tidy": "*",
     "composer/installers": "^2.3",
-    "woocommerce/action-scheduler": "3.9.2"
+    "woocommerce/action-scheduler": "3.9.*"
   },
   "require-dev": {
     "wp-cli/wp-cli": "*",
