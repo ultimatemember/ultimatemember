@@ -3237,7 +3237,6 @@
   text-align: center;
 }
 .um .um-grid {
-  direction: ltr;
   display: grid;
   grid-gap: 8px;
   grid-template-columns: repeat(3, 1fr);
