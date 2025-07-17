@@ -157,31 +157,32 @@ UM.common = {
 			self.choicesInstances = {};
 
 			jQuery('.js-choice').each( function() {
-				if ( 'active' === jQuery(this).attr('data-choice') ){
+				let $el = jQuery(this);
+				if ( 'active' === $el.attr('data-choice') ){
 					return;
 				}
 
-				let element = jQuery(this)[0];
+				let element = $el[0];
 				let choices = null;
 				let attrs = {};
 				// @todo https://github.com/Choices-js/Choices/issues/747 maybe add native "clear all" button in the future
-				if ( jQuery(this).attr( 'multiple' ) ) {
+				if ( $el.attr( 'multiple' ) ) {
 					// @todo https://github.com/Choices-js/Choices/issues/1066 , but it works properly on backend validation
-					let minSelections = jQuery(this).data( 'min_selections' );
+					let minSelections = $el.data( 'min_selections' );
 
-					let maxSelections = jQuery(this).data( 'max_selections' );
+					let maxSelections = $el.data( 'max_selections' );
 					attrs = {removeItemButton: true};
 
 					if ( maxSelections ) {
 						attrs.maxItemCount = maxSelections;
 					}
 
-				} else if ( jQuery(this).hasClass( 'um-no-search' ) ) {
+				} else if ( $el.hasClass( 'um-no-search' ) ) {
 					// Search can be only in the single select box.
 					attrs = { searchEnabled: false };
 				}
 
-				if ( jQuery(this).hasClass( 'um-add-choices' ) ) {
+				if ( $el.hasClass( 'um-add-choices' ) ) {
 					// Can add choices
 					attrs.addChoices = true;
 					attrs.addItems = true;
@@ -189,6 +190,8 @@ UM.common = {
 
 				choices = new Choices(element, attrs);
 				self.choicesInstances[ element.id ] = choices;
+
+				wp.hooks.doAction( 'um_after_choices_element_init', $el, choices );
 			});
 		},
 		initChild: function() {
