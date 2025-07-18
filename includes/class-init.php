@@ -19,7 +19,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_JobBoardWP JobBoardWP() Reviewed branch: master
 	 * @method UM_Mailchimp Mailchimp() Reviewed branch: master
 	 * @method UM_Messaging Messaging() Reviewed branch: feature/new_ui
-	 * @method UM_myCRED myCRED()
+	 * @method UM_myCRED myCRED() Reviewed branch: feature/new_ui
 	 * @method UM_Notices Notices() Reviewed branch: master
 	 * @method UM_Notifications_API Notifications_API()
 	 * @method UM_Online Online() Reviewed branch: master
