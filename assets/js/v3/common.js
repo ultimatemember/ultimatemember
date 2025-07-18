@@ -180,6 +180,9 @@ UM.common = {
 				} else if ( $el.hasClass( 'um-no-search' ) ) {
 					// Search can be only in the single select box.
 					attrs = { searchEnabled: false };
+				} else if ( $el.hasClass( 'um-no-native-search' ) ) {
+					// Search can be only in the single select box.
+					attrs = { searchEnabled: true, searchChoices: false };
 				}
 
 				if ( $el.hasClass( 'um-add-choices' ) ) {
