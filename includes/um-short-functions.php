@@ -287,15 +287,14 @@ function um_field_conditions_are_met( $data ) {
 		return true;
 	}
 
-	$state = ( isset( $data['conditional_action'] ) && $data['conditional_action'] == 'show' ) ? 1 : 0;
+	$state = ( isset( $data['conditional_action'] ) && 'show' === $data['conditional_action'] ) ? 1 : 0;
 
 	$first_group = 0;
 	$state_array = array();
-	$count = count( $state_array );
+	$count       = count( $state_array );
 	foreach ( $data['conditions'] as $k => $arr ) {
-
 		$val = $arr[3];
-		$op = $arr[2];
+		$op  = $arr[2];
 
 		if ( strstr( $arr[1], 'role_' ) ) {
 			$arr[1] = 'role';
@@ -303,70 +302,74 @@ function um_field_conditions_are_met( $data ) {
 
 		$field = um_profile( $arr[1] );
 
-
 		if ( ! isset( $arr[5] ) || $arr[5] != $first_group ) {
+			if ( 'show' === $arr[0] ) {
 
-
-			if ( $arr[0] == 'show' ) {
-
-				switch ($op) {
+				switch ( $op ) {
 					case 'equals to':
-
 						$field = maybe_unserialize( $field );
 
-						if (is_array( $field ))
+						if ( is_array( $field ) ) {
 							$state = in_array( $val, $field ) ? 'show' : 'hide';
-						else
+						} else {
 							$state = ( $field == $val ) ? 'show' : 'hide';
+						}
 
 						break;
 					case 'not equals':
-
 						$field = maybe_unserialize( $field );
 
-						if (is_array( $field ))
-							$state = !in_array( $val, $field ) ? 'show' : 'hide';
-						else
+						if ( is_array( $field ) ) {
+							$state = ! in_array( $val, $field ) ? 'show' : 'hide';
+						} else {
 							$state = ( $field != $val ) ? 'show' : 'hide';
+						}
 
 						break;
 					case 'empty':
-
-						$state = ( !$field ) ? 'show' : 'hide';
+						$state = ( ! $field ) ? 'show' : 'hide';
 
 						break;
 					case 'not empty':
-
 						$state = ( $field ) ? 'show' : 'hide';
 
 						break;
 					case 'greater than':
-						if ($field > $val) {
+						if ( $field > $val ) {
 							$state = 'show';
 						} else {
 							$state = 'hide';
 						}
 						break;
 					case 'less than':
-						if ($field < $val) {
+						if ( $field < $val ) {
 							$state = 'show';
 						} else {
 							$state = 'hide';
 						}
 						break;
 					case 'contains':
-						if (strstr( $field, $val )) {
-							$state = 'show';
+						$match = false;
+						if ( is_array( $field ) ) {
+							foreach ( $field as $item ) {
+								if ( is_string( $item ) && false !== strpos( $item, $val ) ) {
+									$match = true;
+									break;
+								}
+							}
 						} else {
-							$state = 'hide';
+							if ( false !== strpos( $field, $val ) ) {
+								$match = true;
+							}
 						}
+
+						$state = $match ? 'show' : 'hide';
 						break;
 				}
-			} elseif ( $arr[0] == 'hide' ) {
+			} elseif ( 'hide' === $arr[0] ) {
 
 				switch ( $op ) {
 					case 'equals to':
-
 						$field = maybe_unserialize( $field );
 
 						if ( is_array( $field ) ) {
@@ -377,7 +380,6 @@ function um_field_conditions_are_met( $data ) {
 
 						break;
 					case 'not equals':
-
 						$field = maybe_unserialize( $field );
 
 						if ( is_array( $field ) ) {
@@ -388,12 +390,10 @@ function um_field_conditions_are_met( $data ) {
 
 						break;
 					case 'empty':
-
 						$state = ( ! $field ) ? 'hide' : 'show';
 
 						break;
 					case 'not empty':
-
 						$state = ( $field ) ? 'hide' : 'show';
 
 						break;
@@ -412,19 +412,29 @@ function um_field_conditions_are_met( $data ) {
 						}
 						break;
 					case 'contains':
-						if ( strstr( $field, $val ) ) {
-							$state = 'hide';
+						$match = true;
+						if ( is_array( $field ) ) {
+							foreach ( $field as $item ) {
+								if ( is_string( $item ) && false !== strpos( $item, $val ) ) {
+									$match = false;
+									break;
+								}
+							}
 						} else {
-							$state = 'show';
+							if ( false !== strpos( $field, $val ) ) {
+								$match = false;
+							}
 						}
+
+						$state = $match ? 'show' : 'hide';
+
 						break;
 				}
 			}
-			$first_group++;
+			++$first_group;
 			array_push( $state_array, $state );
 		} else {
-
-			if ( $arr[0] == 'show' ) {
+			if ( 'show' === $arr[0] ) {
 
 				switch ( $op ) {
 					case 'equals to':
@@ -448,13 +458,11 @@ function um_field_conditions_are_met( $data ) {
 
 						break;
 					case 'empty':
-
 						$state = ( ! $field ) ? 'show' : 'not_show';
 
 						break;
 					case 'not empty':
-
-						$state = ( $field ) ? 'show': 'not_show';
+						$state = ( $field ) ? 'show' : 'not_show';
 
 						break;
 					case 'greater than':
@@ -472,14 +480,25 @@ function um_field_conditions_are_met( $data ) {
 						}
 						break;
 					case 'contains':
-						if ( strstr( $field, $val ) ) {
-							$state = 'show';
+						$match = false;
+						if ( is_array( $field ) ) {
+							foreach ( $field as $item ) {
+								if ( is_string( $item ) && false !== strpos( $item, $val ) ) {
+									$match = true;
+									break;
+								}
+							}
 						} else {
-							$state = 'not_show';
+							if ( false !== strpos( $field, $val ) ) {
+								$match = true;
+							}
 						}
+
+						$state = $match ? 'show' : 'not_show';
+
 						break;
 				}
-			} elseif ( $arr[0] == 'hide' ) {
+			} elseif ( 'hide' === $arr[0] ) {
 
 				switch ( $op ) {
 					case 'equals to':
@@ -493,7 +512,6 @@ function um_field_conditions_are_met( $data ) {
 
 						break;
 					case 'not equals':
-
 						$field = maybe_unserialize( $field );
 
 						if ( is_array( $field ) ) {
@@ -504,12 +522,10 @@ function um_field_conditions_are_met( $data ) {
 
 						break;
 					case 'empty':
-
 						$state = ( ! $field ) ? 'hide' : 'not_hide';
 
 						break;
 					case 'not empty':
-
 						$state = ( $field ) ? 'hide' : 'not_hide';
 
 						break;
@@ -528,30 +544,41 @@ function um_field_conditions_are_met( $data ) {
 						}
 						break;
 					case 'contains':
-						if ( strstr( $field, $val ) ) {
-							$state = 'hide';
+						$match = true;
+						if ( is_array( $field ) ) {
+							foreach ( $field as $item ) {
+								if ( is_string( $item ) && false !== strpos( $item, $val ) ) {
+									$match = false;
+									break;
+								}
+							}
 						} else {
-							$state = 'not_hide';
+							if ( false !== strpos( $field, $val ) ) {
+								$match = false;
+							}
 						}
+
+						$state = $match ? 'not_hide' : 'hide';
+
 						break;
 				}
 			}
 			if ( isset( $state_array[ $count ] ) ) {
-				if ( $state_array[ $count ] == 'show' || $state_array[ $count ] == 'not_hide' ) {
-					if ( $state == 'show' || $state == 'not_hide' ) {
+				if ( 'show' === $state_array[ $count ] || 'not_hide' === $state_array[ $count ] ) {
+					if ( 'show' === $state || 'not_hide' === $state ) {
 						$state_array[ $count ] = 'show';
 					} else {
 						$state_array[ $count ] = 'hide';
 					}
 				} else {
-					if ( $state == 'hide' || $state == 'not_show' ) {
+					if ( 'hide' === $state || 'not_show' === $state ) {
 						$state_array[ $count ] = 'hide';
 					} else {
 						$state_array[ $count ] = 'hide';
 					}
 				}
 			} else {
-				if ( $state == 'show' || $state == 'not_hide' ) {
+				if ( 'show' === $state || 'not_hide' === $state ) {
 					$state_array[ $count ] = 'show';
 				} else {
 					$state_array[ $count ] = 'hide';
@@ -559,10 +586,9 @@ function um_field_conditions_are_met( $data ) {
 			}
 		}
 
-
 	}
 	$result = array_unique( $state_array );
-	if ( ! in_array( 'show', $result ) ) {
+	if ( ! in_array( 'show', $result, true ) ) {
 		return $state = false;
 	} else {
 		return $state = true;
@@ -2852,7 +2878,7 @@ function um_is_amp( $check_theme_support = true ) {
 	$is_amp = false;
 
 	if ( ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) ||
-	     ( function_exists( 'is_better_amp' ) && is_better_amp() ) ) {
+		( function_exists( 'is_better_amp' ) && is_better_amp() ) ) {
 		$is_amp = true;
 	}
 
