@@ -19,6 +19,7 @@ if ( ! class_exists( 'um\common\Screen' ) ) {
 		 */
 		public function __construct() {
 			add_filter( 'body_class', array( &$this, 'remove_admin_bar' ), 1000 );
+			add_action( 'send_headers', array( &$this, 'avoid_mobile_cache' ) );
 		}
 
 		/**
@@ -39,6 +40,22 @@ if ( ! class_exists( 'um\common\Screen' ) ) {
 			}
 
 			return $classes;
+		}
+
+		/**
+		 * Avoid caching for mobile devices on specific pages.
+		 */
+		public function avoid_mobile_cache() {
+			if ( ! wp_is_mobile() ) {
+				return;
+			}
+
+			if ( um_is_predefined_page( 'login' ) || um_is_predefined_page( 'register' ) || um_is_predefined_page( 'account' ) ) {
+				header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
+				header( 'Cache-Control: post-check=0, pre-check=0', false );
+				header( 'Pragma: no-cache' );
+				header( 'Expires: 0' );
+			}
 		}
 	}
 }
