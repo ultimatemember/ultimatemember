@@ -32,7 +32,11 @@
 			content: '',
 		};
 
-		this.defaultTemplate = '<div class="um um-modal"><span class="um-modal-close">&times;</span><div class="um-modal-header"></div><div class="um-modal-body"></div><div class="um-modal-footer"></div></div>';
+		let wrapperClasses = 'um um-modal';
+		if ( um_common_variables.isRTL ) {
+			wrapperClasses += ' um-rtl';
+		}
+		this.defaultTemplate = '<div class="' + wrapperClasses + '"><span class="um-modal-close">&times;</span><div class="um-modal-header"></div><div class="um-modal-body"></div><div class="um-modal-footer"></div></div>';
 
 	}
 

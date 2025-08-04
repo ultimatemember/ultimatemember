@@ -526,7 +526,13 @@
       row-gap: $spacing-md
       padding: $spacing-lg 0 0 0
       border-top: 1px solid $gray-200
-
+  &.#{$prefix}ui-xs
+    .#{$prefix}box
+      padding: $spacing-xl
+  &.#{$prefix}ui-s,
+  &.#{$prefix}ui-m
+    .#{$prefix}box
+      padding: $spacing-2xl
 
 // Link + Link Button.
 .um

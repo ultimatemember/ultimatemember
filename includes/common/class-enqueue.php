@@ -366,6 +366,7 @@ class Enqueue {
 		wp_register_script( 'um_common', $src, $common_js_deps, UM_VERSION, true );
 		$um_common_variables = array(
 			'locale' => get_locale(),
+			'isRTL'  => is_rtl(),
 		);
 		/**
 		 * Filters data array for localize frontend common scripts.

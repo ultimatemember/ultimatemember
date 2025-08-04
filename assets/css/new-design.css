@@ -704,6 +704,12 @@
   padding: 12px 0 0 0;
   border-top: 1px solid var(--um-gray-200, #eaecf0);
 }
+.um.um-ui-xs .um-box {
+  padding: 16px;
+}
+.um.um-ui-s .um-box, .um.um-ui-m .um-box {
+  padding: 20px;
+}
 
 .um .um-link {
   text-decoration: none;

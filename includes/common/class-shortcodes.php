@@ -1563,6 +1563,10 @@ class Shortcodes {
 				}
 			}
 
+			if ( UM()->is_new_ui() && is_rtl() ) {
+				$args['wrapper_classes'][] = 'um-rtl';
+			}
+
 			/**
 			 * This use of extract() cannot be removed. There are many possible ways that
 			 * templates could depend on variables that it creates existing, and no way to

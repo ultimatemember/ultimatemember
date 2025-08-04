@@ -158,3 +158,7 @@
 .um-modal .um-modal-buttons-wrapper .um-ajax-spinner-svg {
   display: none;
 }
+.um-modal.um-rtl > .um-modal-close {
+  right: unset;
+  left: 0;
+}
