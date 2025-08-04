@@ -38,7 +38,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_User_Notes User_Notes() Reviewed branch: master
 	 * @method UM_User_Photos User_Photos() Reviewed branch: master
 	 * @method UM_User_Tags User_Tags() Reviewed branch: master
-	 * @method UM_Verified_Users_API Verified_Users_API()
+	 * @method UM_Verified_Users Verified_Users()
 	 * @method UM_WooCommerce WooCommerce() Partially Reviewed branch: dev/new_ui
 	 * @method UM_Zapier Zapier()
 	 *
