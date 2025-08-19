@@ -198,7 +198,8 @@
 	box-sizing: border-box;
 }
 
-.um-profile-photo a.um-profile-photo-img {
+.um-profile-photo a.um-profile-photo-img,
+.um-profile-photo div.um-profile-photo-img {
 	float: left;
 	position: absolute;
 	background: #fff;
@@ -209,7 +210,8 @@
 	left: 0;
 }
 
-.um-profile-photo a.um-profile-photo-img img {
+.um-profile-photo a.um-profile-photo-img img,
+.um-profile-photo div.um-profile-photo-img img {
 	width: 100%;
 	height: auto;
 }

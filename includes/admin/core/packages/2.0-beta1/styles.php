@@ -408,6 +408,7 @@ $profile_photocorner = UM()->options()->get( 'profile_photocorner' );
 if ( $profile_photocorner == 1 ) {
 	$css .= "
 .um .um-profile-photo a.um-profile-photo-img,
+.um .um-profile-photo div.um-profile-photo-img,
 .um .um-profile-photo img,
 .um .um-profile-photo span.um-profile-photo-overlay
 {
@@ -419,6 +420,7 @@ if ( $profile_photocorner == 1 ) {
 } else if ( $profile_photocorner == 2 ) {
 	$css .= "
 .um .um-profile-photo a.um-profile-photo-img,
+.um .um-profile-photo div.um-profile-photo-img,
 .um .um-profile-photo img,
 .um .um-profile-photo span.um-profile-photo-overlay
 {
@@ -430,6 +432,7 @@ if ( $profile_photocorner == 1 ) {
 } else if ( $profile_photocorner == 3 ) {
 	$css .= "
 .um .um-profile-photo a.um-profile-photo-img,
+.um .um-profile-photo div.um-profile-photo-img,
 .um .um-profile-photo img,
 .um .um-profile-photo span.um-profile-photo-overlay
 {
@@ -785,6 +788,7 @@ foreach ( $profile_forms as $form_id ) {
 	if ( $profile_photocorner == 1 ) {
 		$css .= "
 .um-$form_id.um .um-profile-photo a.um-profile-photo-img,
+.um-$form_id.um .um-profile-photo div.um-profile-photo-img,
 .um-$form_id.um .um-profile-photo img,
 .um-$form_id.um .um-profile-photo span.um-profile-photo-overlay
 {
@@ -796,6 +800,7 @@ foreach ( $profile_forms as $form_id ) {
 	} else if ( $profile_photocorner == 2 ) {
 		$css .= "
 .um-$form_id.um .um-profile-photo a.um-profile-photo-img,
+.um-$form_id.um .um-profile-photo div.um-profile-photo-img,
 .um-$form_id.um .um-profile-photo img,
 .um-$form_id.um .um-profile-photo span.um-profile-photo-overlay
 {
@@ -807,6 +812,7 @@ foreach ( $profile_forms as $form_id ) {
 	} else if ( $profile_photocorner == 3 ) {
 		$css .= "
 .um-$form_id.um .um-profile-photo a.um-profile-photo-img,
+.um-$form_id.um .um-profile-photo div.um-profile-photo-img,
 .um-$form_id.um .um-profile-photo img,
 .um-$form_id.um .um-profile-photo span.um-profile-photo-overlay
 {

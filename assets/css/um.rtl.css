@@ -12,16 +12,19 @@
 	margin: 0 30px 0 0;
 }
 
-.um-profile-photo a.um-profile-photo-img {
+.um-profile-photo a.um-profile-photo-img,
+.um-profile-photo div.um-profile-photo-img {
 	float: right;
 	left: auto;
 }
 
-.um-cover + .um-header .um-profile-photo a.um-profile-photo-img {
+.um-cover + .um-header .um-profile-photo a.um-profile-photo-img,
+.um-cover + .um-header .um-profile-photo div.um-profile-photo-img {
 	right: 0;
 }
 
-div.uimob500 .um-profile-photo a.um-profile-photo-img {
+div.uimob500 .um-profile-photo a.um-profile-photo-img,
+div.uimob500 .um-profile-photo div.um-profile-photo-img {
 	right: auto;
 }
 

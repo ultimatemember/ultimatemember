@@ -157,9 +157,15 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 * @param bool   $unique Whether the action should be unique. Default: false.
 		 * @param int    $priority Lower values take precedence over higher values. Defaults to 10, with acceptable values falling in the range 0-255.
 		 *
-		 * @return int Еhe action’s ID. Zero if there was an error scheduling the action. The error will be sent to error_log
+		 * @return int Еhe action's ID. Zero if there was an error scheduling the action. The error will be sent to error_log
 		 */
 		public function enqueue_async_action( $hook, $args = array(), $group = '', $unique = false, $priority = 10 ) {
+			if ( ! $this->is_enabled() || ! function_exists( 'as_enqueue_async_action' ) ) {
+				// Make then standard action without Action Scheduler.
+				do_action_ref_array( $hook, $args );
+				return 0;
+			}
+
 			if ( $this->is_hook_enabled( $hook ) ) {
 				$group = $this->set_group( $group );
 				return as_enqueue_async_action( $hook, $args, $group, $unique, $priority );
@@ -180,9 +186,15 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 * @param bool   $unique Whether the action should be unique. Default: false.
 		 * @param int    $priority Lower values take precedence over higher values. Defaults to 10, with acceptable values falling in the range 0-255.
 		 *
-		 * @return int The action’s ID. Zero if there was an error scheduling the action. The error will be sent to error_log.
+		 * @return int The action's ID. Zero if there was an error scheduling the action. The error will be sent to error_log.
 		 */
 		public function schedule_single_action( $timestamp, $hook, $args = array(), $group = '', $unique = false, $priority = 10 ) {
+			if ( ! $this->is_enabled() || ! function_exists( 'as_schedule_single_action' ) ) {
+				// Make then standard action without Action Scheduler.
+				do_action_ref_array( $hook, $args );
+				return 0;
+			}
+
 			if ( $this->is_hook_enabled( $hook ) ) {
 				$group = $this->set_group( $group );
 				return as_schedule_single_action( $timestamp, $hook, $args, $group, $unique, $priority );
@@ -204,9 +216,13 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 * @param bool   $unique Whether the action should be unique. Default: false.
 		 * @param int    $priority Lower values take precedence over higher values. Defaults to 10, with acceptable values falling in the range 0-255.
 		 *
-		 * @return int The action’s ID. Zero if there was an error scheduling the action. The error will be sent to error_log.
+		 * @return int The action's ID. Zero if there was an error scheduling the action. The error will be sent to error_log.
 		 */
 		public function schedule_recurring_action( $timestamp, $interval_in_seconds, $hook, $args = array(), $group = '', $unique = false, $priority = 10 ) {
+			if ( ! $this->is_enabled() || ! function_exists( 'as_schedule_recurring_action' ) ) {
+				return 0;
+			}
+
 			$group = $this->set_group( $group );
 
 			return as_schedule_recurring_action( $timestamp, $interval_in_seconds, $hook, $args, $group, $unique, $priority );
@@ -225,9 +241,13 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 * @param bool   $unique Whether the action should be unique. Default: false.
 		 * @param int    $priority Lower values take precedence over higher values. Defaults to 10, with acceptable values falling in the range 0-255.
 		 *
-		 * @return int The action’s ID. Zero if there was an error scheduling the action. The error will be sent to error_log.
+		 * @return int The action's ID. Zero if there was an error scheduling the action. The error will be sent to error_log.
 		 */
 		public function schedule_cron_action( $timestamp, $schedule, $hook, $args = array(), $group = '', $unique = false, $priority = 10 ) {
+			if ( ! $this->is_enabled() || ! function_exists( 'as_schedule_cron_action' ) ) {
+				return 0;
+			}
+
 			$group = $this->set_group( $group );
 
 			return as_schedule_cron_action( $timestamp, $schedule, $hook, $args, $group, $unique, $priority );
@@ -243,6 +263,10 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 * @return int|null The scheduled action ID if a scheduled action was found, or null if no matching action found.
 		 */
 		public function unschedule_action( $hook, $args = array(), $group = '' ) {
+			if ( ! $this->is_enabled() || ! function_exists( 'as_unschedule_action' ) ) {
+				return null;
+			}
+
 			$group = $this->set_group( $group );
 
 			return as_unschedule_action( $hook, $args, $group );
@@ -256,6 +280,10 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 * @param string $group The group the job is assigned to.
 		 */
 		public function unschedule_all_actions( $hook, $args = array(), $group = '' ) {
+			if ( ! $this->is_enabled() || ! function_exists( 'as_unschedule_all_actions' ) ) {
+				return;
+			}
+
 			$group = $this->set_group( $group );
 
 			as_unschedule_all_actions( $hook, $args, $group );
@@ -271,6 +299,10 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 * @return int|bool The timestamp for the next occurrence of a pending scheduled action, true for an async or in-progress action or false if there is no matching action.
 		 */
 		public function next_scheduled_action( $hook, $args = array(), $group = '' ) {
+			if ( ! $this->is_enabled() || ! function_exists( 'as_next_scheduled_action' ) ) {
+				return false;
+			}
+
 			$group = $this->set_group( $group );
 
 			return as_next_scheduled_action( $hook, $args, $group );
@@ -278,7 +310,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 
 		/**
 		 * Check if there is a scheduled action in the queue, but more efficiently than as_next_scheduled_action().
-		 * It’s recommended to use this function when you need to know whether a specific action is currently scheduled.
+		 * It's recommended to use this function when you need to know whether a specific action is currently scheduled.
 		 *
 		 * @param string $hook Required. Name of the action hook. Default: none.
 		 * @param array  $args Arguments passed to callbacks when the hook triggers. Default: array().
@@ -287,6 +319,10 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 * @return bool True if a matching action is pending or in-progress, false otherwise.
 		 */
 		public function has_scheduled_action( $hook, $args = array(), $group = '' ) {
+			if ( ! $this->is_enabled() || ! function_exists( 'as_has_scheduled_action' ) ) {
+				return false;
+			}
+
 			$group = $this->set_group( $group );
 
 			return as_has_scheduled_action( $hook, $args, $group );
@@ -297,15 +333,15 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 *          'hook' => '' - the name of the action that will be triggered
 		 *          'args' => NULL - the args array that will be passed with the action
 		 *          'date' => NULL - the scheduled date of the action. Expects a DateTime object, a unix timestamp, or a string that can parsed with strtotime().
-		 *          'date_compare' => '<=' - operator for testing “date”. accepted values are ‘!=’, ‘>’, ‘>=’, ‘<’, ‘<=’, ‘=’
+		 *          'date_compare' => '<=' - operator for testing "date". accepted values are '!=', '>', '>=', '<', '<=', '='
 		 *          'modified' => NULL - the date the action was last updated. Expects a DateTime object, a unix timestamp, or a string that can parsed with strtotime().
-		 *          'modified_compare' => '<=' - operator for testing “modified”. accepted values are ‘!=’, ‘>’, ‘>=’, ‘<’, ‘<=’, ‘=’
+		 *          'modified_compare' => '<=' - operator for testing "modified". accepted values are '!=', '>', '>=', '<', '<=', '='
 		 *          'group' => '' - the group the action belongs to
 		 *          'status' => '' - ActionScheduler_Store::STATUS_COMPLETE or ActionScheduler_Store::STATUS_PENDING
 		 *          'claimed' => NULL - TRUE to find claimed actions, FALSE to find unclaimed actions, a string to find a specific claim ID
 		 *          'per_page' => 5 - Number of results to return
 		 *          'offset' => 0
-		 *          'orderby' => 'date' - accepted values are ‘hook’, ‘group’, ‘modified’, or ‘date’
+		 *          'orderby' => 'date' - accepted values are 'hook', 'group', 'modified', or 'date'
 		 *          'order' => 'ASC'
 		 *
 		 * @param string $return_format The format in which to return the scheduled actions: 'OBJECT', 'ARRAY_A', or 'ids'. Default: 'OBJECT'.
@@ -313,6 +349,10 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 * @return array Array of action rows matching the criteria specified with $args.
 		 */
 		public function get_scheduled_actions( $args, $return_format = 'OBJECT' ) {
+			if ( ! $this->is_enabled() || ! function_exists( 'as_get_scheduled_actions' ) ) {
+				return array();
+			}
+
 			if ( ! empty( $args['group'] ) ) {
 				$args['group'] = $this->set_group( $args['group'] );
 			}
