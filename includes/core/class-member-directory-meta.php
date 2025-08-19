@@ -1105,7 +1105,13 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
 
-			$this->cover_size = wp_is_mobile() ? $sizes[1] : end( $sizes );
+			// Ensure we have valid sizes array and handle case when only one size is defined
+			if ( ! is_array( $sizes ) || empty( $sizes ) ) {
+				$sizes = array( 300 ); // fallback to default
+			}
+			
+			// For mobile, use second size if available, otherwise use first size
+			$this->cover_size = wp_is_mobile() ? ( isset( $sizes[1] ) ? $sizes[1] : $sizes[0] ) : end( $sizes );
 
 			$avatar_size       = UM()->options()->get( 'profile_photosize' );
 			$this->avatar_size = str_replace( 'px', '', $avatar_size );
