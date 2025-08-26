@@ -20,6 +20,7 @@ if ( ! class_exists( 'um\frontend\User_Profile' ) ) {
 		public function __construct() {
 			add_action( 'template_redirect', array( $this, 'handle_edit_screen' ), 10000 );
 			add_filter( 'get_edit_user_link', array( $this, 'get_um_edit_user_link' ), 10, 2 );
+			add_filter('get_comment_author_url', array( $this, 'get_comment_author_url' ), 10, 3);
 		}
 
 		/**
@@ -71,6 +72,10 @@ if ( ! class_exists( 'um\frontend\User_Profile' ) ) {
 
 		public function get_um_edit_user_link( $link, $user_id ) {
 			return um_edit_profile_url( $user_id );
+		}
+
+		public function get_comment_author_url( $comment_author_url, $comment_id, $comment ) {
+			return um_user_profile_url( $comment->user_id );
 		}
 	}
 }
