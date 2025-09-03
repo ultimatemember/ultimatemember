@@ -1748,6 +1748,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			if ( ! $profile_noindex ) {
 				$role        = UM()->roles()->get_priority_user_role( $user_id );
 				$permissions = UM()->roles()->role_data( $role );
+				/** This filter is documented in ultimate-member/includes/core/class-roles-capabilities.php */
+				$permissions = apply_filters( 'um_user_permissions_filter', $permissions, $user_id );
 
 				if ( isset( $permissions['profile_noindex'] ) && '' !== $permissions['profile_noindex'] ) {
 					// Setting "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > User Roles > Edit Role]

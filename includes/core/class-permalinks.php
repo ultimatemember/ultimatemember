@@ -141,6 +141,8 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 
 				$user_role      = UM()->roles()->get_priority_user_role( $user_id );
 				$user_role_data = UM()->roles()->role_data( $user_role );
+				/** This filter is documented in ultimate-member/includes/core/class-roles-capabilities.php */
+				$user_role_data = apply_filters( 'um_user_permissions_filter', $user_role_data, $user_id );
 
 				// Log in automatically after activation.
 				$login = ! empty( $user_role_data['login_email_activate'] ); // Role setting "Login user after validating the activation link?"
