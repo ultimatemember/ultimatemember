@@ -22,6 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 echo wp_kses(
 	UM()->frontend()::layouts()::tabs(
 		array(
+			'id'            => 'um-profile-navigation-' . $user_profile_id,
 			'wrapper_class' => array( 'um-profile-nav' ),
 			'orientation'   => 'horizontal',
 			'tabs_only'     => true,
@@ -37,6 +38,7 @@ if ( ! empty( $subnav ) ) {
 	echo wp_kses(
 		UM()->frontend()::layouts()::tabs(
 			array(
+				'id'            => 'um-profile-sub-navigation-' . $user_profile_id,
 				'wrapper_class' => array( 'um-profile-subnav' ),
 				'orientation'   => 'horizontal',
 				'tabs_only'     => true,

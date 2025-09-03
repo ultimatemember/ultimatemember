@@ -1703,8 +1703,6 @@
               a.#{$prefix}link
                 +flex( row, flex-start, center, nowrap )
                 column-gap: $spacing-sm
-        select
-          display: none
       .#{$prefix}tabs-content
         width: calc(100% - 160px)
     &.#{$prefix}horizontal-tabs
@@ -1728,8 +1726,6 @@
               a.#{$prefix}link
                 +flex( row, center, center, nowrap )
                 column-gap: $spacing-sm
-        select
-          display: none
     &.#{$prefix}primary-color-tabs
       .#{$prefix}tabs-list
         ul
@@ -1813,6 +1809,20 @@
                   border-bottom: 2px solid $primary-600
                   color: $primary-700
                   background-color: transparent
+  &.#{$prefix}ui-xs,
+  &.#{$prefix}ui-s
+    .#{$prefix}tabs-wrapper.#{$prefix}vertical-tabs
+      +flex( column, flex-start, stretch, nowrap )
+      gap: $spacing-3xl
+      .#{$prefix}tabs-list
+        +flex( column, flex-start, stretch, nowrap )
+        gap: $spacing-xl
+        min-width: unset
+        width: 100%
+      .#{$prefix}tabs-content
+        min-width: unset
+        width: 100%
+
 
 // Divider
 .um

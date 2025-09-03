@@ -1332,6 +1332,16 @@ UM.frontend = {
 			// 	});
 			// }
 		}*/
+	},
+	tabs: {
+		init: function() {
+			jQuery('.um-tabs-list select').on('change', function() {
+				const url = jQuery(this).find('option:selected').data('href');
+				if (url) {
+					window.location.href = url;
+				}
+			});
+		}
 	}
 }
 
@@ -1375,6 +1385,7 @@ jQuery(document).ready(function($) {
 
 	UM.frontend.emojiPicker.init();
 	UM.frontend.gifPicker.init();
+	UM.frontend.tabs.init();
 
 	$( window ).on( 'resize', function() {
 		UM.frontend.responsive.setClass();

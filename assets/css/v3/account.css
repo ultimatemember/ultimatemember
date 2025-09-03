@@ -1,3 +1,29 @@
+.um.um-account.um-ui-m .um-account-navigation .um-tabs-list, .um.um-account.um-ui-l .um-account-navigation .um-tabs-list, .um.um-account.um-ui-xl .um-account-navigation .um-tabs-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  row-gap: 4px;
+}
+.um.um-account.um-ui-m .um-account-navigation .um-link.um-account-back-to-profile, .um.um-account.um-ui-l .um-account-navigation .um-link.um-account-back-to-profile, .um.um-account.um-ui-xl .um-account-navigation .um-link.um-account-back-to-profile {
+  color: var(--um-gray-500, #667085);
+  background-color: transparent;
+  text-align: left;
+  box-shadow: unset;
+  border: unset;
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+.um.um-account.um-ui-m .um-account-navigation .um-link.um-account-back-to-profile:hover, .um.um-account.um-ui-l .um-account-navigation .um-link.um-account-back-to-profile:hover, .um.um-account.um-ui-xl .um-account-navigation .um-link.um-account-back-to-profile:hover {
+  color: var(--um-primary-700-bg, #6941c6);
+  background-color: var(--um-primary-50-bg, #f9f5ff);
+}
+.um.um-account.um-ui-m .um-account-navigation .um-link.um-account-back-to-profile:focus, .um.um-account.um-ui-m .um-account-navigation .um-link.um-account-back-to-profile:focus-visible, .um.um-account.um-ui-l .um-account-navigation .um-link.um-account-back-to-profile:focus, .um.um-account.um-ui-l .um-account-navigation .um-link.um-account-back-to-profile:focus-visible, .um.um-account.um-ui-xl .um-account-navigation .um-link.um-account-back-to-profile:focus, .um.um-account.um-ui-xl .um-account-navigation .um-link.um-account-back-to-profile:focus-visible {
+  color: var(--um-gray-500, #667085);
+  background-color: transparent;
+  box-shadow: 0 0 0 4px var(--um-primary-500-a-24, rgba(158, 119, 237, 0.24));
+}
 .um.um-account .um-tabs-wrapper.um-vertical-tabs {
   width: 100%;
 }

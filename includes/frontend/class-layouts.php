@@ -1182,6 +1182,7 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
+				'id'            => 'um-tabs-' . uniqid(),
 				'wrapper_class' => array(),
 				'tabs_only'     => false,
 				'orientation'   => 'vertical',
@@ -1196,6 +1197,7 @@ class Layouts {
 						'notifier'      => 0,
 						'notifier_type' => 'gray',
 						'max_notifier'  => 10,
+						'classes'       => array(),
 					),
 				),
 			)
@@ -1233,6 +1235,9 @@ class Layouts {
 			if ( $current_tab === $tab_id ) {
 				$tab_classes[] = 'um-tab-current';
 			}
+
+			$tab_classes = ! empty( $tab_data['classes'] ) && is_array( $tab_data['classes'] ) ? array_merge( $tab_classes, $tab_data['classes'] ) : $tab_classes;
+
 			ob_start();
 			?>
 			<li class="<?php echo esc_attr( implode( ' ', $tab_classes ) ); ?>">
@@ -1290,7 +1295,7 @@ class Layouts {
 					'um-tab-content',
 					'um-tab-' . $tab_id . '-content',
 				);
-				if ( $current_tab === $tab_id  ) {
+				if ( $current_tab === $tab_id ) {
 					$content_classes[] = 'um-tab-current';
 				}
 				ob_start();
@@ -1301,12 +1306,46 @@ class Layouts {
 			}
 		}
 
-		$list_html = '<ul>' . $desktop_list . '</ul><select>' . $mobile_list . '</select>';
+		$list_html = '<ul class="um-responsive um-ui-m um-ui-l um-ui-xl">' . $desktop_list . '</ul><select id="' . esc_attr( $args['id'] . '-select' ) . '" class="um-tabs-mobile-dropdown js-choice um-no-search um-no-native-sorting um-responsive um-ui-s um-ui-xs" aria-label="' . esc_attr__( 'Select a tab', 'ultimate-member' ) . '">' . $mobile_list . '</select>';
 
 		ob_start();
 		?>
-		<div class="<?php echo esc_attr( $wrapper_classes ); ?>">
-			<div class="um-tabs-list"><?php echo wp_kses( $list_html, UM()->get_allowed_html( 'templates' ) ); ?></div>
+		<div id="<?php echo esc_attr( $args['id'] ); ?>" class="<?php echo esc_attr( $wrapper_classes ); ?>">
+			<div class="um-tabs-list">
+				<?php
+				/**
+				 * Fires before tabs list in the UM tabs layout.
+				 *
+				 * @since 3.0.0
+				 * @hook um_layouts_before_tabs_list
+				 *
+				 * @param {array} $args Tabs arguments.
+				 *
+				 * @example <caption>Adds any custom content before UM Tabs list layout.</caption>
+				 * function my_um_layouts_before_tabs_list( $args ) {
+				 *     // your code here
+				 * }
+				 * add_action( 'um_layouts_before_tabs_list', 'my_um_layouts_before_tabs_list' );
+				 */
+				do_action( 'um_layouts_before_tabs_list', $args );
+				echo wp_kses( $list_html, UM()->get_allowed_html( 'templates' ) );
+				/**
+				 * Fires after tabs list in the UM tabs layout.
+				 *
+				 * @since 3.0.0
+				 * @hook um_layouts_after_tabs_list
+				 *
+				 * @param {array} $args Tabs arguments.
+				 *
+				 * @example <caption>Adds any custom content after UM Tabs list layout.</caption>
+				 * function my_um_layouts_after_tabs_list( $args ) {
+				 *     // your code here
+				 * }
+				 * add_action( 'um_layouts_after_tabs_list', 'my_um_layouts_after_tabs_list' );
+				 */
+				do_action( 'um_layouts_after_tabs_list', $args );
+				?>
+			</div>
 			<?php if ( empty( $args['tabs_only'] ) ) { ?>
 				<div class="um-tabs-content"><?php echo wp_kses( $content, UM()->get_allowed_html( 'templates' ) ); ?></div>
 			<?php } ?>

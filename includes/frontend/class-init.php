@@ -20,6 +20,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		 * @used-by \UM::includes()
 		 */
 		public function includes() {
+			$this->account();
 			$this->actions_listener();
 			$this->enqueue();
 			if ( UM()->is_new_ui() ) {
@@ -32,6 +33,19 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			$this->secure();
 			$this->user_profile();
 			$this->users();
+		}
+
+		/**
+		 * @since 3.0.0
+		 *
+		 * @return Account
+		 */
+		public function account() {
+			if ( empty( UM()->classes['um\frontend\account'] ) ) {
+				UM()->classes['um\frontend\account'] = new Account();
+			}
+
+			return UM()->classes['um\frontend\account'];
 		}
 
 		/**

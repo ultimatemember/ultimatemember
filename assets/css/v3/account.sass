@@ -5,6 +5,29 @@
 @import "../typography"
 
 .um.#{$prefix}account
+  &.#{$prefix}ui-m,
+  &.#{$prefix}ui-l,
+  &.#{$prefix}ui-xl
+    .#{$prefix}account-navigation
+      .#{$prefix}tabs-list
+        +flex( column, flex-start, stretch, nowrap )
+        row-gap: $spacing-xs
+      .#{$prefix}link.#{$prefix}account-back-to-profile
+        color: $gray-500
+        background-color: transparent
+        text-align: left
+        box-shadow: unset
+        border: unset
+        border-radius: $radius-sm
+        padding: $spacing-md $spacing-lg
+        &:hover
+          color: $primary-700
+          background-color: $primary-50
+        &:focus,
+        &:focus-visible
+          color: $gray-500
+          background-color: transparent
+          box-shadow: $ring-brand
   .#{$prefix}tabs-wrapper.#{$prefix}vertical-tabs
     width: 100%
     .#{$prefix}tabs-content

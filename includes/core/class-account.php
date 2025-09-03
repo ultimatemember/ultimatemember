@@ -870,9 +870,16 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			}
 
 			if ( UM()->is_new_ui() ) {
+				$header_classes = array( 'um-section-header' );
+				if ( empty( $tab_data['description'] ) ) {
+					$header_classes[] = 'um-responsive';
+					$header_classes[] = 'um-ui-m';
+					$header_classes[] = 'um-ui-l';
+					$header_classes[] = 'um-ui-xl';
+				}
 				?>
-				<div class="um-section-header">
-					<p class="um-section-title"><?php echo esc_html( $tab_data['title'] ); ?></p>
+				<div class="<?php echo esc_attr( implode( ' ', $header_classes ) ); ?>">
+					<p class="um-section-title um-responsive um-ui-m um-ui-l um-ui-xl"><?php echo esc_html( $tab_data['title'] ); ?></p>
 					<?php if ( ! empty( $tab_data['description'] ) ) { ?>
 						<p class="um-supporting-text"><?php echo esc_html( $tab_data['description'] ); ?></p>
 					<?php } ?>

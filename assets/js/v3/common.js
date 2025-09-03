@@ -191,6 +191,22 @@ UM.common = {
 					attrs.addItems = true;
 				}
 
+				if ( $el.hasClass( 'um-no-native-sorting' ) ) {
+					// choices/groups will appear in the order they were given.
+					attrs.shouldSort = false;
+				}
+
+				if ( $el.hasClass( 'um-responsive' ) ) {
+					let outerClasses =['choices','um-responsive'];
+					let classNames = ['um-ui-xs', 'um-ui-s', 'um-ui-m', 'um-ui-l', 'um-ui-xl'];
+					classNames.forEach(function(className) {
+						if ($el.hasClass(className)) {
+							outerClasses.push(className);
+						}
+					});
+					attrs.classNames = { containerOuter: outerClasses };
+				}
+
 				choices = new Choices(element, attrs);
 				self.choicesInstances[ element.id ] = choices;
 
