@@ -2612,7 +2612,7 @@
   -webkit-box-sizing: border-box;
   width: 100%;
   margin: 0;
-  padding: 12px 24px;
+  padding: 12px 0;
   border-top: 1px solid var(--um-gray-200, #eaecf0);
 }
 .um .um-pagination .um-pagination-view-list {
@@ -2623,7 +2623,7 @@
   flex-wrap: nowrap;
   width: 100%;
   margin: 0;
-  padding: 0;
+  padding: 0 24px;
 }
 .um .um-pagination .um-pagination-view-list .um-pagination-item.um-pagination-arrow {
   text-align: center;
