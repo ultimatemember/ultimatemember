@@ -2435,7 +2435,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					unset( $this->settings_structure['appearance']['sections']['']['form_sections']['fields']['fields'][4], $this->settings_structure['appearance']['sections']['']['form_sections']['fields']['fields'][5] );
 
 					// removed "Menu icons in desktop view".
-					unset( $this->settings_structure['appearance']['sections']['profile_menu']['fields'][ count( $this->settings_structure['appearance']['sections']['profile_menu']['fields'] ) - 1 ] );
+					foreach ( $this->settings_structure['appearance']['sections']['profile_menu']['fields'] as $profile_menu_index => $profile_menu_field ) {
+						if ( isset( $profile_menu_field['id'] ) && 'profile_menu_icons' === $profile_menu_field['id'] ) {
+							unset( $this->settings_structure['appearance']['sections']['profile_menu']['fields'][ $profile_menu_index ] );
+							break;
+						}
+					}
 
 					unset(
 						$this->settings_structure['appearance']['sections']['']['form_sections']['profile_photo']['fields'],
