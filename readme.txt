@@ -178,6 +178,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 **Bugfixes**
 
 * Fixed: Changed the view and the edit user profile links in the comments section on the frontend.
+* Fixed: `Contains` conditional logic operand when value is array.
+* Fixed: Integer validation for the 'start_of_week' WP native setting.
 
 = 2.10.5 2025-06-25 =
 
