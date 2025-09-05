@@ -13,9 +13,10 @@ function um_add_restriction_attributes( settings, name ) {
 	// They reject any attributes that were not originally defined in them.
 	// When the editor tries to render such a block, the server sees an unfamiliar
 	// attribute um_is_restrict and returns a 400 error, prohibiting "foreign" properties.
-	const excludedPrefixes = [
+	let excludedPrefixes = [
 		'llms/'
 	];
+	excludedPrefixes = wp.hooks.applyFilters( 'um_admin_blocks_prefixes_excluded', excludedPrefixes, settings, name );
 
 	// Check the blocklist of prefixes.
 	if ( excludedPrefixes.some( prefix => name.startsWith( prefix ) ) ) {

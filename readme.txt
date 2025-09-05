@@ -173,6 +173,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Added: Avoid caching of the UM Forms on the mobile devices via adding the nocache headers to the screens with UM Forms.
 * Added: Filter hook `um_get_empty_status_users_query_result` for changing default query on the different websites to optimize it.
+* Added: JS filter hook `um_admin_blocks_prefixes_excluded` for excluding 3rd-party Gutenberg blocks with predefined prefixes from UM restriction arguments.
 
 **Bugfixes**
 
