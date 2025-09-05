@@ -167,9 +167,15 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.10.6 2025-07-xx =
+= 2.10.6 2025-09-xx =
 
+**Enhancements**
 
+* Added: Avoid caching of the UM Forms on the mobile devices via adding the nocache headers to the screens with UM Forms.
+
+**Bugfixes**
+
+* Fixed: Changed the view and the edit user profile links in the comments section on the frontend.
 
 = 2.10.5 2025-06-25 =
 
