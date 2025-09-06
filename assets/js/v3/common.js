@@ -111,6 +111,8 @@ UM.common = {
 
 			let obj = {};
 			for (let [key, value] of data) {
+				console.log( key );
+				console.log( value );
 				if (obj[key] !== undefined) {
 					if (!Array.isArray(obj[key])) {
 						obj[key] = [obj[key]];
@@ -120,6 +122,22 @@ UM.common = {
 					obj[key] = value;
 				}
 			}
+
+			// Get all select elements in the form
+			let selectElements = formObj.querySelectorAll('select');
+			// Iterate over select elements
+			selectElements.forEach(selectElement => {
+				// Get selected option
+				let selectedOption = selectElement.querySelector('option[selected]');
+
+				// If no option is selected, manually append 'null'
+				if ( ! selectedOption ) {
+					obj[ selectElement.name ] = null;
+				} else {
+					// If an option is selected, append its value
+					obj[ selectElement.name ] = selectedOption.value;
+				}
+			});
 
 			return obj;
 		},
