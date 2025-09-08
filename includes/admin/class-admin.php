@@ -1430,11 +1430,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				}
 			}
 
-			$data = $sanitized;
-
-			$data = apply_filters( 'um_save_builder_input_sanitize', $data );
-
-			return $data;
+			return apply_filters( 'um_save_builder_input_sanitize', $sanitized );
 		}
 
 		/**
