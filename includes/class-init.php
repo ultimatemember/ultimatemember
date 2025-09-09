@@ -21,7 +21,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Messaging Messaging() Reviewed branch: feature/new_ui
 	 * @method UM_myCRED myCRED() Reviewed branch: feature/new_ui
 	 * @method UM_Notices Notices() Reviewed branch: master
-	 * @method UM_Notifications_API Notifications_API()
+	 * @method UM_Notifications Notifications()
 	 * @method UM_Online Online() Reviewed branch: master
 	 * @method UM_Private_Content Private_Content() Reviewed branch: master
 	 * @method UM_Profile_Completeness Profile_Completeness()

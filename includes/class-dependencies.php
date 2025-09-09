@@ -40,7 +40,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'messaging'            => '2.5.0-alpha',
 			'mycred'               => '3.0.0',
 			'notices'              => '2.2.0',
-			'notifications'        => '2.1.3',
+			'notifications'        => '2.4.0-alpha',
 			'online'               => '2.3.0',
 			'private-content'      => '2.2.0',
 			'profile-completeness' => '2.4.0-alpha',
