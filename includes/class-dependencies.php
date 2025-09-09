@@ -43,7 +43,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'notifications'        => '2.1.3',
 			'online'               => '2.3.0',
 			'private-content'      => '2.2.0',
-			'profile-completeness' => '2.2.7',
+			'profile-completeness' => '2.4.0-alpha',
 			'profile-tabs'         => '1.2.0',
 			'recaptcha'            => '2.4.0',
 			'reviews'              => '2.1.5',

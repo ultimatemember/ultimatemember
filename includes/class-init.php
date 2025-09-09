@@ -24,7 +24,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Notifications_API Notifications_API()
 	 * @method UM_Online Online() Reviewed branch: master
 	 * @method UM_Private_Content Private_Content() Reviewed branch: master
-	 * @method UM_Profile_Completeness_API Profile_Completeness_API()
+	 * @method UM_Profile_Completeness Profile_Completeness()
 	 * @method UM_Profile_Tabs Profile_Tabs() Reviewed branch: master
 	 * @method UM_ReCAPTCHA ReCAPTCHA() Reviewed branch: master
 	 * @method UM_Reviews Reviews()
