@@ -31,9 +31,9 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 		 */
 		public $ext_required_version = array(
 			'bbpress'              => '2.2.0',
-			'followers'            => '2.1.6',
+			'followers'            => '2.4.0-alpha',
 			'forumwp'              => '2.2.0',
-			'friends'              => '2.1.4',
+			'friends'              => '2.4.0-alpha',
 			'groups'               => '2.4.2',
 			'jobboardwp'           => '1.1.0',
 			'mailchimp'            => '2.6.0',
