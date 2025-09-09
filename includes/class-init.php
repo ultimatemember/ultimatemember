@@ -14,7 +14,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_bbPress bbPress() Reviewed branch: master
 	 * @method UM_Followers_API Followers_API()
 	 * @method UM_ForumWP ForumWP() Reviewed branch: master
-	 * @method UM_Friends_API Friends_API()
+	 * @method UM_Friends Friends()
 	 * @method UM_Groups Groups()
 	 * @method UM_JobBoardWP JobBoardWP() Reviewed branch: master
 	 * @method UM_Mailchimp Mailchimp() Reviewed branch: master
