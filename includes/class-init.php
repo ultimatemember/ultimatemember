@@ -28,7 +28,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Profile_Tabs Profile_Tabs() Reviewed branch: master
 	 * @method UM_ReCAPTCHA ReCAPTCHA() Reviewed branch: master
 	 * @method UM_Reviews Reviews()
-	 * @method UM_Activity_API Activity_API()
+	 * @method UM_Activity Activity()
 	 * @method UM_Social_Login_API Social_Login_API()
 	 * @method UM_Stripe_API Stripe_API()
 	 * @method UM_Terms_Conditions Terms_Conditions() Reviewed branch: master
