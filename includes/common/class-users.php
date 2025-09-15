@@ -1391,42 +1391,19 @@ class Users {
 			$current_user = get_current_user_id();
 		}
 
-		$temp_id = null;
 		$user_id = absint( $user_id );
-
-		$can_view_user = true;
-		if ( $user_id !== $current_user ) {
-			$temp_id = um_user( 'ID' );
-			um_fetch_user( $current_user );
-
-			$can_view_all = um_user( 'can_view_all' );
-			if ( empty( $can_view_all ) ) {
-				$can_view_user = false;
-			} else {
-				$can_view_roles = um_user( 'can_view_roles' );
-				if ( ! is_array( $can_view_roles ) ) {
-					$can_view_roles = array();
-				}
-
-				$all_roles = UM()->roles()->get_all_user_roles( $user_id );
-				if ( empty( $all_roles ) || ( count( $can_view_roles ) && count( array_intersect( $all_roles, $can_view_roles ) ) <= 0 ) ) {
-					$can_view_user = false;
-				}
-			}
-		}
-
-		if ( $temp_id ) {
-			um_fetch_user( $temp_id );
+		if ( $user_id === $current_user ) {
+			return true;
 		}
 
 		/**
 		 * Filters the marker for user capabilities to view other users on the website
 		 *
-		 * @param {bool} $can_view     Can view user marker.
-		 * @param {int}  $user_id      User ID requested to check capabilities for.
-		 * @param {int}  $current_user Current user.
+		 * @param {null|bool} $can_view     Can view user marker.
+		 * @param {int}       $user_id      User ID requested to check capabilities for.
+		 * @param {int}       $current_user Current user.
 		 *
-		 * @return {bool} Can view user marker.
+		 * @return {null|bool} Can view user marker. By default, it's null for using UM native logic.
 		 *
 		 * @since 3.0.0
 		 * @hook um_can_view_user
@@ -1438,7 +1415,36 @@ class Users {
 		 * }
 		 * add_filter( 'um_can_view_user', 'my_um_can_view_user', 10, 3 );
 		 */
-		return apply_filters( 'um_can_view_user', $can_view_user, $user_id, $current_user );
+		$can_view_user = apply_filters( 'um_can_view_user', null, $user_id, $current_user );
+		if ( ! is_null( $can_view_user ) ) {
+			return $can_view_user;
+		}
+
+		$can_view_user = true;
+
+		$temp_id = um_user( 'ID' );
+		um_fetch_user( $current_user );
+
+		$can_view_all = um_user( 'can_view_all' );
+		if ( empty( $can_view_all ) ) {
+			$can_view_user = false;
+		} else {
+			$can_view_roles = um_user( 'can_view_roles' );
+			if ( ! is_array( $can_view_roles ) ) {
+				$can_view_roles = array();
+			}
+
+			$all_roles = UM()->roles()->get_all_user_roles( $user_id );
+			if ( empty( $all_roles ) || ( count( $can_view_roles ) && count( array_intersect( $all_roles, $can_view_roles ) ) <= 0 ) ) {
+				$can_view_user = false;
+			}
+		}
+
+		if ( $temp_id ) {
+			um_fetch_user( $temp_id );
+		}
+
+		return $can_view_user;
 	}
 
 	/**
@@ -1547,30 +1553,23 @@ class Users {
 		}
 
 		$user_id = absint( $user_id );
-
-		$can_view_user_profile = true;
+		if ( $user_id === $current_user ) {
+			return true;
+		}
 
 		$can_view_user = $this->can_view_user( $user_id, $current_user );
 		if ( empty( $can_view_user ) ) {
-			$can_view_user_profile = false;
-		} elseif ( $user_id !== $current_user ) {
-			if ( $this->is_user_profile_private( $user_id ) ) {
-				if ( ! is_user_logged_in() ) {
-					$can_view_user_profile = false;
-				} else {
-					$can_view_user_profile = $this->can_view_private_user_profile( $user_id, $current_user );
-				}
-			}
+			return false;
 		}
 
 		/**
 		 * Filters the marker for user capabilities to view other user profiles on the website
 		 *
-		 * @param {bool} $can_view     Can view user profile marker.
-		 * @param {int}  $user_id      User ID requested to check capabilities for.
-		 * @param {int}  $current_user Current user.
+		 * @param {null|bool} $can_view_user Can view user profile marker.
+		 * @param {int}       $user_id       User ID requested to check capabilities for.
+		 * @param {int}       $current_user  Current user.
 		 *
-		 * @return {bool} Can view user profile marker.
+		 * @return {null|bool} Can view user profile marker. By default, it's null for using UM native logic.
 		 *
 		 * @since 3.0.0
 		 * @hook um_can_view_user_profile
@@ -1582,6 +1581,20 @@ class Users {
 		 * }
 		 * add_filter( 'um_can_view_user_profile', 'my_um_can_view_user_profile', 10, 3 );
 		 */
-		return apply_filters( 'um_can_view_user_profile', $can_view_user_profile, $user_id, $current_user );
+		$can_view_user_profile = apply_filters( 'um_can_view_user_profile', null, $user_id, $current_user );
+		if ( ! is_null( $can_view_user_profile ) ) {
+			return $can_view_user_profile;
+		}
+
+		$can_view_user_profile = true;
+		if ( $this->is_user_profile_private( $user_id ) ) {
+			if ( ! is_user_logged_in() ) {
+				$can_view_user_profile = false;
+			} else {
+				$can_view_user_profile = $this->can_view_private_user_profile( $user_id, $current_user );
+			}
+		}
+
+		return $can_view_user_profile;
 	}
 }
