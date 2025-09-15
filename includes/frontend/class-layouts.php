@@ -188,11 +188,14 @@ class Layouts {
 				$icon     = '<span class="um-button-icon">' . $args['icon'] . '</span>';
 				$has_icon = true;
 
+				$has_content = $content;
 				$content = '<span class="um-button-content">' . $content . '</span>';
-				if ( 'leading' === $args['icon_position'] ) {
+				if ( 'leading' === $args['icon_position'] && $has_content ) {
 					$content = $icon . $content;
-				} else {
+				} elseif( $has_content ) {
 					$content .= $icon;
+				} else {
+					$content = $icon;
 				}
 			}
 
