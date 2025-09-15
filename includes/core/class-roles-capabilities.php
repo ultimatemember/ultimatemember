@@ -1,12 +1,11 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
-
 
 	/**
 	 * Class Roles_Capabilities
@@ -14,23 +13,21 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 	 */
 	class Roles_Capabilities {
 
-
 		/**
 		 * Roles_Capabilities constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_action( 'wp_roles_init', array( &$this, 'um_roles_init' ), 99999 );
 			add_action( 'update_option', array( &$this, 'um_on_roles_update' ), 10, 3 );
-			add_action( 'set_user_role', array( &$this, 'remove_user_cache' ), 10, 1 );
+			add_action( 'set_user_role', array( &$this, 'remove_user_cache' ) );
 		}
-
 
 		/**
 		 * Flush the Cache User Profile on set new user role(s)
 		 *
 		 * @param int $user_id
 		 */
-		function remove_user_cache( $user_id ) {
+		public function remove_user_cache( $user_id ) {
 			$user = get_userdata( $user_id );
 
 			if ( ! is_a( $user, '\WP_User' ) ) {
@@ -40,13 +37,12 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			UM()->common()->users()->remove_cache( $user_id );
 		}
 
-
 		/**
 		 * @param string $option
 		 * @param mixed $old_value
 		 * @param mixed $value
 		 */
-		function um_on_roles_update( $option, $old_value, $value ) {
+		public function um_on_roles_update( $option, $old_value, $value ) {
 			global $wp_roles;
 
 			if ( is_object( $wp_roles ) && isset( $wp_roles->role_key ) && $option == $wp_roles->role_key ) {
@@ -171,7 +167,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		 * @uses apply_filters() Calls 'um_set_user_role' with the role and user id
 		 * @return string
 		 */
-		function set_role( $user_id, $new_role = '' ) {
+		public function set_role( $user_id, $new_role = '' ) {
 			// Validate user id
 			$user = get_userdata( $user_id );
 
@@ -331,14 +327,13 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			return apply_filters( 'um_set_user_role', $new_role, $user_id, $user );
 		}
 
-
 		/**
 		 * Remove user role
 		 *
 		 * @param $user_id
 		 * @param $role
 		 */
-		function remove_role( $user_id, $role ) {
+		public function remove_role( $user_id, $role ) {
 			// Validate user id
 			$user = get_userdata( $user_id );
 
@@ -349,14 +344,13 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			}
 		}
 
-
 		/**
 		 * Remove user role
 		 *
 		 * @param $user_id
 		 * @param $role
 		 */
-		function set_role_wp( $user_id, $role ) {
+		public function set_role_wp( $user_id, $role ) {
 			// Validate user id
 			$user = get_userdata( $user_id );
 
@@ -367,7 +361,6 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			}
 		}
 
-
 		/**
 		 * Get user one of UM roles if it has it
 		 *
@@ -375,17 +368,16 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		 * @param int $user_id
 		 * @return bool|mixed
 		 */
-		function um_get_user_role( $user_id ) {
+		public function um_get_user_role( $user_id ) {
 			return $this->get_um_user_role( $user_id );
 		}
-
 
 		/**
 		 * @param $user_id
 		 *
 		 * @return array|bool
 		 */
-		function get_all_user_roles( $user_id ) {
+		public function get_all_user_roles( $user_id ) {
 			$user = get_userdata( $user_id );
 
 			if ( empty( $user->roles ) ) {
@@ -395,13 +387,12 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			return array_values( $user->roles );
 		}
 
-
 		/**
 		 * @param $user_id
 		 *
 		 * @return bool|mixed
 		 */
-		function get_priority_user_role( $user_id ) {
+		public function get_priority_user_role( $user_id ) {
 			$user = get_userdata( $user_id );
 
 			if ( empty( $user->roles ) ) {
@@ -444,13 +435,12 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			return array_shift( $roles_in_priority );
 		}
 
-
 		/**
 		 * Get editable UM user roles
 		 *
 		 * @return array
 		 */
-		function get_editable_user_roles() {
+		public function get_editable_user_roles() {
 			$editable_roles = array( 'subscriber' );
 
 			// User has roles so look for a UM Role one
@@ -487,13 +477,12 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			return $editable_roles;
 		}
 
-
 		/**
 		 * @param $user_id
 		 *
 		 * @return bool|mixed
 		 */
-		function get_editable_priority_user_role( $user_id ) {
+		public function get_editable_priority_user_role( $user_id ) {
 			$user = get_userdata( $user_id );
 
 			if ( empty( $user->roles ) )
@@ -534,13 +523,12 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			return array_shift( $roles_in_priority );
 		}
 
-
 		/**
 		 * @param $user_id
 		 *
 		 * @return bool|mixed
 		 */
-		function get_um_user_role( $user_id ) {
+		public function get_um_user_role( $user_id ) {
 			// User has roles so look for a UM Role one
 			$um_roles_keys = get_option( 'um_roles', array() );
 
@@ -567,14 +555,13 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			return array_shift( $user_um_roles_array );
 		}
 
-
 		/**
 		 * Get role name by roleID
 		 *
 		 * @param $slug
 		 * @return bool|string
 		 */
-		function get_role_name( $slug ) {
+		public function get_role_name( $slug ) {
 			$roledata = $this->role_data( $slug );
 
 			if ( empty( $roledata['name'] ) ) {
@@ -586,10 +573,8 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 					return $wp_roles->roles[$slug]['name'];
 			}
 
-
 			return $roledata['name'];
 		}
-
 
 		/**
 		 * Get role data.
