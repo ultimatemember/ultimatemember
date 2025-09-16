@@ -548,13 +548,35 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 					break;
 				case 'templates':
 					$allowed_html = array(
-						'style'    => array(),
-						'link'     => array(
+						'style'      => array(),
+						'link'       => array(
 							'rel'   => true,
 							'href'  => true,
 							'media' => true,
 						),
-						'form'     => array(
+						'svg'        => array(
+							'xmlns'               => true,
+							'height'              => true,
+							'preserveaspectratio' => true,
+							'viewbox'             => true,
+							'width'               => true,
+							'x'                   => true,
+							'y'                   => true,
+							'fill'                => true,
+							'stroke'              => true,
+							'stroke-linecap'      => true,
+							'stroke-linejoin'     => true,
+							'stroke-width'        => true,
+						),
+						'path'       => array(
+							'd'               => true,
+							'stroke'          => true,
+							'stroke-width'    => true,
+							'stroke-linecap'  => true,
+							'stroke-linejoin' => true,
+							'fill'            => true,
+						),
+						'form'       => array(
 							'action'         => true,
 							'accept'         => true,
 							'accept-charset' => true,
@@ -562,11 +584,12 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'method'         => true,
 							'name'           => true,
 							'target'         => true,
+							'novalidate'     => true,
 						),
-						'label'    => array(
+						'label'      => array(
 							'for' => true,
 						),
-						'select'   => array(
+						'select'     => array(
 							'name'         => true,
 							'multiple'     => true,
 							'disabled'     => true,
@@ -574,12 +597,12 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'required'     => true,
 							'autocomplete' => true,
 						),
-						'option'   => array(
+						'option'     => array(
 							'value'    => true,
 							'selected' => true,
 							'disabled' => true,
 						),
-						'input'    => array(
+						'input'      => array(
 							'type'         => true,
 							'name'         => true,
 							'value'        => true,
@@ -598,7 +621,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'maxlength'    => true,
 							'pattern'      => true,
 						),
-						'textarea' => array(
+						'textarea'   => array(
 							'cols'         => true,
 							'rows'         => true,
 							'disabled'     => true,
@@ -606,8 +629,21 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'readonly'     => true,
 							'required'     => true,
 							'autocomplete' => true,
+							'placeholder'  => true,
 						),
-						'img'      => array(
+						'button'     => array(
+							'type'         => true,
+							'name'         => true,
+							'value'        => true,
+							'placeholder'  => true,
+							'readonly'     => true,
+							'disabled'     => true,
+							'checked'      => true,
+							'selected'     => true,
+							'required'     => true,
+							'autocomplete' => true,
+						),
+						'img'        => array(
 							'alt'      => true,
 							'align'    => true,
 							'border'   => true,
@@ -621,25 +657,109 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'usemap'   => true,
 							'width'    => true,
 						),
-						'h1'       => array(
+						'h1'         => array(
 							'align' => true,
 						),
-						'h2'       => array(
+						'h2'         => array(
 							'align' => true,
 						),
-						'h3'       => array(
+						'h3'         => array(
 							'align' => true,
 						),
-						'p'        => array(
+						'h4'         => array(
+							'align' => true,
+						),
+						'h5'         => array(
+							'align' => true,
+						),
+						'h6'         => array(
+							'align' => true,
+						),
+						'p'          => array(
 							'align' => true,
 							'dir'   => true,
 							'lang'  => true,
 						),
-						'ol'       => array(),
-						'ul'       => array(),
-						'li'       => array(),
-						'time'     => array(
+						'ol'         => array(),
+						'ul'         => array(),
+						'li'         => array(),
+						'time'       => array(
 							'datetime' => true,
+						),
+						'section'    => array(),
+						'table'      => array(
+							'align'       => true,
+							'bgcolor'     => true,
+							'border'      => true,
+							'cellpadding' => true,
+							'cellspacing' => true,
+							'dir'         => true,
+							'rules'       => true,
+							'summary'     => true,
+							'width'       => true,
+						),
+						'tbody'      => array(
+							'align'   => true,
+							'char'    => true,
+							'charoff' => true,
+							'valign'  => true,
+						),
+						'thead'      => array(
+							'align'   => true,
+							'char'    => true,
+							'charoff' => true,
+							'valign'  => true,
+						),
+						'th'         => array(
+							'abbr'    => true,
+							'align'   => true,
+							'axis'    => true,
+							'bgcolor' => true,
+							'char'    => true,
+							'charoff' => true,
+							'colspan' => true,
+							'headers' => true,
+							'height'  => true,
+							'nowrap'  => true,
+							'rowspan' => true,
+							'scope'   => true,
+							'valign'  => true,
+							'width'   => true,
+						),
+						'tr'         => array(
+							'align'   => true,
+							'bgcolor' => true,
+							'char'    => true,
+							'charoff' => true,
+							'valign'  => true,
+						),
+						'td'         => array(
+							'abbr'    => true,
+							'align'   => true,
+							'axis'    => true,
+							'bgcolor' => true,
+							'char'    => true,
+							'charoff' => true,
+							'colspan' => true,
+							'dir'     => true,
+							'headers' => true,
+							'height'  => true,
+							'nowrap'  => true,
+							'rowspan' => true,
+							'scope'   => true,
+							'valign'  => true,
+							'width'   => true,
+						),
+						'tfoot'      => array(
+							'align'   => true,
+							'char'    => true,
+							'charoff' => true,
+							'valign'  => true,
+						),
+						'noscript'   => array(),
+						'del'        => array(),
+						'blockquote' => array(
+							'cite' => true,
 						),
 					);
 					break;
