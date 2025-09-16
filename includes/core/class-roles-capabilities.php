@@ -704,7 +704,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 						}
 					} else {
 						// don't merge these `if` conditions!
-						if ( ! um_user( 'can_access_private_profile' ) && UM()->user()->is_private_profile( $user_id ) ) {
+						if ( ! UM()->common()->users()->can_view_user( $user_id ) ) {
 							$return = 0;
 						} else {
 							if ( ! um_user( 'can_edit_everyone' ) ) {

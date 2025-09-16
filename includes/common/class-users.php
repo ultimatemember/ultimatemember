@@ -1457,7 +1457,8 @@ class Users {
 	}
 
 	/**
-	 * Check if user profile is private based on privacy settings
+	 * Check if user profile is private based on privacy settings.
+	 * We don't handle 'account_tab_privacy' option in this function. Privacy cannot be related to the account tab visibility.
 	 *
 	 * @param int $user_id
 	 *
