@@ -21,6 +21,27 @@ function um_predefined_page_slug_exists( $slug ) {
 }
 
 /**
+ * @param int $post_id
+ *
+ * @return bool
+ */
+function um_post_is_predefined_page( $post_id ) {
+	$predefined_pages = UM()->config()->get( 'predefined_pages' );
+	$predefined_pages = array_keys( $predefined_pages );
+	if ( empty( $predefined_pages ) ) {
+		return false;
+	}
+
+	foreach ( $predefined_pages as $slug ) {
+		if ( um_is_predefined_page( $slug, $post_id ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * @param string $slug
  *
  * @return false|int
