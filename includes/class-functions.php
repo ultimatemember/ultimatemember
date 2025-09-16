@@ -545,13 +545,13 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 					break;
 				case 'templates':
 					$allowed_html = array(
-						'style'    => array(),
-						'link'     => array(
+						'style'      => array(),
+						'link'       => array(
 							'rel'   => true,
 							'href'  => true,
 							'media' => true,
 						),
-						'svg'      => array(
+						'svg'        => array(
 							'xmlns'               => true,
 							'height'              => true,
 							'preserveaspectratio' => true,
@@ -565,7 +565,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'stroke-linejoin'     => true,
 							'stroke-width'        => true,
 						),
-						'path'     => array(
+						'path'       => array(
 							'd'               => true,
 							'stroke'          => true,
 							'stroke-width'    => true,
@@ -573,7 +573,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'stroke-linejoin' => true,
 							'fill'            => true,
 						),
-						'form'     => array(
+						'form'       => array(
 							'action'         => true,
 							'accept'         => true,
 							'accept-charset' => true,
@@ -583,10 +583,10 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'target'         => true,
 							'novalidate'     => true,
 						),
-						'label'    => array(
+						'label'      => array(
 							'for' => true,
 						),
-						'select'   => array(
+						'select'     => array(
 							'name'         => true,
 							'multiple'     => true,
 							'disabled'     => true,
@@ -594,12 +594,12 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'required'     => true,
 							'autocomplete' => true,
 						),
-						'option'   => array(
+						'option'     => array(
 							'value'    => true,
 							'selected' => true,
 							'disabled' => true,
 						),
-						'input'    => array(
+						'input'      => array(
 							'type'         => true,
 							'name'         => true,
 							'value'        => true,
@@ -618,7 +618,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'maxlength'    => true,
 							'pattern'      => true,
 						),
-						'textarea' => array(
+						'textarea'   => array(
 							'cols'         => true,
 							'rows'         => true,
 							'disabled'     => true,
@@ -628,7 +628,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'autocomplete' => true,
 							'placeholder'  => true,
 						),
-						'button'   => array(
+						'button'     => array(
 							'type'         => true,
 							'name'         => true,
 							'value'        => true,
@@ -640,7 +640,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'required'     => true,
 							'autocomplete' => true,
 						),
-						'img'      => array(
+						'img'        => array(
 							'alt'      => true,
 							'align'    => true,
 							'border'   => true,
@@ -654,37 +654,37 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'usemap'   => true,
 							'width'    => true,
 						),
-						'h1'       => array(
+						'h1'         => array(
 							'align' => true,
 						),
-						'h2'       => array(
+						'h2'         => array(
 							'align' => true,
 						),
-						'h3'       => array(
+						'h3'         => array(
 							'align' => true,
 						),
-						'h4'       => array(
+						'h4'         => array(
 							'align' => true,
 						),
-						'h5'       => array(
+						'h5'         => array(
 							'align' => true,
 						),
-						'h6'       => array(
+						'h6'         => array(
 							'align' => true,
 						),
-						'p'        => array(
+						'p'          => array(
 							'align' => true,
 							'dir'   => true,
 							'lang'  => true,
 						),
-						'ol'       => array(),
-						'ul'       => array(),
-						'li'       => array(),
-						'time'     => array(
+						'ol'         => array(),
+						'ul'         => array(),
+						'li'         => array(),
+						'time'       => array(
 							'datetime' => true,
 						),
-						'section'  => array(),
-						'table'    => array(
+						'section'    => array(),
+						'table'      => array(
 							'align'       => true,
 							'bgcolor'     => true,
 							'border'      => true,
@@ -695,19 +695,19 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'summary'     => true,
 							'width'       => true,
 						),
-						'tbody'    => array(
+						'tbody'      => array(
 							'align'   => true,
 							'char'    => true,
 							'charoff' => true,
 							'valign'  => true,
 						),
-						'thead'    => array(
+						'thead'      => array(
 							'align'   => true,
 							'char'    => true,
 							'charoff' => true,
 							'valign'  => true,
 						),
-						'th'       => array(
+						'th'         => array(
 							'abbr'    => true,
 							'align'   => true,
 							'axis'    => true,
@@ -723,14 +723,14 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'valign'  => true,
 							'width'   => true,
 						),
-						'tr'       => array(
+						'tr'         => array(
 							'align'   => true,
 							'bgcolor' => true,
 							'char'    => true,
 							'charoff' => true,
 							'valign'  => true,
 						),
-						'td'       => array(
+						'td'         => array(
 							'abbr'    => true,
 							'align'   => true,
 							'axis'    => true,
@@ -747,14 +747,17 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'valign'  => true,
 							'width'   => true,
 						),
-						'tfoot'    => array(
+						'tfoot'      => array(
 							'align'   => true,
 							'char'    => true,
 							'charoff' => true,
 							'valign'  => true,
 						),
-						'noscript' => array(),
-						'del'      => array(),
+						'noscript'   => array(),
+						'del'        => array(),
+						'blockquote' => array(
+							'cite' => true,
+						),
 					);
 					break;
 				case 'admin_notice':
