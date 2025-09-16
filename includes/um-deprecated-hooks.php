@@ -137,6 +137,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param {array} $types Allowed image types.
  *
+ * @return {array} Allowed image types.
+ *
  * @since 1.3.x
  * @depecated 3.0.0 Please use 'um_allowed_default_image_types' hook instead.
  * @hook  um_allowed_image_types
@@ -146,6 +148,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Filters the allowed file types.
  *
  * @param {array} $types Allowed file types.
+ *
+ * @return {array} Allowed file types.
  *
  * @since 1.3.x
  * @depecated 3.0.0 Please use 'um_allowed_default_file_types' hook instead.
@@ -157,6 +161,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param {string} $url Default cover URL.
  *
+ * @return {string} Cover URL.
+ *
  * @since 1.3.67
  * @depecated 3.0.0 Please use 'um_default_cover_url' hook instead.
  * @hook  um_get_default_cover_uri_filter
@@ -167,7 +173,24 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param {string} $size Default cover photo size for mobile device.
  *
+ * @return {string} Cover photo size.
+ *
  * @since 2.0.0
  * @depecated 3.0.0 Please use 'um_cover_photo_size' hook instead with checking `wp_is_mobile()` inside the callback.
  * @hook  um_mobile_cover_photo
+ */
+
+/**
+ * Filters the users privacy.
+ *
+ * @param {bool}   $is_private_case Does the current case is privacy.
+ * @param {string} $privacy         Privacy value.
+ * @param {int}    $user_id         User ID to check for the current user.
+ *
+ * @return {bool} Current privacy case.
+ *
+ * @since 1.3.x
+ * @depecated 3.0.0 Please use 'um_can_view_private_user_profile' hook instead.
+ *
+ * @hook um_is_private_filter_hook
  */
