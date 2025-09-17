@@ -105,10 +105,12 @@ function um_admin_init_pages_select() {
 			dataType: 'json',
 			delay: 250, // delay in ms while typing when to perform a AJAX search
 			data: function( params ) {
+				let fieldID = jQuery(this).attr('id');
 				return {
 					search: params.term, // search query
 					action: 'um_get_pages_list', // AJAX action for admin-ajax.php
 					page: params.page || 1, // infinite scroll pagination
+					field_id: fieldID, // select ID
 					nonce: um_admin_scripts.nonce
 				};
 			},
