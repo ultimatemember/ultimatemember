@@ -1982,7 +1982,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$array['invalid_image'] = __( 'Please upload a valid image!', 'ultimate-member' );
 					}
 					if ( ! isset( $array['allowed_types'] ) ) {
-						$array['allowed_types'] = 'gif,jpg,jpeg,png';
+						$array['allowed_types'] = 'gif,jpg,jpeg,png,webp';
 					} else {
 						$array['allowed_types'] = implode( ',', $array['allowed_types'] );
 					}
