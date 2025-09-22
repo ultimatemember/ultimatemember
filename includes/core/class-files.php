@@ -822,12 +822,15 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			 * }
 			 * ?>
 			 */
-			return apply_filters( 'um_allowed_image_types', array(
-				'png'   => 'PNG',
-				'jpeg'  => 'JPEG',
-				'jpg'   => 'JPG',
-				'gif'   => 'GIF'
-			) );
+			return apply_filters(
+				'um_allowed_image_types',
+				array(
+					'png'  => 'PNG',
+					'jpeg' => 'JPEG',
+					'jpg'  => 'JPG',
+					'webp' => 'WEBP',
+				)
+			);
 		}
 
 
