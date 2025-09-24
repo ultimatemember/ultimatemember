@@ -674,19 +674,8 @@ class Layouts {
 
 		$user_id = absint( $user_id );
 
-		if ( false === $args['ignore_caps'] ) {
-			if ( get_current_user_id() !== $user_id ) {
-				if ( ! um_can_view_profile( $user_id ) ) {
-					return '';
-				}
-
-				if ( ! current_user_can( 'administrator' ) ) {
-					$status = get_user_meta( $user_id, 'account_status', true );
-					if ( 'approved' !== $status ) {
-						return '';
-					}
-				}
-			}
+		if ( false === $args['ignore_caps'] && ! UM()->common()->users()->can_view_user( $user_id ) ) {
+			return '';
 		}
 
 		$title = '';
@@ -1093,19 +1082,8 @@ class Layouts {
 			)
 		);
 
-		if ( false === $args['ignore_caps'] ) {
-			if ( get_current_user_id() !== $user_id ) {
-				if ( ! um_can_view_profile( $user_id ) ) {
-					return '';
-				}
-
-				if ( ! current_user_can( 'administrator' ) ) {
-					$status = get_user_meta( $user_id, 'account_status', true );
-					if ( 'approved' !== $status ) {
-						return '';
-					}
-				}
-			}
+		if ( false === $args['ignore_caps'] && ! UM()->common()->users()->can_view_user( $user_id ) ) {
+			return '';
 		}
 
 		$avatar_args = array(

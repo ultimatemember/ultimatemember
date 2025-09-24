@@ -1735,7 +1735,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				// Option "Search engine visibility" in [wp-admin > Settings > Reading]
 				$profile_noindex = true;
 
-			} elseif ( $this->is_private_profile( $user_id ) ) {
+			} elseif ( UM()->common()->users()->is_user_profile_private( $user_id ) ) {
 				// Setting "Profile Privacy" in [Account > Privacy]
 				$profile_noindex = true;
 
@@ -1786,9 +1786,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		}
 
 		?>
-		 *
+		 * @todo Please don't use since new UI. We have function for that instead `UM()->common()->users()->is_user_profile_private()`.
 		 */
-		function is_private_profile( $user_id ) {
+		public function is_private_profile( $user_id ) {
 			$privacy = get_user_meta( $user_id, 'profile_privacy', true );
 			if ( $privacy == __( 'Only me', 'ultimate-member' ) || $privacy == 'Only me' ) {
 				return true;
@@ -1827,16 +1827,17 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			return false;
 		}
 
-
 		/**
 		 * Is private
 		 *
 		 * @param $user_id
 		 * @param $case
 		 *
+		 * @todo Please don't use since new UI. We have function for that instead `UM()->common()->users()->can_view_private_user_profile()`.
+		 *
 		 * @return bool
 		 */
-		function is_private_case( $user_id, $case ) {
+		public function is_private_case( $user_id, $case ) {
 			$privacy = get_user_meta( $user_id, 'profile_privacy', true );
 
 			if ( $privacy == $case ) {

@@ -1326,7 +1326,7 @@ function um_pre_profile_shortcode( $args ) {
 		UM()->fields()->viewing = true;
 
 		if ( um_get_requested_user() ) {
-			if ( ! um_is_myprofile() && ! um_can_view_profile( um_get_requested_user() ) ) {
+			if ( ! um_is_myprofile() && ! UM()->common()->users()->can_view_user( um_get_requested_user() ) ) {
 				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
 			}
 

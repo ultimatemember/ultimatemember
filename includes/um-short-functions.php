@@ -1530,7 +1530,8 @@ function um_can_view_field( $data ) {
 
 /**
  * Checks if user can view profile
- * @todo make the function review. Maybe rewrite it.
+ * @todo Please don't use since new UI. We have 2 functions for that instead `UM()->common()->users()->can_view_user` and `UM()->common()->users()->can_view_user_profile()`
+ *
  * @param int $user_id
  *
  * @return bool

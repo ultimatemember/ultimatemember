@@ -1072,7 +1072,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					break;
 				case 'um_admin_review_registration':
 					// $arg1 means `user_id` variable in this case.
-					if ( ! current_user_can( 'administrator' ) && ! um_can_view_profile( $arg1 ) ) {
+					if ( ! current_user_can( 'manage_options' ) && ! UM()->common()->users()->can_view_user( $arg1 ) ) {
 						$output = '';
 						break;
 					}

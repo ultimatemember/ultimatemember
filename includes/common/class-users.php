@@ -1392,6 +1392,10 @@ class Users {
 		}
 
 		$user_id = absint( $user_id );
+		if ( ! self::user_exists( $user_id ) ) {
+			return false;
+		}
+
 		if ( $user_id === $current_user ) {
 			return true;
 		}
@@ -1418,6 +1422,11 @@ class Users {
 		$can_view_user = apply_filters( 'um_can_view_user', null, $user_id, $current_user );
 		if ( ! is_null( $can_view_user ) ) {
 			return $can_view_user;
+		}
+
+		// Check the user account status
+		if ( ! $this->can_current_user_edit_user( $user_id ) && ! $this->has_status( $user_id, 'approved' ) ) {
+			return false;
 		}
 
 		$can_view_user = true;
@@ -1448,7 +1457,8 @@ class Users {
 	}
 
 	/**
-	 * Check if user profile is private based on privacy settings
+	 * Check if user profile is private based on privacy settings.
+	 * We don't handle 'account_tab_privacy' option in this function. Privacy cannot be related to the account tab visibility.
 	 *
 	 * @param int $user_id
 	 *
@@ -1553,6 +1563,10 @@ class Users {
 		}
 
 		$user_id = absint( $user_id );
+		if ( ! self::user_exists( $user_id ) ) {
+			return false;
+		}
+
 		if ( $user_id === $current_user ) {
 			return true;
 		}
