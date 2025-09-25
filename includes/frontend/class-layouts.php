@@ -397,26 +397,11 @@ class Layouts {
 		<span class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
 			<?php
 			if ( 'm' === $size ) {
-				?>
-				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-					<path d="M30 16C30 17.8385 29.6379 19.659 28.9343 21.3576C28.2308 23.0561 27.1995 24.5995 25.8995 25.8995C24.5995 27.1995 23.0561 28.2307 21.3576 28.9343C19.659 29.6379 17.8385 30 16 30C14.1615 30 12.341 29.6379 10.6424 28.9343C8.94387 28.2307 7.40052 27.1995 6.1005 25.8995C4.80048 24.5995 3.76925 23.0561 3.06569 21.3576C2.36212 19.659 2 17.8385 2 16C2 14.1615 2.36212 12.341 3.06569 10.6424C3.76926 8.94387 4.80049 7.40052 6.10051 6.1005C7.40053 4.80048 8.94388 3.76925 10.6424 3.06568C12.341 2.36212 14.1615 2 16 2C17.8385 2 19.659 2.36212 21.3576 3.06569C23.0561 3.76926 24.5995 4.80049 25.8995 6.10051C27.1995 7.40053 28.2308 8.94388 28.9343 10.6424C29.6379 12.341 30 14.1615 30 16L30 16Z" stroke="var(--um-gray-100,#f2f4f7)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-					<path d="M16 2C17.8385 2 19.659 2.36212 21.3576 3.06569C23.0561 3.76925 24.5995 4.80049 25.8995 6.10051C27.1995 7.40053 28.2308 8.94388 28.9343 10.6424C29.6379 12.341 30 14.1615 30 16" stroke="var(--um-primary-600-bg,#7f56d9)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-				</svg>
-				<?php
+				echo wp_kses( self::svg( 'ajax-loader-m' ), UM()->get_allowed_html( 'templates' ) );
 			} elseif ( 's' === $size || 'l' === $size ) {
-				?>
-				<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-					<path d="M45 24C45 26.7578 44.4568 29.4885 43.4015 32.0364C42.3461 34.5842 40.7993 36.8992 38.8492 38.8492C36.8992 40.7993 34.5842 42.3461 32.0364 43.4015C29.4885 44.4568 26.7578 45 24 45C21.2422 45 18.5115 44.4568 15.9636 43.4015C13.4158 42.3461 11.1008 40.7993 9.15075 38.8492C7.20072 36.8992 5.65388 34.5842 4.59853 32.0363C3.54318 29.4885 3 26.7578 3 24C3 21.2422 3.54318 18.5115 4.59853 15.9636C5.65388 13.4158 7.20073 11.1008 9.15076 9.15075C11.1008 7.20072 13.4158 5.65387 15.9637 4.59853C18.5115 3.54318 21.2423 3 24 3C26.7578 3 29.4885 3.54318 32.0364 4.59853C34.5842 5.65388 36.8992 7.20073 38.8493 9.15077C40.7993 11.1008 42.3461 13.4158 43.4015 15.9637C44.4568 18.5115 45 21.2423 45 24L45 24Z" stroke="var(--um-gray-100,#f2f4f7)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-					<path d="M24 3C26.7578 3 29.4885 3.54318 32.0364 4.59853C34.5842 5.65388 36.8992 7.20073 38.8492 9.15076C40.7993 11.1008 42.3461 13.4158 43.4015 15.9637C44.4568 18.5115 45 21.2422 45 24" stroke="var(--um-primary-600-bg,#7f56d9)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-				</svg>
-				<?php
+				echo wp_kses( self::svg( 'ajax-loader-l' ), UM()->get_allowed_html( 'templates' ) );
 			} elseif ( 'xl' === $size ) {
-				?>
-				<svg xmlns="http://www.w3.org/2000/svg" width="66" height="66" viewBox="0 0 66 66" fill="none">
-					<path d="M62 33C62 36.8083 61.2499 40.5794 59.7925 44.0978C58.3351 47.6163 56.199 50.8132 53.5061 53.5061C50.8132 56.199 47.6163 58.3351 44.0978 59.7925C40.5794 61.2499 36.8083 62 33 62C29.1917 62 25.4206 61.2499 21.9022 59.7925C18.3837 58.3351 15.1868 56.199 12.4939 53.5061C9.801 50.8132 7.66488 47.6163 6.20749 44.0978C4.7501 40.5794 4 36.8083 4 33C4 29.1917 4.75011 25.4206 6.2075 21.9022C7.66489 18.3837 9.80101 15.1868 12.4939 12.4939C15.1868 9.801 18.3837 7.66487 21.9022 6.20749C25.4206 4.7501 29.1917 4 33 4C36.8083 4 40.5794 4.75011 44.0978 6.2075C47.6163 7.66489 50.8132 9.80101 53.5061 12.4939C56.199 15.1868 58.3351 18.3838 59.7925 21.9022C61.2499 25.4206 62 29.1917 62 33L62 33Z" stroke="var(--um-gray-100,#f2f4f7)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-					<path d="M33 4C36.8083 4 40.5794 4.75011 44.0978 6.20749C47.6163 7.66488 50.8132 9.80101 53.5061 12.4939C56.199 15.1868 58.3351 18.3837 59.7925 21.9022C61.2499 25.4206 62 29.1917 62 33" stroke="var(--um-primary-600-bg,#7f56d9)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-				</svg>
-				<?php
+				echo wp_kses( self::svg( 'ajax-loader-xl' ), UM()->get_allowed_html( 'templates' ) );
 			}
 			?>
 		</span>
@@ -2162,11 +2147,7 @@ class Layouts {
 		ob_start();
 		?>
 		<div class="um-file-extension">
-			<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file" width="48" height="48" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--um-gray-300, #d0d5dd)" fill="none" stroke-linecap="round" stroke-linejoin="round">
-				<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-				<path d="M14 3v4a1 1 0 0 0 1 1h4" />
-				<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-			</svg>
+			<?php echo wp_kses( self::svg( 'file' ), UM()->get_allowed_html( 'templates' ) ); ?>
 			<span class="um-file-extension-text"><?php echo esc_html( $ext ); ?></span>
 		</div>
 		<?php
@@ -2249,33 +2230,21 @@ class Layouts {
 			?>
 			<div class="um-uploader-file-placeholder um-display-none">
 				<div class="um-file-extension">
-					<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file" width="48" height="48" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--um-gray-300, #d0d5dd)" fill="none" stroke-linecap="round" stroke-linejoin="round">
-						<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-						<path d="M14 3v4a1 1 0 0 0 1 1h4" />
-						<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-					</svg>
+					<?php echo wp_kses( self::svg( 'file' ), UM()->get_allowed_html( 'templates' ) ); ?>
 					<span class="um-file-extension-text">{{{extension}}}</span>
 				</div>
 				<div class="um-uploader-file-data">
 					<div class="um-uploader-file-data-header">
 						<div class="um-uploader-file-name">{{{name}}}</div>
 						<?php
-						$button_content = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-  <path d="M4 7l16 0" />
-  <path d="M10 11l0 6" />
-  <path d="M14 11l0 6" />
-  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-</svg>';
-						$button_args    = array(
+						$button_args = array(
 							'type'          => 'button',
 							'icon_position' => 'content',
 							'design'        => 'link-gray',
 							'size'          => 's',
 							'classes'       => array( 'um-uploader-file-remove' ),
 						);
-						echo wp_kses( self::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) );
+						echo wp_kses( self::button( self::svg( 'trash' ), $button_args ), UM()->get_allowed_html( 'templates' ) );
 						?>
 					</div>
 					<div class="um-supporting-text">{{{supporting}}}</div>
@@ -2306,33 +2275,21 @@ class Layouts {
 			?>
 			<div class="um-uploader-file-placeholder um-display-none">
 				<div class="um-file-extension">
-					<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file" width="48" height="48" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--um-gray-300, #d0d5dd)" fill="none" stroke-linecap="round" stroke-linejoin="round">
-						<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-						<path d="M14 3v4a1 1 0 0 0 1 1h4" />
-						<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-					</svg>
+					<?php echo wp_kses( self::svg( 'file' ), UM()->get_allowed_html( 'templates' ) ); ?>
 					<span class="um-file-extension-text">{{{extension}}}</span>
 				</div>
 				<div class="um-uploader-file-data">
 					<div class="um-uploader-file-data-header">
 						<div class="um-uploader-file-name">{{{name}}}</div>
 						<?php
-						$button_content = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-  <path d="M4 7l16 0" />
-  <path d="M10 11l0 6" />
-  <path d="M14 11l0 6" />
-  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-</svg>';
-						$button_args    = array(
+						$button_args = array(
 							'type'          => 'button',
 							'icon_position' => 'content',
 							'design'        => 'link-gray',
 							'size'          => 's',
 							'classes'       => array( 'um-uploader-file-remove', 'um-tip-n' ),
 						);
-						echo wp_kses( self::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) );
+						echo wp_kses( self::button( self::svg( 'trash' ), $button_args ), UM()->get_allowed_html( 'templates' ) );
 						?>
 					</div>
 					<div class="um-supporting-text">{{{supporting}}}</div>
@@ -2482,12 +2439,7 @@ class Layouts {
 		?>
 		<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" id="<?php echo esc_attr( $id ); ?>"<?php echo $data_atts; ?>>
 			<?php
-			$button_content = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-upload" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-  <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
-  <path d="M7 9l5 -5l5 5" />
-  <path d="M12 4l0 12" />
-</svg>';
+			$button_content = self::svg( 'upload' );
 			$button_args    = array(
 				'type'          => 'button',
 				'icon_position' => 'content',
@@ -2627,10 +2579,10 @@ class Layouts {
 			switch ( $args['type'] ) {
 				case 'error':
 				case 'warning':
-					$icon = self::outline_icon( '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-exclamation-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 9v4" /><path d="M12 16v.01" /></svg>' );
+					$icon = self::outline_icon( self::svg( 'exclamation-circle' ) );
 					break;
 				case 'success':
-					$icon = self::outline_icon( '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M9 12l2 2l4 -4" /></svg>' );
+					$icon = self::outline_icon( self::svg( 'circle-check' ) );
 					break;
 			}
 		}
@@ -2672,15 +2624,14 @@ class Layouts {
 			</div>
 			<?php
 			if ( ! empty( $args['dismissible'] ) ) {
-				$button_content = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-x"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>';
-				$button_args    = array(
+				$button_args = array(
 					'type'          => 'button',
 					'icon_position' => 'content',
 					'design'        => 'link-gray',
 					'size'          => 's',
 					'classes'       => array( 'um-alert-dismiss' ),
 				);
-				echo wp_kses( self::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) );
+				echo wp_kses( self::button( self::svg( 'x' ), $button_args ), UM()->get_allowed_html( 'templates' ) );
 			}
 			?>
 		</div>
@@ -2705,14 +2656,6 @@ class Layouts {
 		?>
 		<div class="um-emoji-picker">
 			<?php
-			$emoji_svg_html = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mood-smile" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-				<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-				<path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-				<path d="M9 10l.01 0" />
-				<path d="M15 10l.01 0" />
-				<path d="M9.5 15a3.5 3.5 0 0 0 5 0" />
-			</svg>';
-
 			$link_args = array(
 				'design'        => 'link-color',
 				'type'          => 'link',
@@ -2736,7 +2679,7 @@ class Layouts {
 
 			echo wp_kses(
 				UM()->frontend()::layouts()::link(
-					$emoji_svg_html,
+					self::svg( 'mood-smile' ),
 					$link_args
 				),
 				UM()->get_allowed_html( 'templates' )
@@ -2778,16 +2721,8 @@ class Layouts {
 
 		$args['classes'][] = 'um-gif-picker-link';
 
-		$gif_svg_html = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-gif" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-			<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-			<path d="M8 8h-2a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2v-4h-1" />
-			<path d="M12 8v8" />
-			<path d="M16 12h3" />
-			<path d="M20 8h-4v8" />
-		</svg>';
-
 		return UM()->frontend()::layouts()::link(
-			$gif_svg_html,
+			self::svg( 'gif' ),
 			array(
 				'design'        => 'link-color',
 				'type'          => 'link',
@@ -2855,19 +2790,13 @@ class Layouts {
 		ob_start();
 		?>
 		<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_get_gif_list' ) ); ?>" data-next="<?php echo esc_attr( $pagination ); ?>" data-per_page="<?php echo esc_attr( $args['per_page'] ); ?>">
-			<?php
-			$search_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-				<path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-				<path d="M21 21l-6 -6" />
-			</svg>';
-			?>
 			<div class="um-gif-list-search-box">
 				<span class="screen-reader-text"><?php esc_html_e( 'Search..', 'ultimate-member' ); ?></span>
 				<input type="search" class="um-gif-list-search" placeholder="<?php esc_attr_e( 'Search..', 'ultimate-member' ); ?>" />
 				<?php
 				echo wp_kses(
 					self::button(
-						$search_icon,
+						self::svg( 'search' ),
 						array(
 							'design'        => 'link-color',
 							'size'          => 's',
@@ -2894,5 +2823,18 @@ class Layouts {
 		</div>
 		<?php
 		return ob_get_clean();
+	}
+
+	public static function svg( $key ) {
+		static $all_svg = array();
+		if ( empty( $all_svg ) ) {
+			$all_svg = UM()->config()->get( 'svg_icons' );
+		}
+
+		if ( ! array_key_exists( $key, $all_svg ) ) {
+			return '';
+		}
+
+		return $all_svg[ $key ];
 	}
 }

@@ -66,11 +66,7 @@ class Uploader extends \um\common\Uploader {
 			<div class="um-uploader-file-preview" title="<?php /* translators: %s is the field label. */ echo esc_attr( sprintf( __( 'Preview %s', 'ultimate-member' ), $label ) ); ?>"></div>
 			<div class="um-uploader-file-data">
 				<div class="um-file-extension">
-					<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file" width="48" height="48" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--um-gray-300, #d0d5dd)" fill="none" stroke-linecap="round" stroke-linejoin="round">
-						<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-						<path d="M14 3v4a1 1 0 0 0 1 1h4" />
-						<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-					</svg>
+					<?php echo wp_kses( UM()->frontend()::layouts()::svg( 'file' ), UM()->get_allowed_html( 'templates' ) ); ?>
 					<span class="um-file-extension-text">{{{extension}}}</span>
 				</div>
 				<div class="um-uploader-file-uploading-process">
@@ -192,11 +188,7 @@ class Uploader extends \um\common\Uploader {
 		<div class="um-uploader-file-placeholder um-display-none">
 			<div class="um-uploader-file-data">
 				<div class="um-file-extension">
-					<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file" width="48" height="48" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--um-gray-300, #d0d5dd)" fill="none" stroke-linecap="round" stroke-linejoin="round">
-						<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-						<path d="M14 3v4a1 1 0 0 0 1 1h4" />
-						<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-					</svg>
+					<?php echo wp_kses( UM()->frontend()::layouts()::svg( 'file' ), UM()->get_allowed_html( 'templates' ) ); ?>
 					<span class="um-file-extension-text">{{{extension}}}</span>
 				</div>
 				<div class="um-uploader-file-name">{{{name}}}</div>

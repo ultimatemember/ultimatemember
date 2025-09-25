@@ -541,6 +541,28 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 						'a'        => array(
 							'onclick' => array(),
 						),
+						'svg'      => array(
+							'xmlns'               => true,
+							'height'              => true,
+							'preserveaspectratio' => true,
+							'viewbox'             => true,
+							'width'               => true,
+							'x'                   => true,
+							'y'                   => true,
+							'fill'                => true,
+							'stroke'              => true,
+							'stroke-linecap'      => true,
+							'stroke-linejoin'     => true,
+							'stroke-width'        => true,
+						),
+						'path'     => array(
+							'd'               => true,
+							'stroke'          => true,
+							'stroke-width'    => true,
+							'stroke-linecap'  => true,
+							'stroke-linejoin' => true,
+							'fill'            => true,
+						),
 					);
 					break;
 				case 'templates':

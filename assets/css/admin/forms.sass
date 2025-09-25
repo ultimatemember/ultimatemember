@@ -98,12 +98,13 @@
   //  font-style: italic
   //  clear: both
 
-.um-external-link-icon
-  width: 1em
-  height: 1em
-  margin: 0
-  vertical-align: middle
-  fill: currentcolor
+.#{$prefix}external-link
+  +flex( row, flex-start, center, wrap )
+  gap: 4px
+  svg
+    width: 1em
+    height: 1em
+    margin: 0
 
 .um_admin_fonticon_wrapper
   +flex( row, flex-start, center, nowrap )

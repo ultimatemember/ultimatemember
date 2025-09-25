@@ -102,6 +102,11 @@ if ( ! class_exists( 'um\Config' ) ) {
 		public $google_maps_locales = array();
 
 		/**
+		 * @var string[]
+		 */
+		public $svg_icons = array();
+
+		/**
 		 * Config constructor.
 		 */
 		public function __construct() {
@@ -1173,6 +1178,15 @@ if ( ! class_exists( 'um\Config' ) ) {
 		public function init_avatar_thumbnail_sizes() {
 			$this->avatar_thumbnail_sizes = array( 32, 40, 64, 80, 128, 256 );
 			$this->avatar_thumbnail_sizes = apply_filters( 'um_avatar_thumbnail_sizes', $this->avatar_thumbnail_sizes );
+		}
+
+		/**
+		 * Initialize SVG icons from config file
+		 *
+		 * @since 3.0.0
+		 */
+		public function init_svg_icons() {
+			$this->svg_icons = include UM_PATH . 'includes/config/svg.php';
 		}
 	}
 }
