@@ -66,7 +66,7 @@ class Uploader extends \um\common\Uploader {
 			<div class="um-uploader-file-preview" title="<?php /* translators: %s is the field label. */ echo esc_attr( sprintf( __( 'Preview %s', 'ultimate-member' ), $label ) ); ?>"></div>
 			<div class="um-uploader-file-data">
 				<div class="um-file-extension">
-					<?php echo wp_kses( UM()->frontend()::layouts()::svg( 'file' ), UM()->get_allowed_html( 'templates' ) ); ?>
+					<?php echo wp_kses( UM()->frontend()::layouts()::svg( 'file', 48 ), UM()->get_allowed_html( 'templates' ) ); ?>
 					<span class="um-file-extension-text">{{{extension}}}</span>
 				</div>
 				<div class="um-uploader-file-uploading-process">
@@ -188,7 +188,7 @@ class Uploader extends \um\common\Uploader {
 		<div class="um-uploader-file-placeholder um-display-none">
 			<div class="um-uploader-file-data">
 				<div class="um-file-extension">
-					<?php echo wp_kses( UM()->frontend()::layouts()::svg( 'file' ), UM()->get_allowed_html( 'templates' ) ); ?>
+					<?php echo wp_kses( UM()->frontend()::layouts()::svg( 'file', 48 ), UM()->get_allowed_html( 'templates' ) ); ?>
 					<span class="um-file-extension-text">{{{extension}}}</span>
 				</div>
 				<div class="um-uploader-file-name">{{{name}}}</div>

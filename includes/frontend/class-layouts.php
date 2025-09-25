@@ -397,11 +397,11 @@ class Layouts {
 		<span class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
 			<?php
 			if ( 'm' === $size ) {
-				echo wp_kses( self::svg( 'ajax-loader-m' ), UM()->get_allowed_html( 'templates' ) );
+				echo wp_kses( self::svg( 'ajax-loader-m', 32 ), UM()->get_allowed_html( 'templates' ) );
 			} elseif ( 's' === $size || 'l' === $size ) {
-				echo wp_kses( self::svg( 'ajax-loader-l' ), UM()->get_allowed_html( 'templates' ) );
+				echo wp_kses( self::svg( 'ajax-loader-l', 48 ), UM()->get_allowed_html( 'templates' ) );
 			} elseif ( 'xl' === $size ) {
-				echo wp_kses( self::svg( 'ajax-loader-xl' ), UM()->get_allowed_html( 'templates' ) );
+				echo wp_kses( self::svg( 'ajax-loader-xl', 66 ), UM()->get_allowed_html( 'templates' ) );
 			}
 			?>
 		</span>
@@ -2147,7 +2147,7 @@ class Layouts {
 		ob_start();
 		?>
 		<div class="um-file-extension">
-			<?php echo wp_kses( self::svg( 'file' ), UM()->get_allowed_html( 'templates' ) ); ?>
+			<?php echo wp_kses( self::svg( 'file', 48 ), UM()->get_allowed_html( 'templates' ) ); ?>
 			<span class="um-file-extension-text"><?php echo esc_html( $ext ); ?></span>
 		</div>
 		<?php
@@ -2230,7 +2230,7 @@ class Layouts {
 			?>
 			<div class="um-uploader-file-placeholder um-display-none">
 				<div class="um-file-extension">
-					<?php echo wp_kses( self::svg( 'file' ), UM()->get_allowed_html( 'templates' ) ); ?>
+					<?php echo wp_kses( self::svg( 'file', 48 ), UM()->get_allowed_html( 'templates' ) ); ?>
 					<span class="um-file-extension-text">{{{extension}}}</span>
 				</div>
 				<div class="um-uploader-file-data">
@@ -2275,7 +2275,7 @@ class Layouts {
 			?>
 			<div class="um-uploader-file-placeholder um-display-none">
 				<div class="um-file-extension">
-					<?php echo wp_kses( self::svg( 'file' ), UM()->get_allowed_html( 'templates' ) ); ?>
+					<?php echo wp_kses( self::svg( 'file', 48 ), UM()->get_allowed_html( 'templates' ) ); ?>
 					<span class="um-file-extension-text">{{{extension}}}</span>
 				</div>
 				<div class="um-uploader-file-data">
@@ -2679,7 +2679,7 @@ class Layouts {
 
 			echo wp_kses(
 				UM()->frontend()::layouts()::link(
-					self::svg( 'mood-smile' ),
+					self::svg( 'mood-smile', 24 ),
 					$link_args
 				),
 				UM()->get_allowed_html( 'templates' )
@@ -2722,7 +2722,7 @@ class Layouts {
 		$args['classes'][] = 'um-gif-picker-link';
 
 		return UM()->frontend()::layouts()::link(
-			self::svg( 'gif' ),
+			self::svg( 'gif', 24 ),
 			array(
 				'design'        => 'link-color',
 				'type'          => 'link',
@@ -2796,7 +2796,7 @@ class Layouts {
 				<?php
 				echo wp_kses(
 					self::button(
-						self::svg( 'search' ),
+						self::svg( 'search', 24 ),
 						array(
 							'design'        => 'link-color',
 							'size'          => 's',
@@ -2825,7 +2825,17 @@ class Layouts {
 		return ob_get_clean();
 	}
 
-	public static function svg( $key ) {
+	/**
+	 * Generate SVG image
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $key  SVG key
+	 * @param int    $size SVG size
+	 *
+	 * @return string
+	 */
+	public static function svg( $key, $size = 20 ) {
 		static $all_svg = array();
 		if ( empty( $all_svg ) ) {
 			$all_svg = UM()->config()->get( 'svg_icons' );
@@ -2835,6 +2845,6 @@ class Layouts {
 			return '';
 		}
 
-		return $all_svg[ $key ];
+		return str_replace( '{um_size}', $size, $all_svg[ $key ] );
 	}
 }
