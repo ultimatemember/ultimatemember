@@ -2899,9 +2899,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		}
 
 		/**
+		 * Check if license debug is enabled based on defined constants.
+		 *
+		 * @return bool
+		 */
+		private static function is_license_debug_enabled() {
+			return defined( 'UM_LICENSE_REQUEST_DEBUG' ) && UM_LICENSE_REQUEST_DEBUG && defined( 'WP_DEBUG' ) && WP_DEBUG && defined( 'WP_DEBUG_LOG' ) && WP_DEBUG_LOG;
+		}
+
+		/**
 		 *
 		 */
-		function licenses_save() {
+		public function licenses_save() {
 			if ( empty( $_POST['um_options'] ) || empty( $_POST['licenses_settings'] ) ) {
 				return;
 			}
@@ -2931,47 +2940,62 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$version   = false;
 				$author    = false;
 				foreach ( $this->settings_structure['licenses']['fields'] as $field_data ) {
-					if ( $field_data['id'] == $key ) {
+					if ( $field_data['id'] === $key ) {
 						$item_name = ! empty( $field_data['item_name'] ) ? $field_data['item_name'] : false;
 						$version   = ! empty( $field_data['version'] ) ? $field_data['version'] : false;
 						$author    = ! empty( $field_data['author'] ) ? $field_data['author'] : false;
 					}
 				}
 
-				$api_params = array(
-					'edd_action' => $edd_action,
-					'license'    => $license_key,
-					'item_name'  => $item_name,
-					'version'    => $version,
-					'author'     => $author,
-					'url'        => home_url(),
+				$post_attr = array(
+					'timeout'   => UM()::$request_timeout,
+					'sslverify' => false,
+					'body'      => array(
+						'edd_action' => $edd_action,
+						'license'    => $license_key,
+						'item_name'  => $item_name,
+						'version'    => $version,
+						'author'     => $author,
+						'url'        => home_url(),
+					),
 				);
 
-				$request = wp_remote_post(
-					UM()::$store_url,
-					array(
-						'timeout'   => UM()::$request_timeout,
-						'sslverify' => false,
-						'body'      => $api_params,
-					)
-				);
+				// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Need to debug license requests sometimes.
+				if ( self::is_license_debug_enabled() ) {
+					error_log( '----- License handler starts below -----' );
+					error_log( '### Store URL: ' . UM()::$store_url );
+					error_log( '### Request:' );
+					error_log( maybe_serialize( $post_attr ) );
+				}
 
+				$request = wp_remote_post( UM()::$store_url, $post_attr );
 				if ( ! is_wp_error( $request ) ) {
 					$request = json_decode( wp_remote_retrieve_body( $request ) );
 				} else {
-					$request = wp_remote_post(
-						UM()::$store_url,
-						array(
-							'timeout'   => UM()::$request_timeout,
-							'sslverify' => true,
-							'body'      => $api_params,
-						)
-					);
+					if ( self::is_license_debug_enabled() ) {
+						error_log( '> Got `wp_error`, try again with `sslverify=true`' );
+					}
 
+					$post_attr['sslverify'] = true;
+
+					$request = wp_remote_post( UM()::$store_url, $post_attr );
 					if ( ! is_wp_error( $request ) ) {
 						$request = json_decode( wp_remote_retrieve_body( $request ) );
 					}
 				}
+
+				if ( self::is_license_debug_enabled() ) {
+					if ( is_wp_error( $request ) ) {
+						error_log( '> Finally got `wp_error`. Details below.' );
+						error_log( '>> Error code: ' . $request->get_error_code() );
+						error_log( '>> Error message: ' . $request->get_error_message() );
+					} else {
+						error_log( '### Response from UM website:' );
+						error_log( '>' . maybe_serialize( $request ) );
+					}
+					error_log( '^^^^^^ End license handler ^^^^^^' );
+				}
+				// phpcs:enable WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Need to debug license requests sometimes.
 
 				$request = ( $request ) ? maybe_unserialize( $request ) : false;
 

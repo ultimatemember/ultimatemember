@@ -35,6 +35,7 @@ define( 'UM_PLUGIN', plugin_basename( __FILE__ ) );
 define( 'UM_VERSION', $plugin_data['Version'] );
 define( 'UM_PLUGIN_NAME', $plugin_data['Name'] );
 define( 'UM_WP_FUNCTIONS_VERSION', '6.8.0' ); // Updates every major WordPress release.
+define( 'UM_LICENSE_REQUEST_DEBUG', false ); // Set true then need to debug the license request.
 // define( 'UM_DEV_MODE', true );
 
 require_once 'includes/class-functions.php';
