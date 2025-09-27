@@ -63,7 +63,18 @@ class Pages {
 					$query_args['post__not_in'] = $predefined_ids;
 				}
 			}
-			// since 2.10.6
+
+			/**
+			 * Filters WP_Query arguments for getting pages visible in the dropdown fields in UM Settings.
+			 *
+			 * @since 2.10.6
+			 * @hook  um_admin_settings_get_pages_list_args
+			 *
+			 * @param {array}  $query_args Get pages WP_Query arguments.
+			 * @param {string} $field_id   Dropdown field ID.
+			 *
+			 * @return {array} Get pages WP_Query arguments.
+			 */
 			$query_args = apply_filters( 'um_admin_settings_get_pages_list_args', $query_args, $field_id );
 
 			$search_results = new WP_Query( $query_args );
