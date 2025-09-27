@@ -1,6 +1,8 @@
 <?php
 namespace um\ajax;
 
+use WP_Query;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -23,7 +25,7 @@ class Pages {
 	 * AJAX callback for getting the pages list
 	 */
 	public function get_pages_list() {
-		UM()->admin()->check_ajax_nonce();
+		check_ajax_referer( 'um-admin-nonce', 'nonce' );
 
 		// we will pass post IDs and titles to this array
 		$return = array();
@@ -36,7 +38,7 @@ class Pages {
 				'post_status'         => 'publish', // if you don't want drafts to be returned
 				'ignore_sticky_posts' => 1,
 				'posts_per_page'      => 10, // how much to show at once
-				'paged'               => absint( $_GET['page'] ),
+				'paged'               => ! empty( $_GET['page'] ) ? absint( $_GET['page'] ) : 1,
 				'orderby'             => 'title',
 				'order'               => 'asc',
 			);
@@ -45,7 +47,37 @@ class Pages {
 				$query_args['s'] = sanitize_text_field( $_GET['search'] ); // the search query
 			}
 
-			$search_results = new \WP_Query( $query_args );
+			$field_id = ! empty( $_GET['field_id'] ) ? sanitize_text_field( $_GET['field_id'] ) : null;
+			if ( 'form__um_register_use_gdpr_content_id' === $field_id ) {
+				$predefined_ids   = array();
+				$predefined_pages = array_keys( UM()->config()->get( 'predefined_pages' ) );
+				foreach ( $predefined_pages as $slug ) {
+					$p_id = um_get_predefined_page_id( $slug );
+					if ( empty( $p_id ) ) {
+						continue;
+					}
+					$predefined_ids[] = $p_id;
+				}
+				$predefined_ids = array_unique( $predefined_ids );
+				if ( ! empty( $predefined_ids ) ) {
+					$query_args['post__not_in'] = $predefined_ids;
+				}
+			}
+
+			/**
+			 * Filters WP_Query arguments for getting pages visible in the dropdown fields in UM Settings.
+			 *
+			 * @since 2.10.6
+			 * @hook  um_admin_settings_get_pages_list_args
+			 *
+			 * @param {array}  $query_args Get pages WP_Query arguments.
+			 * @param {string} $field_id   Dropdown field ID.
+			 *
+			 * @return {array} Get pages WP_Query arguments.
+			 */
+			$query_args = apply_filters( 'um_admin_settings_get_pages_list_args', $query_args, $field_id );
+
+			$search_results = new WP_Query( $query_args );
 
 			if ( $search_results->have_posts() ) {
 				while ( $search_results->have_posts() ) {

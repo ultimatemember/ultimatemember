@@ -979,14 +979,34 @@ class Users {
 	public static function get_empty_status_users() {
 		global $wpdb;
 
-		$total_users = $wpdb->get_var(
-			"SELECT COUNT(DISTINCT u.ID)
-			FROM {$wpdb->users} u
-			LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'account_status'
-			LEFT JOIN {$wpdb->usermeta} um2 ON u.ID = um2.user_id AND um2.meta_key = '_um_registration_in_progress'
-			WHERE ( um.meta_value IS NULL OR um.meta_value = '' ) AND
-				  ( um2.meta_value IS NULL OR um2.meta_value != '1' )"
-		);
+		/**
+		 * Filters whitelisted usermeta keys that can be stored inside DB after UM Form submission.
+		 *
+		 * @param {int} $total_users Count of the users with empty status. Query result, by default is null.
+		 *
+		 * @return {int} Count of the users with empty status. Or null.
+		 *
+		 * @since 2.10.6
+		 * @hook um_get_empty_status_users_query_result
+		 *
+		 * @example <caption>Customize the empty status users query.</caption>
+		 * function my_get_empty_status_users_query( $total_users ) {
+		 *     $total_users = $wpdb->get_var( "your custom DB query here" );
+		 *     return $total_users;
+		 * }
+		 * add_filter( 'um_get_empty_status_users_query_result', 'my_get_empty_status_users_query' );
+		 */
+		$total_users = apply_filters( 'um_get_empty_status_users_query_result', null );
+		if ( is_null( $total_users ) ) {
+			$total_users = $wpdb->get_var(
+				"SELECT COUNT(DISTINCT u.ID)
+				FROM {$wpdb->users} u
+				LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'account_status'
+				LEFT JOIN {$wpdb->usermeta} um2 ON u.ID = um2.user_id AND um2.meta_key = '_um_registration_in_progress'
+				WHERE ( um.meta_value IS NULL OR um.meta_value = '' ) AND
+					  ( um2.meta_value IS NULL OR um2.meta_value != '1' )"
+			);
+		}
 
 		$total_users = absint( $total_users );
 		if ( $total_users > 0 ) {

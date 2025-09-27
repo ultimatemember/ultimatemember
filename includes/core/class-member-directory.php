@@ -995,16 +995,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$range = false;
 
 			switch ( $filter ) {
-
-				default: {
-
+				default:
 					$meta = $wpdb->get_row(
 						$wpdb->prepare(
 							"SELECT MIN( CONVERT( meta_value, DECIMAL ) ) as min_meta,
 							MAX( CONVERT( meta_value, DECIMAL ) ) as max_meta,
 							COUNT( DISTINCT meta_value ) as amount
 							FROM {$wpdb->usermeta}
-							WHERE meta_key = %s",
+							WHERE meta_key = %s AND
+								  meta_value != ''",
 							$filter
 						),
 						ARRAY_A
@@ -1016,10 +1015,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					$range = apply_filters( 'um_member_directory_filter_slider_common', $range, $directory_data, $filter );
 					$range = apply_filters( "um_member_directory_filter_{$filter}_slider", $range, $directory_data );
-
 					break;
-				}
-				case 'birth_date': {
+
+				case 'birth_date':
 					$meta = $wpdb->get_row(
 						"SELECT MIN( meta_value ) as min_meta,
 						MAX( meta_value ) as max_meta,
@@ -1033,15 +1031,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					if ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) && isset( $meta['amount'] ) && $meta['amount'] > 1 ) {
 						$range = array( $this->borndate( strtotime( $meta['max_meta'] ) ), $this->borndate( strtotime( $meta['min_meta'] ) ) );
 					}
-
 					break;
-				}
 
 			}
 
 			return $range;
 		}
-
 
 		/**
 		 * @param $filter
@@ -2956,8 +2951,14 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$user_ids = apply_filters( 'um_prepare_user_results_array', $user_ids, $this->query_args );
 
 			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
+			// Ensure we have valid sizes array and handle case when only one size is defined
+			if ( ! is_array( $sizes ) || empty( $sizes ) ) {
+				$sizes = array( 300 ); // fallback to default
+			}
 
-			$this->cover_size = wp_is_mobile() ? $sizes[1] : end( $sizes );
+			// For mobile, use second size if available, otherwise use first size
+			$available_mobile = isset( $sizes[1] ) ? $sizes[1] : $sizes[0];
+			$this->cover_size = wp_is_mobile() ? $available_mobile : end( $sizes );
 
 			$this->cover_size = apply_filters( 'um_member_directory_cover_image_size', $this->cover_size, $directory_data );
 

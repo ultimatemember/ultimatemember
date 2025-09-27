@@ -80,7 +80,9 @@ if ( ! class_exists( 'um\core\Cron' ) ) {
 		 */
 		private function weekly_events() {
 			$sunday_start   = wp_date( 'w' );
-			$week_start     = $sunday_start - absint( get_option( 'start_of_week' ) );
+			$start_of_week  = get_option( 'start_of_week', 0 );
+			$start_of_week  = is_numeric( $start_of_week ) ? $start_of_week : 0;
+			$week_start     = $sunday_start - absint( $start_of_week );
 			$week_start_day = strtotime( '-' . $week_start . ' days' );
 			$time           = mktime( 0, 0, 0, wp_date( 'm', $week_start_day ), wp_date( 'd', $week_start_day ), wp_date( 'Y', $week_start_day ) );
 			if ( ! wp_next_scheduled( 'um_weekly_scheduled_events' ) ) {

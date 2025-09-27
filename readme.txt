@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 6.8
-Stable tag: 2.10.5
+Stable tag: 2.10.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -166,6 +166,30 @@ No specific extensions are needed. But we highly recommended keep active these P
 = Important: =
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
+
+= 2.10.6 2025-09-30 =
+
+**Enhancements**
+
+* Added: Avoid caching of the UM Forms on the mobile devices via adding the nocache headers to the screens with UM Forms.
+* Added: Filter hook `um_get_empty_status_users_query_result` for changing default query on the different websites to optimize it.
+* Added: Filter hook `um_admin_settings_get_pages_list_args` for changing WP_Query arguments for getting pages visible in the dropdown fields in UM Settings.
+* Added: JS filter hook `um_admin_blocks_prefixes_excluded` for excluding 3rd-party Gutenberg blocks with predefined prefixes from UM restriction arguments.
+* Added: WebP file-extension support for UM uploader.
+* Added: `UM_LICENSE_REQUEST_DEBUG` constant for debugging license activation process when it's needed.
+* Added: `Extensions_Updater` class to standardize the upgrade process in UM extensions.
+* Added: Sanitize handlers `sanitize_array_key_int` and `sanitize_array_key` for making sanitize in UM extensions' settings.
+
+**Bugfixes**
+
+* Fixed: Changed the view and the edit user profile links in the comments section on the frontend.
+* Fixed: `Contains` conditional logic operand when value is array.
+* Fixed: Getting cover_size for displaying it in the member directory card.
+* Fixed: Filter's range for numeric-type fields to avoid getting the empty values.
+* Fixed: Integer validation for the 'start_of_week' WP native setting.
+* Fixed: Dependencies with Action Scheduler library.
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
 = 2.10.5 2025-06-25 =
 

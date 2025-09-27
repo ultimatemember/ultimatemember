@@ -1405,6 +1405,13 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 							$sanitized[ $k ] = ( '' !== $v ) ? absint( $v ) : '';
 						}
 						break;
+					case 'sanitize_array_key_int':
+						if ( ! array_key_exists( 'default', $this->builder_input[ $k ] ) || ! array_key_exists( 'array', $this->builder_input[ $k ] ) ) {
+							continue 2;
+						}
+
+						$sanitized[ $k ] = ! in_array( absint( $v ), $this->builder_input[ $k ]['array'], true ) ? $this->builder_input[ $k ]['default'] : absint( $v );
+						break;
 				}
 			}
 
@@ -1565,14 +1572,26 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					case 'text':
 						$sanitized[ $k ] = sanitize_text_field( $v );
 						break;
+					case 'sanitize_array_key':
+						if ( ! array_key_exists( 'default', UM()->admin_settings()->settings_map[ $k ] ) || ! array_key_exists( 'array', UM()->admin_settings()->settings_map[ $k ] ) ) {
+							continue 2;
+						}
+
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array();
+							foreach ( $v as $v_v ) {
+								if ( in_array( sanitize_key( $v_v ), UM()->admin_settings()->settings_map[ $k ]['array'], true ) ) {
+									$sanitized[ $k ][] = sanitize_key( $v_v );
+								}
+							}
+						} else {
+							$sanitized[ $k ] = ! in_array( sanitize_key( $v ), UM()->admin_settings()->settings_map[ $k ]['array'], true ) ? UM()->admin_settings()->settings_map[ $k ]['default'] : sanitize_key( $v );
+						}
+						break;
 				}
 			}
 
-			$data = $sanitized;
-
-			$data = apply_filters( 'um_save_settings_sanitize', $data );
-
-			return $data;
+			return apply_filters( 'um_save_settings_sanitize', $sanitized );
 		}
 
 		/**
@@ -2099,6 +2118,23 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				UM()->classes['um\admin\users_columns'] = new Users_Columns();
 			}
 			return UM()->classes['um\admin\users_columns'];
+		}
+
+		/**
+		 * @since 2.10.6
+		 *
+		 * @param bool|array $data
+		 * @return null|Extensions_Updater
+		 */
+		public function extension_updater( $data = false ) {
+			if ( empty( $data['slug'] ) ) {
+				return null;
+			}
+			$class_index = 'um\admin\extensions_updater_' . $data['slug'];
+			if ( ! isset( UM()->classes[ $class_index ] ) || empty( UM()->classes[ $class_index ] ) ) {
+				UM()->classes[ $class_index ] = new Extensions_Updater( $data );
+			}
+			return UM()->classes[ $class_index ];
 		}
 	}
 }
