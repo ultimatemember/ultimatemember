@@ -131,7 +131,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			add_action( 'um_after_user_updated', array( &$this, 'remove_cache' ) );
 			add_action( 'um_after_user_account_updated', array( &$this, 'remove_cache' ) );
 			add_action( 'personal_options_update', array( &$this, 'remove_cache' ) );
-			//add_action('edit_user_profile_update', array(&$this, 'remove_cache') );
 			add_action( 'um_when_role_is_set', array( &$this, 'remove_cache' ) );
 
 			add_action( 'show_user_profile', array( $this, 'profile_form_additional_section' ), 10 );
@@ -139,14 +138,18 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			add_action( 'edit_user_profile', array( $this, 'profile_form_additional_section' ), 10 );
 			add_filter( 'um_user_profile_additional_fields', array( $this, 'secondary_role_field' ), 1, 2 );
 
-			//on every update of user profile (hook from wp_update_user)
-			add_action( 'profile_update', array( &$this, 'profile_update' ), 10, 2 ); // user_id and old_user_data
+			// TODO investigate these 2 hooks below and make them, but avoid duplicates after 'profile_update' and 'user_register'. These 2 hooks are run after `wp_update_user` and `wp_insert_user` functions.
+			// On user update wp-admin page.
+			// add_action( 'edit_user_profile_update', array( &$this, 'profile_update' ), 10, 1 );
+			// On user create wp-admin page.
+			// add_action( 'edit_user_created_user', array( &$this, 'user_register_via_admin' ) );
 
-			//on user update profile page
-			//add_action( 'edit_user_profile_update', array( &$this, 'profile_update' ), 10, 1 );
+			// On every update of user profile (hook from wp_update_user)
+			add_action( 'profile_update', array( &$this, 'profile_update' ), 10, 2 );
 
-			add_action( 'user_register', array( &$this, 'user_register_via_admin' ), 10, 1 );
-			add_action( 'user_register', array( &$this, 'set_gravatar' ), 11, 1 );
+			// On every insert of the user (hook from wp_insert_user)
+			add_action( 'user_register', array( &$this, 'user_register_via_admin' ) );
+			add_action( 'user_register', array( &$this, 'set_gravatar' ), 11 );
 
 			if ( is_multisite() ) {
 				add_action( 'added_existing_user', array( &$this, 'add_um_role_existing_user' ), 10, 2 );
@@ -945,13 +948,13 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 * @param $user_id
 		 */
-		function user_register_via_admin( $user_id ) {
+		public function user_register_via_admin( $user_id ) {
 			if ( empty( $user_id ) ) {
 				return;
 			}
 
 			if ( is_admin() ) {
-				//if there custom 2 role not empty
+				// If there is a not empty custom 2nd role.
 				if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
 					$user = get_userdata( $user_id );
 					$user->add_role( sanitize_key( $_POST['um-role'] ) );
@@ -959,10 +962,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					UM()->user()->update_usermeta_info( 'role' );
 				}
 				/** This action is documented in ultimate-member/includes/common/um-actions-register.php */
-				do_action( 'um_user_register', $user_id, $_POST, null );
+				do_action( 'um_user_register', $user_id, $_POST, null, true );
 			}
 		}
-
 
 		/**
 		 * On wp_update_user function complete
@@ -970,7 +972,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param int $user_id
 		 * @param WP_User $old_data
 		 */
-		function profile_update( $user_id, $old_data ) {
+		public function profile_update( $user_id, $old_data ) {
 			// Bail if no user ID was passed
 			if ( empty( $user_id ) ) {
 				return;
@@ -1011,7 +1013,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 */
 			do_action( 'um_after_member_role_upgrade', $new_roles, $old_roles, $user_id );
 
-			//Update permalink
+			// Update permalink.
 			$this->generate_profile_slug( $user_id, true );
 
 			$this->remove_cache( $user_id );
