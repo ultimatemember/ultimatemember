@@ -228,8 +228,12 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		function emotize( $content ) {
 			$content = stripslashes( $content );
 			foreach ( $this->emoji as $code => $val ) {
-				$regex = str_replace(array('(', ')'), array("\\" . '(', "\\" . ')'), $code);
-				$content = preg_replace('/(' . $regex . ')(\s|$)/', '<img src="' . $val . '" alt="' . $code . '" title="' . $code . '" class="emoji" />$2', $content);
+				$regex   = str_replace( array( '(', ')' ), array( '\\' . '(', '\\' . ')' ), $code );
+				$content = preg_replace(
+					'/(' . $regex . ')(?=\s|$|<)/',
+					'<img src="' . $val . '" alt="' . $code . '" title="' . $code . '" class="emoji" />',
+					$content
+				);
 			}
 			return $content;
 		}
