@@ -1200,7 +1200,7 @@ UM.frontend = {
 
 			let pickerObj = this;
 
-			jQuery( '.um-gif-list' ).scroll(function(e) {
+			jQuery( '.um-gif-list' ).on( 'scroll', function(e) {
 				let $list  = jQuery(this);
 
 				// Check if we scrolled to the bottom of the container
