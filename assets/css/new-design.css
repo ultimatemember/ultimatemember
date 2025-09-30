@@ -3539,6 +3539,7 @@
 }
 .um .um-emoji-picker .um-emoji-list {
   position: absolute;
+  z-index: 2;
 }
 
 .um .um-gif-picker {
