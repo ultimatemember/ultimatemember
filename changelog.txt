@@ -1,6 +1,6 @@
 ﻿== Changelog ==
 
-= 2.10.6 September 30, 2025 =
+= 2.10.6 October 02, 2025 =
 
 * Enhancements:
 
