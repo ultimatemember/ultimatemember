@@ -1112,10 +1112,13 @@ UM.frontend = {
 							}
 						}
 
+						let styles = {position: 'absolute', top: top, left:left};
+						styles = wp.hooks.applyFilters( 'um_emoji_picker_list_styles', styles, $emojiPickerLink, $emojiList, $emojiPicker[ $item ] );
+
 						// Apply the new position
-						$emojiList.style.position = 'absolute';
-						$emojiList.style.top = `${top}px`;
-						$emojiList.style.left = `${left}px`;
+						$emojiList.style.position = styles.position;
+						$emojiList.style.top = `${styles.top}px`;
+						$emojiList.style.left = `${styles.left}px`;
 					} else {
 						$emojiList.style.display = 'none';
 						wp.hooks.doAction( 'um_emoji_picker_on_close', $emojiPickerLink, $emojiList, $emojiPicker[ $item ] );
