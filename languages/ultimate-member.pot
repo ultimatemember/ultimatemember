@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Member 2.10.5\n"
+"Project-Id-Version: Ultimate Member 2.10.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ultimate-member\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-06-25T15:10:09+00:00\n"
+"POT-Creation-Date: 2025-10-01T23:01:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -106,72 +106,72 @@ msgstr ""
 msgid "Other (Custom Field)"
 msgstr ""
 
-#: includes/admin/class-admin.php:1807
+#: includes/admin/class-admin.php:1826
 #: includes/admin/class-secure.php:96
 #: includes/admin/class-secure.php:133
 msgid "Security check"
 msgstr ""
 
-#: includes/admin/class-admin.php:1811
+#: includes/admin/class-admin.php:1830
 msgid "Wrong ID"
 msgstr ""
 
 #. translators: %s - Form title
-#: includes/admin/class-admin.php:1819
+#: includes/admin/class-admin.php:1838
 #, php-format
 msgid "Duplicate of %s"
 msgstr ""
 
-#: includes/admin/class-admin.php:1879
+#: includes/admin/class-admin.php:1898
 msgid "Docs"
 msgstr ""
 
-#: includes/admin/class-admin.php:1880
+#: includes/admin/class-admin.php:1899
 #: includes/admin/core/class-admin-menu.php:195
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-admin.php:1903
+#: includes/admin/class-admin.php:1922
 #: includes/admin/core/class-admin-notices.php:1123
 #: includes/admin/core/class-admin-settings.php:2563
 #: includes/ajax/class-secure.php:34
 msgid "Security Check"
 msgstr ""
 
-#: includes/admin/class-admin.php:1965
-#: includes/admin/class-admin.php:1968
+#: includes/admin/class-admin.php:1984
+#: includes/admin/class-admin.php:1987
 msgid "Form updated."
 msgstr ""
 
-#: includes/admin/class-admin.php:1966
+#: includes/admin/class-admin.php:1985
 msgid "Custom field updated."
 msgstr ""
 
-#: includes/admin/class-admin.php:1967
+#: includes/admin/class-admin.php:1986
 msgid "Custom field deleted."
 msgstr ""
 
-#: includes/admin/class-admin.php:1969
+#: includes/admin/class-admin.php:1988
 msgid "Form restored to revision."
 msgstr ""
 
-#: includes/admin/class-admin.php:1970
+#: includes/admin/class-admin.php:1989
 msgid "Form created."
 msgstr ""
 
-#: includes/admin/class-admin.php:1971
+#: includes/admin/class-admin.php:1990
 msgid "Form saved."
 msgstr ""
 
-#: includes/admin/class-admin.php:1972
+#: includes/admin/class-admin.php:1991
 msgid "Form submitted."
 msgstr ""
 
-#: includes/admin/class-admin.php:1973
+#: includes/admin/class-admin.php:1992
 msgid "Form scheduled."
 msgstr ""
 
-#: includes/admin/class-admin.php:1974
+#: includes/admin/class-admin.php:1993
 msgid "Form draft updated."
 msgstr ""
 
@@ -1528,7 +1528,7 @@ msgstr ""
 #: includes/admin/class-site-health.php:1914
 #: includes/admin/templates/role/register.php:56
 #: includes/admin/templates/role/register.php:98
-#: assets/js/admin/block-restrictions.js:196
+#: assets/js/admin/block-restrictions.js:210
 msgid "Show custom message"
 msgstr ""
 
@@ -1872,24 +1872,24 @@ msgid "Default sort users by"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2589
-#: includes/admin/core/class-admin-forms.php:1790
-#: includes/admin/core/class-admin-forms.php:1819
+#: includes/admin/core/class-admin-forms.php:1792
+#: includes/admin/core/class-admin-forms.php:1821
 #: includes/admin/templates/directory/sorting.php:22
-#: assets/js/admin/forms.js:355
+#: assets/js/admin/forms.js:357
 msgid "Meta key"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2593
-#: includes/admin/core/class-admin-forms.php:1791
+#: includes/admin/core/class-admin-forms.php:1793
 #: includes/admin/templates/directory/sorting.php:30
-#: assets/js/admin/forms.js:356
+#: assets/js/admin/forms.js:358
 msgid "Data type"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2597
-#: includes/admin/core/class-admin-forms.php:1794
+#: includes/admin/core/class-admin-forms.php:1796
 #: includes/admin/templates/directory/sorting.php:39
-#: assets/js/admin/forms.js:359
+#: assets/js/admin/forms.js:361
 msgid "Order"
 msgstr ""
 
@@ -2333,54 +2333,54 @@ msgstr ""
 msgid "Run"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1169
+#: includes/admin/core/class-admin-forms.php:1170
 msgid "Create Default"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1246
-#: includes/admin/core/class-admin-forms.php:1265
-#: includes/admin/core/class-admin-forms.php:1403
-#: includes/admin/core/class-admin-forms.php:1412
-#: includes/admin/core/class-admin-forms.php:1659
-#: includes/admin/core/class-admin-forms.php:1673
-#: includes/admin/core/class-admin-forms.php:1789
-#: includes/admin/core/class-admin-forms.php:1818
-#: assets/js/admin/forms.js:353
-#: assets/js/admin/forms.js:427
-#: assets/js/admin/forms.js:716
-#: assets/js/admin/forms.js:749
+#: includes/admin/core/class-admin-forms.php:1248
+#: includes/admin/core/class-admin-forms.php:1267
+#: includes/admin/core/class-admin-forms.php:1405
+#: includes/admin/core/class-admin-forms.php:1414
+#: includes/admin/core/class-admin-forms.php:1661
+#: includes/admin/core/class-admin-forms.php:1675
+#: includes/admin/core/class-admin-forms.php:1791
+#: includes/admin/core/class-admin-forms.php:1820
+#: assets/js/admin/forms.js:355
+#: assets/js/admin/forms.js:429
+#: assets/js/admin/forms.js:718
+#: assets/js/admin/forms.js:751
 msgid "Remove"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1459
+#: includes/admin/core/class-admin-forms.php:1461
 msgid "Select media"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1489
-#: assets/js/admin/forms.js:797
+#: includes/admin/core/class-admin-forms.php:1491
+#: assets/js/admin/forms.js:799
 msgid "Select"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1490
+#: includes/admin/core/class-admin-forms.php:1492
 msgid "Clear"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1795
+#: includes/admin/core/class-admin-forms.php:1797
 #: includes/admin/templates/directory/sorting.php:43
-#: assets/js/admin/forms.js:360
+#: assets/js/admin/forms.js:362
 msgid "ASC"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1796
+#: includes/admin/core/class-admin-forms.php:1798
 #: includes/admin/templates/directory/sorting.php:44
-#: assets/js/admin/forms.js:361
+#: assets/js/admin/forms.js:363
 msgid "DESC"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1798
-#: includes/admin/core/class-admin-forms.php:1820
+#: includes/admin/core/class-admin-forms.php:1800
+#: includes/admin/core/class-admin-forms.php:1822
 #: includes/admin/core/class-admin-metabox.php:2376
-#: assets/js/admin/forms.js:363
+#: assets/js/admin/forms.js:365
 msgid "Label"
 msgstr ""
 
@@ -2526,7 +2526,7 @@ msgid "e.g. New Registration Form"
 msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:287
-#: assets/js/admin/block-restrictions.js:104
+#: assets/js/admin/block-restrictions.js:118
 msgid "Ultimate Member: Content Restriction"
 msgstr ""
 
@@ -2553,21 +2553,21 @@ msgstr ""
 #: includes/admin/core/class-admin-navmenu.php:206
 #: includes/admin/templates/access/restrict_content.php:65
 #: includes/core/class-builtin.php:784
-#: assets/js/admin/block-restrictions.js:136
+#: assets/js/admin/block-restrictions.js:150
 msgid "Everyone"
 msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:452
 #: includes/admin/core/class-admin-metabox.php:603
 #: includes/admin/templates/access/restrict_content.php:66
-#: assets/js/admin/block-restrictions.js:144
+#: assets/js/admin/block-restrictions.js:158
 msgid "Logged out users"
 msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:453
 #: includes/admin/core/class-admin-metabox.php:604
 #: includes/admin/templates/access/restrict_content.php:67
-#: assets/js/admin/block-restrictions.js:140
+#: assets/js/admin/block-restrictions.js:154
 msgid "Logged in users"
 msgstr ""
 
@@ -2651,7 +2651,7 @@ msgstr ""
 #: includes/admin/core/class-admin-metabox.php:501
 #: includes/admin/core/class-admin-metabox.php:653
 #: includes/admin/templates/access/restrict_content.php:116
-#: assets/js/admin/block-restrictions.js:215
+#: assets/js/admin/block-restrictions.js:229
 msgid "Custom restricted access message"
 msgstr ""
 
@@ -5093,142 +5093,142 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3028
+#: includes/admin/core/class-admin-settings.php:3052
 msgid "Back"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3040
+#: includes/admin/core/class-admin-settings.php:3064
 msgid "Enable/Disable"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3041
+#: includes/admin/core/class-admin-settings.php:3065
 msgid "Enable this email notification"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3046
+#: includes/admin/core/class-admin-settings.php:3070
 msgid "Subject"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3052
+#: includes/admin/core/class-admin-settings.php:3076
 msgid "Email Content"
 msgstr ""
 
 #. translators: %1$s is an error code; %2$s is an error message.
-#: includes/admin/core/class-admin-settings.php:3120
+#: includes/admin/core/class-admin-settings.php:3144
 #, php-format
 msgid "code: %1$s, message: %2$s;"
 msgstr ""
 
 #. translators: %1$s is an error data; %2$s is a support link.
 #. translators: %1$s is an error; %2$s is a support link.
-#: includes/admin/core/class-admin-settings.php:3126
-#: includes/admin/core/class-admin-settings.php:3200
-#: includes/admin/core/class-admin-settings.php:3209
+#: includes/admin/core/class-admin-settings.php:3150
+#: includes/admin/core/class-admin-settings.php:3224
+#: includes/admin/core/class-admin-settings.php:3233
 #, php-format
 msgid "There was an error with this license key: %1$s. Please <a href=\"%2$s\">contact our support team</a>."
 msgstr ""
 
 #. translators: %1$s is an expiry date; %2$s is a renewal link.
 #. translators: %1$s is a expiry date; %2$s is a renew link.
-#: includes/admin/core/class-admin-settings.php:3137
-#: includes/admin/core/class-admin-settings.php:3232
+#: includes/admin/core/class-admin-settings.php:3161
+#: includes/admin/core/class-admin-settings.php:3256
 #, php-format
 msgid "Your license key expired on %1$s. Please <a href=\"%2$s\" target=\"_blank\">renew your license key</a>."
 msgstr ""
 
 #. translators: %s: support link name.
-#: includes/admin/core/class-admin-settings.php:3148
-#: includes/admin/core/class-admin-settings.php:3243
+#: includes/admin/core/class-admin-settings.php:3172
+#: includes/admin/core/class-admin-settings.php:3267
 #, php-format
 msgid "Your license key has been disabled. Please <a href=\"%s\" target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
 #. translators: %s: account page.
-#: includes/admin/core/class-admin-settings.php:3158
-#: includes/admin/core/class-admin-settings.php:3253
+#: includes/admin/core/class-admin-settings.php:3182
+#: includes/admin/core/class-admin-settings.php:3277
 #, php-format
 msgid "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account page</a> and verify it."
 msgstr ""
 
 #. translators: %1$s is a item name title; %2$s is a account page.
-#: includes/admin/core/class-admin-settings.php:3169
-#: includes/admin/core/class-admin-settings.php:3264
+#: includes/admin/core/class-admin-settings.php:3193
+#: includes/admin/core/class-admin-settings.php:3288
 #, php-format
 msgid "Your %1$s is not active for this URL. Please <a href=\"%2$s\" target=\"_blank\">visit your account page</a> to manage your license key URLs."
 msgstr ""
 
 #. translators: %s: item name.
-#: includes/admin/core/class-admin-settings.php:3179
-#: includes/admin/core/class-admin-settings.php:3274
+#: includes/admin/core/class-admin-settings.php:3203
+#: includes/admin/core/class-admin-settings.php:3298
 #, php-format
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
 #. translators: %s: account link.
-#: includes/admin/core/class-admin-settings.php:3186
-#: includes/admin/core/class-admin-settings.php:3281
+#: includes/admin/core/class-admin-settings.php:3210
+#: includes/admin/core/class-admin-settings.php:3305
 #, php-format
 msgid "Your license key has reached its activation limit. <a href=\"%s\">View possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3192
-#: includes/admin/core/class-admin-settings.php:3287
+#: includes/admin/core/class-admin-settings.php:3216
+#: includes/admin/core/class-admin-settings.php:3311
 msgid "The key you entered belongs to a bundle, please use the product specific license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3198
-#: includes/admin/core/class-admin-settings.php:3207
-#: includes/admin/core/class-admin-settings.php:3218
+#: includes/admin/core/class-admin-settings.php:3222
+#: includes/admin/core/class-admin-settings.php:3231
+#: includes/admin/core/class-admin-settings.php:3242
 msgid "unknown_error"
 msgstr ""
 
 #. translators: %1$s is an error; %2$s is a error data; %3$s is a support link.
-#: includes/admin/core/class-admin-settings.php:3221
+#: includes/admin/core/class-admin-settings.php:3245
 #, php-format
 msgid "There was an error with this license key: %1$s%2$s. Please <a href=\"%3$s\">contact our support team</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3300
+#: includes/admin/core/class-admin-settings.php:3324
 msgid "License key never expires."
 msgstr ""
 
 #. translators: %1$s is an expiry date; %2$s is a renewal link.
-#: includes/admin/core/class-admin-settings.php:3308
+#: includes/admin/core/class-admin-settings.php:3332
 #, php-format
 msgid "Your license key expires soon! It expires on %1$s. <a href=\"%2$s\" target=\"_blank\">Renew your license key</a>."
 msgstr ""
 
 #. translators: %s: expiry date.
-#: includes/admin/core/class-admin-settings.php:3319
+#: includes/admin/core/class-admin-settings.php:3343
 #, php-format
 msgid "Your license key expires on %s."
 msgstr ""
 
 #. translators: %s: item name.
-#: includes/admin/core/class-admin-settings.php:3335
+#: includes/admin/core/class-admin-settings.php:3359
 #, php-format
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3361
-#: includes/admin/core/class-admin-settings.php:3370
+#: includes/admin/core/class-admin-settings.php:3385
+#: includes/admin/core/class-admin-settings.php:3394
 msgid "Clear License"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3365
+#: includes/admin/core/class-admin-settings.php:3389
 msgid "Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3369
+#: includes/admin/core/class-admin-settings.php:3393
 msgid "Re-Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3418
+#: includes/admin/core/class-admin-settings.php:3442
 msgid "Re-check templates"
 msgstr ""
 
 #. translators: %s: Last checking templates time.
-#: includes/admin/core/class-admin-settings.php:3422
+#: includes/admin/core/class-admin-settings.php:3446
 #, php-format
 msgid "Last update: %s. You could re-check changes manually."
 msgstr ""
@@ -5501,7 +5501,7 @@ msgstr ""
 #: includes/admin/core/packages/2.1.3-beta3/init.php:22
 #: includes/admin/core/packages/2.3.0/init.php:54
 #: includes/admin/core/packages/2.8.0/init.php:25
-#: assets/js/admin/forms.js:235
+#: assets/js/admin/forms.js:237
 msgid "There are "
 msgstr ""
 
@@ -5616,7 +5616,7 @@ msgstr ""
 #: includes/admin/core/packages/2.1.3-beta3/init.php:23
 #: includes/admin/core/packages/2.3.0/init.php:55
 #: includes/admin/core/packages/2.8.0/init.php:26
-#: assets/js/admin/forms.js:236
+#: assets/js/admin/forms.js:238
 msgid "Start metadata upgrading..."
 msgstr ""
 
@@ -5731,7 +5731,7 @@ msgid "Upgrade SkypeID fields metadata for users..."
 msgstr ""
 
 #: includes/admin/core/packages/2.3.0/init.php:54
-#: assets/js/admin/forms.js:235
+#: assets/js/admin/forms.js:237
 msgid " metadata rows..."
 msgstr ""
 
@@ -6478,7 +6478,7 @@ msgstr ""
 msgid "Check All"
 msgstr ""
 
-#: includes/ajax/class-pages.php:56
+#: includes/ajax/class-pages.php:88
 #, php-format
 msgid "%s (ID: %s)"
 msgstr ""
@@ -6870,7 +6870,7 @@ msgstr ""
 #: includes/class-config.php:134
 #: includes/class-config.php:944
 #: includes/class-config.php:1008
-#: includes/core/class-member-directory.php:2518
+#: includes/core/class-member-directory.php:2513
 #: includes/core/um-actions-profile.php:1519
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
@@ -7125,49 +7125,49 @@ msgid "Custom field(s)"
 msgstr ""
 
 #. translators: %1$s is an extension name; %2$s is a plugin name; %3$s is a required version.
-#: includes/class-dependencies.php:202
+#: includes/class-dependencies.php:204
 #, php-format
 msgid "When new UI is enabled this version of <strong>\"%1$s\"</strong> requires the core <strong>%2$s</strong> plugin to be <strong>%3$s</strong> or higher."
 msgstr ""
 
 #. translators: %s: plugin name.
-#: includes/class-dependencies.php:205
+#: includes/class-dependencies.php:207
 #, php-format
 msgid "Please update <strong>%s</strong> to the latest version or disable new UI."
 msgstr ""
 
 #. translators: %1$s is an extension name; %2$s is a plugin name; %3$s is a required version.
-#: includes/class-dependencies.php:208
+#: includes/class-dependencies.php:210
 #, php-format
 msgid "This version of <strong>\"%1$s\"</strong> requires the core <strong>%2$s</strong> plugin to be <strong>%3$s</strong> or higher."
 msgstr ""
 
 #. translators: %s: plugin name.
-#: includes/class-dependencies.php:211
+#: includes/class-dependencies.php:213
 #, php-format
 msgid "Please update <strong>%s</strong> to the latest version."
 msgstr ""
 
 #. translators: %1$s is a plugin name; %2$s is an extension name; %3$s is an extension version.
-#: includes/class-dependencies.php:218
+#: includes/class-dependencies.php:220
 #, php-format
 msgid "Sorry, but this version of <strong>%1$s</strong> does not work with extension <strong>\"%2$s\" %3$s</strong> version."
 msgstr ""
 
 #. translators: %s: extension name.
-#: includes/class-dependencies.php:221
+#: includes/class-dependencies.php:223
 #, php-format
 msgid "Please update extension <strong>\"%s\"</strong> to the latest version."
 msgstr ""
 
 #. translators: %1$s is an extension name; %2$s is an extension version.
-#: includes/class-dependencies.php:239
+#: includes/class-dependencies.php:241
 #, php-format
 msgid "Please check <strong>\"%1$s\" %2$s</strong> extension's folder name."
 msgstr ""
 
 #. translators: %s: extension name.
-#: includes/class-dependencies.php:242
+#: includes/class-dependencies.php:244
 #, php-format
 msgid "Correct folder name is <strong>\"%s\"</strong>"
 msgstr ""
@@ -7184,8 +7184,8 @@ msgid "Cheatin&#8217; huh?"
 msgstr ""
 
 #: includes/common/class-cpt.php:33
-#: includes/um-short-functions.php:664
-#: includes/um-short-functions.php:702
+#: includes/um-short-functions.php:690
+#: includes/um-short-functions.php:728
 msgid "Form"
 msgstr ""
 
@@ -9808,7 +9808,7 @@ msgstr ""
 msgid "A theme or plugin compatibility issue"
 msgstr ""
 
-#: includes/core/class-files.php:1534
+#: includes/core/class-files.php:1537
 msgid "Original size"
 msgstr ""
 
@@ -9836,14 +9836,14 @@ msgid "Please agree privacy policy."
 msgstr ""
 
 #: includes/core/class-gdpr.php:90
-#: includes/um-short-functions.php:667
+#: includes/um-short-functions.php:693
 msgid "GDPR Applied"
 msgstr ""
 
 #: includes/core/class-member-directory-meta.php:603
 #: includes/core/class-member-directory-meta.php:608
-#: includes/core/class-member-directory.php:2806
-#: includes/core/class-member-directory.php:2812
+#: includes/core/class-member-directory.php:2801
+#: includes/core/class-member-directory.php:2807
 msgid "Wrong member directory data"
 msgstr ""
 
@@ -9963,27 +9963,27 @@ msgstr ""
 msgid "%s To"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1068
-#: includes/core/class-member-directory.php:1069
+#: includes/core/class-member-directory.php:1063
+#: includes/core/class-member-directory.php:1064
 msgid " stars"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1079
+#: includes/core/class-member-directory.php:1074
 msgid "<strong>Age:</strong>&nbsp;{value} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1080
+#: includes/core/class-member-directory.php:1075
 msgid "<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:2479
-#: includes/core/class-member-directory.php:2507
+#: includes/core/class-member-directory.php:2474
+#: includes/core/class-member-directory.php:2502
 #: includes/core/um-actions-profile.php:1486
 #: includes/core/um-actions-profile.php:1517
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:2513
+#: includes/core/class-member-directory.php:2508
 #: includes/core/um-actions-profile.php:1518
 msgid "My Account"
 msgstr ""
@@ -10768,7 +10768,7 @@ msgid "max"
 msgstr ""
 
 #: includes/frontend/class-actions-listener.php:52
-#: includes/frontend/class-user-profile.php:53
+#: includes/frontend/class-user-profile.php:59
 msgid "Super administrators can not be modified."
 msgstr ""
 
@@ -10841,17 +10841,17 @@ msgid "date submitted"
 msgstr ""
 
 #: includes/um-deprecated-functions.php:682
-#: includes/um-short-functions.php:852
-#: includes/um-short-functions.php:913
+#: includes/um-short-functions.php:878
+#: includes/um-short-functions.php:939
 msgid "(empty)"
 msgstr ""
 
-#: includes/um-short-functions.php:662
+#: includes/um-short-functions.php:688
 msgid "User registered date"
 msgstr ""
 
 #. translators: %1$s is a form title; %2$s is a form ID.
-#: includes/um-short-functions.php:835
+#: includes/um-short-functions.php:861
 #, php-format
 msgid "%1$s - Form ID#: %2$s"
 msgstr ""
@@ -11021,27 +11021,27 @@ msgstr ""
 msgid "This user has not created any posts."
 msgstr ""
 
-#: assets/js/admin/block-restrictions.js:110
+#: assets/js/admin/block-restrictions.js:124
 msgid "Restrict access?"
 msgstr ""
 
-#: assets/js/admin/block-restrictions.js:132
+#: assets/js/admin/block-restrictions.js:146
 msgid "Who can access this block?"
 msgstr ""
 
-#: assets/js/admin/block-restrictions.js:171
+#: assets/js/admin/block-restrictions.js:185
 msgid "What roles can access this block?"
 msgstr ""
 
-#: assets/js/admin/block-restrictions.js:184
+#: assets/js/admin/block-restrictions.js:198
 msgid "Restriction action"
 msgstr ""
 
-#: assets/js/admin/block-restrictions.js:188
+#: assets/js/admin/block-restrictions.js:202
 msgid "Hide block"
 msgstr ""
 
-#: assets/js/admin/block-restrictions.js:192
+#: assets/js/admin/block-restrictions.js:206
 msgid "Show global default message"
 msgstr ""
 
@@ -11049,24 +11049,24 @@ msgstr ""
 msgid "This will permanently delete this custom field from a database and from all forms on your site. Are you sure?"
 msgstr ""
 
-#: assets/js/admin/forms.js:159
+#: assets/js/admin/forms.js:161
 msgid "Wrong AJAX response..."
 msgstr ""
 
-#: assets/js/admin/forms.js:160
-#: assets/js/admin/forms.js:166
+#: assets/js/admin/forms.js:162
+#: assets/js/admin/forms.js:168
 msgid "Your upgrade was crashed, please contact with support"
 msgstr ""
 
-#: assets/js/admin/forms.js:165
+#: assets/js/admin/forms.js:167
 msgid "Something went wrong with AJAX request..."
 msgstr ""
 
-#: assets/js/admin/forms.js:191
+#: assets/js/admin/forms.js:193
 msgid "Upgrade Process Started..."
 msgstr ""
 
-#: assets/js/admin/forms.js:223
+#: assets/js/admin/forms.js:225
 msgid "Getting metadata"
 msgstr ""
 

@@ -361,8 +361,15 @@ class Directory_Config {
 	}
 
 	protected function init_image_sizing( $directory_data ) {
-		$sizes            = UM()->options()->get( 'cover_thumb_sizes' );
-		$this->cover_size = wp_is_mobile() ? $sizes[1] : end( $sizes );
+		$sizes = UM()->options()->get( 'cover_thumb_sizes' );
+		// Ensure we have valid sizes array and handle case when only one size is defined
+		if ( ! is_array( $sizes ) || empty( $sizes ) ) {
+			$sizes = array( 300 ); // fallback to default
+		}
+
+		// For mobile, use second size if available, otherwise use first size
+		$available_mobile = isset( $sizes[1] ) ? $sizes[1] : $sizes[0];
+		$this->cover_size = wp_is_mobile() ? $available_mobile : end( $sizes );
 		$this->cover_size = apply_filters( 'um_member_directory_cover_image_size', $this->cover_size, $directory_data );
 
 		$avatar_size       = UM()->options()->get( 'profile_photosize' );

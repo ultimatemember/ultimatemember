@@ -25,7 +25,7 @@ foreach ( $forms as $form_id ) {
 		delete_post_meta( $form_id, "_um_{$form_type}_use_globals" );
 
 		$role_slug = get_post_meta( $form_id, "_um_{$form_type}_role", true );
-		if ( $role_slug && array_key_exists( $role_slug, $roles_associations ) ) {
+		if ( $role_slug && is_array( $roles_associations ) && array_key_exists( $role_slug, $roles_associations ) ) {
 			update_post_meta( $form_id, "_um_{$form_type}_role", $roles_associations[ $role_slug ] );
 		}
 	}
