@@ -1072,7 +1072,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					break;
 				case 'um_admin_review_registration':
 					// $arg1 means `user_id` variable in this case.
-					if ( ! current_user_can( 'administrator' ) && ! um_can_view_profile( $arg1 ) ) {
+					if ( ! current_user_can( 'manage_options' ) && ! UM()->common()->users()->can_view_user( $arg1 ) ) {
 						$output = '';
 						break;
 					}
@@ -1158,17 +1158,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 */
 		public function skip_field_validation( $skip, $post_input, $array ) {
 			if ( '_options' === $post_input && isset( $array['post']['_custom_dropdown_options_source'] ) ) {
+				// Don't check is_blacklisted here, because we put it to whitelist after field save.
 				$skip = function_exists( wp_unslash( $array['post']['_custom_dropdown_options_source'] ) );
 			}
 
 			return $skip;
 		}
 
-
 		/**
 		 *  Retrieves dropdown/multi-select options from a callback function
 		 */
-		function populate_dropdown_options() {
+		public function populate_dropdown_options() {
 			UM()->admin()->check_ajax_nonce();
 
 			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
@@ -1183,8 +1183,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			$um_callback_func = wp_unslash( $um_callback_func );
 
 			if ( empty( $um_callback_func ) ) {
-				$arr_options['status'] = 'empty';
-				$arr_options['function_name'] = $um_callback_func;
+				$arr_options['status']          = 'empty';
+				$arr_options['function_name']   = $um_callback_func;
 				$arr_options['function_exists'] = function_exists( $um_callback_func );
 			}
 
@@ -1194,11 +1194,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 			$arr_options['data'] = array();
 			if ( function_exists( $um_callback_func ) ) {
-				$arr_options['data'] = call_user_func( $um_callback_func );
+				$arr_options['data'] = $um_callback_func();
 			}
 
 			wp_send_json( $arr_options );
 		}
-
 	}
 }

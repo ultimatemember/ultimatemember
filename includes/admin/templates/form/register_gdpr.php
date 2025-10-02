@@ -34,8 +34,11 @@ $register_use_gdpr = ! isset( $post_id ) ? false : get_post_meta( $post_id, '_um
 				),
 				array(
 					'id'          => '_um_register_use_gdpr_content_id',
-					'type'        => 'select',
+					'type'        => 'page_select',
+					'predefined'  => false,
 					'label'       => __( 'Content', 'ultimate-member' ),
+					'placeholder' => __( 'Choose a page...', 'ultimate-member' ),
+					'size'        => 'small',
 					'value'       => UM()->query()->get_meta_value( '_um_register_use_gdpr_content_id', null, '' ),
 					'options'     => $options,
 					'conditional' => array( '_um_register_use_gdpr', '=', '1' ),

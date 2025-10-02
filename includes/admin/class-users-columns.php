@@ -246,7 +246,7 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 			}
 
 			// Remove row actions for now Administrator role and who cannot view profiles of row's user.
-			if ( ! current_user_can( 'manage_options' ) && ! um_can_view_profile( $user_id ) ) {
+			if ( ! current_user_can( 'manage_options' ) && ! UM()->common()->users()->can_view_user( $user_id ) ) {
 				unset( $actions['frontend_profile'], $actions['view_info'], $actions['view'] );
 			}
 
