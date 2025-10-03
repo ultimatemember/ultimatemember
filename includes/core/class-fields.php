@@ -2362,6 +2362,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$type = apply_filters( "um_hook_for_field_{$type}", $type );
 			switch ( $type ) {
 				case 'textarea':
+					$field_id    = $key . $form_suffix;
+					$field_name  = $key . $form_suffix;
+					$field_value = $this->field_value( $key, $default, $data );
 				case 'multiselect':
 					$field_id    = $key;
 					$field_name  = $key;
@@ -2830,8 +2833,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					$field_id    = $key;
-					$field_name  = $key;
+					$field_id    = $key . $form_suffix;
+					$field_name  = $key . $form_suffix;
 					$field_value = $this->field_value( $key, $default, $data );
 
 					$bio_key = UM()->profile()->get_show_bio_key( $this->global_args );
