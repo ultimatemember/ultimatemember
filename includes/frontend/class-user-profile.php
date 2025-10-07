@@ -94,7 +94,7 @@ if ( ! class_exists( 'um\frontend\User_Profile' ) ) {
 		 * @return string The user profile URL for the comment author.
 		 */
 		public function change_comment_author_url( $comment_author_url, $comment_id, $comment ) {
-			if ( ! is_null( $comment ) ) {
+			if ( ! is_null( $comment ) && ! empty( $comment->user_id ) ) {
 				return um_user_profile_url( $comment->user_id );
 			}
 
