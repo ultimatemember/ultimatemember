@@ -87,14 +87,18 @@ if ( ! class_exists( 'um\frontend\User_Profile' ) ) {
 		/**
 		 * Retrieves the user profile URL for the given comment author.
 		 *
-		 * @param string     $comment_author_url The URL of the comment author.
-		 * @param int        $comment_id         The ID of the comment.
-		 * @param WP_Comment $comment            The comment object.
+		 * @param string          $comment_author_url The URL of the comment author.
+		 * @param int             $comment_id         The ID of the comment.
+		 * @param WP_Comment|null $comment            The comment object.
 		 *
 		 * @return string The user profile URL for the comment author.
 		 */
 		public function change_comment_author_url( $comment_author_url, $comment_id, $comment ) {
-			return um_user_profile_url( $comment->user_id );
+			if ( ! is_null( $comment ) && ! empty( $comment->user_id ) ) {
+				return um_user_profile_url( $comment->user_id );
+			}
+
+			return $comment_author_url;
 		}
 	}
 }
