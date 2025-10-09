@@ -869,6 +869,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 								if ( array_key_exists( 'private_use', $field_data ) && true === $field_data['private_use'] ) {
 									continue;
 								}
+								if ( array_key_exists( 'form_type', $field_data ) && ! in_array( $form_mode, $field_data['form_type'], true ) ) {
+									continue;
+								}
 								?>
 								<a href="javascript:void(0);" class="button" <?php disabled( in_array( $field_key, $form_fields, true ) ); ?> data-silent_action="um_admin_add_field_from_predefined" data-arg1="<?php echo esc_attr( $field_key ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>" title="<?php echo esc_attr( $field_data['title'] ); ?>"><?php echo esc_html( um_trim_string( $field_data['title'] ) ); ?></a>
 								<?php
