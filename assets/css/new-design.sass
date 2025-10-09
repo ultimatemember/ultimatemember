@@ -2045,6 +2045,22 @@
           border-left: 1px solid $button-border-color-disabled
         &:last-child
           border-right: 1px solid $button-border-color-disabled
+.rtl
+  .um
+    .#{$prefix}buttons-group
+      .#{$prefix}button-in-group
+        &:first-child
+          border-radius: 0 $radius-md $radius-md 0
+          border-right: 1px solid $button-border-color
+          border-left: none
+          &.#{$prefix}disabled
+            border-right: 1px solid $button-border-color-disabled
+            border-left: none
+        &:last-child
+          border-radius: $radius-md 0 0 $radius-md
+          border-left: 1px solid $button-border-color
+          &.#{$prefix}disabled
+            border-left: 1px solid $button-border-color-disabled
 
 
 // Pagination
@@ -2120,6 +2136,24 @@
       button
         width: auto
         min-width: 80px
+
+.rtl
+  .um
+    .#{$prefix}pagination
+      .#{$prefix}pagination-view-list
+        .#{$prefix}pagination-item.#{$prefix}pagination-arrow
+          &:last-child
+            border-right: 0
+            border-left: 1px solid $button-border-color
+            &.disabled
+              border-right: 0
+              border-left: 1px solid $button-border-color
+          &:first-child
+            border-left: 0
+            border-right: 1px solid $button-border-color
+            &.disabled
+              border-left: 0
+              border-right: 1px solid $button-border-color
 
 
 // Fields common styling.
