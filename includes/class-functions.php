@@ -675,6 +675,8 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'srcset'   => true,
 							'usemap'   => true,
 							'width'    => true,
+							'onerror'  => true,
+							'decoding' => true,
 						),
 						'h1'         => array(
 							'align' => true,
