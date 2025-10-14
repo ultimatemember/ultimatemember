@@ -1449,6 +1449,11 @@ class Users {
 			return false;
 		}
 
+		// Check if the current visit is from the guest.
+		if ( ! is_user_logged_in() && ! $this->is_user_profile_private( $user_id ) && $this->has_status( $user_id, 'approved' ) ) {
+			return true;
+		}
+
 		$can_view_user = true;
 
 		$temp_id = um_user( 'ID' );
