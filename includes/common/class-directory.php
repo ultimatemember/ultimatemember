@@ -752,7 +752,7 @@ class Directory extends Directory_Config {
 		// getting value from GET line
 		$filter_from_url = array();
 		if ( ! $admin ) {
-			$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? explode( '||', sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ) : $filter_from_url;
+			$filter_from_url = isset( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? explode( '||', sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ) : $filter_from_url;
 			$filter_from_url = apply_filters( 'um_member_directory_filter_value_from_url', $filter_from_url, $attrs, $filter, $directory_data );
 		}
 
@@ -889,35 +889,32 @@ class Directory extends Directory_Config {
 
 					$attrs['options'] = $values_array;
 				} else {
-					if ( true !== $disable_filters_pre_query ) {
-						// @todo find the way how to remove `online_status` from there
-						if ( 'online_status' !== $attrs['metakey'] ) {
-							$values_array = $wpdb->get_col(
-								$wpdb->prepare(
-									"SELECT DISTINCT meta_value
-									FROM $wpdb->usermeta
-									WHERE meta_key = %s AND
-										  meta_value != ''",
-									$attrs['metakey']
-								)
+					if ( true !== $disable_filters_pre_query && empty( $attrs['disable_filters_pre_query'] ) ) {
+						$values_array = $wpdb->get_col(
+							$wpdb->prepare(
+								"SELECT DISTINCT meta_value
+								FROM $wpdb->usermeta
+								WHERE meta_key = %s AND
+									  meta_value != ''",
+								$attrs['metakey']
+							)
+						);
+
+						if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
+							$values_array = array_map(
+								function ( $item ) {
+									$item = maybe_unserialize( $item );
+									return is_array( $item ) ? $item : (array) $item;
+								},
+								$values_array
 							);
+							$values_array = array_unique( array_merge( ...$values_array ) );
+						}
 
-							if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
-								$values_array = array_map(
-									function ( $item ) {
-										$item = maybe_unserialize( $item );
-										return is_array( $item ) ? $item : (array) $item;
-									},
-									$values_array
-								);
-								$values_array = array_unique( array_merge( ...$values_array ) );
-							}
-
-							if ( empty( $option_pairs ) ) {
-								$attrs['options'] = array_intersect( array_map( 'stripslashes', array_map( 'trim', $attrs['options'] ) ), $values_array );
-							} else {
-								$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
-							}
+						if ( empty( $option_pairs ) ) {
+							$attrs['options'] = array_intersect( array_map( 'stripslashes', array_map( 'trim', $attrs['options'] ) ), $values_array );
+						} else {
+							$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
 						}
 					}
 				}
@@ -996,10 +993,10 @@ class Directory extends Directory_Config {
 							$default_value = array( $default_value );
 						}
 
-						// @todo find the way how to use strict comparison
-						$selected = in_array( $opt, $default_value, false ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- $default_value values can be strings but $opt can be a number ( for example user tags extension)
+						// Convert any int option to the string to strict compare.
+						$selected = in_array( (string) $opt, $default_value, true );
 					} else {
-						$selected = ( ! empty( $filter_from_url ) && in_array( $opt, $filter_from_url, true ) );
+						$selected = ( ! empty( $filter_from_url ) && in_array( (string) $opt, $filter_from_url, true ) );
 					}
 					?>
 					<option value="<?php echo esc_attr( $opt ); ?>" data-value_label="<?php echo esc_attr( $v ); ?>" <?php selected( $selected ); ?>>
