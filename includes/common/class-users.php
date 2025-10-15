@@ -215,7 +215,11 @@ class Users {
 
 				$args['url'] = set_url_scheme( $url );
 				if ( ! empty( $args['class'] ) ) {
-					$args['class'][] = 'um-avatar-default';
+					if ( is_array( $args['class'] ) ) {
+						$args['class'][] = 'um-avatar-default';
+					} else {
+						$args['class'] .= ' um-avatar-default';
+					}
 				} else {
 					$args['class'] = array( 'um-avatar-default' );
 				}
