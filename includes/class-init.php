@@ -19,7 +19,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_JobBoardWP JobBoardWP() Reviewed branch: master
 	 * @method UM_Mailchimp Mailchimp() Reviewed branch: master
 	 * @method UM_Messaging Messaging() Reviewed branch: feature/new_ui
-	 * @method UM_myCRED myCRED() Reviewed branch: feature/new_ui
+	 * @method UM_myCRED myCRED() Reviewed branch: master
 	 * @method UM_Notices Notices() Reviewed branch: master
 	 * @method UM_Notifications Notifications()
 	 * @method UM_Online Online() Reviewed branch: master
@@ -40,7 +40,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_User_Tags User_Tags() Reviewed branch: master
 	 * @method UM_Verified_Users Verified_Users()
 	 * @method UM_WooCommerce WooCommerce() Partially Reviewed branch: dev/new_ui
-	 * @method UM_Zapier Zapier() Branch: master. Any frontend handlers, so any new UI changes
+	 * @method UM_Zapier Zapier() TODO branch dev/new_ui for changing a cross-integration class to UM()->Profile_Completeness().
 	 *
 	 * @method UM_Frontend_Posting Frontend_Posting()
 	 * @method UM_Google_Authenticator Google_Authenticator()
