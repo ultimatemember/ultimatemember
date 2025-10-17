@@ -417,6 +417,14 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 
 			if ( get_query_var( 'subnav' ) ) {
 				$this->active_subnav = get_query_var( 'subnav' );
+			} else {
+				// Get active tabs
+				$tabs       = UM()->profile()->tabs_active();
+				$active_tab = $this->active_tab();
+
+				if ( isset( $tabs[ $active_tab ]['subnav_default'] ) ) {
+					$this->active_subnav = $tabs[ $active_tab ]['subnav_default'];
+				}
 			}
 
 			return $this->active_subnav;
