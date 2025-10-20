@@ -1,8 +1,9 @@
 <?php
 namespace um\admin\core;
 
-// Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
 if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
@@ -47,13 +48,11 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 			);
 		}
 
-
 		/**
 		 *
 		 */
-		function init_fields() {
+		public function init_fields() {
 			$this->meta_associations = array(
-
 				'account_status'                        => __( 'Account Status', 'ultimate-member' ),
 				'submitted'                             => __( 'Submitted data on Registration', 'ultimate-member' ),
 				'form_id'                               => __( 'Registration Form ID', 'ultimate-member' ),
@@ -68,20 +67,7 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 				'um_user_profile_url_slug_name_plus'    => __( 'Profile Slug "First and Last Name with \'+\'"', 'ultimate-member' ),
 				'um_user_profile_url_slug_user_id'      => __( 'Profile Slug "User ID"', 'ultimate-member' ),
 				'_um_last_login'                        => __( 'Last Login date', 'ultimate-member' ),
-
-				//Private content extension
-				'_um_private_content_post_id'           => __( 'Private Content Post ID', 'ultimate-member' ),
-
-				//Verified Users extension
-				'_um_verified'                          => __( 'Verified Account', 'ultimate-member' ),
-
-				//Terms & Conditions extension
-				'use_terms_conditions_agreement'        => __( 'Terms&Conditions Agreement', 'ultimate-member' ),
-
-				//GDPR extension
 				'use_gdpr_agreement'                    => __( 'Privacy Policy Agreement', 'ultimate-member' ),
-
-
 			);
 
 			$all_fields = UM()->builtin()->all_user_fields( null, true );
@@ -315,7 +301,5 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 				'done'           => true,
 			);
 		}
-
 	}
-
 }
