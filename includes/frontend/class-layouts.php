@@ -1052,20 +1052,39 @@ class Layouts {
 			return '';
 		}
 
-		$args = wp_parse_args(
-			$args,
-			array(
-				'avatar_size' => 'l',
-				'header'      => '',
-				'clickable'   => get_current_user_id() !== $user_id,
-				'url'         => um_user_profile_url( $user_id ),
-				'url_title'   => __( 'Visit profile', 'ultimate-member' ),
-				'supporting'  => '',
-				'ignore_caps' => false,
-				'classes'     => array(),
-				'context'     => '',
-			)
+		$default_args = array(
+			'avatar_size' => 'l',
+			'header'      => '',
+			'clickable'   => get_current_user_id() !== $user_id,
+			'url'         => um_user_profile_url( $user_id ),
+			'url_title'   => __( 'Visit profile', 'ultimate-member' ),
+			'supporting'  => '',
+			'ignore_caps' => false,
+			'classes'     => array(),
+			'context'     => '',
 		);
+		/**
+		 * Filters default arguments for displaying small data layout.
+		 *
+		 * @param {array} $default_args Default arguments.
+		 * @param {int}   $user_id      User ID.
+		 *
+		 * @return {array} Small data layout default arguments.
+		 *
+		 * @since 3.0.0
+		 * @hook um_user_small_data_default_args
+		 *
+		 * @example <caption>Extends default arguments for displaying small data layout.</caption>
+		 * function my_user_small_data_default_args( $default_args, $user_id ) {
+		 *     // your code here
+		 *     $default_args['custom_key'] = 'custom_value';
+		 *     return $default_args;
+		 * }
+		 * add_filter( 'um_user_small_data_default_args', 'my_user_small_data_default_args', 10, 2 );
+		 */
+		$default_args = apply_filters( 'um_user_small_data_default_args', $default_args, $user_id );
+
+		$args = wp_parse_args( $args, $default_args );
 
 		if ( false === $args['ignore_caps'] && ! UM()->common()->users()->can_view_user( $user_id ) ) {
 			return '';
@@ -1086,6 +1105,30 @@ class Layouts {
 
 		$wrapper_classes = array_merge( $wrapper_classes, $args['classes'] );
 
+		/**
+		 * Filters display name attributes for displaying it in the small data layout.
+		 *
+		 * @param {string} $display_name_html Attribute for um_user( 'display_name', $display_name_html ) function calling.
+		 * @param {array}  $args              Small data layout arguments.
+		 * @param {int}    $user_id           User ID.
+		 *
+		 * @return {array} Small data layout default arguments.
+		 *
+		 * @since 3.0.0
+		 * @hook um_user_small_data_display_name_html
+		 *
+		 * @example <caption>Set 'html' attribute for displaying display_name in the small data layout.</caption>
+		 * function my_user_small_data_display_name_html( $display_name_html, $args, $user_id ) {
+		 *     // your code here
+		 *     if ( $args['custom_key'] = 'custom_value' ) {
+		 *         $display_name_html = 'html';
+		 *     }
+		 *     return $display_name_html;
+		 * }
+		 * add_filter( 'um_user_small_data_display_name_html', 'my_user_small_data_display_name_html', 10, 2 );
+		 */
+		$display_name_html = apply_filters( 'um_user_small_data_display_name_html', null, $args, $user_id );
+
 		ob_start();
 		?>
 		<div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>">
@@ -1102,11 +1145,11 @@ class Layouts {
 			if ( empty( $args['header'] ) ) {
 				if ( ! empty( $args['clickable'] ) ) {
 					?>
-					<a class="um-user-display-name um-link um-header-link" href="<?php echo esc_url( $args['url'] ); ?>" title="<?php echo esc_attr( $args['url_title'] ); ?>"><?php echo esc_html( um_user( 'display_name' ) ); ?></a>
+					<a class="um-user-display-name um-link um-header-link" href="<?php echo esc_url( $args['url'] ); ?>" title="<?php echo esc_attr( $args['url_title'] ); ?>"><?php echo wp_kses( um_user( 'display_name', $display_name_html ), UM()->get_allowed_html( 'templates' ) ); ?></a>
 					<?php
 				} else {
 					?>
-					<span class="um-user-display-name"><?php echo esc_html( um_user( 'display_name' ) ); ?></span>
+					<span class="um-user-display-name"><?php echo wp_kses( um_user( 'display_name', $display_name_html ), UM()->get_allowed_html( 'templates' ) ); ?></span>
 					<?php
 				}
 			} else {

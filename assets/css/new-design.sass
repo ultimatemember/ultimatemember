@@ -1873,6 +1873,7 @@
     .#{$prefix}avatar
       grid-row: 1 / 3
     .#{$prefix}user-display-name
+      +flex( row, flex-start, center, nowrap )
       +typography( text, lg, semibold )
       color: $gray-900
       &.#{$prefix}link
