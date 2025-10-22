@@ -320,6 +320,24 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 				</div>
 				<?php
 			}
+
+			/**
+			 * Fires for displaying content before supporting rows in header wrapper on User Profile.
+			 *
+			 * @param {array} $args    User Profile data.
+			 * @param {int}   $user_id User Profile ID.
+			 *
+			 * @since 3.0.0
+			 * @hook  um_before_header_meta
+			 *
+			 * @example <caption>Display some content before supporting rows in User Profile header wrapper.</caption>
+			 * function my_um_before_header_meta( $args, $user_id ) {
+			 *     // your code here
+			 *     echo $content;
+			 * }
+			 * add_action( 'um_before_header_meta', 'my_um_before_header_meta', 10, 2 );
+			 */
+			do_action( 'um_before_header_meta', $profile_args, $user_profile_id );
 			?>
 			<div class="um-profile-header-supporting-rows">
 				<?php

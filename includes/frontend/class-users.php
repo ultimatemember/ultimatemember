@@ -150,7 +150,7 @@ class Users {
 							$url = add_query_arg( $url_args, wp_get_referer() );
 						} else {
 							// get proper referer via WordPress native function in AJAX for member directories
-							$url = add_query_arg( $url_args, um_get_predefined_page_url( 'user' ) );
+							$url = add_query_arg( $url_args, um_user_profile_url( $user_id ) );
 						}
 
 						$link_classes = array(

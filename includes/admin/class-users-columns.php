@@ -70,7 +70,9 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 
 			$value = '<span class="um-user-status">' . esc_html( $status ) . '</span>';
 
-			if ( get_current_user_id() === $user_id ) {
+			// Add the ability to show some admin-actions for the Administrator users,
+			// who can make something with their account.
+			if ( get_current_user_id() === $user_id && ! current_user_can( 'edit_users' ) ) {
 				return $value;
 			}
 
