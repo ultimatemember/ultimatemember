@@ -58,7 +58,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'user-notes'           => '1.2.0',
 			'user-photos'          => '2.3.0',
 			'user-tags'            => '2.4.0',
-			'verified-users'       => '2.0.5',
+			'verified-users'       => '2.3.0',
 			'woocommerce'          => '2.5.0-alpha',
 
 			/*????*/
