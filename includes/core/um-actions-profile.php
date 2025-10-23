@@ -1146,7 +1146,7 @@ function um_profile_header( $args ) {
 				 * }
 				 * ?>
 				 */
-				do_action( 'um_after_profile_header_name' ); ?>
+				do_action( 'um_after_profile_header_name', $args, um_user( 'ID' ) ); ?>
 
 			</div>
 
