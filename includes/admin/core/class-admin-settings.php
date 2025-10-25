@@ -424,7 +424,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							'type'        => 'select',
 							'multi'       => true,
 							'label'       => __( 'Allowed roles', 'ultimate-member' ),
-							'description' => __( 'Select the the user roles allowed to view this tab.', 'ultimate-member' ),
+							'description' => __( 'Select the user roles allowed to view this tab.', 'ultimate-member' ),
 							'options'     => UM()->roles()->get_roles(),
 							'placeholder' => __( 'Choose user roles...', 'ultimate-member' ),
 							'conditional' => array( 'profile_tab_' . $id . '_privacy', '=', array( '4', '5' ) ),
