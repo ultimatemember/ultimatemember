@@ -2281,13 +2281,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'checkbox_label' => __( 'Disable pre-queries for restriction content logic', 'ultimate-member' ),
 												'description' => __( 'Please enable this option only in the cases when you have big or unnecessary queries on your site with active restriction logic. If you want to exclude posts only from the results queries instead of pre_get_posts and fully-hidden post logic also please enable this option. It activates the restriction content logic until 2.2.x version without latest security enhancements.', 'ultimate-member' ),
 											),
-											array(
-												'id'    => 'enable_custom_emoji',
-												'type'  => 'checkbox',
-												'label' => __( 'Custom UM emoji', 'ultimate-member' ),
-												'checkbox_label' => __( 'Enable outdated emoji', 'ultimate-member' ),
-												'description' => __( 'Back support UM custom emoji additionally to WordPress native emotize.', 'ultimate-member' ),
-											),
+//											array(
+//												'id'    => 'enable_custom_emoji',
+//												'type'  => 'checkbox',
+//												'label' => __( 'Custom UM emoji', 'ultimate-member' ),
+//												'checkbox_label' => __( 'Enable outdated emoji', 'ultimate-member' ),
+//												'description' => __( 'Back support UM custom emoji additionally to WordPress native emotize.', 'ultimate-member' ),
+//											), todo remove because we need legacy emoji always
 										),
 									),
 								),

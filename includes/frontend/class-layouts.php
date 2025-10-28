@@ -1,6 +1,8 @@
 <?php
 namespace um\frontend;
 
+use ErrorException;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -2889,5 +2891,90 @@ class Layouts {
 		}
 
 		return str_replace( '{um_size}', $size, $all_svg[ $key ] );
+	}
+
+	/**
+	 * Wrap emojis in the content with a specific span class.
+	 *
+	 * @param string $content The text content containing emojis to wrap
+	 *
+	 * @return string The content with emojis wrapped in a span element with class name "um-emoji"
+	 * @throws ErrorException
+	 */
+	public static function wrap_emoji( $content ) {
+		$regexp = '/([\p{Emoji}]+)/u';
+
+		// Workaround for handling the PHP errors in the try-catch operator.
+		// Temporarily override the error handler while we process the current action.
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_set_error_handler
+		set_error_handler(
+			function ( $severity, $message, $file, $line ) {
+				throw new ErrorException( $message, $severity, $severity, $file, $line );
+			}
+		);
+		/**
+		 * Unicode emoji property (\p{Emoji}), was introduced into PCRE (Perl Compatible Regular Expressions),
+		 * the library that powers PHP's regex engine, in version 8.34 which corresponds to PHP version 7.4.0.
+		 * Sometimes the PCRE Unicode support for \p{Emoji} is not recognized for PHP version >= 7.4.0.
+		 * While generally, PHP's PCRE iteration should support the Emoji property,
+		 * it's possible that the specific build used in your environment is not compiled with the necessary Unicode property support,
+		 * or there may be an issue with the given text encoding.
+		 */
+		try {
+			// Use preg_replace_callback to replace consecutive emojis with a single wrapper
+			$wrapped_content = preg_replace_callback(
+				$regexp,
+				function ( $matches ) {
+					return '<span class="um-emoji">' . $matches[1] . '</span>';
+				},
+				$content
+			);
+		} catch ( ErrorException $e ) {
+			// Dealing with the failure by falling back to the less precise regexp
+			$regexp = '/(
+				[\x{2600}-\x{26FF}] | # Miscellaneous symbols
+				[\x{1F300}-\x{1F5FF}] | # Symbols & Pictographs
+				[\x{1F600}-\x{1F64F}] | # Emoticons (Unicode v6.1)
+				[\x{1F680}-\x{1F6FF}] # Transport & Map symbols etc
+			)/u';
+
+			$wrapped_content = preg_replace_callback(
+				$regexp,
+				function ( $matches ) {
+					return '<span class="um-emoji">' . $matches[1] . '</span>';
+				},
+				$content
+			);
+		} finally {
+			restore_error_handler();
+		}
+
+		return $wrapped_content;
+	}
+
+	public function emotize( $content ) {
+		foreach ( self::get_emoji() as $code => $val ) {
+			if ( strpos( $code, ')' ) !== false ) {
+				$code = str_replace( ')', '\)', $code );
+			}
+
+			if ( strpos( $code, '(' ) !== false ) {
+				$code = str_replace( '(', '\(', $code );
+			}
+
+			if ( strpos( $code, '$' ) !== false ) {
+				$code = str_replace( '$', '\$', $code );
+			}
+
+			$pattern = "~(?i)<a.*?</a>(*SKIP)(*F)|{$code}~";
+			if ( filter_var( $val, FILTER_VALIDATE_URL ) ) {
+				$content = preg_replace( $pattern, '<img src="' . $val . '" alt="' . $code . '" title="' . $code . '" class="emoji" />', $content );
+			} else {
+				$content = preg_replace( $pattern, '<span class="emoji">' . $val . '</span>', $content );
+			}
+		}
+
+		$content = UM()->frontend()::layouts()::wrap_emoji( $content );
+
 	}
 }

@@ -1472,6 +1472,24 @@ class Shortcodes {
 	}
 
 	/**
+	 * Legacy Emoji support
+	 *
+	 * @todo Maybe deprecate soon because there is native `wp_staticize_emoji()`
+	 *
+	 * @param string $content
+	 *
+	 * @return string
+	 */
+	public function emotize_legacy( $content ) {
+		$content = stripslashes( $content );
+		foreach ( self::$emoji as $code => $val ) {
+			$regex   = str_replace( array( '(', ')' ), array( '\\(', '\\)' ), $code );
+			$content = preg_replace( '/(' . $regex . ')(\s|$)/', '<img src="' . $val . '" alt="' . $code . '" title="' . $code . '" class="emoji" />$2', $content );
+		}
+		return $content;
+	}
+
+	/**
 	 * Emoji support
 	 *
 	 * @todo Maybe deprecate soon because there is native `wp_staticize_emoji()`
@@ -1481,7 +1499,6 @@ class Shortcodes {
 	 * @return string
 	 */
 	public function emotize( $content ) {
-		$content = stripslashes( $content );
 		foreach ( self::$emoji as $code => $val ) {
 			$regex   = str_replace( array( '(', ')' ), array( '\\(', '\\)' ), $code );
 			$content = preg_replace( '/(' . $regex . ')(\s|$)/', '<img src="' . $val . '" alt="' . $code . '" title="' . $code . '" class="emoji" />$2', $content );
