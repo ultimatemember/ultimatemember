@@ -1076,10 +1076,9 @@ function um_filtered_value( $key, $data = false ) {
 	 */
 	$value = apply_filters( "um_profile_field_filter_hook__{$type}", $value, $data );
 
-	$value = UM()->shortcodes()->emotize( $value );
-	return wp_staticize_emoji( $value );
+	$value = UM()->shortcodes()->emotize( $value ); // legacy emoji convert is here.
+	return wp_staticize_emoji( $value ); // WordPress native converts emoji to a static img element
 }
-
 
 /**
  * Returns requested User ID or current User ID
@@ -1091,7 +1090,9 @@ function um_profile_id() {
 
 	if ( $requested_user ) {
 		return um_get_requested_user();
-	} elseif ( is_user_logged_in() && get_current_user_id() ) {
+	}
+
+	if ( is_user_logged_in() && get_current_user_id() ) {
 		return get_current_user_id();
 	}
 

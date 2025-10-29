@@ -1472,7 +1472,7 @@ class Shortcodes {
 	}
 
 	/**
-	 * Legacy Emoji support
+	 * Legacy emoji convert from the predefined list of emoji to the static image.
 	 *
 	 * @todo Maybe deprecate soon because there is native `wp_staticize_emoji()`
 	 *
