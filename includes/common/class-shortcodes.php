@@ -39,7 +39,7 @@ class Shortcodes {
 	/**
 	 * @var array
 	 */
-	private static $emoji = array();
+	public $emoji = array();
 
 	/**
 	 * @var null|int
@@ -60,7 +60,7 @@ class Shortcodes {
 	 * Shortcodes constructor.
 	 */
 	public function __construct() {
-		self::init_legacy_emoji();
+		$this->init_legacy_emoji();
 
 		// Content restrictions shortcodes.
 		add_shortcode( 'um_loggedin', array( &$this, 'um_loggedin' ) );
@@ -91,7 +91,7 @@ class Shortcodes {
 	/**
 	 * @todo deprecate as soon as transfer DB script will be ready.
 	 */
-	private static function init_legacy_emoji() {
+	private function init_legacy_emoji() {
 		$base_uri  = apply_filters( 'um_emoji_base_uri', 'https://s.w.org/images/core/emoji/' );
 		$base_uri .= '72x72/';
 
@@ -163,7 +163,7 @@ class Shortcodes {
 			$base_uri
 		);
 
-		self::$emoji = $emoji;
+		$this->emoji = $emoji;
 	}
 
 	/**
@@ -1480,26 +1480,9 @@ class Shortcodes {
 	 *
 	 * @return string
 	 */
-	public function emotize_legacy( $content ) {
-		$content = stripslashes( $content );
-		foreach ( self::$emoji as $code => $val ) {
-			$regex   = str_replace( array( '(', ')' ), array( '\\(', '\\)' ), $code );
-			$content = preg_replace( '/(' . $regex . ')(\s|$)/', '<img src="' . $val . '" alt="' . $code . '" title="' . $code . '" class="emoji" />$2', $content );
-		}
-		return $content;
-	}
-
-	/**
-	 * Emoji support
-	 *
-	 * @todo Maybe deprecate soon because there is native `wp_staticize_emoji()`
-	 *
-	 * @param string $content
-	 *
-	 * @return string
-	 */
 	public function emotize( $content ) {
-		foreach ( self::$emoji as $code => $val ) {
+		$content = stripslashes( $content );
+		foreach ( $this->emoji as $code => $val ) {
 			$regex   = str_replace( array( '(', ')' ), array( '\\(', '\\)' ), $code );
 			$content = preg_replace( '/(' . $regex . ')(\s|$)/', '<img src="' . $val . '" alt="' . $code . '" title="' . $code . '" class="emoji" />$2', $content );
 		}
