@@ -80,6 +80,7 @@ $emojis = um_legacy_emoji();
 
 $content_by_legacy_emotize     = '';
 $content_by_wp_staticize_emoji = '';
+$final = '';
 foreach ( $emojis as $code => $val ) {
 	$key     = $code;
 	$content = $code;
@@ -100,8 +101,10 @@ foreach ( $emojis as $code => $val ) {
 
 	$content_by_legacy_emotize     .= '<b>' . $key . '</b>:' . $content . ';<br/>';
 	$content_by_wp_staticize_emoji .= '<b>' . $key . '</b>:' . wp_staticize_emoji( convert_smilies( $key ) ) . ';<br/>';
+	$final .= '<b>' . $key . '</b>:' . wp_staticize_emoji( UM()->shortcodes()->emotize( convert_smilies( $key ) ) ) . ';<br/>';
 }
 
 echo 'Legacy<br />' . $content_by_legacy_emotize;
 echo '<br />WP native<br />' . $content_by_wp_staticize_emoji;
+echo '<br />Final result<br />' . $final;
 exit;

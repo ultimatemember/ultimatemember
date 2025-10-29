@@ -1496,7 +1496,7 @@ class Shortcodes {
 				$code = str_replace( '$', '\$', $code );
 			}
 
-			$content = preg_replace( "~(?i)<a.*?</a>(*SKIP)(*F)|{$code}~", '<img src="' . $val . '" alt="' . $code . '" class="wp-smiley" style="height: 1em; max-height: 1em;" />', $content );
+			$content = preg_replace( "~<a.*?</a>(*SKIP)(*F)|{$code}~", '<img src="' . $val . '" alt="' . $code . '" class="wp-smiley" style="height: 1em; max-height: 1em;" />', $content );
 		}
 
 		return $content;
