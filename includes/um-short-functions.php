@@ -1076,6 +1076,7 @@ function um_filtered_value( $key, $data = false ) {
 	 */
 	$value = apply_filters( "um_profile_field_filter_hook__{$type}", $value, $data );
 
+	$value = convert_smilies( $value ); // WordPress native converts text equivalent of smilies to images.
 	$value = UM()->shortcodes()->emotize( $value ); // legacy emoji convert is here.
 	return wp_staticize_emoji( $value ); // WordPress native converts emoji to a static img element
 }
