@@ -12,6 +12,8 @@ class Extensions_Updater {
 
 	const EXTRA_TIME = 30;
 
+	const PAGINATION = 50;
+
 	/**
 	 * @var array
 	 */
@@ -35,22 +37,24 @@ class Extensions_Updater {
 		);
 
 		add_action( 'admin_init', array( $this, 'maybe_run_updater' ) );
-		add_action( 'um_' . $this->updater_data['slug'] . '_package_start', array( $this, 'package_start'), 10, 2 );
-		add_action( 'um_' . $this->updater_data['slug'] . '_package_complete', array( $this, 'package_complete') );
+		add_action( 'um_' . $this->updater_data['slug'] . '_package_start', array( $this, 'package_start' ), 10, 4 );
+		add_action( 'um_' . $this->updater_data['slug'] . '_package_complete', array( $this, 'package_complete' ) );
 	}
 
-	public function package_start( $version, $file_path ) {
+	public function package_start( $version, $file_path, $delay, $per_page ) {
 		$hook = 'um_' . $this->updater_data['slug'] . '_package_complete';
 
 		include_once $file_path;
-//		IMPORTANT!!!: Last action that we need to do after package is complete.
-//		UM()->maybe_action_scheduler()->schedule_single_action(
-//			time() + 1,
-//			$hook,
-//			array(
-//				'version' => $version,
-//			)
-//		);
+		/**
+		 * IMPORTANT!!!: Last action that we need to do after package is complete.
+		 * `UM()->maybe_action_scheduler()->schedule_single_action(
+		 *      time() + 1,
+		 *      $hook,
+		 *      array(
+		 *          'version' => $version,
+		 *      )
+		 * );`
+		 */
 	}
 
 	public function package_complete( $version ) {
@@ -88,9 +92,10 @@ class Extensions_Updater {
 			time() + self::EXTRA_TIME,
 			'um_' . $this->updater_data['slug'] . '_package_start',
 			array(
-				'version' => $package_version,
-				'path'    => $file_path,
-				'delay'   => self::EXTRA_TIME,
+				'version'  => $package_version,
+				'path'     => $file_path,
+				'delay'    => self::EXTRA_TIME,
+				'per_page' => self::PAGINATION,
 			)
 		);
 
