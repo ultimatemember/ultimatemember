@@ -1,0 +1,38 @@
+@import "../../css/selectors"
+@import "../../css/mixins"
+@import "../../css/box"
+@import "../../css/colors"
+@import "../../css/typography"
+
+@import "../../css/responsive"
+
+.#{$prefix}notice-message
+  position: fixed
+  padding: 0
+  color: $gray-700
+  text-align: center
+  width: 250px
+  background-color: $um-white
+  z-index: 99999999
+  right: 30px
+  bottom: -200px
+  display: none
+  .#{$prefix}notice-message-text
+    padding: 5px
+    display: block
+    font-size: 14px
+  .#{$prefix}notice-message-progress
+    display: block
+    border-bottom-width: 2px
+    border-bottom-style: solid
+    margin-bottom: 5px
+
+  &.#{$prefix}notice-message-update
+    .#{$prefix}notice-message-progress
+      border-bottom-color: $success-500
+  &.#{$prefix}notice-message-error
+    .#{$prefix}notice-message-progress
+      border-bottom-color: $error-500
+  &.#{$prefix}notice-message-warning
+    .#{$prefix}notice-message-progress
+      border-bottom-color: $warning-500

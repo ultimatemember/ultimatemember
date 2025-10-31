@@ -70,7 +70,9 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 
 			$value = '<span class="um-user-status">' . esc_html( $status ) . '</span>';
 
-			if ( get_current_user_id() === $user_id ) {
+			// Add the ability to show some admin-actions for the Administrator users,
+			// who can make something with their account.
+			if ( get_current_user_id() === $user_id && ! current_user_can( 'edit_users' ) ) {
 				return $value;
 			}
 
@@ -246,7 +248,7 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 			}
 
 			// Remove row actions for now Administrator role and who cannot view profiles of row's user.
-			if ( ! current_user_can( 'manage_options' ) && ! um_can_view_profile( $user_id ) ) {
+			if ( ! current_user_can( 'manage_options' ) && ! UM()->common()->users()->can_view_user( $user_id ) ) {
 				unset( $actions['frontend_profile'], $actions['view_info'], $actions['view'] );
 			}
 
