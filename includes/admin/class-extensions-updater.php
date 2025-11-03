@@ -42,7 +42,10 @@ class Extensions_Updater {
 	}
 
 	public function package_start( $version, $file_path, $delay, $per_page ) {
-		$hook = 'um_' . $this->updater_data['slug'] . '_package_complete';
+		$hooks = array(
+			'start'    => 'um_' . $this->updater_data['slug'] . '_package_start',
+			'complete' => 'um_' . $this->updater_data['slug'] . '_package_complete',
+		);
 
 		include_once $file_path;
 		/**
