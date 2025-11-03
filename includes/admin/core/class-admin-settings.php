@@ -325,7 +325,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							break;
 						case 'members':
 							if ( ! has_shortcode( $content, 'ultimatemember' ) ) {
-								$page_setting_description = __( '<strong>Warning:</strong> Members page must contain a profile form shortcode. You can get existing shortcode or create a new one <a href="edit.php?post_type=um_directory" target="_blank">here</a>.', 'ultimate-member' );
+								$page_setting_description = __( '<strong>Warning:</strong> Members page must contain a member directory shortcode. You can get existing shortcode or create a new one <a href="edit.php?post_type=um_directory" target="_blank">here</a>.', 'ultimate-member' );
 							}
 							break;
 						default:
