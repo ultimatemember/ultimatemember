@@ -47,6 +47,8 @@ class Extensions_Updater {
 			'complete' => 'um_' . $this->updater_data['slug'] . '_package_complete',
 		);
 
+		$debug = defined( 'UM_UPDATER_DEBUG' ) && UM_UPDATER_DEBUG;
+
 		include_once $file_path;
 		/**
 		 * IMPORTANT!!!: Last action that we need to do after package is complete.
