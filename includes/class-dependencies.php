@@ -36,7 +36,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'friends'              => '2.1.4',
 			'groups'               => '2.4.2',
 			'jobboardwp'           => '1.0.7',
-			'mailchimp'            => '2.2.0',
+			'mailchimp'            => '2.6.2',
 			'messaging'            => '2.2.5',
 			'mycred'               => '2.2.4',
 			'notices'              => '2.0.5',
