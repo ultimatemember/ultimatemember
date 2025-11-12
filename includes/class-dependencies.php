@@ -34,7 +34,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'followers'            => '2.3.5',
 			'forumwp'              => '2.1.5',
 			'friends'              => '2.3.4',
-			'groups'               => '2.4.2',
+			'groups'               => '2.5.0',
 			'jobboardwp'           => '1.0.7',
 			'mailchimp'            => '2.6.2',
 			'messaging'            => '2.2.5',
