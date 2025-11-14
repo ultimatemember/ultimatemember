@@ -814,7 +814,6 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 					'download' => array(
 						'valueless' => 'y',
 					),
-					'style'    => true,
 				),
 				'em'     => array(),
 				'i'      => array(),
