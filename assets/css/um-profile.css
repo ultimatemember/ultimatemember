@@ -574,3 +574,7 @@ font-weight: normal;
 .um-profile.um-viewing .um-field-checkbox, .um-profile.um-viewing .um-field-radio{
 	cursor: default !important;
 }
+
+.um-reset-cover-photo:not(.um-is-visible) {
+	display: none;
+}

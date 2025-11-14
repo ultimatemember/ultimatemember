@@ -10,12 +10,14 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
-	jQuery( document.body ).on('click', '.um-dropdown-hide', function() {
+	jQuery( document.body ).on('click', '.um-dropdown-hide', function(e) {
+		e.preventDefault();
 		UM.dropdown.hideAll();
 		return false;
 	});
 
-	jQuery( document.body ).on('click', 'a.um-manual-trigger', function() {
+	jQuery( document.body ).on('click', 'a.um-manual-trigger', function(e) {
+		e.preventDefault();
 		var child = jQuery(this).attr('data-child');
 		var parent = jQuery(this).attr('data-parent');
 		jQuery(this).parents( parent ).find( child ).trigger('click');
