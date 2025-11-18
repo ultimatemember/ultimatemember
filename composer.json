@@ -32,7 +32,6 @@
     "phpcompatibility/phpcompatibility-wp": "*",
     "wp-coding-standards/wpcs": "*",
     "symplify/phpstan-rules": "*",
-    "squizlabs/php_codesniffer": "4.*",
     "phpdocumentor/phpdocumentor": "3.8.*",
     "sniccowp/php-scoper-wordpress-excludes": "6.8.*"
   },
