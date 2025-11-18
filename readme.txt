@@ -167,16 +167,18 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.10.7 2025-11-12 =
+= 2.10.7 2025-11-20 =
 
 **Enhancements**
 
+* Added: Extra condition for checking the license activation requests.
 * Tweak: Updated `Extensions_Updater` class to use Action Scheduler in the upgrade process of the UM extensions.
 
 **Bugfixes**
 
 * Fixed: User profile links in the comments section on the frontend when the `$comment->user_id` is empty.
 * Fixed: The `emotize` function regexp for better emoji converting.
+* Fixed: The conflict between the image uploader and lazy-loading attribute added by 3rd-party plugins.
 * Fixed: Typo in labels.
 
 = 2.10.6 2025-10-02 =
