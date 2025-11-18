@@ -172,6 +172,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 **Enhancements**
 
 * Added: Extra condition for checking the license activation requests.
+* Added: 2nd `$args` attribute to the action hook 'um_cover_area_content'.
 * Tweak: Updated `Extensions_Updater` class to use Action Scheduler in the upgrade process of the UM extensions.
 
 **Bugfixes**
@@ -179,6 +180,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: User profile links in the comments section on the frontend when the `$comment->user_id` is empty.
 * Fixed: The `emotize` function regexp for better emoji converting.
 * Fixed: The conflict between the image uploader and lazy-loading attribute added by 3rd-party plugins.
+* Fixed: PHP warnings for roles without meta data.
 * Fixed: Typo in labels.
 
 = 2.10.6 2025-10-02 =
