@@ -229,7 +229,8 @@ function um_submit_account_details( $args ) {
 
 		UM()->user()->password_changed();
 
-		add_filter( 'send_password_change_email', '__return_false' );
+		// Don't duplicate UM Password Changed Email and WordPress native email about password changing.
+		add_filter( 'send_password_change_email', '__return_false' ); // TODO maybe unnecessary
 
 		//clear all sessions with old passwords
 		$user = WP_Session_Tokens::get_instance( $args['user_id'] );

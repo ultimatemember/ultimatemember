@@ -619,6 +619,11 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				do_action( 'validate_password_reset', $errors, $user );
 
 				if ( ( ! $errors->get_error_code() ) ) {
+					// Don't duplicate UM Password Changed Email and WordPress native email about password changing.
+					add_filter( 'send_password_change_email', '__return_false' ); // TODO maybe unnecessary
+					// TODO make alternative email notification in UM core, but don't use WordPress native
+					// remove_action( 'after_password_reset', 'wp_password_change_notification' ); // TODO uncomment as soon as UM site admin email notification is ready.
+
 					reset_password( $user, trim( $args['user_password'] ) );
 
 					// send the Password Changed Email
