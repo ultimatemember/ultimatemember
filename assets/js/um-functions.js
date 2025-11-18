@@ -348,6 +348,7 @@ function initImageUpload_UM( trigger ) {
 
 					var cache_ts = new Date();
 
+					img_id.removeAttr("loading");
 					img_id.attr("src", d.url + "?"+cache_ts.getTime() );
 					img_id.data("file", d.file );
 
