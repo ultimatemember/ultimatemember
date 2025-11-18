@@ -667,21 +667,39 @@ function um_get_snippet( $str, $wordCount = 10 ) {
 	return $str;
 }
 
-
 /**
  * Format submitted data for Info preview & Email template
- * @param  boolean $style
- * @return string
  *
- * @since  2.1.4
+ * @since 2.1.4
+ * @since 2.10.6 Added $user_id param
+ *
+ * @param  int  $user_id  Since 2.10.6
+ * @param  bool $is_admin Wrap data to admin styled wrapper.
+ *
+ * @return string
  */
-function um_user_submitted_registration_formatted( $style = false ) {
+function um_user_submitted_registration_formatted( $user_id, $is_admin = false ) {
 	$output = null;
 
-	$submitted_data = um_user( 'submitted' );
+	if ( ! UM()->common()->users()::user_exists( $user_id ) ) {
+		return '';
+	}
 
-	if ( $style ) {
-		$output .= '<div class="um-admin-infobox">';
+	$meta           = get_user_meta( $user_id, 'submitted', true );
+	$submitted_data = ( ! empty( $meta ) && is_array( $meta ) ) ? $meta : array();
+
+	if ( empty( $submitted_data ) ) {
+		return '';
+	}
+
+	if ( ! array_key_exists( 'form_id', $submitted_data ) ) {
+		return '';
+	}
+
+	$temp_id = null;
+	if ( um_user( 'ID' ) !== $user_id ) {
+		$temp_id = um_user( 'ID' );
+		um_fetch_user( $user_id );
 	}
 
 	// User registered date.
@@ -689,7 +707,7 @@ function um_user_submitted_registration_formatted( $style = false ) {
 	// Registration form.
 	$output .= um_user_submited_display( 'form_id', __( 'Form', 'ultimate-member' ), $submitted_data );
 
-	if ( isset( $submitted_data['use_gdpr_agreement'] ) ) {
+	if ( array_key_exists( 'use_gdpr_agreement', $submitted_data ) ) {
 		$output .= um_user_submited_display( 'use_gdpr_agreement', __( 'GDPR Applied', 'ultimate-member' ), $submitted_data );
 	}
 
@@ -716,127 +734,126 @@ function um_user_submitted_registration_formatted( $style = false ) {
 	 */
 	$output .= apply_filters( 'um_before_user_submitted_registration_data', '', $output, $submitted_data );
 
-	if ( isset( $submitted_data ) && is_array( $submitted_data ) ) {
+	$fields = UM()->query()->get_attr( 'custom_fields', $submitted_data['form_id'] );
+	$fields = maybe_unserialize( $fields );
 
-		if ( isset( $submitted_data['form_id'] ) ) {
-			$fields = UM()->query()->get_attr( 'custom_fields', $submitted_data['form_id'] );
-			$fields = maybe_unserialize( $fields );
+	if ( ! empty( $fields ) ) {
+
+		$fields['form_id'] = array( 'title' => __( 'Form', 'ultimate-member' ) );
+
+		$rows = array();
+
+		UM()->fields()->get_fields = $fields;
+
+		foreach ( $fields as $key => $array ) {
+			if ( isset( $array['type'] ) && 'row' === $array['type'] ) {
+				$rows[ $key ] = $array;
+				unset( UM()->fields()->get_fields[ $key ] ); // not needed now
+			}
 		}
 
-		if ( ! empty( $fields ) ) {
+		if ( empty( $rows ) ) {
+			$rows = array(
+				'_um_row_1' => array(
+					'type'     => 'row',
+					'id'       => '_um_row_1',
+					'sub_rows' => 1,
+					'cols'     => 1,
+				),
+			);
+		}
 
-			$fields['form_id'] = array( 'title' => __( 'Form', 'ultimate-member' ) );
+		foreach ( $rows as $row_id => $row_array ) {
 
-			$rows = array();
+			$row_fields = UM()->fields()->get_fields_by_row( $row_id );
 
-			UM()->fields()->get_fields = $fields;
+			if ( $row_fields ) {
 
-			foreach ( $fields as $key => $array ) {
-				if ( isset( $array['type'] ) && 'row' === $array['type'] ) {
-					$rows[ $key ] = $array;
-					unset( UM()->fields()->get_fields[ $key ] ); // not needed now
-				}
-			}
+				$output .= UM()->fields()->new_row_output( $row_id, $row_array );
 
-			if ( empty( $rows ) ) {
-				$rows = array(
-					'_um_row_1' => array(
-						'type'     => 'row',
-						'id'       => '_um_row_1',
-						'sub_rows' => 1,
-						'cols'     => 1,
-					),
-				);
-			}
+				$sub_rows = ( isset( $row_array['sub_rows'] ) ) ? $row_array['sub_rows'] : 1;
+				for ( $c = 0; $c < $sub_rows; $c++ ) {
 
-			foreach ( $rows as $row_id => $row_array ) {
+					// cols
+					$cols = ( isset( $row_array['cols'] ) ) ? $row_array['cols'] : 1;
+					if ( strstr( $cols, ':' ) ) {
+						$col_split = explode( ':', $cols );
+					} else {
+						$col_split = array( $cols );
+					}
+					$cols_num = $col_split[ $c ];
 
-				$row_fields = UM()->fields()->get_fields_by_row( $row_id );
+					// sub row fields
+					$subrow_fields = UM()->fields()->get_fields_in_subrow( $row_fields, $c );
 
-				if ( $row_fields ) {
+					if ( is_array( $subrow_fields ) ) {
 
-					$output .= UM()->fields()->new_row_output( $row_id, $row_array );
-
-					$sub_rows = ( isset( $row_array['sub_rows'] ) ) ? $row_array['sub_rows'] : 1;
-					for ( $c = 0; $c < $sub_rows; $c++ ) {
-
-						// cols
-						$cols = ( isset( $row_array['cols'] ) ) ? $row_array['cols'] : 1;
-						if ( strstr( $cols, ':' ) ) {
-							$col_split = explode( ':', $cols );
-						} else {
-							$col_split = array( $cols );
+						if ( isset( $subrow_fields['form_id'] ) ) {
+							unset( $subrow_fields['form_id'] );
 						}
-						$cols_num = $col_split[ $c ];
 
-						// sub row fields
-						$subrow_fields = UM()->fields()->get_fields_in_subrow( $row_fields, $c );
+						$subrow_fields = UM()->fields()->array_sort_by_column( $subrow_fields, 'position' );
 
-						if ( is_array( $subrow_fields ) ) {
+						if ( $cols_num == 1 ) {
 
-							if ( isset( $subrow_fields['form_id'] ) ) {
-								unset( $subrow_fields['form_id'] );
+							$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
+							if ( $col1_fields ) {
+								foreach ( $col1_fields as $key => $data ) {
+									$output .= um_user_submited_display( $key, $data['title'] );
+								}
+							}
+						} elseif ( $cols_num == 2 ) {
+
+							$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
+							if ( $col1_fields ) {
+								foreach ( $col1_fields as $key => $data ) {
+									$output .= um_user_submited_display( $key, $data['title'] );
+								}
 							}
 
-							$subrow_fields = UM()->fields()->array_sort_by_column( $subrow_fields, 'position' );
-
-							if ( $cols_num == 1 ) {
-
-								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
-								if ( $col1_fields ) {
-									foreach ( $col1_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
-									}
+							$col2_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 2 );
+							if ( $col2_fields ) {
+								foreach ( $col2_fields as $key => $data ) {
+									$output .= um_user_submited_display( $key, $data['title'] );
 								}
-							} elseif ( $cols_num == 2 ) {
+							}
+						} else {
 
-								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
-								if ( $col1_fields ) {
-									foreach ( $col1_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
-									}
+							$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
+							if ( $col1_fields ) {
+								foreach ( $col1_fields as $key => $data ) {
+									$output .= um_user_submited_display( $key, $data['title'] );
 								}
+							}
 
-								$col2_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 2 );
-								if ( $col2_fields ) {
-									foreach ( $col2_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
-									}
+							$col2_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 2 );
+							if ( $col2_fields ) {
+								foreach ( $col2_fields as $key => $data ) {
+									$output .= um_user_submited_display( $key, $data['title'] );
 								}
-							} else {
+							}
 
-								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
-								if ( $col1_fields ) {
-									foreach ( $col1_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
-									}
-								}
-
-								$col2_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 2 );
-								if ( $col2_fields ) {
-									foreach ( $col2_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
-									}
-								}
-
-								$col3_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 3 );
-								if ( $col3_fields ) {
-									foreach ( $col3_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
-									}
+							$col3_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 3 );
+							if ( $col3_fields ) {
+								foreach ( $col3_fields as $key => $data ) {
+									$output .= um_user_submited_display( $key, $data['title'] );
 								}
 							}
 						}
 					}
 				}
-			} // endfor
-		}
+			}
+		} // endfor
 	}
 
 	$output .= apply_filters( 'um_after_user_submitted_registration_data', '', $output, $submitted_data );
 
-	if ( $style ) {
-		$output .= '</div>';
+	if ( $is_admin ) {
+		$output = '<div class="um-admin-infobox">' . $output . '</div>';
+	}
+
+	if ( $temp_id ) {
+		um_fetch_user( $temp_id );
 	}
 
 	return $output;
