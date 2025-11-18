@@ -863,25 +863,22 @@ function um_profile_header_cover_area( $args ) {
 		data-user_id="<?php echo esc_attr( um_profile_id() ); ?>" data-ratio="<?php echo esc_attr( $args['cover_ratio'] ); ?>">
 		<?php
 		/**
-		 * UM hook
+		 * Fires in the User Profile cover wrapper.
 		 *
-		 * @type action
-		 * @title um_cover_area_content
-		 * @description Cover area content change
-		 * @input_vars
-		 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_cover_area_content', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_cover_area_content', 'my_cover_area_content', 10, 1 );
-		 * function my_cover_area_content( $user_id ) {
+		 * @since 1.3.x
+		 * @since 2.10.7 Added $args attribute.
+		 * @hook  um_cover_area_content
+		 *
+		 * @param {int}   $user_id User Profile ID.
+		 * @param {array} $args    User Profile data.
+		 *
+		 * @example <caption>Make any custom action in the User Profile cover wrapper.</caption>
+		 * function my_cover_area_content( $user_id, $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_cover_area_content', 'my_cover_area_content', 10, 2 );
 		 */
-		do_action( 'um_cover_area_content', um_profile_id() );
+		do_action( 'um_cover_area_content', um_profile_id(), $args );
 		if ( true === UM()->fields()->editing ) {
 
 			$hide_remove    = ' style="display:none;"';

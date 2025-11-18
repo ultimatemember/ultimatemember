@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 6.8
-Stable tag: 2.10.6
+Stable tag: 2.10.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -166,6 +166,22 @@ No specific extensions are needed. But we highly recommended keep active these P
 = Important: =
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
+
+= 2.10.7 2025-11-20 =
+
+**Enhancements**
+
+* Added: Extra condition for checking the license activation requests.
+* Added: 2nd `$args` attribute to the action hook 'um_cover_area_content'.
+* Tweak: Updated `Extensions_Updater` class to use Action Scheduler in the upgrade process of the UM extensions.
+
+**Bugfixes**
+
+* Fixed: User profile links in the comments section on the frontend when the `$comment->user_id` is empty.
+* Fixed: The `emotize` function regexp for better emoji converting.
+* Fixed: The conflict between the image uploader and lazy-loading attribute added by 3rd-party plugins.
+* Fixed: PHP warnings for roles without meta data.
+* Fixed: Typo in labels.
 
 = 2.10.6 2025-10-02 =
 

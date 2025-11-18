@@ -217,23 +217,28 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			return $args;
 		}
 
-
 		/**
 		 * Emoji support
 		 *
-		 * @param $content
+		 * @param string $content
+		 * @param bool   $stripslashes
 		 *
 		 * @return mixed|string
 		 */
-		function emotize( $content ) {
-			$content = stripslashes( $content );
+		public function emotize( $content, $stripslashes = true ) {
+			if ( $stripslashes ) {
+				$content = stripslashes( $content );
+			}
 			foreach ( $this->emoji as $code => $val ) {
-				$regex = str_replace(array('(', ')'), array("\\" . '(', "\\" . ')'), $code);
-				$content = preg_replace('/(' . $regex . ')(\s|$)/', '<img src="' . $val . '" alt="' . $code . '" title="' . $code . '" class="emoji" />$2', $content);
+				$regex   = str_replace( array( '(', ')' ), array( '\\' . '(', '\\' . ')' ), $code );
+				$content = preg_replace(
+					'/(' . $regex . ')(?=\s|$|<)/',
+					'<img src="' . $val . '" alt="' . $code . '" title="' . $code . '" class="emoji" />',
+					$content
+				);
 			}
 			return $content;
 		}
-
 
 		/**
 		 * Remove wpautop filter for post content if it's UM core page
