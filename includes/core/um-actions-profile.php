@@ -1856,9 +1856,15 @@ function um_profile_menu( $args ) {
 				<?php foreach ( $tab['subnav'] as $id_s => $subtab ) {
 
 					$subnav_link = add_query_arg( 'subnav', $id_s );
-					$subnav_link = apply_filters( 'um_user_profile_subnav_link', $subnav_link, $id_s, $subtab ); ?>
+					$subnav_link = apply_filters( 'um_user_profile_subnav_link', $subnav_link, $id_s, $subtab );
 
-					<a href="<?php echo esc_url( $subnav_link ); ?>" class="<?php echo $active_subnav == $id_s ? 'active' : ''; ?>">
+					$subnav_classes = array( 'um-profile-subnav-' . $id_s . '-link' );
+					if ( $active_subnav === $id_s ) {
+						$subnav_classes[] = 'active';
+					}
+					?>
+
+					<a href="<?php echo esc_url( $subnav_link ); ?>" class="<?php echo esc_attr( implode( ' ', $subnav_classes ) ); ?>">
 						<?php echo $subtab; ?>
 					</a>
 

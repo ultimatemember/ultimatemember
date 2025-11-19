@@ -173,6 +173,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Added: Extra condition for checking the license activation requests.
 * Added: 2nd `$args` attribute to the action hook 'um_cover_area_content'.
+* Added: Class `um-profile-subnav-{$subnav_id}-link` to the sub navigation links in the User Profile page.
 * Tweak: Updated `Extensions_Updater` class to use Action Scheduler in the upgrade process of the UM extensions.
 
 **Bugfixes**
