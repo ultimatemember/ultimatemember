@@ -87,6 +87,20 @@ class Extensions_Updater {
 			return;
 		}
 
+		/**
+		 * TODO Check the compatibility with WordPress Multisites soon,
+		 * $blog_ids = get_sites([
+		 *   'fields' => 'ids',
+		 *   'number' => -1
+		 * ]);
+		 *
+		 * foreach ($blog_ids as $blog_id) {
+		 *   switch_to_blog($blog_id);
+		 *   UM()->maybe_action_scheduler()->schedule_single_action()
+		 *   restore_current_blog();
+		 * }
+		 */
+
 		// Initialize start package action.
 		$action_id = UM()->maybe_action_scheduler()->schedule_single_action(
 			time() + self::EXTRA_TIME,
