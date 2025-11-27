@@ -29,7 +29,7 @@ jobs:
     - name: Install PHP
       uses: "shivammathur/setup-php@v2"
       with:
-        php-version: "latest"
+        php-version: "8.4"
     - name: Install Composer Dependencies
       run: |
         composer install --no-progress --no-dev --optimize-autoloader --ignore-platform-req=ext-exif --ignore-platform-req=ext-gd --ignore-platform-req=ext-tidy

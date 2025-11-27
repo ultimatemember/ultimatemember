@@ -15,7 +15,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 'latest'
+          php-version: '8.4'
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
