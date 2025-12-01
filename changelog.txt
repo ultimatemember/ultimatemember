@@ -1,6 +1,6 @@
 ﻿== Changelog ==
 
-= 2.10.7 December 02, 2025 =
+= 2.11.0 December 02, 2025 =
 
 * Enhancements:
 

@@ -866,7 +866,7 @@ function um_profile_header_cover_area( $args ) {
 		 * Fires in the User Profile cover wrapper.
 		 *
 		 * @since 1.3.x
-		 * @since 2.10.7 Added $args attribute.
+		 * @since 2.11.0 Added $args attribute.
 		 * @hook  um_cover_area_content
 		 *
 		 * @param {int}   $user_id User Profile ID.
