@@ -1230,24 +1230,24 @@ function um_profile_header( $args ) {
 				 */
 				do_action( 'um_after_profile_header_name_args', $args, um_user( 'ID' ) );
 				/**
-				 * UM hook
+				 * Fires after profile name in the header of the User Profile.
 				 *
-				 * @type action
-				 * @title um_after_profile_name_inline
-				 * @description Insert after profile name some content
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_after_profile_name_inline', 'function_name', 10 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_after_profile_name_inline', 'my_after_profile_name_inline', 10 );
-				 * function my_after_profile_name_inline() {
+				 * @hook um_after_profile_header_name
+				 *
+				 * @since 1.3.x
+				 * @since 2.11.0 Added $args and $user_id attributes.
+				 *
+				 * @param {array} $args    User Profile data.
+				 * @param {int}   $user_id User Profile ID.
+				 *
+				 * @example <caption>Display any custom content after profile name in the header of the User Profile.</caption>
+				 * function my_after_profile_header_name( $args, $user_id ) {
 				 *     // your code here
 				 * }
-				 * ?>
+				 * add_action( 'um_after_profile_header_name', 'my_after_profile_header_name', 10, 2 );
 				 */
-				do_action( 'um_after_profile_header_name' ); ?>
-
+				do_action( 'um_after_profile_header_name', $args, um_user( 'ID' ) );
+				?>
 			</div>
 
 			<?php if ( ! empty( $args['metafields'] ) ) { ?>
