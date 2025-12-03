@@ -1,5 +1,9 @@
 ﻿== Changelog ==
 
+= 2.11.1 December xx, 2025 =
+
+
+
 = 2.11.0 December 02, 2025 =
 
 * Enhancements:
