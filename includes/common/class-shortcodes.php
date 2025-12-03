@@ -1475,30 +1475,22 @@ class Shortcodes {
 	 * Legacy emoji convert from the predefined list of emoji to the static image.
 	 *
 	 * @param string $content
+	 * @param bool   $stripslashes
 	 *
 	 * @return string
 	 */
 	public function emotize( $content, $stripslashes = true ) {
-		if ( true === $stripslashes ) {
+		if ( $stripslashes ) {
 			$content = stripslashes( $content );
 		}
-
 		foreach ( $this->emoji as $code => $val ) {
-			if ( strpos( $code, ')' ) !== false ) {
-				$code = str_replace( ')', '\)', $code );
-			}
-
-			if ( strpos( $code, '(' ) !== false ) {
-				$code = str_replace( '(', '\(', $code );
-			}
-
-			if ( strpos( $code, '$' ) !== false ) {
-				$code = str_replace( '$', '\$', $code );
-			}
-
-			$content = preg_replace( "~<a.*?</a>(*SKIP)(*F)|{$code}~", '<img src="' . $val . '" alt="' . $code . '" class="wp-smiley" style="height: 1em; max-height: 1em;" />', $content );
+			$regex   = str_replace( array( '(', ')' ), array( '\\' . '(', '\\' . ')' ), $code );
+			$content = preg_replace(
+				'/(' . $regex . ')(?=\s|$|<)/',
+				'<img src="' . $val . '" alt="' . $code . '" title="' . $code . '" class="emoji" />',
+				$content
+			);
 		}
-
 		return $content;
 	}
 

@@ -376,11 +376,11 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 					 * 60 - `um_friends_add_button_nocover()` displays Friends buttons.
 					 * 70 - `um_mycred_show_user_badges_profile_header()` displays myCRED badges.
 					 *
-					 * @param {array} $args    User Profile data. Since 3.0.0.
-					 * @param {int}   $user_id User Profile ID. Since 3.0.0.
+					 * @param {array} $args    User Profile data. Since 2.11.0.
+					 * @param {int}   $user_id User Profile ID. Since 2.11.0.
 					 *
 					 * @since 1.3.x
-					 * @since 3.0.0 added $profile_args, $user_id attributes
+					 * @since 2.11.0 Added $profile_args, $user_id attributes
 					 * @hook  um_after_profile_header_name
 					 *
 					 * @example <caption>Display some content in supporting header row on User Profile.</caption>
