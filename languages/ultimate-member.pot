@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Member 2.10.6\n"
+"Project-Id-Version: Ultimate Member 2.11.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ultimate-member\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-10-01T23:01:23+00:00\n"
+"POT-Creation-Date: 2025-12-02T08:27:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -3971,7 +3971,7 @@ msgid "<strong>Warning:</strong> User page must contain a profile form shortcode
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:328
-msgid "<strong>Warning:</strong> Members page must contain a profile form shortcode. You can get existing shortcode or create a new one <a href=\"edit.php?post_type=um_directory\" target=\"_blank\">here</a>."
+msgid "<strong>Warning:</strong> Members page must contain a member directory shortcode. You can get existing shortcode or create a new one <a href=\"edit.php?post_type=um_directory\" target=\"_blank\">here</a>."
 msgstr ""
 
 #. translators: %s: Page title
@@ -5093,142 +5093,142 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3052
+#: includes/admin/core/class-admin-settings.php:3066
 msgid "Back"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3064
+#: includes/admin/core/class-admin-settings.php:3078
 msgid "Enable/Disable"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3065
+#: includes/admin/core/class-admin-settings.php:3079
 msgid "Enable this email notification"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3070
+#: includes/admin/core/class-admin-settings.php:3084
 msgid "Subject"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3076
+#: includes/admin/core/class-admin-settings.php:3090
 msgid "Email Content"
 msgstr ""
 
 #. translators: %1$s is an error code; %2$s is an error message.
-#: includes/admin/core/class-admin-settings.php:3144
+#: includes/admin/core/class-admin-settings.php:3158
 #, php-format
 msgid "code: %1$s, message: %2$s;"
 msgstr ""
 
 #. translators: %1$s is an error data; %2$s is a support link.
 #. translators: %1$s is an error; %2$s is a support link.
-#: includes/admin/core/class-admin-settings.php:3150
-#: includes/admin/core/class-admin-settings.php:3224
-#: includes/admin/core/class-admin-settings.php:3233
+#: includes/admin/core/class-admin-settings.php:3164
+#: includes/admin/core/class-admin-settings.php:3238
+#: includes/admin/core/class-admin-settings.php:3247
 #, php-format
 msgid "There was an error with this license key: %1$s. Please <a href=\"%2$s\">contact our support team</a>."
 msgstr ""
 
 #. translators: %1$s is an expiry date; %2$s is a renewal link.
 #. translators: %1$s is a expiry date; %2$s is a renew link.
-#: includes/admin/core/class-admin-settings.php:3161
-#: includes/admin/core/class-admin-settings.php:3256
+#: includes/admin/core/class-admin-settings.php:3175
+#: includes/admin/core/class-admin-settings.php:3270
 #, php-format
 msgid "Your license key expired on %1$s. Please <a href=\"%2$s\" target=\"_blank\">renew your license key</a>."
 msgstr ""
 
 #. translators: %s: support link name.
-#: includes/admin/core/class-admin-settings.php:3172
-#: includes/admin/core/class-admin-settings.php:3267
+#: includes/admin/core/class-admin-settings.php:3186
+#: includes/admin/core/class-admin-settings.php:3281
 #, php-format
 msgid "Your license key has been disabled. Please <a href=\"%s\" target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
 #. translators: %s: account page.
-#: includes/admin/core/class-admin-settings.php:3182
-#: includes/admin/core/class-admin-settings.php:3277
+#: includes/admin/core/class-admin-settings.php:3196
+#: includes/admin/core/class-admin-settings.php:3291
 #, php-format
 msgid "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account page</a> and verify it."
 msgstr ""
 
 #. translators: %1$s is a item name title; %2$s is a account page.
-#: includes/admin/core/class-admin-settings.php:3193
-#: includes/admin/core/class-admin-settings.php:3288
+#: includes/admin/core/class-admin-settings.php:3207
+#: includes/admin/core/class-admin-settings.php:3302
 #, php-format
 msgid "Your %1$s is not active for this URL. Please <a href=\"%2$s\" target=\"_blank\">visit your account page</a> to manage your license key URLs."
 msgstr ""
 
 #. translators: %s: item name.
-#: includes/admin/core/class-admin-settings.php:3203
-#: includes/admin/core/class-admin-settings.php:3298
+#: includes/admin/core/class-admin-settings.php:3217
+#: includes/admin/core/class-admin-settings.php:3312
 #, php-format
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
 #. translators: %s: account link.
-#: includes/admin/core/class-admin-settings.php:3210
-#: includes/admin/core/class-admin-settings.php:3305
+#: includes/admin/core/class-admin-settings.php:3224
+#: includes/admin/core/class-admin-settings.php:3319
 #, php-format
 msgid "Your license key has reached its activation limit. <a href=\"%s\">View possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3216
-#: includes/admin/core/class-admin-settings.php:3311
+#: includes/admin/core/class-admin-settings.php:3230
+#: includes/admin/core/class-admin-settings.php:3325
 msgid "The key you entered belongs to a bundle, please use the product specific license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3222
-#: includes/admin/core/class-admin-settings.php:3231
-#: includes/admin/core/class-admin-settings.php:3242
+#: includes/admin/core/class-admin-settings.php:3236
+#: includes/admin/core/class-admin-settings.php:3245
+#: includes/admin/core/class-admin-settings.php:3256
 msgid "unknown_error"
 msgstr ""
 
 #. translators: %1$s is an error; %2$s is a error data; %3$s is a support link.
-#: includes/admin/core/class-admin-settings.php:3245
+#: includes/admin/core/class-admin-settings.php:3259
 #, php-format
 msgid "There was an error with this license key: %1$s%2$s. Please <a href=\"%3$s\">contact our support team</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3324
+#: includes/admin/core/class-admin-settings.php:3338
 msgid "License key never expires."
 msgstr ""
 
 #. translators: %1$s is an expiry date; %2$s is a renewal link.
-#: includes/admin/core/class-admin-settings.php:3332
+#: includes/admin/core/class-admin-settings.php:3346
 #, php-format
 msgid "Your license key expires soon! It expires on %1$s. <a href=\"%2$s\" target=\"_blank\">Renew your license key</a>."
 msgstr ""
 
 #. translators: %s: expiry date.
-#: includes/admin/core/class-admin-settings.php:3343
+#: includes/admin/core/class-admin-settings.php:3357
 #, php-format
 msgid "Your license key expires on %s."
 msgstr ""
 
 #. translators: %s: item name.
-#: includes/admin/core/class-admin-settings.php:3359
+#: includes/admin/core/class-admin-settings.php:3373
 #, php-format
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3385
-#: includes/admin/core/class-admin-settings.php:3394
+#: includes/admin/core/class-admin-settings.php:3399
+#: includes/admin/core/class-admin-settings.php:3408
 msgid "Clear License"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3389
+#: includes/admin/core/class-admin-settings.php:3403
 msgid "Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3393
+#: includes/admin/core/class-admin-settings.php:3407
 msgid "Re-Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3442
+#: includes/admin/core/class-admin-settings.php:3456
 msgid "Re-check templates"
 msgstr ""
 
 #. translators: %s: Last checking templates time.
-#: includes/admin/core/class-admin-settings.php:3446
+#: includes/admin/core/class-admin-settings.php:3460
 #, php-format
 msgid "Last update: %s. You could re-check changes manually."
 msgstr ""
@@ -6253,12 +6253,12 @@ msgstr ""
 #: includes/class-config.php:231
 #: includes/core/class-fields.php:3080
 #: includes/core/class-fields.php:3205
-#: includes/core/um-actions-profile.php:900
-#: includes/core/um-actions-profile.php:909
-#: includes/core/um-actions-profile.php:1088
-#: includes/core/um-actions-profile.php:1121
-#: includes/core/um-actions-profile.php:1513
-#: includes/core/um-actions-profile.php:1520
+#: includes/core/um-actions-profile.php:897
+#: includes/core/um-actions-profile.php:906
+#: includes/core/um-actions-profile.php:1085
+#: includes/core/um-actions-profile.php:1118
+#: includes/core/um-actions-profile.php:1510
+#: includes/core/um-actions-profile.php:1517
 msgid "Cancel"
 msgstr ""
 
@@ -6871,7 +6871,7 @@ msgstr ""
 #: includes/class-config.php:944
 #: includes/class-config.php:1008
 #: includes/core/class-member-directory.php:2513
-#: includes/core/um-actions-profile.php:1519
+#: includes/core/um-actions-profile.php:1516
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
 msgstr ""
@@ -7649,7 +7649,7 @@ msgid "Cover Photo"
 msgstr ""
 
 #: includes/core/class-builtin.php:1296
-#: includes/core/um-actions-profile.php:978
+#: includes/core/um-actions-profile.php:975
 msgid "Change your cover photo"
 msgstr ""
 
@@ -9633,8 +9633,8 @@ msgstr ""
 
 #: includes/core/class-fields.php:3035
 #: includes/core/class-fields.php:3079
-#: includes/core/um-actions-profile.php:1086
-#: includes/core/um-actions-profile.php:1119
+#: includes/core/um-actions-profile.php:1083
+#: includes/core/um-actions-profile.php:1116
 msgid "Change photo"
 msgstr ""
 
@@ -9978,13 +9978,13 @@ msgstr ""
 
 #: includes/core/class-member-directory.php:2474
 #: includes/core/class-member-directory.php:2502
-#: includes/core/um-actions-profile.php:1486
-#: includes/core/um-actions-profile.php:1517
+#: includes/core/um-actions-profile.php:1483
+#: includes/core/um-actions-profile.php:1514
 msgid "Edit Profile"
 msgstr ""
 
 #: includes/core/class-member-directory.php:2508
-#: includes/core/um-actions-profile.php:1518
+#: includes/core/um-actions-profile.php:1515
 msgid "My Account"
 msgstr ""
 
@@ -10105,20 +10105,20 @@ msgstr ""
 msgid "The \"unassigned\" $status has been removed. Use `UM()->setup()->set_default_user_status()` for setting up default user account status."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:406
+#: includes/core/class-shortcodes.php:411
 msgid "This content has been restricted to logged-in users only. Please <a href=\"{login_referrer}\">log in</a> to view this content."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:493
-#: includes/core/class-shortcodes.php:514
+#: includes/core/class-shortcodes.php:498
+#: includes/core/class-shortcodes.php:519
 msgid "Go to profile"
 msgstr ""
 
-#: includes/core/class-shortcodes.php:852
+#: includes/core/class-shortcodes.php:857
 msgid "You are already registered."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:1111
+#: includes/core/class-shortcodes.php:1116
 msgid "Default Template"
 msgstr ""
 
@@ -10697,39 +10697,39 @@ msgstr ""
 msgid "Your choosed %s"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:894
-#: includes/core/um-actions-profile.php:895
-#: includes/core/um-actions-profile.php:908
-#: includes/core/um-actions-profile.php:968
+#: includes/core/um-actions-profile.php:891
+#: includes/core/um-actions-profile.php:892
+#: includes/core/um-actions-profile.php:905
+#: includes/core/um-actions-profile.php:965
 #: assets/js/um-profile.js:73
 msgid "Upload a cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:894
-#: includes/core/um-actions-profile.php:895
+#: includes/core/um-actions-profile.php:891
+#: includes/core/um-actions-profile.php:892
 msgid "Change cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:899
+#: includes/core/um-actions-profile.php:896
 msgid "Remove cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1086
-#: includes/core/um-actions-profile.php:1119
+#: includes/core/um-actions-profile.php:1083
+#: includes/core/um-actions-profile.php:1116
 msgid "Upload photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1087
-#: includes/core/um-actions-profile.php:1120
+#: includes/core/um-actions-profile.php:1084
+#: includes/core/um-actions-profile.php:1117
 msgid "Remove photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1321
+#: includes/core/um-actions-profile.php:1318
 msgid "Tell us a bit about yourself..."
 msgstr ""
 
 #. translators: %s: profile status.
-#: includes/core/um-actions-profile.php:1341
+#: includes/core/um-actions-profile.php:1338
 #, php-format
 msgid "This user account status is %s"
 msgstr ""

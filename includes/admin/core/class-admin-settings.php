@@ -326,7 +326,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							break;
 						case 'members':
 							if ( ! has_shortcode( $content, 'ultimatemember' ) ) {
-								$page_setting_description = __( '<strong>Warning:</strong> Members page must contain a profile form shortcode. You can get existing shortcode or create a new one <a href="edit.php?post_type=um_directory" target="_blank">here</a>.', 'ultimate-member' );
+								$page_setting_description = __( '<strong>Warning:</strong> Members page must contain a member directory shortcode. You can get existing shortcode or create a new one <a href="edit.php?post_type=um_directory" target="_blank">here</a>.', 'ultimate-member' );
 							}
 							break;
 						default:
@@ -3258,11 +3258,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				}
 
 				$request = wp_remote_post( UM()::$store_url, $post_attr );
-				if ( ! is_wp_error( $request ) ) {
-					$request = json_decode( wp_remote_retrieve_body( $request ) );
-				} else {
+				if ( empty( $request ) || is_wp_error( $request ) ) {
 					if ( self::is_license_debug_enabled() ) {
-						error_log( '> Got `wp_error`, try again with `sslverify=true`' );
+						error_log( '> Got `wp_error` or empty request body, try again with `sslverify=true`' );
 					}
 
 					$post_attr['sslverify'] = true;
@@ -3271,6 +3269,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					if ( ! is_wp_error( $request ) ) {
 						$request = json_decode( wp_remote_retrieve_body( $request ) );
 					}
+				} else {
+					$request = json_decode( wp_remote_retrieve_body( $request ) );
+					if ( empty( $request ) ) {
+						if ( self::is_license_debug_enabled() ) {
+							error_log( '> Got empty request body, try again with `sslverify=true`' );
+						}
+
+						$post_attr['sslverify'] = true;
+
+						$request = wp_remote_post( UM()::$store_url, $post_attr );
+						if ( ! is_wp_error( $request ) ) {
+							$request = json_decode( wp_remote_retrieve_body( $request ) );
+						}
+					}
 				}
 
 				if ( self::is_license_debug_enabled() ) {
@@ -3278,6 +3290,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						error_log( '> Finally got `wp_error`. Details below.' );
 						error_log( '>> Error code: ' . $request->get_error_code() );
 						error_log( '>> Error message: ' . $request->get_error_message() );
+					} elseif ( empty( $request ) ) {
+						error_log( '> Finally got empty UM website response.' );
 					} else {
 						error_log( '### Response from UM website:' );
 						error_log( '>' . maybe_serialize( $request ) );

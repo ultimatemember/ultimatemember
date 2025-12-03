@@ -5,8 +5,8 @@ Contributors: ultimatemember, champsupertramp, nsinelnikov
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
-Tested up to: 6.8
-Stable tag: 2.10.6
+Tested up to: 6.9
+Stable tag: 2.11.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -232,6 +232,28 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Deprecated function `um_is_temp_image()` because it is unused.
 * Deprecated function `um_get_domain_protocol()` because it is unused helper.
 * Deprecated function `UM()->password()->setcookie()`. Use function `UM()::setcookie()` instead.
+
+= 2.11.1 2025-12-xx =
+
+
+
+= 2.11.0 2025-12-02 =
+
+**Enhancements**
+
+* Added: Extra condition for checking the license activation requests.
+* Added: 2nd `$args` attribute to the action hook 'um_cover_area_content'.
+* Added: `$args` and `$user_id` attributes to the action hook 'um_after_profile_header_name'.
+* Added: Class `um-profile-subnav-{$subnav_id}-link` to the sub navigation links in the User Profile page.
+* Tweak: Updated `Extensions_Updater` class to use Action Scheduler in the upgrade process of the UM extensions.
+
+**Bugfixes**
+
+* Fixed: User profile links in the comments section on the frontend when the `$comment->user_id` is empty.
+* Fixed: The `emotize` function regexp for better emoji converting.
+* Fixed: The conflict between the image uploader and lazy-loading attribute added by 3rd-party plugins.
+* Fixed: PHP warnings for roles without meta data.
+* Fixed: Typo in labels.
 
 = 2.10.6 2025-10-02 =
 

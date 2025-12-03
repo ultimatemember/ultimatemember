@@ -42,7 +42,12 @@ class Extensions_Updater {
 	}
 
 	public function package_start( $version, $file_path, $delay, $per_page ) {
-		$hook = 'um_' . $this->updater_data['slug'] . '_package_complete';
+		$hooks = array(
+			'start'    => 'um_' . $this->updater_data['slug'] . '_package_start',
+			'complete' => 'um_' . $this->updater_data['slug'] . '_package_complete',
+		);
+
+		$debug = defined( 'UM_UPDATER_DEBUG' ) && UM_UPDATER_DEBUG;
 
 		include_once $file_path;
 		/**
@@ -86,20 +91,6 @@ class Extensions_Updater {
 		if ( ! empty( $in_process_package ) && version_compare( $in_process_package, $package_version, '=' ) ) {
 			return;
 		}
-
-		/**
-		 * TODO Check the compatibility with WordPress Multisites soon,
-		 * $blog_ids = get_sites([
-		 *   'fields' => 'ids',
-		 *   'number' => -1
-		 * ]);
-		 *
-		 * foreach ($blog_ids as $blog_id) {
-		 *   switch_to_blog($blog_id);
-		 *   UM()->maybe_action_scheduler()->schedule_single_action()
-		 *   restore_current_blog();
-		 * }
-		 */
 
 		// Initialize start package action.
 		$action_id = UM()->maybe_action_scheduler()->schedule_single_action(

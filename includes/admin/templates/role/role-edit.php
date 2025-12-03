@@ -55,7 +55,7 @@ if ( ! empty( $_GET['id'] ) ) {
 	// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
 	$role_id = sanitize_title( $_GET['id'] );
 
-	$data = get_option( "um_role_{$role_id}_meta" );
+	$data = get_option( "um_role_{$role_id}_meta", array() );
 
 	if ( empty( $data['_um_is_custom'] ) ) {
 		$data['name'] = $wp_roles->roles[ $role_id ]['name'];
