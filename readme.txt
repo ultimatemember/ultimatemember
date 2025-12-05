@@ -169,7 +169,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 = 2.11.1 2025-12-xx =
 
+**Bugfixes**
 
+* Fixed: CVE-2025-13220.
 
 = 2.11.0 2025-12-02 =
 
@@ -335,6 +337,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.11.1 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.10.4 =
 This version fixes a security related bug. Upgrade immediately.
