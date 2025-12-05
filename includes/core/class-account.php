@@ -473,22 +473,26 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			return $url;
 		}
 
-
 		/**
 		 * @param $fields
 		 * @param $shortcode_args
 		 * @return mixed
 		 */
-		function filter_fields_by_attrs( $fields, $shortcode_args ) {
+		private function filter_fields_by_attrs( $fields, $shortcode_args ) {
 			foreach ( $fields as $k => $field ) {
 				if ( isset( $shortcode_args[ $field['metakey'] ] ) && 0 == $shortcode_args[ $field['metakey'] ] ) {
+					unset( $fields[ $k ] );
+					continue;
+				}
+
+				// required user permission 'required_perm' - it's field attribute predefined in the field data in code.
+				if ( isset( $data['required_perm'] ) && ! UM()->roles()->um_user_can( $data['required_perm'] ) ) {
 					unset( $fields[ $k ] );
 				}
 			}
 
 			return $fields;
 		}
-
 
 		/**
 		 * Init displayed fields for security check
