@@ -76,14 +76,14 @@ function um_profile_field_filter_hook__youtube_video( $value, $data ) {
 	}
 	$value = ( strstr( $value, 'http' ) || strstr( $value, '://' ) ) ? um_youtube_id_from_url( $value ) : $value;
 	if ( false !== $value ) {
+		$value = 'https://www.youtube.com/embed/' . $value;
 		$value = '<div class="um-youtube">'
-			. '<iframe width="600" height="450" src="https://www.youtube.com/embed/' . $value . '" frameborder="0" allowfullscreen></iframe>'
+			. '<iframe width="600" height="450" src="' . esc_url( $value ) . '" frameborder="0" allowfullscreen></iframe>'
 			. '</div>';
 	}
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__youtube_video', 'um_profile_field_filter_hook__youtube_video', 99, 2 );
-
 
 /**
  * Outputs a spotify iframe
@@ -127,8 +127,9 @@ function um_profile_field_filter_hook__vimeo_video( $value, $data ) {
 	}
 
 	$value = ! is_numeric( $value ) ? (int) substr( parse_url( $value, PHP_URL_PATH ), 1 ) : $value;
+	$value = 'https://player.vimeo.com/video/' . $value;
 	$value = '<div class="um-vimeo">
-					<iframe src="https://player.vimeo.com/video/' . $value . '" width="600" height="450" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+					<iframe src="' . esc_url( $value ) . '" width="600" height="450" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 					</div>';
 	return $value;
 }
@@ -199,13 +200,13 @@ function um_profile_field_filter_hook__googlemap( $value, $data ) {
 	if ( ! $value ) {
 		return '';
 	}
+	$value = 'https://maps.google.it/maps?q=' . urlencode( $value ) . '&output=embed';
 	$value = '<div class="um-googlemap">
-					<iframe width="600" height="450" frameborder="0" style="border:0" src="https://maps.google.it/maps?q=' . urlencode( $value ) . '&output=embed"></iframe>
+					<iframe width="600" height="450" frameborder="0" style="border:0" src="' . esc_url( $value ) . '"></iframe>
 				</div>';
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__googlemap', 'um_profile_field_filter_hook__googlemap', 99, 2 );
-
 
 /**
  * User's registration date

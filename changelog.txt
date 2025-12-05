@@ -2,7 +2,7 @@
 
 = 2.11.1 December xx, 2025 =
 
-
+Fixed: CVE-2025-13217
 
 = 2.11.0 December 02, 2025 =
 
