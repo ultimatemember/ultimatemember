@@ -150,6 +150,7 @@
 			},
 
 			triggerHandler: function(e) {
+				e.preventDefault();
 				e.stopPropagation();
 
 				self.$element = $(e.currentTarget);
