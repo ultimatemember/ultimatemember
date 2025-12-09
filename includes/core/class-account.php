@@ -656,6 +656,53 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			}
 
 			switch ( $id ) {
+				default:
+					if ( UM()->is_new_ui() ) {
+						$args = '';
+						/** This filter is documented in includes/core/class-account.php */
+						$args = apply_filters( "um_account_tab_{$id}_fields", $args, $shortcode_args );
+
+						$fields = UM()->builtin()->get_specific_fields( $args );
+						$fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
+
+						$this->init_displayed_fields( $fields, $id );
+
+						/**
+						 * Filters the account tab content before the form fields added to content.
+						 * Where $id is the account tab slug.
+						 *
+						 * @hook um_account_{$id}_content_before
+						 * @param {string} $output         The existing content.
+						 * @param {array}  $shortcode_args The shortcode arguments.
+						 *
+						 * @return {string} The modified account content.
+						 *
+						 * @since 3.0.0
+						 */
+						$output = apply_filters( "um_account_{$id}_content_before", $output, $shortcode_args );
+
+						foreach ( $fields as $key => $data ) {
+							if ( ! empty( $shortcode_args['is_block'] ) ) {
+								$data['is_block'] = true;
+							}
+							$output .= UM()->fields()->edit_field( $key, $data );
+						}
+						/**
+						 * Filters the account tab content after the form fields added to content.
+						 * Where $id is the account tab slug.
+						 *
+						 * @hook um_account_{$id}_content_after
+						 * @param {string} $output         The existing content.
+						 * @param {array}  $shortcode_args The shortcode arguments.
+						 *
+						 * @return {string} The modified account content.
+						 *
+						 * @since 3.0.0
+						 */
+						$output = apply_filters( "um_account_{$id}_content_after", $output, $shortcode_args );
+					}
+					break;
+
 				case 'privacy':
 					$args = 'profile_privacy,profile_noindex,hide_in_members,um_show_last_login';
 					/**
@@ -820,7 +867,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
 					break;
-
 			}
 
 			/**

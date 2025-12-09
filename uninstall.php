@@ -150,7 +150,7 @@ if ( ! empty( $delete_options ) ) {
 			  meta_key = '_enable_new_pm' OR
 			  meta_key = '_hidden_conversations' OR
 			  meta_key = '_pm_blocked' OR
-			  meta_key = '_notifications_prefs' OR
+			  meta_key LIKE '_notifications_prefs%' OR
 			  meta_key = '_profile_progress' OR
 			  meta_key = '_completed' OR
 			  meta_key = '_cannot_add_review' OR
