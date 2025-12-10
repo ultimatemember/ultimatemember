@@ -33,3 +33,27 @@
 .um-page .tipsy-arrow-w {
   border-right-color: #333;
 }
+
+/* Pop effect */
+@-webkit-keyframes um-effect-pop {
+  50% {
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+  }
+}
+@keyframes um-effect-pop {
+  50% {
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+  }
+}
+.um-effect-pop {
+  -webkit-animation-name: um-effect-pop;
+  animation-name: um-effect-pop;
+  -webkit-animation-duration: 0.2s;
+  animation-duration: 0.2s;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
+}

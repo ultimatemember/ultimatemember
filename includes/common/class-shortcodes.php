@@ -1295,6 +1295,8 @@ class Shortcodes {
 			<?php echo UM()->frontend()::layouts()::pagination( array( 'page' => 8, 'total' => 500, 'per_page' => 20 ) ); ?>
 
 			<h3>Avatars</h3>
+			<p>Guest</p>
+			<?php echo UM()->frontend()::layouts()::single_avatar( 0, array( 'size' => 'l', 'clickable' => true ) ); ?>
 			<p>Clickable</p>
 			<?php echo UM()->frontend()::layouts()::single_avatar( get_current_user_id(), array( 'size' => 'l', 'clickable' => true ) ); ?>
 			<p>s</p>

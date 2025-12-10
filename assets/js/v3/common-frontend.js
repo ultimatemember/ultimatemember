@@ -192,6 +192,11 @@ UM.frontend = {
 					return;
 				}
 
+				let $mainSkeleton = obj.find('.um-main-skeleton');
+				if ( $mainSkeleton.length > 0 ) {
+					$mainSkeleton.umHide();
+				}
+
 				let element_width = obj.outerWidth();
 
 				jQuery.each( $resolutions, function( index ) {

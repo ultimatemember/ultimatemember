@@ -593,14 +593,6 @@ class Layouts {
 			$user_id = get_current_user_id();
 		}
 
-		if ( empty( $user_id ) ) {
-			return '';
-		}
-
-		if ( false === get_userdata( $user_id ) ) {
-			return '';
-		}
-
 		$default_args = array(
 			'wrapper'       => 'div',
 			'size'          => 'm',
@@ -659,7 +651,7 @@ class Layouts {
 
 		$user_id = absint( $user_id );
 
-		if ( false === $args['ignore_caps'] && ! UM()->common()->users()->can_view_user( $user_id ) ) {
+		if ( false === $args['ignore_caps'] && $user_id && ! UM()->common()->users()->can_view_user( $user_id ) ) {
 			return '';
 		}
 
