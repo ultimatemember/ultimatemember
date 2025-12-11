@@ -284,6 +284,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					'_um_mode'                     => array(
 						'sanitize' => 'key',
 					),
+					'_um_privacy'                  => array(
+						'sanitize' => 'absint',
+					),
+					'_um_privacy_roles'            => array(
+						'sanitize' => array( $this, 'sanitize_existed_role' ),
+					),
 					'_um_view_types'               => array(
 						'sanitize' => array( $this, 'sanitize_md_view_types' ),
 					),

@@ -210,6 +210,13 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 
 			$secure_fields = array(
 				array(
+					'id'             => 'ajax_nopriv_rate_limit',
+					'type'           => 'checkbox',
+					'label'          => __( 'Rate Limit', 'ultimate-member' ),
+					'checkbox_label' => __( 'Enable Rate Limiting', 'ultimate-member' ),
+					'description'    => __( 'This prevents brute-force enumeration attempts in guest AJAX requests.', 'ultimate-member' ),
+				),
+				array(
 					'id'               => 'banned_capabilities',
 					'type'             => 'multi_checkbox',
 					'multi'            => true,

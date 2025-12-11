@@ -47,6 +47,37 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			}
 		}
 
+		/**
+		 * Check if the user rate limit has been reached based on the provided context
+		 *
+		 * @param string   $context      The context for which the rate limit check is being performed
+		 * @param int|null $requests_num Number requests per minute. Default 10.
+		 *
+		 * @return bool True if the rate limit has been reached, false otherwise
+		 */
+		public function is_rate_limited( $context, $requests_num = 10 ) {
+			if ( is_user_logged_in() ) {
+				return false;
+			}
+
+			if ( ! UM()->options()->get( 'ajax_nopriv_rate_limit' ) ) {
+				return false;
+			}
+
+			$transient_name = 'um_ajax_nopriv_rate_limit_' . md5( $context . '_' . $_SERVER['REMOTE_ADDR'] );
+			$rate_limit     = get_transient( $transient_name );
+			$requests_num   = apply_filters( 'um_ajax_rate_limit_requests_num', $requests_num, $context ); // 10 requests per minute per IP
+
+			if ( false === $rate_limit ) {
+				set_transient( $transient_name, 1, MINUTE_IN_SECONDS );
+			} elseif ( $rate_limit < $requests_num ) {
+				set_transient( $transient_name, $rate_limit + 1, MINUTE_IN_SECONDS );
+			} else {
+				return true;
+			}
+
+			return false;
+		}
 
 		/**
 		 * What type of request is this?

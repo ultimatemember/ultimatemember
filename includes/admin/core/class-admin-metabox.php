@@ -728,7 +728,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 * @param $object
 		 * @param $box
 		 */
-		function load_metabox_directory( $object, $box ) {
+		public function load_metabox_directory( $object, $box ) {
 			$box['id'] = str_replace( 'um-admin-form-', '', $box['id'] );
 
 			preg_match('#\{.*?\}#s', $box['id'], $matches );
@@ -857,6 +857,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		public function add_metabox_directory() {
 			add_meta_box( 'submitdiv', __( 'Publish', 'ultimate-member' ), array( &$this, 'custom_submitdiv' ), 'um_directory', 'side', 'high' );
 			add_meta_box( 'um-admin-form-general', __( 'General Options', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
+			add_meta_box( 'um-admin-form-privacy', __( 'Privacy Options', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-sorting', __( 'Sorting', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-profile', __( 'Profile Card', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-search', __( 'Search Options', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
