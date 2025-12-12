@@ -99,6 +99,14 @@ UM.frontend = {
 				UM.frontend.cropper.obj = null; // flush our own object
 			}
 		}
+	},
+	dropdown: {
+		init: function() {
+			let $dropdown = jQuery('.um-dropdown');
+			if ( $dropdown.length ) {
+				$dropdown.um_dropdownMenu();
+			}
+		}
 	}
 }
 
@@ -112,4 +120,16 @@ wp.hooks.addAction( 'um_after_removing_preview', 'um_common_frontend', function(
 
 wp.hooks.addAction( 'um_window_resize', 'um_common_frontend', function() {
 	UM.frontend.cropper.destroy();
+});
+
+wp.hooks.addAction( 'um_member_directory_loaded', 'um_common_frontend', function() {
+	UM.frontend.dropdown.init();
+});
+
+wp.hooks.addAction( 'um_member_directory_build_template', 'um_common_frontend', function() {
+	UM.frontend.dropdown.init();
+});
+
+jQuery(document).ready(function() {
+	UM.frontend.dropdown.init();
 });

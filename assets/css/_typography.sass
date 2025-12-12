@@ -1,0 +1,22 @@
+// Text sizes:
+$header-font-size: ('xs':24px,'sm':30px,'md':36px,'lg':48px,'xl':60px,'2xl':72px)
+$header-line-height: ('xs':32px,'sm':38px,'md':44px,'lg':60px,'xl':72px,'2xl':90px)
+
+$font-size: ('xs':12px,'sm':14px,'md':16px,'lg':18px,'xl':20px)
+$line-height: ('xs':18px,'sm':20px,'md':24px,'lg':28px,'xl':30px)
+
+$font-weight: ('regular':400,'medium':500,'semibold':600,'bold':700)
+
+@function typography( $type, $attr, $size )
+  @if $attr == 'font-size'
+    @if $type == 'header'
+      @return var(--um-#{$type}-#{$attr}-#{$size},map-get( $header-font-size, '#{$size}' ))
+    @else if $type == 'text'
+      @return var(--um-#{$type}-#{$attr}-#{$size},map-get( $font-size, '#{$size}' ))
+  @else if $attr == 'line-height'
+    @if $type == 'header'
+      @return var(--um-#{$type}-#{$attr}-#{$size},map-get( $header-line-height, '#{$size}' ))
+    @else if $type == 'text'
+      @return var(--um-#{$type}-#{$attr}-#{$size},map-get( $line-height, '#{$size}' ))
+  @else if $attr == 'font-weight'
+    @return var(--um-#{$type}-#{$attr}-#{$size},map-get( $font-weight, '#{$size}' ))
