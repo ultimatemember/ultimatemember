@@ -826,9 +826,10 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 				'strong' => array(),
 				'br'     => array(),
 				'div'    => array(
-					'align' => true,
-					'dir'   => true,
-					'lang'  => true,
+					'align'           => true,
+					'dir'             => true,
+					'lang'            => true,
+					'contenteditable' => true,
 				),
 				'span'   => array(
 					'dir'   => true,
