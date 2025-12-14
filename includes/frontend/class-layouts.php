@@ -1183,6 +1183,7 @@ class Layouts {
 				'id'            => 'um-tabs-' . uniqid(),
 				'wrapper_class' => array(),
 				'tabs_only'     => false,
+				'responsive'    => true,
 				'orientation'   => 'vertical',
 				'color'         => 'primary', // secondary, underline, underline-fill, gray-line
 				'size'          => 's', // s, m
@@ -1280,13 +1281,15 @@ class Layouts {
 			<?php
 			$desktop_list .= ob_get_clean();
 
-			ob_start();
-			?>
-			<option value="<?php echo esc_attr( $tab_id ); ?>" <?php selected( $current_tab === $tab_id ); ?> data-href="<?php echo esc_url( $tab_data['url'] ); ?>">
-				<?php echo esc_html( $tab_data['title'] ); ?>
-			</option>
-			<?php
-			$mobile_list .= ob_get_clean();
+			if ( true === $args['responsive'] ) {
+				ob_start();
+				?>
+				<option value="<?php echo esc_attr( $tab_id ); ?>" <?php selected( $current_tab === $tab_id ); ?> data-href="<?php echo esc_url( $tab_data['url'] ); ?>">
+					<?php echo esc_html( $tab_data['title'] ); ?>
+				</option>
+				<?php
+				$mobile_list .= ob_get_clean();
+			}
 
 			if ( empty( $args['tabs_only'] ) ) {
 				$content_classes = array(
@@ -1304,7 +1307,16 @@ class Layouts {
 			}
 		}
 
-		$list_html = '<ul class="um-responsive um-ui-m um-ui-l um-ui-xl">' . $desktop_list . '</ul><select id="' . esc_attr( $args['id'] . '-select' ) . '" class="um-tabs-mobile-dropdown js-choice um-no-search um-no-native-sorting um-responsive um-ui-s um-ui-xs" aria-label="' . esc_attr__( 'Select a tab', 'ultimate-member' ) . '">' . $mobile_list . '</select>';
+		$list_classes = '';
+		if ( true === $args['responsive'] ) {
+			$list_classes = 'um-responsive um-ui-m um-ui-l um-ui-xl';
+		}
+
+		$list_html = '<ul class="' . esc_attr( $list_classes ) . '">' . $desktop_list . '</ul>';
+
+		if ( true === $args['responsive'] ) {
+			$list_html .= '<select id="' . esc_attr( $args['id'] . '-select' ) . '" class="um-tabs-mobile-dropdown js-choice um-no-search um-no-native-sorting um-responsive um-ui-s um-ui-xs" aria-label="' . esc_attr__( 'Select a tab', 'ultimate-member' ) . '">' . $mobile_list . '</select>';
+		}
 
 		ob_start();
 		?>
@@ -2870,7 +2882,7 @@ class Layouts {
 	 *
 	 * @return string
 	 */
-	public static function svg( $key, $size = 20 ) {
+	public static function svg( $key, $size = 20, $color = 'currentColor' ) {
 		static $all_svg = array();
 		if ( empty( $all_svg ) ) {
 			$all_svg = UM()->config()->get( 'svg_icons' );
@@ -2880,6 +2892,6 @@ class Layouts {
 			return '';
 		}
 
-		return str_replace( '{um_size}', $size, $all_svg[ $key ] );
+		return str_replace( array( '{um_color}', '{um_size}' ), array( $color, $size ), $all_svg[ $key ] );
 	}
 }

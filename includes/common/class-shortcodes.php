@@ -582,6 +582,15 @@ class Shortcodes {
 		ob_start();
 		?>
 		<div class="um">
+			<h3>All SVGs</h3>
+			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:flex-start; gap: 8px;">
+				<?php
+				$all_svg = UM()->config()->get( 'svg_icons' );
+				foreach ( $all_svg as $svg_k => $svg ) {
+					echo wp_kses( UM()->frontend()::layouts()::svg( $svg_k ), UM()->get_allowed_html( 'templates' ) );
+				}
+				?>
+			</div>
 			<h3>GIF Piker async</h3>
 			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:flex-start; gap: 8px;">
 			<?php
