@@ -310,7 +310,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @return false|string
 		 */
 		public function set_directory_hash( $id ) {
-			$unique_hash = wp_generate_password( 32, false );
+			$unique_hash = wp_generate_password( 5, false );
 			$result      = update_post_meta( $id, '_um_directory_token', $unique_hash );
 			if ( false === $result ) {
 				return false;
@@ -328,6 +328,40 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			if ( '' === $hash ) {
 				// Set the hash if empty.
 				$hash = $this->set_directory_hash( $id );
+			}
+			if ( empty( $hash ) ) {
+				// Fallback, use old value.
+				$hash = substr( md5( $id ), 10, 5 );
+			}
+			return $hash;
+		}
+
+		/**
+		 * Generate a secure random token for each user card
+		 *
+		 * @param int $id
+		 *
+		 * @return false|string
+		 */
+		public function set_user_hash( $id ) {
+			$unique_hash = wp_generate_password( 5, false );
+			$result      = update_user_meta( $id, '_um_card_anchor_token', $unique_hash );
+			if ( false === $result ) {
+				return false;
+			}
+			return $unique_hash;
+		}
+
+		/**
+		 * @param $id
+		 *
+		 * @return bool|string
+		 */
+		public function get_user_hash( $id ) {
+			$hash = get_user_meta( $id, '_um_card_anchor_token', true );
+			if ( '' === $hash ) {
+				// Set the hash if empty.
+				$hash = $this->set_user_hash( $id );
 			}
 			if ( empty( $hash ) ) {
 				// Fallback, use old value.
@@ -2655,7 +2689,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$hook_after_user_name = ob_get_clean();
 
 			$data_array = array(
-				'card_anchor'          => esc_html( substr( md5( $user_id ), 10, 5 ) ),
+				'card_anchor'          => esc_html( $this->get_user_hash( $user_id ) ),
 				'role'                 => is_user_logged_in() ? esc_html( um_user( 'role' ) ) : 'undefined', // make the role hidden for the nopriv requests.
 				'account_status'       => is_user_logged_in() ? esc_html( UM()->common()->users()->get_status( $user_id ) ) : 'undefined', // make the status hidden for the nopriv requests.
 				'account_status_name'  => is_user_logged_in() ? esc_html( UM()->common()->users()->get_status( $user_id, 'formatted' ) ) : __( 'Undefined', 'ultimate-member' ), // make the status hidden for the nopriv requests.
