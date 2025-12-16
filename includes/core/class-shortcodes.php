@@ -775,6 +775,9 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			}
 
 			if ( 'directory' === $args['mode'] ) {
+				if ( ! UM()->member_directory()->can_view_directory( $this->form_id ) ) {
+					return ''; // Checking for privacy settings of the member directory
+				}
 				wp_enqueue_script( 'um_members' );
 				wp_enqueue_style( 'um_members' );
 			}
