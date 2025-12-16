@@ -1493,6 +1493,10 @@ class Site_Health {
 				'label' => __( 'Advanced > Security', 'ultimate-member' ),
 				'value' => '---------------------------------------------------------------------',
 			),
+			'ajax_nopriv_rate_limit'      => array(
+				'label' => __( 'Enable Rate Limiting', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'ajax_nopriv_rate_limit' ) ? $labels['yes'] : $labels['no'],
+			),
 			'banned_capabilities'         => array(
 				'label' => __( 'Banned Administrative Capabilities', 'ultimate-member' ),
 				'value' => ! empty( $banned_capabilities ) ? implode( ', ', $banned_capabilities ) : '',
@@ -2569,6 +2573,32 @@ class Site_Health {
 				 * add_filter( 'um_debug_member_directory_general_extend', 'um_debug_member_directory_general_extend', 10, 2 );
 				 */
 				$debug_info = apply_filters( 'um_debug_member_directory_general_extend', $debug_info, $directory_id );
+
+				$md_privacy_options = array(
+					0 => __( 'Anyone', 'ultimate-member' ),
+					1 => __( 'Guests only', 'ultimate-member' ),
+					2 => __( 'Members only', 'ultimate-member' ),
+					3 => __( 'Only specific roles', 'ultimate-member' ),
+				);
+				$directory_privacy  = get_post_meta( $directory_id, '_um_privacy', true );
+
+				$debug_info[] = array(
+					'privacy' => array(
+						'label' => __( 'Who can see this member directory', 'ultimate-member' ),
+						'value' => array_key_exists( $directory_privacy, $md_privacy_options ) ? $md_privacy_options[ $directory_privacy ] : __( 'Invalid', 'ultimate-member' ),
+					),
+				);
+				if ( 3 === absint( $directory_privacy ) ) {
+					$directory_privacy_roles = get_post_meta( $directory_id, '_um_privacy_roles', true );
+					$directory_privacy_roles = ! empty( $directory_privacy_roles ) && is_array( $directory_privacy_roles ) ? $directory_privacy_roles : array();
+
+					$debug_info[] = array(
+						'privacy_roles' => array(
+							'label' => __( 'Allowed roles', 'ultimate-member' ),
+							'value' => $directory_privacy_roles,
+						),
+					);
+				}
 
 				if ( isset( $options[ get_post_meta( $directory_id, '_um_sortby', true ) ] ) ) {
 					$sortby_label = $options[ get_post_meta( $directory_id, '_um_sortby', true ) ];
