@@ -2,6 +2,7 @@
 namespace um\core;
 
 use Exception;
+use WP_Post;
 use WP_User_Query;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -123,11 +124,79 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		public function __construct() {
 			add_filter( 'init', array( &$this, 'init_variables' ) );
 
+			add_action( 'wp_insert_post', array( &$this, 'set_token' ), 10, 3 );
 			add_action( 'template_redirect', array( &$this, 'access_members' ), 555 );
 		}
 
 		/**
+		 * Set member directory token as soon as it's created.
+		 *
+		 * @param int     $post_ID
+		 * @param WP_Post $post
+		 * @param bool    $update
+		 *
+		 * @return void
+		 */
+		public function set_token( $post_ID, $post, $update ) {
+			if ( 'um_directory' === $post->post_type && ! $update ) {
+				$this->set_directory_hash( $post_ID );
+			}
+		}
+
+		/**
+		 * Check if the user can view the member directory.
+		 *
+		 * @param int      $directory_id
+		 * @param int|null $user_id
+		 *
+		 * @return bool
+		 */
+		public function can_view_directory( $directory_id, $user_id = null ) {
+			if ( is_null( $user_id ) && is_user_logged_in() ) {
+				$user_id = get_current_user_id();
+			}
+
+			$can_view = false;
+			$privacy  = get_post_meta( $directory_id, '_um_privacy', true );
+			if ( '' === $privacy ) {
+				$can_view = true;
+			} else {
+				$privacy = absint( $privacy );
+
+				switch ( $privacy ) {
+					case 0:
+						$can_view = true;
+						break;
+					case 1:
+						if ( ! is_user_logged_in() ) {
+							$can_view = true;
+						}
+						break;
+					case 2:
+						if ( is_user_logged_in() ) {
+							$can_view = true;
+						}
+						break;
+					case 3:
+						if ( is_user_logged_in() ) {
+							$privacy_roles = get_post_meta( $directory_id, '_um_privacy_roles', true );
+							$privacy_roles = ! empty( $privacy_roles ) && is_array( $privacy_roles ) ? $privacy_roles : array();
+
+							$current_user_roles = um_user( 'roles' );
+							if ( ! empty( $current_user_roles ) && count( array_intersect( $current_user_roles, $privacy_roles ) ) > 0 ) {
+								$can_view = true;
+							}
+						}
+						break;
+				}
+			}
+
+			return apply_filters( 'um_directory_user_can_view', $can_view, $directory_id, $user_id );
+		}
+
+		/**
 		 * Get the WordPress core searching fields in wp_users query.
+		 *
 		 * @since 2.6.10
 		 * @version 2.10.2
 		 * @param array|null  $qv     WP_User_Query variables.
@@ -202,29 +271,104 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 * @return bool|int
 		 */
-		function get_directory_by_hash( $hash ) {
+		public function get_directory_by_hash( $hash ) {
 			global $wpdb;
 
-			$directory_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE SUBSTRING( MD5( ID ), 11, 5 ) = %s", $hash ) );
-
+			$directory_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT post_id
+					FROM {$wpdb->postmeta}
+					WHERE meta_key = '_um_directory_token' AND
+						  meta_value = %s
+					LIMIT 1",
+					$hash
+				)
+			);
 			if ( empty( $directory_id ) ) {
-				return false;
+				// Fallback, use old value.
+				$directory_id = $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT ID
+						FROM {$wpdb->posts}
+						WHERE SUBSTRING( MD5( ID ), 11, 5 ) = %s",
+						$hash
+					)
+				);
+				if ( empty( $directory_id ) ) {
+					return false;
+				}
 			}
 
 			return (int) $directory_id;
 		}
 
+		/**
+		 * Generate a secure random token for each directory
+		 *
+		 * @param int $id
+		 *
+		 * @return false|string
+		 */
+		public function set_directory_hash( $id ) {
+			$unique_hash = wp_generate_password( 5, false );
+			$result      = update_post_meta( $id, '_um_directory_token', $unique_hash );
+			if ( false === $result ) {
+				return false;
+			}
+			return $unique_hash;
+		}
 
 		/**
 		 * @param $id
 		 *
 		 * @return bool|string
 		 */
-		function get_directory_hash( $id ) {
-			$hash = substr( md5( $id ), 10, 5 );
+		public function get_directory_hash( $id ) {
+			$hash = get_post_meta( $id, '_um_directory_token', true );
+			if ( '' === $hash ) {
+				// Set the hash if empty.
+				$hash = $this->set_directory_hash( $id );
+			}
+			if ( empty( $hash ) ) {
+				// Fallback, use old value.
+				$hash = substr( md5( $id ), 10, 5 );
+			}
 			return $hash;
 		}
 
+		/**
+		 * Generate a secure random token for each user card
+		 *
+		 * @param int $id
+		 *
+		 * @return false|string
+		 */
+		public function set_user_hash( $id ) {
+			$unique_hash = wp_generate_password( 5, false );
+			$result      = update_user_meta( $id, '_um_card_anchor_token', $unique_hash );
+			if ( false === $result ) {
+				return false;
+			}
+			return $unique_hash;
+		}
+
+		/**
+		 * @param $id
+		 *
+		 * @return bool|string
+		 */
+		public function get_user_hash( $id ) {
+			$hash = get_user_meta( $id, '_um_card_anchor_token', true );
+			if ( '' === $hash ) {
+				// Set the hash if empty.
+				$hash = $this->set_user_hash( $id );
+			}
+			if ( empty( $hash ) ) {
+				// Fallback, use old value.
+				$hash = substr( md5( $id ), 10, 5 );
+			}
+			return $hash;
+		}
 
 		/**
 		 * Get view Type template
@@ -673,7 +817,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 */
 			$attrs = apply_filters( 'um_search_fields', $attrs, $field_key, $directory_data['form_id'] );
 
-			$unique_hash = substr( md5( $directory_data['form_id'] ), 10, 5 );
+			$unique_hash = $this->get_directory_hash( $directory_data['form_id'] );
 
 			ob_start();
 
@@ -2545,16 +2689,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$hook_after_user_name = ob_get_clean();
 
 			$data_array = array(
-				'card_anchor'          => esc_html( substr( md5( $user_id ), 10, 5 ) ),
-				'id'                   => absint( $user_id ),
-				'role'                 => esc_html( um_user( 'role' ) ),
-				'account_status'       => esc_html( UM()->common()->users()->get_status( $user_id ) ),
-				'account_status_name'  => esc_html( UM()->common()->users()->get_status( $user_id, 'formatted' ) ),
+				'card_anchor'          => esc_html( $this->get_user_hash( $user_id ) ),
+				'role'                 => is_user_logged_in() ? esc_html( um_user( 'role' ) ) : 'undefined', // make the role hidden for the nopriv requests.
+				'account_status'       => is_user_logged_in() ? esc_html( UM()->common()->users()->get_status( $user_id ) ) : 'undefined', // make the status hidden for the nopriv requests.
+				'account_status_name'  => is_user_logged_in() ? esc_html( UM()->common()->users()->get_status( $user_id, 'formatted' ) ) : __( 'Undefined', 'ultimate-member' ), // make the status hidden for the nopriv requests.
 				'cover_photo'          => wp_kses( um_user( 'cover_photo', $this->cover_size ), UM()->get_allowed_html( 'templates' ) ),
 				'display_name'         => esc_html( um_user( 'display_name' ) ),
 				'profile_url'          => esc_url( um_user_profile_url() ),
 				'can_edit'             => (bool) $can_edit,
-				'edit_profile_url'     => esc_url( um_edit_profile_url() ),
+				'edit_profile_url'     => $can_edit ? esc_url( um_edit_profile_url() ) : '',
 				'avatar'               => wp_kses( get_avatar( $user_id, $this->avatar_size ), UM()->get_allowed_html( 'templates' ) ),
 				'display_name_html'    => wp_kses( um_user( 'display_name', 'html' ), UM()->get_allowed_html( 'templates' ) ),
 				'dropdown_actions'     => $dropdown_actions,
@@ -2788,12 +2931,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 		}
 
-
 		/**
 		 * Main Query function for getting members via AJAX
 		 */
-		function ajax_get_members() {
+		public function ajax_get_members() {
 			UM()->check_ajax_nonce();
+
+			if ( UM()->is_rate_limited( 'member_directory' ) ) {
+				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
+			}
 
 			global $wpdb;
 
@@ -2805,6 +2951,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			if ( empty( $directory_id ) ) {
 				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
+			}
+
+			if ( ! $this->can_view_directory( $directory_id ) ) {
+				wp_send_json_error( __( 'You cannot see this member directory', 'ultimate-member' ) );
 			}
 
 			$directory_data = UM()->query()->post_data( $directory_id );
