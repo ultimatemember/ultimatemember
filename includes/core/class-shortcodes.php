@@ -527,10 +527,10 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 *
 		 * @return string
 		 */
-		function ultimatemember_login( $args = array() ) {
+		public function ultimatemember_login( $args = array() ) {
 			global $wpdb;
 
-			$args = ! empty( $args ) ? $args : array();
+			$args = shortcode_atts( array(), $args, 'ultimatemember_login' );
 
 			$default_login = $wpdb->get_var(
 				"SELECT pm.post_id
@@ -547,23 +547,18 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$shortcode_attrs .= " {$key}=\"{$value}\"";
 			}
 
-			if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
-				return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
-			} else {
-				return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
-			}
+			return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
 		}
-
 
 		/**
 		 * @param array $args
 		 *
 		 * @return string
 		 */
-		function ultimatemember_register( $args = array() ) {
+		public function ultimatemember_register( $args = array() ) {
 			global $wpdb;
 
-			$args = ! empty( $args ) ? $args : array();
+			$args = shortcode_atts( array(), $args, 'ultimatemember_register' );
 
 			$default_register = $wpdb->get_var(
 				"SELECT pm.post_id
@@ -580,23 +575,18 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$shortcode_attrs .= " {$key}=\"{$value}\"";
 			}
 
-			if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
-				return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
-			} else {
-				return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
-			}
+			return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
 		}
-
 
 		/**
 		 * @param array $args
 		 *
 		 * @return string
 		 */
-		function ultimatemember_profile( $args = array() ) {
+		public function ultimatemember_profile( $args = array() ) {
 			global $wpdb;
 
-			$args = ! empty( $args ) ? $args : array();
+			$args = shortcode_atts( array(), $args, 'ultimatemember_profile' );
 
 			$default_profile = $wpdb->get_var(
 				"SELECT pm.post_id
@@ -614,23 +604,18 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$shortcode_attrs .= " {$key}=\"{$value}\"";
 			}
 
-			if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
-				return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
-			} else {
-				return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
-			}
+			return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
 		}
-
 
 		/**
 		 * @param array $args
 		 *
 		 * @return string
 		 */
-		function ultimatemember_directory( $args = array() ) {
+		public function ultimatemember_directory( $args = array() ) {
 			global $wpdb;
 
-			$args = ! empty( $args ) ? $args : array();
+			$args = shortcode_atts( array(), $args, 'ultimatemember_directory' );
 
 			$default_directory = $wpdb->get_var(
 				"SELECT pm.post_id
@@ -648,11 +633,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$shortcode_attrs .= " {$key}=\"{$value}\"";
 			}
 
-			if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
-				return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
-			} else {
-				return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
-			}
+			return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
 		}
 
 		/**
