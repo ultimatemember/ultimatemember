@@ -6,7 +6,7 @@
  *
  * Page: "Members"
  *
- * @version 2.6.1
+ * @version 2.11.1
  *
  * @var array  $args
  * @var bool   $cover_photos
@@ -23,8 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
-
+$unique_hash = UM()->member_directory()->get_directory_hash( $args['form_id'] );
+?>
 <script type="text/template" id="tmpl-um-member-grid-<?php echo esc_attr( $unique_hash ) ?>">
 	<div class="um-members um-members-grid">
 		<div class="um-gutter-sizer"></div>
