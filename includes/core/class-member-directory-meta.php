@@ -595,6 +595,10 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 		public function ajax_get_members() {
 			UM()->check_ajax_nonce();
 
+			if ( UM()->is_rate_limited( 'member_directory' ) ) {
+				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
+			}
+
 			global $wpdb;
 
 			$blog_id = get_current_blog_id();
@@ -608,6 +612,10 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
 			}
 			// phpcs:enable WordPress.Security.NonceVerification -- verified via `UM()->check_ajax_nonce();`.
+
+			if ( ! $this->can_view_directory( $directory_id ) ) {
+				wp_send_json_error( __( 'You cannot see this member directory', 'ultimate-member' ) );
+			}
 
 			$directory_data = UM()->query()->post_data( $directory_id );
 

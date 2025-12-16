@@ -266,6 +266,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		public function ajax_remove_file() {
 			UM()->check_ajax_nonce();
 
+			if ( UM()->is_rate_limited( 'remove_file' ) ) {
+				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
+			}
+
 			if ( empty( $_POST['src'] ) ) {
 				wp_send_json_error( __( 'Wrong path', 'ultimate-member' ) );
 			}
@@ -314,6 +318,11 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 */
 		public function ajax_resize_image() {
 			UM()->check_ajax_nonce();
+
+			if ( UM()->is_rate_limited( 'resize_image' ) ) {
+				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
+			}
+
 			// phpcs:disable WordPress.Security.NonceVerification -- verified by the `check_ajax_nonce()`
 			if ( ! isset( $_REQUEST['src'], $_REQUEST['coord'], $_REQUEST['key'] ) ) {
 				wp_send_json_error( esc_js( __( 'Invalid parameters', 'ultimate-member' ) ) );
@@ -447,6 +456,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * @throws Exception
 		 */
 		public function ajax_image_upload() {
+			if ( UM()->is_rate_limited( 'upload_image' ) ) {
+				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
+			}
+
 			$ret['error'] = null;
 			$ret          = array();
 
@@ -645,6 +658,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * @throws Exception
 		 */
 		public function ajax_file_upload() {
+			if ( UM()->is_rate_limited( 'upload_file' ) ) {
+				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
+			}
+
 			$ret['error'] = null;
 			$ret          = array();
 

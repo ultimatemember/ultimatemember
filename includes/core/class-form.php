@@ -116,6 +116,10 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		public function ajax_select_options() {
 			UM()->check_ajax_nonce();
 
+			if ( UM()->is_rate_limited( 'select_options' ) ) {
+				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
+			}
+
 			// phpcs:disable WordPress.Security.NonceVerification
 
 			$arr_options           = array();
