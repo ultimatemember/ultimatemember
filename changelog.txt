@@ -2,7 +2,8 @@
 
 = 2.11.1 December xx, 2025 =
 
-Fixed: CVE-2025-14081
+Fixed: CVE-2025-13217.
+Fixed: CVE-2025-14081.
 
 = 2.11.0 December 02, 2025 =
 
