@@ -1682,7 +1682,7 @@ class Shortcodes {
 	public function ultimatemember_login( $args = array() ) {
 		global $wpdb;
 
-		$args = ! empty( $args ) ? $args : array();
+		$args = shortcode_atts( array(), $args, 'ultimatemember_login' );
 
 		$default_login = $wpdb->get_var(
 			"SELECT pm.post_id
@@ -1711,7 +1711,7 @@ class Shortcodes {
 	public function ultimatemember_register( $args = array() ) {
 		global $wpdb;
 
-		$args = ! empty( $args ) ? $args : array();
+		$args = shortcode_atts( array(), $args, 'ultimatemember_register' );
 
 		$default_register = $wpdb->get_var(
 			"SELECT pm.post_id
@@ -1740,7 +1740,7 @@ class Shortcodes {
 	public function ultimatemember_profile( $args = array() ) {
 		global $wpdb;
 
-		$args = ! empty( $args ) ? $args : array();
+		$args = shortcode_atts( array(), $args, 'ultimatemember_profile' );
 
 		$default_profile = $wpdb->get_var(
 			"SELECT pm.post_id
@@ -1776,11 +1776,12 @@ class Shortcodes {
 			'ultimatemember_directory'
 		);
 
-		if ( empty( $args['id'] ) || ! is_numeric( $args['id'] ) ) {
+		if ( empty( $args['id'] ) ) {
 			return '';
 		}
 
-		$directory = get_post( $args['id'] );
+		$args['id'] = absint( $args['id'] );
+		$directory  = get_post( $args['id'] );
 		if ( empty( $directory ) ) {
 			return '';
 		}
@@ -1965,6 +1966,10 @@ class Shortcodes {
 		}
 
 		if ( 'directory' === $args['mode'] ) {
+			if ( ! UM()->member_directory()->can_view_directory( $this->form_id ) ) {
+				return ''; // Checking for privacy settings of the member directory
+			}
+
 			if ( ! UM()->is_new_ui() ) {
 				wp_enqueue_script( 'um_members' );
 				wp_enqueue_style( 'um_members' );

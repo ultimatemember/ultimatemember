@@ -1543,6 +1543,10 @@ class Directory extends \um\common\Directory {
 	public function ajax_get_members() {
 		check_ajax_referer( 'um_member_directory', 'nonce' );
 
+		if ( UM()->is_rate_limited( 'member_directory' ) ) {
+			wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
+		}
+
 		global $wpdb;
 
 		if ( empty( $_POST['directory_id'] ) ) {
@@ -1553,6 +1557,10 @@ class Directory extends \um\common\Directory {
 
 		if ( empty( $directory_id ) ) {
 			wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
+		}
+
+		if ( ! $this->can_view_directory( $directory_id ) ) {
+			wp_send_json_error( __( 'You cannot see this member directory', 'ultimate-member' ) );
 		}
 
 		$directory_data = UM()->query()->post_data( $directory_id );
