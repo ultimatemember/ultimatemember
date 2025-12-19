@@ -1350,6 +1350,20 @@ UM.frontend = {
 				}
 			});
 		}
+	},
+	animate: {
+		pop: {
+			start: function( obj ) {
+				if ( obj.length ) {
+					obj.addClass('um-effect-pop');
+				}
+			},
+			stop: function( obj ) {
+				if ( obj.length ) {
+					obj.removeClass('um-effect-pop');
+				}
+			}
+		}
 	}
 }
 

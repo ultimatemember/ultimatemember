@@ -130,6 +130,10 @@
   align-items: stretch;
   flex-wrap: nowrap;
 }
+.um .um-main-skeleton {
+  width: 100%;
+  min-height: 300px;
+}
 
 .um .um-button {
   text-align: center;

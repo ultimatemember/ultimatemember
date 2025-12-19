@@ -1235,12 +1235,15 @@ class Layouts {
 				$tab_classes[] = 'um-tab-current';
 			}
 
-			$tab_classes = ! empty( $tab_data['classes'] ) && is_array( $tab_data['classes'] ) ? array_merge( $tab_classes, $tab_data['classes'] ) : $tab_classes;
-
+			$tab_classes  = ! empty( $tab_data['classes'] ) && is_array( $tab_data['classes'] ) ? array_merge( $tab_classes, $tab_data['classes'] ) : $tab_classes;
+			$link_classes = array( 'um-link' );
+			if ( ! empty( $tab_data['link-classes'] ) ) {
+				$link_classes = array_merge( $link_classes, $tab_data['link-classes'] );
+			}
 			ob_start();
 			?>
 			<li class="<?php echo esc_attr( implode( ' ', $tab_classes ) ); ?>">
-				<a class="um-link" href="<?php echo esc_url( $tab_data['url'] ); ?>" data-tab="<?php echo esc_attr( $tab_id ); ?>">
+				<a class="<?php echo esc_attr( implode( ' ', $link_classes ) ); ?>" href="<?php echo esc_url( $tab_data['url'] ); ?>" data-tab="<?php echo esc_attr( $tab_id ); ?>">
 					<?php
 					echo esc_html( $tab_data['title'] );
 					if ( array_key_exists( 'notifier', $tab_data ) ) {
