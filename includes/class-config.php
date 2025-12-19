@@ -155,6 +155,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_core'                     => 'members',
 				'_um_template'                 => 'members',
 				'_um_mode'                     => 'directory',
+				'_um_privacy'                  => 2,
+				'_um_privacy_roles'            => array(),
 				'_um_view_types'               => array( 'grid' ),
 				'_um_default_view'             => 'grid',
 				'_um_roles'                    => array(),
@@ -466,14 +468,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'title'          => __( 'Account Welcome Email', 'ultimate-member' ),
 					'subject'        => 'Welcome to {site_name}!',
 					'body'           => 'Hi {display_name},<br /><br />' .
-										'Thank you for signing up with {site_name}! Your account is now active.<br /><br />' .
-										'{action_title}:<br /><br />' .
-										'{action_url} <br /><br />' .
-										'Your account email: {email} <br />' .
-										'Your account username: {username} <br /><br />' .
-										'If you have any problems, please contact us at {admin_email}<br /><br />' .
-										'Thanks,<br />' .
-										'{site_name}',
+					                    'Thank you for signing up with {site_name}! Your account is now active.<br /><br />' .
+					                    '{action_title}:<br /><br />' .
+					                    '{action_url} <br /><br />' .
+					                    'Your account email: {email} <br />' .
+					                    'Your account username: {username} <br /><br />' .
+					                    'If you have any problems, please contact us at {admin_email}<br /><br />' .
+					                    'Thanks,<br />' .
+					                    '{site_name}',
 					'description'    => __( 'Whether to send the user an email when his account is automatically approved', 'ultimate-member' ),
 					'recipient'      => 'user',
 					'default_active' => true,
@@ -483,11 +485,11 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'title'       => __( 'Account Activation Email', 'ultimate-member' ),
 					'subject'     => 'Please activate your account',
 					'body'        => 'Hi {display_name},<br /><br />' .
-										'Thank you for signing up with {site_name}! To activate your account, please click the link below to confirm your email address:<br /><br />' .
-										'{account_activation_link} <br /><br />' .
-										'If you have any problems, please contact us at {admin_email}<br /><br />' .
-										'Thanks, <br />' .
-										'{site_name}',
+					                 'Thank you for signing up with {site_name}! To activate your account, please click the link below to confirm your email address:<br /><br />' .
+					                 '{account_activation_link} <br /><br />' .
+					                 'If you have any problems, please contact us at {admin_email}<br /><br />' .
+					                 'Thanks, <br />' .
+					                 '{site_name}',
 					'description' => __( 'Whether to send the user an email when his account needs email activation', 'ultimate-member' ),
 					'recipient'   => 'user',
 				),
@@ -496,11 +498,11 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'title'       => __( 'Your account is pending review', 'ultimate-member' ),
 					'subject'     => '[{site_name}] New user account',
 					'body'        => 'Hi {display_name}, <br /><br />' .
-										'Thank you for signing up with {site_name}! Your account is currently being reviewed by a member of our team.<br /><br />' .
-										'Please allow us some time to process your request.<br /><br />' .
-										'If you have any problems, please contact us at {admin_email}<br /><br />' .
-										'Thanks,<br />' .
-										'{site_name}',
+					                 'Thank you for signing up with {site_name}! Your account is currently being reviewed by a member of our team.<br /><br />' .
+					                 'Please allow us some time to process your request.<br /><br />' .
+					                 'If you have any problems, please contact us at {admin_email}<br /><br />' .
+					                 'Thanks,<br />' .
+					                 '{site_name}',
 					'description' => __( 'Whether to send the user an email when his account needs admin review', 'ultimate-member' ),
 					'recipient'   => 'user',
 				),
@@ -509,15 +511,15 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'title'       => __( 'Account Approved Email', 'ultimate-member' ),
 					'subject'     => 'Your account at {site_name} is now active',
 					'body'        => 'Hi {display_name},<br /><br />' .
-										'Thank you for signing up with {site_name}! Your account has been approved and is now active.<br /><br />' .
-										'To login please visit the following url:<br /><br />' .
-										'{login_url}<br /><br />' .
-										'Your account email: {email}<br />' .
-										'Your account username: {username}<br />' .
-										'Set your account password: {password_reset_link}<br /><br />' .
-										'If you have any problems, please contact us at {admin_email}<br /><br />' .
-										'Thanks,<br />' .
-										'{site_name}',
+					                 'Thank you for signing up with {site_name}! Your account has been approved and is now active.<br /><br />' .
+					                 'To login please visit the following url:<br /><br />' .
+					                 '{login_url}<br /><br />' .
+					                 'Your account email: {email}<br />' .
+					                 'Your account username: {username}<br />' .
+					                 'Set your account password: {password_reset_link}<br /><br />' .
+					                 'If you have any problems, please contact us at {admin_email}<br /><br />' .
+					                 'Thanks,<br />' .
+					                 '{site_name}',
 					'description' => __( 'Whether to send the user an email when his account is approved', 'ultimate-member' ),
 					'recipient'   => 'user',
 				),
@@ -526,10 +528,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'title'       => __( 'Account Rejected Email', 'ultimate-member' ),
 					'subject'     => 'Your account has been rejected',
 					'body'        => 'Hi {display_name},<br /><br />' .
-										'Thank you for applying for membership to {site_name}! We have reviewed your information and unfortunately we are unable to accept you as a member at this moment.<br /><br />' .
-										'Please feel free to apply again at a future date.<br /><br />' .
-										'Thanks,<br />' .
-										'{site_name}',
+					                 'Thank you for applying for membership to {site_name}! We have reviewed your information and unfortunately we are unable to accept you as a member at this moment.<br /><br />' .
+					                 'Please feel free to apply again at a future date.<br /><br />' .
+					                 'Thanks,<br />' .
+					                 '{site_name}',
 					'description' => __( 'Whether to send the user an email when his account is rejected', 'ultimate-member' ),
 					'recipient'   => 'user',
 				),
@@ -538,10 +540,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'title'          => __( 'Account Deactivated Email', 'ultimate-member' ),
 					'subject'        => 'Your account has been deactivated',
 					'body'           => 'Hi {display_name},<br /><br />' .
-										'This is an automated email to let you know your {site_name} account has been deactivated.<br /><br />' .
-										'If you would like your account to be reactivated please contact us at {admin_email}<br /><br />' .
-										'Thanks,<br />' .
-										'{site_name}',
+					                    'This is an automated email to let you know your {site_name} account has been deactivated.<br /><br />' .
+					                    'If you would like your account to be reactivated please contact us at {admin_email}<br /><br />' .
+					                    'Thanks,<br />' .
+					                    '{site_name}',
 					'description'    => __( 'Whether to send the user an email when his account is deactivated', 'ultimate-member' ),
 					'recipient'      => 'user',
 					'default_active' => true,
@@ -551,10 +553,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'title'          => __( 'Account Deleted Email', 'ultimate-member' ),
 					'subject'        => 'Your account has been deleted',
 					'body'           => 'Hi {display_name},<br /><br />' .
-										'This is an automated email to let you know your {site_name} account has been deleted. All of your personal information has been permanently deleted and you will no longer be able to login to {site_name}.<br /><br />' .
-										'If your account has been deleted by accident please contact us at {admin_email} <br />' .
-										'Thanks,<br />' .
-										'{site_name}',
+					                    'This is an automated email to let you know your {site_name} account has been deleted. All of your personal information has been permanently deleted and you will no longer be able to login to {site_name}.<br /><br />' .
+					                    'If your account has been deleted by accident please contact us at {admin_email} <br />' .
+					                    'Thanks,<br />' .
+					                    '{site_name}',
 					'description'    => __( 'Whether to send the user an email when his account is deleted', 'ultimate-member' ),
 					'recipient'      => 'user',
 					'default_active' => true,
@@ -564,11 +566,11 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'title'          => __( 'Password Reset Email', 'ultimate-member' ),
 					'subject'        => 'Reset your password',
 					'body'           => 'Hi {display_name},<br /><br />' .
-										'We received a request to reset the password for your account. If you made this request, click the link below to change your password:<br /><br />' .
-										'{password_reset_link}<br /><br />' .
-										'If you didn\'t make this request, you can ignore this email <br /><br />' .
-										'Thanks,<br />' .
-										'{site_name}',
+					                    'We received a request to reset the password for your account. If you made this request, click the link below to change your password:<br /><br />' .
+					                    '{password_reset_link}<br /><br />' .
+					                    'If you didn\'t make this request, you can ignore this email <br /><br />' .
+					                    'Thanks,<br />' .
+					                    '{site_name}',
 					'description'    => __( 'Whether to send an email when users changed their password (Recommended, please keep on)', 'ultimate-member' ),
 					'recipient'      => 'user',
 					'default_active' => true,
@@ -578,10 +580,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'title'          => __( 'Password Changed Email', 'ultimate-member' ),
 					'subject'        => 'Your {site_name} password has been changed',
 					'body'           => 'Hi {display_name},<br /><br />' .
-										'You recently changed the password associated with your {site_name} account.<br /><br />' .
-										'If you did not make this change and believe your {site_name} account has been compromised, please contact us at the following email address: {admin_email}<br /><br />' .
-										'Thanks,<br />' .
-										'{site_name}',
+					                    'You recently changed the password associated with your {site_name} account.<br /><br />' .
+					                    'If you did not make this change and believe your {site_name} account has been compromised, please contact us at the following email address: {admin_email}<br /><br />' .
+					                    'Thanks,<br />' .
+					                    '{site_name}',
 					'description'    => __( 'Whether to send the user an email when he requests to reset password (Recommended, please keep on)', 'ultimate-member' ),
 					'recipient'      => 'user',
 					'default_active' => true,
@@ -591,10 +593,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'title'          => __( 'Account Updated Email', 'ultimate-member' ),
 					'subject'        => 'Your account at {site_name} was updated',
 					'body'           => 'Hi {display_name},<br /><br />' .
-										'You recently updated your {site_name} account.<br /><br />' .
-										'If you did not make this change and believe your {site_name} account has been compromised, please contact us at the following email address: {admin_email}<br /><br />' .
-										'Thanks,<br />' .
-										'{site_name}',
+					                    'You recently updated your {site_name} account.<br /><br />' .
+					                    'If you did not make this change and believe your {site_name} account has been compromised, please contact us at the following email address: {admin_email}<br /><br />' .
+					                    'Thanks,<br />' .
+					                    '{site_name}',
 					'description'    => __( 'Whether to send the user an email when he updated their account', 'ultimate-member' ),
 					'recipient'      => 'user',
 					'default_active' => true,
@@ -604,9 +606,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'title'          => __( 'New User Notification', 'ultimate-member' ),
 					'subject'        => '[{site_name}] New user account',
 					'body'           => '{display_name} has just created an account on {site_name}. To view their profile click here:<br /><br />' .
-										'{user_profile_link}<br /><br />' .
-										'Here is the submitted registration form:<br /><br />' .
-										'{submitted_registration}',
+					                    '{user_profile_link}<br /><br />' .
+					                    'Here is the submitted registration form:<br /><br />' .
+					                    '{submitted_registration}',
 					'description'    => __( 'Whether to receive notification when a new user account is created', 'ultimate-member' ),
 					'recipient'      => 'admin',
 					'default_active' => true,
@@ -616,10 +618,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'title'       => __( 'Account Needs Review Notification', 'ultimate-member' ),
 					'subject'     => '[{site_name}] New user awaiting review',
 					'body'        => '{display_name} has just applied for membership to {site_name} and is waiting to be reviewed.<br /><br />' .
-										'To review this member please click the following link:<br /><br />' .
-										'{user_profile_link}<br /><br />' .
-										'Here is the submitted registration form:<br /><br />' .
-										'{submitted_registration}',
+					                 'To review this member please click the following link:<br /><br />' .
+					                 '{user_profile_link}<br /><br />' .
+					                 'Here is the submitted registration form:<br /><br />' .
+					                 '{submitted_registration}',
 					'description' => __( 'Whether to receive notification when an account needs admin review', 'ultimate-member' ),
 					'recipient'   => 'admin',
 				),
@@ -760,6 +762,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'lock_register_forms'                   => false,
 				'display_login_form_notice'             => false,
 				'secure_ban_admins_accounts'            => false,
+				'ajax_nopriv_rate_limit'                => true,
 				'banned_capabilities'                   => array( 'manage_options', 'promote_users', 'level_10' ),
 				'secure_notify_admins_banned_accounts'  => false,
 				'secure_notify_admins_banned_accounts__interval' => 'instant',

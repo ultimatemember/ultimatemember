@@ -1,8 +1,24 @@
 ﻿== Changelog ==
 
-= 2.11.1 December xx, 2025 =
+= 2.11.1 December 16, 2025 =
 
+* Enhancements:
 
+  - Added: 'Privacy Options' for Member Directory. 'Who can see this member directory' and 'Allowed Roles'.
+  - Added: 'Rate Limit' setting for nopriv AJAX actions.
+
+* Bugfixes:
+
+  - Fixed: Security issue CVE ID: CVE-2025-13220. Used `shortcode_atts()` function to avoid using wrong attributes.
+  - Fixed: Security issue CVE ID: CVE-2025-13217. Implementing proper input sanitization and escaping for iframe URLs in YouTube, Vimeo, and Google Maps embeds.
+  - Fixed: Security issue CVE ID: CVE-2025-14081. Filtering fields based on user permissions during Account form submission.
+  - Fixed: Security issue CVE ID: CVE-2025-12492. Added directory privacy settings and added rate limiting.
+
+* Templates required update:
+
+  - members.php
+  - members-grid.php
+  - members-list.php
 
 = 2.11.0 December 02, 2025 =
 

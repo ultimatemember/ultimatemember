@@ -1051,6 +1051,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'display_login_form_notice'            => array(
 						'sanitize' => 'bool',
 					),
+					'ajax_nopriv_rate_limit'               => array(
+						'sanitize' => 'bool',
+					),
 					'banned_capabilities'                  => array(
 						'sanitize' => array( UM()->admin(), 'sanitize_wp_capabilities_assoc' ),
 					),

@@ -4,6 +4,7 @@ namespace um\core;
 
 use um\common\Directory;
 use Exception;
+use WP_Post;
 use WP_User_Query;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -138,9 +139,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : $default_value;
 					?>
 					<input type="text" autocomplete="off" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?>"
-						   placeholder="<?php echo esc_attr( $label ); ?>"
-						   value="<?php echo esc_attr( $filter_from_url ); ?>" class="um-form-field"
-						   aria-label="<?php echo esc_attr( $label ); ?>" />
+					       placeholder="<?php echo esc_attr( $label ); ?>"
+					       value="<?php echo esc_attr( $filter_from_url ); ?>" class="um-form-field"
+					       aria-label="<?php echo esc_attr( $label ); ?>" />
 					<?php
 					break;
 
@@ -277,9 +278,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					?>
 
 					<select class="um-s1" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
-							data-placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
-							aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
-							<?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>multiple<?php } ?>
+					        data-placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
+					        aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
+					        <?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>multiple<?php } ?>
 						<?php echo $custom_dropdown; ?>>
 
 						<option></option>
@@ -1992,16 +1993,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$hook_after_user_name = ob_get_clean();
 
 			$data_array = array(
-				'card_anchor'          => esc_html( substr( md5( $user_id ), 10, 5 ) ),
-				'id'                   => absint( $user_id ),
-				'role'                 => esc_html( um_user( 'role' ) ),
-				'account_status'       => esc_html( UM()->common()->users()->get_status( $user_id ) ),
-				'account_status_name'  => esc_html( UM()->common()->users()->get_status( $user_id, 'formatted' ) ),
+				'card_anchor'          => esc_html( $this->get_user_hash( $user_id ) ),
+				'role'                 => is_user_logged_in() ? esc_html( um_user( 'role' ) ) : 'undefined', // make the role hidden for the nopriv requests.
+				'account_status'       => is_user_logged_in() ? esc_html( UM()->common()->users()->get_status( $user_id ) ) : 'undefined', // make the status hidden for the nopriv requests.
+				'account_status_name'  => is_user_logged_in() ? esc_html( UM()->common()->users()->get_status( $user_id, 'formatted' ) ) : __( 'Undefined', 'ultimate-member' ), // make the status hidden for the nopriv requests.
 				'cover_photo'          => wp_kses( um_user( 'cover_photo', $this->cover_size ), UM()->get_allowed_html( 'templates' ) ),
 				'display_name'         => esc_html( um_user( 'display_name' ) ),
 				'profile_url'          => esc_url( um_user_profile_url() ),
 				'can_edit'             => (bool) $can_edit,
-				'edit_profile_url'     => esc_url( um_edit_profile_url() ),
+				'edit_profile_url'     => $can_edit ? esc_url( um_edit_profile_url() ) : '',
 				'avatar'               => wp_kses( get_avatar( $user_id, $this->avatar_size ), UM()->get_allowed_html( 'templates' ) ),
 				'display_name_html'    => wp_kses( um_user( 'display_name', 'html' ), UM()->get_allowed_html( 'templates' ) ),
 				'dropdown_actions'     => $dropdown_actions,
@@ -2245,6 +2245,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		public function ajax_get_members() {
 			UM()->check_ajax_nonce();
 
+			if ( UM()->is_rate_limited( 'member_directory' ) ) {
+				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
+			}
+
 			global $wpdb;
 
 			if ( empty( $_POST['directory_id'] ) ) {
@@ -2255,6 +2259,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			if ( empty( $directory_id ) ) {
 				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
+			}
+
+			if ( ! $this->can_view_directory( $directory_id ) ) {
+				wp_send_json_error( __( 'You cannot see this member directory', 'ultimate-member' ) );
 			}
 
 			$directory_data = UM()->query()->post_data( $directory_id );
