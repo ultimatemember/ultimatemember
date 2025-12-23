@@ -1,0 +1,2735 @@
+@import "selectors"
+@import "mixins"
+@import "box"
+@import "colors"
+@import "typography"
+
+@import "responsive"
+
+@mixin thumb
+  box-shadow: $shadow-md
+  border-radius: $radius-xl
+  border: 2px solid $primary-600
+  background: $um-white
+  cursor: pointer
+  height: $spacing-3xl
+  width: $spacing-3xl
+  margin-top: -$spacing-md
+
+@mixin track
+  cursor: default
+  height: $spacing-md
+  transition: all .2s ease
+
+// Skeleton animation.
++keyframes(um-ajax-shimmer)
+  100%
+    transform: translateX(100%)
+
++keyframes(um-svg-spin)
+  0%
+    -ms-transform: rotate(0deg)
+    -moz-transform: rotate(0deg)
+    -webkit-transform: rotate(0deg)
+    transform: rotate(0deg)
+  100%
+    -ms-transform: rotate(360deg)
+    -moz-transform: rotate(360deg)
+    -webkit-transform: rotate(360deg)
+    transform: rotate(360deg)
+
+.#{$prefix}ajax-spinner-svg
+  position: relative
+  svg
+    position: absolute
+    top: 0
+    left: 0
+    -webkit-animation: um-svg-spin 1s linear infinite
+    -moz-animation: um-svg-spin 1s linear infinite
+    animation: um-svg-spin 1s linear infinite
+  &.#{$prefix}ajax-spinner-s
+    width: 24px
+    height: 24px
+    svg
+      transform: scale(0.5)
+      width: 24px
+      height: 24px
+  &.#{$prefix}ajax-spinner-m
+    width: 32px
+    height: 32px
+  &.#{$prefix}ajax-spinner-l
+    width: 48px
+    height: 48px
+  &.#{$prefix}ajax-spinner-xl
+    width: 66px
+    height: 66px
+
+// Make parent block flexible.
+.um
+  +flex( column, flex-start, stretch, nowrap )
+  .#{$prefix}main-skeleton
+    width: 100%
+    min-height: 300px
+
+// Buttons.
+.um
+  .#{$prefix}button // button has predefined styles for default secondary-gray
+    text-align: center
+    cursor: pointer
+    border-radius: $radius-md
+    padding: 0
+    margin: 0
+    outline: none
+    &:not(.#{$prefix}button-has-icon.#{$prefix}button-icon-content)
+      &.#{$prefix}button-size-s
+        padding: $spacing-md 14px
+        +typography( text, sm, semibold )
+      &.#{$prefix}button-size-m
+        padding: 10px $spacing-xl
+        +typography( text, sm, semibold )
+      &.#{$prefix}button-size-l
+        padding: 10px 18px
+        +typography( text, md, semibold )
+      &.#{$prefix}button-size-xl
+        padding: $spacing-lg $spacing-2xl
+        +typography( text, md, semibold )
+    &.#{$prefix}button-has-icon
+      +flex( row, flex-start, center, nowrap )
+      svg
+        stroke: currentColor
+        overflow: visible
+      &.#{$prefix}button-icon-content
+        +flex( row, center, center, nowrap )
+        &.#{$prefix}button-size-s
+          padding: $spacing-md
+        &.#{$prefix}button-size-m
+          padding: 10px
+        &.#{$prefix}button-size-l
+          padding: $spacing-lg
+        &.#{$prefix}button-size-xl
+          padding: 14px
+      &.#{$prefix}button-icon-trailing,
+      &.#{$prefix}button-icon-leading
+        &.#{$prefix}button-size-s,
+        &.#{$prefix}button-size-m
+          column-gap: $spacing-xs
+        &.#{$prefix}button-size-l,
+        &.#{$prefix}button-size-xl
+          column-gap: $spacing-sm
+        .#{$prefix}button-icon
+          +flex( row, center, center, nowrap )
+          font-size: unset
+          line-height: unset
+          font-weight: unset
+
+    &.#{$prefix}button-secondary-gray
+      box-shadow: $shadow-xs
+      background-color: $button-bg
+      color: $button-color
+      border: 1px solid $button-border-color
+      &:hover
+        color: $button-color-hover
+        background-color: $button-bg-hover
+      &:focus
+        background-color: $button-bg
+        color: $button-color
+        box-shadow: $ring-gray-shadow-xs
+        outline: none
+      &:disabled
+        cursor: not-allowed
+        color: $button-color-disabled
+        background-color: $button-bg-disabled
+        border: 1px solid $button-border-color-disabled
+    &.#{$prefix}link-button
+      text-decoration: none
+      display: inline-block
+      box-sizing: border-box
+    &.#{$prefix}link-button-disabled
+      cursor: not-allowed
+      color: $button-color-disabled
+      background-color: $button-bg-disabled
+      border: 1px solid $button-border-color-disabled
+      &:hover,
+      &:focus
+        cursor: not-allowed
+        color: $button-color-disabled
+        background-color: $button-bg-disabled
+        border: 1px solid $button-border-color-disabled
+        box-shadow: none
+    &.#{$prefix}button-primary
+      background-color: $button-primary-bg
+      border: 1px solid $button-primary-bg
+      color: $button-primary-color
+      &:hover
+        background-color: $button-primary-bg-hover
+        border: 1px solid $button-primary-bg-hover
+        color: $button-primary-color
+      &:focus
+        background-color: $button-primary-bg
+        border: 1px solid $button-primary-bg
+        box-shadow: $ring-brand-shadow-xs
+      &:disabled
+        background-color: $button-primary-bg-disabled
+        border: 1px solid $button-primary-border-color-disabled
+        color: $button-primary-color-disabled
+        cursor: not-allowed
+      &.#{$prefix}link-button-disabled
+        background-color: $button-primary-bg-disabled
+        border: 1px solid $button-primary-border-color-disabled
+        color: $button-primary-color-disabled
+        cursor: not-allowed
+        &:hover,
+        &:focus
+          cursor: not-allowed
+          background-color: $button-primary-bg-disabled
+          border: 1px solid $button-primary-border-color-disabled
+          color: $button-primary-color-disabled
+          box-shadow: none
+    &.#{$prefix}button-primary-destructive
+      background-color: $error-600
+      border: 1px solid $error-600
+      color: $um-white
+      &:hover
+        background-color: $error-700
+        border: 1px solid $error-700
+        color: $um-white
+      &:focus
+        background-color: $error-600
+        border: 1px solid $error-600
+        box-shadow: $ring-error-shadow-xs
+        color: $um-white
+      &:disabled
+        background-color: $button-primary-bg-disabled
+        border: 1px solid $button-primary-border-color-disabled
+        color: $button-primary-color-disabled
+        cursor: not-allowed
+      &.#{$prefix}link-button-disabled
+        background-color: $button-primary-bg-disabled
+        border: 1px solid $button-primary-border-color-disabled
+        color: $button-primary-color-disabled
+        cursor: not-allowed
+        &:hover,
+        &:focus
+          cursor: not-allowed
+          background-color: $button-primary-bg-disabled
+          border: 1px solid $button-primary-border-color-disabled
+          color: $button-primary-color-disabled
+          box-shadow: none
+
+    &.#{$prefix}button-secondary-destructive
+      background-color: $um-white
+      border: 1px solid $error-300
+      color: $error-700
+      &:hover
+        background-color: $error-50
+        border: 1px solid $error-300
+        color: $error-800
+      &:focus
+        background-color: $um-white
+        border: 1px solid $error-300
+        box-shadow: $ring-error-shadow-xs
+        color: $error-700
+      &:disabled
+        color: $button-color-disabled
+        background-color: $button-bg-disabled
+        border: 1px solid $button-border-color-disabled
+        cursor: not-allowed
+      &.#{$prefix}link-button-disabled
+        color: $button-color-disabled
+        background-color: $button-bg-disabled
+        border: 1px solid $button-border-color-disabled
+        cursor: not-allowed
+        &:hover,
+        &:focus
+          cursor: not-allowed
+          color: $button-color-disabled
+          background-color: $button-bg-disabled
+          border: 1px solid $button-border-color-disabled
+          box-shadow: none
+    &.#{$prefix}button-tertiary-destructive
+      background-color: transparent
+      color: $error-700
+      border: none
+      box-shadow: none
+      &:hover
+        color: $error-800
+        background-color: $error-50
+        border: none
+        box-shadow: none
+      &:focus
+        color: $error-700
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:disabled
+        cursor: not-allowed
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &.#{$prefix}link-button-disabled
+        cursor: not-allowed
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
+        &:hover,
+        &:focus
+          cursor: not-allowed
+          color: $gray-400
+          background-color: transparent
+          border: none
+          box-shadow: none
+    &.#{$prefix}button-link-destructive
+      background-color: transparent
+      color: $error-700
+      border: none
+      border-radius: 0
+      box-shadow: none
+      &:hover
+        color: $error-800
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:focus
+        color: $error-700
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:disabled
+        cursor: not-allowed
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &.#{$prefix}link-button-disabled
+        cursor: not-allowed
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
+        &:hover,
+        &:focus
+          cursor: not-allowed
+          color: $gray-400
+          background-color: transparent
+          border: none
+          box-shadow: none
+
+    &.#{$prefix}button-secondary-color
+      background-color: $um-white
+      color: $primary-700
+      border: 1px solid $primary-300
+      &:hover
+        color: $primary-800
+        background-color: $primary-50
+        border: 1px solid $primary-300
+      &:focus
+        border: 1px solid $primary-300
+        background-color: $um-white
+        color: $primary-700
+        box-shadow: $ring-brand-shadow-xs
+      &:disabled
+        cursor: not-allowed
+        color: $gray-400
+        background-color: $um-white
+        border: 1px solid $gray-200
+        box-shadow: none
+      &.#{$prefix}link-button-disabled
+        cursor: not-allowed
+        color: $gray-400
+        background-color: $um-white
+        border: 1px solid $gray-200
+        box-shadow: none
+        &:hover,
+        &:focus
+          cursor: not-allowed
+          color: $gray-400
+          background-color: $um-white
+          border: 1px solid $gray-200
+          box-shadow: none
+    &.#{$prefix}button-tertiary-gray
+      background-color: transparent
+      color: $gray-600
+      border: none
+      box-shadow: none
+      &:hover
+        color: $gray-700
+        background-color: $gray-50
+        border: none
+        box-shadow: none
+      &:focus
+        color: $gray-600
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:disabled
+        cursor: not-allowed
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &.#{$prefix}link-button-disabled
+        cursor: not-allowed
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
+        &:hover,
+        &:focus
+          cursor: not-allowed
+          color: $gray-400
+          background-color: transparent
+          border: none
+          box-shadow: none
+    &.#{$prefix}button-tertiary-color
+      background-color: transparent
+      color: $primary-700
+      border: none
+      box-shadow: none
+      &:hover
+        color: $primary-800
+        background-color: $primary-50
+        border: none
+        box-shadow: none
+      &:focus
+        color: $primary-700
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:disabled
+        cursor: not-allowed
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &.#{$prefix}link-button-disabled
+        cursor: not-allowed
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
+        &:hover,
+        &:focus
+          cursor: not-allowed
+          color: $gray-400
+          background-color: transparent
+          border: none
+          box-shadow: none
+    &.#{$prefix}button-link-gray
+      background-color: transparent
+      color: $gray-600
+      border: none
+      border-radius: 0
+      box-shadow: none
+      &:hover
+        color: $gray-700
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:focus
+        color: $gray-600
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:disabled
+        cursor: not-allowed
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &.#{$prefix}link-button-disabled
+        cursor: not-allowed
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
+        &:hover,
+        &:focus
+          cursor: not-allowed
+          color: $gray-400
+          background-color: transparent
+          border: none
+          box-shadow: none
+    &.#{$prefix}button-link-color
+      background-color: transparent
+      color: $primary-700
+      border: none
+      border-radius: 0
+      box-shadow: none
+      &:hover
+        color: $primary-800
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:focus
+        color: $primary-700
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:disabled
+        cursor: not-allowed
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &.#{$prefix}link-button-disabled
+        cursor: not-allowed
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
+        &:hover,
+        &:focus
+          cursor: not-allowed
+          color: $gray-400
+          background-color: transparent
+          border: none
+          box-shadow: none
+
+// Box.
+.um
+  .#{$prefix}box
+    +flex( column, flex-start, stretch, nowrap )
+    border-radius: $radius-xl
+    border: 1px solid $gray-200
+    background: $um-white
+    overflow: hidden
+    box-shadow: $shadow-sm
+    +border-box
+    row-gap: $spacing-lg
+    padding: $spacing-3xl
+    .#{$prefix}box-header
+      +flex( row, space-between, baseline, nowrap )
+      column-gap: $spacing-md
+      +border-box
+      .#{$prefix}box-title
+        color: $gray-600
+        +typography( text, sm, bold )
+      &.#{$prefix}box-header-no-title
+        justify-content: flex-end
+        &.#{$prefix}box-header-no-actions
+          justify-content: flex-start
+      &.#{$prefix}box-header-no-actions
+          justify-content: flex-start
+      &.#{$prefix}box-header-left-actions
+        flex-direction: row-reverse
+        .#{$prefix}box-dropdown-toggle:before
+          right: 8px
+    .#{$prefix}box-content
+      +flex( column, flex-start, stretch, nowrap )
+      +border-box
+      row-gap: $spacing-md
+      color: $gray-900
+      word-wrap: break-word
+      word-break: break-word
+    .#{$prefix}box-footer
+      +flex( column, flex-start, stretch, nowrap )
+      +border-box
+      row-gap: $spacing-md
+      padding: $spacing-lg 0 0 0
+      border-top: 1px solid $gray-200
+  &.#{$prefix}ui-xs
+    .#{$prefix}box
+      padding: $spacing-xl
+  &.#{$prefix}ui-s,
+  &.#{$prefix}ui-m
+    .#{$prefix}box
+      padding: $spacing-2xl
+
+// Link + Link Button.
+.um
+  .#{$prefix}link
+    text-decoration: none
+    outline: none
+    &.#{$prefix}link-disabled
+      pointer-events: none
+      box-shadow: none
+      &:hover,
+      &:focus
+        box-shadow: none
+    &:not(.#{$prefix}link-button)
+      +typography( text, sm, bold )
+      color: $link-color
+      &:hover
+        color: $link-hover-color
+        outline: none
+      &:focus
+        color: $link-focus-color
+        outline: none
+      &.#{$prefix}link-disabled
+        color: $gray-400
+        background-color: transparent
+        border: none
+        &:hover,
+        &:focus
+          color: $gray-400
+          background-color: transparent
+          border: none
+    &.#{$prefix}link-button
+      text-align: center
+      cursor: pointer
+      border-radius: $radius-md
+      padding: 0
+      margin: 0
+      display: inline-block
+      box-sizing: border-box
+      &.#{$prefix}link-disabled
+        pointer-events: none
+        box-shadow: none
+        &:hover,
+        &:focus
+          box-shadow: none
+      &:not(.#{$prefix}link-button-has-icon.#{$prefix}link-button-icon-content)
+        &.#{$prefix}link-button-size-s
+          padding: $spacing-md 14px
+          +typography( text, sm, semibold )
+        &.#{$prefix}link-button-size-m
+          padding: 10px $spacing-xl
+          +typography( text, sm, semibold )
+        &.#{$prefix}link-button-size-l
+          padding: 10px 18px
+          +typography( text, md, semibold )
+        &.#{$prefix}link-button-size-xl
+          padding: $spacing-lg $spacing-2xl
+          +typography( text, md, semibold )
+      &.#{$prefix}link-button-has-icon
+        +flex( row, flex-start, center, nowrap )
+        svg
+          stroke: currentColor
+          overflow: visible
+        &.#{$prefix}link-button-icon-content
+          +flex( row, center, center, nowrap )
+          &.#{$prefix}link-button-size-s
+            padding: $spacing-md
+          &.#{$prefix}link-button-size-m
+            padding: 10px
+          &.#{$prefix}link-button-size-l
+            padding: $spacing-lg
+          &.#{$prefix}link-button-size-xl
+            padding: 14px
+        &.#{$prefix}link-button-icon-trailing,
+        &.#{$prefix}link-button-icon-leading
+          &.#{$prefix}link-button-size-s,
+          &.#{$prefix}link-button-size-m
+            column-gap: $spacing-xs
+          &.#{$prefix}link-button-size-l,
+          &.#{$prefix}link-button-size-xl
+            column-gap: $spacing-sm
+          .#{$prefix}link-button-icon
+            +flex( row, center, center, nowrap )
+            font-size: unset
+            line-height: unset
+            font-weight: unset
+      &.#{$prefix}link-button-secondary-gray
+        box-shadow: $shadow-xs
+        background-color: $button-bg
+        color: $button-color
+        border: 1px solid $button-border-color
+        &:hover
+          color: $button-color-hover
+          background-color: $button-bg-hover
+        &:focus
+          background-color: $button-bg
+          color: $button-color
+          box-shadow: $ring-gray-shadow-xs
+          outline: none
+        &.#{$prefix}link-disabled
+          color: $button-color-disabled
+          background-color: $button-bg-disabled
+          border: 1px solid $button-border-color-disabled
+          &:hover,
+          &:focus
+            color: $button-color-disabled
+            background-color: $button-bg-disabled
+            border: 1px solid $button-border-color-disabled
+      &.#{$prefix}link-button-primary
+        background-color: $button-primary-bg
+        border: 1px solid $button-primary-bg
+        color: $button-primary-color
+        &:hover
+          background-color: $button-primary-bg-hover
+          border: 1px solid $button-primary-bg-hover
+          color: $button-primary-color
+        &:focus
+          background-color: $button-primary-bg
+          border: 1px solid $button-primary-bg
+          box-shadow: $ring-brand-shadow-xs
+        &.#{$prefix}link-disabled
+          background-color: $button-primary-bg-disabled
+          border: 1px solid $button-primary-border-color-disabled
+          color: $button-primary-color-disabled
+          &:hover,
+          &:focus
+            background-color: $button-primary-bg-disabled
+            border: 1px solid $button-primary-border-color-disabled
+            color: $button-primary-color-disabled
+      &.#{$prefix}link-button-primary-destructive
+        background-color: $error-600
+        border: 1px solid $error-600
+        color: $um-white
+        &:hover
+          background-color: $error-700
+          border: 1px solid $error-700
+          color: $um-white
+        &:focus
+          background-color: $error-600
+          border: 1px solid $error-600
+          box-shadow: $ring-error-shadow-xs
+          color: $um-white
+        &.#{$prefix}link-disabled
+          background-color: $button-primary-bg-disabled
+          border: 1px solid $button-primary-border-color-disabled
+          color: $button-primary-color-disabled
+          &:hover,
+          &:focus
+            background-color: $button-primary-bg-disabled
+            border: 1px solid $button-primary-border-color-disabled
+            color: $button-primary-color-disabled
+
+      &.#{$prefix}link-button-secondary-destructive
+        background-color: $um-white
+        border: 1px solid $error-300
+        color: $error-700
+        &:hover
+          background-color: $error-50
+          border: 1px solid $error-300
+          color: $error-800
+        &:focus
+          background-color: $um-white
+          border: 1px solid $error-300
+          box-shadow: $ring-error-shadow-xs
+          color: $error-700
+        &.#{$prefix}link-disabled
+          color: $button-color-disabled
+          background-color: $button-bg-disabled
+          border: 1px solid $button-border-color-disabled
+          &:hover,
+          &:focus
+            color: $button-color-disabled
+            background-color: $button-bg-disabled
+            border: 1px solid $button-border-color-disabled
+      &.#{$prefix}link-button-tertiary-destructive
+        background-color: transparent
+        color: $error-700
+        border: none
+        box-shadow: none
+        &:hover
+          color: $error-800
+          background-color: $error-50
+          border: none
+          box-shadow: none
+        &:focus
+          color: $error-700
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &.#{$prefix}link-disabled
+          color: $gray-400
+          background-color: transparent
+          border: none
+          &:hover,
+          &:focus
+            color: $gray-400
+            background-color: transparent
+            border: none
+      &.#{$prefix}link-button-link-destructive
+        background-color: transparent
+        color: $error-700
+        border: none
+        border-radius: 0
+        box-shadow: none
+        &:hover
+          color: $error-800
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &:focus
+          color: $error-700
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &.#{$prefix}link-disabled
+          color: $gray-400
+          background-color: transparent
+          border: none
+          &:hover,
+          &:focus
+            color: $gray-400
+            background-color: transparent
+            border: none
+      &.#{$prefix}link-button-secondary-color
+        background-color: $um-white
+        color: $primary-700
+        border: 1px solid $primary-300
+        &:hover
+          color: $primary-800
+          background-color: $primary-50
+          border: 1px solid $primary-300
+        &:focus
+          border: 1px solid $primary-300
+          background-color: $um-white
+          color: $primary-700
+          box-shadow: $ring-brand-shadow-xs
+        &.#{$prefix}link-disabled
+          color: $gray-400
+          background-color: $um-white
+          border: 1px solid $gray-200
+          &:hover,
+          &:focus
+            color: $gray-400
+            background-color: $um-white
+            border: 1px solid $gray-200
+      &.#{$prefix}link-button-tertiary-gray
+        background-color: transparent
+        color: $gray-600
+        border: none
+        box-shadow: none
+        &:hover
+          color: $gray-700
+          background-color: $gray-50
+          border: none
+          box-shadow: none
+        &:focus
+          color: $gray-600
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &.#{$prefix}link-disabled
+          color: $gray-400
+          background-color: transparent
+          border: none
+          &:hover,
+          &:focus
+            color: $gray-400
+            background-color: transparent
+            border: none
+      &.#{$prefix}link-button-tertiary-color
+        background-color: transparent
+        color: $primary-700
+        border: none
+        box-shadow: none
+        &:hover
+          color: $primary-800
+          background-color: $primary-50
+          border: none
+          box-shadow: none
+        &:focus
+          color: $primary-700
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &.#{$prefix}link-disabled
+          color: $gray-400
+          background-color: transparent
+          border: none
+          &:hover,
+          &:focus
+            color: $gray-400
+            background-color: transparent
+            border: none
+      &.#{$prefix}link-button-link-gray
+        background-color: transparent
+        color: $gray-600
+        border: none
+        border-radius: 0
+        box-shadow: none
+        &:hover
+          color: $gray-700
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &:focus
+          color: $gray-600
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &.#{$prefix}link-disabled
+          color: $gray-400
+          background-color: transparent
+          border: none
+          &:hover,
+          &:focus
+            color: $gray-400
+            background-color: transparent
+            border: none
+      &.#{$prefix}link-button-link-color
+        background-color: transparent
+        color: $primary-700
+        border: none
+        border-radius: 0
+        box-shadow: none
+        &:hover
+          color: $primary-800
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &:focus
+          color: $primary-700
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &.#{$prefix}link-disabled
+          color: $gray-400
+          background-color: transparent
+          border: none
+          &:hover,
+          &:focus
+            color: $gray-400
+            background-color: transparent
+            border: none
+
+// Avatar.
+.um
+  .#{$prefix}avatar
+    margin: 0
+    padding: 0
+    display: block
+    img
+      display: block
+      width: 100%
+      height: auto
+      float: left
+      margin: 0
+      padding: 0
+    &.#{$prefix}avatar-xs
+      width: 24px
+      height: 24px
+    &.#{$prefix}avatar-s
+      width: 32px
+      height: 32px
+    &.#{$prefix}avatar-m
+      width: 40px
+      height: 40px
+    &.#{$prefix}avatar-l
+      width: 64px
+      height: 64px
+    &.#{$prefix}avatar-xl
+      width: 128px
+      height: 128px
+    &.#{$prefix}avatar-round
+      overflow: hidden
+      border-radius: 100%
+
+
+// Avatars list.
+.um
+  .#{$prefix}avatars-list
+    +flex( row, flex-start, center, nowrap )
+    margin: 0
+    padding: 0
+    +border-box
+    position: relative
+    &.#{$prefix}avatars-list-xs
+      margin: 0 0 0 $spacing-md
+    &.#{$prefix}avatars-list-s
+      margin: 0 0 0 $spacing-lg
+    &.#{$prefix}avatars-list-m
+      margin: 0 0 0 $spacing-xl
+    &.#{$prefix}avatars-list-l
+      margin: 0 0 0 $spacing-3xl
+    &.#{$prefix}avatars-list-xl
+      margin: 0 0 0 $spacing-5xl
+    .#{$prefix}avatar
+      border: 1.5px solid $um-white
+      position: relative
+      +border-box
+      &.#{$prefix}avatar-xs
+        margin-left: -$spacing-md
+      &.#{$prefix}avatar-s
+        margin-left: -$spacing-lg
+      &.#{$prefix}avatar-m
+        margin-left: -$spacing-xl
+      &.#{$prefix}avatar-l
+        margin-left: -$spacing-3xl
+      &.#{$prefix}avatar-xl
+        margin-left: -$spacing-5xl
+    &.#{$prefix}avatars-list-tooltip
+      .#{$prefix}avatar:hover
+        z-index: 1
+
+
+// Avatar uploader
+.um
+  .#{$prefix}profile-photo-uploader
+    width: 128px
+    height: 128px
+    +border-box
+    margin: 0
+    padding: 0
+    position: relative
+    box-shadow: $shadow-lg
+    border-radius: 100%
+    .#{$prefix}profile-photo
+      border: 4px solid $um-white
+      +border-box
+      img
+        height: auto
+      &:hover
+        & ~ .#{$prefix}uploader
+          display: block
+    .#{$prefix}uploader
+      cursor: pointer
+      position: absolute
+      top: 3px
+      left: 3px
+      bottom: 3px
+      right: 3px
+      background: rgba(0, 0, 0, 0.2)
+      border-radius: 100%
+      display: none
+      &:hover
+        display: block
+      .#{$prefix}uploader-button
+        width: 100%
+        height: 100%
+        svg
+          stroke: $um-white
+          > *
+            stroke: $um-white
+    .#{$prefix}profile-photo-overflow
+      backdrop-filter: blur(10px)
+      position: absolute
+      top: 3px
+      left: 3px
+      bottom: 3px
+      right: 3px
+      background: rgba(255, 255, 255, 0.2)
+      border-radius: 100%
+      display: none
+      .#{$prefix}ajax-spinner-svg
+        position: absolute
+        top: calc( 50% - 24px )
+        left: calc( 50% - 24px )
+    &.#{$prefix}processing
+      .#{$prefix}uploader
+        display: none
+      .#{$prefix}profile-photo-overflow
+        display: block
+
+
+// Form components
+.um
+  .#{$prefix}form-new
+    +flex( column, stretch, start, nowrap )
+    +border-box
+    margin: 0
+    padding: 0
+    row-gap: $spacing-3xl
+    position: relative
+    .#{$prefix}form-supporting-text
+      +border-box
+      margin: 0
+      padding: 0
+      width: 100%
+      text-align: center
+    .#{$prefix}form-rows
+      +flex( column, stretch, start, nowrap )
+      +border-box
+      margin: 0
+      padding: 0
+      width: 100%
+      row-gap: $spacing-2xl
+      .#{$prefix}form-rows-heading
+        +flex( column, stretch, start, nowrap )
+        +border-box
+        margin: 0
+        padding: 0
+        width: 100%
+        row-gap: $spacing-xxs
+        .#{$prefix}text
+          color: $gray-700
+          +typography( text, sm, semibold )
+      .#{$prefix}row-heading
+        color: $gray-900
+        +typography( text, lg, semibold )
+      .#{$prefix}form-row
+        +flex( column, stretch, start, nowrap )
+        +border-box
+        margin: 0
+        padding: 0
+        width: 100%
+        row-gap: $spacing-2xl
+        .#{$prefix}form-cols
+          +flex( row, flex-start, start, nowrap )
+          +border-box
+          margin: 0
+          padding: 0
+          width: 100%
+          column-gap: $spacing-lg
+          .#{$prefix}form-col
+            +flex( column, flex-start, stretch, nowrap )
+            +border-box
+            margin: 0
+            padding: 0
+            row-gap: $spacing-2xl
+            //.#{$prefix}field-area
+            //  +flex( row, flex-start, center, nowrap )
+            //  .#{$prefix}form-field
+            //    +border-box
+            //    width: 100%
+            .#{$prefix}field-area-password
+              position: relative
+              +flex( column, flex-start, stretch, nowrap )
+              +border-box
+              margin: 0
+              padding: 0
+              .#{$prefix}toggle-password
+                transition: all .2s linear
+                cursor: pointer
+                display: block
+                position: absolute
+                right: 10px
+                top: 50%
+                margin-top: -10px
+                width: 20px
+                height: 20px
+                background-color: $primary-600
+                &:hover
+                  background-color: $primary-700
+                &.#{$prefix}icon-eye
+                  mask: url(../icons/eye.svg)
+                  -webkit-mask: url(../icons/eye.svg)
+                &.#{$prefix}icon-eye-disabled
+                  mask: url(../icons/eye-off.svg)
+                  -webkit-mask: url(../icons/eye-off.svg)
+            .#{$prefix}field
+              +flex( column, flex-start, stretch, nowrap )
+              +border-box
+              margin: 0
+              padding: 0
+              row-gap: $spacing-sm
+              &.#{$prefix}field-type_image,
+              &.#{$prefix}field-type_file
+                align-items: flex-start
+                label
+                  width: 100%
+                .#{$prefix}field-uploader-wrapper
+                  +flex( column, flex-start, start, nowrap )
+                  width: 100%
+                  +border-box
+                  margin: 0
+                  padding: 0
+                  row-gap: $spacing-sm
+                  .#{$prefix}uploader
+                    width: 100%
+                    .#{$prefix}uploader-filelist
+                      padding: $spacing-xl $spacing-3xl
+                      border-radius: $spacing-lg
+                      border: 1px solid $gray-200
+                      background: $um-white
+                      margin: 1px
+                      +border-box
+                    &.#{$prefix}upload-completed
+                      .#{$prefix}uploader-dropzone
+                        display: none
+                      .#{$prefix}uploader-filelist
+                        padding: 0
+                        margin: 0
+                        border: transparent
+              &.#{$prefix}field-type_image
+                .#{$prefix}field-value
+                  +flex( column, flex-start, stretch, nowrap )
+                  +border-box
+                  margin: 0
+                  padding: 0
+                  row-gap: $spacing-sm
+                .#{$prefix}field-uploader-wrapper
+                  .#{$prefix}uploader
+                    .#{$prefix}uploader-file
+                      +border-box
+                      +flex( column, flex-start, center, nowrap )
+                      padding: 0
+                      margin: 0
+                      border: none
+                      .#{$prefix}uploader-file-preview
+                        width: 100%
+                        +flex( row, flex-start, start, nowrap )
+                        .#{$prefix}image-lazyload-wrapper
+                          min-height: 150px
+                      .#{$prefix}uploader-file-data
+                        +flex( column, space-evenly, center, nowrap )
+                        row-gap: $spacing-lg
+                        width: 100%
+                        min-height: 114px
+                        +border-box
+                        margin: 0
+                        .#{$prefix}uploader-file-uploading-process
+                          width: 100%
+                          +flex ( row, space-between, flex-start, nowrap )
+                          column-gap: $spacing-xl
+                          margin: 0
+                          +border-box
+                          position: relative
+                          .#{$prefix}progress-bar-wrapper
+                            width: 100%
+                          .#{$prefix}supporting-text
+                            position: absolute
+                            top: $spacing-xl
+                      &.#{$prefix}upload-failed
+                        .#{$prefix}uploader-file-preview
+                          display: none
+                        .#{$prefix}uploader-file-data
+                          .#{$prefix}uploader-file-uploading-process
+                            .#{$prefix}supporting-text
+                              position: unset
+                              text-align: center
+                              width: 100%
+                              color: $error-500
+                    &.#{$prefix}upload-completed
+                      .#{$prefix}uploader-file
+                        overflow: hidden
+                        border: 0 transparent
+                        margin: 0
+                        padding: 0
+                        .#{$prefix}uploader-file-data
+                          display: none
+                .#{$prefix}field-image-controls
+                  +flex( row, center, center, nowrap )
+                  +border-box
+                  width: 100%
+                  margin: 0
+                  padding: 0
+                  column-gap: $spacing-sm
+              &.#{$prefix}field-type_file
+                .#{$prefix}field-value
+                  +flex( column, flex-start, stretch, nowrap )
+                  +border-box
+                  margin: 0
+                  padding: 0
+                  row-gap: $spacing-sm
+                .#{$prefix}field-uploader-wrapper
+                  .#{$prefix}uploader
+                    .#{$prefix}uploader-file
+                      +flex( column, space-between, center, nowrap )
+                      row-gap: $spacing-lg
+                      width: 100%
+                      min-height: 114px
+                      +border-box
+                      margin: 0
+                      padding: 0
+                      border: none
+                      .#{$prefix}uploader-file-data
+                        +flex( column, flex-start, center, nowrap )
+                        width: 100%
+                        +border-box
+                        margin: 0
+                        padding: 0
+                        row-gap: $spacing-lg
+                      .#{$prefix}uploader-file-name
+                        +typography( text, sm, regular )
+                        color: $gray-600
+                      .#{$prefix}uploader-file-uploading-process
+                        width: 100%
+                        +flex ( row, space-between, flex-start, nowrap )
+                        column-gap: $spacing-xl
+                        margin: 0
+                        +border-box
+                        position: relative
+                        .#{$prefix}progress-bar-wrapper
+                          width: 100%
+                        .#{$prefix}supporting-text
+                          position: absolute
+                          top: $spacing-xl
+                      &.#{$prefix}upload-failed
+                        .#{$prefix}uploader-file-uploading-process
+                          .#{$prefix}supporting-text
+                            position: unset
+                            text-align: center
+                            width: 100%
+                            color: $error-500
+                    &.#{$prefix}upload-completed
+                      .#{$prefix}uploader-file
+                        overflow: hidden
+                        border: 1px solid $gray-200
+                        margin: 1px
+                        +border-box
+                        padding: $spacing-xl $spacing-3xl
+                        min-height: 150px
+                        .#{$prefix}uploader-file-uploading-process
+                          display: none
+                .#{$prefix}field-file-controls
+                  +flex( row, center, center, nowrap )
+                  +border-box
+                  width: 100%
+                  margin: 0
+                  padding: 0
+                  column-gap: $spacing-sm
+              &.#{$prefix}field-type_block[data-key="gdpr_details"]
+                row-gap: 0
+                .#{$prefix}gdpr-post-content-wrap:not(.#{$prefix}toggle-block-collapsed)
+                  padding-top: $spacing-sm
+                  +border-box
+            //.#{$prefix}field
+            //  & > input[type="date"],
+            //  & > input[type="datetime"],
+            //  & > input[type="datetime-local"],
+            //  & > input[type="email"],
+            //  & > input[type="file"],
+            //  & > input[type="image"],
+            //  & > input[type="month"],
+            //  & > input[type="number"],
+            //  & > input[type="password"],
+            //  & > input[type="search"],
+            //  & > input[type="tel"],
+            //  & > input[type="text"],
+            //  & > input[type="time"],
+            //  & > input[type="url"],
+            //  & > input[type="week"],
+            //  & > select,
+            //  & > textarea
+            //    +border-box
+            //    width: 100%
+            //    border-radius: $radius-md
+            //    border: 1px solid $gray-300
+            //    background: $um-white
+            //    box-shadow: $shadow-xs
+            //    padding: $spacing-md $spacing-lg
+            //    color: $gray-900
+            //    +typography( text, md, regular )
+            //    &:focus,
+            //    &:focus-visible
+            //      border: 1px solid $primary-300
+            //      box-shadow: $ring-brand-shadow-xs
+            //      background: $um-white
+            //      outline: none
+            //    &:disabled
+            //      background: $gray-50
+            //      color: $gray-500
+            //    &::placeholder
+            //      color: $gray-500
+            //    &.#{$prefix}error
+            //      border-color: $error-300
+            //      &:focus,
+            //      &:focus-visible
+            //        box-shadow: $ring-error-shadow-xs
+            //  & > textarea,
+            //  & > input[type="date"],
+            //  & > input[type="datetime"],
+            //  & > input[type="datetime-local"],
+            //  & > input[type="time"]
+            //    font-family: inherit
+            //  .wp-core-ui.wp-editor-wrap
+            //    width: 100%
+            .#{$prefix}field-hint
+              +border-box
+              margin: 0
+              padding: 0
+              width: 100%
+              color: $gray-600
+              +typography( text, sm, regular )
+              &.#{$prefix}field-error
+                color: $error-500
+            .#{$prefix}field-radio-area
+              +flex( row, flex-start, start, nowrap )
+              column-gap: $spacing-xl
+              width: 100%
+              .#{$prefix}field-radio-column
+                width: 50%
+                +flex( column, flex-start, stretch, nowrap )
+                row-gap: $spacing-xl
+            .#{$prefix}field-checkbox-area
+              +flex( row, flex-start, start, nowrap )
+              column-gap: $spacing-xl
+              width: 100%
+              .#{$prefix}field-checkbox-column
+                width: 50%
+                +flex( column, flex-start, stretch, nowrap )
+                row-gap: $spacing-xl
+            label
+              +flex( row, flex-start, center, nowrap )
+              gap: $spacing-sm
+              +border-box
+              width: 100%
+              color: $gray-700
+              +typography( text, sm, medium )
+              margin: 0
+              padding: 0
+              .#{$prefix}req
+                color: #a00
+                margin: 0 0 0 3px
+                font-weight: normal
+              .#{$prefix}field-label-icon
+                +flex( row, flex-start, center, nowrap )
+                i
+                  font-size: $spacing-2xl
+              &.#{$prefix}radio-label
+                +flex( row, flex-start, center, nowrap )
+                input[type="radio"]
+                  -webkit-appearance: none
+                  appearance: none
+                  border: 1px solid $gray-300
+                  border-radius: 100%
+                  background: $um-white
+                  box-shadow: none
+                  outline: none
+                  margin: 0
+                  &:checked
+                    border: 1px solid $primary-600
+                    background: $primary-600
+                    position: relative
+                    &::after
+                      content: ""
+                      position: absolute
+                      background: $um-white
+                      border-radius: 100%
+                  &:hover
+                    border: 1px solid $gray-400
+                    background: $um-white
+                    box-shadow: none
+                    outline: none
+                    &:checked
+                      background: $primary-700
+                      border: 1px solid $primary-700
+                  &:focus,
+                  &:focus-visible
+                    border: 1px solid $gray-300
+                    background: $um-white
+                    box-shadow: $ring-gray
+                    outline: none
+                    &:checked
+                      background: $primary-600
+                      border: 1px solid $primary-600
+                      box-shadow: $ring-brand
+                  &:disabled
+                    border: 1px solid $gray-300
+                    background: $gray-50
+                    box-shadow: none
+                    outline: none
+                    cursor: not-allowed
+                    &:checked
+                      border: 1px solid $gray-300
+                      background: $gray-50
+                      box-shadow: none
+                      &::after
+                        background: $gray-300
+
+                .#{$prefix}text
+                  color: $gray-700
+                  +typography( text, sm, medium )
+                &.#{$prefix}size-sm
+                  column-gap: $spacing-md
+                  input[type="radio"]
+                    width: 16px
+                    height: 16px
+                    &:checked
+                      &::after
+                        width: 6px
+                        height: 6px
+                        top: 4px
+                        left: 4px
+                &.#{$prefix}size-md
+                  column-gap: $spacing-lg
+                  input[type="radio"]
+                    width: 20px
+                    height: 20px
+                    &:checked
+                      &::after
+                        width: 8px
+                        height: 8px
+                        top: 5px
+                        left: 5px
+                &.#{$prefix}supporting-text
+                  align-items: start
+                  input[type="radio"]
+                    margin: $spacing-xxs 0 0 0
+              &.#{$prefix}checkbox-label
+                +flex( row, flex-start, center, nowrap )
+                input[type="checkbox"]
+                  -webkit-appearance: none
+                  appearance: none
+                  border: 1px solid $gray-300
+                  background: $um-white
+                  box-shadow: none
+                  outline: none
+                  margin: 0
+                  &:checked
+                    border: 1px solid $primary-600
+                    background: $primary-600
+                    position: relative
+                    &::after
+                      content: ""
+                      position: absolute
+                      background: $um-white
+                      border-radius: 100%
+                      mask: url(../icons/check-2x.svg)
+                      mask-clip: border-box
+                      mask-size: cover
+                      -webkit-mask: url(../icons/check-2x.svg)
+                      -webkit-mask-clip: border
+                      -webkit-mask-size: cover
+                  &:indeterminate
+                    border: 1px solid $primary-600
+                    background: $primary-600
+                    position: relative
+                    &::after
+                      content: ""
+                      position: absolute
+                      background: $um-white
+                      border-radius: 100%
+                      mask: url(../icons/minus-2x.svg)
+                      mask-clip: border-box
+                      mask-size: cover
+                      -webkit-mask: url(../icons/minus-2x.svg)
+                      -webkit-mask-clip: border
+                      -webkit-mask-size: cover
+                  &:hover
+                    border: 1px solid $gray-400
+                    background: $um-white
+                    box-shadow: none
+                    outline: none
+                    &:checked,
+                    &:indeterminate
+                      background: $primary-700
+                      border: 1px solid $primary-700
+                  &:focus,
+                  &:focus-visible
+                    border: 1px solid $gray-300
+                    background: $um-white
+                    box-shadow: $ring-gray
+                    outline: none
+                    &:checked,
+                    &:indeterminate
+                      background: $primary-600
+                      border: 1px solid $primary-600
+                      box-shadow: $ring-brand
+                  &:disabled
+                    border: 1px solid $gray-300
+                    background: $gray-50
+                    box-shadow: none
+                    outline: none
+                    cursor: not-allowed
+                    &:checked,
+                    &:indeterminate
+                      border: 1px solid $gray-300
+                      background: $gray-50
+                      box-shadow: none
+                      &::after
+                        background: $gray-300
+                .#{$prefix}text
+                  color: $gray-700
+                  +typography( text, sm, medium )
+                &.#{$prefix}size-sm
+                  column-gap: $spacing-md
+                  input[type="checkbox"]
+                    width: 16px
+                    height: 16px
+                    border-radius: $radius-xs
+                    &:checked,
+                    &:indeterminate
+                      &::after
+                        width: 12px
+                        height: 12px
+                        top: 1px
+                        left: 1px
+                &.#{$prefix}size-md
+                  column-gap: $spacing-lg
+                  input[type="checkbox"]
+                    width: 20px
+                    height: 20px
+                    border-radius: $radius-sm
+                    &:checked,
+                    &:indeterminate
+                      &::after
+                        width: 14px
+                        height: 14px
+                        top: 2px
+                        left: 2px
+                &.#{$prefix}supporting-text
+                  align-items: start
+                  input[type="checkbox"]
+                    margin: $spacing-xxs 0 0 0
+            //& > input[type="date"],
+            //& > input[type="datetime"],
+            //& > input[type="datetime-local"],
+            //& > input[type="email"],
+            //& > input[type="file"],
+            //& > input[type="image"],
+            //& > input[type="month"],
+            //& > input[type="number"],
+            //& > input[type="password"],
+            //& > input[type="search"],
+            //& > input[type="tel"],
+            //& > input[type="text"],
+            //& > input[type="time"],
+            //& > input[type="url"],
+            //& > input[type="week"],
+            //& > select,
+            //& > textarea
+            //  +border-box
+            //  width: 100%
+            //  border-radius: $radius-md
+            //  border: 1px solid $gray-300
+            //  background: $um-white
+            //  box-shadow: $shadow-xs
+            //  padding: $spacing-md $spacing-lg
+            //  color: $gray-900
+            //  +typography( text, md, regular )
+            //  &:focus,
+            //  &:focus-visible
+            //    border: 1px solid $primary-300
+            //    box-shadow: $ring-brand-shadow-xs
+            //    background: $um-white
+            //    outline: none
+            //  &:disabled
+            //    background: $gray-50
+            //    color: $gray-500
+            //  &::placeholder
+            //    color: $gray-500
+            //  &.#{$prefix}error
+            //    border-color: $error-300
+            //    &:focus,
+            //    &:focus-visible
+            //      box-shadow: $ring-error-shadow-xs
+            //& > textarea,
+            //& > input[type="date"],
+            //& > input[type="datetime"],
+            //& > input[type="datetime-local"],
+            //& > input[type="time"]
+            //  font-family: inherit
+            //.wp-core-ui.wp-editor-wrap,
+            //.choices
+            //  width: 100%
+            //& > input[type="color"]
+            //  -webkit-appearance: none
+            //  -moz-appearance: none
+            //  appearance: none
+            //  +border-box
+            //  border-radius: $radius-md
+            //  border: 1px solid $gray-300
+            //  box-shadow: $shadow-xs
+            //  padding: 0
+            //  background: $um-white
+            //  height: 42px
+            //  min-width: 64px
+            //  &::-webkit-color-swatch,
+            //  &::-moz-color-swatch
+            //    border: 1px solid $um-white
+            //    border-radius: $radius-md
+          &.#{$prefix}form-cols-1
+            .#{$prefix}form-col
+              width: 100%
+          &.#{$prefix}form-cols-2
+            .#{$prefix}form-col
+              width: 50%
+              &.#{$prefix}form-col-right
+                align-items: end
+                .#{$prefix}field
+                  align-items: end
+          &.#{$prefix}form-cols-3
+            .#{$prefix}form-col
+              width: calc( 100% / 3 - $spacing-md )
+    .#{$prefix}form-submit
+      +border-box
+      +flex( column, stretch, start, nowrap )
+      width: 100%
+      margin: 0
+      padding: 0
+      row-gap: $spacing-xl
+      .#{$prefix}center
+        +typography( text, sm, regular )
+        width: 100%
+        margin: 0
+        padding: 0
+        text-align: center
+        color: $gray-600
+
+
+.#{$prefix}tab-content
+  .#{$prefix}field-hint
+    +border-box
+    margin: 0
+    padding: 0
+    width: 100%
+    color: $gray-600
+    +typography( text, sm, regular )
+    &.#{$prefix}field-error
+      color: $error-500
+
+
+//input[type="number"]
+//  color: #8a8383
+//  width: 50px
+//  height: 30px
+//  font-size: 20px
+//  border: none
+//
+//input[type=number]::-webkit-inner-spin-button,
+//input[type=number]::-webkit-outer-spin-button
+//  opacity: 1
+
+
+
+// Tabs vertical and horizontal
+.um
+  .#{$prefix}tabs-wrapper
+    .#{$prefix}tabs-content
+      +flex( column, flex-start, stretch, nowrap )
+      .#{$prefix}tab-content
+        width: 100%
+        row-gap: $spacing-3xl
+        display: none
+        &.#{$prefix}tab-current
+          +flex( column, flex-start, stretch, nowrap )
+    &.#{$prefix}tabs-size-s
+      .#{$prefix}tabs-list
+        ul
+          li
+            a.#{$prefix}link
+              +typography( text, sm, semibold )
+    &.#{$prefix}tabs-size-m
+      ul
+        li
+          a.#{$prefix}link
+            +typography( text, md, semibold )
+    &.#{$prefix}vertical-tabs
+      +flex( row, flex-start, flex-start, nowrap )
+      column-gap: $spacing-3xl
+      .#{$prefix}tabs-list
+        min-width: 160px
+        ul
+          +flex( column, flex-start, stretch, nowrap )
+          list-style: none
+          margin: 0
+          padding: 0
+          row-gap: $spacing-xs
+          li
+            width: 100%
+            a.#{$prefix}link
+              width: 100%
+              text-align: left
+              display: inline-block
+              +border-box
+              border-radius: $radius-sm
+              padding: $spacing-md $spacing-lg
+            &.#{$prefix}tab-has-notifier
+              a.#{$prefix}link
+                +flex( row, flex-start, center, nowrap )
+                column-gap: $spacing-sm
+      .#{$prefix}tabs-content
+        width: calc(100% - 160px)
+    &.#{$prefix}horizontal-tabs
+      +flex( column, flex-start, stretch, nowrap )
+      column-gap: $spacing-3xl
+      .#{$prefix}tabs-list
+        ul
+          +flex( row, flex-start, center, wrap )
+          list-style: none
+          margin: 0
+          padding: 0
+          gap: $spacing-xs
+          li
+            a.#{$prefix}link
+              text-align: center
+              display: inline-block
+              +border-box
+              border-radius: $radius-sm
+              padding: $spacing-md $spacing-lg
+            &.#{$prefix}tab-has-notifier
+              a.#{$prefix}link
+                +flex( row, center, center, nowrap )
+                column-gap: $spacing-sm
+    &.#{$prefix}primary-color-tabs
+      .#{$prefix}tabs-list
+        ul
+          li
+            a.#{$prefix}link
+              color: $gray-500
+              background-color: transparent
+              &:hover
+                color: $primary-700
+                background-color: $primary-50
+              &:focus
+                color: $gray-500
+                background-color: transparent
+                box-shadow: $ring-brand
+            &.#{$prefix}tab-current
+              a.#{$prefix}link
+                color: $primary-700
+                background-color: $primary-50
+                &:hover
+                  color: $primary-700
+                  background-color: $primary-50
+                &:focus
+                  color: $primary-700
+                  background-color: $primary-50
+                  box-shadow: $ring-brand
+    &.#{$prefix}secondary-color-tabs
+      .#{$prefix}tabs-list
+        ul
+          li
+            a.#{$prefix}link
+              color: $gray-500
+              background-color: transparent
+              &:hover
+                color: $gray-700
+                background-color: $gray-50
+              &:focus
+                color: $gray-500
+                background-color: transparent
+                box-shadow: $ring-gray
+            &.#{$prefix}tab-current
+              a.#{$prefix}link
+                color: $gray-700
+                background-color: $gray-50
+                &:hover
+                  color: $gray-700
+                  background-color: $gray-50
+                &:focus
+                  color: $gray-700
+                  background-color: $gray-50
+                  box-shadow: $ring-gray
+    &.#{$prefix}underline-color-tabs
+      .#{$prefix}tabs-list
+        ul
+          border-bottom: 1px solid $gray-200
+          li
+            position: relative
+            top: 1px
+            a.#{$prefix}link
+              border-radius: 0
+              border-bottom: 2px solid transparent
+              color: $gray-500
+              background-color: transparent
+              &:hover
+                color: $primary-700
+                border-color: $primary-600
+                background-color: transparent
+              &:focus
+                color: $gray-500
+                background-color: transparent
+            &.#{$prefix}tab-current
+              a.#{$prefix}link
+                border-radius: 0
+                border-bottom: 2px solid $primary-600
+                color: $primary-700
+                background-color: transparent
+                &:hover
+                  border-bottom: 2px solid $primary-600
+                  color: $primary-700
+                  background-color: transparent
+                &:focus
+                  border-bottom: 2px solid $primary-600
+                  color: $primary-700
+                  background-color: transparent
+  &.#{$prefix}ui-xs,
+  &.#{$prefix}ui-s
+    .#{$prefix}tabs-wrapper.#{$prefix}vertical-tabs
+      +flex( column, flex-start, stretch, nowrap )
+      gap: $spacing-3xl
+      .#{$prefix}tabs-list
+        +flex( column, flex-start, stretch, nowrap )
+        gap: $spacing-xl
+        min-width: unset
+        width: 100%
+      .#{$prefix}tabs-content
+        min-width: unset
+        width: 100%
+
+
+// Divider
+.um
+  .#{$prefix}divider
+    overflow: hidden
+    height: 1px
+    margin: 20px 0
+    hr
+      margin: 0
+      padding: 0
+      +border-box
+      height: 1px
+    &.#{$prefix}divider-has-label
+      overflow: visible
+      +typography( text, sm, bold )
+      +flex( row, flex-start, center, nowrap )
+      gap: $spacing-md
+      height: auto
+      hr
+        flex: 1
+      &.#{$prefix}divider-label-position-right
+        +flex( row, flex-end, center, nowrap )
+      &.#{$prefix}divider-label-position-center
+        +flex( row, space-between, center, nowrap )
+        hr
+          flex: 1 / 2
+    &.#{$prefix}divider-color-gray
+      color: $gray-700
+      hr
+        color: $gray-200
+        border: 1px solid $gray-200
+    &.#{$prefix}divider-color-brand
+      color: $primary-900
+      hr
+        color: $primary-900
+        border: 1px solid $primary-900
+
+
+
+// Small user data header.
+.um
+  .#{$prefix}small-data
+    display: grid
+    grid-template-rows: auto 1fr
+    grid-template-columns: auto 1fr
+    column-gap: $spacing-lg
+    row-gap: $spacing-xs
+    .#{$prefix}avatar
+      grid-row: 1 / 3
+    .#{$prefix}user-display-name
+      +flex( row, flex-start, center, nowrap )
+      +typography( text, lg, semibold )
+      color: $gray-900
+      &.#{$prefix}link
+        +typography( text, lg, semibold )
+        color: $gray-900
+        &:hover
+          color: $gray-900
+    .#{$prefix}supporting-text
+      text-overflow: ellipsis
+      padding: 0
+      margin: 0
+    &.#{$prefix}data-no-supporting
+      +flex( row, flex-start, center, nowrap )
+      row-gap: 0
+      .#{$prefix}user-display-name
+        +flex( row, flex-start, center, nowrap )
+        flex: 1
+
+
+// Badges.
+.um
+  .#{$prefix}badge
+    text-align: center
+    border: 1px solid
+    &.#{$prefix}badge-s
+      padding: $spacing-xxs $spacing-md
+      +typography( text, xs, medium )
+    &.#{$prefix}badge-m
+      padding: $spacing-xxs 10px
+      +typography( text, sm, medium )
+    &.#{$prefix}badge-l
+      padding: $spacing-xs $spacing-lg
+      +typography( text, sm, medium )
+    &.#{$prefix}badge-color
+      border-radius: $radius-sm
+      &.#{$prefix}badge-s
+        padding: $spacing-xxs $spacing-sm
+      &.#{$prefix}badge-m
+        padding: $spacing-xxs $spacing-md
+      &.#{$prefix}badge-l
+        padding: $spacing-xs 10px
+      &.#{$prefix}badge-color-gray
+        border-color: $gray-200
+        background: $gray-50
+        color: $gray-700
+      &.#{$prefix}badge-color-brand
+        border-color: $primary-200
+        background: $primary-50
+        color: $primary-700
+      &.#{$prefix}badge-color-error
+        border-color: $error-200
+        background: $error-50
+        color: $error-700
+      &.#{$prefix}badge-color-warning
+        border-color: $warning-200
+        background: $warning-50
+        color: $warning-700
+      &.#{$prefix}badge-color-success
+        border-color: $success-200
+        background: $success-50
+        color: $success-700
+    &.#{$prefix}badge-pill-outline
+      border-width: 1.5px
+      border-radius: $radius-2xl
+      background: transparent
+      &.#{$prefix}badge-color-gray
+        border-color: $gray-600
+        color: $gray-700
+      &.#{$prefix}badge-color-brand
+        border-color: $primary-600
+        color: $primary-700
+      &.#{$prefix}badge-color-error
+        border-color: $error-600
+        color: $error-700
+      &.#{$prefix}badge-color-warning
+        border-color: $warning-600
+        color: $warning-700
+      &.#{$prefix}badge-color-success
+        border-color: $success-600
+        color: $success-700
+    &.#{$prefix}badge-pill-color
+      border-radius: $radius-2xl
+      &.#{$prefix}badge-color-gray
+        border-color: $gray-200
+        background: $gray-50
+        color: $gray-700
+      &.#{$prefix}badge-color-brand
+        border-color: $primary-200
+        background: $primary-50
+        color: $primary-700
+      &.#{$prefix}badge-color-error
+        border-color: $error-200
+        background: $error-50
+        color: $error-700
+      &.#{$prefix}badge-color-warning
+        border-color: $warning-200
+        background: $warning-50
+        color: $warning-700
+      &.#{$prefix}badge-color-success
+        border-color: $success-200
+        background: $success-50
+        color: $success-700
+
+
+// Buttons group.
+.um
+  .#{$prefix}buttons-group
+    margin: 0
+    padding: 0
+    box-shadow: $shadow-xs
+    border-radius: $radius-md
+    overflow: hidden
+    &.#{$prefix}buttons-group-auto
+      +flex( row, flex-start, baseline, nowrap )
+    &.#{$prefix}buttons-group-equal
+      display: grid
+      grid-auto-columns: minmax(0, 1fr)
+      grid-auto-flow: column
+    .#{$prefix}button-in-group
+      +border-box
+      text-align: center
+      cursor: pointer
+      display: inline-block
+      padding: $spacing-md $spacing-xl
+      transition: all .2s linear
+      +typography( text, sm, semibold )
+      color: $button-color
+      background-color: $button-bg
+      border-right: 1px solid $button-border-color
+      border-top: 1px solid $button-border-color
+      border-bottom: 1px solid $button-border-color
+      &:hover
+        color: $button-color-hover
+        background-color: $button-bg-hover
+      &.current
+        cursor: default
+        background-color: $button-bg-hover
+        color: $button-color-hover
+        &:hover
+          color: $button-color-hover
+          background-color: $button-bg-hover
+      &.#{$prefix}disabled
+        cursor: not-allowed
+        color: $button-color-disabled
+        background-color: $button-bg-disabled
+        border-top: 1px solid  $button-border-color-disabled
+        border-bottom: 1px solid  $button-border-color-disabled
+        &:hover
+          color: $button-color-disabled
+          background-color: $button-bg-disabled
+      &:first-child
+        border-radius: $radius-md 0 0 $radius-md
+        border-left: 1px solid $button-border-color
+        &.#{$prefix}disabled
+          border-left: 1px solid $button-border-color-disabled
+      &:last-child
+        border-radius: 0 $radius-md $radius-md 0
+        &.#{$prefix}disabled
+          border-right: 1px solid $button-border-color-disabled
+    &.#{$prefix}disabled
+      .#{$prefix}button-in-group
+        cursor: not-allowed
+        color: $button-color-disabled
+        background-color: $button-bg-disabled
+        border-top: 1px solid  $button-border-color-disabled
+        border-bottom: 1px solid  $button-border-color-disabled
+        &:hover
+          color: $button-color-disabled
+          background-color: $button-bg-disabled
+        &:first-child
+          border-left: 1px solid $button-border-color-disabled
+        &:last-child
+          border-right: 1px solid $button-border-color-disabled
+.rtl
+  .um
+    .#{$prefix}buttons-group
+      .#{$prefix}button-in-group
+        &:first-child
+          border-radius: 0 $radius-md $radius-md 0
+          border-right: 1px solid $button-border-color
+          border-left: none
+          &.#{$prefix}disabled
+            border-right: 1px solid $button-border-color-disabled
+            border-left: none
+        &:last-child
+          border-radius: $radius-md 0 0 $radius-md
+          border-left: 1px solid $button-border-color
+          &.#{$prefix}disabled
+            border-left: 1px solid $button-border-color-disabled
+
+
+// Pagination
+// Note: It partially uses the buttons group style
+.um
+  .#{$prefix}pagination
+    +border-box
+    width: 100%
+    margin: 0
+    padding: $spacing-lg 0
+    border-top: 1px solid $gray-200
+    .#{$prefix}pagination-view-list
+      +flex( row, center, center, nowrap )
+      width: 100%
+      margin: 0
+      padding: 0 $spacing-3xl
+      .#{$prefix}pagination-item.#{$prefix}pagination-arrow
+        text-align: center
+        padding: $spacing-md $spacing-xl
+        min-width: 80px
+        height: 40px
+        &:first-child
+          border-right: 0
+          &.disabled
+            border-right: 0
+      .#{$prefix}pagination-pages-grid
+        display: grid
+        grid-auto-columns: minmax(0, 1fr)
+        grid-auto-flow: column
+        .#{$prefix}pagination-item
+          min-width: 40px
+          height: 40px
+          text-align: center
+          padding: $spacing-md
+          border-radius: 0
+
+    .#{$prefix}pagination-view-mobile
+      +flex( row, space-between, center, nowrap )
+      width: 100%
+      margin: 0
+      padding: 0
+      text-align: center
+      label
+        +flex( row, center, center, nowrap )
+        column-gap: $spacing-md
+        +typography( text, sm, regular )
+        input[type="number"]
+          -moz-appearance: textfield
+          +border-box
+          width: $spacing-7xl
+          border-radius: $radius-md
+          border: 1px solid $gray-300
+          background: $um-white
+          box-shadow: $shadow-xs
+          padding: $spacing-md $spacing-lg
+          color: $gray-900
+          +typography( text, sm, regular )
+          &:focus,
+          &:focus-visible
+            border: 1px solid $primary-300
+            box-shadow: $ring-brand-shadow-xs
+            background: $um-white
+            outline: none
+          &:disabled
+            background: $gray-50
+            color: $gray-500
+          &::placeholder
+            color: $gray-500
+          &::-webkit-outer-spin-button,
+          &::-webkit-inner-spin-button
+            -webkit-appearance: none
+            margin: 0
+      button
+        width: auto
+        min-width: 80px
+
+.rtl
+  .um
+    .#{$prefix}pagination
+      .#{$prefix}pagination-view-list
+        .#{$prefix}pagination-item.#{$prefix}pagination-arrow
+          &:last-child
+            border-right: 0
+            border-left: 1px solid $button-border-color
+            &.disabled
+              border-right: 0
+              border-left: 1px solid $button-border-color
+          &:first-child
+            border-left: 0
+            border-right: 1px solid $button-border-color
+            &.disabled
+              border-left: 0
+              border-right: 1px solid $button-border-color
+
+
+// Fields common styling.
+.um
+  input[type="date"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="email"],
+  input[type="file"],
+  input[type="image"],
+  input[type="month"],
+  input[type="number"],
+  input[type="password"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="text"],
+  input[type="time"],
+  input[type="url"],
+  input[type="week"],
+  select,
+  textarea
+    +border-box
+    background: $um-white
+    box-shadow: $shadow-xs
+    padding: $spacing-md $spacing-lg
+    margin: 0
+    color: $gray-900
+    +typography( text, md, regular )
+    &:not(.wp-editor-area)
+      border-radius: $radius-md
+      border: 1px solid $gray-300
+      &:focus,
+      &:focus-visible
+        border: 1px solid $primary-300
+        box-shadow: $ring-brand-shadow-xs
+        background: $um-white
+        outline: none
+    &:disabled
+      background: $gray-50
+      color: $gray-500
+    &::placeholder
+      color: $gray-500
+    &.#{$prefix}error
+      border-color: $error-300
+      &:not(.wp-editor-area)
+        &:focus,
+        &:focus-visible
+          box-shadow: $ring-error-shadow-xs
+  textarea,
+  input[type="date"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="time"]
+    font-family: inherit
+  input[type="password"]
+    &::-ms-reveal,
+    &::-ms-clear
+      display: none
+  .choices
+    padding: 0
+    margin: 0
+  .#{$prefix}date-range-row,
+  .#{$prefix}time-range-row
+    +flex( row, space-between, center, nowrap )
+    border: 1px solid $gray-300
+    border-radius: $radius-md
+    background: $gray-200
+    +border-box
+    label
+      +typography(text, sm, regular)
+      text-align: center
+      padding: 0
+      margin: 0
+      +border-box
+    input
+      border: none
+      width: calc( 50% - 20px )
+      +border-box
+      &:hover,
+      &:focus,
+      &:focus-visible
+        border: none
+      &:first-child
+        border-radius: $radius-md 0 0 $radius-md
+      &:last-child
+        border-radius: 0 $radius-md $radius-md 0
+  .wp-editor-wrap
+    &.#{$prefix}error
+      .wp-editor-container
+        border: 1px solid $error-500
+      &.tmce-active
+        .switch-tmce
+          border-top-color: $error-500
+          border-left-color: $error-500
+          border-right-color: $error-500
+        .switch-html
+          border-color: $error-500
+      &.html-active
+        .switch-tmce
+          border-color: $error-500
+        .switch-html
+          border-top-color: $error-500
+          border-left-color: $error-500
+          border-right-color: $error-500
+
+
+// Field wrapper common styling
+.um
+  .#{$prefix}field-wrapper
+    +flex( column, flex-start, stretch, nowrap )
+    row-gap: $spacing-sm
+    padding: 0
+    margin: 0
+    position: relative
+    +border-box
+    > label
+      +typography( text, sm, medium )
+      color: $gray-700
+      padding: 0
+      margin: 0
+    input[type="date"],
+    input[type="datetime"],
+    input[type="datetime-local"],
+    input[type="email"],
+    input[type="file"],
+    input[type="image"],
+    input[type="month"],
+    input[type="number"],
+    input[type="password"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="text"],
+    input[type="time"],
+    input[type="url"],
+    input[type="week"],
+    select,
+    textarea
+      +border-box
+      width: 100%
+    .choices
+      width: 100%
+
+
+// Toggle sections displayed after button/link click.
+.um
+  .#{$prefix}toggle-block
+    display: grid
+    grid-template-rows: 1fr
+    transition: grid-template-rows 0.5s ease-in-out
+    &.#{$prefix}toggle-block-collapsed
+      grid-template-rows: 0fr
+    .#{$prefix}toggle-block-inner
+      overflow: hidden
+      margin: 0
+      padding: 0
+      width: 100%
+      &.#{$prefix}visible
+        overflow: visible
+
+
+// Uploader.
+.um
+  .#{$prefix}uploader
+    +flex( column, flex-start, start, nowrap )
+    row-gap: $spacing-lg
+    .#{$prefix}uploader-dropzone
+      +flex( column, flex-start, center, nowrap )
+      width: 100%
+      row-gap: $spacing-lg
+      +border-box
+      padding: $spacing-xl $spacing-3xl
+      border-radius: $radius-xl
+      border: 1px solid $gray-200
+      background: $um-white
+      margin: 1px
+      .#{$prefix}supporting-text
+        +flex( column, flex-start, center, nowrap )
+        row-gap: $spacing-xs
+        & > span
+          text-align: center
+      &:focus,
+      &[drop-active=true]
+        border: 2px solid $primary-600
+        margin: 0
+    .#{$prefix}uploader-filelist
+      +flex( column, flex-start, stretch, nowrap )
+      width: 100%
+      row-gap: $spacing-lg
+      &:not(.#{$prefix}display-none)
+        margin: $spacing-xs 0 0 0
+      .#{$prefix}uploader-file
+        +flex( row, flex-start, start, nowrap )
+        padding: $spacing-xl
+        background: $um-white
+        border: 1px solid $gray-200
+        border-radius: $radius-xl
+        column-gap: $spacing-lg
+        margin: 1px // for handle 2px border without screen jumping.
+        .#{$prefix}uploader-file-data
+          +flex( column, flex-start, stretch, nowrap )
+          width: 100%
+          .#{$prefix}uploader-file-data-header
+            +flex( row, space-between, flex-start, nowrap )
+            .#{$prefix}uploader-file-name
+              color: $gray-700
+              +typography( text, sm, medium )
+            .#{$prefix}uploader-file-remove
+              padding: $spacing-xxs 0 0 0
+        &.#{$prefix}upload-failed
+          border: 2px solid $error-600
+          margin: 0 // for handle 2px border without screen jumping.
+          .#{$prefix}file-extension
+            .#{$prefix}file-extension-text
+              background: $error-600
+        &.#{$prefix}upload-completed
+          border: 2px solid $success-600
+          margin: 0 // for handle 2px border without screen jumping.
+          .#{$prefix}file-extension
+            .#{$prefix}file-extension-text
+              background: $success-600
+
+    .#{$prefix}link
+      +typography( text, sm, semibold )
+    &.#{$prefix}disabled
+      .#{$prefix}uploader-dropzone
+        background: $gray-50
+        .#{$prefix}supporting-text
+          +flex( column, flex-start, center, nowrap )
+          row-gap: $spacing-xs
+
+
+// File extensions.
+.um
+  .#{$prefix}file-extension
+    position: relative
+    overflow: hidden
+    width: 40px
+    height: 40px
+    & > svg
+      stroke: $gray-300
+      position: absolute
+      top: -4px
+      left: -4px
+    .#{$prefix}file-extension-text
+      position: absolute
+      bottom: $spacing-sm
+      left: 0
+      color: $um-white
+      text-align: center
+      font-size: 10px
+      line-height: normal
+      font-weight: 700
+      padding: $spacing-xxs 3px
+      text-transform: uppercase
+      background: $primary-600
+      border-radius: $radius-xxs
+
+
+// Progress bar.
+.um
+  .#{$prefix}progress-bar
+    height: $spacing-md
+    border-radius: $radius-xs
+    overflow: hidden
+    background: $gray-200
+    .#{$prefix}progress-bar-inner
+      border-radius: $radius-xs
+      height: 100%
+      background: $primary-600
+  .#{$prefix}progress-bar-wrapper
+    .#{$prefix}progress-bar-label
+      +typography( text, sm, medium )
+      color: $gray-700
+    &.#{$prefix}progress-bar-label-bottom
+      +flex( column, flex-start, end, nowrap )
+      row-gap: $spacing-md
+      .#{$prefix}progress-bar
+        width: 100%
+    &.#{$prefix}progress-bar-label-right
+      +flex( row, space-between, center, nowrap )
+      column-gap: $spacing-lg
+      .#{$prefix}progress-bar-label
+        max-width: 50px
+      .#{$prefix}progress-bar
+        width: calc( 100% - 50px )
+
+
+// Misc
+.um
+  .#{$prefix}supporting-text
+    color: $gray-600
+    +typography( text, sm, regular )
+  p.#{$prefix}supporting-text
+    padding: 0
+    margin: 0
+  .#{$prefix}full-width
+    width: 100%
+  .#{$prefix}display-none
+    display: none !important // has to be important to rewrite some major display settings without additional styles.
+  .#{$prefix}hidden
+    visibility: hidden
+  .#{$prefix}visible
+    visibility: visible
+  .#{$prefix}error-text
+    color: $error-500
+  .#{$prefix}success-text
+    color: $success-500
+  .#{$prefix}align-center
+    text-align: center
+  .#{$prefix}grid
+    display: grid
+    grid-gap: $spacing-md
+    grid-template-columns: repeat(3, 1fr) // it has 3 columns by default.
+    align-content: center
+    align-items: flex-start
+    &.#{$prefix}grid-col-1
+      grid-template-columns: repeat(1, 1fr)
+    &.#{$prefix}grid-col-2
+      grid-template-columns: repeat(2, 1fr)
+    &.#{$prefix}grid-col-3
+      grid-template-columns: repeat(3, 1fr)
+    &.#{$prefix}grid-col-4
+      grid-template-columns: repeat(4, 1fr)
+    &.#{$prefix}grid-col-5
+      grid-template-columns: repeat(5, 1fr)
+    &.#{$prefix}grid-col-6
+      grid-template-columns: repeat(6, 1fr)
+  .#{$prefix}list
+    +flex( column, flex-start, stretch, nowrap )
+    margin: 0
+    padding: 0
+    gap: $spacing-md
+    +border-box
+    .#{$prefix}list-item
+      margin: 0
+      padding: 0 0 $spacing-md 0
+      +border-box
+      gap: $spacing-lg
+      &:not(:last-child)
+        border-bottom: 1px solid $gray-200
+  .#{$prefix}skeleton-box
+    overflow: hidden
+    background-color: $gray-300
+    border-radius: $radius-xs
+    position: relative
+    &:after
+      position: absolute
+      top: 0
+      right: 0
+      bottom: 0
+      left: 0
+      transform: translateX(-100%)
+      background-image: linear-gradient(90deg,rgba(#fff, 0) 0,rgba(#fff, 0.2) 20%,rgba(#fff, 0.5) 60%,rgba(#fff, 0))
+      animation: um-ajax-shimmer 2s infinite
+      content: ''
+
+// Secondary link
+.um
+  .#{$prefix}link
+    &.#{$prefix}link-secondary
+      color: $gray-600
+      +typography( text, sm, regular )
+      text-decoration: none
+      border: none
+      box-shadow: none
+      &:active,
+      &:hover,
+      &:visited
+        color: $gray-600
+        +typography( text, sm, regular )
+        text-decoration: none
+        border: none
+        box-shadow: none
+      &.#{$prefix}link-underline
+        text-decoration: underline
+        &:active,
+        &:hover,
+        &:visited
+          text-decoration: underline
+
+
+// Image lazyload
+.um
+  .um-image-lazyload-wrapper
+    position: relative
+    overflow: hidden
+    .um-image-lazyload
+      visibility: hidden
+      width: 100%
+      display: block
+      height: auto
+    .um-skeleton-box
+      position: absolute
+      top: 0
+      right: 0
+      bottom: 0
+      left: 0
+      display: block
+      background: $gray-300
+      &:after
+        position: absolute
+        top: 0
+        right: 0
+        bottom: 0
+        left: 0
+        transform: translateX(-100%)
+        background-image: linear-gradient(90deg,rgba(#fff, 0) 0,rgba(#fff, 0.2) 20%,rgba(#fff, 0.5) 60%,rgba(#fff, 0))
+        animation: um-ajax-shimmer 2s infinite
+        content: ''
+    &.um-loaded
+      .um-image-lazyload
+        visibility: visible
+      .um-skeleton-box
+        display: none
+
+
+// Alerts
+.um
+  .#{$prefix}alert
+    +flex( row, flex-start, center, nowrap )
+    padding: 0
+    margin: 0
+    +border-box
+    .#{$prefix}alert-message
+      +flex( row, flex-start, center, nowrap )
+      width: 100%
+      column-gap: $spacing-lg
+      .#{$prefix}alert-texts
+        +flex( row, flex-start, center, wrap )
+        flex: 1
+        column-gap: $spacing-lg
+        row-gap: $spacing-xs
+        .#{$prefix}alert-text
+          +typography( text, sm, semibold )
+          color: $gray-700
+    &.#{$prefix}alert-underline
+      border-bottom: 1px solid $gray-300
+      padding: 0 0 $spacing-lg 0
+    &.#{$prefix}dismissible
+      +flex( row, space-between, center, nowrap )
+      column-gap: $spacing-lg
+      .#{$prefix}alert-message
+        width: auto
+        flex: 1
+    &.#{$prefix}alert-error
+      .#{$prefix}alert-icon
+        color: $error-600
+        .#{$prefix}outline-icon
+          border-color: $outline-outer-error600
+          .#{$prefix}outline-inner
+            border-color: $outline-inner-error600
+            svg
+              color: currentColor
+    &.#{$prefix}alert-warning
+      .#{$prefix}alert-icon
+        color: $warning-600
+        .#{$prefix}outline-icon
+          border-color: $outline-outer-warning600
+          .#{$prefix}outline-inner
+            border-color: $outline-inner-warning600
+            svg
+              color: currentColor
+    &.#{$prefix}alert-success
+      .#{$prefix}alert-icon
+        color: $success-600
+        .#{$prefix}outline-icon
+          border-color: $outline-outer-success600
+          .#{$prefix}outline-inner
+            border-color: $outline-inner-success600
+            svg
+              color: currentColor
+
+
+// Outline icon
+.um
+  .#{$prefix}outline-icon
+    display: block
+    margin: 0
+    padding: 0
+    +border-box
+    border-radius: $radius-full
+    border: 2px solid $outline-outer-gray600
+    .#{$prefix}outline-inner
+      display: block
+      margin: $spacing-xs
+      border-radius: $radius-full
+      border: 2px solid $outline-inner-gray600
+      +border-box
+      svg
+        display: block
+        margin: $spacing-xs
+        padding: 0
+        color: $gray-600
+        +border-box
+
+
+// Overlay
+.um
+  .#{$prefix}overlay
+    position: absolute
+    top: 0
+    bottom: 0
+    left: 0
+    right: 0
+    background-color: $gray-200
+    opacity: 0.6
+    z-index: 1
+    &.#{$prefix}rounded
+      border-radius: $radius-md
+
+
+// Users list
+.um
+  .#{$prefix}users-list:not(.#{$prefix}grid)
+    +flex( column, flex-start, stretch, nowrap )
+    gap: $spacing-md
+    margin: 0
+    padding: 0
+    +border-box
+
+
+// Emoji Picker
+.um
+  .#{$prefix}emoji-picker
+    position: relative
+    .#{$prefix}emoji-list
+      position: absolute
+      z-index: 2
+
+
+
+// GIF Picker
+.um
+  .#{$prefix}gif-picker
+    position: relative
+
+
+.#{$prefix}gif-list-wrapper
+  +flex(column, flex-start, stretch, nowrap)
+  padding: 0
+  margin: 0
+  min-width: 360px
+  +border-box
+  .#{$prefix}gif-list-search-box
+    +flex(row, space-between, center, nowrap)
+    width: 100%
+    margin: 0
+    padding: 0 0 $spacing-lg 0
+    gap: $spacing-md
+    .#{$prefix}gif-list-search
+      flex: 1
+    .#{$prefix}gif-list-loader
+      margin: $spacing-md
+  .#{$prefix}gif-list
+    position: relative
+    width: 100%
+    margin: 0
+    padding: 0
+    gap: $spacing-md
+    overflow-y: auto
+    max-height: 150px
+    +flex(row, flex-start, center, wrap)
+    .#{$prefix}gif-list-pagination-loader-wrapper
+      +flex(row, center, center, nowrap)
+      width: 90px
+      height: 90px
+      .#{$prefix}gif-list-loader
+        +flex(row, center, center, nowrap)
+        min-height: 100px
+        width: 100%
+        margin: 0
+        padding: 0
+    .#{$prefix}gif-img
+      cursor: pointer
