@@ -1,5 +1,11 @@
 ﻿== Changelog ==
 
+= 2.11.2 January xx, 2026 =
+
+* Bugfixes:
+
+  - Fixed: Security issue CVE ID: CVE-2025-15064. Deprecated ability to use HTML inside the user description.
+
 = 2.11.1 December 16, 2025 =
 
 * Enhancements:
