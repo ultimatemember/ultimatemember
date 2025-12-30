@@ -3,7 +3,7 @@
  * Plugin Name: Ultimate Member
  * Plugin URI: http://ultimatemember.com/
  * Description: The easiest way to create powerful online communities and beautiful user profiles with WordPress
- * Version: 2.11.1
+ * Version: 2.11.2
  * Author: Ultimate Member
  * Author URI: http://ultimatemember.com/
  * License: GPLv3
@@ -41,3 +41,7 @@ define( 'UM_UPDATER_DEBUG', false ); // Set true then need to debug the upgrade 
 
 require_once 'includes/class-functions.php';
 require_once 'includes/class-init.php';
+//
+//echo wp_kses( '<a href="javascript:alert(1)"></a>', UM()->get_allowed_html( 'templates' ) );
+//echo wp_kses( '<img onerror="alert(1)" />', UM()->get_allowed_html( 'templates' ) );
+//exit;
