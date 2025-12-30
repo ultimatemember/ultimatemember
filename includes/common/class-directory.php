@@ -409,6 +409,7 @@ class Directory extends Directory_Config {
 		$hook_after_user_name = ob_get_clean();
 
 		$data_array = array(
+			'id'                   => $user_id,
 			'card_anchor'          => esc_html( $this->get_user_hash( $user_id ) ),
 			'role'                 => is_user_logged_in() ? esc_html( um_user( 'role' ) ) : 'undefined', // make the role hidden for the nopriv requests.
 			'account_status'       => is_user_logged_in() ? esc_html( UM()->common()->users()->get_status( $user_id ) ) : 'undefined', // make the status hidden for the nopriv requests.
