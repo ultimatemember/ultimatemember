@@ -1,0 +1,157 @@
+$border: #ddd
+$hover: #ccc
+$shadow1: rgba(50,50,93,.1)
+$shadow2: rgba(0,0,0,.07)
+
+// NEW COLORS since v3
+
+// wp-admin
+
+$wp-admin-primary: #2271b1
+
+// Frontend or common
+
+$required-asterisk: #a00
+
+$um-white: #fff
+$um-black: #000
+
+$palette: 25,50,100,200,300,400,500,600,700,800,900
+
+// Figma shades of gray default colors
+$default-gray: (25:#fcfcfd,50:#f9fafb,100:#f2f4f7,200:#eaecf0,300:#d0d5dd,400:#98a2b3,500:#667085,600:#475467,700:#344054,800:#1d2939,900:#101828)
+$default-error: (25:#fffbfa,50:#fef3f2,100:#fee4e2,200:#fecdca,300:#fda29b,400:#f97066,500:#f04438,600:#d92d20,700:#b42318,800:#912018,900:#7a271a)
+$default-warning: (25:#fffcf5,50:#fffaeb,100:#fef0c7,200:#fedf89,300:#fec84b,400:#fdb022,500:#f79009,600:#dc6803,700:#b54708,800:#93370d,900:#7a2e0e)
+$default-success: (25:#f6fef9,50:#ecfdf3,100:#d1fadf,200:#a6f4c5,300:#6ce9a6,400:#32d583,500:#12b76a,600:#039855,700:#027a48,800:#05603a,900:#054f31)
+@function default_color( $type, $number )
+  @if $type == 'gray'
+    @if map-has-key($default-gray,$number)
+      @return map-get( $default-gray, $number )
+  @if $type == 'error'
+    @if map-has-key($default-error,$number)
+      @return map-get( $default-error, $number )
+  @if $type == 'warning'
+    @if map-has-key($default-warning,$number)
+      @return map-get( $default-warning, $number )
+  @if $type == 'success'
+    @if map-has-key($default-success,$number)
+      @return map-get( $default-success, $number )
+
+@function color( $type, $number )
+  @if $type == 'gray'
+    @return var(--um-gray-#{$number},map-get( $default-gray, $number ))
+
+// Figma shades of gray colors
+$gray-25: var(--um-gray-25, default_color('gray',25) )
+$gray-50: var(--um-gray-50, default_color('gray',50))
+$gray-100: var(--um-gray-100, default_color('gray',100))
+$gray-200: var(--um-gray-200, default_color('gray',200))
+$gray-300: var(--um-gray-300, default_color('gray',300))
+$gray-400: var(--um-gray-400, default_color('gray',400))
+$gray-500: var(--um-gray-500, default_color('gray',500))
+$gray-600: var(--um-gray-600, default_color('gray',600))
+$gray-700: var(--um-gray-700, default_color('gray',700))
+$gray-800: var(--um-gray-800, default_color('gray',800))
+$gray-900: var(--um-gray-900, default_color('gray',900))
+
+$overlay-gray900: var(--um-gray-900-overlay,rgba(default_color('gray',900),0.7))
+
+$outline-outer-gray600: var(--um-gray-600-overlay,rgba(default_color('gray',600),0.1))
+$outline-inner-gray600: var(--um-gray-600-overlay,rgba(default_color('gray',600),0.3))
+
+// Figma shades of primary colors
+$primary-25: var(--um-primary-25-bg, #fcfaff)
+$primary-50: var(--um-primary-50-bg, #f9f5ff)
+$primary-100: var(--um-primary-100-bg, #f4ebff)
+$primary-200: var(--um-primary-200-bg, #e9d7fe)
+$primary-300: var(--um-primary-300-bg, #d6bbfb)
+$primary-400: var(--um-primary-400-bg, #b692f6)
+$primary-500: var(--um-primary-500-bg, #9e77ed)
+$primary-600: var(--um-primary-600-bg, #7f56d9)
+$primary-700: var(--um-primary-700-bg, #6941c6)
+$primary-800: var(--um-primary-800-bg, #53389e)
+$primary-900: var(--um-primary-900-bg, #42307d)
+
+$primary-fg: var(--um-primary-600-fg, $um-white)
+
+// Figma shades of error colors
+$error-25: var(--um-error-25, #fffbfa)
+$error-50: var(--um-error-50, #fef3f2)
+$error-100: var(--um-error-100, #fee4e2)
+$error-200: var(--um-error-200, #fecdca)
+$error-300: var(--um-error-300, #fda29b)
+$error-400: var(--um-error-400, #f97066)
+$error-500: var(--um-error-500, #f04438)
+$error-600: var(--um-error-600, #d92d20)
+$error-700: var(--um-error-700, #b42318)
+$error-800: var(--um-error-800, #912018)
+$error-900: var(--um-error-900, #7a271a)
+
+$outline-outer-error600: var(--um-error-600-overlay,rgba(default_color('error',600),0.1))
+$outline-inner-error600: var(--um-error-600-overlay,rgba(default_color('error',600),0.3))
+
+// Figma shades of warning colors
+$warning-25: var(--um-warning-25, #fffcf5)
+$warning-50: var(--um-warning-50, #fffaeb)
+$warning-100: var(--um-warning-100, #fef0c7)
+$warning-200: var(--um-warning-200, #fedf89)
+$warning-300: var(--um-warning-300, #fec84b)
+$warning-400: var(--um-warning-400, #fdb022)
+$warning-500: var(--um-warning-500, #f79009)
+$warning-600: var(--um-warning-600, #dc6803)
+$warning-700: var(--um-warning-700, #b54708)
+$warning-800: var(--um-warning-800, #93370d)
+$warning-900: var(--um-warning-900, #7a2e0e)
+
+$outline-outer-warning600: var(--um-warning-600-overlay,rgba(default_color('warning',600),0.1))
+$outline-inner-warning600: var(--um-warning-600-overlay,rgba(default_color('warning',600),0.3))
+
+// Figma shades of success colors
+$success-25: var(--um-success-25, #f6fef9)
+$success-50: var(--um-success-50, #ecfdf3)
+$success-100: var(--um-success-100, #d1fadf)
+$success-200: var(--um-success-200, #a6f4c5)
+$success-300: var(--um-success-300, #6ce9a6)
+$success-400: var(--um-success-400, #32d583)
+$success-500: var(--um-success-500, #12b76a)
+$success-600: var(--um-success-600, #039855)
+$success-700: var(--um-success-700, #027a48)
+$success-800: var(--um-success-800, #05603a)
+$success-900: var(--um-success-900, #054f31)
+
+$outline-outer-success600: var(--um-success-600-overlay,rgba(default_color('success',600),0.1))
+$outline-inner-success600: var(--um-success-600-overlay,rgba(default_color('success',600),0.3))
+
+$button-bg: var(--um-blocks-button-bg-color, $um-white)
+$button-bg-hover: var(--um-blocks-button-bg-hover-color, $gray-50)
+$button-bg-disabled: var(--um-blocks-button-bg-disabled-color, $button-bg)
+$button-border-color: var(--um-blocks-button-bg-color, $gray-300)
+$button-border-color-disabled: var(--um-blocks-button-bg-disabled-color, $gray-200)
+$button-color: var(--um-blocks-button-fg-color, $gray-700)
+$button-color-hover: var(--um-blocks-button-fg-color, $gray-800)
+$button-color-disabled: var(--um-blocks-button-fg-color, $gray-400)
+
+$button-primary-bg: $primary-600
+$button-primary-bg-hover: $primary-700
+$button-primary-bg-disabled: $gray-100
+$button-primary-border-color-disabled: $gray-200
+$button-primary-color: $primary-fg
+$button-primary-color-disabled: $gray-400
+
+$icon-size: 20px
+
+// Text input variables
+//$text-input-border-radius: $radius-sm
+$text-input-bg: $um-white
+$text-input-color: $um-black
+$text-input-border-color: $gray-300
+$text-input-border-color-focus: $gray-400
+
+$semi-bold-weight: 500
+$bold-weight: 600 // CSS bold = 700, so it will be applied if there aren't 600 weight for the font
+$label-size: 15px
+
+// Links variables
+$link-color: $primary-700
+$link-hover-color: $primary-800
+$link-focus-color: $primary-700

@@ -111,7 +111,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		}
 
 		/**
+		 * Old UI options populate callback.
 		 *
+		 * @todo maybe deprecate since new UI.
 		 */
 		public function ajax_select_options() {
 			UM()->check_ajax_nonce();
@@ -204,27 +206,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 				wp_send_json( $arr_options );
 			} else {
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_ajax_select_options__debug_mode
-				 * @description Activate debug mode for AJAX select options
-				 * @input_vars
-				 * [{"var":"$debug_mode","type":"bool","desc":"Enable Debug mode"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_ajax_select_options__debug_mode', 'function_name', 10, 1 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_ajax_select_options__debug_mode', 'my_ajax_select_options__debug_mode', 10, 1 );
-				 * function my_ajax_select_options__debug_mode( $debug_mode ) {
-				 *     // your code here
-				 *     return $debug_mode;
-				 * }
-				 * ?>
-				 */
+				/** This filter is documented in includes/ajax/class-fields.php */
 				$debug = apply_filters( 'um_ajax_select_options__debug_mode', false );
 				if ( $debug ) {
 					$arr_options['debug'] = array(
@@ -236,8 +218,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				if ( ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] ) ) {
 					// If the requested callback function is added in the form or added in the field option, execute it with call_user_func.
 					if ( isset( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
-						! empty( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
-						$form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] === $ajax_source_func ) {
+					     ! empty( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
+					     $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] === $ajax_source_func ) {
 
 						$arr_options['field'] = $form_fields[ $_POST['child_name'] ];
 
@@ -253,7 +235,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			}
 		}
 
-
 		/**
 		 * Count the form errors.
 		 * @return integer
@@ -267,7 +248,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 			return 0;
 		}
-
 
 		/**
 		 * Appends field errors
@@ -512,15 +492,16 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					// Hidden for edit fields
 					$cf_metakeys = array_values( array_diff( $cf_metakeys, $arr_restricted_fields ) );
 
-					$cf_metakeys[] = 'profile_photo';
-					$cf_metakeys[] = 'cover_photo';
+					// These fields are added to the form in the new UI, so no need a hardcode to add them to custom fields.
+					if ( ! UM()->is_new_ui() ) {
+						$cf_metakeys[] = 'profile_photo';
+						$cf_metakeys[] = 'cover_photo';
+					}
 
 					if ( ! empty( $this->form_data['use_custom_settings'] ) && ! empty( $this->form_data['show_bio'] ) ) {
 						$cf_metakeys[] = UM()->profile()->get_show_bio_key( $this->form_data );
-					} else {
-						if ( UM()->options()->get( 'profile_show_bio' ) ) {
-							$cf_metakeys[] = UM()->profile()->get_show_bio_key( $this->form_data );
-						}
+					} elseif ( UM()->options()->get( 'profile_show_bio' ) ) {
+						$cf_metakeys[] = UM()->profile()->get_show_bio_key( $this->form_data );
 					}
 				}
 				// Add required usermeta for register.
@@ -632,7 +613,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 								$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
 
 								if ( ! empty( $role ) &&
-									( ! in_array( $role, $custom_field_roles, true ) || in_array( $role, $exclude_roles, true ) ) ) {
+								     ( ! in_array( $role, $custom_field_roles, true ) || in_array( $role, $exclude_roles, true ) ) ) {
 									// High level escape if hacking.
 									wp_die( esc_html__( 'This is not possible for security reasons.', 'ultimate-member' ) );
 								}
@@ -643,6 +624,18 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 								// Force adding `role` metakey if there is a role-type field on the form. It's required to User Profile.
 								$this->usermeta_whitelist[] = 'role';
 							}
+						}
+					}
+				}
+
+				// Flush empty files fields during registration.
+				if ( 'register' === $this->form_data['mode'] && UM()->is_new_ui() ) {
+					foreach ( $custom_fields as $cf_k => $cf_data ) {
+						if ( ! array_key_exists( 'type', $cf_data ) || ! in_array( $cf_data['type'], array( 'image', 'file' ), true ) ) {
+							continue;
+						}
+						if ( isset( $this->post_form[ $cf_k ] ) && empty( $this->post_form[ $cf_k ]['filename'] ) ) {
+							unset( $this->post_form[ $cf_k ] );
 						}
 					}
 				}
@@ -829,82 +822,83 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					if ( is_array( $custom_fields ) ) {
 						foreach ( $custom_fields as $k => $field ) {
 
-							if ( isset( $field['type'] ) ) {
-								if ( isset( $form[ $k ] ) ) {
+							if ( isset( $field['type'], $form[ $k ] ) ) {
+								switch ( $field['type'] ) {
+									default:
+										$form[ $k ] = apply_filters( 'um_sanitize_form_field', $form[ $k ], $field );
+										break;
 
-									switch ( $field['type'] ) {
-										default:
-											$form[ $k ] = apply_filters( 'um_sanitize_form_field', $form[ $k ], $field );
-											break;
-										case 'number':
-											$form[ $k ] = '' !== $form[ $k ] ? (int) $form[ $k ] : '';
-											break;
-										case 'textarea':
-											if ( ! empty( $field['html'] ) || ( UM()->profile()->get_show_bio_key( $form ) === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
-												$form[ $k ] = html_entity_decode( $form[ $k ] ); // required because WP_Editor send sometimes encoded content.
-												$form[ $k ] = self::maybe_apply_tidy( $form[ $k ], $field );
+									case 'number':
+										$form[ $k ] = '' !== $form[ $k ] ? (int) $form[ $k ] : '';
+										break;
 
-												$allowed_html = UM()->get_allowed_html( 'templates' );
-												if ( empty( $allowed_html['iframe'] ) ) {
-													$allowed_html['iframe'] = array(
-														'allow'           => true,
-														'frameborder'     => true,
-														'loading'         => true,
-														'name'            => true,
-														'referrerpolicy'  => true,
-														'sandbox'         => true,
-														'src'             => true,
-														'srcdoc'          => true,
-														'title'           => true,
-														'width'           => true,
-														'height'          => true,
-														'allowfullscreen' => true,
-													);
-												}
-												$form[ $k ] = wp_kses( strip_shortcodes( $form[ $k ] ), $allowed_html );
-												add_filter( 'wp_kses_allowed_html', array( &$this, 'wp_kses_user_desc' ), 10, 2 );
-											} else {
-												$form[ $k ] = sanitize_textarea_field( strip_shortcodes( $form[ $k ] ) );
+									case 'textarea':
+										if ( ! empty( $field['html'] ) || ( UM()->profile()->get_show_bio_key( $form ) === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
+											$form[ $k ] = html_entity_decode( $form[ $k ] ); // required because WP_Editor send sometimes encoded content.
+											$form[ $k ] = self::maybe_apply_tidy( $form[ $k ], $field );
+
+											$allowed_html = UM()->get_allowed_html( 'templates' );
+											if ( empty( $allowed_html['iframe'] ) ) {
+												$allowed_html['iframe'] = array(
+													'allow' => true,
+													'frameborder' => true,
+													'loading' => true,
+													'name' => true,
+													'referrerpolicy' => true,
+													'sandbox' => true,
+													'src'  => true,
+													'srcdoc' => true,
+													'title' => true,
+													'width' => true,
+													'height' => true,
+													'allowfullscreen' => true,
+												);
 											}
-											break;
-										case 'oembed':
-										case 'url':
-											$f = UM()->builtin()->get_a_field( $k );
+											$form[ $k ] = wp_kses( strip_shortcodes( $form[ $k ] ), $allowed_html );
+											add_filter( 'wp_kses_allowed_html', array( &$this, 'wp_kses_user_desc' ), 10, 2 );
+										} else {
+											$form[ $k ] = sanitize_textarea_field( strip_shortcodes( $form[ $k ] ) );
+										}
+										break;
 
-											if ( is_array( $f ) && array_key_exists( 'match', $f ) && array_key_exists( 'advanced', $f ) && 'social' === $f['advanced'] ) {
-												$v = $form[ $k ];
+									case 'oembed':
+									case 'url':
+										$f = UM()->builtin()->get_a_field( $k );
 
-												// Make a proper social link
-												if ( ! empty( $v ) ) {
-													$replace_match = is_array( $f['match'] ) ? $f['match'][0] : $f['match'];
+										if ( is_array( $f ) && array_key_exists( 'match', $f ) && array_key_exists( 'advanced', $f ) && 'social' === $f['advanced'] ) {
+											$v = $form[ $k ];
 
-													$need_replace = false;
-													if ( is_array( $f['match'] ) ) {
-														$need_replace = true;
-														foreach ( $f['match'] as $arr_match ) {
-															if ( strstr( $v, $arr_match ) ) {
-																$need_replace = false;
-															}
+											// Make a proper social link
+											if ( ! empty( $v ) ) {
+												$replace_match = is_array( $f['match'] ) ? $f['match'][0] : $f['match'];
+
+												$need_replace = false;
+												if ( is_array( $f['match'] ) ) {
+													$need_replace = true;
+													foreach ( $f['match'] as $arr_match ) {
+														if ( strstr( $v, $arr_match ) ) {
+															$need_replace = false;
 														}
 													}
+												}
 
-													if ( ! is_array( $f['match'] ) || $need_replace ) {
-														if ( ! strstr( $v, $replace_match ) ) {
-															$domain = trim(
-																strtr(
-																	$replace_match,
-																	array(
-																		'https://' => '',
-																		'http://'  => '',
-																	)
-																),
-																' /'
-															);
+												if ( ! is_array( $f['match'] ) || $need_replace ) {
+													if ( ! strstr( $v, $replace_match ) ) {
+														$domain = trim(
+															strtr(
+																$replace_match,
+																array(
+																	'https://' => '',
+																	'http://'  => '',
+																)
+															),
+															' /'
+														);
 
-															if ( ! strstr( $v, $domain ) ) {
-																$v = $replace_match . $v;
-															} else {
-																$v = 'https://' . trim(
+														if ( ! strstr( $v, $domain ) ) {
+															$v = $replace_match . $v;
+														} else {
+															$v = 'https://' . trim(
 																	strtr(
 																		$v,
 																		array(
@@ -914,43 +908,55 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 																	),
 																	' /'
 																);
-															}
 														}
 													}
 												}
+											}
 
-												$form[ $k ] = esc_url_raw( strip_shortcodes( $v ) );
-											} else {
-												$form[ $k ] = esc_url_raw( strip_shortcodes( $form[ $k ] ) );
-											}
-											break;
-										case 'password':
-											$form[ $k ] = trim( $form[ $k ] );
-											if ( array_key_exists( 'confirm_' . $k, $form ) ) {
-												$form[ 'confirm_' . $k ] = trim( $form[ 'confirm_' . $k ] );
-											}
-											break;
-										case 'text':
-										case 'select':
-										case 'image':
-										case 'file':
-										case 'date':
-										case 'time':
-										case 'rating':
-										case 'googlemap':
-										case 'youtube_video':
-										case 'vimeo_video':
-										case 'soundcloud_track':
-										case 'spotify':
-										case 'tel':
+											$form[ $k ] = esc_url_raw( strip_shortcodes( $v ) );
+										} else {
+											$form[ $k ] = esc_url_raw( strip_shortcodes( $form[ $k ] ) );
+										}
+										break;
+
+									case 'password':
+										$form[ $k ] = trim( $form[ $k ] );
+										if ( array_key_exists( 'confirm_' . $k, $form ) ) {
+											$form[ 'confirm_' . $k ] = trim( $form[ 'confirm_' . $k ] );
+										}
+										break;
+
+									case 'image':
+									case 'file':
+										if ( is_array( $form[ $k ] ) && UM()->is_new_ui() ) {
+											$form[ $k ]['filename']  = isset( $form[ $k ]['filename'] ) ? sanitize_file_name( $form[ $k ]['filename'] ) : '';
+											$form[ $k ]['hash']      = isset( $form[ $k ]['hash'] ) ? sanitize_key( $form[ $k ]['hash'] ) : '';
+											$form[ $k ]['temp_hash'] = isset( $form[ $k ]['temp_hash'] ) ? sanitize_key( $form[ $k ]['temp_hash'] ) : '';
+										} else {
 											$form[ $k ] = sanitize_text_field( strip_shortcodes( $form[ $k ] ) );
-											break;
-										case 'multiselect':
-										case 'radio':
-										case 'checkbox':
-											$form[ $k ] = is_array( $form[ $k ] ) ? array_map( 'sanitize_text_field', array_map( 'strip_shortcodes', $form[ $k ] ) ) : sanitize_text_field( strip_shortcodes( $form[ $k ] ) );
-											break;
-									}
+										}
+										break;
+
+									case 'text':
+									case 'select':
+									case 'date':
+									case 'time':
+									case 'rating':
+									case 'googlemap':
+									case 'youtube_video':
+									case 'vimeo_video':
+									case 'soundcloud_track':
+									case 'spotify':
+									case 'tel':
+										$form[ $k ] = sanitize_text_field( strip_shortcodes( $form[ $k ] ) );
+										break;
+
+									case 'multiselect':
+									case 'radio':
+									case 'checkbox':
+										$form[ $k ] = is_array( $form[ $k ] ) ? array_map( 'sanitize_text_field', array_map( 'strip_shortcodes', $form[ $k ] ) ) : sanitize_text_field( strip_shortcodes( $form[ $k ] ) );
+										break;
+
 								}
 							}
 						}
@@ -1029,11 +1035,11 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 									'allowfullscreen' => true,
 								);
 							}
-							$form[ $description_key ] = wp_kses( strip_shortcodes( $form[ $description_key ] ), $allowed_html );
+							$form[ $description_key ] = wp_kses( $form[ $description_key ], $allowed_html );
 
 							add_filter( 'wp_kses_allowed_html', array( &$this, 'wp_kses_user_desc' ), 10, 2 );
 						} else {
-							$form[ $description_key ] = sanitize_textarea_field( strip_shortcodes( $form[ $description_key ] ) );
+							$form[ $description_key ] = sanitize_textarea_field( $form[ $description_key ] );
 						}
 					}
 				}
@@ -1152,7 +1158,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 			$roles = UM()->roles()->get_roles( false, $exclude_roles );
 			$roles = array_map(
-				function( $item ) {
+				function ( $item ) {
 					return html_entity_decode( $item, ENT_QUOTES );
 				},
 				$roles

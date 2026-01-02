@@ -179,7 +179,7 @@ if ( ! class_exists( 'um\core\rest\API_v2' ) ) {
 					$val->profile_pic_original = um_get_user_avatar_url( '', 'original' );
 					$val->profile_pic_normal   = um_get_user_avatar_url( '', 200 );
 					$val->profile_pic_small    = um_get_user_avatar_url( '', 40 );
-					$val->cover_photo          = $this->getsrc( um_user( 'cover_photo', 1000 ) );
+					$val->cover_photo          = UM()->common()->users()->get_cover_photo_url( $user->ID );
 
 					/** This filter is documented in includes/core/rest/class-api-v1.php */
 					$response[ $user->ID ] = apply_filters( 'um_rest_userdata', $val, $user->ID );
@@ -320,7 +320,7 @@ if ( ! class_exists( 'um\core\rest\API_v2' ) ) {
 							$response = apply_filters( 'um_rest_get_auser', $response, $field, $user->ID );
 							break;
 						case 'cover_photo':
-							$response['cover_photo'] = $this->getsrc( um_user( 'cover_photo', 1000 ) );
+							$response['cover_photo'] = UM()->common()->users()->get_cover_photo_url( $user->ID );
 							break;
 						case 'profile_pic':
 							$response['profile_pic_original'] = um_get_user_avatar_url( '', 'original' );
@@ -353,7 +353,7 @@ if ( ! class_exists( 'um\core\rest\API_v2' ) ) {
 					$val->profile_pic_original = um_get_user_avatar_url( '', 'original' );
 					$val->profile_pic_normal   = um_get_user_avatar_url( '', 200 );
 					$val->profile_pic_small    = um_get_user_avatar_url( '', 40 );
-					$val->cover_photo          = $this->getsrc( um_user( 'cover_photo', 1000 ) );
+					$val->cover_photo          = UM()->common()->users()->get_cover_photo_url( $user->ID );
 
 					/** This filter is documented in includes/core/rest/class-api-v1.php */
 					$response = apply_filters( 'um_rest_userdata', $val, $user->ID );

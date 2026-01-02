@@ -14,6 +14,20 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 	class Member_Directory_Meta extends Member_Directory {
 
 		/**
+		 * Fields used for sorting from wp_users table.
+		 *
+		 * @var string[]
+		 */
+		public $core_users_fields = array(
+			'user_login',
+			'user_url',
+			'display_name',
+			'user_email',
+			'user_nicename',
+			'user_registered',
+		);
+
+		/**
 		 * @var array
 		 */
 		public $joins = array();
@@ -57,157 +71,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 		 * @var string
 		 */
 		public $sql_order = '';
-
-		/**
-		 * Member_Directory_Meta constructor.
-		 */
-		public function __construct() {
-			parent::__construct();
-
-			add_action( 'updated_user_meta', array( &$this, 'on_update_usermeta' ), 10, 4 );
-			add_action( 'added_user_meta', array( &$this, 'on_update_usermeta' ), 10, 4 );
-			add_action( 'deleted_user_meta', array( &$this, 'on_delete_usermeta' ), 10, 4 );
-
-			add_action( 'um_add_new_field', array( &$this, 'on_new_field_added' ), 10, 2 );
-			add_action( 'um_delete_custom_field', array( &$this, 'on_delete_custom_field' ), 10, 2 );
-		}
-
-		/**
-		 * Delete custom field and metakey from UM usermeta table
-		 *
-		 * @param $metakey
-		 * @param $args
-		 */
-		public function on_delete_custom_field( $metakey, $args ) {
-			$metakeys = get_option( 'um_usermeta_fields', array() );
-
-			if ( in_array( $metakey, $metakeys, true ) ) {
-				unset( $metakeys[ array_search( $metakey, $metakeys, true ) ] );
-
-				global $wpdb;
-
-				$wpdb->delete(
-					"{$wpdb->prefix}um_metadata",
-					array(
-						'um_key' => $metakey,
-					),
-					array(
-						'%s',
-					)
-				);
-
-				update_option( 'um_usermeta_fields', array_values( $metakeys ) );
-			}
-
-			do_action( 'um_metadata_on_delete_custom_field', $metakeys, $metakey, $args );
-		}
-
-		/**
-		 * Add metakey to usermeta fields
-		 *
-		 * @param $metakey
-		 * @param $args
-		 */
-		public function on_new_field_added( $metakey, $args ) {
-			$metakeys = get_option( 'um_usermeta_fields', array() );
-
-			if ( ! in_array( $metakey, $metakeys, true ) ) {
-				$metakeys[] = $metakey;
-				update_option( 'um_usermeta_fields', array_values( $metakeys ) );
-			}
-
-			do_action( 'um_metadata_on_new_field_added', $metakeys, $metakey, $args );
-		}
-
-		/**
-		 * When you delete usermeta - remove row from um_metadata
-		 *
-		 * @param int|array $meta_ids
-		 * @param int $object_id
-		 * @param string $meta_key
-		 * @param mixed $_meta_value
-		 */
-		public function on_delete_usermeta( $meta_ids, $object_id, $meta_key, $_meta_value ) {
-			$metakeys = get_option( 'um_usermeta_fields', array() );
-			if ( ! in_array( $meta_key, $metakeys, true ) ) {
-				return;
-			}
-
-			global $wpdb;
-
-			$wpdb->delete(
-				"{$wpdb->prefix}um_metadata",
-				array(
-					'user_id' => $object_id,
-					'um_key'  => $meta_key,
-				),
-				array(
-					'%d',
-					'%s',
-				)
-			);
-		}
-
-		/**
-		 * When you add/update usermeta - add/update row from um_metadata
-		 *
-		 * @param int $meta_id
-		 * @param int $object_id
-		 * @param string $meta_key
-		 * @param mixed $_meta_value
-		 */
-		public function on_update_usermeta( $meta_id, $object_id, $meta_key, $_meta_value ) {
-			$metakeys = get_option( 'um_usermeta_fields', array() );
-			if ( ! in_array( $meta_key, $metakeys, true ) ) {
-				return;
-			}
-
-			global $wpdb;
-
-			$result = $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT umeta_id
-					FROM {$wpdb->prefix}um_metadata
-					WHERE user_id = %d AND
-						  um_key = %s
-					LIMIT 1",
-					$object_id,
-					$meta_key
-				)
-			);
-
-			if ( empty( $result ) ) {
-				$wpdb->insert(
-					"{$wpdb->prefix}um_metadata",
-					array(
-						'user_id'  => $object_id,
-						'um_key'   => $meta_key,
-						'um_value' => maybe_serialize( $_meta_value ),
-					),
-					array(
-						'%d',
-						'%s',
-						'%s',
-					)
-				);
-			} else {
-				$wpdb->update(
-					"{$wpdb->prefix}um_metadata",
-					array(
-						'um_value' => maybe_serialize( $_meta_value ),
-					),
-					array(
-						'umeta_id' => $result,
-					),
-					array(
-						'%s',
-					),
-					array(
-						'%d',
-					)
-				);
-			}
-		}
 
 		/**
 		 * @param $directory_data
@@ -593,7 +456,13 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 		 * Main Query function for getting members via AJAX
 		 */
 		public function ajax_get_members() {
-			UM()->check_ajax_nonce();
+			if ( UM()->is_new_ui() ) {
+				if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'um_member_directory' ) ) {
+					wp_send_json_error( __( 'Wrong nonce.', 'ultimate-member' ) );
+				}
+			} else {
+				UM()->check_ajax_nonce();
+			}
 
 			if ( UM()->is_rate_limited( 'member_directory' ) ) {
 				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
@@ -667,7 +536,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			}
 
 			$cover_photo_where = '';
-			if ( $directory_data['has_cover_photo'] == 1 ) {
+			if ( ! UM()->is_new_ui() && ! empty( $directory_data['has_cover_photo'] ) ) { // @todo maybe remove if cover photos backs to user profile
 				$cover_photo_where = " AND umm_general.um_value LIKE '%s:11:\"cover_photo\";b:1;%'";
 			}
 
@@ -1111,18 +980,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			$pagination_data = $this->calculate_pagination( $directory_data, $total_users );
 
-			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
-			// Ensure we have valid sizes array and handle case when only one size is defined
-			if ( ! is_array( $sizes ) || empty( $sizes ) ) {
-				$sizes = array( 300 ); // fallback to default
-			}
-
-			// For mobile, use second size if available, otherwise use first size
-			$available_mobile = isset( $sizes[1] ) ? $sizes[1] : $sizes[0];
-			$this->cover_size = wp_is_mobile() ? $available_mobile : end( $sizes );
-
-			$avatar_size       = UM()->options()->get( 'profile_photosize' );
-			$this->avatar_size = str_replace( 'px', '', $avatar_size );
+			$this->init_image_sizing( $directory_data );
 
 			$users = array();
 			foreach ( $user_ids as $user_id ) {
