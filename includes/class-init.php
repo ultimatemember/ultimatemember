@@ -1402,7 +1402,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @since 2.0
 		 */
 		public function widgets_init() {
-			register_widget( 'um\widgets\UM_Search_Widget' );
+			register_widget( 'um\widgets\Search' );
 		}
 
 		/**

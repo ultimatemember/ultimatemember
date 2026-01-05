@@ -1,37 +1,33 @@
 <?php
 namespace um\widgets;
 
+use WP_Widget;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
- * Class UM_Search_Widget
+ * Class Search
  * @package um\widgets
  */
-class UM_Search_Widget extends \WP_Widget {
-
+class Search extends WP_Widget {
 
 	/**
-	 * UM_Search_Widget constructor.
+	 * Search constructor.
 	 */
-	function __construct() {
-
+	public function __construct() {
 		parent::__construct(
-
-		// Base ID of your widget
-		'um_search_widget',
-
-		// Widget name will appear in UI
-		__( 'Ultimate Member - Search', 'ultimate-member' ),
-
-		// Widget description
-		array( 'description' => __( 'Shows the search member form.', 'ultimate-member' ), )
+			// Base ID of your widget
+			'um_search_widget',
+			// Widget name will appear in UI
+			__( 'Ultimate Member - Search', 'ultimate-member' ),
+			// Widget description
+			array(
+				'description' => __( 'Shows the search member form.', 'ultimate-member' ),
+			)
 		);
-
 	}
-
 
 	/**
 	 * Creating widget front-end
@@ -62,7 +58,6 @@ class UM_Search_Widget extends \WP_Widget {
 
 		echo $args['after_widget'];
 	}
-
 
 	/**
 	 * Widget Backend
@@ -95,7 +90,6 @@ class UM_Search_Widget extends \WP_Widget {
 		<?php
 	}
 
-
 	/**
 	 * Updating widget replacing old instances with new
 	 *
@@ -109,5 +103,4 @@ class UM_Search_Widget extends \WP_Widget {
 		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
 		return $instance;
 	}
-
 }
