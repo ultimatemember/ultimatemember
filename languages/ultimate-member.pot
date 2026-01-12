@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-12T13:00:53+00:00\n"
+"POT-Creation-Date: 2026-01-12T14:13:16+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -6580,8 +6580,8 @@ msgstr ""
 #: includes/core/um-actions-profile.php:839
 #: includes/core/um-actions-profile.php:999
 #: includes/core/um-actions-profile.php:1032
-#: includes/core/um-actions-profile.php:1395
-#: includes/core/um-actions-profile.php:1402
+#: includes/core/um-actions-profile.php:1377
+#: includes/core/um-actions-profile.php:1384
 #: templates/v3/profile/header.php:41
 msgid "Cancel"
 msgstr ""
@@ -7563,7 +7563,7 @@ msgstr ""
 #: includes/class-config.php:988
 #: includes/class-config.php:1142
 #: includes/core/class-member-directory.php:1960
-#: includes/core/um-actions-profile.php:1401
+#: includes/core/um-actions-profile.php:1383
 #: includes/core/um-actions-user.php:19
 #: includes/frontend/class-users.php:119
 #: includes/frontend/class-users.php:129
@@ -10788,8 +10788,8 @@ msgstr ""
 
 #: includes/core/class-member-directory.php:1921
 #: includes/core/class-member-directory.php:1949
-#: includes/core/um-actions-profile.php:1368
-#: includes/core/um-actions-profile.php:1399
+#: includes/core/um-actions-profile.php:1350
+#: includes/core/um-actions-profile.php:1381
 #: includes/frontend/class-users.php:115
 #: includes/frontend/class-users.php:135
 #: templates/v3/profile/header.php:55
@@ -10797,7 +10797,7 @@ msgid "Edit Profile"
 msgstr ""
 
 #: includes/core/class-member-directory.php:1955
-#: includes/core/um-actions-profile.php:1400
+#: includes/core/um-actions-profile.php:1382
 #: includes/frontend/class-users.php:116
 #: includes/frontend/class-users.php:128
 msgid "My Account"
@@ -11476,7 +11476,7 @@ msgid "This activation link is expired."
 msgstr ""
 
 #: includes/core/um-actions-profile.php:212
-#: includes/frontend/class-profile.php:578
+#: includes/frontend/class-profile.php:579
 msgid "You are not allowed to edit this user."
 msgstr ""
 
@@ -11508,12 +11508,12 @@ msgstr ""
 msgid "Upload photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1198
+#: includes/core/um-actions-profile.php:1180
 msgid "Tell us a bit about yourself..."
 msgstr ""
 
 #. translators: %s: profile status.
-#: includes/core/um-actions-profile.php:1218
+#: includes/core/um-actions-profile.php:1200
 #: templates/v3/profile/header.php:354
 #, php-format
 msgid "This user account status is %s"
@@ -11727,7 +11727,7 @@ msgid "Search"
 msgstr ""
 
 #. translators: %s: title.
-#: includes/frontend/class-profile.php:880
+#: includes/frontend/class-profile.php:881
 #, php-format
 msgid "Your choosed %s"
 msgstr ""
