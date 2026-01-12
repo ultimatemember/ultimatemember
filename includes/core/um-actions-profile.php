@@ -1096,25 +1096,7 @@ function um_profile_header( $args ) {
 						   title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>"><?php echo um_user( 'display_name', 'html' ); ?></a>
 
 						<?php
-						/**
-						 * UM hook
-						 *
-						 * @type action
-						 * @title um_after_profile_name_inline
-						 * @description Insert after profile name some content
-						 * @input_vars
-						 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
-						 * @change_log
-						 * ["Since: 2.0"]
-						 * @usage add_action( 'um_after_profile_name_inline', 'function_name', 10, 1 );
-						 * @example
-						 * <?php
-						 * add_action( 'um_after_profile_name_inline', 'my_after_profile_name_inline', 10, 1 );
-						 * function my_after_profile_name_inline( $args ) {
-						 *     // your code here
-						 * }
-						 * ?>
-						 */
+						/** This action is documented in ultimate-member/templates/v3/profile/header.php */
 						do_action( 'um_after_profile_name_inline', $args, um_user( 'ID' ) );
 						?>
 					</div>
@@ -1123,9 +1105,9 @@ function um_profile_header( $args ) {
 				<div class="um-clear"></div>
 
 				<?php
-				/** This filter is documented in ultimate-member/includes/um-deprecated-hooks.php */
+				/** This action is documented in ultimate-member/includes/um-deprecated-hooks.php */
 				do_action( 'um_after_profile_header_name_args', $args, um_user( 'ID' ) );
-				/** This filter is documented in ultimate-member/templates/v3/profile/header.php */
+				/** This action is documented in ultimate-member/templates/v3/profile/header.php */
 				do_action( 'um_after_profile_header_name', $args, um_user( 'ID' ) );
 				?>
 			</div>

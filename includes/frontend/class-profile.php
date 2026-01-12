@@ -112,8 +112,9 @@ class Profile {
 		 * Fires for displaying content in User Profile navigation bar.
 		 *
 		 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
-		 * 4 - `um_followers_add_profile_bar()` displays Followers button.
-		 * 5 - `add_profile_bar()` displays Messaging button.
+		 * 3 - `add_profile_bar_content()` displays Friends button.
+		 * 4 - `add_profile_bar_content()` displays Followers button.
+		 * 5 - `add_profile_bar_content()` displays Messaging button.
 		 *
 		 * @param {array} $args    User Profile data.
 		 * @param {int}   $user_id User Profile ID.
