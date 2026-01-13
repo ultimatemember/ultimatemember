@@ -99,8 +99,23 @@ class Layouts {
 			<?php
 			if ( ! empty( $args['mobile'] ) && 'dots' !== $args['type'] ) {
 				// Render dots for mobile devices.
-				$toggle_classes        = array_merge( $toggle_classes, array( 'um-responsive','um-ui-m','um-ui-l','um-ui-xl' ) );
-				$toggle_classes_mobile = array( 'um-dropdown-toggle', 'um-dropdown-toggle-dots', $element, 'um-responsive','um-ui-xs','um-ui-s' );
+				$toggle_classes        = array_merge(
+					$toggle_classes,
+					array(
+						'um-responsive',
+						'um-ui-m',
+						'um-ui-l',
+						'um-ui-xl',
+					)
+				);
+				$toggle_classes_mobile = array(
+					'um-dropdown-toggle',
+					'um-dropdown-toggle-dots',
+					'um-responsive',
+					'um-ui-xs',
+					'um-ui-s',
+					$element,
+				);
 				?>
 				<div class="<?php echo esc_attr( implode( ' ', $toggle_classes ) ); ?>"><?php echo wp_kses( $type_html, UM()->get_allowed_html( 'templates' ) ); ?></div>
 				<div class="<?php echo esc_attr( implode( ' ', $toggle_classes_mobile ) ); ?>" title="<?php echo esc_attr( $args['button_label'] ); ?>"></div>
