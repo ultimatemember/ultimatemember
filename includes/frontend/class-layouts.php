@@ -46,6 +46,7 @@ class Layouts {
 				'parent'       => '',
 				'disabled'     => false,
 				'place'        => '',
+				'mobile'       => false,
 			)
 		);
 
@@ -95,7 +96,21 @@ class Layouts {
 		ob_start();
 		?>
 		<div class="um-dropdown-wrapper">
-			<div class="<?php echo esc_attr( implode( ' ', $toggle_classes ) ); ?>"><?php echo wp_kses( $type_html, UM()->get_allowed_html( 'templates' ) ); ?></div>
+			<?php
+			if ( ! empty( $args['mobile'] ) && 'dots' !== $args['type'] ) {
+				// Render dots for mobile devices.
+				$toggle_classes        = array_merge( $toggle_classes, array( 'um-responsive','um-ui-m','um-ui-l','um-ui-xl' ) );
+				$toggle_classes_mobile = array( 'um-dropdown-toggle', 'um-dropdown-toggle-dots', $element, 'um-responsive','um-ui-xs','um-ui-s' );
+				?>
+				<div class="<?php echo esc_attr( implode( ' ', $toggle_classes ) ); ?>"><?php echo wp_kses( $type_html, UM()->get_allowed_html( 'templates' ) ); ?></div>
+				<div class="<?php echo esc_attr( implode( ' ', $toggle_classes_mobile ) ); ?>" title="<?php echo esc_attr( $args['button_label'] ); ?>"></div>
+				<?php
+			} else {
+				?>
+				<div class="<?php echo esc_attr( implode( ' ', $toggle_classes ) ); ?>"><?php echo wp_kses( $type_html, UM()->get_allowed_html( 'templates' ) ); ?></div>
+				<?php
+			}
+			?>
 			<div class="<?php echo esc_attr( implode( ' ', $dropdown_classes ) ); ?>" data-element=".<?php echo esc_attr( $element ); ?>" data-trigger="<?php echo esc_attr( $trigger ); ?>" data-parent="<?php echo esc_attr( $parent ); ?>" data-width="<?php echo esc_attr( $args['width'] ); ?>" data-place="<?php echo esc_attr( $args['place'] ); ?>">
 				<?php if ( ! empty( $args['header'] ) ) { ?>
 					<div class="um-dropdown-header">

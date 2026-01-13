@@ -76,6 +76,7 @@ if ( true !== UM()->fields()->editing ) {
 				'type'         => 'button',
 				'button_label' => __( 'More actions', 'ultimate-member' ),
 				'width'        => 210,
+				'mobile'       => true,
 			)
 		);
 	}
