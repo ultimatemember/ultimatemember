@@ -576,7 +576,8 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 			}
 		}
 
-		if ( ! isset( $submitted_data[ $key ] ) ) {
+		// Skip validation for empty fields that are not required.
+		if ( ! isset( $submitted_data[ $key ] ) || ( '' === $submitted_data[ $key ] && empty( $array['required'] ) ) ) {
 			continue;
 		}
 
