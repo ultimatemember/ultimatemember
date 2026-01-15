@@ -585,6 +585,11 @@
   row-gap: 8px;
 }
 .um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-box-main .um-member-meta .um-member-metaline {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
   width: 100%;
   padding: 0;
   margin: 0;
@@ -593,6 +598,7 @@
   line-height: var(--um-text-line-height-md, 24px);
   font-weight: var(--um-text-font-weight-regular, 400);
   color: var(--um-gray-600, #475467);
+  gap: 4px;
 }
 .um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-box-main .um-member-meta .um-member-metaline strong {
   font-size: var(--um-text-font-size-md, 16px);
@@ -660,6 +666,11 @@
   row-gap: 8px;
 }
 .um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-no-cover .um-member-box-main .um-member-meta .um-member-metaline {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
   width: 100%;
   padding: 0;
   margin: 0;
@@ -668,6 +679,7 @@
   line-height: var(--um-text-line-height-md, 24px);
   font-weight: var(--um-text-font-weight-regular, 400);
   color: var(--um-gray-600, #475467);
+  gap: 4px;
 }
 .um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-no-cover .um-member-box-main .um-member-meta .um-member-metaline strong {
   font-size: var(--um-text-font-size-md, 16px);
@@ -815,6 +827,11 @@
   row-gap: 6px;
 }
 .um.um-directory .um-members-wrapper.um-members-list .um-box.um-member .um-member-box-main .um-member-meta .um-member-metaline {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
   width: 100%;
   padding: 0;
   margin: 0;
@@ -823,6 +840,7 @@
   line-height: var(--um-text-line-height-sm, 20px);
   font-weight: var(--um-text-font-weight-regular, 400);
   color: var(--um-gray-600, #475467);
+  gap: 4px;
 }
 .um.um-directory .um-members-wrapper.um-members-list .um-box.um-member .um-member-box-main .um-member-meta .um-member-metaline strong {
   font-size: var(--um-text-font-size-sm, 14px);
