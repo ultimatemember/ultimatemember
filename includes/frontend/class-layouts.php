@@ -866,6 +866,7 @@ class Layouts {
 				'type'          => 'round',
 				'wrapper_class' => array(),
 				'tooltip'       => true,
+				'clickable'     => false,
 			)
 		);
 
@@ -901,16 +902,19 @@ class Layouts {
 				break;
 			}
 
-			$avatar = self::single_avatar(
-				$user_id,
-				array(
-					'size'    => $args['size'],
-					'wrapper' => $args['wrapper'],
-					'tooltip' => $args['tooltip'],
-					'context' => array( 'avatars_list' => $args ),
-				)
+			$avatar_args = array(
+				'size'      => $args['size'],
+				'wrapper'   => $args['wrapper'],
+				'tooltip'   => $args['tooltip'],
+				'context'   => array( 'avatars_list' => $args ),
+				'clickable' => $args['clickable'],
 			);
 
+			if ( ! empty( $args['clickable'] ) ) {
+				$avatar_args['url_title'] = sprintf( __( 'Visit %s profile', 'ultimate-member' ), um_get_display_name( $user_id ) );
+			}
+
+			$avatar = self::single_avatar( $user_id, $avatar_args );
 			if ( empty( $avatar ) ) {
 				continue;
 			}
