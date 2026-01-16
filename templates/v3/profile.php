@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>">
+<div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>" data-user_id="<?php echo esc_attr( um_profile_id() ); ?>">
 	<?php
 	/**
 	 * Fires before User Profile header.
