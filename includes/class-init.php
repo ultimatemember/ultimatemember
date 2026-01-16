@@ -12,9 +12,9 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @version 3.0
 	 *
 	 * @method UM_bbPress bbPress() Reviewed branch: master
-	 * @method UM_Followers Followers() Under review branch: dev/new_ui
+	 * @method UM_Followers Followers() Reviewed branch: master
 	 * @method UM_ForumWP ForumWP() Reviewed branch: master
-	 * @method UM_Friends Friends() Not reviewed branch: dev/new_ui
+	 * @method UM_Friends Friends() Under review branch: dev/new_ui
 	 * @method UM_Groups Groups() Under dev branch: dev/wall-lib
 	 * @method UM_JobBoardWP JobBoardWP() Reviewed branch: master
 	 * @method UM_Mailchimp Mailchimp() Reviewed branch: master
