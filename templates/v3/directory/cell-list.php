@@ -110,7 +110,7 @@ ob_start();
 				<?php
 			}
 
-			if ( 'approved' !== $member['account_status'] ) {
+			if ( 'approved' !== $member['account_status'] && is_user_logged_in() ) {
 				$status_badge = array(
 					'class' => array( 'um-member-status' ),
 					'size'  => 's',
