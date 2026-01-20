@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-19T23:41:40+00:00\n"
+"POT-Creation-Date: 2026-01-20T10:58:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -6856,7 +6856,7 @@ msgstr ""
 #: includes/ajax/class-directory.php:1547
 #: includes/core/class-form.php:122
 #: includes/core/class-member-directory-meta.php:468
-#: includes/core/class-member-directory.php:2249
+#: includes/core/class-member-directory.php:2250
 #: includes/legacy/class-files.php:356
 #: includes/legacy/class-files.php:409
 #: includes/legacy/class-files.php:546
@@ -6870,14 +6870,14 @@ msgstr ""
 #: includes/ajax/class-directory.php:1559
 #: includes/core/class-member-directory-meta.php:476
 #: includes/core/class-member-directory-meta.php:481
-#: includes/core/class-member-directory.php:2255
-#: includes/core/class-member-directory.php:2261
+#: includes/core/class-member-directory.php:2256
+#: includes/core/class-member-directory.php:2262
 msgid "Wrong member directory data"
 msgstr ""
 
 #: includes/ajax/class-directory.php:1563
 #: includes/core/class-member-directory-meta.php:486
-#: includes/core/class-member-directory.php:2265
+#: includes/core/class-member-directory.php:2266
 msgid "You cannot see this member directory"
 msgstr ""
 
@@ -8465,7 +8465,7 @@ msgstr ""
 
 #: includes/common/class-directory.php:416
 #: includes/common/class-users.php:472
-#: includes/core/class-member-directory.php:1999
+#: includes/core/class-member-directory.php:2000
 msgid "Undefined"
 msgstr ""
 
