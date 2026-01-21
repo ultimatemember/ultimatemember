@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-20T13:45:18+00:00\n"
+"POT-Creation-Date: 2026-01-21T09:37:17+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -136,7 +136,7 @@ msgid "Settings"
 msgstr ""
 
 #: includes/admin/class-admin.php:1941
-#: includes/admin/core/class-admin-notices.php:1103
+#: includes/admin/core/class-admin-notices.php:1096
 #: includes/admin/core/class-admin-settings.php:2853
 #: includes/ajax/class-secure.php:34
 msgid "Security Check"
@@ -187,10 +187,10 @@ msgstr ""
 
 #: includes/admin/class-enqueue.php:119
 #: includes/admin/core/class-admin-settings.php:1310
-#: includes/class-config.php:347
-#: includes/class-config.php:350
-#: includes/class-config.php:422
-#: includes/class-config.php:425
+#: includes/class-config.php:921
+#: includes/class-config.php:924
+#: includes/class-config.php:995
+#: includes/class-config.php:998
 #: includes/core/class-builtin.php:849
 #: includes/core/class-builtin.php:852
 #: includes/core/class-builtin.php:1437
@@ -3653,10 +3653,8 @@ msgid "This is the text that appears within the field e.g please enter your emai
 msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:2558
-#: includes/class-config.php:147
-#: includes/class-config.php:985
-#: includes/class-config.php:1138
-#: includes/core/class-setup.php:134
+#: includes/class-config.php:275
+#: includes/core/class-setup.php:138
 msgid "Members"
 msgstr ""
 
@@ -3800,108 +3798,108 @@ msgid "<strong>%1$s %2$s</strong> requires 2.0 extensions. You have pre 2.0 exte
 msgstr ""
 
 #. translators: %s: Plugin name.
-#: includes/admin/core/class-admin-notices.php:413
+#: includes/admin/core/class-admin-notices.php:411
 #, php-format
 msgid "%s needs to create several pages (User Profiles, Account, Registration, Login, Password Reset, Logout, Member Directory) to function correctly."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:418
+#: includes/admin/core/class-admin-notices.php:416
 msgid "Create Pages"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:420
+#: includes/admin/core/class-admin-notices.php:418
 msgid "No thanks"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:447
+#: includes/admin/core/class-admin-notices.php:444
 msgid "Ultimate Member Setup Error: User page can not be a child page."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:461
+#: includes/admin/core/class-admin-notices.php:456
 msgid "Ultimate Member Setup Error: Account page can not be a child page."
 msgstr ""
 
 #. translators: %s: query args.
-#: includes/admin/core/class-admin-notices.php:480
+#: includes/admin/core/class-admin-notices.php:473
 msgid "Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:498
+#: includes/admin/core/class-admin-notices.php:491
 msgid "Your temp uploads directory is now clean."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:501
+#: includes/admin/core/class-admin-notices.php:494
 msgid "Your user cache is now removed."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:504
+#: includes/admin/core/class-admin-notices.php:497
 msgid "Your user statuses cache is now removed."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:507
+#: includes/admin/core/class-admin-notices.php:500
 msgid "You have the latest updates."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:510
+#: includes/admin/core/class-admin-notices.php:503
 msgid "Try again later. You can run this action once daily."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:513
+#: includes/admin/core/class-admin-notices.php:506
 msgid "The form has been duplicated successfully."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:516
+#: includes/admin/core/class-admin-notices.php:509
 msgid "Settings have been saved successfully."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:519
+#: includes/admin/core/class-admin-notices.php:512
 msgid "Users have been updated."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:522
+#: includes/admin/core/class-admin-notices.php:515
 msgid "All users sessions have been successfully destroyed."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:525
+#: includes/admin/core/class-admin-notices.php:518
 msgid "Account has been successfully restored."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:530
+#: includes/admin/core/class-admin-notices.php:523
 #, php-format
 msgid "<strong>%s</strong> user has been approved."
 msgid_plural "<strong>%s</strong> users have been approved."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/core/class-admin-notices.php:535
+#: includes/admin/core/class-admin-notices.php:528
 #, php-format
 msgid "<strong>%s</strong> user has been reactivated."
 msgid_plural "<strong>%s</strong> users have been reactivated."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/core/class-admin-notices.php:540
+#: includes/admin/core/class-admin-notices.php:533
 #, php-format
 msgid "<strong>%s</strong> user has been rejected."
 msgid_plural "<strong>%s</strong> users have been rejected."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/core/class-admin-notices.php:545
+#: includes/admin/core/class-admin-notices.php:538
 #, php-format
 msgid "<strong>%s</strong> user has been deactivated."
 msgid_plural "<strong>%s</strong> users have been deactivated."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/core/class-admin-notices.php:550
+#: includes/admin/core/class-admin-notices.php:543
 #, php-format
 msgid "<strong>%s</strong> user has been set as pending admin review."
 msgid_plural "<strong>%s</strong> users have been set as pending admin review."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/core/class-admin-notices.php:555
+#: includes/admin/core/class-admin-notices.php:548
 #, php-format
 msgid "Activation email for <strong>%s</strong> user has been sent."
 msgid_plural "Activation emails for <strong>%s</strong> users have been sent."
@@ -3909,119 +3907,119 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: Plugin name.
-#: includes/admin/core/class-admin-notices.php:624
+#: includes/admin/core/class-admin-notices.php:617
 #, php-format
 msgid "You have installed <strong>%s</strong> with wrong folder name. Correct folder name is <strong>\"ultimate-member\"</strong>."
 msgstr ""
 
 #. translators: %1$s is an inactive license number; %2$s is a plugin name.
-#: includes/admin/core/class-admin-notices.php:659
+#: includes/admin/core/class-admin-notices.php:652
 #, php-format
 msgid "There are %1$s inactive %2$s license keys for this site. This site is not authorized to get plugin updates. You can activate this site on <a href=\"https://ultimatemember.com/\">www.ultimatemember.com</a>."
 msgstr ""
 
 #. translators: %1$s is an invalid license; %2$s is a plugin name; %3$s is a license link.
-#: includes/admin/core/class-admin-notices.php:679
+#: includes/admin/core/class-admin-notices.php:672
 #, php-format
 msgid "You have %1$s invalid or expired license keys for %2$s. Please go to the <a href=\"%3$s\">Licenses page</a> to correct this issue."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:696
+#: includes/admin/core/class-admin-notices.php:689
 msgid "version needs to be updated to work correctly."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:698
+#: includes/admin/core/class-admin-notices.php:691
 msgid "It is necessary to update the structure of the database and options that are associated with current version"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:700
+#: includes/admin/core/class-admin-notices.php:693
 msgid "Please run the upgrade process on this "
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:700
+#: includes/admin/core/class-admin-notices.php:693
 msgid "page"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:704
+#: includes/admin/core/class-admin-notices.php:697
 msgid "Visit Upgrade Page"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:725
+#: includes/admin/core/class-admin-notices.php:718
 msgid "Settings successfully upgraded"
 msgstr ""
 
 #. translators: %1$s is a plugin name title; %2$s is a plugin version.
-#: includes/admin/core/class-admin-notices.php:735
+#: includes/admin/core/class-admin-notices.php:728
 #, php-format
 msgid "<strong>%1$s %2$s</strong> Successfully Upgraded"
 msgstr ""
 
 #. translators: %s: plugin name.
-#: includes/admin/core/class-admin-notices.php:765
+#: includes/admin/core/class-admin-notices.php:758
 #, php-format
 msgid "Hey there! It's been one month since you installed %s. How have you found the plugin so far?"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:769
+#: includes/admin/core/class-admin-notices.php:762
 msgid "I love it!"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:770
+#: includes/admin/core/class-admin-notices.php:763
 msgid "It's good but could be better"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:771
+#: includes/admin/core/class-admin-notices.php:764
 msgid "I don't like the plugin"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:780
+#: includes/admin/core/class-admin-notices.php:773
 msgid "Leave Review"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:789
-#: includes/admin/core/class-admin-notices.php:798
+#: includes/admin/core/class-admin-notices.php:782
+#: includes/admin/core/class-admin-notices.php:791
 msgid "Provide Feedback"
 msgstr ""
 
 #. translators: %1$s is a plugin name; %2$s is a #.
-#: includes/admin/core/class-admin-notices.php:828
+#: includes/admin/core/class-admin-notices.php:821
 #, php-format
 msgid "<strong>%1$s</strong> future plans! Detailed future list is <a href=\"%2$s\" target=\"_blank\">here</a>"
 msgstr ""
 
 #. translators: %s child-theme article link.
-#: includes/admin/core/class-admin-notices.php:860
+#: includes/admin/core/class-admin-notices.php:853
 #, php-format
 msgid "We recommend using a <a href=\"%s\">child-theme</a> for Ultimate Member customization. Unlike official theme repositories, child themes don't have dependencies that could lead to your custom files being overwritten during a theme upgrade.<br />Without a child theme, your customization files may be deleted after every theme update."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:883
+#: includes/admin/core/class-admin-notices.php:876
 msgid "Your Register forms are now locked. You can unlock them in Ultimate Member > Settings > Advanced > Security > Lock All Register Forms."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:902
+#: includes/admin/core/class-admin-notices.php:895
 msgid "Mandatory password changes has been enabled. You can disable them in Ultimate Member > Settings > Advanced > Security > Display Login form notice to reset passwords."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:921
+#: includes/admin/core/class-admin-notices.php:914
 msgid "Ban for administrative capabilities is enabled. You can disable them in Ultimate Member > Settings > Advanced > Security > Enable ban for administrative capabilities."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:954
+#: includes/admin/core/class-admin-notices.php:947
 msgid "The role selected in WordPress native \"Settings > New User Default Role\" setting has Administrative capabilities."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:980
+#: includes/admin/core/class-admin-notices.php:973
 msgid "The role selected in \"Ultimate Member > Settings > Appearance > Registration Form > Registration Default Role\" setting has Administrative capabilities."
 msgstr ""
 
 #. translators: %s are link(s) to the forms.
-#: includes/admin/core/class-admin-notices.php:1048
+#: includes/admin/core/class-admin-notices.php:1041
 #, php-format
 msgid "Register forms have Administrative roles, we recommend that you assign a non-admin roles to secure the forms. %s"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:1067
+#: includes/admin/core/class-admin-notices.php:1060
 msgid "Wrong Data"
 msgstr ""
 
@@ -4451,9 +4449,7 @@ msgid "This will be used in the meta description that is available for search-en
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:1388
-#: includes/class-config.php:149
-#: includes/class-config.php:991
-#: includes/class-config.php:1146
+#: includes/class-config.php:283
 msgid "Account"
 msgstr ""
 
@@ -6573,7 +6569,7 @@ msgstr ""
 #: includes/admin/templates/role/publish.php:33
 #: includes/ajax/class-files.php:274
 #: includes/ajax/class-files.php:561
-#: includes/class-config.php:258
+#: includes/class-config.php:825
 #: includes/core/class-fields.php:3128
 #: includes/core/class-fields.php:3257
 #: includes/core/um-actions-profile.php:830
@@ -7535,33 +7531,410 @@ msgstr ""
 msgid "Unable to crop image file."
 msgstr ""
 
-#: includes/class-config.php:144
-#: includes/class-config.php:976
-#: includes/class-config.php:1126
+#: includes/class-config.php:160
+#: includes/core/class-builtin.php:1781
+msgid "Afrikaans"
+msgstr ""
+
+#: includes/class-config.php:161
+#: includes/core/class-builtin.php:1926
+msgid "Albanian"
+msgstr ""
+
+#: includes/class-config.php:162
+#: includes/core/class-builtin.php:1783
+msgid "Amharic"
+msgstr ""
+
+#: includes/class-config.php:163
+#: includes/core/class-builtin.php:1785
+msgid "Arabic"
+msgstr ""
+
+#: includes/class-config.php:164
+#: includes/core/class-builtin.php:1840
+msgid "Armenian"
+msgstr ""
+
+#: includes/class-config.php:165
+#: includes/core/class-builtin.php:1789
+msgid "Azerbaijani"
+msgstr ""
+
+#: includes/class-config.php:166
+#: includes/core/class-builtin.php:1819
+msgid "Basque"
+msgstr ""
+
+#: includes/class-config.php:167
+#: includes/core/class-builtin.php:1791
+msgid "Belarusian"
+msgstr ""
+
+#: includes/class-config.php:168
+#: includes/core/class-builtin.php:1796
+msgid "Bengali"
+msgstr ""
+
+#: includes/class-config.php:169
+#: includes/core/class-builtin.php:1799
+msgid "Bosnian"
+msgstr ""
+
+#: includes/class-config.php:170
+#: includes/core/class-builtin.php:1887
+msgid "Burmese"
+msgstr ""
+
+#: includes/class-config.php:171
+#: includes/core/class-builtin.php:1800
+msgid "Catalan"
+msgstr ""
+
+#: includes/class-config.php:172
+#: includes/core/class-builtin.php:1960
+msgid "Chinese"
+msgstr ""
+
+#: includes/class-config.php:173
+msgid "Chinese (Simplified)"
+msgstr ""
+
+#: includes/class-config.php:174
+msgid "Chinese (Hong Kong)"
+msgstr ""
+
+#: includes/class-config.php:175
+msgid "Chinese (Traditional)"
+msgstr ""
+
+#: includes/class-config.php:176
+#: includes/core/class-builtin.php:1837
+msgid "Croatian"
+msgstr ""
+
+#: includes/class-config.php:177
+#: includes/core/class-builtin.php:1805
+msgid "Czech"
+msgstr ""
+
+#: includes/class-config.php:178
+#: includes/core/class-builtin.php:1809
+msgid "Danish"
+msgstr ""
+
+#: includes/class-config.php:179
+#: includes/core/class-builtin.php:1893
+msgid "Dutch"
+msgstr ""
+
+#: includes/class-config.php:180
+#: includes/core/class-builtin.php:1815
+msgid "English"
+msgstr ""
+
+#: includes/class-config.php:181
+msgid "English (Australian)"
+msgstr ""
+
+#: includes/class-config.php:182
+msgid "English (Great Britain)"
+msgstr ""
+
+#: includes/class-config.php:183
+#: includes/core/class-builtin.php:1818
+msgid "Estonian"
+msgstr ""
+
+#: includes/class-config.php:184
+msgid "Farsi"
+msgstr ""
+
+#: includes/class-config.php:185
+#: includes/core/class-builtin.php:1822
+msgid "Finnish"
+msgstr ""
+
+#: includes/class-config.php:186
+msgid "Filipino"
+msgstr ""
+
+#: includes/class-config.php:187
+#: includes/core/class-builtin.php:1825
+msgid "French"
+msgstr ""
+
+#: includes/class-config.php:188
+msgid "French (Canada)"
+msgstr ""
+
+#: includes/class-config.php:189
+#: includes/core/class-builtin.php:1829
+msgid "Galician"
+msgstr ""
+
+#: includes/class-config.php:190
+msgid "Georgian"
+msgstr ""
+
+#: includes/class-config.php:191
+#: includes/core/class-builtin.php:1810
+msgid "German"
+msgstr ""
+
+#: includes/class-config.php:192
+#: includes/core/class-builtin.php:1814
+msgid "Greek"
+msgstr ""
+
+#: includes/class-config.php:193
+#: includes/core/class-builtin.php:1831
+msgid "Gujarati"
+msgstr ""
+
+#: includes/class-config.php:194
+#: includes/core/class-builtin.php:1834
+msgid "Hebrew"
+msgstr ""
+
+#: includes/class-config.php:195
+#: includes/core/class-builtin.php:1835
+msgid "Hindi"
+msgstr ""
+
+#: includes/class-config.php:196
+#: includes/core/class-builtin.php:1839
+msgid "Hungarian"
+msgstr ""
+
+#: includes/class-config.php:197
+#: includes/core/class-builtin.php:1849
+msgid "Icelandic"
+msgstr ""
+
+#: includes/class-config.php:198
+#: includes/core/class-builtin.php:1843
+msgid "Indonesian"
+msgstr ""
+
+#: includes/class-config.php:199
+#: includes/core/class-builtin.php:1850
+msgid "Italian"
+msgstr ""
+
+#: includes/class-config.php:200
+#: includes/core/class-builtin.php:1852
+msgid "Japanese"
+msgstr ""
+
+#: includes/class-config.php:201
+#: includes/core/class-builtin.php:1861
+msgid "Kannada"
+msgstr ""
+
+#: includes/class-config.php:202
+#: includes/core/class-builtin.php:1858
+msgid "Kazakh"
+msgstr ""
+
+#: includes/class-config.php:203
+#: includes/core/class-builtin.php:1860
+msgid "Khmer"
+msgstr ""
+
+#: includes/class-config.php:204
+#: includes/core/class-builtin.php:1862
+msgid "Korean"
+msgstr ""
+
+#: includes/class-config.php:205
+msgid "Kyrgyz"
+msgstr ""
+
+#: includes/class-config.php:206
+#: includes/core/class-builtin.php:1874
+msgid "Lao"
+msgstr ""
+
+#: includes/class-config.php:207
+#: includes/core/class-builtin.php:1877
+msgid "Latvian"
+msgstr ""
+
+#: includes/class-config.php:208
+#: includes/core/class-builtin.php:1875
+msgid "Lithuanian"
+msgstr ""
+
+#: includes/class-config.php:209
+#: includes/core/class-builtin.php:1881
+msgid "Macedonian"
+msgstr ""
+
+#: includes/class-config.php:210
+#: includes/core/class-builtin.php:1885
+msgid "Malay"
+msgstr ""
+
+#: includes/class-config.php:211
+#: includes/core/class-builtin.php:1882
+msgid "Malayalam"
+msgstr ""
+
+#: includes/class-config.php:212
+#: includes/core/class-builtin.php:1884
+msgid "Marathi"
+msgstr ""
+
+#: includes/class-config.php:213
+#: includes/core/class-builtin.php:1883
+msgid "Mongolian"
+msgstr ""
+
+#: includes/class-config.php:214
+#: includes/core/class-builtin.php:1891
+msgid "Nepali"
+msgstr ""
+
+#: includes/class-config.php:215
+#: includes/core/class-builtin.php:1895
+msgid "Norwegian"
+msgstr ""
+
+#: includes/class-config.php:216
+#: includes/core/class-builtin.php:1906
+msgid "Polish"
+msgstr ""
+
+#: includes/class-config.php:217
+#: includes/core/class-builtin.php:1908
+msgid "Portuguese"
+msgstr ""
+
+#: includes/class-config.php:218
+msgid "Portuguese (Brazil)"
+msgstr ""
+
+#: includes/class-config.php:219
+msgid "Portuguese (Portugal)"
+msgstr ""
+
+#: includes/class-config.php:220
+msgid "Punjabi"
+msgstr ""
+
+#: includes/class-config.php:221
+#: includes/core/class-builtin.php:1912
+msgid "Romanian"
+msgstr ""
+
+#: includes/class-config.php:222
+#: includes/core/class-builtin.php:1913
+msgid "Russian"
+msgstr ""
+
+#: includes/class-config.php:223
+#: includes/core/class-builtin.php:1927
+msgid "Serbian"
+msgstr ""
+
+#: includes/class-config.php:224
+msgid "Sinhalese"
+msgstr ""
+
+#: includes/class-config.php:225
+#: includes/core/class-builtin.php:1921
+msgid "Slovak"
+msgstr ""
+
+#: includes/class-config.php:226
+#: includes/core/class-builtin.php:1922
+msgid "Slovenian"
+msgstr ""
+
+#: includes/class-config.php:227
+#: includes/core/class-builtin.php:1817
+msgid "Spanish"
+msgstr ""
+
+#: includes/class-config.php:228
+msgid "Spanish (Latin America)"
+msgstr ""
+
+#: includes/class-config.php:229
+#: includes/core/class-builtin.php:1932
+msgid "Swahili"
+msgstr ""
+
+#: includes/class-config.php:230
+#: includes/core/class-builtin.php:1931
+msgid "Swedish"
+msgstr ""
+
+#: includes/class-config.php:231
+#: includes/core/class-builtin.php:1933
+msgid "Tamil"
+msgstr ""
+
+#: includes/class-config.php:232
+#: includes/core/class-builtin.php:1934
+msgid "Telugu"
+msgstr ""
+
+#: includes/class-config.php:233
+#: includes/core/class-builtin.php:1936
+msgid "Thai"
+msgstr ""
+
+#: includes/class-config.php:234
+#: includes/core/class-builtin.php:1942
+msgid "Turkish"
+msgstr ""
+
+#: includes/class-config.php:235
+#: includes/core/class-builtin.php:1948
+msgid "Ukrainian"
+msgstr ""
+
+#: includes/class-config.php:236
+#: includes/core/class-builtin.php:1949
+msgid "Urdu"
+msgstr ""
+
+#: includes/class-config.php:237
+#: includes/core/class-builtin.php:1950
+msgid "Uzbek"
+msgstr ""
+
+#: includes/class-config.php:238
+#: includes/core/class-builtin.php:1952
+msgid "Vietnamese"
+msgstr ""
+
+#: includes/class-config.php:239
+#: includes/core/class-builtin.php:1961
+msgid "Zulu"
+msgstr ""
+
+#: includes/class-config.php:263
 msgid "User"
 msgstr ""
 
-#: includes/class-config.php:145
-#: includes/class-config.php:268
-#: includes/class-config.php:276
-#: includes/class-config.php:979
-#: includes/class-config.php:1130
+#: includes/class-config.php:267
+#: includes/class-config.php:835
+#: includes/class-config.php:843
 #: includes/core/class-form.php:1085
 msgid "Login"
 msgstr ""
 
-#: includes/class-config.php:146
-#: includes/class-config.php:266
-#: includes/class-config.php:280
-#: includes/class-config.php:982
-#: includes/class-config.php:1134
+#: includes/class-config.php:271
+#: includes/class-config.php:833
+#: includes/class-config.php:847
 #: includes/core/class-form.php:1091
 msgid "Register"
 msgstr ""
 
-#: includes/class-config.php:148
-#: includes/class-config.php:988
-#: includes/class-config.php:1142
+#: includes/class-config.php:279
 #: includes/core/class-member-directory.php:1960
 #: includes/core/um-actions-profile.php:1383
 #: includes/core/um-actions-user.php:19
@@ -7570,226 +7943,15 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: includes/class-config.php:150
-#: includes/class-config.php:994
-#: includes/class-config.php:1150
+#: includes/class-config.php:287
 msgid "Password Reset"
 msgstr ""
 
-#: includes/class-config.php:206
-#: includes/class-config.php:285
-msgid "{total_users} Members"
-msgstr ""
-
-#: includes/class-config.php:207
-#: includes/class-config.php:286
-msgid "{total_users} Member"
-msgstr ""
-
-#: includes/class-config.php:208
-#: templates/v3/directory/wrapper.php:245
-msgid "We are sorry. We cannot find any users who match your search criteria."
-msgstr ""
-
-#: includes/class-config.php:256
-msgid "Update Profile"
-msgstr ""
-
-#: includes/class-config.php:315
-#: includes/class-config.php:318
-#: includes/class-config.php:927
-#: includes/class-config.php:940
-#: includes/common/class-directory-config.php:164
-#: includes/core/class-builtin.php:825
-#: includes/core/class-builtin.php:828
-msgid "Username"
-msgstr ""
-
-#: includes/class-config.php:332
-#: includes/class-config.php:335
-msgid "E-mail Address"
-msgstr ""
-
-#: includes/class-config.php:365
-#: includes/class-config.php:368
-#: includes/common/class-directory-config.php:250
-#: includes/core/class-builtin.php:864
-#: includes/core/class-builtin.php:867
-msgid "First Name"
-msgstr ""
-
-#: includes/class-config.php:379
-#: includes/class-config.php:382
-#: includes/common/class-directory-config.php:251
-#: includes/core/class-builtin.php:874
-#: includes/core/class-builtin.php:877
-msgid "Last Name"
-msgstr ""
-
-#: includes/class-config.php:407
-#: includes/class-config.php:410
-msgid "Username or E-mail"
-msgstr ""
-
-#: includes/class-config.php:468
-msgid "Account Welcome Email"
-msgstr ""
-
-#: includes/class-config.php:479
-msgid "Whether to send the user an email when his account is automatically approved"
-msgstr ""
-
-#: includes/class-config.php:485
-msgid "Account Activation Email"
-msgstr ""
-
-#: includes/class-config.php:493
-msgid "Whether to send the user an email when his account needs email activation"
-msgstr ""
-
-#: includes/class-config.php:498
-msgid "Your account is pending review"
-msgstr ""
-
-#: includes/class-config.php:506
-msgid "Whether to send the user an email when his account needs admin review"
-msgstr ""
-
-#: includes/class-config.php:511
-msgid "Account Approved Email"
-msgstr ""
-
-#: includes/class-config.php:523
-msgid "Whether to send the user an email when his account is approved"
-msgstr ""
-
-#: includes/class-config.php:528
-msgid "Account Rejected Email"
-msgstr ""
-
-#: includes/class-config.php:535
-msgid "Whether to send the user an email when his account is rejected"
-msgstr ""
-
-#: includes/class-config.php:540
-msgid "Account Deactivated Email"
-msgstr ""
-
-#: includes/class-config.php:547
-msgid "Whether to send the user an email when his account is deactivated"
-msgstr ""
-
-#: includes/class-config.php:553
-msgid "Account Deleted Email"
-msgstr ""
-
-#: includes/class-config.php:560
-msgid "Whether to send the user an email when his account is deleted"
-msgstr ""
-
-#: includes/class-config.php:566
-msgid "Password Reset Email"
-msgstr ""
-
-#: includes/class-config.php:574
-msgid "Whether to send an email when users changed their password (Recommended, please keep on)"
-msgstr ""
-
-#: includes/class-config.php:580
-msgid "Password Changed Email"
-msgstr ""
-
-#: includes/class-config.php:587
-msgid "Whether to send the user an email when he requests to reset password (Recommended, please keep on)"
-msgstr ""
-
-#: includes/class-config.php:593
-msgid "Account Updated Email"
-msgstr ""
-
-#: includes/class-config.php:600
-msgid "Whether to send the user an email when he updated their account"
-msgstr ""
-
-#: includes/class-config.php:606
-msgid "New User Notification"
-msgstr ""
-
-#: includes/class-config.php:612
-msgid "Whether to receive notification when a new user account is created"
-msgstr ""
-
-#: includes/class-config.php:618
-msgid "Account Needs Review Notification"
-msgstr ""
-
-#: includes/class-config.php:625
-msgid "Whether to receive notification when an account needs admin review"
-msgstr ""
-
-#: includes/class-config.php:630
-msgid "Account Deletion Notification"
-msgstr ""
-
-#: includes/class-config.php:633
-msgid "Whether to receive notification when an account is deleted"
-msgstr ""
-
-#: includes/class-config.php:638
-msgid "Security: Suspicious Account Activity"
-msgstr ""
-
-#: includes/class-config.php:639
-msgid "[{site_name}] Suspicious Account Activity"
-msgstr ""
-
-#: includes/class-config.php:641
-msgid "Whether to receive notification when suspicious account activity is detected."
-msgstr ""
-
-#: includes/class-config.php:702
-#: includes/core/class-account.php:135
-msgid "Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account enter your password below."
-msgstr ""
-
-#: includes/class-config.php:703
-#: includes/core/class-account.php:137
-msgid "Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account, click on the button below."
-msgstr ""
-
-#: includes/class-config.php:719
-msgid "Restricted content"
-msgstr ""
-
-#: includes/class-config.php:928
-msgid "First and Last Name with '.'"
-msgstr ""
-
-#: includes/class-config.php:929
-msgid "First and Last Name with '-'"
-msgstr ""
-
-#: includes/class-config.php:930
-msgid "First and Last Name with '+'"
-msgstr ""
-
-#: includes/class-config.php:931
-msgid "User ID"
-msgstr ""
-
-#: includes/class-config.php:932
-msgid "Unique hash string"
-msgstr ""
-
-#: includes/class-config.php:933
-msgid "Custom usermeta"
-msgstr ""
-
-#: includes/class-config.php:938
+#: includes/class-config.php:358
 msgid "Default WP Display Name"
 msgstr ""
 
-#: includes/class-config.php:939
+#: includes/class-config.php:359
 #: includes/common/class-directory-config.php:165
 #: includes/common/class-directory-config.php:252
 #: includes/core/class-builtin.php:884
@@ -7797,413 +7959,237 @@ msgstr ""
 msgid "Nickname"
 msgstr ""
 
-#: includes/class-config.php:941
+#: includes/class-config.php:360
+#: includes/class-config.php:594
+#: includes/class-config.php:889
+#: includes/class-config.php:892
+#: includes/common/class-directory-config.php:164
+#: includes/core/class-builtin.php:825
+#: includes/core/class-builtin.php:828
+msgid "Username"
+msgstr ""
+
+#: includes/class-config.php:361
 msgid "First name & last name"
 msgstr ""
 
-#: includes/class-config.php:942
+#: includes/class-config.php:362
 msgid "Last name & first name"
 msgstr ""
 
-#: includes/class-config.php:943
+#: includes/class-config.php:363
 msgid "First name & first initial of last name"
 msgstr ""
 
-#: includes/class-config.php:944
+#: includes/class-config.php:364
 msgid "First initial of first name & last name"
 msgstr ""
 
-#: includes/class-config.php:945
+#: includes/class-config.php:365
 msgid "First name only"
 msgstr ""
 
-#: includes/class-config.php:946
+#: includes/class-config.php:366
 msgid "Custom field(s)"
 msgstr ""
 
-#: includes/class-config.php:1023
-#: includes/core/class-builtin.php:1781
-msgid "Afrikaans"
+#: includes/class-config.php:379
+msgid "Account Welcome Email"
 msgstr ""
 
-#: includes/class-config.php:1024
-#: includes/core/class-builtin.php:1926
-msgid "Albanian"
+#: includes/class-config.php:390
+msgid "Whether to send the user an email when his account is automatically approved"
 msgstr ""
 
-#: includes/class-config.php:1025
-#: includes/core/class-builtin.php:1783
-msgid "Amharic"
+#: includes/class-config.php:396
+msgid "Account Activation Email"
 msgstr ""
 
-#: includes/class-config.php:1026
-#: includes/core/class-builtin.php:1785
-msgid "Arabic"
+#: includes/class-config.php:404
+msgid "Whether to send the user an email when his account needs email activation"
 msgstr ""
 
-#: includes/class-config.php:1027
-#: includes/core/class-builtin.php:1840
-msgid "Armenian"
+#: includes/class-config.php:409
+msgid "Your account is pending review"
 msgstr ""
 
-#: includes/class-config.php:1028
-#: includes/core/class-builtin.php:1789
-msgid "Azerbaijani"
+#: includes/class-config.php:417
+msgid "Whether to send the user an email when his account needs admin review"
 msgstr ""
 
-#: includes/class-config.php:1029
-#: includes/core/class-builtin.php:1819
-msgid "Basque"
+#: includes/class-config.php:422
+msgid "Account Approved Email"
 msgstr ""
 
-#: includes/class-config.php:1030
-#: includes/core/class-builtin.php:1791
-msgid "Belarusian"
+#: includes/class-config.php:434
+msgid "Whether to send the user an email when his account is approved"
 msgstr ""
 
-#: includes/class-config.php:1031
-#: includes/core/class-builtin.php:1796
-msgid "Bengali"
+#: includes/class-config.php:439
+msgid "Account Rejected Email"
 msgstr ""
 
-#: includes/class-config.php:1032
-#: includes/core/class-builtin.php:1799
-msgid "Bosnian"
+#: includes/class-config.php:446
+msgid "Whether to send the user an email when his account is rejected"
 msgstr ""
 
-#: includes/class-config.php:1033
-#: includes/core/class-builtin.php:1887
-msgid "Burmese"
+#: includes/class-config.php:451
+msgid "Account Deactivated Email"
 msgstr ""
 
-#: includes/class-config.php:1034
-#: includes/core/class-builtin.php:1800
-msgid "Catalan"
+#: includes/class-config.php:458
+msgid "Whether to send the user an email when his account is deactivated"
 msgstr ""
 
-#: includes/class-config.php:1035
-#: includes/core/class-builtin.php:1960
-msgid "Chinese"
+#: includes/class-config.php:464
+msgid "Account Deleted Email"
 msgstr ""
 
-#: includes/class-config.php:1036
-msgid "Chinese (Simplified)"
+#: includes/class-config.php:471
+msgid "Whether to send the user an email when his account is deleted"
 msgstr ""
 
-#: includes/class-config.php:1037
-msgid "Chinese (Hong Kong)"
+#: includes/class-config.php:477
+msgid "Password Reset Email"
 msgstr ""
 
-#: includes/class-config.php:1038
-msgid "Chinese (Traditional)"
+#: includes/class-config.php:485
+msgid "Whether to send an email when users changed their password (Recommended, please keep on)"
 msgstr ""
 
-#: includes/class-config.php:1039
-#: includes/core/class-builtin.php:1837
-msgid "Croatian"
+#: includes/class-config.php:491
+msgid "Password Changed Email"
 msgstr ""
 
-#: includes/class-config.php:1040
-#: includes/core/class-builtin.php:1805
-msgid "Czech"
+#: includes/class-config.php:498
+msgid "Whether to send the user an email when he requests to reset password (Recommended, please keep on)"
 msgstr ""
 
-#: includes/class-config.php:1041
-#: includes/core/class-builtin.php:1809
-msgid "Danish"
+#: includes/class-config.php:504
+msgid "Account Updated Email"
 msgstr ""
 
-#: includes/class-config.php:1042
-#: includes/core/class-builtin.php:1893
-msgid "Dutch"
+#: includes/class-config.php:511
+msgid "Whether to send the user an email when he updated their account"
 msgstr ""
 
-#: includes/class-config.php:1043
-#: includes/core/class-builtin.php:1815
-msgid "English"
+#: includes/class-config.php:517
+msgid "New User Notification"
 msgstr ""
 
-#: includes/class-config.php:1044
-msgid "English (Australian)"
+#: includes/class-config.php:523
+msgid "Whether to receive notification when a new user account is created"
 msgstr ""
 
-#: includes/class-config.php:1045
-msgid "English (Great Britain)"
+#: includes/class-config.php:529
+msgid "Account Needs Review Notification"
 msgstr ""
 
-#: includes/class-config.php:1046
-#: includes/core/class-builtin.php:1818
-msgid "Estonian"
+#: includes/class-config.php:536
+msgid "Whether to receive notification when an account needs admin review"
 msgstr ""
 
-#: includes/class-config.php:1047
-msgid "Farsi"
+#: includes/class-config.php:541
+msgid "Account Deletion Notification"
 msgstr ""
 
-#: includes/class-config.php:1048
-#: includes/core/class-builtin.php:1822
-msgid "Finnish"
+#: includes/class-config.php:544
+msgid "Whether to receive notification when an account is deleted"
 msgstr ""
 
-#: includes/class-config.php:1049
-msgid "Filipino"
+#: includes/class-config.php:549
+msgid "Security: Suspicious Account Activity"
 msgstr ""
 
-#: includes/class-config.php:1050
-#: includes/core/class-builtin.php:1825
-msgid "French"
+#: includes/class-config.php:550
+msgid "[{site_name}] Suspicious Account Activity"
 msgstr ""
 
-#: includes/class-config.php:1051
-msgid "French (Canada)"
+#: includes/class-config.php:552
+msgid "Whether to receive notification when suspicious account activity is detected."
 msgstr ""
 
-#: includes/class-config.php:1052
-#: includes/core/class-builtin.php:1829
-msgid "Galician"
+#: includes/class-config.php:595
+msgid "First and Last Name with '.'"
 msgstr ""
 
-#: includes/class-config.php:1053
-msgid "Georgian"
+#: includes/class-config.php:596
+msgid "First and Last Name with '-'"
 msgstr ""
 
-#: includes/class-config.php:1054
-#: includes/core/class-builtin.php:1810
-msgid "German"
+#: includes/class-config.php:597
+msgid "First and Last Name with '+'"
 msgstr ""
 
-#: includes/class-config.php:1055
-#: includes/core/class-builtin.php:1814
-msgid "Greek"
+#: includes/class-config.php:598
+msgid "User ID"
 msgstr ""
 
-#: includes/class-config.php:1056
-#: includes/core/class-builtin.php:1831
-msgid "Gujarati"
+#: includes/class-config.php:599
+msgid "Unique hash string"
 msgstr ""
 
-#: includes/class-config.php:1057
-#: includes/core/class-builtin.php:1834
-msgid "Hebrew"
+#: includes/class-config.php:600
+msgid "Custom usermeta"
 msgstr ""
 
-#: includes/class-config.php:1058
-#: includes/core/class-builtin.php:1835
-msgid "Hindi"
+#: includes/class-config.php:757
+#: includes/class-config.php:852
+msgid "{total_users} Members"
 msgstr ""
 
-#: includes/class-config.php:1059
-#: includes/core/class-builtin.php:1839
-msgid "Hungarian"
+#: includes/class-config.php:758
+#: includes/class-config.php:853
+msgid "{total_users} Member"
 msgstr ""
 
-#: includes/class-config.php:1060
-#: includes/core/class-builtin.php:1849
-msgid "Icelandic"
+#: includes/class-config.php:759
+#: templates/v3/directory/wrapper.php:245
+msgid "We are sorry. We cannot find any users who match your search criteria."
 msgstr ""
 
-#: includes/class-config.php:1061
-#: includes/core/class-builtin.php:1843
-msgid "Indonesian"
+#: includes/class-config.php:823
+msgid "Update Profile"
 msgstr ""
 
-#: includes/class-config.php:1062
-#: includes/core/class-builtin.php:1850
-msgid "Italian"
+#: includes/class-config.php:906
+#: includes/class-config.php:909
+msgid "E-mail Address"
 msgstr ""
 
-#: includes/class-config.php:1063
-#: includes/core/class-builtin.php:1852
-msgid "Japanese"
+#: includes/class-config.php:939
+#: includes/class-config.php:942
+#: includes/common/class-directory-config.php:250
+#: includes/core/class-builtin.php:864
+#: includes/core/class-builtin.php:867
+msgid "First Name"
 msgstr ""
 
-#: includes/class-config.php:1064
-#: includes/core/class-builtin.php:1861
-msgid "Kannada"
+#: includes/class-config.php:953
+#: includes/class-config.php:956
+#: includes/common/class-directory-config.php:251
+#: includes/core/class-builtin.php:874
+#: includes/core/class-builtin.php:877
+msgid "Last Name"
 msgstr ""
 
-#: includes/class-config.php:1065
-#: includes/core/class-builtin.php:1858
-msgid "Kazakh"
-msgstr ""
-
-#: includes/class-config.php:1066
-#: includes/core/class-builtin.php:1860
-msgid "Khmer"
-msgstr ""
-
-#: includes/class-config.php:1067
-#: includes/core/class-builtin.php:1862
-msgid "Korean"
-msgstr ""
-
-#: includes/class-config.php:1068
-msgid "Kyrgyz"
-msgstr ""
-
-#: includes/class-config.php:1069
-#: includes/core/class-builtin.php:1874
-msgid "Lao"
-msgstr ""
-
-#: includes/class-config.php:1070
-#: includes/core/class-builtin.php:1877
-msgid "Latvian"
+#: includes/class-config.php:980
+#: includes/class-config.php:983
+msgid "Username or E-mail"
 msgstr ""
 
 #: includes/class-config.php:1071
-#: includes/core/class-builtin.php:1875
-msgid "Lithuanian"
+#: includes/core/class-account.php:135
+msgid "Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account enter your password below."
 msgstr ""
 
 #: includes/class-config.php:1072
-#: includes/core/class-builtin.php:1881
-msgid "Macedonian"
-msgstr ""
-
-#: includes/class-config.php:1073
-#: includes/core/class-builtin.php:1885
-msgid "Malay"
-msgstr ""
-
-#: includes/class-config.php:1074
-#: includes/core/class-builtin.php:1882
-msgid "Malayalam"
-msgstr ""
-
-#: includes/class-config.php:1075
-#: includes/core/class-builtin.php:1884
-msgid "Marathi"
-msgstr ""
-
-#: includes/class-config.php:1076
-#: includes/core/class-builtin.php:1883
-msgid "Mongolian"
-msgstr ""
-
-#: includes/class-config.php:1077
-#: includes/core/class-builtin.php:1891
-msgid "Nepali"
-msgstr ""
-
-#: includes/class-config.php:1078
-#: includes/core/class-builtin.php:1895
-msgid "Norwegian"
-msgstr ""
-
-#: includes/class-config.php:1079
-#: includes/core/class-builtin.php:1906
-msgid "Polish"
-msgstr ""
-
-#: includes/class-config.php:1080
-#: includes/core/class-builtin.php:1908
-msgid "Portuguese"
-msgstr ""
-
-#: includes/class-config.php:1081
-msgid "Portuguese (Brazil)"
-msgstr ""
-
-#: includes/class-config.php:1082
-msgid "Portuguese (Portugal)"
-msgstr ""
-
-#: includes/class-config.php:1083
-msgid "Punjabi"
-msgstr ""
-
-#: includes/class-config.php:1084
-#: includes/core/class-builtin.php:1912
-msgid "Romanian"
-msgstr ""
-
-#: includes/class-config.php:1085
-#: includes/core/class-builtin.php:1913
-msgid "Russian"
-msgstr ""
-
-#: includes/class-config.php:1086
-#: includes/core/class-builtin.php:1927
-msgid "Serbian"
-msgstr ""
-
-#: includes/class-config.php:1087
-msgid "Sinhalese"
+#: includes/core/class-account.php:137
+msgid "Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account, click on the button below."
 msgstr ""
 
 #: includes/class-config.php:1088
-#: includes/core/class-builtin.php:1921
-msgid "Slovak"
-msgstr ""
-
-#: includes/class-config.php:1089
-#: includes/core/class-builtin.php:1922
-msgid "Slovenian"
-msgstr ""
-
-#: includes/class-config.php:1090
-#: includes/core/class-builtin.php:1817
-msgid "Spanish"
-msgstr ""
-
-#: includes/class-config.php:1091
-msgid "Spanish (Latin America)"
-msgstr ""
-
-#: includes/class-config.php:1092
-#: includes/core/class-builtin.php:1932
-msgid "Swahili"
-msgstr ""
-
-#: includes/class-config.php:1093
-#: includes/core/class-builtin.php:1931
-msgid "Swedish"
-msgstr ""
-
-#: includes/class-config.php:1094
-#: includes/core/class-builtin.php:1933
-msgid "Tamil"
-msgstr ""
-
-#: includes/class-config.php:1095
-#: includes/core/class-builtin.php:1934
-msgid "Telugu"
-msgstr ""
-
-#: includes/class-config.php:1096
-#: includes/core/class-builtin.php:1936
-msgid "Thai"
-msgstr ""
-
-#: includes/class-config.php:1097
-#: includes/core/class-builtin.php:1942
-msgid "Turkish"
-msgstr ""
-
-#: includes/class-config.php:1098
-#: includes/core/class-builtin.php:1948
-msgid "Ukrainian"
-msgstr ""
-
-#: includes/class-config.php:1099
-#: includes/core/class-builtin.php:1949
-msgid "Urdu"
-msgstr ""
-
-#: includes/class-config.php:1100
-#: includes/core/class-builtin.php:1950
-msgid "Uzbek"
-msgstr ""
-
-#: includes/class-config.php:1101
-#: includes/core/class-builtin.php:1952
-msgid "Vietnamese"
-msgstr ""
-
-#: includes/class-config.php:1102
-#: includes/core/class-builtin.php:1961
-msgid "Zulu"
+msgid "Restricted content"
 msgstr ""
 
 #. translators: %1$s is an extension name; %2$s is a plugin name; %3$s is a required version.
@@ -8364,8 +8350,8 @@ msgid "%s ASC"
 msgstr ""
 
 #: includes/common/class-directory-config.php:204
-#: includes/common/class-shortcodes.php:2249
-#: templates/members.php:105
+#: includes/common/class-shortcodes.php:2241
+#: templates/members.php:106
 msgid "Random"
 msgstr ""
 
@@ -8584,11 +8570,11 @@ msgstr ""
 msgid "Action 6"
 msgstr ""
 
-#: includes/common/class-shortcodes.php:2041
+#: includes/common/class-shortcodes.php:2032
 msgid "You are already registered."
 msgstr ""
 
-#: includes/common/class-shortcodes.php:2560
+#: includes/common/class-shortcodes.php:2552
 msgid "Default Template"
 msgstr ""
 
@@ -10904,15 +10890,15 @@ msgstr ""
 msgid "The \"unassigned\" $status has been removed. Use `UM()->setup()->set_default_user_status()` for setting up default user account status."
 msgstr ""
 
-#: includes/core/class-setup.php:98
+#: includes/core/class-setup.php:100
 msgid "Default Registration"
 msgstr ""
 
-#: includes/core/class-setup.php:100
+#: includes/core/class-setup.php:102
 msgid "Default Login"
 msgstr ""
 
-#: includes/core/class-setup.php:102
+#: includes/core/class-setup.php:104
 msgid "Default Profile"
 msgstr ""
 
@@ -11723,8 +11709,8 @@ msgid "Search.."
 msgstr ""
 
 #: includes/frontend/class-layouts.php:2887
-#: templates/members.php:259
-#: templates/members.php:261
+#: templates/members.php:260
+#: templates/members.php:262
 #: templates/v3/directory/wrapper.php:65
 #: templates/v3/directory/wrapper.php:70
 #: assets/js/v3/common-frontend.js:1000
@@ -11928,36 +11914,36 @@ msgstr ""
 msgid "Last page"
 msgstr ""
 
-#: templates/members.php:258
+#: templates/members.php:259
 #: templates/v3/directory/wrapper.php:64
 msgid "Search:"
 msgstr ""
 
 #. translators: %s: title.
-#: templates/members.php:285
+#: templates/members.php:286
 #, php-format
 msgid "Change to %s"
 msgstr ""
 
-#: templates/members.php:309
+#: templates/members.php:310
 #: templates/v3/directory/wrapper.php:204
 msgid "Sort by:"
 msgstr ""
 
-#: templates/members.php:330
+#: templates/members.php:331
 msgid "More filters"
 msgstr ""
 
-#: templates/members.php:355
+#: templates/members.php:356
 msgid "Remove filter"
 msgstr ""
 
-#: templates/members.php:382
+#: templates/members.php:383
 #: templates/v3/directory/wrapper.php:134
 msgid "Remove all filters"
 msgstr ""
 
-#: templates/members.php:382
+#: templates/members.php:383
 #: templates/v3/directory/wrapper.php:129
 msgid "Clear all"
 msgstr ""
