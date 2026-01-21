@@ -194,3 +194,28 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @hook um_is_private_filter_hook
  */
+
+/**
+ * Filters Ultimate Member predefined pages.
+ *
+ * @param {array} $pages Predefined pages.
+ *
+ * @return {array} Predefined pages.
+ *
+ * @since 1.3.x
+ * @depecated 3.0.0 Please use 'um_predefined_pages' hook instead.
+ * @hook um_core_pages
+ */
+
+/**
+ * Filters the base URL of the UM profile page.
+ *
+ * @since 1.3.x
+ * @deprecated 2.6.3 Use <a href="https://developer.wordpress.org/reference/hooks/post_link/" target="_blank" title="'post_link' hook article on developer.wordpress.org">'post_link'</a> instead.
+ * @hook um_localize_permalink_filter
+ *
+ * @param {string} $profile_url Profile URL.
+ * @param {int}    $page_id     Profile Page ID.
+ *
+ * @return {string} Profile URL.
+ */

@@ -17,8 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 global $post;
 
 // Get default and real arguments
-$def_args = array();
-foreach ( UM()->config()->core_directory_meta['members'] as $k => $v ) {
+$def_args            = array();
+$core_directory_meta = UM()->config()->get( 'core_directory_meta' );
+foreach ( $core_directory_meta['members'] as $k => $v ) {
 	$key = str_replace( '_um_', '', $k );
 	$def_args[ $key ] = $v;
 }

@@ -353,31 +353,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 				return ! empty( $external_profile_url ) ? $external_profile_url : '';
 			}
 
-			$page_id     = UM()->config()->permalinks['user'];
-			$profile_url = get_permalink( $page_id );
-
-			/**
-			 * Filters the base URL of the UM profile page.
-			 *
-			 * @since 1.3.x
-			 * @deprecated 2.6.3 Use <a href="https://developer.wordpress.org/reference/hooks/post_link/" target="_blank" title="'post_link' hook article on developer.wordpress.org">'post_link'</a> instead.
-			 * @hook um_localize_permalink_filter
-			 * @todo fully remove since 2.7.0
-			 *
-			 * @param {string} $profile_url Profile URL.
-			 * @param {int}    $page_id     Profile Page ID.
-			 *
-			 * @return {string} Profile URL.
-			 *
-			 * @example <caption>Change profile base URL to your custom link.</caption>
-			 * function my_localize_permalink( $profile_url, $page_id ) {
-			 *     $profile_url = '{some your custom URL}'; // replace to your custom link.
-			 *     return $profile_url;
-			 * }
-			 * add_filter( 'um_localize_permalink_filter', 'my_localize_permalink', 10, 2 );
-			 */
-			$profile_url = apply_filters( 'um_localize_permalink_filter', $profile_url, $page_id );
-
+			$profile_url = um_get_predefined_page_url( 'user' );
 			if ( UM()->is_permalinks ) {
 				$profile_url  = trailingslashit( untrailingslashit( $profile_url ) );
 				$profile_url .= trailingslashit( strtolower( $slug ) );
@@ -389,10 +365,11 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 			 * Filters user profile URL.
 			 *
 			 * @since 2.6.3
+			 * @since 3.0.0 Deprecated $page_id. 2nd attribute.
 			 * @hook um_profile_permalink
 			 *
 			 * @param {string} $profile_url Profile URL.
-			 * @param {int}    $page_id     Profile Page ID.
+			 * @param {null}   $deprecated  Profile Page ID. Deprecated.
 			 * @param {string} $slug        User profile slug.
 			 *
 			 * @return {string} Profile URL.
@@ -404,7 +381,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 			 * }
 			 * add_filter( 'um_profile_permalink', 'my_um_profile_permalink', 10, 3 );
 			 */
-			$profile_url = apply_filters( 'um_profile_permalink', $profile_url, $page_id, $slug );
+			$profile_url = apply_filters( 'um_profile_permalink', $profile_url, null, $slug );
 
 			return ! empty( $profile_url ) ? $profile_url : '';
 		}

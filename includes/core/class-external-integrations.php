@@ -189,7 +189,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 				return $profile_url;
 			}
 
-			$page_id      = UM()->config()->permalinks['user'];
+			$page_id      = um_get_predefined_page_id( 'user' );
 			$lang_post_id = apply_filters( 'wpml_object_id', $page_id, 'page', true );
 
 			if ( $lang_post_id && $lang_post_id !== $page_id ) {
@@ -256,7 +256,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 				foreach ( $array as $lang_code => $arr ) {
 					$sitepress->switch_lang( $lang_code );
 
-					$lang_post_id  = apply_filters( 'wpml_object_id', UM()->config()->permalinks['user'], 'page', true );
+					$lang_post_id  = apply_filters( 'wpml_object_id', um_get_predefined_page_id( 'user' ), 'page', true );
 					$user_page_url = get_permalink( $lang_post_id );
 
 					if ( UM()->is_permalinks ) {
@@ -357,7 +357,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 				return $url;
 
 			if ( function_exists( 'icl_get_current_language' ) && icl_get_current_language() != icl_get_default_language() ) {
-				$url = $this->get_url_for_language( UM()->config()->permalinks[ $slug ], icl_get_current_language() );
+				$url = $this->get_url_for_language( um_get_predefined_page_id( $slug ), icl_get_current_language() );
 
 				if ( $updated ) {
 					$url = add_query_arg( 'updated', esc_attr( $updated ), $url );

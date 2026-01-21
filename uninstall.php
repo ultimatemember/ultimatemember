@@ -37,7 +37,7 @@ if ( ! empty( $delete_options ) ) {
 	UM()->common()->filesystem()::remove_dir( $upl_folder );
 
 	//remove core settings
-	$settings_defaults = UM()->config()->settings_defaults;
+	$settings_defaults = UM()->config()->get( 'settings_defaults' );
 	foreach ( $settings_defaults as $k => $v ) {
 		UM()->options()->remove( $k );
 	}

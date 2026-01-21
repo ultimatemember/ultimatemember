@@ -85,12 +85,14 @@ PRIMARY KEY  (id)
 				update_option( 'um_is_installed', 1 );
 
 				//Install default options
-				foreach ( UM()->config()->settings_defaults as $key => $value ) {
+				foreach ( UM()->config()->get( 'settings_defaults' ) as $key => $value ) {
 					$options[ $key ] = $value;
 				}
 
+				$core_forms_config = UM()->config()->get( 'core_forms' );
+				$core_form_meta    = UM()->config()->get( 'core_form_meta' );
 				// Install Core Forms.
-				foreach ( UM()->config()->core_forms as $id ) {
+				foreach ( $core_forms_config as $id ) {
 					// If page does not exist - create it.
 					$page_exists = UM()->query()->find_post_id( 'um_form', '_um_core', $id );
 					if ( ! $page_exists ) {
@@ -109,7 +111,7 @@ PRIMARY KEY  (id)
 							'post_author' => get_current_user_id(),
 						);
 
-						foreach ( UM()->config()->core_form_meta[ $id ] as $meta_key => $meta_value ) {
+						foreach ( $core_form_meta[ $id ] as $meta_key => $meta_value ) {
 							$form['meta_input'][ $meta_key ] = $meta_value;
 						}
 
@@ -125,7 +127,9 @@ PRIMARY KEY  (id)
 				}
 
 				// Install Core Directories.
-				foreach ( UM()->config()->core_directories as $id ) {
+				$core_directories_config = UM()->config()->get( 'core_directories' );
+				$core_directory_meta     = UM()->config()->get( 'core_directory_meta' );
+				foreach ( $core_directories_config as $id ) {
 					// If page does not exist - create it.
 					$page_exists = UM()->query()->find_post_id( 'um_directory', '_um_core', $id );
 					if ( ! $page_exists ) {
@@ -136,7 +140,7 @@ PRIMARY KEY  (id)
 							'post_author' => get_current_user_id(),
 						);
 
-						foreach ( UM()->config()->core_directory_meta[ $id ] as $meta_key => $meta_value ) {
+						foreach ( $core_directory_meta[ $id ] as $meta_key => $meta_value ) {
 							$form['meta_input'][ $meta_key ] = $meta_value;
 						}
 
@@ -169,9 +173,9 @@ PRIMARY KEY  (id)
 			$setup_shortcodes = array_merge( $core_forms, $core_directories );
 
 			// Install Core Pages.
-			$core_pages = array();
-			foreach ( UM()->config()->core_pages as $slug => $array ) {
-
+			$core_pages       = array();
+			$predefined_pages = UM()->config()->get( 'predefined_pages' );
+			foreach ( $predefined_pages as $slug => $array ) {
 				$page_exists = UM()->query()->find_post_id( 'page', '_um_core', $slug );
 				if ( $page_exists ) {
 					$core_pages[ $slug ] = $page_exists;
@@ -296,7 +300,7 @@ PRIMARY KEY  (id)
 		public function set_default_settings() {
 			$options = get_option( 'um_options', array() );
 
-			foreach ( UM()->config()->settings_defaults as $key => $value ) {
+			foreach ( UM()->config()->get( 'settings_defaults' ) as $key => $value ) {
 				//set new options to default
 				if ( ! isset( $options[ $key ] ) ) {
 					$options[ $key ] = $value;
@@ -310,7 +314,7 @@ PRIMARY KEY  (id)
 		 * Set UM roles meta to Default WP roles.
 		 */
 		public function set_default_role_meta() {
-			foreach ( UM()->config()->default_roles_metadata as $role => $meta ) {
+			foreach ( UM()->config()->get( 'default_roles_metadata' ) as $role => $meta ) {
 				add_option( "um_role_{$role}_meta", $meta );
 			}
 		}

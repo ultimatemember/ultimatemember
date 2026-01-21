@@ -1106,7 +1106,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'label'       => __( 'Profile Permalink Base', 'ultimate-member' ),
 					// translators: %s: Profile page URL
 					'description' => sprintf( __( 'Here you can control the permalink structure of the user profile URL globally e.g. %s<strong>username</strong>/.', 'ultimate-member' ), trailingslashit( um_get_core_page( 'user' ) ) ),
-					'options'     => UM()->config()->permalink_base_options,
+					'options'     => UM()->config()->get( 'permalink_base_options' ),
 					'placeholder' => __( 'Select...', 'ultimate-member' ),
 				),
 				array(
@@ -1123,7 +1123,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'size'        => 'medium',
 					'label'       => __( 'User Display Name', 'ultimate-member' ),
 					'description' => __( 'This is the name that will be displayed for users on the front end of your site. Default setting uses first/last name as display name if it exists.', 'ultimate-member' ),
-					'options'     => UM()->config()->display_name_options,
+					'options'     => UM()->config()->get( 'display_name_options' ),
 					'placeholder' => __( 'Select...', 'ultimate-member' ),
 				),
 				array(
@@ -3322,7 +3322,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 */
 		public function settings_before_email_tab() {
 			$email_key = empty( $_GET['email'] ) ? '' : sanitize_key( $_GET['email'] );
-			$emails    = UM()->config()->email_notifications;
+			$emails    = UM()->config()->get( 'email_notifications' );
 
 			if ( empty( $email_key ) || empty( $emails[ $email_key ] ) ) {
 				include_once UM_PATH . 'includes/admin/core/list-tables/emails-list-table.php';
@@ -3343,7 +3343,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			}
 
 			$email_key = empty( $_GET['email'] ) ? '' : sanitize_key( $_GET['email'] );
-			$emails    = UM()->config()->email_notifications;
+			$emails    = UM()->config()->get( 'email_notifications' );
 
 			if ( empty( $email_key ) || empty( $emails[ $email_key ] ) ) {
 				return $section_fields;

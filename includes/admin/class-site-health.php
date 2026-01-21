@@ -597,7 +597,7 @@ class Site_Health {
 
 		// Pages settings.
 		$pages            = array();
-		$predefined_pages = UM()->config()->core_pages;
+		$predefined_pages = UM()->config()->get( 'predefined_pages' );
 		foreach ( $predefined_pages as $page_s => $page ) {
 			$page_id    = UM()->options()->get_predefined_page_option_key( $page_s );
 			$page_title = ! empty( $page['title'] ) ? $page['title'] : '';
@@ -627,8 +627,8 @@ class Site_Health {
 		);
 
 		// User settings
-		$permalink_base = UM()->config()->permalink_base_options;
-		$display_name   = UM()->config()->display_name_options;
+		$permalink_base = UM()->config()->get( 'permalink_base_options' );
+		$display_name   = UM()->config()->get( 'display_name_options' );
 
 		$user_settings = array(
 			'user_separator' => array(
@@ -1080,7 +1080,7 @@ class Site_Health {
 			),
 		);
 
-		$emails = UM()->config()->email_notifications;
+		$emails = UM()->config()->get( 'email_notifications' );
 		foreach ( $emails as $key => $email ) {
 			$email_settings[ $key . '-enabled' ] = array(
 				// translators: %s is email template title.

@@ -17,51 +17,46 @@ if ( ! class_exists( 'um\Config' ) ) {
 	class Config {
 
 		/**
-		 * @var array
+		 * @var string[]
 		 */
 		public $core_forms;
 
 		/**
-		 * @var array
+		 * @var string[]
 		 */
 		public $core_directories;
 
 		/**
-		 * @var mixed|void
-		 */
-		public $core_pages;
-
-		/**
 		 * @since 2.8.3
 		 *
-		 * @var array
+		 * @var array[]
 		 */
 		public $predefined_pages;
 
 		/**
 		 * @since 2.8.4
 		 *
-		 * @var array
+		 * @var int[]
 		 */
 		public $avatar_thumbnail_sizes;
 
 		/**
-		 * @var array
+		 * @var array[]
 		 */
 		public $core_directory_meta = array();
 
 		/**
-		 * @var array
+		 * @var string[]
 		 */
-		public $core_global_meta_all;
+		public $core_global_meta_all = array();
 
 		/**
-		 * @var mixed|void
+		 * @var array|array[]
 		 */
-		public $core_form_meta_all;
+		public $core_form_meta_all = array();
 
 		/**
-		 * @var array
+		 * @var array|array[]
 		 */
 		public $core_form_meta = array();
 
@@ -76,14 +71,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 		public $nonadmin_perms;
 
 		/**
-		 * @var mixed|void
+		 * @var array|array[]
 		 */
-		public $email_notifications;
+		public $email_notifications = array();
 
 		/**
-		 * @var mixed|void
+		 * @var array|array[]
 		 */
-		public $settings_defaults;
+		public $settings_defaults = array();
 
 		/**
 		 * @var array
@@ -95,8 +90,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 */
 		public $default_roles_metadata = array();
 
+		/**
+		 * @var string[]
+		 */
 		public $permalink_base_options = array();
 
+		/**
+		 * @var string[]
+		 */
 		public $display_name_options = array();
 
 		public $google_maps_locales = array();
@@ -110,14 +111,182 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 * Config constructor.
 		 */
 		public function __construct() {
-			$this->core_forms = array(
-				'register',
-				'login',
-				'profile',
+			$this->permalinks = $this->get_core_pages();
+		}
+
+		/**
+		 * Get UM Pages
+		 *
+		 * @return array
+		 */
+		function get_core_pages() {
+			$permalink  = array();
+			$core_pages = array_keys( $this->get( 'predefined_pages' ) );
+			if ( empty( $core_pages ) ) {
+				return $permalink;
+			}
+
+			foreach ( $core_pages as $page_key ) {
+				$page_option_key        = UM()->options()->get_predefined_page_option_key( $page_key );
+				$permalink[ $page_key ] = UM()->options()->get( $page_option_key );
+			}
+
+			return $permalink;
+		}
+
+		/**
+		 * Get variable from config
+		 *
+		 * @param string $key
+		 *
+		 * @return mixed
+		 *
+		 * @since 2.8.3
+		 */
+		public function get( $key ) {
+			if ( empty( $this->$key ) ) {
+				$this->{'init_' . $key}();
+			}
+			return apply_filters( 'um_config_get', $this->$key, $key );
+		}
+
+		/**
+		 * @since 2.9.3
+		 *
+		 * @return void
+		 */
+		public function init_google_maps_locales() {
+			$this->google_maps_locales = array(
+				'af'     => __( 'Afrikaans', 'ultimate-member' ),
+				'sq'     => __( 'Albanian', 'ultimate-member' ),
+				'am'     => __( 'Amharic', 'ultimate-member' ),
+				'ar'     => __( 'Arabic', 'ultimate-member' ),
+				'hy'     => __( 'Armenian', 'ultimate-member' ),
+				'az'     => __( 'Azerbaijani', 'ultimate-member' ),
+				'eu'     => __( 'Basque', 'ultimate-member' ),
+				'be'     => __( 'Belarusian', 'ultimate-member' ),
+				'bn'     => __( 'Bengali', 'ultimate-member' ),
+				'bs'     => __( 'Bosnian', 'ultimate-member' ),
+				'my'     => __( 'Burmese', 'ultimate-member' ),
+				'ca'     => __( 'Catalan', 'ultimate-member' ),
+				'zh'     => __( 'Chinese', 'ultimate-member' ),
+				'zh-CN'  => __( 'Chinese (Simplified)', 'ultimate-member' ),
+				'zh-HK'  => __( 'Chinese (Hong Kong)', 'ultimate-member' ),
+				'zh-TW'  => __( 'Chinese (Traditional)', 'ultimate-member' ),
+				'hr'     => __( 'Croatian', 'ultimate-member' ),
+				'cs'     => __( 'Czech', 'ultimate-member' ),
+				'da'     => __( 'Danish', 'ultimate-member' ),
+				'nl'     => __( 'Dutch', 'ultimate-member' ),
+				'en'     => __( 'English', 'ultimate-member' ),
+				'en-AU'  => __( 'English (Australian)', 'ultimate-member' ),
+				'en-GB'  => __( 'English (Great Britain)', 'ultimate-member' ),
+				'et'     => __( 'Estonian', 'ultimate-member' ),
+				'fa'     => __( 'Farsi', 'ultimate-member' ),
+				'fi'     => __( 'Finnish', 'ultimate-member' ),
+				'fil'    => __( 'Filipino', 'ultimate-member' ),
+				'fr'     => __( 'French', 'ultimate-member' ),
+				'fr-CA'  => __( 'French (Canada)', 'ultimate-member' ),
+				'gl'     => __( 'Galician', 'ultimate-member' ),
+				'ka'     => __( 'Georgian', 'ultimate-member' ),
+				'de'     => __( 'German', 'ultimate-member' ),
+				'el'     => __( 'Greek', 'ultimate-member' ),
+				'gu'     => __( 'Gujarati', 'ultimate-member' ),
+				'iw'     => __( 'Hebrew', 'ultimate-member' ),
+				'hi'     => __( 'Hindi', 'ultimate-member' ),
+				'hu'     => __( 'Hungarian', 'ultimate-member' ),
+				'is'     => __( 'Icelandic', 'ultimate-member' ),
+				'id'     => __( 'Indonesian', 'ultimate-member' ),
+				'it'     => __( 'Italian', 'ultimate-member' ),
+				'ja'     => __( 'Japanese', 'ultimate-member' ),
+				'kn'     => __( 'Kannada', 'ultimate-member' ),
+				'kk'     => __( 'Kazakh', 'ultimate-member' ),
+				'km'     => __( 'Khmer', 'ultimate-member' ),
+				'ko'     => __( 'Korean', 'ultimate-member' ),
+				'ky'     => __( 'Kyrgyz', 'ultimate-member' ),
+				'lo'     => __( 'Lao', 'ultimate-member' ),
+				'lv'     => __( 'Latvian', 'ultimate-member' ),
+				'lt'     => __( 'Lithuanian', 'ultimate-member' ),
+				'mk'     => __( 'Macedonian', 'ultimate-member' ),
+				'ms'     => __( 'Malay', 'ultimate-member' ),
+				'ml'     => __( 'Malayalam', 'ultimate-member' ),
+				'mr'     => __( 'Marathi', 'ultimate-member' ),
+				'mn'     => __( 'Mongolian', 'ultimate-member' ),
+				'ne'     => __( 'Nepali', 'ultimate-member' ),
+				'no'     => __( 'Norwegian', 'ultimate-member' ),
+				'pl'     => __( 'Polish', 'ultimate-member' ),
+				'pt'     => __( 'Portuguese', 'ultimate-member' ),
+				'pt-BR'  => __( 'Portuguese (Brazil)', 'ultimate-member' ),
+				'pt-PT'  => __( 'Portuguese (Portugal)', 'ultimate-member' ),
+				'pa'     => __( 'Punjabi', 'ultimate-member' ),
+				'ro'     => __( 'Romanian', 'ultimate-member' ),
+				'ru'     => __( 'Russian', 'ultimate-member' ),
+				'sr'     => __( 'Serbian', 'ultimate-member' ),
+				'si'     => __( 'Sinhalese', 'ultimate-member' ),
+				'sk'     => __( 'Slovak', 'ultimate-member' ),
+				'sl'     => __( 'Slovenian', 'ultimate-member' ),
+				'es'     => __( 'Spanish', 'ultimate-member' ),
+				'es-419' => __( 'Spanish (Latin America)', 'ultimate-member' ),
+				'sw'     => __( 'Swahili', 'ultimate-member' ),
+				'sv'     => __( 'Swedish', 'ultimate-member' ),
+				'ta'     => __( 'Tamil', 'ultimate-member' ),
+				'te'     => __( 'Telugu', 'ultimate-member' ),
+				'th'     => __( 'Thai', 'ultimate-member' ),
+				'tr'     => __( 'Turkish', 'ultimate-member' ),
+				'uk'     => __( 'Ukrainian', 'ultimate-member' ),
+				'ur'     => __( 'Urdu', 'ultimate-member' ),
+				'uz'     => __( 'Uzbek', 'ultimate-member' ),
+				'vi'     => __( 'Vietnamese', 'ultimate-member' ),
+				'zu'     => __( 'Zulu', 'ultimate-member' ),
+			);
+		}
+
+		/**
+		 * Init plugin core pages.
+		 *
+		 * @since 2.8.3
+		 */
+		public function init_predefined_pages() {
+			$core_forms       = get_option( 'um_core_forms', array() );
+			$core_directories = get_option( 'um_core_directories', array() );
+			$setup_shortcodes = array_merge(
+				array(
+					'profile'  => '',
+					'login'    => '',
+					'register' => '',
+					'members'  => '',
+				),
+				array_merge( $core_forms, $core_directories )
 			);
 
-			$this->core_directories = array(
-				'members',
+			$this->predefined_pages = array(
+				'user'           => array(
+					'title'   => __( 'User', 'ultimate-member' ),
+					'content' => ! empty( $setup_shortcodes['profile'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['profile'] . '"]' : '',
+				),
+				'login'          => array(
+					'title'   => __( 'Login', 'ultimate-member' ),
+					'content' => ! empty( $setup_shortcodes['login'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['login'] . '"]' : '',
+				),
+				'register'       => array(
+					'title'   => __( 'Register', 'ultimate-member' ),
+					'content' => ! empty( $setup_shortcodes['register'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['register'] . '"]' : '',
+				),
+				'members'        => array(
+					'title'   => __( 'Members', 'ultimate-member' ),
+					'content' => ! empty( $setup_shortcodes['members'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['members'] . '"]' : '',
+				),
+				'logout'         => array(
+					'title'   => __( 'Logout', 'ultimate-member' ),
+					'content' => '',
+				),
+				'account'        => array(
+					'title'   => __( 'Account', 'ultimate-member' ),
+					'content' => '[ultimatemember_account]',
+				),
+				'password-reset' => array(
+					'title'   => __( 'Password Reset', 'ultimate-member' ),
+					'content' => '[ultimatemember_password]',
+				),
 			);
 
 			/**
@@ -127,341 +296,83 @@ if ( ! class_exists( 'um\Config' ) ) {
 			 *
 			 * @return {array} Predefined pages.
 			 *
-			 * @since 1.3.x
-			 * @hook um_core_pages
+			 * @since 2.8.3
+			 * @hook um_predefined_pages
 			 *
 			 * @example <caption>Extend UM core pages.</caption>
-			 * function my_core_pages( $pages ) {
+			 * function my_predefined_pages( $pages ) {
 			 *     // your code here
-			 *     $pages['my_page_key'] = array( 'title' => __( 'My Page Title', 'my-translate-key' ) );
+			 *     $pages['my_page_key'] = array( 'title' => __( 'My Page Title', 'my-translate-key' ), 'content' => 'my-page-predefined-content' );
 			 *     return $pages;
 			 * }
-			 * add_filter( 'um_core_pages', 'my_core_pages' );
+			 * add_filter( 'um_predefined_pages', 'my_predefined_pages' );
 			 */
-			$this->core_pages = apply_filters(
-				'um_core_pages',
-				array(
-					'user'           => array( 'title' => __( 'User', 'ultimate-member' ) ),
-					'login'          => array( 'title' => __( 'Login', 'ultimate-member' ) ),
-					'register'       => array( 'title' => __( 'Register', 'ultimate-member' ) ),
-					'members'        => array( 'title' => __( 'Members', 'ultimate-member' ) ),
-					'logout'         => array( 'title' => __( 'Logout', 'ultimate-member' ) ),
-					'account'        => array( 'title' => __( 'Account', 'ultimate-member' ) ),
-					'password-reset' => array( 'title' => __( 'Password Reset', 'ultimate-member' ) ),
-				)
+			$this->predefined_pages = apply_filters( 'um_predefined_pages', $this->predefined_pages );
+		}
+
+		public function init_avatar_thumbnail_sizes() {
+			$this->avatar_thumbnail_sizes = array( 32, 40, 64, 80, 128, 256 );
+			$this->avatar_thumbnail_sizes = apply_filters( 'um_avatar_thumbnail_sizes', $this->avatar_thumbnail_sizes );
+		}
+
+		/**
+		 * Initialize SVG icons from config file
+		 *
+		 * @since 3.0.0
+		 */
+		public function init_svg_icons() {
+			$this->svg_icons = include UM_PATH . 'includes/config/svg.php';
+		}
+
+		/**
+		 * Initialize core forms array
+		 *
+		 * @since 3.0.0
+		 */
+		public function init_core_forms() {
+			$this->core_forms = array(
+				'register',
+				'login',
+				'profile',
 			);
+		}
 
-			$this->core_directory_meta['members'] = array(
-				'_um_core'                     => 'members',
-				'_um_template'                 => 'members',
-				'_um_mode'                     => 'directory',
-				'_um_privacy'                  => 2,
-				'_um_privacy_roles'            => array(),
-				'_um_view_types'               => array( 'grid' ),
-				'_um_default_view'             => 'grid',
-				'_um_roles'                    => array(),
-				'_um_has_profile_photo'        => 0,
-				'_um_has_cover_photo'          => 0,
-				'_um_show_these_users'         => '',
-				'_um_exclude_these_users'      => '',
-
-				'_um_sortby'                   => 'user_registered_desc',
-				'_um_sortby_custom'            => '',
-				'_um_sortby_custom_label'      => '',
-				'_um_enable_sorting'           => 0,
-				'_um_sorting_fields'           => array(),
-
-				'_um_profile_photo'            => '1',
-				'_um_cover_photos'             => '1',
-				'_um_show_name'                => '1',
-				'_um_show_tagline'             => 0,
-				'_um_tagline_fields'           => array(),
-				'_um_show_userinfo'            => 0,
-				'_um_reveal_fields'            => array(),
-				'_um_show_social'              => 0,
-				'_um_userinfo_animate'         => '1',
-
-				'_um_search'                   => 0,
-				'_um_roles_can_search'         => array(),
-				'_um_filters'                  => 0,
-				'_um_roles_can_filter'         => array(),
-				'_um_search_fields'            => array(),
-				'_um_filters_expanded'         => 0,
-				'_um_filters_is_collapsible'   => 1,
-				'_um_search_filters'           => array(),
-				'_um_search'                    => 0,
-				'_um_roles_can_search'          => array(),
-				'_um_filters'                   => 0,
-				'_um_roles_can_filter'          => array(),
-				'_um_search_fields'             => array(),
-				'_um_filters_expanded'          => 0,
-				'_um_disable_filters_pre_query' => 0,
-				'_um_filters_is_collapsible'    => 1,
-				'_um_search_filters'            => array(),
-
-				'_um_must_search'              => 0,
-				'_um_max_users'                => '',
-				'_um_profiles_per_page'        => 12,
-				'_um_profiles_per_page_mobile' => 6,
-				'_um_directory_header'         => __( '{total_users} Members', 'ultimate-member' ),
-				'_um_directory_header_single'  => __( '{total_users} Member', 'ultimate-member' ),
-				'_um_directory_no_users'       => __( 'We are sorry. We cannot find any users who match your search criteria.', 'ultimate-member' ),
+		/**
+		 * Initialize core member directories array
+		 *
+		 * @since 3.0.0
+		 */
+		public function init_core_directories() {
+			$this->core_directories = array(
+				'members',
 			);
+		}
 
-			$this->core_global_meta_all = array(
-				'_um_primary_btn_color',
-				'_um_primary_btn_hover',
-				'_um_primary_btn_text',
-				'_um_secondary_btn_color',
-				'_um_secondary_btn_hover',
-				'_um_secondary_btn_text',
-				'_um_form_border',
-				'_um_form_border_hover',
-				'_um_form_bg_color',
-				'_um_form_bg_color_focus',
-				'_um_form_placeholder',
-				'_um_form_icon_color',
-				'_um_form_asterisk_color',
-				'_um_form_field_label',
-				'_um_form_text_color',
-				'_um_active_color',
-				'_um_help_tip_color',
-				'_um_secondary_color',
+		/**
+		 * Initialize display name options
+		 *
+		 * @since 3.0.0
+		 */
+		public function init_display_name_options() {
+			$this->display_name_options = array(
+				'default'        => __( 'Default WP Display Name', 'ultimate-member' ),
+				'nickname'       => __( 'Nickname', 'ultimate-member' ),
+				'username'       => __( 'Username', 'ultimate-member' ),
+				'full_name'      => __( 'First name & last name', 'ultimate-member' ),
+				'sur_name'       => __( 'Last name & first name', 'ultimate-member' ),
+				'initial_name'   => __( 'First name & first initial of last name', 'ultimate-member' ),
+				'initial_name_f' => __( 'First initial of first name & last name', 'ultimate-member' ),
+				'first_name'     => __( 'First name only', 'ultimate-member' ),
+				'field'          => __( 'Custom field(s)', 'ultimate-member' ),
 			);
+		}
 
-			$this->core_form_meta_all = array(
-				/*Profile Form*/
-				'_um_profile_show_name'            => 1,
-				'_um_profile_show_social_links'    => 0,
-				'_um_profile_show_bio'             => 1,
-				'_um_profile_bio_maxchars'         => 180,
-				'_um_profile_header_menu'          => 'bc',
-				'_um_profile_empty_text'           => 1,
-				'_um_profile_empty_text_emo'       => 1,
-				'_um_profile_role'                 => array(),
-				'_um_profile_template'             => 'profile',
-				'_um_profile_max_width'            => '1000px',
-				'_um_profile_area_max_width'       => '600px',
-				'_um_profile_align'                => 'center',
-				'_um_profile_icons'                => 'label',
-				'_um_profile_photo_enabled'        => 1,
-				'_um_profile_disable_photo_upload' => 0,
-				'_um_profile_photo_required'       => 0,
-				'_um_profile_photosize'            => '190',
-				'_um_profile_cover_enabled'        => 1,
-				'_um_profile_coversize'            => 'original',
-				'_um_profile_cover_ratio'          => '2.7:1',
-				'_um_profile_photocorner'          => '1',
-				'_um_profile_header_bg'            => '',
-				'_um_profile_primary_btn_word'     => __( 'Update Profile', 'ultimate-member' ),
-				'_um_profile_secondary_btn'        => '1',
-				'_um_profile_secondary_btn_word'   => __( 'Cancel', 'ultimate-member' ),
-
-				/*Registration Form*/
-				'_um_register_role'                => '0',
-				'_um_register_template'            => 'register',
-				'_um_register_max_width'           => '450px',
-				'_um_register_align'               => 'center',
-				'_um_register_icons'               => 'label',
-				'_um_register_primary_btn_word'    => __( 'Register', 'ultimate-member' ),
-				'_um_register_secondary_btn'       => 1,
-				'_um_register_secondary_btn_word'  => __( 'Login', 'ultimate-member' ),
-				'_um_register_secondary_btn_url'   => '',
-
-				/*Login Form*/
-				'_um_login_template'               => 'login',
-				'_um_login_max_width'              => '450px',
-				'_um_login_align'                  => 'center',
-				'_um_login_icons'                  => 'label',
-				'_um_login_primary_btn_word'       => __( 'Login', 'ultimate-member' ),
-				'_um_login_forgot_pass_link'       => 1,
-				'_um_login_show_rememberme'        => 1,
-				'_um_login_secondary_btn'          => 1,
-				'_um_login_secondary_btn_word'     => __( 'Register', 'ultimate-member' ),
-				'_um_login_secondary_btn_url'      => '',
-
-				/*Member Directory*/
-				'_um_directory_template'           => 'members',
-				'_um_directory_header'             => __( '{total_users} Members', 'ultimate-member' ),
-				'_um_directory_header_single'      => __( '{total_users} Member', 'ultimate-member' ),
-			);
-
-			if ( UM()->is_new_ui() ) {
-				unset( $this->core_form_meta_all['_um_profile_disable_photo_upload'], $this->core_form_meta_all['_um_profile_photo_required'] );
-			}
-			/**
-			 * Filters the list of Ultimate Member forms meta.
-			 *
-			 * @param {array} $form_meta UM Forms meta.
-			 *
-			 * @return {array} Forms meta.
-			 *
-			 * @since 1.3.x
-			 * @hook um_core_form_meta_all
-			 *
-			 * @example <caption>Add custom admin notice after {custom_update_key} action.</caption>
-			 * function my_um_core_form_meta_all( $form_meta ) {
-			 *      // your code here
-			 *      $meta['my_meta_key'] = 'my_meta_value';
-			 *      return $meta;
-			 * }
-			 * add_filter( 'um_core_form_meta_all', 'my_um_core_form_meta_all' );
-			 */
-			$this->core_form_meta_all = apply_filters( 'um_core_form_meta_all', $this->core_form_meta_all );
-
-			$this->core_form_meta['register'] = array(
-				'_um_custom_fields'                => array(
-					'user_login'    => array(
-						'title'      => __( 'Username', 'ultimate-member' ),
-						'metakey'    => 'user_login',
-						'type'       => 'text',
-						'label'      => __( 'Username', 'ultimate-member' ),
-						'required'   => 1,
-						'public'     => 1,
-						'editable'   => false,
-						'validate'   => 'unique_username',
-						'min_chars'  => 3,
-						'max_chars'  => 24,
-						'position'   => '1',
-						'in_row'     => '_um_row_1',
-						'in_sub_row' => '0',
-						'in_column'  => '1',
-						'in_group'   => '',
-					),
-					'user_email'    => array(
-						'title'      => __( 'E-mail Address', 'ultimate-member' ),
-						'metakey'    => 'user_email',
-						'type'       => 'text',
-						'label'      => __( 'E-mail Address', 'ultimate-member' ),
-						'required'   => 0,
-						'public'     => 1,
-						'editable'   => true,
-						'validate'   => 'unique_email',
-						'position'   => '4',
-						'in_row'     => '_um_row_1',
-						'in_sub_row' => '0',
-						'in_column'  => '1',
-						'in_group'   => '',
-					),
-					'user_password' => array(
-						'title'              => __( 'Password', 'ultimate-member' ),
-						'metakey'            => 'user_password',
-						'type'               => 'password',
-						'label'              => __( 'Password', 'ultimate-member' ),
-						'required'           => 1,
-						'public'             => 1,
-						'editable'           => true,
-						'min_chars'          => 8,
-						'max_chars'          => 30,
-						'force_good_pass'    => 1,
-						'force_confirm_pass' => 1,
-						'position'           => '5',
-						'in_row'             => '_um_row_1',
-						'in_sub_row'         => '0',
-						'in_column'          => '1',
-						'in_group'           => '',
-					),
-					'first_name'    => array(
-						'title'      => __( 'First Name', 'ultimate-member' ),
-						'metakey'    => 'first_name',
-						'type'       => 'text',
-						'label'      => __( 'First Name', 'ultimate-member' ),
-						'required'   => 0,
-						'public'     => 1,
-						'editable'   => true,
-						'position'   => '2',
-						'in_row'     => '_um_row_1',
-						'in_sub_row' => '0',
-						'in_column'  => '1',
-						'in_group'   => '',
-					),
-					'last_name'     => array(
-						'title'      => __( 'Last Name', 'ultimate-member' ),
-						'metakey'    => 'last_name',
-						'type'       => 'text',
-						'label'      => __( 'Last Name', 'ultimate-member' ),
-						'required'   => 0,
-						'public'     => 1,
-						'editable'   => true,
-						'position'   => '3',
-						'in_row'     => '_um_row_1',
-						'in_sub_row' => '0',
-						'in_column'  => '1',
-						'in_group'   => '',
-					),
-					'_um_row_1'     => array(
-						'type'     => 'row',
-						'id'       => '_um_row_1',
-						'sub_rows' => '1',
-						'cols'     => '1',
-					),
-				),
-				'_um_mode'                         => 'register',
-				'_um_core'                         => 'register',
-				'_um_register_use_custom_settings' => 0,
-			);
-
-			$this->core_form_meta['login'] = array(
-				'_um_custom_fields'             => array(
-					'username'      => array(
-						'title'      => __( 'Username or E-mail', 'ultimate-member' ),
-						'metakey'    => 'username',
-						'type'       => 'text',
-						'label'      => __( 'Username or E-mail', 'ultimate-member' ),
-						'required'   => 1,
-						'public'     => 1,
-						'editable'   => false,
-						'validate'   => 'unique_username_or_email',
-						'position'   => '1',
-						'in_row'     => '_um_row_1',
-						'in_sub_row' => '0',
-						'in_column'  => '1',
-						'in_group'   => '',
-					),
-					'user_password' => array(
-						'title'              => __( 'Password', 'ultimate-member' ),
-						'metakey'            => 'user_password',
-						'type'               => 'password',
-						'label'              => __( 'Password', 'ultimate-member' ),
-						'required'           => 1,
-						'public'             => 1,
-						'editable'           => true,
-						'min_chars'          => 8,
-						'max_chars'          => 30,
-						'force_good_pass'    => 1,
-						'force_confirm_pass' => 1,
-						'position'           => '2',
-						'in_row'             => '_um_row_1',
-						'in_sub_row'         => '0',
-						'in_column'          => '1',
-						'in_group'           => '',
-					),
-					'_um_row_1'     => array(
-						'type'     => 'row',
-						'id'       => '_um_row_1',
-						'sub_rows' => '1',
-						'cols'     => '1',
-					),
-				),
-				'_um_mode'                      => 'login',
-				'_um_core'                      => 'login',
-				'_um_login_use_custom_settings' => 0,
-			);
-
-			$this->core_form_meta['profile'] = array(
-				'_um_custom_fields'               => array(
-					'_um_row_1' => array(
-						'type'     => 'row',
-						'id'       => '_um_row_1',
-						'sub_rows' => '1',
-						'cols'     => '1',
-					),
-				),
-				'_um_mode'                        => 'profile',
-				'_um_core'                        => 'profile',
-				'_um_profile_use_custom_settings' => 0,
-			);
-
+		/**
+		 * Initialize email notifications with predefined settings
+		 *
+		 * @since 3.0.0
+		 */
+		public function init_email_notifications() {
 			$this->email_notifications = array(
 				'welcome_email'         => array(
 					'key'            => 'welcome_email',
@@ -671,7 +582,465 @@ if ( ! class_exists( 'um\Config' ) ) {
 			 * add_filter( 'um_email_notifications', 'my_um_email_notifications' );
 			 */
 			$this->email_notifications = apply_filters( 'um_email_notifications', $this->email_notifications );
+		}
 
+		/**
+		 * Initialize permalink base options
+		 *
+		 * @since 3.0.0
+		 */
+		public function init_permalink_base_options() {
+			$this->permalink_base_options = array(
+				'user_login'  => __( 'Username', 'ultimate-member' ),
+				'name'        => __( 'First and Last Name with \'.\'', 'ultimate-member' ),
+				'name_dash'   => __( 'First and Last Name with \'-\'', 'ultimate-member' ),
+				'name_plus'   => __( 'First and Last Name with \'+\'', 'ultimate-member' ),
+				'user_id'     => __( 'User ID', 'ultimate-member' ),
+				'hash'        => __( 'Unique hash string', 'ultimate-member' ),
+				'custom_meta' => __( 'Custom usermeta', 'ultimate-member' ),
+			);
+			$this->permalink_base_options = apply_filters( 'um_config_permalink_base_options', $this->permalink_base_options );
+		}
+
+		/**
+		 * Initialize default roles metadata
+		 *
+		 * @since 3.0.0
+		 */
+		public function init_default_roles_metadata() {
+			$this->default_roles_metadata = array(
+				'subscriber'    => array(
+					'_um_can_access_wpadmin'         => 0,
+					'_um_can_not_see_adminbar'       => 1,
+					'_um_can_edit_everyone'          => 0,
+					'_um_can_delete_everyone'        => 0,
+					'_um_can_edit_profile'           => 1,
+					'_um_can_delete_profile'         => 1,
+					'_um_after_login'                => 'redirect_profile',
+					'_um_after_logout'               => 'redirect_home',
+					'_um_default_homepage'           => 1,
+					'_um_can_view_all'               => 1,
+					'_um_can_make_private_profile'   => 0,
+					'_um_can_access_private_profile' => 0,
+					'_um_status'                     => 'approved',
+					'_um_auto_approve_act'           => 'redirect_profile',
+				),
+				'author'        => array(
+					'_um_can_access_wpadmin'         => 0,
+					'_um_can_not_see_adminbar'       => 1,
+					'_um_can_edit_everyone'          => 0,
+					'_um_can_delete_everyone'        => 0,
+					'_um_can_edit_profile'           => 1,
+					'_um_can_delete_profile'         => 1,
+					'_um_after_login'                => 'redirect_profile',
+					'_um_after_logout'               => 'redirect_home',
+					'_um_default_homepage'           => 1,
+					'_um_can_view_all'               => 1,
+					'_um_can_make_private_profile'   => 0,
+					'_um_can_access_private_profile' => 0,
+					'_um_status'                     => 'approved',
+					'_um_auto_approve_act'           => 'redirect_profile',
+				),
+				'contributor'   => array(
+					'_um_can_access_wpadmin'         => 0,
+					'_um_can_not_see_adminbar'       => 1,
+					'_um_can_edit_everyone'          => 0,
+					'_um_can_delete_everyone'        => 0,
+					'_um_can_edit_profile'           => 1,
+					'_um_can_delete_profile'         => 1,
+					'_um_after_login'                => 'redirect_profile',
+					'_um_after_logout'               => 'redirect_home',
+					'_um_default_homepage'           => 1,
+					'_um_can_view_all'               => 1,
+					'_um_can_make_private_profile'   => 0,
+					'_um_can_access_private_profile' => 0,
+					'_um_status'                     => 'approved',
+					'_um_auto_approve_act'           => 'redirect_profile',
+				),
+				'editor'        => array(
+					'_um_can_access_wpadmin'         => 0,
+					'_um_can_not_see_adminbar'       => 1,
+					'_um_can_edit_everyone'          => 0,
+					'_um_can_delete_everyone'        => 0,
+					'_um_can_edit_profile'           => 1,
+					'_um_can_delete_profile'         => 1,
+					'_um_after_login'                => 'redirect_profile',
+					'_um_after_logout'               => 'redirect_home',
+					'_um_default_homepage'           => 1,
+					'_um_can_view_all'               => 1,
+					'_um_can_make_private_profile'   => 0,
+					'_um_can_access_private_profile' => 0,
+					'_um_status'                     => 'approved',
+					'_um_auto_approve_act'           => 'redirect_profile',
+				),
+				'administrator' => array(
+					'_um_can_access_wpadmin'         => 1,
+					'_um_can_not_see_adminbar'       => 0,
+					'_um_can_edit_everyone'          => 1,
+					'_um_can_delete_everyone'        => 1,
+					'_um_can_edit_profile'           => 1,
+					'_um_can_delete_profile'         => 1,
+					'_um_default_homepage'           => 1,
+					'_um_after_login'                => 'redirect_admin',
+					'_um_after_logout'               => 'redirect_home',
+					'_um_can_view_all'               => 1,
+					'_um_can_make_private_profile'   => 1,
+					'_um_can_access_private_profile' => 1,
+					'_um_status'                     => 'approved',
+					'_um_auto_approve_act'           => 'redirect_profile',
+				),
+			);
+		}
+
+		/**
+		 * Initialize core directory meta data
+		 *
+		 * @since 3.0.0
+		 *
+		 * Initializes an array of meta data related to the core directory functionality including
+		 * member settings, privacy settings, view types, sorting options, profile photo preferences,
+		 * search and filter settings, and directory display settings.
+		 */
+		public function init_core_directory_meta() {
+			$this->core_directory_meta['members'] = array(
+				'_um_core'                     => 'members',
+				'_um_template'                 => 'members',
+				'_um_mode'                     => 'directory',
+				'_um_privacy'                  => 2,
+				'_um_privacy_roles'            => array(),
+				'_um_view_types'               => array( 'grid' ),
+				'_um_default_view'             => 'grid',
+				'_um_roles'                    => array(),
+				'_um_has_profile_photo'        => 0,
+				'_um_has_cover_photo'          => 0,
+				'_um_show_these_users'         => '',
+				'_um_exclude_these_users'      => '',
+
+				'_um_sortby'                   => 'user_registered_desc',
+				'_um_sortby_custom'            => '',
+				'_um_sortby_custom_label'      => '',
+				'_um_enable_sorting'           => 0,
+				'_um_sorting_fields'           => array(),
+
+				'_um_profile_photo'            => '1',
+				'_um_cover_photos'             => '1',
+				'_um_show_name'                => '1',
+				'_um_show_tagline'             => 0,
+				'_um_tagline_fields'           => array(),
+				'_um_show_userinfo'            => 0,
+				'_um_reveal_fields'            => array(),
+				'_um_show_social'              => 0,
+				'_um_userinfo_animate'         => '1',
+
+				'_um_search'                   => 0,
+				'_um_roles_can_search'         => array(),
+				'_um_filters'                  => 0,
+				'_um_roles_can_filter'         => array(),
+				'_um_search_fields'            => array(),
+				'_um_filters_expanded'         => 0,
+				'_um_filters_is_collapsible'   => 1,
+				'_um_search_filters'           => array(),
+				'_um_search'                    => 0,
+				'_um_roles_can_search'          => array(),
+				'_um_filters'                   => 0,
+				'_um_roles_can_filter'          => array(),
+				'_um_search_fields'             => array(),
+				'_um_filters_expanded'          => 0,
+				'_um_disable_filters_pre_query' => 0,
+				'_um_filters_is_collapsible'    => 1,
+				'_um_search_filters'            => array(),
+
+				'_um_must_search'              => 0,
+				'_um_max_users'                => '',
+				'_um_profiles_per_page'        => 12,
+				'_um_profiles_per_page_mobile' => 6,
+				'_um_directory_header'         => __( '{total_users} Members', 'ultimate-member' ),
+				'_um_directory_header_single'  => __( '{total_users} Member', 'ultimate-member' ),
+				'_um_directory_no_users'       => __( 'We are sorry. We cannot find any users who match your search criteria.', 'ultimate-member' ),
+			);
+		}
+
+		/**
+		 * Initialize core global meta all
+		 *
+		 * @since 3.0.0
+		 */
+		public function init_core_global_meta_all() {
+			$this->core_global_meta_all = array(
+				'_um_primary_btn_color',
+				'_um_primary_btn_hover',
+				'_um_primary_btn_text',
+				'_um_secondary_btn_color',
+				'_um_secondary_btn_hover',
+				'_um_secondary_btn_text',
+				'_um_form_border',
+				'_um_form_border_hover',
+				'_um_form_bg_color',
+				'_um_form_bg_color_focus',
+				'_um_form_placeholder',
+				'_um_form_icon_color',
+				'_um_form_asterisk_color',
+				'_um_form_field_label',
+				'_um_form_text_color',
+				'_um_active_color',
+				'_um_help_tip_color',
+				'_um_secondary_color',
+			);
+		}
+
+		/**
+		 * Initialize core form meta for various forms in Ultimate Member
+		 *
+		 * @since 3.0.0
+		 * @hook um_core_form_meta_all
+		 *
+		 */
+		public function init_core_form_meta_all() {
+			$this->core_form_meta_all = array(
+				/*Profile Form*/
+				'_um_profile_show_name'            => 1,
+				'_um_profile_show_social_links'    => 0,
+				'_um_profile_show_bio'             => 1,
+				'_um_profile_bio_maxchars'         => 180,
+				'_um_profile_header_menu'          => 'bc',
+				'_um_profile_empty_text'           => 1,
+				'_um_profile_empty_text_emo'       => 1,
+				'_um_profile_role'                 => array(),
+				'_um_profile_template'             => 'profile',
+				'_um_profile_max_width'            => '1000px',
+				'_um_profile_area_max_width'       => '600px',
+				'_um_profile_align'                => 'center',
+				'_um_profile_icons'                => 'label',
+				'_um_profile_photo_enabled'        => 1,
+				'_um_profile_disable_photo_upload' => 0,
+				'_um_profile_photo_required'       => 0,
+				'_um_profile_photosize'            => '190',
+				'_um_profile_cover_enabled'        => 1,
+				'_um_profile_coversize'            => 'original',
+				'_um_profile_cover_ratio'          => '2.7:1',
+				'_um_profile_photocorner'          => '1',
+				'_um_profile_header_bg'            => '',
+				'_um_profile_primary_btn_word'     => __( 'Update Profile', 'ultimate-member' ),
+				'_um_profile_secondary_btn'        => '1',
+				'_um_profile_secondary_btn_word'   => __( 'Cancel', 'ultimate-member' ),
+
+				/*Registration Form*/
+				'_um_register_role'                => '0',
+				'_um_register_template'            => 'register',
+				'_um_register_max_width'           => '450px',
+				'_um_register_align'               => 'center',
+				'_um_register_icons'               => 'label',
+				'_um_register_primary_btn_word'    => __( 'Register', 'ultimate-member' ),
+				'_um_register_secondary_btn'       => 1,
+				'_um_register_secondary_btn_word'  => __( 'Login', 'ultimate-member' ),
+				'_um_register_secondary_btn_url'   => '',
+
+				/*Login Form*/
+				'_um_login_template'               => 'login',
+				'_um_login_max_width'              => '450px',
+				'_um_login_align'                  => 'center',
+				'_um_login_icons'                  => 'label',
+				'_um_login_primary_btn_word'       => __( 'Login', 'ultimate-member' ),
+				'_um_login_forgot_pass_link'       => 1,
+				'_um_login_show_rememberme'        => 1,
+				'_um_login_secondary_btn'          => 1,
+				'_um_login_secondary_btn_word'     => __( 'Register', 'ultimate-member' ),
+				'_um_login_secondary_btn_url'      => '',
+
+				/*Member Directory*/
+				'_um_directory_template'           => 'members',
+				'_um_directory_header'             => __( '{total_users} Members', 'ultimate-member' ),
+				'_um_directory_header_single'      => __( '{total_users} Member', 'ultimate-member' ),
+			);
+
+			if ( UM()->is_new_ui() ) {
+				unset( $this->core_form_meta_all['_um_profile_disable_photo_upload'], $this->core_form_meta_all['_um_profile_photo_required'] );
+			}
+			/**
+			 * Filters the list of Ultimate Member forms meta.
+			 *
+			 * @param {array} $form_meta UM Forms meta.
+			 *
+			 * @return {array} Forms meta.
+			 *
+			 * @since 1.3.x
+			 * @hook um_core_form_meta_all
+			 *
+			 * @example <caption>Add custom admin notice after {custom_update_key} action.</caption>
+			 * function my_um_core_form_meta_all( $form_meta ) {
+			 *      // your code here
+			 *      $meta['my_meta_key'] = 'my_meta_value';
+			 *      return $meta;
+			 * }
+			 * add_filter( 'um_core_form_meta_all', 'my_um_core_form_meta_all' );
+			 */
+			$this->core_form_meta_all = apply_filters( 'um_core_form_meta_all', $this->core_form_meta_all );
+		}
+
+		/**
+		 * Initialize core form meta for various sections like register, login, profile
+		 *
+		 * @since 3.0.0
+		 */
+		public function init_core_form_meta() {
+			$this->core_form_meta['register'] = array(
+				'_um_custom_fields'                => array(
+					'user_login'    => array(
+						'title'      => __( 'Username', 'ultimate-member' ),
+						'metakey'    => 'user_login',
+						'type'       => 'text',
+						'label'      => __( 'Username', 'ultimate-member' ),
+						'required'   => 1,
+						'public'     => 1,
+						'editable'   => false,
+						'validate'   => 'unique_username',
+						'min_chars'  => 3,
+						'max_chars'  => 24,
+						'position'   => '1',
+						'in_row'     => '_um_row_1',
+						'in_sub_row' => '0',
+						'in_column'  => '1',
+						'in_group'   => '',
+					),
+					'user_email'    => array(
+						'title'      => __( 'E-mail Address', 'ultimate-member' ),
+						'metakey'    => 'user_email',
+						'type'       => 'text',
+						'label'      => __( 'E-mail Address', 'ultimate-member' ),
+						'required'   => 0,
+						'public'     => 1,
+						'editable'   => true,
+						'validate'   => 'unique_email',
+						'position'   => '4',
+						'in_row'     => '_um_row_1',
+						'in_sub_row' => '0',
+						'in_column'  => '1',
+						'in_group'   => '',
+					),
+					'user_password' => array(
+						'title'              => __( 'Password', 'ultimate-member' ),
+						'metakey'            => 'user_password',
+						'type'               => 'password',
+						'label'              => __( 'Password', 'ultimate-member' ),
+						'required'           => 1,
+						'public'             => 1,
+						'editable'           => true,
+						'min_chars'          => 8,
+						'max_chars'          => 30,
+						'force_good_pass'    => 1,
+						'force_confirm_pass' => 1,
+						'position'           => '5',
+						'in_row'             => '_um_row_1',
+						'in_sub_row'         => '0',
+						'in_column'          => '1',
+						'in_group'           => '',
+					),
+					'first_name'    => array(
+						'title'      => __( 'First Name', 'ultimate-member' ),
+						'metakey'    => 'first_name',
+						'type'       => 'text',
+						'label'      => __( 'First Name', 'ultimate-member' ),
+						'required'   => 0,
+						'public'     => 1,
+						'editable'   => true,
+						'position'   => '2',
+						'in_row'     => '_um_row_1',
+						'in_sub_row' => '0',
+						'in_column'  => '1',
+						'in_group'   => '',
+					),
+					'last_name'     => array(
+						'title'      => __( 'Last Name', 'ultimate-member' ),
+						'metakey'    => 'last_name',
+						'type'       => 'text',
+						'label'      => __( 'Last Name', 'ultimate-member' ),
+						'required'   => 0,
+						'public'     => 1,
+						'editable'   => true,
+						'position'   => '3',
+						'in_row'     => '_um_row_1',
+						'in_sub_row' => '0',
+						'in_column'  => '1',
+						'in_group'   => '',
+					),
+					'_um_row_1'     => array(
+						'type'     => 'row',
+						'id'       => '_um_row_1',
+						'sub_rows' => '1',
+						'cols'     => '1',
+					),
+				),
+				'_um_mode'                         => 'register',
+				'_um_core'                         => 'register',
+				'_um_register_use_custom_settings' => 0,
+			);
+			$this->core_form_meta['login']    = array(
+				'_um_custom_fields'             => array(
+					'username'      => array(
+						'title'      => __( 'Username or E-mail', 'ultimate-member' ),
+						'metakey'    => 'username',
+						'type'       => 'text',
+						'label'      => __( 'Username or E-mail', 'ultimate-member' ),
+						'required'   => 1,
+						'public'     => 1,
+						'editable'   => false,
+						'validate'   => 'unique_username_or_email',
+						'position'   => '1',
+						'in_row'     => '_um_row_1',
+						'in_sub_row' => '0',
+						'in_column'  => '1',
+						'in_group'   => '',
+					),
+					'user_password' => array(
+						'title'              => __( 'Password', 'ultimate-member' ),
+						'metakey'            => 'user_password',
+						'type'               => 'password',
+						'label'              => __( 'Password', 'ultimate-member' ),
+						'required'           => 1,
+						'public'             => 1,
+						'editable'           => true,
+						'min_chars'          => 8,
+						'max_chars'          => 30,
+						'force_good_pass'    => 1,
+						'force_confirm_pass' => 1,
+						'position'           => '2',
+						'in_row'             => '_um_row_1',
+						'in_sub_row'         => '0',
+						'in_column'          => '1',
+						'in_group'           => '',
+					),
+					'_um_row_1'     => array(
+						'type'     => 'row',
+						'id'       => '_um_row_1',
+						'sub_rows' => '1',
+						'cols'     => '1',
+					),
+				),
+				'_um_mode'                      => 'login',
+				'_um_core'                      => 'login',
+				'_um_login_use_custom_settings' => 0,
+			);
+			$this->core_form_meta['profile']  = array(
+				'_um_custom_fields'               => array(
+					'_um_row_1' => array(
+						'type'     => 'row',
+						'id'       => '_um_row_1',
+						'sub_rows' => '1',
+						'cols'     => '1',
+					),
+				),
+				'_um_mode'                        => 'profile',
+				'_um_core'                        => 'profile',
+				'_um_profile_use_custom_settings' => 0,
+			);
+		}
+
+		/**
+		 * Initialize default settings values
+		 *
+		 * @since 3.0.0
+		 */
+		public function init_settings_defaults() {
 			// Settings defaults.
 			$this->settings_defaults = array(
 				'restricted_access_post_metabox'        => array(
@@ -786,7 +1155,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 			$tabs = UM()->profile()->tabs();
 
 			foreach ( $tabs as $id => $tab ) {
-
 				if ( ! empty( $tab['hidden'] ) ) {
 					continue;
 				}
@@ -799,19 +1167,19 @@ if ( ! class_exists( 'um\Config' ) ) {
 				}
 			}
 
-			foreach ( $this->email_notifications as $key => $notification ) {
+			foreach ( $this->get( 'email_notifications' ) as $key => $notification ) {
 				$this->settings_defaults[ $key . '_on' ]  = ! empty( $notification['default_active'] );
 				$this->settings_defaults[ $key . '_sub' ] = $notification['subject'];
 				$this->settings_defaults[ $key ]          = $notification['body'];
 			}
 
-			foreach ( $this->core_pages as $page_s => $page ) {
+			foreach ( $this->get( 'predefined_pages' ) as $page_s => $page ) {
 				$page_id = UM()->options()->get_predefined_page_option_key( $page_s );
 
 				$this->settings_defaults[ $page_id ] = '';
 			}
 
-			foreach ( $this->core_form_meta_all as $key => $value ) {
+			foreach ( $this->get( 'core_form_meta_all' ) as $key => $value ) {
 				$this->settings_defaults[ str_replace( '_um_', '', $key ) ] = $value;
 			}
 
@@ -837,359 +1205,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 			 * ?>
 			 */
 			$this->settings_defaults = apply_filters( 'um_default_settings_values', $this->settings_defaults );
-
-			$this->permalinks = $this->get_core_pages();
-
-			$this->default_roles_metadata = array(
-				'subscriber'    => array(
-					'_um_can_access_wpadmin'         => 0,
-					'_um_can_not_see_adminbar'       => 1,
-					'_um_can_edit_everyone'          => 0,
-					'_um_can_delete_everyone'        => 0,
-					'_um_can_edit_profile'           => 1,
-					'_um_can_delete_profile'         => 1,
-					'_um_after_login'                => 'redirect_profile',
-					'_um_after_logout'               => 'redirect_home',
-					'_um_default_homepage'           => 1,
-					'_um_can_view_all'               => 1,
-					'_um_can_make_private_profile'   => 0,
-					'_um_can_access_private_profile' => 0,
-					'_um_status'                     => 'approved',
-					'_um_auto_approve_act'           => 'redirect_profile',
-				),
-				'author'        => array(
-					'_um_can_access_wpadmin'         => 0,
-					'_um_can_not_see_adminbar'       => 1,
-					'_um_can_edit_everyone'          => 0,
-					'_um_can_delete_everyone'        => 0,
-					'_um_can_edit_profile'           => 1,
-					'_um_can_delete_profile'         => 1,
-					'_um_after_login'                => 'redirect_profile',
-					'_um_after_logout'               => 'redirect_home',
-					'_um_default_homepage'           => 1,
-					'_um_can_view_all'               => 1,
-					'_um_can_make_private_profile'   => 0,
-					'_um_can_access_private_profile' => 0,
-					'_um_status'                     => 'approved',
-					'_um_auto_approve_act'           => 'redirect_profile',
-				),
-				'contributor'   => array(
-					'_um_can_access_wpadmin'         => 0,
-					'_um_can_not_see_adminbar'       => 1,
-					'_um_can_edit_everyone'          => 0,
-					'_um_can_delete_everyone'        => 0,
-					'_um_can_edit_profile'           => 1,
-					'_um_can_delete_profile'         => 1,
-					'_um_after_login'                => 'redirect_profile',
-					'_um_after_logout'               => 'redirect_home',
-					'_um_default_homepage'           => 1,
-					'_um_can_view_all'               => 1,
-					'_um_can_make_private_profile'   => 0,
-					'_um_can_access_private_profile' => 0,
-					'_um_status'                     => 'approved',
-					'_um_auto_approve_act'           => 'redirect_profile',
-				),
-				'editor'        => array(
-					'_um_can_access_wpadmin'         => 0,
-					'_um_can_not_see_adminbar'       => 1,
-					'_um_can_edit_everyone'          => 0,
-					'_um_can_delete_everyone'        => 0,
-					'_um_can_edit_profile'           => 1,
-					'_um_can_delete_profile'         => 1,
-					'_um_after_login'                => 'redirect_profile',
-					'_um_after_logout'               => 'redirect_home',
-					'_um_default_homepage'           => 1,
-					'_um_can_view_all'               => 1,
-					'_um_can_make_private_profile'   => 0,
-					'_um_can_access_private_profile' => 0,
-					'_um_status'                     => 'approved',
-					'_um_auto_approve_act'           => 'redirect_profile',
-				),
-				'administrator' => array(
-					'_um_can_access_wpadmin'         => 1,
-					'_um_can_not_see_adminbar'       => 0,
-					'_um_can_edit_everyone'          => 1,
-					'_um_can_delete_everyone'        => 1,
-					'_um_can_edit_profile'           => 1,
-					'_um_can_delete_profile'         => 1,
-					'_um_default_homepage'           => 1,
-					'_um_after_login'                => 'redirect_admin',
-					'_um_after_logout'               => 'redirect_home',
-					'_um_can_view_all'               => 1,
-					'_um_can_make_private_profile'   => 1,
-					'_um_can_access_private_profile' => 1,
-					'_um_status'                     => 'approved',
-					'_um_auto_approve_act'           => 'redirect_profile',
-				),
-			);
-
-			$this->permalink_base_options = array(
-				'user_login'  => __( 'Username', 'ultimate-member' ),
-				'name'        => __( 'First and Last Name with \'.\'', 'ultimate-member' ),
-				'name_dash'   => __( 'First and Last Name with \'-\'', 'ultimate-member' ),
-				'name_plus'   => __( 'First and Last Name with \'+\'', 'ultimate-member' ),
-				'user_id'     => __( 'User ID', 'ultimate-member' ),
-				'hash'        => __( 'Unique hash string', 'ultimate-member' ),
-				'custom_meta' => __( 'Custom usermeta', 'ultimate-member' ),
-			);
-			$this->permalink_base_options = apply_filters( 'um_config_permalink_base_options', $this->permalink_base_options );
-
-			$this->display_name_options = array(
-				'default'        => __( 'Default WP Display Name', 'ultimate-member' ),
-				'nickname'       => __( 'Nickname', 'ultimate-member' ),
-				'username'       => __( 'Username', 'ultimate-member' ),
-				'full_name'      => __( 'First name & last name', 'ultimate-member' ),
-				'sur_name'       => __( 'Last name & first name', 'ultimate-member' ),
-				'initial_name'   => __( 'First name & first initial of last name', 'ultimate-member' ),
-				'initial_name_f' => __( 'First initial of first name & last name', 'ultimate-member' ),
-				'first_name'     => __( 'First name only', 'ultimate-member' ),
-				'field'          => __( 'Custom field(s)', 'ultimate-member' ),
-			);
-		}
-
-		/**
-		 * Get UM Pages
-		 *
-		 * @return array
-		 */
-		function get_core_pages() {
-			$permalink  = array();
-			$core_pages = array_keys( $this->core_pages );
-			if ( empty( $core_pages ) ) {
-				return $permalink;
-			}
-
-			foreach ( $core_pages as $page_key ) {
-				$page_option_key        = UM()->options()->get_predefined_page_option_key( $page_key );
-				$permalink[ $page_key ] = UM()->options()->get( $page_option_key );
-			}
-
-			return $permalink;
-		}
-
-		/**
-		 * @todo make config class not cycled
-		 */
-		public function set_core_page() {
-			$this->core_pages = array(
-				'user'           => array(
-					'title' => __( 'User', 'ultimate-member' ),
-				),
-				'login'          => array(
-					'title' => __( 'Login', 'ultimate-member' ),
-				),
-				'register'       => array(
-					'title' => __( 'Register', 'ultimate-member' ),
-				),
-				'members'        => array(
-					'title' => __( 'Members', 'ultimate-member' ),
-				),
-				'logout'         => array(
-					'title' => __( 'Logout', 'ultimate-member' ),
-				),
-				'account'        => array(
-					'title' => __( 'Account', 'ultimate-member' ),
-				),
-				'password-reset' => array(
-					'title' => __( 'Password Reset', 'ultimate-member' ),
-				),
-			);
-			$this->core_pages = apply_filters( 'um_core_pages', $this->core_pages );
-		}
-
-		/**
-		 * Get variable from config
-		 *
-		 * @param string $key
-		 *
-		 * @return mixed
-		 *
-		 * @since 2.8.3
-		 */
-		public function get( $key ) {
-			if ( empty( $this->$key ) ) {
-				$this->{'init_' . $key}();
-			}
-			return apply_filters( 'um_config_get', $this->$key, $key );
-		}
-
-		/**
-		 * @since 2.9.3
-		 *
-		 * @return void
-		 */
-		public function init_google_maps_locales() {
-			$this->google_maps_locales = array(
-				'af'     => __( 'Afrikaans', 'ultimate-member' ),
-				'sq'     => __( 'Albanian', 'ultimate-member' ),
-				'am'     => __( 'Amharic', 'ultimate-member' ),
-				'ar'     => __( 'Arabic', 'ultimate-member' ),
-				'hy'     => __( 'Armenian', 'ultimate-member' ),
-				'az'     => __( 'Azerbaijani', 'ultimate-member' ),
-				'eu'     => __( 'Basque', 'ultimate-member' ),
-				'be'     => __( 'Belarusian', 'ultimate-member' ),
-				'bn'     => __( 'Bengali', 'ultimate-member' ),
-				'bs'     => __( 'Bosnian', 'ultimate-member' ),
-				'my'     => __( 'Burmese', 'ultimate-member' ),
-				'ca'     => __( 'Catalan', 'ultimate-member' ),
-				'zh'     => __( 'Chinese', 'ultimate-member' ),
-				'zh-CN'  => __( 'Chinese (Simplified)', 'ultimate-member' ),
-				'zh-HK'  => __( 'Chinese (Hong Kong)', 'ultimate-member' ),
-				'zh-TW'  => __( 'Chinese (Traditional)', 'ultimate-member' ),
-				'hr'     => __( 'Croatian', 'ultimate-member' ),
-				'cs'     => __( 'Czech', 'ultimate-member' ),
-				'da'     => __( 'Danish', 'ultimate-member' ),
-				'nl'     => __( 'Dutch', 'ultimate-member' ),
-				'en'     => __( 'English', 'ultimate-member' ),
-				'en-AU'  => __( 'English (Australian)', 'ultimate-member' ),
-				'en-GB'  => __( 'English (Great Britain)', 'ultimate-member' ),
-				'et'     => __( 'Estonian', 'ultimate-member' ),
-				'fa'     => __( 'Farsi', 'ultimate-member' ),
-				'fi'     => __( 'Finnish', 'ultimate-member' ),
-				'fil'    => __( 'Filipino', 'ultimate-member' ),
-				'fr'     => __( 'French', 'ultimate-member' ),
-				'fr-CA'  => __( 'French (Canada)', 'ultimate-member' ),
-				'gl'     => __( 'Galician', 'ultimate-member' ),
-				'ka'     => __( 'Georgian', 'ultimate-member' ),
-				'de'     => __( 'German', 'ultimate-member' ),
-				'el'     => __( 'Greek', 'ultimate-member' ),
-				'gu'     => __( 'Gujarati', 'ultimate-member' ),
-				'iw'     => __( 'Hebrew', 'ultimate-member' ),
-				'hi'     => __( 'Hindi', 'ultimate-member' ),
-				'hu'     => __( 'Hungarian', 'ultimate-member' ),
-				'is'     => __( 'Icelandic', 'ultimate-member' ),
-				'id'     => __( 'Indonesian', 'ultimate-member' ),
-				'it'     => __( 'Italian', 'ultimate-member' ),
-				'ja'     => __( 'Japanese', 'ultimate-member' ),
-				'kn'     => __( 'Kannada', 'ultimate-member' ),
-				'kk'     => __( 'Kazakh', 'ultimate-member' ),
-				'km'     => __( 'Khmer', 'ultimate-member' ),
-				'ko'     => __( 'Korean', 'ultimate-member' ),
-				'ky'     => __( 'Kyrgyz', 'ultimate-member' ),
-				'lo'     => __( 'Lao', 'ultimate-member' ),
-				'lv'     => __( 'Latvian', 'ultimate-member' ),
-				'lt'     => __( 'Lithuanian', 'ultimate-member' ),
-				'mk'     => __( 'Macedonian', 'ultimate-member' ),
-				'ms'     => __( 'Malay', 'ultimate-member' ),
-				'ml'     => __( 'Malayalam', 'ultimate-member' ),
-				'mr'     => __( 'Marathi', 'ultimate-member' ),
-				'mn'     => __( 'Mongolian', 'ultimate-member' ),
-				'ne'     => __( 'Nepali', 'ultimate-member' ),
-				'no'     => __( 'Norwegian', 'ultimate-member' ),
-				'pl'     => __( 'Polish', 'ultimate-member' ),
-				'pt'     => __( 'Portuguese', 'ultimate-member' ),
-				'pt-BR'  => __( 'Portuguese (Brazil)', 'ultimate-member' ),
-				'pt-PT'  => __( 'Portuguese (Portugal)', 'ultimate-member' ),
-				'pa'     => __( 'Punjabi', 'ultimate-member' ),
-				'ro'     => __( 'Romanian', 'ultimate-member' ),
-				'ru'     => __( 'Russian', 'ultimate-member' ),
-				'sr'     => __( 'Serbian', 'ultimate-member' ),
-				'si'     => __( 'Sinhalese', 'ultimate-member' ),
-				'sk'     => __( 'Slovak', 'ultimate-member' ),
-				'sl'     => __( 'Slovenian', 'ultimate-member' ),
-				'es'     => __( 'Spanish', 'ultimate-member' ),
-				'es-419' => __( 'Spanish (Latin America)', 'ultimate-member' ),
-				'sw'     => __( 'Swahili', 'ultimate-member' ),
-				'sv'     => __( 'Swedish', 'ultimate-member' ),
-				'ta'     => __( 'Tamil', 'ultimate-member' ),
-				'te'     => __( 'Telugu', 'ultimate-member' ),
-				'th'     => __( 'Thai', 'ultimate-member' ),
-				'tr'     => __( 'Turkish', 'ultimate-member' ),
-				'uk'     => __( 'Ukrainian', 'ultimate-member' ),
-				'ur'     => __( 'Urdu', 'ultimate-member' ),
-				'uz'     => __( 'Uzbek', 'ultimate-member' ),
-				'vi'     => __( 'Vietnamese', 'ultimate-member' ),
-				'zu'     => __( 'Zulu', 'ultimate-member' ),
-			);
-		}
-
-		/**
-		 * Init plugin core pages.
-		 *
-		 * @since 2.8.3
-		 */
-		public function init_predefined_pages() {
-			$core_forms       = get_option( 'um_core_forms', array() );
-			$core_directories = get_option( 'um_core_directories', array() );
-			$setup_shortcodes = array_merge(
-				array(
-					'profile'  => '',
-					'login'    => '',
-					'register' => '',
-					'members'  => '',
-				),
-				array_merge( $core_forms, $core_directories )
-			);
-
-			$this->predefined_pages = array(
-				'user'           => array(
-					'title'   => __( 'User', 'ultimate-member' ),
-					'content' => ! empty( $setup_shortcodes['profile'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['profile'] . '"]' : '',
-				),
-				'login'          => array(
-					'title'   => __( 'Login', 'ultimate-member' ),
-					'content' => ! empty( $setup_shortcodes['login'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['login'] . '"]' : '',
-				),
-				'register'       => array(
-					'title'   => __( 'Register', 'ultimate-member' ),
-					'content' => ! empty( $setup_shortcodes['register'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['register'] . '"]' : '',
-				),
-				'members'        => array(
-					'title'   => __( 'Members', 'ultimate-member' ),
-					'content' => ! empty( $setup_shortcodes['members'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['members'] . '"]' : '',
-				),
-				'logout'         => array(
-					'title'   => __( 'Logout', 'ultimate-member' ),
-					'content' => '',
-				),
-				'account'        => array(
-					'title'   => __( 'Account', 'ultimate-member' ),
-					'content' => '[ultimatemember_account]',
-				),
-				'password-reset' => array(
-					'title'   => __( 'Password Reset', 'ultimate-member' ),
-					'content' => '[ultimatemember_password]',
-				),
-			);
-
-			/**
-			 * Filters Ultimate Member predefined pages.
-			 *
-			 * @param {array} $pages Predefined pages.
-			 *
-			 * @return {array} Predefined pages.
-			 *
-			 * @since 2.8.3
-			 * @hook um_predefined_pages
-			 *
-			 * @example <caption>Extend UM core pages.</caption>
-			 * function my_predefined_pages( $pages ) {
-			 *     // your code here
-			 *     $pages['my_page_key'] = array( 'title' => __( 'My Page Title', 'my-translate-key' ), 'content' => 'my-page-predefined-content' );
-			 *     return $pages;
-			 * }
-			 * add_filter( 'um_predefined_pages', 'my_predefined_pages' );
-			 */
-			$this->predefined_pages = apply_filters( 'um_predefined_pages', $this->predefined_pages );
-
-			// since 2.8.3 legacy hook
-			// @todo remove in 3.0 version
-			$this->predefined_pages = apply_filters( 'um_core_pages', $this->predefined_pages );
-			$this->core_pages       = $this->predefined_pages;
-		}
-
-		public function init_avatar_thumbnail_sizes() {
-			$this->avatar_thumbnail_sizes = array( 32, 40, 64, 80, 128, 256 );
-			$this->avatar_thumbnail_sizes = apply_filters( 'um_avatar_thumbnail_sizes', $this->avatar_thumbnail_sizes );
-		}
-
-		/**
-		 * Initialize SVG icons from config file
-		 *
-		 * @since 3.0.0
-		 */
-		public function init_svg_icons() {
-			$this->svg_icons = include UM_PATH . 'includes/config/svg.php';
 		}
 	}
 }

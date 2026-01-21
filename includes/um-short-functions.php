@@ -1302,8 +1302,8 @@ function um_is_core_post( $post, $core_page ) {
 function um_styling_defaults( $mode ) {
 
 	$new_arr = array();
-	$core_form_meta_all = UM()->config()->core_form_meta_all;
-	$core_global_meta_all = UM()->config()->core_global_meta_all;
+	$core_form_meta_all   = UM()->config()->get( 'core_form_meta_all' );
+	$core_global_meta_all = UM()->config()->get( 'core_global_meta_all' );
 
 	foreach ( $core_form_meta_all as $k => $v ) {
 		$s = str_replace( $mode . '_', '', $k );
@@ -1329,7 +1329,7 @@ function um_styling_defaults( $mode ) {
  * @return string
  */
 function um_get_metadefault( $id ) {
-	$core_form_meta_all = UM()->config()->core_form_meta_all;
+	$core_form_meta_all = UM()->config()->get( 'core_form_meta_all' );
 
 	return isset( $core_form_meta_all[ '_um_' . $id ] ) ? $core_form_meta_all[ '_um_' . $id ] : '';
 }

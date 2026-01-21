@@ -1506,15 +1506,6 @@ class Shortcodes {
 	}
 
 	/**
-	 * Remove wpautop filter for post content if it's UM core page
-	 */
-	public function is_um_page() {
-		if ( is_ultimatemember() ) {
-			remove_filter( 'the_content', 'wpautop' );
-		}
-	}
-
-	/**
 	 * Retrieve core login form
 	 *
 	 * @return int
@@ -2153,8 +2144,9 @@ class Shortcodes {
 
 		if ( 'directory' === $mode && UM()->is_new_ui() ) {
 			// Get default and real arguments
-			$config_args = array();
-			foreach ( UM()->config()->core_directory_meta['members'] as $config_k => $config_v ) {
+			$config_args         = array();
+			$core_directory_meta = UM()->config()->get( 'core_directory_meta' );
+			foreach ( $core_directory_meta['members'] as $config_k => $config_v ) {
 				$config_args[ str_replace( '_um_', '', $config_k ) ] = $config_v;
 			}
 
@@ -2769,7 +2761,7 @@ class Shortcodes {
 
 		$member_directory_ids = array();
 
-		$page_id = UM()->config()->permalinks['members'];
+		$page_id = um_get_predefined_page_id( 'members' );
 		if ( ! empty( $page_id ) ) {
 			$member_directory_ids = UM()->member_directory()->get_member_directory_id( $page_id );
 		}

@@ -206,11 +206,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Columns' ) ) {
 		 * @return mixed
 		 */
 		public function add_display_post_states( $post_states, $post ) {
-
-			foreach ( UM()->config()->core_pages as $page_key => $page_value ) {
+			$predefined_pages = UM()->config()->get( 'predefined_pages' );
+			foreach ( $predefined_pages as $page_key => $page_value ) {
 				$page_id = UM()->options()->get( UM()->options()->get_predefined_page_option_key( $page_key ) );
 
-				if ( $page_id == $post->ID ) {
+				if ( absint( $page_id ) === $post->ID ) {
 					$post_states[ 'um_core_page_' . $page_key ] = sprintf( 'UM %s', $page_value['title'] );
 				}
 			}

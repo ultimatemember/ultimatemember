@@ -54,7 +54,7 @@ function um_dynamic_user_profile_title( $title, $id = '' ) {
 	}
 
 	if ( um_is_core_page( 'user' ) ) {
-		if ( $id == UM()->config()->permalinks['user'] && in_the_loop() ) {
+		if ( $id == um_get_predefined_page_id( 'user' ) && in_the_loop() ) {
 			if ( um_get_requested_user() ) {
 				$title = um_get_display_name( um_get_requested_user() );
 			} elseif ( is_user_logged_in() ) {
@@ -79,7 +79,7 @@ add_filter( 'the_title', 'um_dynamic_user_profile_title', 100000, 2 );
  * @return string|false                The canonical URL, or false if current URL is canonical.
  */
 function um_get_canonical_url( $canonical_url, $post ) {
-	if ( UM()->config()->permalinks['user'] == $post->ID || ( UM()->external_integrations()->is_wpml_active() && UM()->config()->permalinks['user'] == wpml_object_id_filter( $post->ID, 'page', true, icl_get_default_language() ) ) ) {
+	if ( um_get_predefined_page_id( 'user' ) == $post->ID || ( UM()->external_integrations()->is_wpml_active() && um_get_predefined_page_id( 'user' ) == wpml_object_id_filter( $post->ID, 'page', true, icl_get_default_language() ) ) ) {
 
 		/**
 		 * UM hook
