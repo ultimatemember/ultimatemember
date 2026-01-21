@@ -33,6 +33,9 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 
 			// don't use lower than 2 priority because there is sending email inside, but Action Scheduler is init on 1st priority.
 			add_action( 'init',  array( &$this, 'activate_account_via_email_link' ), 2 );
+
+			// Approve the user after the activate account link is verified.
+			add_action( 'um_after_email_confirmation', 'um_post_registration_approved_hook' );
 		}
 
 		/**
@@ -134,22 +137,11 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 					exit;
 				}
 
-				// Activate account link is valid. Can be approved below.
-
-				um_fetch_user( $user_id ); // @todo maybe don't need to fetch.
-				UM()->common()->users()->approve( $user_id, true );
-
-				$user_role      = UM()->roles()->get_priority_user_role( $user_id );
-				$user_role_data = UM()->roles()->role_data( $user_role );
-
-				// Log in automatically after activation.
-				$login = ! empty( $user_role_data['login_email_activate'] ); // Role setting "Login user after validating the activation link?"
-				if ( $login && ! is_user_logged_in() ) {
-					UM()->user()->auto_login( $user_id );
-				}
-
 				/**
 				 * Fires on user activation after visit link for email confirmation.
+				 *
+				 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+				 * 10 - `um_post_registration_approved_hook()` Approve the user after the activate account link is verified.
 				 *
 				 * @hook um_after_email_confirmation
 				 *
@@ -164,6 +156,15 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 				 * add_filter( 'um_after_email_confirmation', 'my_after_email_confirmation' );
 				 */
 				do_action( 'um_after_email_confirmation', $user_id );
+
+				$user_role      = UM()->roles()->get_priority_user_role( $user_id );
+				$user_role_data = UM()->roles()->role_data( $user_role );
+
+				// Log in automatically after activation.
+				$login = ! empty( $user_role_data['login_email_activate'] ); // Role setting "Login user after validating the activation link?"
+				if ( $login && ! is_user_logged_in() ) {
+					UM()->user()->auto_login( $user_id );
+				}
 
 				// Prepare redirect link.
 				$set_password_required = get_user_meta( $user_id, 'um_set_password_required', true );
