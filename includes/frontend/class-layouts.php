@@ -1223,14 +1223,15 @@ class Layouts {
 				'size'          => 's', // s, m
 				'tabs'          => array(
 					'id' => array(
-						'title'         => __( 'Tab title', 'ultimate-member' ),
-						'content'       => __( 'Tab content', 'ultimate-member' ),
-						'url'           => '#',
-						'current'       => true,
-						'notifier'      => 0,
-						'notifier_type' => 'gray',
-						'max_notifier'  => 10,
-						'classes'       => array(),
+						'title'          => __( 'Tab title', 'ultimate-member' ),
+						'content'        => __( 'Tab content', 'ultimate-member' ),
+						'url'            => '#',
+						'current'        => true,
+						'notifier'       => 0,
+						'notifier_type'  => 'gray',
+						'notifier_title' => '',
+						'max_notifier'   => 10,
+						'classes'        => array(),
 					),
 				),
 			)
@@ -1285,6 +1286,7 @@ class Layouts {
 							'size'  => 's',
 							'type'  => 'pill-color',
 							'color' => array_key_exists( 'notifier_type', $tab_data ) ? $tab_data['notifier_type'] : 'gray',
+							'title' => array_key_exists( 'notifier_title', $tab_data ) ? $tab_data['notifier_title'] : '',
 						);
 						$notifier         = 0;
 						$notifier_classes = array( 'um-' . $tab_id . '-tab-notifier' );
