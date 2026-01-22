@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-22T10:33:43+00:00\n"
+"POT-Creation-Date: 2026-01-22T11:33:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -4674,7 +4674,7 @@ msgid "Provides settings for controlling access to your site."
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:1623
-#: includes/frontend/class-layouts.php:2178
+#: includes/frontend/class-layouts.php:2184
 msgid "Other"
 msgstr ""
 
@@ -7045,7 +7045,7 @@ msgid "Nonce is required."
 msgstr ""
 
 #: includes/ajax/class-files.php:317
-#: includes/frontend/class-layouts.php:2433
+#: includes/frontend/class-layouts.php:2439
 msgid "Unknown handler."
 msgstr ""
 
@@ -11607,108 +11607,108 @@ msgstr ""
 msgid "You do not have permission to delete this user."
 msgstr ""
 
-#: includes/frontend/class-layouts.php:633
-#: includes/frontend/class-layouts.php:1086
+#: includes/frontend/class-layouts.php:639
+#: includes/frontend/class-layouts.php:1092
 msgid "Visit profile"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:914
+#: includes/frontend/class-layouts.php:920
 #, php-format
 msgid "Visit %s profile"
 msgstr ""
 
 #. translators: %s is the user display name.
-#: includes/frontend/class-layouts.php:998
+#: includes/frontend/class-layouts.php:1004
 #, php-format
 msgid "%s's cover photo"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:1226
+#: includes/frontend/class-layouts.php:1232
 msgid "Tab title"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:1227
+#: includes/frontend/class-layouts.php:1233
 msgid "Tab content"
 msgstr ""
 
 #. translators: %d is the notifier value.
-#: includes/frontend/class-layouts.php:1301
+#: includes/frontend/class-layouts.php:1307
 #, php-format
 msgid "%d+"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:1357
+#: includes/frontend/class-layouts.php:1363
 msgid "Select a tab"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2133
+#: includes/frontend/class-layouts.php:2139
 msgid "..."
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2181
+#: includes/frontend/class-layouts.php:2187
 msgid "Image"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2184
+#: includes/frontend/class-layouts.php:2190
 msgid "Audio"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2187
+#: includes/frontend/class-layouts.php:2193
 msgid "Video"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2190
+#: includes/frontend/class-layouts.php:2196
 msgid "Document"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2193
+#: includes/frontend/class-layouts.php:2199
 msgid "Spreadsheet"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2196
+#: includes/frontend/class-layouts.php:2202
 msgid "Interactive"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2199
+#: includes/frontend/class-layouts.php:2205
 msgid "Text"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2202
+#: includes/frontend/class-layouts.php:2208
 msgid "Archive"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2205
+#: includes/frontend/class-layouts.php:2211
 msgid "Code"
 msgstr ""
 
 #. translators: %d is the progress percents.
-#: includes/frontend/class-layouts.php:2258
+#: includes/frontend/class-layouts.php:2264
 #, php-format
 msgid "%d%%"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2441
+#: includes/frontend/class-layouts.php:2447
 msgid "Unknown field id."
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2495
+#: includes/frontend/class-layouts.php:2501
 msgid " or "
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2749
+#: includes/frontend/class-layouts.php:2755
 msgid "Emoji"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2816
+#: includes/frontend/class-layouts.php:2822
 msgid "GIF"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2880
-#: includes/frontend/class-layouts.php:2881
+#: includes/frontend/class-layouts.php:2886
+#: includes/frontend/class-layouts.php:2887
 msgid "Search.."
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2889
+#: includes/frontend/class-layouts.php:2895
 #: templates/members.php:260
 #: templates/members.php:262
 #: templates/v3/directory/wrapper.php:65
@@ -12081,18 +12081,18 @@ msgstr ""
 msgid "Request erase"
 msgstr ""
 
-#: templates/v3/directory/cell-grid.php:220
-#: templates/v3/directory/cell-list.php:207
+#: templates/v3/directory/cell-grid.php:223
+#: templates/v3/directory/cell-list.php:208
 msgid "Hide details"
 msgstr ""
 
-#: templates/v3/directory/cell-grid.php:220
-#: templates/v3/directory/cell-list.php:207
+#: templates/v3/directory/cell-grid.php:223
+#: templates/v3/directory/cell-list.php:208
 msgid "More details"
 msgstr ""
 
-#: templates/v3/directory/cell-grid.php:228
-#: templates/v3/directory/cell-list.php:218
+#: templates/v3/directory/cell-grid.php:231
+#: templates/v3/directory/cell-list.php:219
 msgid "View Profile"
 msgstr ""
 
