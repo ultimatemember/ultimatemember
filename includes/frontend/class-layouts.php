@@ -38,15 +38,16 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'type'         => 'dots',
-				'button_label' => '',
-				'event'        => 'click',
-				'header'       => '',
-				'width'        => 150,
-				'parent'       => '',
-				'disabled'     => false,
-				'place'        => '',
-				'mobile'       => false,
+				'type'            => 'dots',
+				'button_label'    => '',
+				'event'           => 'click',
+				'header'          => '',
+				'width'           => 150,
+				'parent'          => '',
+				'disabled'        => false,
+				'place'           => '',
+				'mobile'          => false,
+				'wrapper_classes' => array(),
 			)
 		);
 
@@ -89,13 +90,18 @@ class Layouts {
 			}
 		}
 
+		$wrapper_classes = array( 'um-dropdown-wrapper' );
+		if ( ! empty( $args['wrapper_classes'] ) ) {
+			$wrapper_classes = array_merge( $wrapper_classes, $args['wrapper_classes'] );
+		}
+
 		$dropdown_classes = array( 'um-dropdown' );
 		if ( empty( $args['header'] ) ) {
 			$dropdown_classes[] = 'um-dropdown-no-header';
 		}
 		ob_start();
 		?>
-		<div class="um-dropdown-wrapper">
+		<div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>">
 			<?php
 			if ( ! empty( $args['mobile'] ) && 'dots' !== $args['type'] ) {
 				// Render dots for mobile devices.

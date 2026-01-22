@@ -521,7 +521,7 @@
 .um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-cover-photo[data-ratio="3.2:1"] {
   aspect-ratio: 3.2/1;
 }
-.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-dropdown-wrapper {
+.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-dropdown-wrapper.um-member-actions-dropdown-wrapper {
   width: 100%;
   height: 56px;
   box-sizing: border-box;
@@ -529,7 +529,7 @@
   -webkit-box-sizing: border-box;
   padding: 0 12px;
 }
-.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-dropdown-wrapper .um-dropdown-toggle {
+.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-dropdown-wrapper.um-member-actions-dropdown-wrapper .um-dropdown-toggle {
   float: right;
   width: 20px;
 }

@@ -98,7 +98,10 @@ echo wp_kses(
 	UM()->frontend()::layouts()::dropdown_menu(
 		'um-member-actions-toggle',
 		$member['dropdown_actions'],
-		array( 'width' => 210 )
+		array(
+			'width'           => 210,
+			'wrapper_classes' => array( 'um-member-actions-dropdown-wrapper' ),
+		)
 	),
 	UM()->get_allowed_html( 'templates' )
 );
