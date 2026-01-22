@@ -195,6 +195,9 @@
 .um.um-profile.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core {
   padding: 0 32px;
 }
+.um.um-profile.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-navbar {
+  padding: 0 32px;
+}
 .um.um-profile.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-nav,
 .um.um-profile.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-subnav {
   padding: 0 32px;
