@@ -70,6 +70,7 @@
 					place = self.data.place || '';
 
 				if ( 'toggle-button-width' === width ) {
+					// Using the same width as the parent toggle button.
 					width = self.$element[0].offsetWidth;
 				}
 
