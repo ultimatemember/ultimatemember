@@ -23,7 +23,9 @@
 
 				self.$dropdown = self.$menu.clone();
 
-				self.$dropdown.on('click', 'li a', self.itemHandler).attr('data-cloned', '1'); /* add the handler for menu items */
+				let uniqID = UM.common.helpers.randID();
+
+				self.$dropdown.on('click', 'li a', self.itemHandler).attr('data-cloned', '1').attr('data-uniq-id', uniqID).data('uniq-id',uniqID); /* add the handler for menu items */
 				$(window).on('resize', self.updatePosition); /* update the position on window resize */
 
 				if ( '' !== self.data.parent ) {
@@ -37,7 +39,7 @@
 				/* set styles and show */
 				self.$dropdown.css(self.calculatePosition()).show();
 
-				self.$element.addClass('um-dropdown-shown').data('um-dropdown-show', true);
+				self.$element.addClass('um-dropdown-shown').data('um-dropdown-show', true).attr('data-uniq-id', uniqID).data('uniq-id',uniqID);
 
 				return self;
 			},
