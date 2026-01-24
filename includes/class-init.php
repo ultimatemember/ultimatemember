@@ -14,7 +14,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_bbPress bbPress() Reviewed branch: master
 	 * @method UM_Followers Followers() Reviewed branch: master
 	 * @method UM_ForumWP ForumWP() Reviewed branch: master
-	 * @method UM_Friends Friends() Under review branch: dev/new_ui
+	 * @method UM_Friends Friends() Reviewed branch: master
 	 * @method UM_Groups Groups() Under dev branch: dev/wall-lib
 	 * @method UM_JobBoardWP JobBoardWP() Reviewed branch: master
 	 * @method UM_Mailchimp Mailchimp() Reviewed branch: master
