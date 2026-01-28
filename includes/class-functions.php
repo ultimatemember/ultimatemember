@@ -53,7 +53,9 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * @param string   $context      The context for which the rate limit check is being performed
 		 * @param int|null $requests_num Number requests per minute. Default 10.
 		 *
-		 * @return bool True if the rate limit has been reached, false otherwise
+		 * @return bool True if the rate limit has been reached, false otherwise.
+		 *
+		 * @since 2.11.1
 		 */
 		public function is_rate_limited( $context, $requests_num = 10 ) {
 			if ( is_user_logged_in() ) {
