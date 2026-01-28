@@ -1370,12 +1370,10 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		}
 
 		/**
-		 * @param array $args
-		 * @param string $content
 		 *
 		 * @return string
 		 */
-		public function ultimatemember_searchform( $args = array(), $content = '' ) {
+		public function ultimatemember_searchform() {
 			if ( ! UM()->options()->get( 'members_page' ) ) {
 				return '';
 			}
@@ -1391,7 +1389,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				return '';
 			}
 
-			//current user priority role
+			// Current user priority role
 			$priority_user_role = false;
 			if ( is_user_logged_in() ) {
 				$priority_user_role = UM()->roles()->get_priority_user_role( get_current_user_id() );
@@ -1405,7 +1403,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					$directory_data['roles_can_search'] = maybe_unserialize( $directory_data['roles_can_search'] );
 				}
 
-				$show_search = empty( $directory_data['roles_can_search'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $directory_data['roles_can_search'] ) );
+				$show_search = empty( $directory_data['roles_can_search'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $directory_data['roles_can_search'], true ) );
 				if ( empty( $directory_data['search'] ) || ! $show_search ) {
 					continue;
 				}
@@ -1419,12 +1417,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				return '';
 			}
 
+			$query        = array_filter( $query );
 			$search_value = array_values( $query );
 
 			$t_args = array(
-				'query'        => $query,
-				'search_value' => $search_value[0],
-				'members_page' => um_get_core_page( 'members' ),
+				'search_value' => ! empty( $search_value ) ? $search_value[0] : '',
 			);
 			return UM()->get_template( 'searchform.php', '', $t_args );
 		}

@@ -19,6 +19,9 @@ class Pages {
 	 */
 	public function __construct() {
 		add_action( 'wp_ajax_um_get_pages_list', array( $this, 'get_pages_list' ) );
+
+		add_action( 'wp_ajax_um_search_widget_request', array( $this, 'search_widget_request' ) );
+		add_action( 'wp_ajax_nopriv_um_search_widget_request', array( $this, 'search_widget_request' ) );
 	}
 
 	/**
@@ -97,5 +100,59 @@ class Pages {
 		}
 
 		wp_send_json( $return );
+	}
+
+	/**
+	 * AJAX callback for getting search widget redirect to a proper member directory page.
+	 */
+	public function search_widget_request() {
+		check_ajax_referer( 'um_search_widget_request' );
+
+		if ( ! UM()->options()->get( 'members_page' ) ) {
+			wp_send_json_error( __( 'No members page enabled', 'ultimate-member' ) );
+		}
+
+		$member_directory_ids = array();
+
+		$page_id = UM()->config()->permalinks['members'];
+		if ( ! empty( $page_id ) ) {
+			$member_directory_ids = UM()->member_directory()->get_member_directory_id( $page_id );
+		}
+
+		if ( empty( $member_directory_ids ) ) {
+			wp_send_json_error( __( 'No members page enabled', 'ultimate-member' ) );
+		}
+
+		$url = um_get_predefined_page_url( 'members' );
+
+		$search = isset( $_POST['search'] ) ? sanitize_text_field( $_POST['search'] ) : '';
+		if ( empty( $search ) ) {
+			wp_send_json_success( array( 'url' => $url ) );
+		}
+
+		// Current user priority role
+		$priority_user_role = false;
+		if ( is_user_logged_in() ) {
+			$priority_user_role = UM()->roles()->get_priority_user_role( get_current_user_id() );
+		}
+
+		foreach ( $member_directory_ids as $directory_id ) {
+			$directory_data = UM()->query()->post_data( $directory_id );
+
+			if ( isset( $directory_data['roles_can_search'] ) ) {
+				$directory_data['roles_can_search'] = maybe_unserialize( $directory_data['roles_can_search'] );
+			}
+
+			$show_search = empty( $directory_data['roles_can_search'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $directory_data['roles_can_search'], true ) );
+			if ( empty( $directory_data['search'] ) || ! $show_search ) {
+				continue;
+			}
+
+			$hash = UM()->member_directory()->get_directory_hash( $directory_id );
+
+			$url = add_query_arg( array( 'search_' . $hash => $search ), $url );
+		}
+
+		wp_send_json_success( array( 'url' => $url ) );
 	}
 }
