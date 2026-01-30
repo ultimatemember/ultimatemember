@@ -54,6 +54,10 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 				}
 			} elseif ( ! isset( $_COOKIE[ self::$key ] ) ) {
 				error_log( 'not logged in branch' );
+				error_log( $_SERVER['HTTP_USER_AGENT'] );
+				error_log( $_SERVER['REQUEST_METHOD'] );
+				error_log( $_SERVER['REQUEST_URI'] );
+				error_log( $_SERVER['REMOTE_ADDR'] );
 				self::generate_token();
 			}
 		}
