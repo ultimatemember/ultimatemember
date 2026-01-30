@@ -46,11 +46,14 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 			}
 
 			if ( is_user_logged_in() ) {
+				error_log( 'logged in branch' );
 				if ( isset( $_COOKIE[ self::$key ] ) ) {
+					error_log( 'logged in branch cookies isset try to flush' );
 					// flush cookies after login
 					UM()::setcookie( self::$key, false );
 				}
 			} elseif ( ! isset( $_COOKIE[ self::$key ] ) ) {
+				error_log( 'not logged in branch' );
 				self::generate_token();
 			}
 		}
