@@ -41,23 +41,16 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 		 * @throws RandomException
 		 */
 		public function set_guest_token() {
-			if ( UM()->is_ajax() ) {
+			if ( wp_doing_cron() || UM()->is_ajax() ) {
 				return;
 			}
 
 			if ( is_user_logged_in() ) {
-				error_log( 'logged in branch' );
 				if ( isset( $_COOKIE[ self::$key ] ) ) {
-					error_log( 'logged in branch cookies isset try to flush' );
 					// flush cookies after login
 					UM()::setcookie( self::$key, false );
 				}
 			} elseif ( ! isset( $_COOKIE[ self::$key ] ) ) {
-				error_log( 'not logged in branch' );
-				error_log( $_SERVER['HTTP_USER_AGENT'] );
-				error_log( $_SERVER['REQUEST_METHOD'] );
-				error_log( $_SERVER['REQUEST_URI'] );
-				error_log( $_SERVER['REMOTE_ADDR'] );
 				self::generate_token();
 			}
 		}

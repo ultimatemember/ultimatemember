@@ -955,11 +955,6 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 				@ob_end_clean();
 			}
 
-			if ( ! empty( $_GET['um_check_headers'] ) ) {
-				var_dump( debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ) );
-				exit;
-			}
-
 			nocache_headers();
 			setcookie( $name, $value, $expire, $path, COOKIE_DOMAIN, $secure, $httponly );
 		}
