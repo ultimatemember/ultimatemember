@@ -224,7 +224,9 @@ class Layouts {
 				$icon     = '<span class="um-button-icon">' . $args['icon'] . '</span>';
 				$has_icon = true;
 
-				$content = '<span class="um-button-content">' . $content . '</span>';
+				if( ! empty( $content ) ) {
+					$content = '<span class="um-button-content">' . $content . '</span>';
+				}
 				if ( 'leading' === $args['icon_position'] ) {
 					$content = $icon . $content;
 				} else {
