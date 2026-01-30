@@ -183,7 +183,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
   * `UM()->common()->filesystem()` class has all necessary methods.
   * `UM()->files()->get_download_link()` -> 'UM()->fields()->get_download_link()'.
   * `UM()->files()->delete_core_user_photo()` -> 'UM()->common()->users()->delete_photo()'.
-  * `UM()->frontend()->layouts()::uploader()` layout handles all default processes for uploading files via plupload.
+  * `UM()->frontend()::layouts()::uploader()` layout handles all default processes for uploading files via plupload.
 
 * Class `UM()->uploader()` is legacy since 3.0.0 and is used only when old UI is enabled
   New UI function alternatives:
