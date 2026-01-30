@@ -30,7 +30,7 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 		 * Guest constructor.
 		 */
 		public function __construct() {
-			add_action( 'init', array( &$this, 'set_guest_token' ) );
+			add_action( 'um_core_loaded', array( &$this, 'set_guest_token' ) );
 		//	add_action( 'init', array( &$this, 'maybe_add_scheduled_action' ) );
 			add_action( 'wp_logout', array( &$this, 'flush_cookies' ) );
 			add_action( 'wp_login', array( &$this, 'flush_cookies' ) );
