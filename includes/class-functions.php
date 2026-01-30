@@ -956,7 +956,6 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			}
 
 			if ( ! empty( $_GET['um_check_headers'] ) ) {
-				ob_end_flush();
 				var_dump( debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ) );
 				exit;
 			}
