@@ -169,9 +169,19 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 = 2.11.2 2026-02-09 =
 
+**Enhancements**
+
+* Added: Server side validation when Searching Form is submitted.
+
 **Bugfixes**
 
-* Fixed: Security issue CVE ID: CVE-2025-15064. Deprecated ability to use HTML inside the user description.
+* Fixed: Security issue CVE ID: CVE-2025-15064. Deprecated ability to use HTML inside the user description. It's still allowed to use only predefined 'user_description' tags in `wp_kses()`.
+* Fixed: Security issue CVE ID: CVE-2026-1404. Changed template items formatting to avoid using HTML symbols in the filter values.
+
+* Templates required update:
+
+* members.php
+* searchform.php
 
 = 2.11.1 2025-12-16 =
 
