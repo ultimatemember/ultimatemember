@@ -796,23 +796,7 @@ function um_profile_header_cover_area( $args ) {
 	<div class="<?php echo esc_attr( implode( ' ', $cover_wrapper_classes ) ); ?>"
 		 data-user_id="<?php echo esc_attr( um_profile_id() ); ?>" data-ratio="<?php echo esc_attr( $args['cover_ratio'] ); ?>">
 		<?php
-		/**
-		 * Fires in the User Profile cover wrapper.
-		 *
-		 * @since 1.3.x
-		 * @since 2.11.0 Added $args attribute.
-		 * @since 3.0.0  Changed the place of attributes.
-		 * @hook  um_cover_area_content
-		 *
-		 * @param {array} $args    User Profile data.
-		 * @param {int}   $user_id User Profile ID.
-		 *
-		 * @example <caption>Make any custom action in the User Profile cover wrapper.</caption>
-		 * function my_cover_area_content( $args, $user_id ) {
-		 *     // your code here
-		 * }
-		 * add_action( 'um_cover_area_content', 'my_cover_area_content', 10, 2 );
-		 */
+		/** This action is documented in ultimate-member/templates/v3/profile/header.php */
 		do_action( 'um_cover_area_content', $args, um_profile_id() );
 		if ( true === UM()->fields()->editing ) {
 
@@ -893,9 +877,9 @@ add_action( 'um_profile_header_cover_area', 'um_profile_header_cover_area', 9 );
 /**
  * Show social links as icons below profile name
  * @todo remove as soon as new UI is live.
- * @param $args
+ * @param array $args
  */
-function um_social_links_icons( $args = null ) {
+function um_social_links_icons( $args ) {
 	// Displayed directly in header in new UI template.
 	if ( UM()->is_new_ui() ) {
 		return;
