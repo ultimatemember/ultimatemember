@@ -1,7 +1,18 @@
 <?php
+/**
+ * Metabox "Privacy Options" on wp-admin > Ultimate Member > Member Directories > Edit.
+ *
+ * @package um\admin\templates
+ *
+ * @var array   $box
+ * @var WP_Post $object
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$_um_privacy_roles_value = get_post_meta( $object->ID, '_um_privacy_roles', true );
 
 $fields = array(
 	array(
@@ -26,7 +37,7 @@ $fields = array(
 		'options'     => UM()->roles()->get_roles(),
 		'placeholder' => __( 'Choose user roles...', 'ultimate-member' ),
 		'conditional' => array( '_um_privacy', '=', '3' ),
-		'value'       => UM()->query()->get_meta_value( '_um_privacy_roles', null, 'na' ),
+		'value'       => empty( $_um_privacy_roles_value ) ? array() : (array) $_um_privacy_roles_value,
 	),
 );
 
