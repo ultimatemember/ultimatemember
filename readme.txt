@@ -171,17 +171,24 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Enhancements**
 
-* Added: Server side validation when Searching Form is submitted.
+* Added: Server-side validation when the Search Form is submitted.
+* Added: Action hook `um_approve_user_on_email_confirmation` to natively approve the user after validating the email activation link.
 
 **Bugfixes**
 
-* Fixed: Security issue CVE ID: CVE-2025-15064. Deprecated ability to use HTML inside the user description. It's still allowed to use only predefined 'user_description' tags in `wp_kses()`.
-* Fixed: Security issue CVE ID: CVE-2026-1404. Changed template items formatting to avoid using HTML symbols in the filter values.
+* Fixed: Security issue, CVE ID: CVE-2025-15064. Deprecated the ability to use HTML inside the user description. It's still allowed to use only predefined 'user_description' tags in `wp_kses()`.
+* Fixed: Security issue, CVE ID: CVE-2026-1404. Modified template item formatting to avoid using HTML characters in the filter values.
+* Fixed: Profile photo dropdown menu position for screens smaller than 340px.
+* Fixed: Display of the saved value of the "Privacy Options" > "Allowed roles" setting for the member directory.
+* Fixed: Information in Site-Health about the registration form's `Template` and `Role` settings.
+* Fixed: Information in Site-Health about the login and profile form's `Template` settings.
 
-* Templates required update:
+**Templates Requiring Update**
 
 * members.php
 * searchform.php
+
+**Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
 
 = 2.11.1 2025-12-16 =
 
@@ -197,7 +204,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Security issue CVE ID: CVE-2025-14081. Filtering fields based on user permissions during Account form submission.
 * Fixed: Security issue CVE ID: CVE-2025-12492. Added directory privacy settings and added rate limiting.
 
-* Templates required update:
+**Templates Requiring Update**
 
 * members.php
 * members-grid.php
