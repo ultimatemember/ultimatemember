@@ -1,11 +1,12 @@
 ﻿== Changelog ==
 
-= 2.11.2 February 09, 2026 =
+= 2.11.2 February 10, 2026 =
 
 * Enhancements:
 
   - Added: Server-side validation when the Search Form is submitted.
   - Added: Action hook `um_approve_user_on_email_confirmation` to natively approve the user after validating the email activation link.
+  - Added: JS filter wp.hook `um_member_directory_popstate_ignore` to stop window.pushSate in the member directory for 3rd-party integrations.
 
 * Bugfixes:
 

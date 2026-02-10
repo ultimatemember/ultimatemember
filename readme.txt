@@ -167,12 +167,13 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.11.2 2026-02-09 =
+= 2.11.2 2026-02-10 =
 
 **Enhancements**
 
 * Added: Server-side validation when the Search Form is submitted.
 * Added: Action hook `um_approve_user_on_email_confirmation` to natively approve the user after validating the email activation link.
+* Added: JS filter wp.hook `um_member_directory_popstate_ignore` to stop window.pushSate in the member directory for 3rd-party integrations.
 
 **Bugfixes**
 
