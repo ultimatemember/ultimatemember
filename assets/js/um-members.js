@@ -1670,6 +1670,11 @@ jQuery(document.body).ready( function() {
 
 	//history events when back/forward and change window.location.hash
 	window.addEventListener( "popstate", function(e) {
+		let ignorePopstate = wp.hooks.applyFilters( 'um_member_directory_popstate_ignore', false );
+		if ( false !== ignorePopstate ) {
+			return;
+		}
+
 		jQuery( '.um-directory' ).each( function() {
 			var directory = jQuery(this);
 			var hash = um_members_get_hash( directory );

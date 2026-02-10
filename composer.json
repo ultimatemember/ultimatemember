@@ -33,7 +33,7 @@
     "wp-coding-standards/wpcs": "*",
     "symplify/phpstan-rules": "*",
     "phpdocumentor/phpdocumentor": "3.8.*",
-    "sniccowp/php-scoper-wordpress-excludes": "6.8.*"
+    "sniccowp/php-scoper-wordpress-excludes": "6.9.*"
   },
   "scripts": {
     "wordpress-excludes": [

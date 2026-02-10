@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 6.9
-Stable tag: 2.11.0
+Stable tag: 2.11.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -167,6 +167,30 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.11.2 2026-02-10 =
+
+**Enhancements**
+
+* Added: Server-side validation when the Search Form is submitted.
+* Added: Action hook `um_approve_user_on_email_confirmation` to natively approve the user after validating the email activation link.
+* Added: JS filter wp.hook `um_member_directory_popstate_ignore` to stop window.pushSate in the member directory for 3rd-party integrations.
+
+**Bugfixes**
+
+* Fixed: Security issue, CVE ID: CVE-2025-15064. Deprecated the ability to use HTML inside the user description. It's still allowed to use only predefined 'user_description' tags in `wp_kses()`.
+* Fixed: Security issue, CVE ID: CVE-2026-1404. Modified template item formatting to avoid using HTML characters in the filter values.
+* Fixed: Profile photo dropdown menu position for screens smaller than 340px.
+* Fixed: Display of the saved value of the "Privacy Options" > "Allowed roles" setting for the member directory.
+* Fixed: Information in Site-Health about the registration form's `Template` and `Role` settings.
+* Fixed: Information in Site-Health about the login and profile form's `Template` settings.
+
+**Templates Requiring Update**
+
+* members.php
+* searchform.php
+
+**Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
+
 = 2.11.1 2025-12-16 =
 
 **Enhancements**
@@ -181,7 +205,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Security issue CVE ID: CVE-2025-14081. Filtering fields based on user permissions during Account form submission.
 * Fixed: Security issue CVE ID: CVE-2025-12492. Added directory privacy settings and added rate limiting.
 
-* Templates required update:
+**Templates Requiring Update**
 
 * members.php
 * members-grid.php
@@ -208,6 +232,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.11.2 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.11.1 =
 This version fixes a security related bug. Upgrade immediately.
