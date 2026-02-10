@@ -310,6 +310,8 @@ jQuery(document).ready(function() {
 		}
 		UM.modal.close();
 
+		wp.hooks.doAction( 'um_after_field_image_crop_cancelled', fieldID );
+
 		let changeTextCb = function( confirmText, obj ) {
 			if ( obj.hasClass('um-field-image-remove') ) {
 				confirmText = '';
