@@ -3020,6 +3020,35 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 */
 			$this->query_args = apply_filters( 'um_prepare_user_query_args', $this->query_args, $directory_data );
 
+			// fix for field's relation = 'AND'
+			if ( isset( $this->query_args['meta_query'] ) && is_array( $this->query_args['meta_query'] ) ) {
+				foreach ( $this->query_args['meta_query'] as $group_index => &$group ) {
+					if ( ! is_array( $group ) ) {
+						continue;
+					}
+
+					foreach ( $group as $key => $condition ) {
+						if ( 'relation' === $key ) {
+							continue;
+						}
+
+						if ( is_array( $condition ) && isset( $condition['key'], $condition['compare'] ) ) {
+							$compare = $condition['compare'];
+							$value   = isset( $condition['value'] ) ? $condition['value'] : '';
+
+							if ( '=' === $compare || ( is_string( $value ) && substr( $value, 0, 2 ) === 's:' ) ) {
+								unset( $group[ $key ] );
+							}
+						}
+					}
+
+					if ( count( $group ) === 1 && isset( $group['relation'] ) ) {
+						unset( $this->query_args['meta_query'][ $group_index ] );
+					}
+				}
+				unset( $group );
+			}
+
 			//unset empty meta_query attribute
 			if ( isset( $this->query_args['meta_query']['relation'] ) && count( $this->query_args['meta_query'] ) == 1 ) {
 				unset( $this->query_args['meta_query'] );
