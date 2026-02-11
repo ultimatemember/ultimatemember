@@ -325,16 +325,37 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			$file       = UM_PATH . "templates/{$tpl}.php";
 			$theme_file = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
+
+			// Use the theme file if it exists
 			if ( file_exists( $theme_file ) ) {
 				$file = $theme_file;
 			}
 
 			if ( file_exists( $file ) ) {
-				// Avoid Directory Traversal vulnerability by the checking the realpath.
-				// Templates can be situated only in the get_stylesheet_directory() or plugindir templates.
-				$real_file = wp_normalize_path( realpath( $file ) );
-				if ( 0 === strpos( $real_file, wp_normalize_path( UM_PATH . "templates" . DIRECTORY_SEPARATOR ) ) || 0 === strpos( $real_file, wp_normalize_path( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR ) ) ) {
+				// Normalize all paths
+				$plugin_tpl_dir = wp_normalize_path( UM_PATH . "templates/" );
+				$theme_tpl_dir  = wp_normalize_path( get_stylesheet_directory() . '/ultimate-member/templates/' );
+				$file_norm      = wp_normalize_path( $file );
+
+				// Try to resolve symlinks, fallback to normalized path if realpath fails
+				$real_file      = realpath( $file );
+				$real_file_norm = $real_file ? wp_normalize_path( $real_file ) : $file_norm;
+
+				// Also resolve base template directories via realpath
+				$plugin_tpl_dir_real = realpath( UM_PATH . "templates/" );
+				$theme_tpl_dir_real  = realpath( get_stylesheet_directory() . '/ultimate-member/templates/' );
+				$plugin_tpl_dir_real_norm = $plugin_tpl_dir_real ? wp_normalize_path( $plugin_tpl_dir_real ) : $plugin_tpl_dir;
+				$theme_tpl_dir_real_norm  = $theme_tpl_dir_real ? wp_normalize_path( $theme_tpl_dir_real ) : $theme_tpl_dir;
+
+				// Secure: Allow only if within allowed dirs (normalized)
+				if (
+					( 0 === strpos( $real_file_norm, $plugin_tpl_dir_real_norm ) ) ||
+					( 0 === strpos( $real_file_norm, $theme_tpl_dir_real_norm ) )
+				) {
 					include $file;
+				} else {
+					// Optional: Log or throw an error for debugging
+					error_log("UM template load error: File not in allowed directories: " . $file );
 				}
 			}
 		}
