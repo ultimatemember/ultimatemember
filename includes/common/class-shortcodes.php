@@ -2770,7 +2770,7 @@ class Shortcodes {
 			return '';
 		}
 
-		//current user priority role
+		// Current user priority role
 		$priority_user_role = false;
 		if ( is_user_logged_in() ) {
 			$priority_user_role = UM()->roles()->get_priority_user_role( get_current_user_id() );
@@ -2798,12 +2798,11 @@ class Shortcodes {
 			return '';
 		}
 
+		$query        = array_filter( $query );
 		$search_value = array_values( $query );
 
 		$t_args = array(
-			'query'        => $query,
-			'search_value' => $search_value[0],
-			'members_page' => um_get_core_page( 'members' ),
+			'search_value' => ! empty( $search_value ) ? $search_value[0] : '',
 		);
 		return UM()->get_template( 'searchform.php', '', $t_args );
 	}
