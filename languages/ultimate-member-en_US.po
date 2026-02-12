@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-02-10T12:04:58+00:00\n"
+"POT-Creation-Date: 2026-02-12T11:24:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -1910,31 +1910,31 @@ msgid "Exclude specific users"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2615
-#: includes/admin/templates/directory/privacy.php:13
+#: includes/admin/templates/directory/privacy.php:24
 #: includes/core/class-profile.php:101
 msgid "Anyone"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2616
-#: includes/admin/templates/directory/privacy.php:14
+#: includes/admin/templates/directory/privacy.php:25
 #: includes/core/class-profile.php:102
 msgid "Guests only"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2617
-#: includes/admin/templates/directory/privacy.php:15
+#: includes/admin/templates/directory/privacy.php:26
 #: includes/core/class-profile.php:103
 msgid "Members only"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2618
-#: includes/admin/templates/directory/privacy.php:16
+#: includes/admin/templates/directory/privacy.php:27
 #: includes/core/class-profile.php:105
 msgid "Only specific roles"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2624
-#: includes/admin/templates/directory/privacy.php:10
+#: includes/admin/templates/directory/privacy.php:21
 msgid "Who can see this member directory"
 msgstr ""
 
@@ -1944,7 +1944,7 @@ msgstr ""
 
 #: includes/admin/class-site-health.php:2634
 #: includes/admin/core/class-admin-settings.php:426
-#: includes/admin/templates/directory/privacy.php:24
+#: includes/admin/templates/directory/privacy.php:35
 msgid "Allowed roles"
 msgstr ""
 
@@ -4118,7 +4118,7 @@ msgid "Select the user roles allowed to view this tab."
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:429
-#: includes/admin/templates/directory/privacy.php:27
+#: includes/admin/templates/directory/privacy.php:38
 msgid "Choose user roles..."
 msgstr ""
 
@@ -4788,7 +4788,7 @@ msgid "Appearance"
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:1729
-#: includes/core/class-form.php:1088
+#: includes/core/class-form.php:1007
 msgid "Profile"
 msgstr ""
 
@@ -6227,11 +6227,11 @@ msgstr ""
 msgid "This is the text that is displayed if no users are found during a search"
 msgstr ""
 
-#: includes/admin/templates/directory/privacy.php:11
+#: includes/admin/templates/directory/privacy.php:22
 msgid "Select which users can view this member directory. Minimum recommended visibility is `Members only`. Please pay attention that visible for guests (anyone) member directory can have sensitive information."
 msgstr ""
 
-#: includes/admin/templates/directory/privacy.php:25
+#: includes/admin/templates/directory/privacy.php:36
 msgid "Select the the user roles allowed to view this member directory."
 msgstr ""
 
@@ -7124,9 +7124,14 @@ msgstr ""
 msgid "Unable to crop stream image file: %s"
 msgstr ""
 
-#: includes/ajax/class-pages.php:88
+#: includes/ajax/class-pages.php:91
 #, php-format
 msgid "%s (ID: %s)"
+msgstr ""
+
+#: includes/ajax/class-pages.php:112
+#: includes/ajax/class-pages.php:123
+msgid "No members page enabled"
 msgstr ""
 
 #: includes/ajax/class-profile.php:46
@@ -7923,14 +7928,14 @@ msgstr ""
 #: includes/class-config.php:267
 #: includes/class-config.php:835
 #: includes/class-config.php:843
-#: includes/core/class-form.php:1085
+#: includes/core/class-form.php:1004
 msgid "Login"
 msgstr ""
 
 #: includes/class-config.php:271
 #: includes/class-config.php:833
 #: includes/class-config.php:847
-#: includes/core/class-form.php:1091
+#: includes/core/class-form.php:1010
 msgid "Register"
 msgstr ""
 
@@ -12053,6 +12058,17 @@ msgstr ""
 #: templates/profile/posts.php:52
 #: templates/v3/profile/posts.php:53
 msgid "This user has not created any posts."
+msgstr ""
+
+#: templates/searchform.php:19
+#: templates/searchform.php:20
+msgctxt "label"
+msgid "Search for:"
+msgstr ""
+
+#: templates/searchform.php:20
+msgctxt "placeholder"
+msgid "Search &hellip;"
 msgstr ""
 
 #: templates/v3/account/personal-data.php:88
