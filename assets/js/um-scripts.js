@@ -424,60 +424,63 @@ jQuery(document).ready(function() {
 	// 	return false;
 	// });
 
-	jQuery( document.body ).on('click', '#um-search-button', function() {
-		var action = jQuery(this).parents('.um-search-form').data('members_page');
+	jQuery( document.body ).on('click', '#um-search-button', function(e) {
+		e.preventDefault();
 
-		var search_keys = [];
-		jQuery(this).parents('.um-search-form').find('input[name="um-search-keys[]"]').each( function() {
-			search_keys.push( jQuery(this).val() );
-		});
-
-		var search = jQuery(this).parents('.um-search-form').find('.um-search-field').val();
-
-		var url;
-		if ( search === '' ) {
-			url = action;
-		} else {
-			var query = '?';
-			for ( var i = 0; i < search_keys.length; i++ ) {
-				query += search_keys[i] + '=' + search;
-				if ( i !== search_keys.length - 1 ) {
-					query += '&';
-				}
-			}
-
-			url = action + query;
+		let $btn = jQuery(this);
+		if ( $btn.hasClass( 'um-disabled' ) ) {
+			return;
 		}
-		window.location = url;
+
+		let $form = $btn.parents('.um-search-form');
+		let search = $form.find('.um-search-field').val();
+		let nonce = $form.data('nonce');
+
+		$btn.addClass('um-disabled');
+		wp.ajax.send( 'um_search_widget_request', {
+			data: {
+				search: search,
+				_wpnonce: nonce
+			},
+			success: function(response) {
+				$btn.removeClass('um-disabled');
+				window.location = response.url;
+			},
+			error: function(e) {
+				console.log(e);
+				$btn.removeClass('um-disabled');
+			}
+		});
 	});
 
 	//make search on Enter click
 	jQuery( document.body ).on( 'keypress', '.um-search-field', function(e) {
 		if ( e.which === 13 ) {
-			var action = jQuery(this).parents('.um-search-form').data('members_page');
+			let $field = jQuery(this);
+			let $form = $field.parents('.um-search-form');
 
-			var search_keys = [];
-			jQuery(this).parents('.um-search-form').find('input[name="um-search-keys[]"]').each( function() {
-				search_keys.push( jQuery(this).val() );
-			});
-
-			var search = jQuery(this).val();
-
-			var url;
-			if ( search === '' ) {
-				url = action;
-			} else {
-				var query = '?';
-				for ( var i = 0; i < search_keys.length; i++ ) {
-					query += search_keys[i] + '=' + search;
-					if ( i !== search_keys.length - 1 ) {
-						query += '&';
-					}
-				}
-
-				url = action + query;
+			let $btn = $form.find('#um-search-button');
+			if ( $btn.hasClass( 'um-disabled' ) ) {
+				return;
 			}
-			window.location = url;
+			let search = $field.val();
+			let nonce = $form.data('nonce');
+
+			$btn.addClass('um-disabled');
+			wp.ajax.send( 'um_search_widget_request', {
+				data: {
+					search: search,
+					_wpnonce: nonce
+				},
+				success: function(response) {
+					$btn.removeClass('um-disabled');
+					window.location = response.url;
+				},
+				error: function(e) {
+					console.log(e);
+					$btn.removeClass('um-disabled');
+				}
+			});
 		}
 	});
 

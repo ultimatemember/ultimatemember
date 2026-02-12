@@ -60,7 +60,7 @@ UM.dropdown = {
 		// profile photo
 		if ( $element.is('.um-profile-photo') ) {
 			var $imgBox = $element.find('.um-profile-photo-img');
-			if ( $element.closest('div.uimob500').length ) {
+			if ( $element.closest('div.uimob340,div.uimob500').length ) {
 				top_p = $element.outerHeight() - $imgBox.outerHeight() / 4;
 			} else {
 				left_p = ($imgBox.outerWidth() - menu_width) / 2;
@@ -71,7 +71,7 @@ UM.dropdown = {
 		// cover photo
 		if ( $element.is('.um-cover') ) {
 			var $imgBox = $element.find('.um-cover-e');
-			if ( $element.closest('div.uimob500').length ) {
+			if ( $element.closest('div.uimob340,div.uimob500').length ) {
 				left_p = ($imgBox.outerWidth() - menu_width) / 2;
 				top_p = $imgBox.outerHeight() / 2 + 24;
 			} else {

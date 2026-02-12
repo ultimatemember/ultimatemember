@@ -6,7 +6,7 @@
  *
  * Page: "Members"
  *
- * @version 2.11.1
+ * @version 2.11.2
  *
  * @var array $args
  */
@@ -347,13 +347,13 @@ $postid = ! empty( $post->ID ) ? $post->ID : '';
 						<# _.each( data.filters, function( filter, key, list ) { #>
 							<div class="um-members-filter-tag">
 								<# if ( filter.type == 'slider' ) { #>
-									{{{filter.value_label}}}
+									{{filter.value_label}}
 								<# } else { #>
-									<strong>{{{filter.label}}}</strong>: {{{filter.value_label}}}
+									<strong>{{filter.label}}</strong>: {{filter.value_label}}
 								<# } #>
-								<div class="um-members-filter-remove um-tip-n" data-name="{{{filter.name}}}"
-									 data-value="{{{filter.value}}}" data-range="{{{filter.range}}}"
-									 data-type="{{{filter.type}}}" title="<?php esc_attr_e( 'Remove filter', 'ultimate-member' ) ?>">&times;</div>
+								<div class="um-members-filter-remove um-tip-n" data-name="{{filter.name}}"
+									 data-value="{{filter.value}}" data-range="{{filter.range}}"
+									 data-type="{{filter.type}}" title="<?php esc_attr_e( 'Remove filter', 'ultimate-member' ) ?>">&times;</div>
 							</div>
 						<# }); #>
 					<# } #>

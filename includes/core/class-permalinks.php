@@ -27,12 +27,14 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		 * Permalinks constructor.
 		 */
 		public function __construct() {
-			add_action( 'init',  array( &$this, 'set_current_url' ), 0 );
+			add_action( 'init', array( &$this, 'set_current_url' ), 0 );
 
-			add_action( 'init',  array( &$this, 'check_for_querystrings' ), 1 );
+			add_action( 'init', array( &$this, 'check_for_querystrings' ), 1 );
 
 			// don't use lower than 2 priority because there is sending email inside, but Action Scheduler is init on 1st priority.
-			add_action( 'init',  array( &$this, 'activate_account_via_email_link' ), 2 );
+			add_action( 'init', array( &$this, 'activate_account_via_email_link' ), 2 );
+			// Approve the user after the activate account link is verified.
+			add_action( 'um_approve_user_on_email_confirmation', array( &$this, 'approve_user_on_email_confirmation' ) );
 		}
 
 		/**
@@ -135,9 +137,25 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 				}
 
 				// Activate account link is valid. Can be approved below.
-
-				um_fetch_user( $user_id ); // @todo maybe don't need to fetch.
-				UM()->common()->users()->approve( $user_id, true );
+				/**
+				 * Fires for user activation after validation the link for email confirmation.
+				 *
+				 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+				 * 10 - `UM()->permalinks()->approve_user_on_email_confirmation()` Approve the user after the activate account link is verified.
+				 *
+				 * @hook um_approve_user_on_email_confirmation
+				 *
+				 * @param {int} $user_id The user ID.
+				 *
+				 * @since 2.11.2
+				 *
+				 * @example <caption>Doing some code just after native approve the $user_id on email confirmation.</caption>
+				 * function my_approve_user_on_email_confirmation( $user_id ) {
+				 *     // your code here
+				 * }
+				 * add_action( 'um_approve_user_on_email_confirmation', 'my_approve_user_on_email_confirmation', 11 );
+				 */
+				do_action( 'um_approve_user_on_email_confirmation', $user_id );
 
 				$user_role      = UM()->roles()->get_priority_user_role( $user_id );
 				$user_role_data = UM()->roles()->role_data( $user_role );
@@ -163,7 +181,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 				 * function my_after_email_confirmation( $user_id ) {
 				 *     // your code here
 				 * }
-				 * add_filter( 'um_after_email_confirmation', 'my_after_email_confirmation' );
+				 * add_action( 'um_after_email_confirmation', 'my_after_email_confirmation' );
 				 */
 				do_action( 'um_after_email_confirmation', $user_id );
 
@@ -200,6 +218,18 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 				$redirect = apply_filters( 'um_after_email_confirmation_redirect', $redirect, $user_id, $login );
 				um_safe_redirect( $redirect );
 			}
+		}
+
+		/**
+		 * Natively approve the user after validation of the email activation link.
+		 *
+		 * @param int $user_id
+		 *
+		 * @return void
+		 */
+		public function approve_user_on_email_confirmation( $user_id ) {
+			um_fetch_user( $user_id ); // @todo maybe don't need to fetch.
+			UM()->common()->users()->approve( $user_id, true );
 		}
 
 		/**

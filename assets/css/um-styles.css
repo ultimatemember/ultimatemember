@@ -900,14 +900,14 @@ small.um-max-filesize span{
 	max-width: 300px;
 }
 
-.um-search-area .um-search-field {
+.um .um-form.um-search-area .um-search-field {
 	width: 100%;
 	margin: 0;
-	padding-left: 25px;
+	padding-left: 25px !important;
 }
 
-.rtl .um-search-area .um-search-field {
-	padding-right: 25px;
+.rtl .um .um-form.um-search-area .um-search-field {
+	padding-right: 25px !important;
 	padding-left: initial;
 }
 

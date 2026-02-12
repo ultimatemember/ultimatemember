@@ -2167,11 +2167,11 @@ class Site_Health {
 						$debug_info[] = array(
 							'role'             => array(
 								'label' => __( 'User registration role', 'ultimate-member' ),
-								'value' => 0 === absint( get_post_meta( $form_id, '_um_register_role', true ) ) ? $labels['default'] : get_post_meta( $form_id, '_um_register_role', true ),
+								'value' => empty( get_post_meta( $form_id, '_um_register_role', true ) ) ? $labels['default'] : get_post_meta( $form_id, '_um_register_role', true ),
 							),
 							'template'         => array(
 								'label' => __( 'Template', 'ultimate-member' ),
-								'value' => 0 === absint( get_post_meta( $form_id, '_um_register_template', true ) ) ? $labels['default'] : get_post_meta( $form_id, '_um_register_template', true ),
+								'value' => empty( get_post_meta( $form_id, '_um_register_template', true ) ) ? $labels['default'] : get_post_meta( $form_id, '_um_register_template', true ),
 							),
 							'max_width'        => array(
 								'label' => __( 'Max. Width (px)', 'ultimate-member' ),
@@ -2257,7 +2257,7 @@ class Site_Health {
 						$debug_info[] = array(
 							'template'         => array(
 								'label' => __( 'Template', 'ultimate-member' ),
-								'value' => 0 === absint( get_post_meta( $form_id, '_um_login_template', true ) ) ? $labels['default'] : get_post_meta( $form_id, '_um_login_template', true ),
+								'value' => empty( get_post_meta( $form_id, '_um_login_template', true ) ) ? $labels['default'] : get_post_meta( $form_id, '_um_login_template', true ),
 							),
 							'max_width'        => array(
 								'label' => __( 'Max. Width (px)', 'ultimate-member' ),
@@ -2329,7 +2329,7 @@ class Site_Health {
 							),
 							'template'         => array(
 								'label' => __( 'Template', 'ultimate-member' ),
-								'value' => 0 === absint( get_post_meta( $form_id, '_um_profile_template', true ) ) ? $labels['default'] : get_post_meta( $form_id, '_um_profile_template', true ),
+								'value' => empty( get_post_meta( $form_id, '_um_profile_template', true ) ) ? $labels['default'] : get_post_meta( $form_id, '_um_profile_template', true ),
 							),
 							'max_width'        => array(
 								'label' => __( 'Max. Width (px)', 'ultimate-member' ),
