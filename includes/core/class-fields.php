@@ -1596,7 +1596,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 */
 			$label = apply_filters( 'um_change_field_label', $label, $key, $field_data );
 
-			return sprintf( __( '%s', 'ultimate-member' ), $label );
+			// Field labels come from field configuration and should already be translated
+		// via the um_change_field_label filter hook above. No need for additional translation wrapper.
+		return $label;
 		}
 
 		/**
