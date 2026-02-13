@@ -544,7 +544,10 @@ function um_before_account_delete() {
 		$text = UM()->options()->get( 'delete_account_no_pass_required_text' );
 	}
 
-	printf( __( '%s', 'ultimate-member' ), wpautop( htmlspecialchars( $text ) ) );
+	// The delete account message text comes from plugin settings and should be output
+	// with proper escaping. We use wpautop to preserve paragraph formatting and
+	// wp_kses_post to allow safe HTML while preventing XSS.
+	echo wpautop( wp_kses_post( $text ) );
 }
 add_action( 'um_before_account_delete', 'um_before_account_delete' );
 
