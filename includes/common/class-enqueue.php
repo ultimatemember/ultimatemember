@@ -297,6 +297,8 @@ class Enqueue {
 		wp_set_script_translations( 'um_raty', 'ultimate-member' );
 		wp_register_style( 'um_raty', $libs_url . 'raty/um-raty' . $suffix . '.css', array(), '2.6.0' );
 
+		wp_register_script( 'um_conditional', $js_url . 'um-conditional' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
+
 		$fonticons_handlers = array();
 //		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 //			// New FontIcons from FontAwesome.
@@ -328,7 +330,7 @@ class Enqueue {
 		wp_register_script( 'um_choices', $libs_url . 'choices-js/choices' . $suffix . '.js', array(), '11.1.0', true );
 		wp_register_style( 'um_choices', $css_url . 'um-choices' . $suffix . '.css', array(), UM_VERSION );
 
-		$common_js_deps  = array( 'jquery', 'wp-util', 'wp-hooks', 'wp-i18n', 'um_tipsy', 'um_raty', 'um_choices' );
+		$common_js_deps  = array( 'jquery', 'wp-util', 'wp-hooks', 'wp-i18n', 'um_tipsy', 'um_raty', 'um_choices', 'um_conditional' );
 		$common_css_deps = array_merge( array( 'um_tipsy', 'um_raty', 'um_choices' ), self::$fonticons_handlers );
 		if ( ! UM()->is_new_ui() ) {
 			// Date-time picker (Pickadate.JS)
@@ -364,6 +366,8 @@ class Enqueue {
 		}
 
 		wp_register_script( 'um_common', $src, $common_js_deps, UM_VERSION, true );
+		wp_set_script_translations( 'um_common', 'ultimate-member' );
+
 		$um_common_variables = array(
 			'locale' => get_locale(),
 			'isRTL'  => is_rtl(),

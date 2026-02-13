@@ -66,8 +66,7 @@ UM.common = {
 						click:      function( score, evt ) {
 							um_live_field = this.id;
 							um_live_value = score;
-							// @todo make condition logic here
-							// um_apply_conditions( jQuery(this), false );
+							um_apply_conditions( jQuery(this), false );
 						}
 					});
 				}

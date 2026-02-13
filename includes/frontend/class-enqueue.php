@@ -140,14 +140,14 @@ final class Enqueue extends \um\common\Enqueue {
 		$js_url   = self::get_url( 'js' );
 		$css_url  = self::get_url( 'css' );
 
+		// Cropper.js
+		wp_register_script( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.js', array( 'jquery' ), '1.6.1', true );
+		wp_register_style( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.css', array(), '1.6.1' );
+
 		if ( UM()->is_new_ui() ) {
 			// New one.
 			wp_register_script( 'um_dropdown', $libs_url . 'dropdown/dropdown' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
 			wp_register_style( 'um_dropdown', $libs_url . 'dropdown/dropdown' . $suffix . '.css', array(), UM_VERSION );
-
-			// Cropper.js
-			wp_register_script( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.js', array( 'jquery' ), '1.6.1', true );
-			wp_register_style( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.css', array(), '1.6.1' );
 
 			wp_register_script( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.js', array( 'jquery' ), '1.0', true );
 
@@ -166,6 +166,7 @@ final class Enqueue extends \um\common\Enqueue {
 					'in_footer' => false,
 				)
 			);
+			wp_set_script_translations( 'um_frontend_common', 'ultimate-member' );
 
 			$um_common_variables = array();
 			/**
@@ -192,11 +193,12 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_style( 'um_modal', $libs_url . 'modal/modal' . $suffix . '.css', array(), UM_VERSION );
 
 			wp_register_script( 'um_new_design', $js_url . 'new-design' . $suffix . '.js', array( 'um_frontend_common', 'plupload', 'um_modal' ), UM_VERSION, true );
+			wp_set_script_translations( 'um_new_design', 'ultimate-member' );
 
 			wp_register_script( 'um_directory', $js_url . 'v3/directory' . $suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'wp-hooks' ), UM_VERSION, true );
 
-			wp_register_script( 'um_forms', $js_url . 'v3/forms' . $suffix . '.js', array( 'um_frontend_common', 'plupload', 'jquery-ui-slider', 'um_modal' ), UM_VERSION, true );
-
+			wp_register_script( 'um_forms', $js_url . 'v3/forms' . $suffix . '.js', array( 'um_frontend_common', 'plupload', 'jquery-ui-slider', 'um_modal', 'um_conditional' ), UM_VERSION, true );
+			wp_set_script_translations( 'um_forms', 'ultimate-member' );
 			ob_start();
 			?>
 			jQuery( window ).on( 'load', function() {
@@ -204,15 +206,10 @@ final class Enqueue extends \um\common\Enqueue {
 			});
 			<?php
 			$inline_script = ob_get_clean();
-
 			wp_add_inline_script( 'um_forms', $inline_script );
 
 			wp_register_script( 'um_profile', $js_url . 'v3/profile' . $suffix . '.js', array( 'um_forms' ), UM_VERSION, true );
 			wp_register_script( 'um_register', $js_url . 'v3/register' . $suffix . '.js', array( 'um_forms' ), UM_VERSION, false );
-
-			// uploadFiles scripts + UM custom styles for uploader.
-//			wp_register_script( 'um_jquery_form', $libs_url . 'jquery-form/jquery-form' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
-//			wp_register_script( 'um_fileupload', $libs_url . 'fileupload/fileupload.js', array( 'um_jquery_form' ), UM_VERSION, true );
 
 //			$um_common_variables = array();
 //			/**
@@ -235,10 +232,6 @@ final class Enqueue extends \um\common\Enqueue {
 //			$um_common_variables = apply_filters( 'um_frontend_common_js_variables', $um_common_variables );
 //			wp_localize_script( 'um_frontend_common', 'um_frontend_common_variables', $um_common_variables );
 //
-//			// uploadFiles scripts + UM custom styles for uploader.
-//			wp_register_script( 'um_jquery_form', $libs_url . 'jquery-form/jquery-form' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
-//			wp_register_script( 'um_fileupload', $libs_url . 'fileupload/fileupload.js', array( 'um_jquery_form' ), UM_VERSION, true );
-//
 //			wp_register_script( 'um_functions', $js_url . 'um-functions' . $suffix . '.js', array( 'um_frontend_common', 'um_fileupload' ), UM_VERSION, true );
 //
 //			wp_register_script( 'um_modal', $js_url . 'um-modal' . $suffix . '.js', array( 'um_frontend_common' ), UM_VERSION, true );
@@ -246,7 +239,7 @@ final class Enqueue extends \um\common\Enqueue {
 //			wp_register_script( 'um_functions', $js_url . 'um-functions' . $suffix . '.js', array( 'um_frontend_common', 'jquery-masonry' ), UM_VERSION, true );
 //			wp_register_script( 'um_responsive', $js_url . 'um-responsive' . $suffix . '.js', array( 'um_functions' ), UM_VERSION, true );
 //
-//			wp_register_script( 'um_conditional', $js_url . 'um-conditional' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
+//
 //			wp_register_script( 'um_scripts', $js_url . 'um-scripts' . $suffix . '.js', array( 'um_frontend_common', 'um_conditional', self::$select2_handle, 'um_raty' ), UM_VERSION, true );
 //
 //			$max_upload_size = wp_max_upload_size();
@@ -283,10 +276,6 @@ final class Enqueue extends \um\common\Enqueue {
 		} else {
 			wp_register_script( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.js', array( 'jquery' ), '1.0', true );
 
-			// Cropper.js
-			wp_register_script( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.js', array( 'jquery' ), '1.6.1', true );
-			wp_register_style( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.css', array(), '1.6.1' );
-
 			wp_register_script( 'um_frontend_common', $js_url . 'common-frontend' . $suffix . '.js', array( 'um_common', 'um_crop' ), UM_VERSION, true );
 			$um_common_variables = array();
 			/**
@@ -316,12 +305,12 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_script( 'um_functions', $js_url . 'um-functions' . $suffix . '.js', array( 'um_frontend_common', 'um_fileupload' ), UM_VERSION, true );
 
 			wp_register_script( 'um_modal', $js_url . 'um-modal' . $suffix . '.js', array( 'um_frontend_common' ), UM_VERSION, true );
+			wp_set_script_translations( 'um_modal', 'ultimate-member' );
 
 			wp_register_script( 'um_functions', $js_url . 'um-functions' . $suffix . '.js', array( 'um_frontend_common', 'jquery-masonry' ), UM_VERSION, true );
 			wp_register_script( 'um_responsive', $js_url . 'um-responsive' . $suffix . '.js', array( 'um_functions' ), UM_VERSION, true );
 
 			wp_register_script( 'um-gdpr', $js_url . 'um-gdpr' . $suffix . '.js', array( 'jquery' ), UM_VERSION, false );
-			wp_register_script( 'um_conditional', $js_url . 'um-conditional' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
 			wp_register_script( 'um_scripts', $js_url . 'um-scripts' . $suffix . '.js', array( 'um_frontend_common', 'um_conditional', self::$select2_handle, 'um_raty' ), UM_VERSION, true );
 
 			$max_upload_size = wp_max_upload_size();
@@ -391,8 +380,9 @@ final class Enqueue extends \um\common\Enqueue {
 		$libs_url = self::get_url( 'libs' );
 		$css_url  = self::get_url( 'css' );
 
+		wp_register_style( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.css', array(), '1.0' );
+
 		if ( UM()->is_new_ui() ) {
-			wp_register_style( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.css', array(), '1.0' );
 			wp_register_style( 'um_notice', $libs_url . 'um-notice/um-notice' . $suffix . '.css', array(), '1.0' );
 
 			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array( 'um_common', 'um_tipsy', 'um_dropdown', 'um_crop', 'um_modal', 'um_choices', 'um_confirm', 'um_notice' ), UM_VERSION );
@@ -404,25 +394,7 @@ final class Enqueue extends \um\common\Enqueue {
 
 			$custom_css = '.' . esc_attr( UM()->honeypot ) . '_name {display: none !important;}';
 			wp_add_inline_style( 'um_new_design', $custom_css );
-//				wp_add_inline_style( 'um_profile', $custom_css );
-//				wp_add_inline_style( 'um_account', $custom_css );
-
-			//FontAwesome and FontIcons styles
-//			wp_register_style( 'um_rtl', $css_url . 'um.rtl' . $suffix . '.css', array(), UM_VERSION );
-//			wp_register_style( 'um_default_css', $css_url . 'um-old-default' . $suffix . '.css', array(), UM_VERSION );
-//			wp_register_style( 'um_modal', $css_url . 'um-modal' . $suffix . '.css', array(), UM_VERSION );
-//			wp_register_style( 'um_responsive', $css_url . 'um-responsive' . $suffix . '.css', array(), UM_VERSION );
-//
-//			// Workaround when select2 deregistered (e.g. Woo + Impreza theme activated).
-//			$this->register_select2();
-//
-//			wp_register_style( 'um_styles', $css_url . 'um-styles' . $suffix . '.css', array( 'um_ui', 'um_tipsy', 'um_raty', 'um_fonticons_ii', 'um_fonticons_fa', 'select2', 'um_fileupload', 'um_common', 'um_responsive', 'um_modal' ), UM_VERSION );
-//
-//			wp_register_style( 'um_profile', $css_url . 'um-profile' . $suffix . '.css', array( 'um_styles', 'um_crop' ), UM_VERSION );
-//			wp_register_style( 'um_misc', $css_url . 'um-misc' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
 		} else {
-			wp_register_style( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.css', array(), '1.0' );
-
 			wp_register_style( 'um_fileupload', $css_url . 'um-fileupload' . $suffix . '.css', array(), UM_VERSION );
 
 			//FontAwesome and FontIcons styles
@@ -461,22 +433,21 @@ final class Enqueue extends \um\common\Enqueue {
 
 		if ( ! UM()->is_new_ui() ) {
 			$this->load_original();
+			// rtl style
+			if ( is_rtl() ) {
+				wp_enqueue_style( 'um_rtl' );
+			}
+
+			global $post;
+			if ( is_object( $post ) && has_shortcode( $post->post_content, 'ultimatemember' ) ) {
+				wp_dequeue_script( 'jquery-form' );
+			}
+
+			//old settings before UM 2.0 CSS
+			wp_enqueue_style( 'um_default_css' );
+
+			$this->old_css_settings();
 		}
-
-		// rtl style
-		if ( is_rtl() ) {
-			wp_enqueue_style( 'um_rtl' );
-		}
-
-		global $post;
-		if ( is_object( $post ) && has_shortcode( $post->post_content, 'ultimatemember' ) ) {
-			wp_dequeue_script( 'jquery-form' );
-		}
-
-		//old settings before UM 2.0 CSS
-		wp_enqueue_style( 'um_default_css' );
-
-		$this->old_css_settings();
 	}
 
 	/**
@@ -485,127 +456,128 @@ final class Enqueue extends \um\common\Enqueue {
 	 * @since 2.8.4
 	 */
 	public function add_to_global_styles() {
-		if ( UM()->is_new_ui() ) {
-			$styles = apply_filters(
-				'um_inline_styles_variables',
-				array(
-					'--um-gray-25:#fcfcfd;',
-					'--um-gray-50:#f9fafb;',
-					'--um-gray-100:#f2f4f7;',
-					'--um-gray-200:#eaecf0;',
-					'--um-gray-300:#d0d5dd;',
-					'--um-gray-400:#98a2b3;',
-					'--um-gray-500:#667085;',
-					'--um-gray-600:#475467;',
-					'--um-gray-700:#344054;',
-					'--um-gray-800:#1d2939;',
-					'--um-gray-900:#101828;',
-				)
-			);
-
-			$shadow_shades = array( 3, 5, 6, 8, 10, 14, 18 );
-			foreach ( $shadow_shades as $opacity ) {
-				$alpha    = $opacity / 100;
-				$styles[] = "--um-gray-900-a-{$opacity}:rgba(16,24,40,{$alpha});";
-			}
-
-			$gray_ring_shades = array( 14, 20 );
-			foreach ( $gray_ring_shades as $opacity ) {
-				$alpha    = $opacity / 100;
-				$styles[] = "--um-gray-400-a-{$opacity}:rgba(152,162,179,{$alpha});";
-			}
-
-			$error_ring_shades = array( 24 );
-			foreach ( $error_ring_shades as $opacity ) {
-				$alpha    = $opacity / 100;
-				$styles[] = "--um-error-500-a-{$opacity}:rgba(240,68,56,{$alpha});";
-			}
-
-			$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color' ) );
-			foreach ( $palette as $title => $colors ) {
-				$styles[] = '--um-primary-' . $title . '-bg:' . esc_attr( $colors['bg'] ) . ';';
-				$styles[] = '--um-primary-' . $title . '-fg:' . esc_attr( $colors['fg'] ) . ';';
-			}
-
-			$primary_ring_shades = array( 24 );
-			foreach ( $primary_ring_shades as $opacity ) {
-				$alpha = $opacity / 100;
-				if ( ! empty( $palette['500']['bg'] ) ) {
-					$rgb      = UM()->common()::color()->hex2rgb( $palette['500']['bg'] );
-					$rgb      = implode( ',', $rgb );
-					$styles[] = "--um-primary-500-a-{$opacity}:rgba({$rgb},{$alpha});";
-				} else {
-					$styles[] = "--um-primary-500-a-{$opacity}:rgba(158,119,237,{$alpha});";
-				}
-			}
-
-			$rules = array();
-			if ( empty( $styles ) ) {
-				return;
-			}
-			$inline_style = 'body{' . implode( ' ', $styles ) . '}';
-			if ( ! empty( $rules ) ) {
-				$inline_style .= implode( ' ', $rules );
-			}
-
-			$stylesheet = 'wp-block-library';
-			wp_add_inline_style( $stylesheet, $inline_style );
-
-			$dynamic_styles = '';
-			$forms_query    = get_posts(
-				array(
-					'post_type'      => array( 'um_form', 'um_directory' ),
-					'post_status'    => 'publish',
-					'posts_per_page' => -1,
-					'fields'         => 'ids',
-				)
-			);
-
-			foreach ( $forms_query as $form_id ) {
-				$form_data = UM()->query()->post_data( $form_id );
-
-				if ( isset( $form_data['max_width'] ) && $form_data['max_width'] ) {
-					$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um {max-width: ' . esc_attr( $form_data['max_width'] ) . ';}';
-				}
-				if ( isset( $form_data['align'] ) && in_array( $form_data['align'], array( 'left', 'right' ), true ) ) {
-					$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um {margin-' . esc_attr( $form_data['align'] ) . ': 0px !important;}';
-				}
-
-				if ( array_key_exists( 'mode', $form_data ) && 'profile' === $form_data['mode'] ) {
-
-					if ( ! isset( $form_data['photosize'] ) || 'original' === $form_data['photosize'] ) {
-						$form_data['photosize'] = um_get_metadefault( 'profile_photosize' ); // Cannot be more than metadefault value.
-					}
-
-					$form_data['photosize'] = absint( $form_data['photosize'] );
-
-					$photosize_up = ( $form_data['photosize'] / 2 ) + 10;
-					$meta_padding = ( $form_data['photosize'] + 60 ) . 'px';
-
-					if ( ! empty( $form_data['area_max_width'] ) ) {
-						$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-body {max-width: ' . esc_attr( $form_data['area_max_width'] ) . ';}';
-						$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-body .um-form-new {width: ' . esc_attr( $form_data['area_max_width'] ) . ';}';
-					}
-
-					$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-photo a.um-profile-photo-img {width: ' . esc_attr( $form_data['photosize'] ) . 'px; height: ' . esc_attr( $form_data['photosize'] ) . 'px;}';
-					$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-photo a.um-profile-photo-img {top: -' . esc_attr( $photosize_up ) . 'px;}';
-
-					if ( is_rtl() ) {
-						$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-meta {padding-right: ' . esc_attr( $meta_padding ) . ';}';
-					} else {
-						$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-meta {padding-left: ' . esc_attr( $meta_padding ) . ';}';
-					}
-				}
-			}
-
-			wp_add_inline_style( $stylesheet, $dynamic_styles );
-
-			/* TODO Make block editor scripts/styles review for new UI.
-			 * $suffix   = self::get_suffix();
-			$css_url  = self::get_url( 'css' );
-
-			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array( 'um_common' ), UM_VERSION );*/
+		if ( ! UM()->is_new_ui() ) {
+			return;
 		}
+		$styles = apply_filters(
+			'um_inline_styles_variables',
+			array(
+				'--um-gray-25:#fcfcfd;',
+				'--um-gray-50:#f9fafb;',
+				'--um-gray-100:#f2f4f7;',
+				'--um-gray-200:#eaecf0;',
+				'--um-gray-300:#d0d5dd;',
+				'--um-gray-400:#98a2b3;',
+				'--um-gray-500:#667085;',
+				'--um-gray-600:#475467;',
+				'--um-gray-700:#344054;',
+				'--um-gray-800:#1d2939;',
+				'--um-gray-900:#101828;',
+			)
+		);
+
+		$shadow_shades = array( 3, 5, 6, 8, 10, 14, 18 );
+		foreach ( $shadow_shades as $opacity ) {
+			$alpha    = $opacity / 100;
+			$styles[] = "--um-gray-900-a-{$opacity}:rgba(16,24,40,{$alpha});";
+		}
+
+		$gray_ring_shades = array( 14, 20 );
+		foreach ( $gray_ring_shades as $opacity ) {
+			$alpha    = $opacity / 100;
+			$styles[] = "--um-gray-400-a-{$opacity}:rgba(152,162,179,{$alpha});";
+		}
+
+		$error_ring_shades = array( 24 );
+		foreach ( $error_ring_shades as $opacity ) {
+			$alpha    = $opacity / 100;
+			$styles[] = "--um-error-500-a-{$opacity}:rgba(240,68,56,{$alpha});";
+		}
+
+		$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color' ) );
+		foreach ( $palette as $title => $colors ) {
+			$styles[] = '--um-primary-' . $title . '-bg:' . esc_attr( $colors['bg'] ) . ';';
+			$styles[] = '--um-primary-' . $title . '-fg:' . esc_attr( $colors['fg'] ) . ';';
+		}
+
+		$primary_ring_shades = array( 24 );
+		foreach ( $primary_ring_shades as $opacity ) {
+			$alpha = $opacity / 100;
+			if ( ! empty( $palette['500']['bg'] ) ) {
+				$rgb      = UM()->common()::color()->hex2rgb( $palette['500']['bg'] );
+				$rgb      = implode( ',', $rgb );
+				$styles[] = "--um-primary-500-a-{$opacity}:rgba({$rgb},{$alpha});";
+			} else {
+				$styles[] = "--um-primary-500-a-{$opacity}:rgba(158,119,237,{$alpha});";
+			}
+		}
+
+		$rules = array();
+		if ( empty( $styles ) ) {
+			return;
+		}
+		$inline_style = 'body{' . implode( ' ', $styles ) . '}';
+		if ( ! empty( $rules ) ) {
+			$inline_style .= implode( ' ', $rules );
+		}
+
+		$stylesheet = 'wp-block-library';
+		wp_add_inline_style( $stylesheet, $inline_style );
+
+		$dynamic_styles = '';
+		$forms_query    = get_posts(
+			array(
+				'post_type'      => array( 'um_form', 'um_directory' ),
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+			)
+		);
+
+		foreach ( $forms_query as $form_id ) {
+			$form_data = UM()->query()->post_data( $form_id );
+
+			if ( isset( $form_data['max_width'] ) && $form_data['max_width'] ) {
+				$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um {max-width: ' . esc_attr( $form_data['max_width'] ) . ';}';
+			}
+			if ( isset( $form_data['align'] ) && in_array( $form_data['align'], array( 'left', 'right' ), true ) ) {
+				$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um {margin-' . esc_attr( $form_data['align'] ) . ': 0px !important;}';
+			}
+
+			if ( array_key_exists( 'mode', $form_data ) && 'profile' === $form_data['mode'] ) {
+
+				if ( ! isset( $form_data['photosize'] ) || 'original' === $form_data['photosize'] ) {
+					$form_data['photosize'] = um_get_metadefault( 'profile_photosize' ); // Cannot be more than metadefault value.
+				}
+
+				$form_data['photosize'] = absint( $form_data['photosize'] );
+
+				$photosize_up = ( $form_data['photosize'] / 2 ) + 10;
+				$meta_padding = ( $form_data['photosize'] + 60 ) . 'px';
+
+				if ( ! empty( $form_data['area_max_width'] ) ) {
+					$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-body {max-width: ' . esc_attr( $form_data['area_max_width'] ) . ';}';
+					$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-body .um-form-new {width: ' . esc_attr( $form_data['area_max_width'] ) . ';}';
+				}
+
+				$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-photo a.um-profile-photo-img {width: ' . esc_attr( $form_data['photosize'] ) . 'px; height: ' . esc_attr( $form_data['photosize'] ) . 'px;}';
+				$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-photo a.um-profile-photo-img {top: -' . esc_attr( $photosize_up ) . 'px;}';
+
+				if ( is_rtl() ) {
+					$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-meta {padding-right: ' . esc_attr( $meta_padding ) . ';}';
+				} else {
+					$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-meta {padding-left: ' . esc_attr( $meta_padding ) . ';}';
+				}
+			}
+		}
+
+		wp_add_inline_style( $stylesheet, $dynamic_styles );
+
+		/* TODO Make block editor scripts/styles review for new UI.
+		 * $suffix   = self::get_suffix();
+		$css_url  = self::get_url( 'css' );
+
+		wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array( 'um_common' ), UM_VERSION );*/
 	}
 
 	/**
@@ -614,26 +586,27 @@ final class Enqueue extends \um\common\Enqueue {
 	 * @since 2.8.4
 	 */
 	public function add_style_variables( $um_common_variables ) {
-		if ( UM()->is_new_ui() ) {
-			$um_common_variables['colors'] = array(
-				'gray25'  => '#fcfcfd',
-				'gray50'  => '#f9fafb',
-				'gray100' => '#f2f4f7',
-				'gray200' => '#eaecf0',
-				'gray300' => '#d0d5dd',
-				'gray400' => '#98a2b3',
-				'gray500' => '#667085',
-				'gray600' => '#475467',
-				'gray700' => '#344054',
-				'gray800' => '#1d2939',
-				'gray900' => '#101828',
-			);
+		if ( ! UM()->is_new_ui() ) {
+			return $um_common_variables;
+		}
+		$um_common_variables['colors'] = array(
+			'gray25'  => '#fcfcfd',
+			'gray50'  => '#f9fafb',
+			'gray100' => '#f2f4f7',
+			'gray200' => '#eaecf0',
+			'gray300' => '#d0d5dd',
+			'gray400' => '#98a2b3',
+			'gray500' => '#667085',
+			'gray600' => '#475467',
+			'gray700' => '#344054',
+			'gray800' => '#1d2939',
+			'gray900' => '#101828',
+		);
 
-			$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color' ) );
-			foreach ( $palette as $title => $colors ) {
-				$um_common_variables['colors'][ 'primary' . $title . 'bg' ] = $colors['bg'];
-				$um_common_variables['colors'][ 'primary' . $title . 'fg' ] = $colors['fg'];
-			}
+		$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color' ) );
+		foreach ( $palette as $title => $colors ) {
+			$um_common_variables['colors'][ 'primary' . $title . 'bg' ] = $colors['bg'];
+			$um_common_variables['colors'][ 'primary' . $title . 'fg' ] = $colors['fg'];
 		}
 
 		return $um_common_variables;
