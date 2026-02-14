@@ -343,95 +343,176 @@ function um_profile_field_filter_hook__date( $value, $data ) {
 }
 add_filter( 'um_profile_field_filter_hook__date', 'um_profile_field_filter_hook__date', 99, 2 );
 
-/**
- * File field
- * @param $value
- * @param $data
- *
- * @return string
- */
-function um_profile_field_filter_hook__file( $value, $data ) {
-	if ( ! $value ) {
-		return '';
-	}
-	$file_type = wp_check_filetype( $value );
-	$uri       = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
+if ( UM()->is_new_ui() ) {
+	/**
+	 * File field
+	 * @param $value
+	 * @param $data
+	 *
+	 * @return string
+	 */
+	function um_profile_field_filter_hook__file( $value, $data ) {
+		if ( ! $value ) {
+			return '';
+		}
 
-	$removed = false;
-	if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
-		if ( is_multisite() ) {
-			//multisite fix for old customers
-			$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value );
-			if ( ! file_exists( $file_path ) ) {
-				$removed = true;
-			}
+		if ( ! file_exists( UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) ) . DIRECTORY_SEPARATOR . $value ) ) {
+			$value = __( 'This file has been removed.', 'ultimate-member' );
 		} else {
+			$file_type = wp_check_filetype( $value );
+			$uri       = UM()->fields()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ), $value );
+
+			$file_info = um_user( $data['metakey'] . '_metadata' );
+			if ( ! empty( $file_info['original_name'] ) ) {
+				$value = $file_info['original_name'];
+			}
+
+			$icon  = UM()->frontend()::layouts()::get_file_extension_icon( $file_type['ext'] );
+			$value = '<div class="um-field-single-file">
+				' . $icon . '
+				<div class="um-field-file-info">
+					<span class="um-field-file-filename">' . esc_attr( $value ) . '</span>
+					<a class="um-link um-link-secondary um-link-underline um-field-file-download-link" href="' . esc_url( $uri ) . '" target="_blank" title="' . esc_html__( 'Download', 'ultimate-member' ) . '">' .
+						esc_html__( 'Download', 'ultimate-member' ) .
+					'</a>
+				</div>
+			</div>';
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Image field
+	 *
+	 * @param $value
+	 * @param $data
+	 *
+	 * @return string
+	 */
+	function um_profile_field_filter_hook__image( $value, $data ) {
+		if ( ! $value ) {
+			return '';
+		}
+
+		$uri   = UM()->fields()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ), $value );
+		$title = isset( $data['title'] ) ? $data['title'] : __( 'Untitled photo', 'ultimate-member' );
+
+		$removed = false;
+		if ( ! file_exists( UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) ) . DIRECTORY_SEPARATOR . $value ) ) {
 			$removed = true;
 		}
-	}
 
-	if ( $removed ) {
-		$value = __( 'This file has been removed.', 'ultimate-member' );
-	} else {
-		$file_info = um_user( $data['metakey'] . "_metadata" );
-		if ( ! empty( $file_info['original_name'] ) ) {
-			$value = $file_info['original_name'];
+		if ( ! $removed ) {
+			$lazy = wp_kses(
+				UM()->frontend()::layouts()::lazy_image(
+					$uri,
+					array(
+						'width' => '100%',
+						'alt'   => $title,
+					)
+				),
+				UM()->get_allowed_html( 'templates' )
+			);
+			// translators: %s is the field name
+			$value = '<a href="#" class="um-photo-modal" data-src="' . esc_url( $uri ) . '" title="' . sprintf( esc_attr__( 'Preview %s', 'ultimate-member' ), esc_attr( $title ) ) . '">' . $lazy . '</a>';
+		} else {
+			$value = '';
 		}
-		$value = '<div class="um-single-file-preview show">
-                        <div class="um-single-fileinfo">
-                            <a href="' . esc_url( $uri )  . '" target="_blank">
-                                <span class="icon" style="background:'. UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] ) . '"><i class="'. UM()->files()->get_fonticon_by_ext( $file_type['ext'] ) .'"></i></span>
-                                <span class="filename">' . esc_attr( $value ) . '</span>
-                            </a>
-                        </div>
-                    </div>';
+
+		return $value;
+	}
+} else {
+	/**
+	 * File field
+	 * @param $value
+	 * @param $data
+	 *
+	 * @return string
+	 */
+	function um_profile_field_filter_hook__file( $value, $data ) {
+		if ( ! $value ) {
+			return '';
+		}
+		$file_type = wp_check_filetype( $value );
+		$uri       = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
+
+		$removed = false;
+		if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
+			if ( is_multisite() ) {
+				//multisite fix for old customers
+				$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value );
+				if ( ! file_exists( $file_path ) ) {
+					$removed = true;
+				}
+			} else {
+				$removed = true;
+			}
+		}
+
+		if ( $removed ) {
+			$value = __( 'This file has been removed.', 'ultimate-member' );
+		} else {
+			$file_info = um_user( $data['metakey'] . '_metadata' );
+			if ( ! empty( $file_info['original_name'] ) ) {
+				$value = $file_info['original_name'];
+			}
+			$value = '<div class="um-single-file-preview show">
+				<div class="um-single-fileinfo">
+					<a href="' . esc_url( $uri )  . '" target="_blank">
+						<span class="icon" style="background:'. UM()->fonticons()->get_file_fonticon_bg( $file_type['ext'] ) . '"><i class="'. UM()->fonticons()->get_file_fonticon( $file_type['ext'] ) .'"></i></span>
+						<span class="filename">' . esc_attr( $value ) . '</span>
+					</a>
+				</div>
+			</div>';
+		}
+
+		return $value;
 	}
 
-	return $value;
+	/**
+	 * Image field
+	 *
+	 * @param $value
+	 * @param $data
+	 *
+	 * @return string
+	 */
+	function um_profile_field_filter_hook__image( $value, $data ) {
+		if ( ! $value ) {
+			return '';
+		}
+		$uri = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
+		$title = ( isset( $data['title'] ) ) ? $data['title'] : __( 'Untitled photo', 'ultimate-member' );
+
+		$removed = false;
+		if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
+			if ( is_multisite() ) {
+				//multisite fix for old customers
+				$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value );
+				if ( ! file_exists( $file_path ) ) {
+					$removed = true;
+				}
+			} else {
+				$removed = true;
+			}
+		}
+
+		// if value is an image tag
+		if( preg_match( '/\<img.*src=\"([^"]+).*/', $value, $matches ) ) {
+			$uri   = $matches[1];
+			$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="' . esc_attr( $uri ) . '"><img src="' . esc_attr( $uri ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" class="" /></a></div>';
+		} else if ( ! $removed ) {
+			$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="' . esc_attr( $uri ) . '"><img src="' . esc_attr( $uri ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" class="" /></a></div>';
+		} else {
+			$value = '';
+		}
+
+		return $value;
+	}
 }
+
 add_filter( 'um_profile_field_filter_hook__file', 'um_profile_field_filter_hook__file', 99, 2 );
-
-
-/**
- * Image field
- *
- * @param $value
- * @param $data
- *
- * @return string
- */
-function um_profile_field_filter_hook__image( $value, $data ) {
-	if ( ! $value ) {
-		return '';
-	}
-	$uri = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
-	$title = ( isset( $data['title'] ) ) ? $data['title'] : __( 'Untitled photo', 'ultimate-member' );
-
-	$removed = false;
-	if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
-		if ( is_multisite() ) {
-			//multisite fix for old customers
-			$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value );
-			if ( ! file_exists( $file_path ) ) {
-				$removed = true;
-			}
-		} else {
-			$removed = true;
-		}
-	}
-
-	// if value is an image tag
-	if( preg_match( '/\<img.*src=\"([^"]+).*/', $value, $matches ) ) {
-		$uri   = $matches[1];
-		$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="' . esc_attr( $uri ) . '"><img src="' . esc_attr( $uri ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" class="" /></a></div>';
-	} else if ( ! $removed ) {
-		$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="' . esc_attr( $uri ) . '"><img src="' . esc_attr( $uri ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" class="" /></a></div>';
-	} else {
-		$value = '';
-	}
-
-	return $value;
-}
 add_filter( 'um_profile_field_filter_hook__image', 'um_profile_field_filter_hook__image', 99, 2 );
 
 /**
@@ -543,7 +624,6 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 
 	$value = str_replace( 'https://https://', 'https://', $value );
 	$value = str_replace( 'http://https://', 'https://', $value );
-	//$value = UM()->shortcodes()->emotize( $value );
 	return $value;
 
 }
@@ -735,7 +815,6 @@ function um_select_dropdown_dynamic_options_to_utf8( $options, $data ) {
 }
 add_filter( 'um_select_dropdown_dynamic_options','um_select_dropdown_dynamic_options_to_utf8', 10, 2 );
 
-
 /**
  * Filter non-UTF8 strings
  * @param  string $value
@@ -743,7 +822,6 @@ add_filter( 'um_select_dropdown_dynamic_options','um_select_dropdown_dynamic_opt
  * @uses hook filter: um_field_non_utf8_value
  */
 function um_field_non_utf8_value( $value ) {
-
 	if ( function_exists( 'mb_detect_encoding' ) ) {
 		$encoding = mb_detect_encoding( $value, 'utf-8, iso-8859-1, ascii', true );
 		if ( strcasecmp( $encoding, 'UTF-8' ) !== 0 ) {
@@ -757,48 +835,51 @@ function um_field_non_utf8_value( $value ) {
 }
 add_filter( 'um_field_non_utf8_value', 'um_field_non_utf8_value' );
 
+if ( ! UM()->is_new_ui() ) {
+	/**
+	 * Returns dropdown/multi-select options from a callback function.
+	 * Old UI. Don't handle new UI.
+	 *
+	 * @param  $options array
+	 * @param  $data array
+	 * @return array
+	 */
+	function um_select_dropdown_dynamic_callback_options( $options, $data ) {
+		if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) ) {
+			if ( UM()->fields()->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
+				return $options;
+			}
 
-/**
- * Returns dropdown/multi-select options from a callback function
- * @param  $options array
- * @param  $data array
- * @return array
- * @uses   hook filter: um_select_dropdown_dynamic_options, um_multiselect_options
- */
-function um_select_dropdown_dynamic_callback_options( $options, $data ) {
-	if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) ) {
-		if ( UM()->fields()->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
-			return $options;
+			$options = call_user_func( $data['custom_dropdown_options_source'] );
 		}
-		$options = call_user_func( $data['custom_dropdown_options_source'] );
+
+		return $options;
 	}
-
-	return $options;
+	add_filter( 'um_select_dropdown_dynamic_options', 'um_select_dropdown_dynamic_callback_options', 10, 2 );
+	add_filter( 'um_multiselect_options', 'um_select_dropdown_dynamic_callback_options', 10, 2 );
 }
-add_filter( 'um_select_dropdown_dynamic_options','um_select_dropdown_dynamic_callback_options', 10, 2 );
-add_filter( 'um_multiselect_options','um_select_dropdown_dynamic_callback_options', 10, 2 );
-
 
 /**
- * Pair dropdown/multi-select options from a callback function
+ * Pair dropdown/multi-select options from a callback function.
+ * It does not handle registration form displaying and submission.
+ * Is triggered on profile form view or on the members directory user card
  *
  * @param  $value string
  * @param  $data  array
  * @return string
- * @uses   hook filter: um_profile_field_filter_hook__
  */
-
 function um_option_match_callback_view_field( $value, $data ) {
-	if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
+	$choices_callback = UM()->fields()->get_custom_dropdown_options_source( $data['metakey'], $data );
+	if ( ! empty( $choices_callback ) ) {
 		return UM()->fields()->get_option_value_from_callback( $value, $data, $data['type'] );
 	}
 
 	return $value;
 }
-add_filter('um_profile_field_filter_hook__select','um_option_match_callback_view_field', 10, 2);
-add_filter('um_profile_field_filter_hook__multiselect','um_option_match_callback_view_field', 10, 2);
-add_filter('um_field_select_default_value','um_option_match_callback_view_field', 10, 2);
-add_filter('um_field_multiselect_default_value','um_option_match_callback_view_field', 10, 2);
+add_filter( 'um_profile_field_filter_hook__select', 'um_option_match_callback_view_field', 10, 2 );
+add_filter( 'um_profile_field_filter_hook__multiselect', 'um_option_match_callback_view_field', 10, 2 );
+add_filter( 'um_field_select_default_value', 'um_option_match_callback_view_field', 10, 2 );
+add_filter( 'um_field_multiselect_default_value', 'um_option_match_callback_view_field', 10, 2 );
 
 /**
  * Apply textdomain in select/multi-select options
@@ -883,7 +964,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 			}
 
 			$arr = array_map( 'stripslashes', $arr );
-
+			// @todo check 'custom_dropdown_options_source' argument here
 			if ( ! empty( $arr ) && ! in_array( $value, array_map( 'trim', $arr ) ) && empty( $data['custom_dropdown_options_source'] ) ) {
 				$value = '';
 			} else {
@@ -902,7 +983,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 			if ( $option_pairs ) {
 				$arr = array_keys( $data['options'] );
 			}
-
+			// @todo check 'custom_dropdown_options_source' argument here
 			if ( ! empty( $arr ) && empty( $data['custom_dropdown_options_source'] ) ) {
 				$arr   = wp_unslash( $arr );
 				$arr   = wp_slash( array_map( 'trim', $arr ) );

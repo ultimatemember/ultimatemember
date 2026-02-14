@@ -20,12 +20,16 @@ if ( $exclude_these_users ) {
 $_um_view_types_value = get_post_meta( $post_id, '_um_view_types', true );
 $_um_view_types_value = empty( $_um_view_types_value ) ? array( 'grid', 'list' ) : $_um_view_types_value;
 
-$view_types_options = array_map(
-	function( $item ) {
-		return $item['title'];
-	},
-	UM()->member_directory()->view_types
-);
+if ( UM()->is_new_ui() ) {
+	$view_types_options = UM()->member_directory()->view_types;
+} else {
+	$view_types_options = array_map(
+		static function ( $item ) {
+			return $item['title'];
+		},
+		UM()->member_directory()->view_types
+	);
+}
 
 $conditional = array();
 foreach ( $view_types_options as $key => $value ) {
@@ -116,7 +120,26 @@ $fields = array(
  * }
  * ?>
  */
-$fields = apply_filters( 'um_admin_extend_directory_options_general', $fields ); ?>
+$fields = apply_filters( 'um_admin_extend_directory_options_general', $fields );
+
+if ( UM()->is_new_ui() ) {
+	$hide_fields = array();
+
+	if ( ! get_option( 'show_avatars' ) ) {
+		$hide_fields[] = '_um_has_profile_photo';
+	}
+
+	if ( ! UM()->options()->get( 'enable_user_cover' ) ) {
+		$hide_fields[] = '_um_has_cover_photo';
+	}
+
+	foreach ( $fields as $field_k => $field ) {
+		if ( in_array( $field['id'], $hide_fields, true ) ) {
+			unset( $fields[ $field_k ] );
+		}
+	}
+}
+?>
 
 <div class="um-admin-metabox">
 	<?php

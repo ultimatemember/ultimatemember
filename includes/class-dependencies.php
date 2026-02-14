@@ -30,36 +30,36 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 		 * @var array
 		 */
 		public $ext_required_version = array(
-			'bbpress'              => '2.0.7',
-			'followers'            => '2.3.5',
-			'forumwp'              => '2.1.5',
-			'friends'              => '2.3.4',
-			'groups'               => '2.5.0',
-			'jobboardwp'           => '1.0.7',
+			'bbpress'              => '2.2.0',
+			'followers'            => '2.4.0',
+			'forumwp'              => '2.2.0',
+			'friends'              => '2.4.0',
+			'groups'               => '2.5.1-alpha',
+			'jobboardwp'           => '1.1.0',
 			'mailchimp'            => '2.6.2',
-			'messaging'            => '2.2.5',
-			'mycred'               => '2.2.4',
-			'notices'              => '2.0.5',
-			'notifications'        => '2.3.8',
-			'online'               => '2.1.1',
-			'private-content'      => '2.0.5',
-			'profile-completeness' => '2.2.7',
-			'profile-tabs'         => '1.0.0',
-			'recaptcha'            => '2.3.4',
-			'reviews'              => '2.1.5',
-			'social-activity'      => '2.4.0',
+			'messaging'            => '2.5.0',
+			'mycred'               => '3.0.0',
+			'notices'              => '2.2.0',
+			'notifications'        => '2.4.0',
+			'online'               => '2.3.0',
+			'private-content'      => '2.2.0',
+			'profile-completeness' => '2.4.0-alpha',
+			'profile-tabs'         => '1.2.0',
+			'recaptcha'            => '2.4.0',
+			'reviews'              => '2.3.0-alpha',
+			'social-activity'      => '2.4.1-alpha',
 			'social-login'         => '2.2.0',
 			'stripe'               => '1.0.0',
 			'zapier'               => '1.0.0',
-			'terms-conditions'     => '2.1.6',
-			'unsplash'             => '2.0.2',
-			'user-bookmarks'       => '2.1.4',
+			'terms-conditions'     => '2.3.0',
+			'unsplash'             => '2.2.0-alpha',
+			'user-bookmarks'       => '2.2.0-alpha',
 			'user-locations'       => '1.0.0',
-			'user-notes'           => '1.1.0',
-			'user-photos'          => '2.0.4',
-			'user-tags'            => '2.2.6',
-			'verified-users'       => '2.0.5',
-			'woocommerce'          => '2.3.7',
+			'user-notes'           => '1.2.0',
+			'user-photos'          => '2.3.0',
+			'user-tags'            => '2.4.0',
+			'verified-users'       => '2.3.0',
+			'woocommerce'          => '2.5.0-alpha',
 
 			/*????*/
 			'restrict-content'     => '2.0',
@@ -191,8 +191,8 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 		 */
 		public function compare_versions( $um_required_ver, $ext_ver, $ext_key, $ext_title, $raw = false ) {
 			if ( empty( $this->ext_required_version[ $ext_key ] ) ||
-				version_compare( UM_VERSION, $um_required_ver, '<' ) ||
-				version_compare( $this->ext_required_version[ $ext_key ], $ext_ver, '>' ) ) {
+			     version_compare( UM_VERSION, $um_required_ver, '<' ) ||
+			     version_compare( $this->ext_required_version[ $ext_key ], $ext_ver, '>' ) ) {
 
 				$message = '';
 				if ( version_compare( UM_VERSION, $um_required_ver, '<' ) ) {
@@ -202,15 +202,15 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 					if ( UM()->is_new_ui() ) {
 						// translators: %1$s is an extension name; %2$s is a plugin name; %3$s is a required version.
 						$message = sprintf( __( 'When new UI is enabled this version of <strong>"%1$s"</strong> requires the core <strong>%2$s</strong> plugin to be <strong>%3$s</strong> or higher.', 'ultimate-member' ), $ext_title, UM_PLUGIN_NAME, $um_required_ver ) .
-							'<br />' .
-							// translators: %s: plugin name.
-							sprintf( __( 'Please update <strong>%s</strong> to the latest version or disable new UI.', 'ultimate-member' ), UM_PLUGIN_NAME );
+						           '<br />' .
+						           // translators: %s: plugin name.
+						           sprintf( __( 'Please update <strong>%s</strong> to the latest version or disable new UI.', 'ultimate-member' ), UM_PLUGIN_NAME );
 					} else {
 						// translators: %1$s is an extension name; %2$s is a plugin name; %3$s is a required version.
 						$message = sprintf( __( 'This version of <strong>"%1$s"</strong> requires the core <strong>%2$s</strong> plugin to be <strong>%3$s</strong> or higher.', 'ultimate-member' ), $ext_title, UM_PLUGIN_NAME, $um_required_ver ) .
-							'<br />' .
-							// translators: %s: plugin name.
-							sprintf( __( 'Please update <strong>%s</strong> to the latest version.', 'ultimate-member' ), UM_PLUGIN_NAME );
+						           '<br />' .
+						           // translators: %s: plugin name.
+						           sprintf( __( 'Please update <strong>%s</strong> to the latest version.', 'ultimate-member' ), UM_PLUGIN_NAME );
 					}
 				} elseif ( empty( $this->ext_required_version[ $ext_key ] ) || version_compare( $this->ext_required_version[ $ext_key ], $ext_ver, '>' ) ) {
 					if ( $raw ) {
@@ -218,9 +218,9 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 					}
 					// translators: %1$s is a plugin name; %2$s is an extension name; %3$s is an extension version.
 					$message = sprintf( __( 'Sorry, but this version of <strong>%1$s</strong> does not work with extension <strong>"%2$s" %3$s</strong> version.', 'ultimate-member' ), UM_PLUGIN_NAME, $ext_title, $ext_ver ) .
-						'<br /> ' .
-						// translators: %s: extension name.
-						sprintf( __( 'Please update extension <strong>"%s"</strong> to the latest version.', 'ultimate-member' ), $ext_title );
+					           '<br /> ' .
+					           // translators: %s: extension name.
+					           sprintf( __( 'Please update extension <strong>"%s"</strong> to the latest version.', 'ultimate-member' ), $ext_title );
 				}
 
 				return $message;
@@ -232,16 +232,16 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			}
 
 			if ( ! array_key_exists( "um-{$ext_key}/um-{$ext_key}.php", self::$active_plugins ) &&
-				! in_array( "um-{$ext_key}/um-{$ext_key}.php", self::$active_plugins, true ) ) {
+			     ! in_array( "um-{$ext_key}/um-{$ext_key}.php", self::$active_plugins, true ) ) {
 				if ( $raw ) {
 					return false;
 				}
 
 				// translators: %1$s is an extension name; %2$s is an extension version.
 				return sprintf( __( 'Please check <strong>"%1$s" %2$s</strong> extension\'s folder name.', 'ultimate-member' ), $ext_title, $ext_ver ) .
-					'<br />' .
-					// translators: %s: extension name.
-					sprintf( __( 'Correct folder name is <strong>"%s"</strong>', 'ultimate-member' ), "um-{$ext_key}" );
+				       '<br />' .
+				       // translators: %s: extension name.
+				       sprintf( __( 'Correct folder name is <strong>"%s"</strong>', 'ultimate-member' ), "um-{$ext_key}" );
 			}
 
 			return true;

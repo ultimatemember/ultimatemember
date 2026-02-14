@@ -99,6 +99,11 @@ class Site_Health {
 			}
 		}
 
+		$tests['direct']['um_show_avatars'] = array(
+			'label' => esc_html__( 'Is the WordPress "Avatar Display" option enabled?', 'ultimate-member' ),
+			'test'  => array( $this, 'show_avatars_test' ),
+		);
+
 		return $tests;
 	}
 
@@ -363,11 +368,11 @@ class Site_Health {
 
 					$forms_description[] = '<h4>' . sprintf(
 						// translators: %1$s is the form link, %2$s is the form title, %3$s is the form ID
-						__( 'Fields in <a href="%1$s" target="_blank">%2$s (#ID: %3$s)</a>:', 'ultimate-member' ),
-						esc_url( $form_data['link'] ),
-						esc_html( $form_data['title'] ),
-						esc_html( $form_id )
-					) . '</h4><ul><li>' . implode( '</li><li>', $fields ) . '</li></ul>';
+							__( 'Fields in <a href="%1$s" target="_blank">%2$s (#ID: %3$s)</a>:', 'ultimate-member' ),
+							esc_url( $form_data['link'] ),
+							esc_html( $form_data['title'] ),
+							esc_html( $form_id )
+						) . '</h4><ul><li>' . implode( '</li><li>', $fields ) . '</li></ul>';
 				}
 
 				$result['description'] .= implode( ' ', $forms_description );
@@ -435,6 +440,38 @@ class Site_Health {
 			$result['badge']['color'] = 'red';
 			$result['description']    = $banned_fields['description'];
 			$result['actions']        = $banned_fields['actions'];
+		}
+
+		return $result;
+	}
+
+	public function show_avatars_test() {
+		$result = array(
+			'label'       => __( 'You have enabled "Avatar Display" option', 'ultimate-member' ),
+			'status'      => 'good',
+			'badge'       => array(
+				'label' => UM_PLUGIN_NAME,
+				'color' => self::BADGE_COLOR,
+			),
+			'description' => sprintf(
+				'<p>%s</p>',
+				__( 'The setting is properly set. Ultimate Member users\' avatars will be properly displayed.', 'ultimate-member' )
+			),
+			'actions'     => '',
+			'test'        => 'um_show_avatars',
+		);
+
+		$show_avatars = get_option( 'show_avatars' );
+		if ( empty( $show_avatars ) ) {
+			$result['label']          = __( 'You have disabled "Avatar Display" option', 'ultimate-member' );
+			$result['status']         = 'recommended';
+			$result['badge']['color'] = 'orange';
+			$result['description']    = __( 'Please visit "Settings > Discussion" screen and enable "Avatar Display" option for properly displaying the users\' avatars.', 'ultimate-member' );
+			$result['actions']        = sprintf(
+				'<p><a href="%s">%s</a></p>',
+				admin_url( 'options-discussion.php' ),
+				esc_html__( 'Visit settings page', 'ultimate-member' )
+			);
 		}
 
 		return $result;
@@ -560,7 +597,7 @@ class Site_Health {
 
 		// Pages settings.
 		$pages            = array();
-		$predefined_pages = UM()->config()->core_pages;
+		$predefined_pages = UM()->config()->get( 'predefined_pages' );
 		foreach ( $predefined_pages as $page_s => $page ) {
 			$page_id    = UM()->options()->get_predefined_page_option_key( $page_s );
 			$page_title = ! empty( $page['title'] ) ? $page['title'] : '';
@@ -590,8 +627,8 @@ class Site_Health {
 		);
 
 		// User settings
-		$permalink_base = UM()->config()->permalink_base_options;
-		$display_name   = UM()->config()->display_name_options;
+		$permalink_base = UM()->config()->get( 'permalink_base_options' );
+		$display_name   = UM()->config()->get( 'display_name_options' );
 
 		$user_settings = array(
 			'user_separator' => array(
@@ -1043,7 +1080,7 @@ class Site_Health {
 			),
 		);
 
-		$emails = UM()->config()->email_notifications;
+		$emails = UM()->config()->get( 'email_notifications' );
 		foreach ( $emails as $key => $email ) {
 			$email_settings[ $key . '-enabled' ] = array(
 				// translators: %s is email template title.

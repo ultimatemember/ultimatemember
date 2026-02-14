@@ -31,13 +31,13 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-init.php';
 
 $delete_options = UM()->options()->get( 'uninstall_on_delete' );
 if ( ! empty( $delete_options ) ) {
-
+	// @todo check multisite uninstall
 	//remove uploads
-	$upl_folder = UM()->files()->upload_basedir;
-	UM()->files()->remove_dir( $upl_folder );
+	$upl_folder = UM()->common()->filesystem()->get_basedir();
+	UM()->common()->filesystem()::remove_dir( $upl_folder );
 
 	//remove core settings
-	$settings_defaults = UM()->config()->settings_defaults;
+	$settings_defaults = UM()->config()->get( 'settings_defaults' );
 	foreach ( $settings_defaults as $k => $v ) {
 		UM()->options()->remove( $k );
 	}
@@ -150,7 +150,7 @@ if ( ! empty( $delete_options ) ) {
 			  meta_key = '_enable_new_pm' OR
 			  meta_key = '_hidden_conversations' OR
 			  meta_key = '_pm_blocked' OR
-			  meta_key = '_notifications_prefs' OR
+			  meta_key LIKE '_notifications_prefs%' OR
 			  meta_key = '_profile_progress' OR
 			  meta_key = '_completed' OR
 			  meta_key = '_cannot_add_review' OR
@@ -242,10 +242,10 @@ if ( ! empty( $delete_options ) ) {
 		WHERE tax.taxonomy = 'um_user_tag'"
 	);
 
-	//mailchimp
-	$mailchimp_log = UM()->files()->upload_basedir . 'mailchimp.log';
+	// Mailchimp
+	$mailchimp_log = UM()->common()->filesystem()->get_basedir() . DIRECTORY_SEPARATOR . 'mailchimp.log';
 	if ( file_exists( $mailchimp_log ) ) {
-		unlink( $mailchimp_log );
+		wp_delete_file( $mailchimp_log );
 	}
 
 	$um_options = $wpdb->get_results(

@@ -28,7 +28,7 @@ if ( ! class_exists( 'um\core\Login' ) ) {
 		}
 
 		/**
-		 * Add registration form notice
+		 * Add login form notice
 		 */
 		public function add_nonce() {
 			wp_nonce_field( 'um_login_form' );

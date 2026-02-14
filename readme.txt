@@ -167,6 +167,72 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 3.0.0: xxxx, 2025 =
+
+**Enhancements**
+
+* New UI
+
+**Bugfixes**
+
+**Tweaks**
+
+* Function `UM()->files()->delete_file()` is private
+* Class `UM()->files()` is legacy since 3.0.0 and is used only when old UI is enabled
+  New UI function alternatives:
+  * `UM()->common()->filesystem()` class has all necessary methods.
+  * `UM()->files()->get_download_link()` -> 'UM()->fields()->get_download_link()'.
+  * `UM()->files()->delete_core_user_photo()` -> 'UM()->common()->users()->delete_photo()'.
+  * `UM()->frontend()::layouts()::uploader()` layout handles all default processes for uploading files via plupload.
+
+* Class `UM()->uploader()` is legacy since 3.0.0 and is used only when old UI is enabled
+  New UI function alternatives:
+  * `UM()->uploader()->get_core_upload_dir()` -> `UM()->common()->filesystem()->get_basedir()`
+  * `UM()->uploader()->get_upload_base_dir()` -> `UM()->common()->filesystem()->get_basedir()`
+  * `UM()->uploader()->get_upload_base_url()` -> `UM()->common()->filesystem()->get_baseurl()`
+  * `UM()->uploader()->get_core_temp_url()` -> `UM()->common()->filesystem()->get_tempurl()`
+  * `UM()->uploader()->get_upload_user_base_dir()` -> `UM()->common()->filesystem()->get_user_uploads_dir()`
+  * `UM()->uploader()->get_upload_user_base_url()` -> `UM()->common()->filesystem()->get_user_uploads_url()`
+
+**Deprecated**
+
+* Action hook 'um_after_profile_header_name_args' use action hook 'um_after_profile_header_name' instead.
+* Action hook 'um_pre_header_editprofile' for new UI profile templates.
+* Action hook 'um_profile_header_cover_area' for new UI profile templates.
+* Filter hook 'um_allowed_image_types' use filter hook 'um_allowed_default_image_types' instead.
+* Filter hook 'um_allowed_file_types' use filter hook 'um_allowed_default_file_types' instead.
+* Filter hook 'um_cover_area_content_dropdown_items' because there is used standard image uploader field on the User Profile form.
+* Filter hook 'um_mobile_cover_photo' use filter hook 'um_cover_photo_size' instead with checking `wp_is_mobile()` inside the callback.
+* Deleted permanently function `um_user_uploads_dir()` deprecated since 2.0.26
+* Deleted permanently function `um_user_uploads_uri()` deprecated since 2.0.26
+* Deleted permanently function `um_user_submitted_registration` deprecated since 2.1.3
+* Deleted permanently function `UM()->admin_notices()->create_languages_folder()` due to this [article](https://developer.wordpress.org/plugins/internationalization/localization/#using-localizations). It's WordPress native folder.
+* Deprecated function `UM()->admin_menu()->dir_size()`. Use function 'UM()->common()->filesystem()->dir_size()' instead.
+* Deprecated function `UM()->files()->remove_dir()` use function 'UM()->common()->filesystem()::remove_dir()' instead.
+* Deprecated function `UM()->files()->get_profile_photo_size()` use function 'UM()->options()->get_profile_photo_size()' instead.
+* Deprecated function `UM()->files()->get_fonticon_by_ext()`. Use function 'UM()->fonticons()->get_file_fonticon()' instead.
+* Deprecated function `UM()->files()->get_fonticon_bg_by_ext()`. Use function 'UM()->fonticons()->get_file_fonticon_bg()' instead.
+* Deprecated function `UM()->files()->allowed_file_types()`. Use function `UM()->common()->filesystem()::file_mimes()` instead.
+* Deprecated function `UM()->files()->allowed_image_types()`. Use function `UM()->common()->filesystem()::image_mimes()` instead.
+* Deprecated function `UM()->files()->create_and_copy_image()` because it is unused.
+* Deprecated function `UM()->files()->new_user()` because it is unused.
+* Deprecated function `UM()->files()->new_image_upload_temp()` because it is unused.
+* Deprecated function `UM()->files()->in_array()` because it is unused.
+* Deprecated function `UM()->files()->get_file_data()` because it is unused.
+* Deprecated function `UM()->files()->get_image_data()` because it is unused.
+* Deprecated function `UM()->files()->get_extension_by_mime_type()` because it is unused.
+* Deprecated function `UM()->files()->make_dir()` because it is unused.
+* Deprecated function `UM()->files()->path_only()` because it is unused.
+* Deprecated function `UM()->files()->upload_temp_file()` because it is unused.
+* Deprecated function `UM()->files()->new_file_upload_temp()` because it is unused.
+* Deprecated function `UM()->files()->unique_dir()` because it is unused.
+* Deprecated variable `UM()->files()->fonticon`. Use private variable `UM()->fonticon()->file_fonticons` instead.
+* Deprecated variable `UM()->files()->default_file_fonticon`. Use private variable `UM()->fonticon()->default_file_fonticon` instead.
+* Deprecated function `um_is_temp_upload()` use function 'UM()->files()->is_temp_upload()' instead in old UI.
+* Deprecated function `um_is_temp_image()` because it is unused.
+* Deprecated function `um_get_domain_protocol()` because it is unused helper.
+* Deprecated function `UM()->password()->setcookie()`. Use function `UM()::setcookie()` instead.
+
 = 2.11.2 2026-02-10 =
 
 **Enhancements**

@@ -166,7 +166,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				}
 
 				// Clear Cache.
-				UM()->user()->remove_cache( $user_id );
+				UM()->common()->users()->remove_cache( $user_id );
 				um_reset_user();
 				wp_safe_redirect( add_query_arg( 'update', 'um_secure_restore', wp_get_referer() ) );
 				exit;

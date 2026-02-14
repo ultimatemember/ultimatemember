@@ -33,10 +33,13 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		 * Validation constructor.
 		 */
 		public function __construct() {
-			add_filter( 'um_user_pre_updating_files_array', array( $this, 'validate_files' ) );
-			add_filter( 'um_before_save_filter_submitted', array( $this, 'validate_fields_values' ), 10, 3 );
+			if ( UM()->is_new_ui() ) {
+				add_filter( 'um_before_save_filter_submitted', array( $this, 'validate_fields_values' ), 10, 3 );
+			} else {
+				add_filter( 'um_before_save_filter_submitted', array( $this, 'validate_fields_values_v2' ), 10, 3 );
+				add_filter( 'um_user_pre_updating_files_array', array( $this, 'validate_files' ) );
+			}
 		}
-
 
 		/**
 		 * Validate files before upload
@@ -45,7 +48,7 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		 *
 		 * @return mixed
 		 */
-		function validate_files( $files ) {
+		public function validate_files( $files ) {
 			if ( ! empty( $files ) ) {
 				foreach ( $files as $key => $filename ) {
 					if ( validate_file( $filename ) !== 0 ) {
@@ -57,7 +60,122 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 			return $files;
 		}
 
+		/**
+		 * Is triggered after registration form submission and proper validation.
+		 *
+		 * @param $changes
+		 * @param $args
+		 * @param $form_data
+		 *
+		 * @return mixed|void
+		 */
 		public function validate_fields_values( $changes, $args, $form_data ) {
+			$fields = maybe_unserialize( $form_data['custom_fields'] );
+
+			foreach ( $changes as $key => $value ) {
+				if ( ! isset( $fields[ $key ] ) ) {
+					continue;
+				}
+
+				//rating field validation
+				if ( isset( $fields[ $key ]['type'] ) && 'rating' === $fields[ $key ]['type'] ) {
+					if ( ! is_numeric( $value ) ) {
+						unset( $changes[ $key ] );
+					} else {
+						if ( $fields[ $key ]['number'] == 5 ) {
+							if ( ! in_array( $value, range( 1, 5 ) ) ) {
+								unset( $changes[ $key ] );
+							}
+						} elseif ( $fields[ $key ]['number'] == 10 ) {
+							if ( ! in_array( $value, range( 1, 10 ) ) ) {
+								unset( $changes[ $key ] );
+							}
+						}
+					}
+				}
+
+				//validation of correct values from options in wp-admin
+				$stripslashes = $value;
+				if ( is_string( $value ) ) {
+					$stripslashes = stripslashes( $value );
+				}
+
+				// Dynamic dropdown options population
+				/** This filter is documented in includes/core/class-fields.php */
+				$has_custom_source = apply_filters( "um_has_dropdown_options_source__$key", false );
+				if ( $has_custom_source && in_array( $fields[ $key ]['type'], array( 'select', 'multiselect' ), true ) ) {
+					/** This filter is documented in includes/core/class-fields.php */
+					$fields[ $key ] = apply_filters( "um_get_field__$key", $fields[ $key ] );
+					if ( is_array( $fields[ $key ] ) && array_key_exists( 'options', $fields[ $key ] ) ) {
+						$fields[ $key ]['options'] = array_keys( $fields[ $key ]['options'] );
+					}
+				}
+
+				// Dropdown options source from callback function
+				if ( in_array( $fields[ $key ]['type'], array( 'select', 'multiselect' ), true ) ) {
+					$choices_callback = UM()->fields()->get_custom_dropdown_options_source( $key, $fields[ $key ] );
+					if ( ! empty( $choices_callback ) ) {
+						if ( ! empty( $fields[ $key ]['parent_dropdown_relationship'] ) ) {
+							$parent_dropdown_relationship = $fields[ $key ]['parent_dropdown_relationship'];
+							// Get parent values from the form's $_POST data or userdata
+							$parent_options = array();
+							if ( isset( UM()->form()->post_form[ $parent_dropdown_relationship ] ) ) {
+								if ( ! is_array( UM()->form()->post_form[ $parent_dropdown_relationship ] ) ) {
+									$parent_options = array( UM()->form()->post_form[ $parent_dropdown_relationship ] );
+								} else {
+									$parent_options = UM()->form()->post_form[ $parent_dropdown_relationship ];
+								}
+							} elseif ( um_user( $parent_dropdown_relationship ) ) {
+								if ( ! is_array( um_user( $parent_dropdown_relationship ) ) ) {
+									$parent_options = array( um_user( $parent_dropdown_relationship ) );
+								} else {
+									$parent_options = um_user( $parent_dropdown_relationship );
+								}
+							}
+							$arr_options = $choices_callback( $parent_options, $parent_dropdown_relationship );
+						} else {
+							$arr_options = $choices_callback();
+						}
+
+						if ( is_array( $arr_options ) ) {
+							$fields[ $key ]['options'] = array_keys( $arr_options );
+						} else {
+							$fields[ $key ]['options'] = array();
+						}
+					}
+				}
+
+				// Unset changed value that doesn't match the option list
+				if ( 'select' === $fields[ $key ]['type'] &&
+				     ! empty( $stripslashes ) && ! empty( $fields[ $key ]['options'] ) &&
+				     ! in_array( $stripslashes, array_map( 'trim', $fields[ $key ]['options'] ), true ) ) {
+					unset( $changes[ $key ] );
+				}
+
+				//validation of correct values from options in wp-admin
+				//the user cannot set invalid value in the hidden input at the page
+				if ( in_array( $fields[ $key ]['type'], array( 'multiselect', 'checkbox', 'radio' ) ) &&
+				     ! empty( $value ) && ! empty( $fields[ $key ]['options'] ) ) {
+					$value = array_map( 'stripslashes', array_map( 'trim', $value ) );
+					$changes[ $key ] = array_intersect( $value, array_map( 'trim', $fields[ $key ]['options'] ) );
+				}
+			}
+
+			return $changes;
+		}
+
+		/**
+		 * Don't handle in new UI
+		 *
+		 * @todo deprecate since new UI is live
+		 *
+		 * @param $changes
+		 * @param $args
+		 * @param $form_data
+		 *
+		 * @return mixed
+		 */
+		public function validate_fields_values_v2( $changes, $args, $form_data ) {
 			$fields = maybe_unserialize( $form_data['custom_fields'] );
 
 			foreach ( $changes as $key => $value ) {
@@ -100,9 +218,9 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 
 				// Dropdown options source from callback function
 				if ( in_array( $fields[ $key ]['type'], array( 'select','multiselect' ), true ) &&
-					isset( $fields[ $key ]['custom_dropdown_options_source'] ) &&
-					! empty( $fields[ $key ]['custom_dropdown_options_source'] ) &&
-					function_exists( $fields[ $key ]['custom_dropdown_options_source'] ) ) {
+				     isset( $fields[ $key ]['custom_dropdown_options_source'] ) &&
+				     ! empty( $fields[ $key ]['custom_dropdown_options_source'] ) &&
+				     function_exists( $fields[ $key ]['custom_dropdown_options_source'] ) ) {
 					if ( ! UM()->fields()->is_source_blacklisted( $fields[ $key ]['custom_dropdown_options_source'] ) ) {
 						$arr_options = call_user_func( $fields[ $key ]['custom_dropdown_options_source'] );
 						$fields[ $key ]['options'] = array_keys( $arr_options );

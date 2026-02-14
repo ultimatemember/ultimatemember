@@ -149,7 +149,7 @@ function um_add_update_notice( $args ) {
 					$err = __( 'An error has been encountered', 'ultimate-member' );
 				}
 				break;
-			case 'registration_disabled':
+			case 'registration_disabled': // @todo maybe remove because not used
 				$err = __( 'Registration is currently disabled', 'ultimate-member' );
 				break;
 			case 'blocked_email':
@@ -185,20 +185,43 @@ function um_add_update_notice( $args ) {
 		}
 	}
 	// phpcs:enable WordPress.Security.NonceVerification -- used for echo and already verified here.
+	if ( UM()->is_new_ui() ) {
+		if ( ! empty( $err ) ) {
+			$output = UM()->frontend()::layouts()::alert(
+				$err,
+				array(
+					'type'        => 'error',
+					'dismissible' => true,
+				)
+			);
+		}
 
-	add_filter( 'um_late_escaping_allowed_tags', 'um_form_notices_additional_tags', 10, 2 );
+		if ( ! empty( $success ) ) {
+			$output = UM()->frontend()::layouts()::alert(
+				$success,
+				array(
+					'type'        => 'success',
+					'dismissible' => true,
+				)
+			);
+		}
 
-	if ( ! empty( $err ) ) {
-		$output .= '<p class="um-notice err"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $err . '</p>';
+		echo wp_kses( $output, UM()->get_allowed_html( 'templates' ) );
+	} else {
+		add_filter( 'um_late_escaping_allowed_tags', 'um_form_notices_additional_tags', 10, 2 );
+
+		if ( ! empty( $err ) ) {
+			$output .= '<p class="um-notice err"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $err . '</p>';
+		}
+
+		if ( ! empty( $success ) ) {
+			$output .= '<p class="um-notice success"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $success . '</p>';
+		}
+
+		echo wp_kses( $output, UM()->get_allowed_html( 'templates' ) );
+
+		remove_filter( 'um_late_escaping_allowed_tags', 'um_form_notices_additional_tags' );
 	}
-
-	if ( ! empty( $success ) ) {
-		$output .= '<p class="um-notice success"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $success . '</p>';
-	}
-
-	echo wp_kses( $output, UM()->get_allowed_html( 'templates' ) );
-
-	remove_filter( 'um_late_escaping_allowed_tags', 'um_form_notices_additional_tags' );
 }
 add_action( 'um_before_form', 'um_add_update_notice', 500 );
 

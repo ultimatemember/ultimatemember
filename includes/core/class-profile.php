@@ -1,11 +1,11 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Profile' ) ) {
-
 
 	/**
 	 * Class Profile
@@ -13,18 +13,15 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 	 */
 	class Profile {
 
-
 		/**
 		 * @var array
 		 */
 		public $arr_user_slugs = array();
 
-
 		/**
 		 * @var array
 		 */
 		public $arr_user_roles = array();
-
 
 		/**
 		 * @var
@@ -36,7 +33,6 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 */
 		public $active_subnav = null;
 
-
 		/**
 		 * Profile constructor.
 		 */
@@ -44,7 +40,6 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			add_action( 'template_redirect', array( &$this, 'active_tab' ), 10002 );
 			add_action( 'template_redirect', array( &$this, 'active_subnav' ), 10002 );
 		}
-
 
 		/**
 		 * @param array $args
@@ -56,9 +51,9 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			return $key;
 		}
 
-
 		/**
-		 * Delete profile avatar AJAX handler
+		 * Delete profile avatar AJAX handler.
+		 * Note: Old UI only method.
 		 */
 		public function ajax_delete_profile_photo() {
 			UM()->check_ajax_nonce();
@@ -76,9 +71,9 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			UM()->files()->delete_core_user_photo( $user_id, 'profile_photo' );
 		}
 
-
 		/**
 		 * Delete cover photo AJAX handler
+		 * Note: Old UI only method.
 		 */
 		public function ajax_delete_cover_photo() {
 			UM()->check_ajax_nonce();
@@ -96,13 +91,20 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			UM()->files()->delete_core_user_photo( $user_id, 'cover_photo' );
 		}
 
-
 		/**
 		 * Pre-defined privacy options
 		 *
 		 * @return array
 		 */
 		public function tabs_privacy() {
+			$privacy = array(
+				0 => __( 'Anyone', 'ultimate-member' ),
+				1 => __( 'Guests only', 'ultimate-member' ),
+				2 => __( 'Members only', 'ultimate-member' ),
+				3 => __( 'Only the owner', 'ultimate-member' ),
+				4 => __( 'Only specific roles', 'ultimate-member' ),
+				5 => __( 'Owner and specific roles', 'ultimate-member' ),
+			);
 			/**
 			 * Filters a privacy list extend.
 			 *
@@ -120,17 +122,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			 * }
 			 * add_filter( 'um_profile_tabs_privacy_list', 'um_profile_tabs_privacy_list', 10, 1 );
 			 */
-			return apply_filters(
-				'um_profile_tabs_privacy_list',
-				array(
-					0 => __( 'Anyone', 'ultimate-member' ),
-					1 => __( 'Guests only', 'ultimate-member' ),
-					2 => __( 'Members only', 'ultimate-member' ),
-					3 => __( 'Only the owner', 'ultimate-member' ),
-					4 => __( 'Only specific roles', 'ultimate-member' ),
-					5 => __( 'Owner and specific roles', 'ultimate-member' ),
-				)
-			);
+			return apply_filters( 'um_profile_tabs_privacy_list', $privacy );
 		}
 
 		/**
@@ -154,25 +146,46 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 				),
 			);
 			/**
-			 * Filters user profile tabs
+			 * Filters the User Profile menu tabs.
+			 *
+			 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+			 * 1 - `predefine_tabs()` handled Profile tabs from Profile tabs extension.
+			 * 5 - `add_tab()` handled Profile tabs from Activity extension.
+			 * 200 - `add_tab()` Profile tabs from Private Messages extension.
+			 * 800 - `um_reviews_add_tab()` Profile tabs from User Reviews extension.
+			 * 800 - `add_profile_tab()` Profile tabs from User Photos extension.
+			 * 800 - `um_woocommerce_add_tab()` Profile tabs from Woocommerce extension.
+			 * 801 - `add_profile_tab()` Profile tabs from User Bookmarks extension.
+			 * 802 - `add_profile_tab()` Profile tabs from ForumWP extension.
+			 * 802 - `add_profile_tab()` Profile tabs from JobBoardWP extension.
+			 * 802 - `add_profile_tab()` Profile tabs from User Notes extension.
+			 * 1000 - `um_bbpress_add_tab()` Profile tabs from bbPress extension.
+			 * 1000 - `um_private_content_add_tab()` Profile tabs from Private Content extension.
+			 * 2000 - `um_followers_add_tabs()` Profile tabs from Followers extension.
+			 * 2000 - `um_friends_add_tabs()` Profile tabs from Friends extension.
+			 * 2000 - `um_groups_add_tabs()` Profile tabs from Groups extension.
+			 * 2000 - `add_tab()` Profile tabs from myCRED extension.
+			 * 9999 - `add_tabs()` Profile tabs from Profile tabs extension.
+			 *
+			 * @param {array} $tabs User Profile tabs.
 			 *
 			 * @since 1.3.x
-			 * @hook um_profile_tabs
+			 * @hook  um_profile_tabs
 			 *
-			 * @param {array} $tabs tabs list.
-			 *
-			 * @return {array} tabs list.
-			 *
-			 * @example <caption>Add user profile tabs.</caption>
-			 * function um_profile_tabs( $tabs ) {
+			 * @example <caption>Adds `Custom title` User Profile Tab.</caption>
+			 * function my_um_profile_tabs( $tabs ) {
 			 *     // your code here
-			 *     return $tabs;
+			 *     $tabs['custom_key'] = array(
+			 *         'name' => 'Custom title',
+			 *         'icon' => 'icon class',
+			 *     );
+			 *     echo $tabs;
 			 * }
-			 * add_filter( 'um_profile_tabs', 'um_profile_tabs' );
+			 * add_filter( 'um_profile_tabs', 'my_um_profile_tabs' );
 			 */
 			$tabs = apply_filters( 'um_profile_tabs', $tabs );
 
-			// disable private tabs
+			// Disable private tabs.
 			if ( ! is_admin() ) {
 				if ( is_user_logged_in() ) {
 					$user_id = um_user( 'ID' );
@@ -193,7 +206,6 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			return $tabs;
 		}
 
-
 		/**
 		 * Check if the user can view the current tab
 		 *
@@ -202,7 +214,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 *
 		 * @return bool
 		 */
-		function can_view_tab( $tab, $tab_data = array() ) {
+		public function can_view_tab( $tab, $tab_data = array() ) {
 			$can_view = false;
 
 			$target_id = (int) UM()->user()->target_id;
@@ -282,7 +294,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 *
 		 * @return array
 		 */
-		function tabs_active() {
+		public function tabs_active() {
 			$tabs = $this->tabs();
 
 			foreach ( $tabs as $id => $info ) {
@@ -323,15 +335,13 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			return $tabs;
 		}
 
-
 		/**
 		 * Get active_tab
 		 *
 		 * @return string
 		 */
-		function active_tab() {
-
-			// get active tabs
+		public function active_tab() {
+			// Get active tabs
 			$tabs = UM()->profile()->tabs_active();
 
 			if ( ! UM()->options()->get( 'profile_menu' ) ) {
@@ -397,18 +407,24 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			return $this->active_tab;
 		}
 
-
 		/**
-		 * Get active active_subnav
+		 * Get active subnav.
 		 *
 		 * @return string|null
 		 */
-		function active_subnav() {
-
+		public function active_subnav() {
 			$this->active_subnav = null;
 
 			if ( get_query_var( 'subnav' ) ) {
 				$this->active_subnav = get_query_var( 'subnav' );
+			} else {
+				// Get active tabs
+				$tabs       = UM()->profile()->tabs_active();
+				$active_tab = $this->active_tab();
+
+				if ( isset( $tabs[ $active_tab ]['subnav_default'] ) ) {
+					$this->active_subnav = $tabs[ $active_tab ]['subnav_default'];
+				}
 			}
 
 			return $this->active_subnav;
@@ -492,9 +508,10 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			return $output;
 		}
 
-
 		/**
 		 * New menu
+		 *
+		 * @todo deprecate for new UI soon.
 		 *
 		 * @param string $position
 		 * @param string $element
@@ -502,19 +519,19 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 * @param array $items
 		 * @param array $args
 		 */
-		function new_ui( $position, $element, $trigger, $items, $args = array() ) {
-
+		public function new_ui( $position, $element, $trigger, $items, $args = array() ) {
 			$additional_data = '';
 			foreach ( $args as $key => $value ) {
-				$additional_data .= " data-{$key}=\"{$value}\"";
-			} ?>
+				$additional_data .= " data-{$key}=\"" . esc_attr( $value ) . '"';
+			}
+			?>
 
-			<div class="um-dropdown" data-element="<?php echo esc_attr( $element ); ?>" data-position="<?php echo esc_attr( $position ); ?>" data-trigger="<?php echo esc_attr( $trigger ); ?>"<?php echo $additional_data ?>>
+			<div class="um-dropdown" data-element="<?php echo esc_attr( $element ); ?>" data-position="<?php echo esc_attr( $position ); ?>" data-trigger="<?php echo esc_attr( $trigger ); ?>"<?php echo $additional_data; ?>>
 				<div class="um-dropdown-b">
 					<div class="um-dropdown-arr"><i class=""></i></div>
 					<ul>
-						<?php foreach ( $items as $k => $v ) { ?>
-							<li><?php echo $v; ?></li>
+						<?php foreach ( $items as $v ) { ?>
+							<li><?php echo wp_kses( $v, UM()->get_allowed_html( 'templates' ) ); ?></li>
 						<?php } ?>
 					</ul>
 				</div>

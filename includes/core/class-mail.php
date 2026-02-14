@@ -633,5 +633,25 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			$replace_placeholders[] = esc_html__( 'Your set password', 'ultimate-member' );
 			return $replace_placeholders;
 		}
+
+		/**
+		 * Checks if user enabled email notification
+		 *
+		 * @since 3.0
+		 *
+		 * @param int    $user_id
+		 * @param string $key
+		 *
+		 * @return bool
+		 */
+		public function enabled_email( $user_id, $key ) {
+			$_enable = true;
+
+			$meta_value = get_user_meta( $user_id, $key, true );
+			if ( 'no' === $meta_value || '0' === (string) $meta_value ) {
+				$_enable = false;
+			}
+			return $_enable;
+		}
 	}
 }

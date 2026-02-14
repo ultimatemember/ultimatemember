@@ -1,0 +1,689 @@
+@import "../selectors"
+@import "../mixins"
+@import "../box"
+@import "../colors"
+@import "../typography"
+
++keyframes(um-ajax-shimmer)
+  100%
+    transform: translateX(100%)
+
+// Range slider.
+.um
+  .#{$prefix}range-container
+    +flex( column, flex-start, stretch, nowrap )
+    width: 100%
+    margin: 0
+    padding: 0
+    gap: $spacing-xs
+    .#{$prefix}sliders-control
+      position: relative
+      height: $spacing-md
+      padding: $spacing-md 0
+      input[type="range"]
+        margin: 0
+        -webkit-appearance: none
+        appearance: none
+        width: 100%
+        position: absolute
+        background-color: $gray-200
+        pointer-events: none
+        height: $spacing-md
+        transition: all .2s ease
+        border-radius: $radius-xs
+        outline: none
+        &:hover,
+        &:focus,
+        &:focus-visible
+          outline: none
+        &::-webkit-slider-thumb
+          -webkit-appearance: none
+          pointer-events: all
+          box-shadow: $shadow-md
+          border-radius: $radius-xl
+          border: 2px solid $primary-600
+          background: $um-white
+          cursor: pointer
+          height: $spacing-3xl
+          width: $spacing-3xl
+          +border-box
+          &:hover
+            border: 2px solid $primary-700
+          &:active
+            border: 2px solid $primary-600
+        &::-moz-range-thumb
+          -webkit-appearance: none
+          pointer-events: all
+          box-shadow: $shadow-md
+          border-radius: $radius-xl
+          border: 2px solid $primary-600
+          background: $um-white
+          cursor: pointer
+          height: $spacing-3xl
+          width: $spacing-3xl
+          +border-box
+          &:hover
+            border: 2px solid $primary-700
+          &:active
+            border: 2px solid $primary-600
+        &.#{$prefix}from-slider
+          height: 0
+          z-index: 1
+          &::-webkit-slider-thumb
+            margin-top: $spacing-md
+          &::-moz-range-thumb
+            margin-top: $spacing-md
+            padding-top: $spacing-md
+            top: $spacing-md
+            position: relative
+            display: block
+      &:hover
+        input[type="range"]
+          background-color: $gray-300
+          &::-webkit-slider-thumb,
+          &::-moz-range-thumb
+            border: 2px solid $primary-700
+
+  @-moz-document url-prefix()
+    .#{$prefix}from-slider
+      top: $spacing-lg
+
+
+.um
+  &.#{$prefix}directory
+    .#{$prefix}member-directory-loading
+      display: none
+    &.#{$prefix}processing
+      .#{$prefix}member-directory-loading
+        +flex( row, center, center, nowrap )
+.um
+  &.#{$prefix}directory
+    +flex( column, flex-start, stretch, nowrap )
+    width: 100%
+    row-gap: $spacing-lg
+    position: relative
+    //.#{$prefix}members-overlay
+    //  display: none
+    //  position: absolute
+    //  width: 100%
+    //  top: 0
+    //  bottom: 0
+    //  background: $overlay-gray900
+    //  backdrop-filter: blur(8px)
+    //  -webkit-backdrop-filter: blur(8px)
+    //  z-index: 2
+    //  border-radius: $radius-md
+    //  .#{$prefix}ajax-spinner-svg
+    //    position: absolute
+    //    left: calc(50% - 33px)
+    //    top: calc(50% - 33px)
+    .#{$prefix}member-directory-header
+      +flex( column, flex-start, stretch, nowrap )
+      row-gap: $spacing-md
+      &.#{$prefix}display-none
+        display: none
+      .#{$prefix}member-directory-header-row
+        width: 100%
+        &:not(.#{$prefix}member-directory-filters-bar)
+          +flex( row, flex-start, stretch, nowrap )
+      .#{$prefix}member-directory-filters-bar
+        padding: 0
+        margin: 0
+        +border-box
+        row-gap: $spacing-md
+        justify-content: normal
+        .#{$prefix}filters-form
+          margin: 0
+          padding: 0
+          width: 100%
+          display: grid
+          grid-template-columns: calc( 50% - $spacing-xs ) calc( 50% - $spacing-xs )
+          -ms-grid-template-columns: calc( 50% - $spacing-xs ) calc( 50% - $spacing-xs )
+          grid-gap: $spacing-md
+          -ms-grid-gap: $spacing-md
+
+
+          //grid-template-rows: auto 1fr
+          //grid-template-columns: repeat(2, 1fr)
+          //grid-gap: $spacing-md
+          //grid-auto-rows: minmax(max-content, auto)
+          //-ms-grid-template-rows: auto 1fr
+          //-ms-grid-template-columns: repeat(2, 1fr)
+          //-ms-grid-gap: $spacing-md
+          //-ms-grid-auto-rows: minmax(max-content, auto)
+        .#{$prefix}filters-header,
+        .#{$prefix}filters-footer
+          +typography( text, md, semibold )
+          color: $gray-700
+          width: 100%
+          grid-column: 1 / 3
+          +flex( row, space-between, baseline, nowrap )
+          .#{$prefix}clear-filters-a
+            padding-left: 0
+        .#{$prefix}search-filter
+          +flex( column, flex-start, stretch, nowrap )
+          //row-gap: $spacing-md
+          //.choices
+          //  .choices__list--dropdown,
+          //  .choices__list[aria-expanded]
+          //    z-index: 3
+          .#{$prefix}field-wrapper
+            width: 100%
+            margin: 0
+            padding: 0
+            .#{$prefix}date-range-row
+              width: 100%
+              margin: 0
+              padding: 0
+              +border-box
+              input
+                max-width: 140px
+                border: none
+                padding: $spacing-md - 1 $spacing-lg
+            .#{$prefix}time-range-row
+              width: 100%
+              margin: 0
+              padding: 0
+              +border-box
+              input
+                max-width: 140px
+                border: none
+                padding: $spacing-md - 1 $spacing-lg
+            input[type="search"].choices__input
+              width: 10px // workaround for not empty directory filters with a multiple values
+      .#{$prefix}member-directory-header-row-grid
+        width: 100%
+        display: grid
+        grid-auto-columns: minmax(0, 1fr)
+        grid-auto-flow: column
+        &.#{$prefix}display-none
+          display: none
+        .#{$prefix}member-directory-header-left-cell
+          +flex( row, flex-start, baseline, nowrap )
+        .#{$prefix}member-directory-header-right-cell
+          +flex( row, flex-end, baseline, nowrap )
+
+      .#{$prefix}member-directory-search-filters
+        +flex( row, flex-start, center, nowrap )
+        column-gap: $spacing-md
+        .#{$prefix}filters-toggle
+          max-width: 200px
+          .#{$prefix}toggle-chevron
+            width: $icon-size
+            height: $icon-size
+            position: relative
+            &:after
+              content: ""
+              position: absolute
+              top: 0
+              right: 0
+              mask-size: contain
+              -webkit-mask-size: contain
+              mask-position: center
+              -webkit-mask-position: center
+              mask-repeat: no-repeat
+              -webkit-mask-repeat: no-repeat
+              mask-image: url(../../icons/chevron-down.svg)
+              -webkit-mask-image: url(../../icons/chevron-down.svg)
+              width: $icon-size
+              height: $icon-size
+              background-color: $gray-700
+              text-indent: 500%
+              white-space: nowrap
+              overflow: hidden
+          &.#{$prefix}toggle-button-active
+            .#{$prefix}toggle-chevron
+              &:after
+                mask-image: url(../../icons/chevron-up.svg)
+                -webkit-mask-image: url(../../icons/chevron-up.svg)
+        .um-member-directory-search-wrapper
+          +flex( row, flex-start, center, nowrap )
+          width: 100%
+          column-gap: $spacing-md
+          label.um-member-directory-search-line
+            margin: 0
+            padding: 0
+            width: 100%
+            & > span
+              display: none
+            .um-search-line
+              width: 100%
+          .#{$prefix}do-search
+            max-width: 200px
+      .#{$prefix}member-view-switcher
+        margin-right: $spacing-3xl
+      .#{$prefix}members-counter
+        +typography( text, lg, semibold )
+      .#{$prefix}member-directory-sorting
+        +flex( row, flex-start, baseline, nowrap )
+        column-gap: $spacing-md
+        & > span
+          +typography( text, sm, semibold )
+        .#{$prefix}dropdown-wrapper
+          min-width: auto
+          min-height: auto
+
+    & > .#{$prefix}supporting-text
+      text-align: center
+    .#{$prefix}members-wrapper
+      .#{$prefix}box.#{$prefix}member
+        .#{$prefix}member-skeleton
+          position: absolute
+          background: $um-white
+          top: 0
+          bottom: 0
+          left: 0
+          right: 0
+          z-index: 3
+          padding: 24px
+          width: 100%
+          height: 100%
+          +border-box
+          display: none
+          .#{$prefix}member-skeleton-inner
+            +flex(column,flex-start,center, wrap)
+            gap: 8px
+            width: 100%
+            height: 100%
+            overflow: hidden
+            +border-box
+          .#{$prefix}skeleton-box-avatar
+            display: inline-block
+            width: 128px
+            height: 128px
+            position: relative
+            overflow: hidden
+            background-color: $gray-300
+            border: none
+            border-radius: 100%
+            margin-bottom: 16px
+          .#{$prefix}skeleton-box-header
+            display: inline-block
+            height: 32px
+            position: relative
+            overflow: hidden
+            background-color: $gray-300
+            border: none
+            border-radius: $radius-xs
+            width: 100%
+          .#{$prefix}skeleton-box
+            width: 100%
+            display: inline-block
+            height: 24px
+            position: relative
+            overflow: hidden
+            background-color: $gray-300
+            border: none
+            border-radius: $radius-xs
+          .#{$prefix}skeleton-box-avatar,
+          .#{$prefix}skeleton-box-header,
+          .#{$prefix}skeleton-box
+            &:after
+              position: absolute
+              top: 0
+              right: 0
+              bottom: 0
+              left: 0
+              transform: translateX(-100%)
+              background-image: linear-gradient(90deg,rgba(#fff, 0) 0,rgba(#fff, 0.2) 20%,rgba(#fff, 0.5) 60%,rgba(#fff, 0))
+              animation: um-ajax-shimmer 2s infinite
+              content: ''
+        &.#{$prefix}skeleton-mode
+          .#{$prefix}member-skeleton
+            display: block
+      &.#{$prefix}members-grid
+        margin: 0
+        width: 100%
+        display: grid
+        grid-template-rows: auto 1fr
+        grid-template-columns: repeat(2, 1fr)
+        grid-gap: 10px
+        grid-auto-rows: minmax(max-content, auto)
+        -ms-grid-template-rows: auto 1fr
+        -ms-grid-template-columns: repeat(2, 1fr)
+        -ms-grid-gap: 10px
+        -ms-grid-auto-rows: minmax(max-content, auto)
+        align-items: stretch
+        .#{$prefix}box
+          &.#{$prefix}member
+            +flex( column, flex-start, center, nowrap )
+            position: relative
+            .#{$prefix}avatar
+              border: $spacing-xs solid $um-white
+              +border-box
+              box-shadow: $shadow-lg
+            .#{$prefix}member-box-main
+              .#{$prefix}member-meta
+                .#{$prefix}member-connect
+                  +flex( row, center, center, wrap )
+                  width: 100%
+                  margin: 0
+                  padding: 0
+                  gap: $spacing-md
+                  a
+                    text-align: center
+                    width: 36px
+                    line-height: 36px
+                    height: 36px
+                    font-size: 20px
+                    border-radius: 100%
+                    color: $um-white
+                    opacity: 0.85
+                    margin: 0 1px
+                    transition: 0.25s
+                    display: inline-block
+                    &:hover
+                      opacity: 1
+            &.#{$prefix}member-with-cover
+              padding: 0 0 $spacing-3xl 0
+              .#{$prefix}member-photos
+                position: relative
+                +flex( column, flex-start, center, nowrap )
+                .#{$prefix}avatar
+                  position: absolute
+                  bottom: -$spacing-7xl
+                  z-index: 2
+                .#{$prefix}cover-photo
+                  z-index: 1
+              .#{$prefix}cover-photo
+                width: 100%
+                height: auto
+                margin: 0
+                padding: 0
+                object-fit: cover
+                &[data-ratio="1.6:1"]
+                  aspect-ratio: 1.6/1
+                &[data-ratio="2.7:1"]
+                  aspect-ratio: 2.7/1
+                &[data-ratio="2.2:1"]
+                  aspect-ratio: 2.2/1
+                &[data-ratio="3.2:1"]
+                  aspect-ratio: 3.2/1
+              .#{$prefix}dropdown-wrapper.#{$prefix}member-actions-dropdown-wrapper
+                width: 100%
+                height: calc( $spacing-7xl - $spacing-md )
+                +border-box
+                padding: 0 $spacing-lg
+                .#{$prefix}dropdown-toggle
+                  float: right
+                  width: 20px
+              .#{$prefix}member-box-main
+                width: 100%
+                padding: 0 $spacing-3xl
+                margin: 0
+                +border-box
+                +flex( column, flex-start, center, wrap )
+                row-gap: $spacing-md
+                .#{$prefix}member-name
+                  +typography( header, xs, semibold )
+                  color: $gray-900
+                  text-align: center
+                  width: 100%
+                  word-break: break-word
+                  padding: 0 $spacing-lg
+                  +border-box
+                .#{$prefix}member-tagline
+                  +typography( text, md, regular )
+                  color: $gray-600
+                  word-break: break-word
+                .#{$prefix}member-meta
+                  width: 100%
+                  padding: 0
+                  margin: 0
+                  +border-box
+                  row-gap: $spacing-md
+                  .#{$prefix}member-meta-inner
+                    +flex( column, flex-start, stretch, nowrap )
+                    row-gap: $spacing-md
+                  .#{$prefix}member-metaline
+                    +flex( column, flex-start, stretch, nowrap )
+                    width: 100%
+                    padding: 0
+                    margin: 0
+                    word-break: break-word
+                    +typography( text, md, regular )
+                    color: $gray-600
+                    gap: $spacing-xs
+                    strong
+                      +typography( text, md, semibold )
+                      color: $gray-700
+                  &.#{$prefix}member-meta-no-animate
+                    display: grid
+                    grid-template-rows: 1fr
+            &.#{$prefix}member-no-cover
+              .#{$prefix}dropdown-wrapper
+                position: absolute
+                right: $spacing-3xl
+              .#{$prefix}member-box-main
+                width: 100%
+                padding: 0
+                margin: 0
+                +border-box
+                +flex( column, flex-start, center, wrap )
+                row-gap: $spacing-md
+                .#{$prefix}member-name
+                  +typography( header, xs, semibold )
+                  color: $gray-900
+                  text-align: center
+                  width: 100%
+                  word-break: break-word
+                  padding: 0 $spacing-lg
+                  +border-box
+                .#{$prefix}member-tagline
+                  +typography( text, md, regular )
+                  color: $gray-600
+                  word-break: break-word
+                .#{$prefix}member-meta
+                  width: 100%
+                  padding: 0
+                  margin: 0
+                  +border-box
+                  row-gap: $spacing-md
+                  .#{$prefix}member-meta-inner
+                    +flex( column, flex-start, stretch, nowrap )
+                    row-gap: $spacing-md
+                  .#{$prefix}member-metaline
+                    +flex( column, flex-start, stretch, nowrap )
+                    width: 100%
+                    padding: 0
+                    margin: 0
+                    word-break: break-word
+                    +typography( text, md, regular )
+                    color: $gray-600
+                    gap: $spacing-xs
+                    strong
+                      +typography( text, md, semibold )
+                      color: $gray-700
+                  &.#{$prefix}member-meta-no-animate
+                    display: grid
+                    grid-template-rows: 1fr
+            &.#{$prefix}member-no-actions // not logged-in user
+              .#{$prefix}member-photos
+                margin-bottom: calc( $spacing-7xl - $spacing-md )
+            .#{$prefix}member-skeleton
+              .#{$prefix}member-skeleton-inner
+                +flex(column,flex-start,center, wrap)
+                gap: 8px
+                width: 100%
+                height: 100%
+                overflow: hidden
+                +border-box
+      &.#{$prefix}members-list
+        margin: 0
+        width: 100%
+        +flex(column,flex-start,stretch,nowrap)
+        row-gap: 10px
+        .#{$prefix}box
+          &.#{$prefix}member
+            +flex( row, flex-start, center, nowrap )
+            position: relative
+            padding: $spacing-xl
+            .#{$prefix}dropdown-wrapper
+              position: absolute
+              right: $spacing-xl
+              top: $spacing-xl
+            .#{$prefix}member-box-main
+              width: 100%
+              padding: 0 $spacing-2xl 0 0
+              margin: 0
+              +border-box
+              +flex( row, space-between, start, nowrap )
+              column-gap: $spacing-xl
+              .#{$prefix}avatar
+                flex: 0 0 64px
+              & > .#{$prefix}link
+                flex: 1
+              .#{$prefix}member-list-data
+                flex: 4
+                +flex( column, flex-start, flex-start, nowrap )
+                padding: 0
+                margin: 0
+                +border-box
+              .#{$prefix}member-nameline
+                +flex( row, flex-start, center, nowrap )
+                padding: 0 0 $spacing-sm 0
+                gap: $spacing-xl
+                width: 100%
+                margin: 0
+                +border-box
+                .#{$prefix}member-name
+                  +typography( text, md, semibold )
+                  color: $gray-900
+                  text-align: left
+                  word-break: break-word
+                  padding: 0
+              .#{$prefix}member-taglines
+                +flex( row, flex-start, baseline, wrap )
+                padding: 0 0 $spacing-sm 0
+                margin: 0
+                +border-box
+                width: 100%
+                align-self: stretch
+                column-gap: $spacing-xl
+                .#{$prefix}member-tagline
+                  +typography( text, sm, regular )
+                  color: $gray-600
+                  word-break: break-word
+              .#{$prefix}member-meta
+                width: 100%
+                padding: 0
+                margin: 0
+                +border-box
+                .#{$prefix}member-meta-inner
+                  +flex( column, flex-start, stretch, nowrap )
+                  row-gap: $spacing-sm
+                .#{$prefix}member-metaline
+                  +flex( column, flex-start, stretch, nowrap )
+                  width: 100%
+                  padding: 0
+                  margin: 0
+                  word-break: break-word
+                  +typography( text, sm, regular )
+                  color: $gray-600
+                  gap: $spacing-xs
+                  strong
+                    +typography( text, sm, semibold )
+                    color: $gray-700
+                  &:last-child
+                    margin-bottom: $spacing-sm
+                .#{$prefix}member-connect
+                  +flex( row, flex-start, center, wrap )
+                  margin: 0 0 $spacing-sm 0
+                  padding: 0
+                  gap: $spacing-md
+                  a
+                    text-align: center
+                    width: 36px
+                    line-height: 36px
+                    height: 36px
+                    font-size: 20px
+                    border-radius: 100%
+                    color: $um-white
+                    opacity: 0.85
+                    margin: 0 1px
+                    transition: 0.25s
+                    display: inline-block
+                    &:hover
+                      opacity: 1
+                &.#{$prefix}member-meta-no-animate
+                  display: grid
+                  grid-template-rows: 1fr
+            &.#{$prefix}member-no-actions
+              .#{$prefix}member-box-main
+                padding: 0
+            .#{$prefix}member-skeleton
+              padding: $spacing-xl
+              .#{$prefix}member-skeleton-inner
+                +flex( row, flex-start, center, nowrap )
+                column-gap: $spacing-xl
+                width: 100%
+                height: 100%
+                overflow: hidden
+                +border-box
+                .#{$prefix}skeleton-box-avatar
+                  width: 64px
+                  height: 64px
+                  margin: 0
+                .#{$prefix}skeleton-box-group
+                  flex: 1
+                  align-self: start
+                  gap: $spacing-sm
+                  .#{$prefix}skeleton-box-header
+                    height: 24px
+                  .#{$prefix}skeleton-box
+                    height: 20px
+      &.#{$prefix}display-none
+        display: none
+    &.#{$prefix}ui-xs
+      .#{$prefix}member-directory-header
+        .#{$prefix}member-directory-filters-bar
+          .#{$prefix}filters-form
+            grid-template-columns: repeat(1, 1fr)
+            -ms-grid-template-columns: repeat(1, 1fr)
+          .#{$prefix}filters-header,
+          .#{$prefix}filters-footer
+            grid-column: 1 / 2
+      .#{$prefix}members-wrapper
+        &.#{$prefix}members-grid
+          grid-template-columns: repeat(1, 1fr)
+          -ms-grid-template-columns: repeat(1, 1fr)
+    &.#{$prefix}ui-m
+      .#{$prefix}member-directory-header
+        .#{$prefix}member-directory-filters-bar
+          .#{$prefix}filters-form
+            grid-template-columns: repeat(2, 1fr)
+            -ms-grid-template-columns: repeat(2, 1fr)
+          .#{$prefix}filters-header,
+          .#{$prefix}filters-footer
+            grid-column: 1 / 3
+      .#{$prefix}members-wrapper
+        &.#{$prefix}members-grid
+          grid-template-columns: repeat(3, 1fr)
+          -ms-grid-template-columns: repeat(3, 1fr)
+    &.#{$prefix}ui-l
+      .#{$prefix}member-directory-header
+        .#{$prefix}member-directory-filters-bar
+          .#{$prefix}filters-form
+            grid-template-columns: repeat(3, 1fr)
+            -ms-grid-template-columns: repeat(3, 1fr)
+          .#{$prefix}filters-header,
+          .#{$prefix}filters-footer
+            grid-column: 1 / 4
+      .#{$prefix}members-wrapper
+        &.#{$prefix}members-grid
+          grid-template-columns: repeat(3, 1fr)
+          -ms-grid-template-columns: repeat(3, 1fr)
+    &.#{$prefix}ui-xl
+      .#{$prefix}member-directory-header
+        .#{$prefix}member-directory-filters-bar
+          .#{$prefix}filters-form
+            grid-template-columns: repeat(3, 1fr)
+            -ms-grid-template-columns: repeat(3, 1fr)
+          .#{$prefix}filters-header,
+          .#{$prefix}filters-footer
+            grid-column: 1 / 4
+      .#{$prefix}members-wrapper
+        &.#{$prefix}members-grid
+          grid-template-columns: repeat(4, 1fr)
+          -ms-grid-template-columns: repeat(4, 1fr)
+

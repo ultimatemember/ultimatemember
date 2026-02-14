@@ -1,0 +1,85 @@
+@import "../selectors"
+@import "../mixins"
+@import "../box"
+@import "../colors"
+@import "../typography"
+
+.um.#{$prefix}account
+  &.#{$prefix}ui-m,
+  &.#{$prefix}ui-l,
+  &.#{$prefix}ui-xl
+    .#{$prefix}account-navigation
+      .#{$prefix}tabs-list
+        +flex( column, flex-start, stretch, nowrap )
+        row-gap: $spacing-xs
+      .#{$prefix}link.#{$prefix}account-back-to-profile
+        color: $gray-500
+        background-color: transparent
+        text-align: left
+        box-shadow: unset
+        border: unset
+        border-radius: $radius-sm
+        padding: $spacing-md $spacing-lg
+        &:hover
+          color: $primary-700
+          background-color: $primary-50
+        &:focus,
+        &:focus-visible
+          color: $gray-500
+          background-color: transparent
+          box-shadow: $ring-brand
+  .#{$prefix}tabs-wrapper.#{$prefix}vertical-tabs
+    width: 100%
+    .#{$prefix}tabs-content
+      .#{$prefix}tab-content[data-tab="personal-data"]
+        row-gap: 0
+
+        form.#{$prefix}form-new
+          .#{$prefix}form-submit
+            +flex( row, flex-start, center, nowrap )
+            row-gap: initial
+            column-gap: $spacing-2xl
+            .#{$prefix}ajax-spinner-svg
+              display: none
+  &.#{$prefix}custom-account-tab // single tab account shortcode.
+    +flex( column, flex-start, stretch, nowrap )
+    width: 100%
+    row-gap: $spacing-3xl
+
+.um
+  .#{$prefix}section-header
+    +flex( column, flex-start, stretch, nowrap )
+    row-gap: $spacing-xs
+    .#{$prefix}section-title
+      +typography( text, lg, semibold )
+      color: $gray-900
+      margin: 0
+      padding: 0
+    .#{$prefix}section-supporting-text
+      margin: 0
+      padding: 0
+
+  .#{$prefix}subsection
+    +flex( column, stretch, start, nowrap )
+    +border-box
+    margin: 0
+    padding: 0
+    row-gap: $spacing-3xl
+    position: relative
+  .#{$prefix}subsection-heading
+    +flex( column, stretch, start, nowrap )
+    +border-box
+    margin: 0
+    padding: 0
+    width: 100%
+    row-gap: $spacing-xxs
+    .#{$prefix}text
+      color: $gray-700
+      +typography( text, sm, semibold )
+  .#{$prefix}subsection-action
+    +border-box
+    +flex( column, stretch, start, nowrap )
+    width: 100%
+    margin: 0
+    padding: 0
+    row-gap: $spacing-xl

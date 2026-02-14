@@ -1,0 +1,48 @@
+.um.um-ui-xs .um-responsive:not(.um-ui-xs) {
+  display: none !important;
+}
+.um.um-ui-s .um-responsive:not(.um-ui-s) {
+  display: none !important;
+}
+.um.um-ui-m .um-responsive:not(.um-ui-m) {
+  display: none !important;
+}
+.um.um-ui-l .um-responsive:not(.um-ui-l) {
+  display: none !important;
+}
+.um.um-ui-xl .um-responsive:not(.um-ui-xl) {
+  display: none !important;
+}
+
+.um-notice-message {
+  position: fixed;
+  padding: 0;
+  color: var(--um-gray-700, #344054);
+  text-align: center;
+  width: 250px;
+  background-color: #fff;
+  z-index: 99999999;
+  right: 30px;
+  bottom: -200px;
+  display: none;
+}
+.um-notice-message .um-notice-message-text {
+  padding: 5px;
+  display: block;
+  font-size: 14px;
+}
+.um-notice-message .um-notice-message-progress {
+  display: block;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  margin-bottom: 5px;
+}
+.um-notice-message.um-notice-message-update .um-notice-message-progress {
+  border-bottom-color: var(--um-success-500, #12b76a);
+}
+.um-notice-message.um-notice-message-error .um-notice-message-progress {
+  border-bottom-color: var(--um-error-500, #f04438);
+}
+.um-notice-message.um-notice-message-warning .um-notice-message-progress {
+  border-bottom-color: var(--um-warning-500, #f79009);
+}

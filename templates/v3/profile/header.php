@@ -1,0 +1,467 @@
+<?php
+/**
+ * Template for the header of profile page
+ *
+ * This template can be overridden by copying it to your-theme/ultimate-member/templates/v3/profile/header.php
+ *
+ * Page: "Profile"
+ *
+ * @version 3.0.0
+ *
+ * @var int    $current_user_id
+ * @var int    $user_profile_id
+ * @var string $display_name
+ * @var bool   $show_display_name
+ * @var string $account_status
+ * @var string $social_links
+ * @var bool   $show_bio
+ * @var string $user_bio Already escaped based on the setting user's bio.
+ * @var array  $wrapper_classes
+ * @var array  $profile_args
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+$actions = array();
+if ( is_user_logged_in() && UM()->roles()->um_current_user_can( 'edit', $user_profile_id ) ) {
+	if ( true === UM()->fields()->editing ) {
+		$submit   = UM()->frontend()::layouts()::button(
+			__( 'Save', 'ultimate-member' ),
+			array(
+				'design'  => 'primary',
+				'type'    => 'submit',
+				'size'    => 's',
+				'classes' => array(
+					'um-profile-save',
+				),
+			)
+		);
+		$cancel   = UM()->frontend()::layouts()::link(
+			__( 'Cancel', 'ultimate-member' ),
+			array(
+				'type'    => 'button',
+				'size'    => 's',
+				'url'     => um_user_profile_url( $user_profile_id ),
+				'classes' => array(
+					'um-profile-form-cancel',
+				),
+			)
+		);
+		$actions['cancel'] = $cancel;
+		$actions['submit'] = $submit;
+	} else {
+		$actions['edit_profile'] = UM()->frontend()::layouts()::link(
+			__( 'Edit Profile', 'ultimate-member' ),
+			array(
+				'design'  => 'primary',
+				'type'    => 'button',
+				'size'    => 's',
+				'url'     => um_edit_profile_url( $user_profile_id ),
+				'classes' => array(
+					'um-profile-edit-link',
+				),
+			)
+		);
+	}
+}
+
+if ( true !== UM()->fields()->editing ) {
+	$dropdown_actions = UM()->frontend()->users()->get_dropdown_items( $user_profile_id );
+	if ( ! empty( $dropdown_actions ) ) {
+		$actions['more_actions'] = UM()->frontend()::layouts()::dropdown_menu(
+			'um-profile-actions-toggle',
+			$dropdown_actions,
+			array(
+				'type'         => 'button',
+				'button_label' => __( 'More actions', 'ultimate-member' ),
+				'width'        => 210,
+				'mobile'       => true,
+			)
+		);
+	}
+}
+/**
+ * Filters a User Profile actions list.
+ *
+ * @param {array} $actions         Actions in format 'action_key' => 'action_html'.
+ * @param {array} $profile_args    User Profile data.
+ * @param {int}   $user_profile_id User Profile ID.
+ *
+ * @return {array} User Profile actions.
+ *
+ * @since 3.0.0
+ * @hook um_user_profile_actions
+ *
+ * @example <caption>Add custom user profile action.</caption>
+ * function um_profile_menu_link_attrs( $actions, $profile_args, $user_profile_id ) {
+ *     if ( true !== UM()->fields()->editing ) {
+ *         $actions = UM()->array_insert_before(
+ *             $actions,
+ *             'more_actions',
+ *             array(
+ *                 'custom_action_key' => 'Custom action HTML',
+ *             )
+ *         );
+ *     }
+ *     return $actions;
+ * }
+ * add_filter( 'um_profile_tabs_privacy_list', 'um_profile_tabs_privacy_list', 10, 1 );
+ */
+$actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $user_profile_id );
+// Reason for deprecate these hooks is unified dropdown with the actions. please use new one:
+// apply_filters( 'um_user_dropdown_items', $items, $user_id, $context );
+//@todo apply_filters( 'um_profile_edit_menu_items', $items, um_profile_id() ); hook is deprecated for new UI.
+//@todo apply_filters( 'um_myprofile_edit_menu_items', $items ); hook is deprecated for new UI.
+
+// Reason for deprecate these hooks is not editable profile photo in the profile header.
+// Maybe we will use them on the avatar edit field.
+//@todo apply_filters( 'um_user_photo_menu_view', $items ); hook is deprecated for new UI. and maybe will be added soon.
+//@todo apply_filters( 'um_user_photo_menu_edit', $items ); hook is deprecated for new UI. and maybe will be added soon.
+?>
+<div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>">
+	<?php
+	if ( ! empty( $profile_args['cover_enabled'] ) && UM()->options()->get( 'enable_user_cover' ) ) {
+		$has_cover         = UM()->common()->users()->has_photo( $user_profile_id, 'cover_photo' );
+		$default_cover_url = UM()->options()->get_default_cover_url();
+		?>
+		<div class="um-cover-wrapper">
+			<?php
+			if ( $has_cover || ! empty( $default_cover_url ) ) {
+				$cover_args = array(
+					'cache' => false,
+				);
+				if ( $has_cover ) {
+					$cover_size = null; // Means original.
+					if ( ! empty( $profile_args['coversize'] ) ) {
+						$cover_size = $profile_args['coversize']; // Gets from form setting and if empty goes to global UM > Appearance settings.
+					}
+					// Set for mobile width = 300 by default but can be changed via filter below.
+					$cover_size = wp_is_mobile() ? 300 : $cover_size;
+					/**
+					 * Filters the cover photo size.
+					 *
+					 * @param {string} $cover_size   Default cover photo size.
+					 * @param {array}  $profile_args Profile form data arguments.
+					 *
+					 * @since 3.0.0
+					 * @hook  um_cover_photo_size
+					 *
+					 * @example <caption>Change the mobile cover size to 600 px.</caption>
+					 * function my_default_cover_uri( $cover_size, $profile_args ) {
+					 *     if ( wp_is_mobile() ) {
+					 *         $cover_size = 600;
+					 *     }
+					 *     return $cover_size;
+					 * }
+					 * add_filter( 'um_cover_photo_size', 'my_cover_photo_size', 10, 2 );
+					 */
+					$cover_args['size'] = apply_filters( 'um_cover_photo_size', $cover_size, $profile_args );
+				}
+				/**
+				 * Fires in the User Profile cover wrapper.
+				 *
+				 * @since 1.3.x
+				 * @since 2.11.0 Added $args attribute.
+				 * @since 3.0.0  Changed the place of attributes.
+				 * @hook  um_cover_area_content
+				 *
+				 * @param {array} $args    User Profile data.
+				 * @param {int}   $user_id User Profile ID.
+				 *
+				 * @example <caption>Make any custom action in the User Profile cover wrapper.</caption>
+				 * function my_cover_area_content( $args, $user_id ) {
+				 *     // your code here
+				 * }
+				 * add_action( 'um_cover_area_content', 'my_cover_area_content', 10, 2 );
+				 */
+				do_action( 'um_cover_area_content', $profile_args, $user_profile_id );
+
+				echo wp_kses( UM()->frontend()::layouts()::cover_photo( $user_profile_id, $cover_args ), UM()->get_allowed_html( 'templates' ) );
+			}
+			?>
+		</div>
+		<?php
+	}
+	?>
+	<div class="um-profile-header-core">
+		<?php
+		if ( get_option( 'show_avatars' ) && ! empty( $profile_args['photo_enabled'] ) ) {
+			// Don't remove um-profile-header-core wrapper if you have 3rd-party integrations via `pre` and `after` header hooks.
+			echo wp_kses(
+				UM()->frontend()::layouts()::single_avatar(
+					$user_profile_id,
+					array(
+						'size'        => 'xl',
+						'type'        => 'round',
+						'ignore_caps' => true, // ignore caps because we display in profile and caps checked on lower level
+						'cache'       => false,
+					)
+				),
+				UM()->get_allowed_html( 'templates' )
+			);
+		}
+		?>
+		<div class="um-profile-header-content">
+			<?php
+			/**
+			 * Fires for displaying content in header content wrapper on User Profile.
+			 *
+			 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+			 * 10 - `um_friends_add_button()` displays Add Friend button.
+			 *
+			 * @param {array} $args    User Profile data.
+			 * @param {int}   $user_id User Profile ID. Since 3.0.0.
+			 *
+			 * @since 2.0
+			 * @since 3.0.0 added $user_id attribute
+			 * @hook  um_before_profile_main_meta
+			 *
+			 * @example <caption>Display some content in User Profile header content wrapper.</caption>
+			 * function my_um_before_profile_main_meta( $args, $user_id ) {
+			 *     // your code here
+			 *     echo $content;
+			 * }
+			 * add_action( 'um_before_profile_main_meta', 'my_um_before_profile_main_meta', 10, 2 );
+			 */
+			do_action( 'um_before_profile_main_meta', $profile_args, $user_profile_id );
+
+			if ( $profile_args['show_name'] || ! empty( $actions ) ) {
+				$row_classes = array( 'um-profile-header-main-row' );
+				if ( empty( $profile_args['show_name'] ) ) {
+					$row_classes[] = 'um-profile-header-no-name';
+				}
+				if ( empty( $actions ) ) {
+					$row_classes[] = 'um-profile-header-no-actions';
+				}
+				?>
+				<div class="<?php echo esc_attr( implode( ' ', $row_classes ) ); ?>">
+					<?php if ( $profile_args['show_name'] ) { ?>
+						<div class="um-profile-display-name-wrapper">
+							<h2 class="um-profile-display-name">
+								<?php
+								// Construction `um_user( 'display_name', 'html' )` is used for displaying verified marker just after display name.
+								echo wp_kses( um_user( 'display_name', 'html' ), UM()->get_allowed_html( 'templates' ) );
+								?>
+							</h2>
+							<?php
+							/**
+							 * Fires just after user display name in header on User Profile.
+							 *
+							 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+							 * 10  - `um_online_show_user_status()` displays Online status.
+							 * 20  - `um_mc_after_profile_name_inline()` displays MailChimp marker.
+							 * 200 - `um_friends_add_state()` displays Friendship state.
+							 * 200 - `um_followers_add_state()` displays Followers state.
+							 *
+							 * @param {array} $args    User Profile data.
+							 * @param {int}   $user_id User Profile ID. Since 3.0.0.
+							 *
+							 * @since 1.3.x
+							 * @since 3.0.0 added $user_id attribute
+							 * @hook  um_after_profile_name_inline
+							 *
+							 * @example <caption>Display some content after display name in User Profile header.</caption>
+							 * function my_um_after_profile_name_inline( $args, $user_id ) {
+							 *     // your code here
+							 *     echo $content;
+							 * }
+							 * add_action( 'um_after_profile_name_inline', 'my_um_after_profile_name_inline', 10, 2 );
+							 */
+							do_action( 'um_after_profile_name_inline', $profile_args, $user_profile_id );
+							?>
+						</div>
+					<?php } ?>
+					<?php if ( ! empty( $actions ) ) { ?>
+						<div class="um-profile-header-actions">
+							<?php
+							/**
+							 * Fires before profile actions.
+							 *
+							 * @param {array} $args    User Profile data.
+							 * @param {int}   $user_id User Profile ID. Since 3.0.0.
+							 *
+							 * @since 2.8.7
+							 * @hook  um_before_profile_actions
+							 *
+							 * @example <caption>Display some content before profile actions in User Profile header.</caption>
+							 * function my_um_before_profile_actions( $args, $user_id ) {
+							 *     // your code here
+							 *     echo $content;
+							 * }
+							 * add_action( 'um_before_profile_actions', 'my_um_before_profile_actions', 10, 2 );
+							 */
+							do_action( 'um_before_profile_actions', $profile_args, $user_profile_id );
+
+							echo wp_kses( implode( '', $actions ), UM()->get_allowed_html( 'templates' ) );
+
+							/**
+							 * Fires after profile actions.
+							 *
+							 * @param {array} $args    User Profile data.
+							 * @param {int}   $user_id User Profile ID. Since 3.0.0.
+							 *
+							 * @since 2.8.7
+							 * @hook  um_after_profile_actions
+							 *
+							 * @example <caption>Display some content after profile actions in User Profile header.</caption>
+							 * function my_um_after_profile_actions( $args, $user_id ) {
+							 *     // your code here
+							 *     echo $content;
+							 * }
+							 * add_action( 'um_after_profile_actions', 'my_um_after_profile_actions', 10, 2 );
+							 */
+							do_action( 'um_after_profile_actions', $profile_args, $user_profile_id );
+							?>
+						</div>
+					<?php } ?>
+				</div>
+				<?php
+			}
+
+			/**
+			 * Fires for displaying content before supporting rows in header wrapper on User Profile.
+			 *
+			 * @param {array} $args    User Profile data.
+			 * @param {int}   $user_id User Profile ID.
+			 *
+			 * @since 3.0.0
+			 * @hook  um_before_header_meta
+			 *
+			 * @example <caption>Display some content before supporting rows in User Profile header wrapper.</caption>
+			 * function my_um_before_header_meta( $args, $user_id ) {
+			 *     // your code here
+			 *     echo $content;
+			 * }
+			 * add_action( 'um_before_header_meta', 'my_um_before_header_meta', 10, 2 );
+			 */
+			do_action( 'um_before_header_meta', $profile_args, $user_profile_id );
+			?>
+			<div class="um-profile-header-supporting-rows">
+				<?php
+				if ( true !== UM()->fields()->editing ) {
+					if ( 'approved' !== $account_status ) {
+						$status_badge = array(
+							'class' => array( 'um-member-status' ),
+							'color' => 'error',
+						);
+						if ( 'awaiting_admin_review' === $account_status ) {
+							$status_badge['color'] = 'warning';
+						}
+						// translators: %s: profile status.
+						$badge_text = sprintf( __( 'This user account status is %s', 'ultimate-member' ), um_user( 'account_status_name' ) );
+						?>
+						<div class="um-profile-header-account-status-row">
+							<?php echo wp_kses( UM()->frontend()::layouts()::badge( $badge_text, $status_badge ), UM()->get_allowed_html( 'templates' ) ); ?>
+						</div>
+						<?php
+					}
+
+					if ( ! empty( $social_links ) ) {
+						?>
+						<div class="um-profile-header-social-row">
+							<?php echo wp_kses( $social_links, UM()->get_allowed_html( 'templates' ) ); ?>
+						</div>
+						<?php
+					}
+
+					/**
+					 * Fires for displaying content in supporting header row on User Profile.
+					 *
+					 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+					 * 10 - `add_um_user_bookmarks_button_profile_nocover()` displays User Bookmarks button.
+					 * 50 - `um_social_links_icons()` displays social URLs.
+					 * 60 - `um_friends_add_button_nocover()` displays Friends buttons.
+					 * 70 - `um_mycred_show_user_badges_profile_header()` displays myCRED badges.
+					 *
+					 * @param {array} $args    User Profile data. Since 2.11.0.
+					 * @param {int}   $user_id User Profile ID. Since 2.11.0.
+					 *
+					 * @since 1.3.x
+					 * @since 2.11.0 Added $profile_args, $user_id attributes
+					 * @hook  um_after_profile_header_name
+					 *
+					 * @example <caption>Display some content in supporting header row on User Profile.</caption>
+					 * function my_um_after_profile_header_name( $args, $user_id ) {
+					 *     // your code here
+					 *     echo $content;
+					 * }
+					 * add_action( 'um_after_profile_header_name', 'my_um_after_profile_header_name', 10, 2 );
+					 */
+					do_action( 'um_after_profile_header_name', $profile_args, $user_profile_id );
+
+					if ( ! empty( $profile_args['metafields'] ) ) {
+						?>
+						<div class="um-profile-header-supporting-row">
+							<?php echo wp_kses( UM()->profile()->show_meta( $profile_args['metafields'], $profile_args ), UM()->get_allowed_html( 'templates' ) ); ?>
+						</div>
+						<?php
+					}
+
+					if ( $show_bio ) {
+						?>
+						<div class="um-profile-header-supporting-row">
+							<?php
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- early escaped variable because need different escape based on options.
+							echo $user_bio;
+							?>
+						</div>
+						<?php
+					}
+				} else {
+					?>
+					<span class="um-supporting-text">
+						<?php
+						if ( um_is_myprofile() ) {
+							esc_html_e( 'Update your photo and personal details.', 'ultimate-member' );
+						} else {
+							esc_html_e( 'Update user\'s photo and personal details.', 'ultimate-member' );
+						}
+						?>
+					</span>
+					<?php
+				}
+				?>
+			</div>
+			<?php
+			/**
+			 * Fires for displaying content at the end of supporting row in header wrapper on User Profile.
+			 *
+			 * @param {array} $args    User Profile data.
+			 * @param {int}   $user_id User Profile ID.
+			 *
+			 * @since 1.3.x
+			 * @since 3.0.0 Changed the arguments position. $user_id was the 1st, and it's the 2nd now.
+			 * @hook  um_after_header_meta
+			 *
+			 * @example <caption>Display some content at the end of supporting row in User Profile header wrapper after standard content.</caption>
+			 * function my_um_after_header_meta( $args, $user_id ) {
+			 *     // your code here
+			 *     echo $content;
+			 * }
+			 * add_action( 'um_after_header_meta', 'my_um_after_header_meta', 10, 2 );
+			 */
+			do_action( 'um_after_header_meta', $profile_args, $user_profile_id );
+			?>
+		</div>
+	</div>
+	<?php
+	/**
+	 * Fires for displaying content at the end of header wrapper on User Profile.
+	 *
+	 * @param {array} $args    User Profile data.
+	 * @param {int}   $user_id User Profile ID.
+	 *
+	 * @since 1.3.x
+	 * @hook  um_after_header_info
+	 *
+	 * @example <caption>Display some content in User Profile header wrapper after standard content.</caption>
+	 * function my_um_after_header_info( $args, $user_id ) {
+	 *     // your code here
+	 *     echo $content;
+	 * }
+	 * add_action( 'um_after_header_info', 'my_um_after_header_info', 10, 2 );
+	 */
+	do_action( 'um_after_header_info', $profile_args, $user_profile_id );
+	?>
+</div>

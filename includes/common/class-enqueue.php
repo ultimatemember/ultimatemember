@@ -54,6 +54,38 @@ class Enqueue {
 		add_action( 'admin_enqueue_scripts', array( &$this, 'common_libs' ), 9 );
 		add_action( 'wp_enqueue_scripts', array( &$this, 'common_libs' ), 9 );
 		add_action( 'enqueue_block_assets', array( &$this, 'common_libs' ), 9 );
+		add_filter( 'um_common_js_variables', array( &$this, 'add_style_variables' ) );
+	}
+
+	/**
+	 * Adds our custom button colors to the global stylesheet.
+	 *
+	 * @since 2.8.4
+	 */
+	public function add_style_variables( $um_common_variables ) {
+		if ( UM()->is_new_ui() ) {
+			$um_common_variables['colors'] = array(
+				'gray25'  => '#fcfcfd',
+				'gray50'  => '#f9fafb',
+				'gray100' => '#f2f4f7',
+				'gray200' => '#eaecf0',
+				'gray300' => '#d0d5dd',
+				'gray400' => '#98a2b3',
+				'gray500' => '#667085',
+				'gray600' => '#475467',
+				'gray700' => '#344054',
+				'gray800' => '#1d2939',
+				'gray900' => '#101828',
+			);
+
+			$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color' ) );
+			foreach ( $palette as $title => $colors ) {
+				$um_common_variables['colors'][ 'primary' . $title . 'bg' ] = $colors['bg'];
+				$um_common_variables['colors'][ 'primary' . $title . 'fg' ] = $colors['fg'];
+			}
+		}
+
+		return $um_common_variables;
 	}
 
 	/**
@@ -260,54 +292,85 @@ class Enqueue {
 		wp_register_script( 'um_tipsy', $libs_url . 'tipsy/tipsy' . $suffix . '.js', array( 'jquery' ), '1.0.0a', true );
 		wp_register_style( 'um_tipsy', $libs_url . 'tipsy/tipsy' . $suffix . '.css', array(), '1.0.0a' );
 
-		wp_register_script( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.js', array( 'jquery' ), '1.0', true );
-		wp_register_style( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.css', array(), '1.0' );
-
 		// Raty JS for rating field-type.
 		wp_register_script( 'um_raty', $libs_url . 'raty/um-raty' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), '2.6.0', true );
 		wp_set_script_translations( 'um_raty', 'ultimate-member' );
 		wp_register_style( 'um_raty', $libs_url . 'raty/um-raty' . $suffix . '.css', array(), '2.6.0' );
 
+		wp_register_script( 'um_conditional', $js_url . 'um-conditional' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
+
+		$fonticons_handlers = array();
+//		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+//			// New FontIcons from FontAwesome.
+//			// @todo new version
+//			// First install set this option to true by default and use new FontAwesome icons
+//			wp_register_style( 'um_fontawesome', $css_url . 'um-fontawesome' . $suffix . '.css', array(), self::$fa_version ); // New FontAwesome
+//			$fonticons_handlers[] = 'um_fontawesome';
+//		} else {
 		// Legacy FontIcons.
 		wp_register_style( 'um_fonticons_ii', $libs_url . 'legacy/fonticons/fonticons-ii' . $suffix . '.css', array(), UM_VERSION ); // Ionicons
 		wp_register_style( 'um_fonticons_fa', $libs_url . 'legacy/fonticons/fonticons-fa' . $suffix . '.css', array(), UM_VERSION ); // FontAwesome
-		$fonticons_handlers = array( 'um_fonticons_ii', 'um_fonticons_fa' );
+		$fonticons_handlers = array_merge( $fonticons_handlers, array( 'um_fonticons_ii', 'um_fonticons_fa' ) );
 		// New FontIcons from FontAwesome.
 		// @todo new version
 		// First install set this option to true by default and use new FontAwesome icons
 		wp_register_style( 'um_fontawesome', $css_url . 'um-fontawesome' . $suffix . '.css', array(), self::$fa_version ); // New FontAwesome
-		$fonticons_handlers[]     = 'um_fontawesome';
+		$fonticons_handlers[] = 'um_fontawesome';
+		//}
+
 		self::$fonticons_handlers = $fonticons_handlers;
 
-		// Select2 JS.
-		$this->register_select2();
-
-		// Date-time picker (Pickadate.JS)
-		wp_register_script( 'um_datetime', $libs_url . 'pickadate/picker' . $suffix . '.js', array( 'jquery' ), '3.6.2', true );
-		wp_register_script( 'um_datetime_date', $libs_url . 'pickadate/picker.date' . $suffix . '.js', array( 'um_datetime' ), '3.6.2', true );
-		wp_register_script( 'um_datetime_time', $libs_url . 'pickadate/picker.time' . $suffix . '.js', array( 'um_datetime' ), '3.6.2', true );
-
-		$common_js_deps = array( 'jquery', 'wp-util', 'wp-hooks', 'wp-i18n', 'um_tipsy', 'um_confirm', 'um_datetime_date', 'um_datetime_time' );
-
-		// Load a localized version for date/time.
-		$locale = $this->get_pickadate_locale();
-		if ( $locale ) {
-			if ( file_exists( WP_LANG_DIR . '/plugins/ultimate-member/assets/js/pickadate/' . $locale . $suffix . '.js' ) ) {
-				wp_register_script( 'um_datetime_locale', content_url() . '/languages/plugins/ultimate-member/assets/js/pickadate/' . $locale . $suffix . '.js', array( 'jquery', 'um_datetime' ), '3.6.2', true );
-				$common_js_deps[] = 'um_datetime_locale';
-			} elseif ( file_exists( UM_PATH . 'assets/libs/pickadate/translations/' . $locale . $suffix . '.js' ) ) {
-				wp_register_script( 'um_datetime_locale', $libs_url . 'pickadate/translations/' . $locale . $suffix . '.js', array( 'jquery', 'um_datetime' ), '3.6.2', true );
-				$common_js_deps[] = 'um_datetime_locale';
-			}
+		// Register select2 script only on wp-admin for new UI.
+		if ( ! UM()->is_new_ui() ) {
+			// Select2 JS.
+			$this->register_select2();
 		}
 
-		wp_register_style( 'um_datetime', $libs_url . 'pickadate/default' . $suffix . '.css', array(), '3.6.2' );
-		wp_register_style( 'um_datetime_date', $libs_url . 'pickadate/default.date' . $suffix . '.css', array( 'um_datetime' ), '3.6.2' );
-		wp_register_style( 'um_datetime_time', $libs_url . 'pickadate/default.time' . $suffix . '.css', array( 'um_datetime' ), '3.6.2' );
+		// wp_register_script( 'um_choices', $libs_url . 'choices-js/choices' . $suffix . '.js', array(), '10.2.0', true );
+		wp_register_script( 'um_choices', $libs_url . 'choices-js/choices' . $suffix . '.js', array(), '11.1.0', true );
+		wp_register_style( 'um_choices', $css_url . 'um-choices' . $suffix . '.css', array(), UM_VERSION );
 
-		wp_register_script( 'um_common', $js_url . 'common' . $suffix . '.js', $common_js_deps, UM_VERSION, true );
+		$common_js_deps  = array( 'jquery', 'wp-util', 'wp-hooks', 'wp-i18n', 'um_tipsy', 'um_raty', 'um_choices', 'um_conditional' );
+		$common_css_deps = array_merge( array( 'um_tipsy', 'um_raty', 'um_choices' ), self::$fonticons_handlers );
+		if ( ! UM()->is_new_ui() ) {
+			// Date-time picker (Pickadate.JS)
+			wp_register_script( 'um_datetime', $libs_url . 'pickadate/picker' . $suffix . '.js', array( 'jquery' ), '3.6.2', true );
+			wp_register_script( 'um_datetime_date', $libs_url . 'pickadate/picker.date' . $suffix . '.js', array( 'um_datetime' ), '3.6.2', true );
+			wp_register_script( 'um_datetime_time', $libs_url . 'pickadate/picker.time' . $suffix . '.js', array( 'um_datetime' ), '3.6.2', true );
+
+			$common_js_deps = array_merge( $common_js_deps, array( 'um_datetime_date', 'um_datetime_time' ) );
+
+			// Load a localized version for date/time.
+			$locale = $this->get_pickadate_locale();
+			if ( $locale ) {
+				if ( file_exists( WP_LANG_DIR . '/plugins/ultimate-member/assets/js/pickadate/' . $locale . $suffix . '.js' ) ) {
+					wp_register_script( 'um_datetime_locale', content_url() . '/languages/plugins/ultimate-member/assets/js/pickadate/' . $locale . $suffix . '.js', array( 'jquery', 'um_datetime' ), '3.6.2', true );
+					$common_js_deps[] = 'um_datetime_locale';
+				} elseif ( file_exists( UM_PATH . 'assets/libs/pickadate/translations/' . $locale . $suffix . '.js' ) ) {
+					wp_register_script( 'um_datetime_locale', $libs_url . 'pickadate/translations/' . $locale . $suffix . '.js', array( 'jquery', 'um_datetime' ), '3.6.2', true );
+					$common_js_deps[] = 'um_datetime_locale';
+				}
+			}
+
+			wp_register_style( 'um_datetime', $libs_url . 'pickadate/default' . $suffix . '.css', array(), '3.6.2' );
+			wp_register_style( 'um_datetime_date', $libs_url . 'pickadate/default.date' . $suffix . '.css', array( 'um_datetime' ), '3.6.2' );
+			wp_register_style( 'um_datetime_time', $libs_url . 'pickadate/default.time' . $suffix . '.css', array( 'um_datetime' ), '3.6.2' );
+
+			$common_css_deps = array_merge( $common_css_deps, array( 'um_datetime_date', 'um_datetime_time' ) );
+		}
+
+		if ( UM()->is_new_ui() ) {
+			$src = $js_url . 'v3/common' . $suffix . '.js';
+		} else {
+			$src = $js_url . 'common' . $suffix . '.js';
+		}
+
+		wp_register_script( 'um_common', $src, $common_js_deps, UM_VERSION, true );
+		wp_set_script_translations( 'um_common', 'ultimate-member' );
+
 		$um_common_variables = array(
 			'locale' => get_locale(),
+			'isRTL'  => is_rtl(),
 		);
 		/**
 		 * Filters data array for localize frontend common scripts.
@@ -329,7 +392,18 @@ class Enqueue {
 		$um_common_variables = apply_filters( 'um_common_js_variables', $um_common_variables );
 		wp_localize_script( 'um_common', 'um_common_variables', $um_common_variables );
 
-		$common_css_deps = array_merge( array( 'um_tipsy', 'um_confirm', 'um_datetime_date', 'um_datetime_time' ), self::$fonticons_handlers );
-		wp_register_style( 'um_common', $css_url . 'common' . $suffix . '.css', $common_css_deps, UM_VERSION );
+		if ( UM()->common()->apis()::is_active( 'google-maps' ) ) {
+			$api_instance = UM()->common()->apis()->get( 'google-maps' );
+			if ( $api_instance ) {
+				$api_instance->add_inline_script();
+			}
+		}
+
+		if ( UM()->is_new_ui() ) {
+			$src = $css_url . 'v3/common' . $suffix . '.css';
+		} else {
+			$src = $css_url . 'common' . $suffix . '.css';
+		}
+		wp_register_style( 'um_common', $src, $common_css_deps, UM_VERSION );
 	}
 }

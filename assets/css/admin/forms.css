@@ -74,12 +74,18 @@
   margin: 0 0 5px 0;
 }
 
-.um-external-link-icon {
+.um-external-link {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.um-external-link svg {
   width: 1em;
   height: 1em;
   margin: 0;
-  vertical-align: middle;
-  fill: currentcolor;
 }
 
 .um_admin_fonticon_wrapper {

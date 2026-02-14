@@ -155,7 +155,7 @@ if ( ! empty( $_POST['role'] ) ) {
 			 *     $data['{meta_key}'] = {meta_value}; // set your meta key and meta value
 			 *     return $data;
 			 * }
-			 * add_action( 'um_role_edit_data', 'my_custom_um_role_edit_data', 10, 3 );
+			 * add_filter( 'um_role_edit_data', 'my_custom_um_role_edit_data', 10, 3 );
 			 * @example <caption>Force remove role's metadata on saving when update.</caption>
 			 * function my_custom_um_role_edit_data( $data, $id, $update ) {
 			 *     if ( true === $update ) {
@@ -163,12 +163,32 @@ if ( ! empty( $_POST['role'] ) ) {
 			 *     }
 			 *     return $data;
 			 * }
-			 * add_action( 'um_role_edit_data', 'my_custom_um_role_edit_data', 10, 3 );
+			 * add_filter( 'um_role_edit_data', 'my_custom_um_role_edit_data', 10, 3 );
 			 */
 			$role_meta = apply_filters( 'um_role_edit_data', $data, $id, $update );
 			unset( $role_meta['id'] );
 
 			update_option( "um_role_{$id}_meta", $role_meta );
+
+			/**
+			 * Fires after the role upgrade or create.
+			 *
+			 * @param {array}  $data   Role meta.
+			 * @param {string} $id     Role key.
+			 * @param {bool}   $update Create or update role. "True" if update.
+			 *
+			 * @since 3.0.0
+			 * @hook um_role_update
+			 *
+			 * @example <caption>Make any action only after role insert.</caption>
+			 * function my_custom_after_role_insert( $data, $id, $update ) {
+			 *     if ( false === $update ) {
+			 *         // make something only after role insert.
+			 *     }
+			 * }
+			 * add_action( 'um_role_update', 'my_custom_after_role_insert', 10, 3 );
+			 */
+			do_action( 'um_role_update', $role_meta, $id, $update );
 
 			UM()->user()->remove_cache_all_users();
 

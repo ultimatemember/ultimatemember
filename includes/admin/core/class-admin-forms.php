@@ -1,12 +1,11 @@
 <?php
 namespace um\admin\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
-
 
 	/**
 	 * Class Admin_Forms
@@ -14,23 +13,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 	 */
 	class Admin_Forms {
 
-
 		/**
 		 * @var bool
 		 */
 		var $form_data;
 
-
 		/**
 		 * Admin_Forms constructor.
 		 * @param bool $form_data
 		 */
-		function __construct( $form_data = false ) {
+		public function __construct( $form_data = false ) {
 			if ( $form_data ) {
 				$this->form_data = $form_data;
 			}
 		}
-
 
 		/**
 		 * Set Form Data
@@ -39,11 +35,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 *
 		 * @return $this
 		 */
-		function set_data( $data ) {
+		public function set_data( $data ) {
 			$this->form_data = $data;
 			return $this;
 		}
-
 
 		/**
 		 * Render form
@@ -1422,7 +1417,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			return $html;
 		}
 
-
 		/**
 		 * @param $field_data
 		 *
@@ -1601,7 +1595,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 *
 		 * @return string
 		 */
-		function render_md_default_filters( $field_data ) {
+		public function render_md_default_filters( $field_data ) {
 			if ( empty( $field_data['id'] ) ) {
 				return false;
 			}
@@ -1614,9 +1608,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$class_attr = ' class="um-forms-field ' . $class . '" ';
 
 			$data = array(
-				'field_id'          => $field_data['id'],
-				'id_attr'           => $id,
-				'member_directory'  => $post->ID
+				'field_id'         => $field_data['id'],
+				'id_attr'          => $id,
+				'member_directory' => $post->ID,
 			);
 
 			$data_attr = '';
@@ -1678,7 +1672,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				}
 			}
 
-			$html .= "</ul><a href=\"javascript:void(0);\" class=\"button button-primary um-md-default-filters-add-option\" data-name=\"$name\">{$field_data['add_text']}</a>";
+			$nonce = '';
+			if ( UM()->is_new_ui() ) {
+				$nonce = 'data-nonce="' . esc_attr( wp_create_nonce( 'um_search_filters' ) ) . '"';
+			}
+
+			$html .= "</ul><a href=\"javascript:void(0);\" class=\"button button-primary um-md-default-filters-add-option\" $nonce data-name=\"$name\">{$field_data['add_text']}</a>";
 
 			return $html;
 		}
@@ -1873,9 +1872,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			}
 			ob_start();
 			?>
-			<a target="_blank" href="<?php echo esc_url( $data['url'] ); ?>">
-				<?php echo esc_html( $data['html'] ); ?>
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="um-external-link-icon" aria-hidden="true" focusable="false"><path d="M19.5 4.5h-7V6h4.44l-5.97 5.97 1.06 1.06L18 7.06v4.44h1.5v-7Zm-13 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3H17v3a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h3V5.5h-3Z"></path></svg>
+			<a target="_blank" href="<?php echo esc_url( $data['url'] ); ?>" class="um-external-link">
+				<?php echo wp_kses( $data['html'] . UM()->frontend()::layouts()::svg( 'external-link' ), UM()->get_allowed_html( 'wp-admin' ) ); ?>
 			</a>
 			<?php
 			return ob_get_clean();

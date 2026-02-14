@@ -26,8 +26,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 * Admin_Notices constructor.
 		 */
 		public function __construct() {
-			add_action( 'admin_init', array( &$this, 'create_languages_folder' ) );
-
 			add_action( 'admin_init', array( &$this, 'create_list' ) );
 			add_action( 'admin_notices', array( &$this, 'render_notices' ), 1 );
 
@@ -321,24 +319,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 		}
 
-
-		/**
-		 * To store plugin languages
-		 */
-		function create_languages_folder() {
-			$path = UM()->files()->upload_basedir;
-			$path = str_replace( '/uploads/ultimatemember', '', $path );
-			$path = $path . '/languages/plugins/';
-			$path = str_replace( '//', '/', $path );
-
-			if ( ! file_exists( $path ) ) {
-				$old = umask( 0 );
-				@mkdir( $path, 0777, true );
-				umask( $old );
-			}
-		}
-
-
 		/**
 		 * Show notice for customers with old extension's versions
 		 */
@@ -408,82 +388,75 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		/**
 		 * Regarding page setup
 		 */
-		function install_core_page_notice() {
-			$pages = UM()->config()->permalinks;
+		public function install_core_page_notice() {
+			$predefined_pages = UM()->config()->get( 'predefined_pages' );
+			foreach ( array_keys( $predefined_pages ) as $slug ) {
+				$page_id = um_get_predefined_page_id( $slug );
+				$page    = get_post( $page_id );
 
-			if ( $pages && is_array( $pages ) ) {
+				if ( empty( $page ) ) {
+					$url = add_query_arg(
+						array(
+							'um_adm_action' => 'install_core_pages',
+							'_wpnonce'      => wp_create_nonce( 'install_core_pages' ),
+						)
+					);
 
-				foreach ( $pages as $slug => $page_id ) {
-					$page = get_post( $page_id );
+					ob_start();
+					?>
 
-					if ( ! isset( $page->ID ) && array_key_exists( $slug, UM()->config()->core_pages ) ) {
-						$url = add_query_arg(
-							array(
-								'um_adm_action' => 'install_core_pages',
-								'_wpnonce'      => wp_create_nonce( 'install_core_pages' ),
-							)
-						);
-
-						ob_start();
-						?>
-
-						<p>
-							<?php
-							// translators: %s: Plugin name.
-							echo wp_kses( sprintf( __( '%s needs to create several pages (User Profiles, Account, Registration, Login, Password Reset, Logout, Member Directory) to function correctly.', 'ultimate-member' ), UM_PLUGIN_NAME ), UM()->get_allowed_html( 'admin_notice' ) );
-							?>
-						</p>
-
-						<p>
-							<a href="<?php echo esc_url( $url ); ?>" class="button button-primary"><?php esc_html_e( 'Create Pages', 'ultimate-member' ); ?></a>
-							&nbsp;
-							<a href="javascript:void(0);" class="button-secondary um_secondary_dismiss"><?php esc_html_e( 'No thanks', 'ultimate-member' ); ?></a>
-						</p>
-
+					<p>
 						<?php
-						$message = ob_get_clean();
+						// translators: %s: Plugin name.
+						echo wp_kses( sprintf( __( '%s needs to create several pages (User Profiles, Account, Registration, Login, Password Reset, Logout, Member Directory) to function correctly.', 'ultimate-member' ), UM_PLUGIN_NAME ), UM()->get_allowed_html( 'admin_notice' ) );
+						?>
+					</p>
 
-						$this->add_notice(
-							'wrong_pages',
-							array(
-								'class'       => 'updated',
-								'message'     => $message,
-								'dismissible' => true,
-							),
-							20
-						);
+					<p>
+						<a href="<?php echo esc_url( $url ); ?>" class="button button-primary"><?php esc_html_e( 'Create Pages', 'ultimate-member' ); ?></a>
+						&nbsp;
+						<a href="javascript:void(0);" class="button-secondary um_secondary_dismiss"><?php esc_html_e( 'No thanks', 'ultimate-member' ); ?></a>
+					</p>
 
-						break;
-					}
+					<?php
+					$message = ob_get_clean();
+
+					$this->add_notice(
+						'wrong_pages',
+						array(
+							'class'       => 'updated',
+							'message'     => $message,
+							'dismissible' => true,
+						),
+						20
+					);
+
+					break;
 				}
+			}
 
-				if ( isset( $pages['user'] ) ) {
-					$test = get_post( $pages['user'] );
-					if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
-						$this->add_notice(
-							'wrong_user_page',
-							array(
-								'class'   => 'updated',
-								'message' => '<p>' . esc_html__( 'Ultimate Member Setup Error: User page can not be a child page.', 'ultimate-member' ) . '</p>',
-							),
-							25
-						);
-					}
-				}
+			$test = get_post( um_get_predefined_page_id( 'user' ) );
+			if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
+				$this->add_notice(
+					'wrong_user_page',
+					array(
+						'class'   => 'updated',
+						'message' => '<p>' . esc_html__( 'Ultimate Member Setup Error: User page can not be a child page.', 'ultimate-member' ) . '</p>',
+					),
+					25
+				);
+			}
 
-				if ( isset( $pages['account'] ) ) {
-					$test = get_post( $pages['account'] );
-					if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
-						$this->add_notice(
-							'wrong_account_page',
-							array(
-								'class'   => 'updated',
-								'message' => '<p>' . esc_html__( 'Ultimate Member Setup Error: Account page can not be a child page.', 'ultimate-member' ) . '</p>',
-							),
-							30
-						);
-					}
-				}
+			$test = get_post( um_get_predefined_page_id( 'account' ) );
+			if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
+				$this->add_notice(
+					'wrong_account_page',
+					array(
+						'class'   => 'updated',
+						'message' => '<p>' . esc_html__( 'Ultimate Member Setup Error: Account page can not be a child page.', 'ultimate-member' ) . '</p>',
+					),
+					30
+				);
 			}
 		}
 

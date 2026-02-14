@@ -348,34 +348,6 @@ function um_get_url_for_language( $post_id, $language ) {
 	return UM()->external_integrations()->get_url_for_language( $post_id, $language );
 }
 
-
-/**
- * user uploads directory
- *
- * @deprecated 2.0.26
- *
- * @return string
- */
-function um_user_uploads_dir() {
-	//um_deprecated_function( 'um_user_uploads_dir', '2.0.26', 'UM()->external_integrations()->get_url_for_language' );
-	$uri = UM()->files()->upload_basedir . um_user( 'ID' ) . '/';
-	return $uri;
-}
-
-/**
- * user uploads uri
- *
- * @deprecated 2.0.26
- *
- * @return string
- */
-function um_user_uploads_uri() {
-	//um_deprecated_function( 'um_user_uploads_uri', '2.0.26', 'UM()->external_integrations()->get_url_for_language' );
-	UM()->files()->upload_baseurl = set_url_scheme( UM()->files()->upload_baseurl );
-	$uri = UM()->files()->upload_baseurl . um_user( 'ID' ) . '/';
-	return $uri;
-}
-
 /**
  * Check if a legitimate password reset request is in action
  *
@@ -428,27 +400,6 @@ function um_time_diff( $time1, $time2 ) {
 	//um_deprecated_function( 'um_time_diff', '2.0.30', 'UM()->datetime()->time_diff' );
 
 	return UM()->datetime()->time_diff( $time1, $time2 );
-}
-
-
-/**
- * Get members to show in directory
- *
- * @deprecated 2.1.0
- *
- *
- * @param $argument
- *
- * @return mixed
- */
-function um_members( $argument ) {
-	//um_deprecated_function( 'um_members', '2.1.0', 'UM()->member_directory()' );
-
-	$result = null;
-	if ( isset( UM()->members()->results[ $argument ] ) ) {
-		$result = UM()->members()->results[ $argument ];
-	}
-	return $result;
 }
 
 
@@ -585,108 +536,67 @@ function um_select_if_in_query_params( $filter, $val ) {
 	echo $selected ? 'selected="selected"' : '';
 }
 
+/**
+ * Check that temp image is valid
+ *
+ * @param $url
+ * @deprecated 3.0.0
+ *
+ * @return bool|string
+ */
+function um_is_temp_image( $url ) {
+	_deprecated_function( __FUNCTION__, '3.0.0' );
+
+	$url = explode( '/ultimatemember/temp/', $url );
+	if (isset( $url[1] )) {
+		$src = UM()->files()->upload_temp . $url[1];
+		if (!file_exists( $src ))
+			return false;
+		list( $width, $height, $type, $attr ) = @getimagesize( $src );
+		if (isset( $width ) && isset( $height ))
+			return $src;
+	}
+
+	return false;
+}
 
 /**
- * Get submitted user information
+ * Check that temp upload is valid
  *
- * @param bool $style
+ * @deprecated 3.0.0
  *
- * @return null|string
+ * @param string $url
  *
- * @deprecated 2.1.3
+ * @return bool|string
  */
-function um_user_submitted_registration( $style = false ) {
-	$output = null;
+function um_is_temp_upload( $url ) {
+	_deprecated_function( __FUNCTION__, '3.0.0', 'UM()->files()->is_temp_upload()' );
+	return UM()->files()->is_temp_upload( $url );
+}
 
-	$data = um_user( 'submitted' );
-
-	if ( $style ) {
-		$output .= '<div class="um-admin-infobox">';
+/**
+ * Get server protocol
+ * @deprecated 3.0.0 It's the not used helper. Because WordPress native `set_url_scheme()` function can be used instead.
+ * @return string
+ */
+function um_get_domain_protocol() {
+	_deprecated_function( __FUNCTION__, '3.0.0' );
+	if ( is_ssl() ) {
+		$protocol = 'https://';
+	} else {
+		$protocol = 'http://';
 	}
 
-	if ( isset( $data ) && is_array( $data ) ) {
+	return $protocol;
+}
 
-		/**
-		 * UM hook
-		 *
-		 * @type filter
-		 * @title um_email_registration_data
-		 * @description Prepare Registration data to email
-		 * @input_vars
-		 * [{"var":"$data","type":"array","desc":"Registration Data"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_filter( 'um_email_registration_data', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_filter( 'um_email_registration_data', 'my_email_registration_data', 10, 1 );
-		 * function my_email_registration_data( $data ) {
-		 *     // your code here
-		 *     return $data;
-		 * }
-		 * ?>
-		 */
-		$data = apply_filters( 'um_email_registration_data', $data );
+/**
+ * default cover
+ * @deprecated 3.0.0
+ * @return string
+ */
+function um_get_default_cover_uri() {
+	_deprecated_function( __FUNCTION__, '3.0.0', 'UM()->options()->get_default_cover_url()' );
 
-		$pw_fields = array();
-		foreach ( $data as $k => $v ) {
-
-			if ( strstr( $k, 'user_pass' ) || in_array( $k, array( 'g-recaptcha-response', 'request', '_wpnonce', '_wp_http_referer' ) ) ) {
-				continue;
-			}
-
-			if ( UM()->fields()->get_field_type( $k ) == 'password' ) {
-				$pw_fields[] = $k;
-				$pw_fields[] = 'confirm_' . $k;
-				continue;
-			}
-
-			if ( ! empty( $pw_fields ) && in_array( $k, $pw_fields ) ) {
-				continue;
-			}
-
-			if ( UM()->fields()->get_field_type( $k ) == 'image' || UM()->fields()->get_field_type( $k ) == 'file' ) {
-				$file = basename( $v );
-				$filedata = get_user_meta( um_user( 'ID' ), $k . "_metadata", true );
-
-				$baseurl = UM()->uploader()->get_upload_base_url();
-				if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $file ) ) {
-					if ( is_multisite() ) {
-						//multisite fix for old customers
-						$baseurl = str_replace( '/sites/' . get_current_blog_id() . '/', '/', $baseurl );
-					}
-				}
-
-				if ( ! empty( $filedata['original_name'] ) ) {
-					$v = '<a href="' . esc_attr( $baseurl . um_user( 'ID' ) . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
-				} else {
-					$v = $baseurl . um_user( 'ID' ) . '/' . $file;
-				}
-			}
-
-			if ( is_array( $v ) ) {
-				$v = implode( ',', $v );
-			}
-
-			if ( $k == 'timestamp' ) {
-				$k = __( 'date submitted', 'ultimate-member' );
-				$v = date( "d M Y H:i", $v );
-			}
-
-			if ( $style ) {
-				if ( ! $v ) {
-					$v = __( '(empty)', 'ultimate-member' );
-				}
-				$output .= "<p><label>$k</label><span>$v</span></p>";
-			} else {
-				$output .= "$k: $v" . "<br />";
-			}
-		}
-	}
-
-	if ( $style ) {
-		$output .= '</div>';
-	}
-
-	return $output;
+	return UM()->options()->get_default_cover_url();
 }

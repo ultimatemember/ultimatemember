@@ -20,12 +20,32 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		 * @used-by \UM::includes()
 		 */
 		public function includes() {
+			$this->account();
 			$this->actions_listener();
 			$this->enqueue();
-			$this->modal();
+			if ( UM()->is_new_ui() ) {
+				$this->directory();
+				$this->profile();
+				$this->uploader();
+			} else {
+				$this->modal();
+			}
 			$this->secure();
 			$this->user_profile();
 			$this->users();
+		}
+
+		/**
+		 * @since 3.0.0
+		 *
+		 * @return Account
+		 */
+		public function account() {
+			if ( empty( UM()->classes['um\frontend\account'] ) ) {
+				UM()->classes['um\frontend\account'] = new Account();
+			}
+
+			return UM()->classes['um\frontend\account'];
 		}
 
 		/**
@@ -42,6 +62,19 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		}
 
 		/**
+		 * @since 3.0.0
+		 *
+		 * @return Directory
+		 */
+		public function directory() {
+			if ( empty( UM()->classes['um\frontend\directory'] ) ) {
+				UM()->classes['um\frontend\directory'] = new Directory();
+			}
+
+			return UM()->classes['um\frontend\directory'];
+		}
+
+		/**
 		 * @since 2.7.0
 		 *
 		 * @return Enqueue
@@ -55,6 +88,32 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		}
 
 		/**
+		 * @since 3.0.0
+		 *
+		 * @return form\Form
+		 */
+		public function form() {
+			if ( empty( UM()->classes['um\frontend\form\form'] ) ) {
+				UM()->classes['um\frontend\form\form'] = new form\Form();
+			}
+
+			return UM()->classes['um\frontend\form\form'];
+		}
+
+		/**
+		 * @since 3.0.0
+		 *
+		 * @return Layouts
+		 */
+		public static function layouts() {
+			if ( empty( UM()->classes['um\frontend\layouts'] ) ) {
+				UM()->classes['um\frontend\layouts'] = new Layouts();
+			}
+
+			return UM()->classes['um\frontend\layouts'];
+		}
+
+		/**
 		 * @since 2.8.6
 		 *
 		 * @return Modal
@@ -65,6 +124,32 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			}
 
 			return UM()->classes['um\frontend\modal'];
+		}
+
+		/**
+		 * @since 3.0.0
+		 *
+		 * @return Profile
+		 */
+		public function profile() {
+			if ( empty( UM()->classes['um\frontend\profile'] ) ) {
+				UM()->classes['um\frontend\profile'] = new Profile();
+			}
+
+			return UM()->classes['um\frontend\profile'];
+		}
+
+		/**
+		 * @since 3.0.0
+		 *
+		 * @return Uploader
+		 */
+		public function uploader() {
+			if ( empty( UM()->classes['um\frontend\uploader'] ) ) {
+				UM()->classes['um\frontend\uploader'] = new Uploader();
+			}
+
+			return UM()->classes['um\frontend\uploader'];
 		}
 
 		/**
