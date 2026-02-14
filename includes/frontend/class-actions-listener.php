@@ -19,6 +19,7 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 		 */
 		public function __construct() {
 			add_action( 'wp_loaded', array( $this, 'actions_listener' ) );
+			add_action( 'wp_footer', array( $this, 'display_action_error_notice' ) );
 		}
 
 		/**
@@ -66,7 +67,10 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 
 					$result = UM()->common()->users()->approve( $user_id );
 					if ( ! $result ) {
-						wp_die( esc_html__( 'Something went wrong.', 'ultimate-member' ) );
+						$status = UM()->common()->users()->get_status( $user_id, 'formatted' );
+						/* translators: %s: current user account status */
+						$message = sprintf( __( 'This user could not be approved because their current status is: %s.', 'ultimate-member' ), $status );
+						$this->set_action_error_and_redirect( $message, $user_id );
 					}
 
 					um_safe_redirect( UM()->permalinks()->get_current_url( true ) );
@@ -82,7 +86,10 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 
 					$result = UM()->common()->users()->reactivate( $user_id );
 					if ( ! $result ) {
-						wp_die( esc_html__( 'Something went wrong.', 'ultimate-member' ) );
+						$status = UM()->common()->users()->get_status( $user_id, 'formatted' );
+						/* translators: %s: current user account status */
+						$message = sprintf( __( 'This user could not be reactivated because their current status is: %s.', 'ultimate-member' ), $status );
+						$this->set_action_error_and_redirect( $message, $user_id );
 					}
 
 					um_safe_redirect( UM()->permalinks()->get_current_url( true ) );
@@ -98,7 +105,10 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 
 					$result = UM()->common()->users()->set_as_pending( $user_id );
 					if ( ! $result ) {
-						wp_die( esc_html__( 'Something went wrong.', 'ultimate-member' ) );
+						$status = UM()->common()->users()->get_status( $user_id, 'formatted' );
+						/* translators: %s: current user account status */
+						$message = sprintf( __( 'This user could not be set as pending review because their current status is: %s.', 'ultimate-member' ), $status );
+						$this->set_action_error_and_redirect( $message, $user_id );
 					}
 
 					um_safe_redirect( UM()->permalinks()->get_current_url( true ) );
@@ -114,7 +124,8 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 
 					$result = UM()->common()->users()->send_activation( $user_id, true );
 					if ( ! $result ) {
-						wp_die( esc_html__( 'Something went wrong.', 'ultimate-member' ) );
+						$message = __( 'The activation email could not be sent for this user. Please try again.', 'ultimate-member' );
+						$this->set_action_error_and_redirect( $message, $user_id );
 					}
 
 					um_safe_redirect( UM()->permalinks()->get_current_url( true ) );
@@ -130,7 +141,10 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 
 					$result = UM()->common()->users()->reject( $user_id );
 					if ( ! $result ) {
-						wp_die( esc_html__( 'Something went wrong.', 'ultimate-member' ) );
+						$status = UM()->common()->users()->get_status( $user_id, 'formatted' );
+						/* translators: %s: current user account status */
+						$message = sprintf( __( 'This user could not be rejected because their current status is: %s.', 'ultimate-member' ), $status );
+						$this->set_action_error_and_redirect( $message, $user_id );
 					}
 
 					um_safe_redirect( UM()->permalinks()->get_current_url( true ) );
@@ -146,7 +160,10 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 
 					$result = UM()->common()->users()->deactivate( $user_id );
 					if ( ! $result ) {
-						wp_die( esc_html__( 'Something went wrong.', 'ultimate-member' ) );
+						$status = UM()->common()->users()->get_status( $user_id, 'formatted' );
+						/* translators: %s: current user account status */
+						$message = sprintf( __( 'This user could not be deactivated because their current status is: %s.', 'ultimate-member' ), $status );
+						$this->set_action_error_and_redirect( $message, $user_id );
 					}
 
 					um_safe_redirect( UM()->permalinks()->get_current_url( true ) );
@@ -201,6 +218,66 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 					do_action( 'um_action_user_request_hook', $action, $user_id );
 					break;
 			}
+		}
+
+		/**
+		 * Store an action error message in a transient and redirect back to the profile page.
+		 *
+		 * Instead of calling wp_die() which shows a blank death page, this method
+		 * stores an informative error message and redirects the admin back to the
+		 * user's profile page where the notice will be displayed.
+		 *
+		 * @since 2.10.0
+		 *
+		 * @param string $message Error message to display.
+		 * @param int    $user_id The target user ID.
+		 */
+		private function set_action_error_and_redirect( $message, $user_id ) {
+			$current_user_id = get_current_user_id();
+			$transient_key   = 'um_action_error_' . $current_user_id;
+
+			set_transient( $transient_key, $message, 30 );
+
+			$redirect_url = add_query_arg( 'um_action_error', '1', UM()->permalinks()->get_current_url( true ) );
+			um_safe_redirect( $redirect_url );
+			exit;
+		}
+
+		/**
+		 * Display an action error notice on the frontend.
+		 *
+		 * Hooked to `wp_footer`. When a frontend action fails (e.g., approving a user
+		 * whose status was already changed from the backend), this method retrieves
+		 * the stored error message from a transient and displays it as a dismissible
+		 * overlay notice.
+		 *
+		 * @since 2.10.0
+		 */
+		public function display_action_error_notice() {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only used to check for display flag.
+			if ( empty( $_GET['um_action_error'] ) ) {
+				return;
+			}
+
+			if ( ! is_user_logged_in() ) {
+				return;
+			}
+
+			$current_user_id = get_current_user_id();
+			$transient_key   = 'um_action_error_' . $current_user_id;
+			$message         = get_transient( $transient_key );
+
+			if ( empty( $message ) ) {
+				return;
+			}
+
+			delete_transient( $transient_key );
+			?>
+			<p class="um-notice warning" id="um-action-error-notice" style="position:fixed;top:40px;left:50%;transform:translateX(-50%);z-index:999999;max-width:600px;width:90%;box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+				<i class="um-icon-close" onclick="this.parentElement.remove();"></i>
+				<?php echo esc_html( $message ); ?>
+			</p>
+			<?php
 		}
 	}
 }
