@@ -173,17 +173,25 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		/**
 		 * Password strength test
 		 *
-		 * @param string $candidate
+		 * @since 2.0
+		 * @since 2.10.x Added $require_special_character parameter.
+		 *
+		 * @param string $candidate                 Password candidate to test.
+		 * @param bool   $require_special_character Optional. Whether to require a special character. Default false.
 		 *
 		 * @return bool
 		 */
-		function strong_pass( $candidate ) {
+		function strong_pass( $candidate, $require_special_character = false ) {
 			// are used Unicode Regular Expressions
 			$regexps = [
 				'/[\p{Lu}]/u', // any Letter Uppercase symbol
 				'/[\p{Ll}]/u', // any Letter Lowercase symbol
 				'/[\p{N}]/u', // any Number symbol
 			];
+			// Require at least one special character (non-letter, non-number, non-whitespace).
+			if ( $require_special_character ) {
+				$regexps[] = '/[^\p{L}\p{N}\s]/u';
+			}
 			foreach ( $regexps as $regexp ) {
 				if ( preg_match_all( $regexp, $candidate, $o ) < 1 ) {
 					return false;
