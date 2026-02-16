@@ -172,6 +172,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 **Enhancements**
 
 * Added: Function `UM()->mail()->enabled_email()` for checking if the email notification is enabled by the user.
+* Added: `color` type of sanitize settings saved in wp-admin.
+* Added: Checking array type of submission data when `url` type of sanitize is used in wp-admin.
 
 = 2.11.2 2026-02-10 =
 
