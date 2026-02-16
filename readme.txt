@@ -167,6 +167,12 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.11.3 2026-02-xx =
+
+**Enhancements**
+
+* Added: Function `UM()->mail()->enabled_email()` for checking if the email notification is enabled by the user.
+
 = 2.11.2 2026-02-10 =
 
 **Enhancements**
