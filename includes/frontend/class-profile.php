@@ -447,7 +447,7 @@ class Profile {
 		$last_id = 0;
 		if ( $posts_query->posts ) {
 			$last_post = end( $posts_query->posts );
-			$last_id = absint( $last_post->ID );
+			$last_id   = absint( $last_post->ID );
 		}
 
 		$t_args = array(
@@ -658,11 +658,11 @@ class Profile {
 					if ( ! is_numeric( $args['submitted'][ $key ] ) ) {
 						continue;
 					} else {
-						if ( $array['number'] == 5 ) {
+						if ( 5 === absint( $array['number'] ) ) {
 							if ( ! in_array( $args['submitted'][ $key ], range( 1, 5 ) ) ) {
 								continue;
 							}
-						} elseif ( $array['number'] == 10 ) {
+						} elseif ( 10 === absint( $array['number'] ) ) {
 							if ( ! in_array( $args['submitted'][ $key ], range( 1, 10 ) ) ) {
 								continue;
 							}

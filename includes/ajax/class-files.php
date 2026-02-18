@@ -752,6 +752,7 @@ class Files extends Uploader {
 			array(
 				'filename'     => $filename,
 				'hash'         => $hash,
+				'temp_hash'    => $temp_hash,
 				'file_preview' => UM()->ajax()->esc_html_spaces( $preview ),
 			)
 		);

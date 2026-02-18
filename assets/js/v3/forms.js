@@ -381,9 +381,9 @@ jQuery(document).ready(function() {
 								$wrapper.find('.um-uploaded-value-hash-hidden').prop('disabled', true);
 								$wrapper.find('.um-uploaded-value-temp-hash-hidden').prop('disabled', true);
 
-								UM.frontend.image.lazyload.init();
-
 								wp.hooks.doAction( 'um_uploader_image_file_cropped', $wrapper, $fileRow, response );
+
+								UM.frontend.image.lazyload.init();
 							}
 
 							$loader.hide();
