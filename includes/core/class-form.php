@@ -841,12 +841,16 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 											$form[ $k ] = '' !== $form[ $k ] ? (int) $form[ $k ] : '';
 											break;
 										case 'textarea':
+											$v = strip_shortcodes( html_entity_decode( $form[ $k ] ) );
 											if ( ! empty( $field['html'] ) || ( UM()->profile()->get_show_bio_key( $form ) === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
-												$form[ $k ] = html_entity_decode( $form[ $k ] ); // required because WP_Editor send sometimes encoded content.
-												$form[ $k ] = self::maybe_apply_tidy( $form[ $k ], $field );
-												$form[ $k ] = wp_kses( strip_shortcodes( $form[ $k ] ), 'user_description' );
+												$v = self::maybe_apply_tidy( $v, $field );
+												if ( UM()->profile()->get_show_bio_key( $form ) === $k ) {
+													$form[ $k ] = wp_kses( $v, 'user_description' );
+												} else {
+													$form[ $k ] = wp_kses( $v, 'post' );
+												}
 											} else {
-												$form[ $k ] = sanitize_textarea_field( strip_shortcodes( $form[ $k ] ) );
+												$form[ $k ] = sanitize_textarea_field( $v );
 											}
 											break;
 										case 'oembed':
