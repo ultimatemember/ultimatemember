@@ -74,6 +74,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'user-events'          => '1.0.0',
 			'ai-assistant'         => '1.0.0',
 			'ai-moderation'        => '1.0.0',
+			'videos'               => '1.0.0',
 
 			// deprecated
 			'instagram'            => '2.0.5',
