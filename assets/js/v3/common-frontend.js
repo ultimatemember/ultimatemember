@@ -1364,6 +1364,19 @@ UM.frontend = {
 				}
 			}
 		}
+	},
+	autosize: {
+		init: function ( selector, maxLines = 5 ) {
+			jQuery( document.body ).on('keyup', selector, function () {
+				let lineHeight = parseInt( jQuery(this).css('line-height'), 10 );
+				jQuery(this).height('auto');
+				if(jQuery(this)[0].scrollHeight < lineHeight * maxLines){
+					jQuery(this).height(jQuery(this)[0].scrollHeight);
+				} else {
+					jQuery(this).height(lineHeight * maxLines);
+				}
+			});
+		}
 	}
 }
 
