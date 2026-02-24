@@ -24,7 +24,7 @@ if ( ! defined( 'UM_PLUGIN' ) ) {
 //for delete Email options only for Core email notifications
 remove_all_filters( 'um_email_notifications' );
 //for delete only Core Theme Link pages
-remove_all_filters( 'um_core_pages' );
+remove_all_filters( 'um_predefined_pages' );
 
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-functions.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-init.php';
