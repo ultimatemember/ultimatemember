@@ -104,6 +104,11 @@
   column-gap: 12px;
 }
 .um.um-profile .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper .um-profile-display-name {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
   font-size: var(--um-header-font-size-sm, 30px);
   line-height: var(--um-header-line-height-sm, 38px);
   font-weight: var(--um-header-font-weight-semibold, 600);
