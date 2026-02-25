@@ -842,9 +842,14 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 											break;
 										case 'textarea':
 											if ( ! empty( $field['html'] ) || ( UM()->profile()->get_show_bio_key( $form ) === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
+												$allowed_html = UM()->get_allowed_html( 'templates' );
+												if ( UM()->profile()->get_show_bio_key( $form ) === $k ) {
+													$allowed_html = 'user_description';
+												}
+
 												$form[ $k ] = html_entity_decode( $form[ $k ] ); // required because WP_Editor send sometimes encoded content.
 												$form[ $k ] = self::maybe_apply_tidy( $form[ $k ], $field );
-												$form[ $k ] = wp_kses( strip_shortcodes( $form[ $k ] ), 'user_description' );
+												$form[ $k ] = wp_kses( strip_shortcodes( $form[ $k ] ), $allowed_html );
 											} else {
 												$form[ $k ] = sanitize_textarea_field( strip_shortcodes( $form[ $k ] ) );
 											}
