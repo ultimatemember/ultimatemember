@@ -19,8 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div class="um-postmessage">
 		<?php
-		// translators: %s: The message after registration process based on a role data and user status after registration
-		printf( __( '%s', 'ultimate-member' ), $this->custom_message ); ?>
+		// The registration message comes from role/form settings and is output with safe HTML escaping.
+		// Allows basic HTML formatting while preventing XSS attacks.
+		echo wp_kses_post( $this->custom_message ); ?>
 	</div>
 
 </div>

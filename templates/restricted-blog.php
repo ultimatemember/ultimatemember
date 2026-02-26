@@ -37,8 +37,9 @@ get_header();
 				$message = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
 			}
 
-			// translators: %s: Restricted blog page message.
-			printf( __( '%s', 'ultimate-member' ), $message );
+			// Restricted access message from plugin settings or post meta.
+			// Output with safe HTML escaping to allow basic formatting.
+			echo wp_kses_post( $message );
 			?>
 		</main><!-- #main -->
 	</div><!-- #primary -->
