@@ -533,7 +533,6 @@ function um_account_page_hidden_fields( $args ) {
 }
 add_action( 'um_account_page_hidden_fields', 'um_account_page_hidden_fields' );
 
-
 /**
  * Before delete account tab content
  */
@@ -547,7 +546,7 @@ function um_before_account_delete() {
 	// The delete account message text comes from plugin settings and should be output
 	// with proper escaping. We use wpautop to preserve paragraph formatting and
 	// wp_kses_post to allow safe HTML while preventing XSS.
-	echo wpautop( wp_kses_post( $text ) );
+	echo wp_kses_post( wpautop( $text ) );
 }
 add_action( 'um_before_account_delete', 'um_before_account_delete' );
 

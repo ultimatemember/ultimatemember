@@ -1594,11 +1594,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 * }
 			 * add_filter( 'um_change_field_label', 'my_change_field_label', 10, 3 );
 			 */
-			$label = apply_filters( 'um_change_field_label', $label, $key, $field_data );
-
-			// Field labels come from field configuration and should already be translated
-		// via the um_change_field_label filter hook above. No need for additional translation wrapper.
-		return $label;
+			return apply_filters( 'um_change_field_label', $label, $key, $field_data );
 		}
 
 		/**

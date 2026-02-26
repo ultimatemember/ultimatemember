@@ -188,7 +188,6 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			return $args;
 		}
 
-
 		/**
 		 * Filter shortcode args
 		 *
@@ -196,25 +195,20 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 *
 		 * @return array
 		 */
-		function parse_shortcode_args( $args ) {
-			if ( $this->message_mode == true ) {
-				if ( ! empty( $_REQUEST['um_role'] ) ) {
-					$args['template'] = 'message';
-					$roleID = sanitize_key( $_REQUEST['um_role'] );
-					$role = UM()->roles()->role_data( $roleID );
+		public function parse_shortcode_args( $args ) {
+			// phpcs:ignore WordPress.Security.NonceVerification -- result of the form submission verified earlier.
+			if ( $this->message_mode && ! empty( $_REQUEST['um_role'] ) ) {
+				$args['template'] = 'message';
+				$role             = sanitize_key( $_REQUEST['um_role'] ); // phpcs:ignore WordPress.Security.NonceVerification -- result of the form submission verified earlier.
+				$role_data        = UM()->roles()->role_data( $role );
 
-					if ( ! empty( $role ) && ! empty( $role['status'] ) ) {
-						$message_key = $role['status'] . '_message';
-						$this->custom_message = ! empty( $role[ $message_key ] ) ? $this->convert_user_tags( stripslashes( $role[ $message_key ] ) ) : '';
-					}
+				if ( ! empty( $role_data ) && ! empty( $role_data['status'] ) ) {
+					$message_key     = $role_data['status'] . '_message';
+					$args['message'] = ! empty( $role_data[ $message_key ] ) ? $this->convert_user_tags( stripslashes( $role_data[ $message_key ] ) ) : '';
 				}
 			}
 
-			foreach ( $args as $k => $v ) {
-				$args[ $k ] = maybe_unserialize( $args[ $k ] );
-			}
-
-			return $args;
+			return array_map( 'maybe_unserialize', $args );
 		}
 
 		/**

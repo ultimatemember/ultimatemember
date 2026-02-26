@@ -167,13 +167,26 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.11.3 2026-02-xx =
+= 2.11.3 2026-03-04 =
 
 **Enhancements**
 
 * Added: Function `UM()->mail()->enabled_email()` for checking if the email notification is enabled by the user.
 * Added: `color` type of sanitize settings saved in wp-admin.
 * Added: Checking array type of submission data when `url` type of sanitize is used in wp-admin.
+* Added: Enhance UM form sanitization filter with $form_data param. Added the $form_data parameter to the `um_sanitize_form_submission` filter.
+
+**Bugfixes**
+
+* Fixed: HTML sanitization logic for textarea-type custom fields with enabled HTML using setting.
+* Fixed: WP editor formatting to prevent incorrect HTML entity conversion when using html-mode in the textarea-type custom fields. Applied and removed this filter dynamically to avoid interfering with other processes.
+* Fixed: Dynamic string translation pattern and improve escaping. Replaced incorrect __('%s') pattern. (@faisalahammad)
+
+**Templates Requiring Update**
+
+* message.php
+* restricted-blog.php
+* restricted-taxonomy.php
 
 = 2.11.2 2026-02-10 =
 
