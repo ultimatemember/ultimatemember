@@ -165,8 +165,6 @@ const rename      = require( 'gulp-rename' );
 function defaultTask( done ) {
 	// sass.compiler = require( 'node-sass' );
 
-	src(['assets/sass/*.sass']).pipe( sass().on( 'error', sass.logError ) ).pipe( dest( 'assets/css' ) );
-
 	src(['assets/js/*.js','!assets/js/*.min.js']) // path to your files
 		.pipe( uglify() )
 		.pipe( rename({ suffix: '.min' }) )
