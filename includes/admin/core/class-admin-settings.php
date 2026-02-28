@@ -765,7 +765,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'require_strongpass'                   => array(
 						'sanitize' => 'bool',
 					),
-					'require_strongpass_special_char'       => array(
+					'require_strongpass_special_char'      => array(
 						'sanitize' => 'bool',
 					),
 					'password_min_chars'                   => array(
@@ -1228,7 +1228,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 											array(
 												'id'    => 'require_strongpass_special_char',
 												'type'  => 'checkbox',
-												'label' => __( 'Require Special Character', 'ultimate-member' ),
+												'label' => __( 'Password requires special character', 'ultimate-member' ),
 												'checkbox_label' => __( 'Enable special character requirement', 'ultimate-member' ),
 												'description' => __( 'Require at least one special character (e.g. !@#$%^&*) in passwords.', 'ultimate-member' ),
 												'conditional' => array( 'require_strongpass', '=', '1' ),
