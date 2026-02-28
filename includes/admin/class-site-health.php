@@ -695,7 +695,11 @@ class Site_Health {
 			$user_settings = array_merge(
 				$user_settings,
 				array(
-					'password_min_chars' => array(
+					'require_strongpass_special_char'       => array(
+					'label' => __( 'Require Special Character', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'require_strongpass_special_char' ) ? $labels['yes'] : $labels['no'],
+				),
+				'password_min_chars' => array(
 						'label' => __( 'Password minimum length', 'ultimate-member' ),
 						'value' => UM()->options()->get( 'password_min_chars' ),
 					),

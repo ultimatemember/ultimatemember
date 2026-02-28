@@ -663,6 +663,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'admin_ignore_user_status'              => false,
 				'toggle_password'                       => false,
 				'require_strongpass'                    => false,
+				'require_strongpass_special_char'        => false,
 				'password_min_chars'                    => 8,
 				'password_max_chars'                    => 30,
 				'account_tab_password'                  => true,

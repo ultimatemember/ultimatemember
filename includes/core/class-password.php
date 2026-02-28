@@ -566,8 +566,13 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your email address', 'ultimate-member' ) );
 				}
 
-				if ( ! UM()->validation()->strong_pass( $args['user_password'] ) ) {
-					UM()->form()->add_error( 'user_password', __( 'Your password must contain at least one lowercase letter, one capital letter and one number', 'ultimate-member' ) );
+				$require_special_char = (bool) UM()->options()->get( 'require_strongpass_special_char' );
+				if ( ! UM()->validation()->strong_pass( $args['user_password'], $require_special_char ) ) {
+					if ( $require_special_char ) {
+						UM()->form()->add_error( 'user_password', __( 'Your password must contain at least one lowercase letter, one capital letter, one number, and one special character (e.g. !@#$%^&*)', 'ultimate-member' ) );
+					} else {
+						UM()->form()->add_error( 'user_password', __( 'Your password must contain at least one lowercase letter, one capital letter and one number', 'ultimate-member' ) );
+					}
 				}
 			}
 
