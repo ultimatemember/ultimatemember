@@ -49,7 +49,7 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 			}
 
 			if ( ! empty( $user_id ) && is_super_admin( $user_id ) ) {
-				wp_die( esc_html__( 'Super administrators can not be modified.', 'ultimate-member' ) );
+				$this->set_action_error_and_redirect( 'super_admin' );
 			}
 
 			$action = sanitize_key( $_REQUEST['um_action'] );
@@ -57,96 +57,96 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 			switch ( $action ) {
 				case 'approve_user':
 					if ( ! wp_verify_nonce( $_REQUEST['nonce'], "approve_user{$user_id}" ) ) {
-						wp_die( esc_html__( 'The link you followed has expired.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'expired' );
 					}
 
 					if ( ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
-						wp_die( esc_html__( 'You do not have permission to edit this user.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'edit_user' );
 					}
 
 					$result = UM()->common()->users()->approve( $user_id );
 					if ( ! $result ) {
-						wp_die( esc_html__( 'Something went wrong.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'approve_user' );
 					}
 
 					um_safe_redirect( UM()->permalinks()->get_current_url( true ) );
 					exit;
 				case 'reactivate_user':
 					if ( ! wp_verify_nonce( $_REQUEST['nonce'], "reactivate_user{$user_id}" ) ) {
-						wp_die( esc_html__( 'The link you followed has expired.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'expired' );
 					}
 
 					if ( ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
-						wp_die( esc_html__( 'You do not have permission to edit this user.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'edit_user' );
 					}
 
 					$result = UM()->common()->users()->reactivate( $user_id );
 					if ( ! $result ) {
-						wp_die( esc_html__( 'Something went wrong.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'reactivate_user' );
 					}
 
 					um_safe_redirect( UM()->permalinks()->get_current_url( true ) );
 					exit;
 				case 'put_user_as_pending':
 					if ( ! wp_verify_nonce( $_REQUEST['nonce'], "put_user_as_pending{$user_id}" ) ) {
-						wp_die( esc_html__( 'The link you followed has expired.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'expired' );
 					}
 
 					if ( ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
-						wp_die( esc_html__( 'You do not have permission to edit this user.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'edit_user' );
 					}
 
 					$result = UM()->common()->users()->set_as_pending( $user_id );
 					if ( ! $result ) {
-						wp_die( esc_html__( 'Something went wrong.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'put_user_as_pending' );
 					}
 
 					um_safe_redirect( UM()->permalinks()->get_current_url( true ) );
 					exit;
 				case 'resend_user_activation':
 					if ( ! wp_verify_nonce( $_REQUEST['nonce'], "resend_user_activation{$user_id}" ) ) {
-						wp_die( esc_html__( 'The link you followed has expired.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'expired' );
 					}
 
 					if ( ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
-						wp_die( esc_html__( 'You do not have permission to edit this user.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'edit_user' );
 					}
 
 					$result = UM()->common()->users()->send_activation( $user_id, true );
 					if ( ! $result ) {
-						wp_die( esc_html__( 'Something went wrong.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'resend_user_activation' );
 					}
 
 					um_safe_redirect( UM()->permalinks()->get_current_url( true ) );
 					exit;
 				case 'reject_user':
 					if ( ! wp_verify_nonce( $_REQUEST['nonce'], "reject_user{$user_id}" ) ) {
-						wp_die( esc_html__( 'The link you followed has expired.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'expired' );
 					}
 
 					if ( ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
-						wp_die( esc_html__( 'You do not have permission to edit this user.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'edit_user' );
 					}
 
 					$result = UM()->common()->users()->reject( $user_id );
 					if ( ! $result ) {
-						wp_die( esc_html__( 'Something went wrong.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'reject_user' );
 					}
 
 					um_safe_redirect( UM()->permalinks()->get_current_url( true ) );
 					exit;
 				case 'deactivate_user':
 					if ( ! wp_verify_nonce( $_REQUEST['nonce'], "deactivate_user{$user_id}" ) ) {
-						wp_die( esc_html__( 'The link you followed has expired.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'expired' );
 					}
 
 					if ( ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
-						wp_die( esc_html__( 'You do not have permission to edit this user.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'edit_user' );
 					}
 
 					$result = UM()->common()->users()->deactivate( $user_id );
 					if ( ! $result ) {
-						wp_die( esc_html__( 'Something went wrong.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'deactivate_user' );
 					}
 
 					um_safe_redirect( UM()->permalinks()->get_current_url( true ) );
@@ -157,7 +157,7 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 					}
 
 					if ( ! wp_verify_nonce( $_REQUEST['nonce'], "switch_user{$user_id}" ) ) {
-						wp_die( esc_html__( 'The link you followed has expired.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'expired' );
 					}
 
 					UM()->user()->auto_login( $user_id );
@@ -166,11 +166,11 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 					exit;
 				case 'delete':
 					if ( ! wp_verify_nonce( $_REQUEST['nonce'], "delete{$user_id}" ) ) {
-						wp_die( esc_html__( 'The link you followed has expired.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'expired' );
 					}
 
 					if ( ! UM()->roles()->um_current_user_can( 'delete', $user_id ) ) {
-						wp_die( esc_html__( 'You do not have permission to delete this user.', 'ultimate-member' ) );
+						$this->set_action_error_and_redirect( 'delete_user' );
 					}
 
 					um_fetch_user( $user_id );
@@ -201,6 +201,80 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 					do_action( 'um_action_user_request_hook', $action, $user_id );
 					break;
 			}
+		}
+
+		/**
+		 * Store an action error message in a transient and redirect back to the profile page.
+		 *
+		 * Instead of calling wp_die() which shows a blank death page, this method
+		 * stores an informative error message and redirects the admin back to the
+		 * user's profile page where the notice will be displayed.
+		 *
+		 * @since 2.11.3
+		 *
+		 * @param string $code Error code to redirect.
+		 */
+		private function set_action_error_and_redirect( $code ) {
+			$redirect_url = add_query_arg( 'um_action_error', $code, UM()->permalinks()->get_current_url( true ) );
+			um_safe_redirect( $redirect_url );
+			exit;
+		}
+
+		/**
+		 *
+		 * @since 2.11.3
+		 *
+		 * @param string $code
+		 *
+		 * @return string
+		 */
+		public function get_error_message( $code ) {
+			switch ( $code ) {
+				case 'super_admin':
+					$message = __( 'Super administrators can not be modified.', 'ultimate-member' );
+					break;
+
+				case 'expired':
+					$message = __( 'The link you followed has expired.', 'ultimate-member' );
+					break;
+
+				case 'edit_user':
+					$message = __( 'You do not have permission to edit this user.', 'ultimate-member' );
+					break;
+
+				case 'approve_user':
+					$message = __( 'This user could not be approved.', 'ultimate-member' );
+					break;
+
+				case 'reactivate_user':
+					$message = __( 'This user could not be reactivated.', 'ultimate-member' );
+					break;
+
+				case 'put_user_as_pending':
+					$message = __( 'This user could not be set as pending review.', 'ultimate-member' );
+					break;
+
+				case 'resend_user_activation':
+					$message = __( 'Activation email could not be sent for this user.', 'ultimate-member' );
+					break;
+
+				case 'reject_user':
+					$message = __( 'This user could not be rejected.', 'ultimate-member' );
+					break;
+
+				case 'deactivate_user':
+					$message = __( 'This user could not be deactivated.', 'ultimate-member' );
+					break;
+
+				case 'delete_user':
+					$message = __( 'You do not have permission to delete this user.', 'ultimate-member' );
+					break;
+
+				default:
+					$message = apply_filters( 'um_action_error_message_default', __( 'Something went wrong', 'ultimate-member' ), $code );
+			}
+
+			return apply_filters( 'um_action_error_message', $message, $code );
 		}
 	}
 }
