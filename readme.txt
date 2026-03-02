@@ -176,6 +176,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Added: Checking array type of submission data when `url` type of sanitize is used in wp-admin.
 * Added: Enhance UM form sanitization filter with $form_data param. Added the $form_data parameter to the `um_sanitize_form_submission` filter.
 * Added: Option for special character requirement for passwords. It's situated in "General > Users > Password requires special character" (based on @faisalahammad suggestions)
+* Added: Filter hook `um_before_account_delete_text` for changing before delete account text by 3rd-party plugins. End-customers can use it for translations.
+* Added: Filter hook `um_custom_{$message_key}` (`um_custom_pending_message`, `um_custom_checkmail_message`) for changing after-registration message based on the user status by 3rd-party plugins. End-customers can use it for translations.
 
 **Bugfixes**
 

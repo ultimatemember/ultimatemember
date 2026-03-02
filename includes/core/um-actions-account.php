@@ -538,11 +538,29 @@ add_action( 'um_account_page_hidden_fields', 'um_account_page_hidden_fields' );
  * Before delete account tab content
  */
 function um_before_account_delete() {
-	if ( UM()->account()->current_password_is_required( 'delete' ) ) {
-		$text = UM()->options()->get( 'delete_account_text' );
-	} else {
-		$text = UM()->options()->get( 'delete_account_no_pass_required_text' );
-	}
+	$pass_required = UM()->account()->current_password_is_required( 'delete' );
+	$option_key    = $pass_required ? 'delete_account_text' : 'delete_account_no_pass_required_text';
+
+	$text = UM()->options()->get( $option_key );
+	/**
+	 * Filters delete account text.
+	 *
+	 * @since 2.11.3
+	 * @hook um_before_account_delete_text
+	 *
+	 * @param {string} $text          Delete account text.
+	 * @param {bool}   $pass_required Data to localize.
+	 *
+	 * @return {string} Delete account text.
+	 *
+	 * @example <caption>Change the text before delete account. There can be used locale condition for translation.</caption>
+	 * function um_custom_before_account_delete_text( $text, $pass_required ) {
+	 *     $text = $pass_required ? '{pass_required_custom_text}' : '{no_pass_required_custom_text}';
+	 *     return $text;
+	 * }
+	 * add_filter( 'um_before_account_delete_text', 'um_custom_before_account_delete_text', 10, 2 );
+	 */
+	$text = apply_filters( 'um_before_account_delete_text', $text, $pass_required );
 
 	// The delete account message text comes from plugin settings and should be output
 	// with proper escaping. We use wpautop to preserve paragraph formatting and

@@ -203,8 +203,39 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$role_data        = UM()->roles()->role_data( $role );
 
 				if ( ! empty( $role_data ) && ! empty( $role_data['status'] ) ) {
-					$message_key     = $role_data['status'] . '_message';
-					$args['message'] = ! empty( $role_data[ $message_key ] ) ? $this->convert_user_tags( stripslashes( $role_data[ $message_key ] ) ) : '';
+					$message_key = $role_data['status'] . '_message';
+					$message     = ! empty( $role_data[ $message_key ] ) ? stripslashes( $role_data[ $message_key ] ) : '';
+					/**
+					 * Filters `pending` or `checkmail` status messages after registration.
+					 * Note: The message can have user placeholders. Please make sure that you use them in the proper context.
+					 * Allowed placeholders by default: '{first_name}', '{last_name}', '{display_name}', '{user_avatar_small}', '{username}', '{nickname}', '{user_email}'.
+					 *
+					 * @param {string} $message   After registration message based on the user status.
+					 * @param {string} $role      User role.
+					 * @param {array}  $role_data User role data.
+					 * @param {array}  $args      Registration form data arguments.
+					 *
+					 * @return {string} After registration message based on the user status.
+					 *
+					 * @since 2.11.3
+					 * @hook um_custom_{$message_key}
+					 *
+					 * @example <caption>Change the registration message if the user has status `Waiting for admin review`.</caption>
+					 * function um_custom_pending_message( $message, $role, $role_data, $args ) {
+					 *     $message = 'Your custom message is here';
+					 *     return $message;
+					 * }
+					 * add_filter( 'um_custom_pending_message', 'um_custom_pending_message', 10, 4 );
+					 * @example <caption>Change the registration message if the user has status `Waiting for email activation`.</caption>
+					 * function um_custom_checkmail_message( $message, $role, $role_data, $args ) {
+					 *      $message = 'Your custom message is here';
+					 *      return $message;
+					 * }
+					 * add_filter( 'um_custom_checkmail_message', 'um_custom_checkmail_message', 10, 4 );
+					 */
+					$message = apply_filters( 'um_custom_' . $message_key, $message, $role, $role_data, $args );
+
+					$args['message'] = $message ? $this->convert_user_tags( $message ) : '';
 				}
 			}
 
