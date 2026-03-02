@@ -183,6 +183,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: WP editor formatting to prevent incorrect HTML entity conversion when using html-mode in the textarea-type custom fields. Applied and removed this filter dynamically to avoid interfering with other processes.
 * Fixed: Dynamic string translation pattern and improve escaping. Replaced incorrect __('%s') pattern. (@faisalahammad)
 * Fixed: `wp_die()` function triggering on the frontend actions. Added UM notice above the User Profile page. (based on @faisalahammad suggestions)
+* Fixed: Password reset key handling for multiple users. Previously, the static reset key caused issues when handling password resets for multiple users simultaneously.
 
 **Templates Requiring Update**
 
