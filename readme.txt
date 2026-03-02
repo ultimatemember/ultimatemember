@@ -193,6 +193,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * restricted-blog.php
 * restricted-taxonomy.php
 
+**Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
+
 = 2.11.2 2026-02-10 =
 
 **Enhancements**
