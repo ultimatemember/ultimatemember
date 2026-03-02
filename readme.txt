@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 6.9
-Stable tag: 2.11.2
+Stable tag: 2.11.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -175,12 +175,14 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Added: `color` type of sanitize settings saved in wp-admin.
 * Added: Checking array type of submission data when `url` type of sanitize is used in wp-admin.
 * Added: Enhance UM form sanitization filter with $form_data param. Added the $form_data parameter to the `um_sanitize_form_submission` filter.
+* Added: Option for special character requirement for passwords. It's situated in "General > Users > Password requires special character" (based on @faisalahammad suggestions)
 
 **Bugfixes**
 
 * Fixed: HTML sanitization logic for textarea-type custom fields with enabled HTML using setting.
 * Fixed: WP editor formatting to prevent incorrect HTML entity conversion when using html-mode in the textarea-type custom fields. Applied and removed this filter dynamically to avoid interfering with other processes.
 * Fixed: Dynamic string translation pattern and improve escaping. Replaced incorrect __('%s') pattern. (@faisalahammad)
+* Fixed: `wp_die()` function triggering on the frontend actions. Added UM notice above the User Profile page. (based on @faisalahammad suggestions)
 
 **Templates Requiring Update**
 
