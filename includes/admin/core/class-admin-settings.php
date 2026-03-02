@@ -2306,6 +2306,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			} else {
 				unset( $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][1] );
 			}
+
+			// Hide un-existed API
+			foreach ( $this->settings_structure['advanced']['sections']['apis']['form_sections'] as $api => $section_data ) {
+				if ( ! UM()->common()->apis()::has_api( $api ) ) {
+					unset( $this->settings_structure['advanced']['sections']['apis']['form_sections'][ $api ] );
+				}
+			}
+			// Hide APIs tab when there aren't any APIs
+			if ( count( $this->settings_structure['advanced']['sections']['apis']['form_sections'] ) < 1 ) {
+				unset( $this->settings_structure['advanced']['sections']['apis'] );
+			}
 		}
 
 		/**
