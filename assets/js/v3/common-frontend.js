@@ -1367,7 +1367,7 @@ UM.frontend = {
 	},
 	autosize: {
 		init: function ( selector, maxLines = 5 ) {
-			jQuery( document.body ).on('keyup', selector, function () {
+			jQuery( document.body ).on('input', selector, function () {
 				let lineHeight = parseInt( jQuery(this).css('line-height'), 10 );
 				jQuery(this).height('auto');
 				if(jQuery(this)[0].scrollHeight < lineHeight * maxLines){
