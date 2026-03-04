@@ -47,6 +47,10 @@ class Google_Maps_Api {
 	 * @return void
 	 */
 	public function add_inline_script() {
+		if ( ! UM()->is_new_ui() && version_compare( self::get_version(), '3.0', '!=' ) ) {
+			return;
+		}
+
 		static $script_added = false;
 		if ( ! $script_added ) {
 			ob_start();
@@ -60,5 +64,15 @@ class Google_Maps_Api {
 			wp_add_inline_script( 'um_common', $script, 'before' );
 		}
 		$script_added = true;
+	}
+
+	/**
+	 * Retrieve the Google Maps API version from the options
+	 *
+	 * @return string The Google Maps API version from the options or the default version '2.0'
+	 */
+	public static function get_version() {
+		$api_version = UM()->options()->get( 'um_google_maps_api_version' );
+		return empty( $api_version ) ? '2.0' : $api_version;
 	}
 }
