@@ -58,4 +58,14 @@ class Google_Maps_Api {
 		}
 		$script_added = true;
 	}
+
+	/**
+	 * Retrieve the Google Maps API version from the options
+	 *
+	 * @return string The Google Maps API version from the options or the default version '2.0'
+	 */
+	public static function get_version() {
+		$api_version = UM()->options()->get( 'um_google_maps_api_version' );
+		return empty( $api_version ) ? '2.0' : $api_version;
+	}
 }
