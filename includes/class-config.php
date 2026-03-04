@@ -751,6 +751,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'um_google_lang_as_default'             => true, // The same option name as we use in User Locations. Legacy support.
 				'um_google_lang'                        => '', // The same option name as we use in User Locations. Legacy support.
 				'um_google_maps_js_api_key'             => '', // The same option name as we use in User Locations. Legacy support.
+				'um_google_maps_api_version'            => '2.0', // Legacy Google Maps API support.
 			);
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );

@@ -1026,6 +1026,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'disable_restriction_pre_queries'      => array(
 						'sanitize' => 'bool',
 					),
+					'um_google_maps_js_api_key'            => array(
+						'sanitize' => 'text',
+					),
+					'um_google_lang_as_default'            => array(
+						'sanitize' => 'bool',
+					),
+					'um_google_lang'                       => array(
+						'sanitize' => 'text',
+					),
+					'um_google_maps_api_version'           => array(
+						'sanitize' => 'text',
+					),
 					'uninstall_on_delete'                  => array(
 						'sanitize' => 'bool',
 					),
@@ -2271,6 +2283,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'size'    => 'small',
 												'options' => UM()->config()->get( 'google_maps_locales' ),
 												'conditional' => array( 'um_google_lang_as_default', '=', 0 ),
+											),
+											array(
+												'id'      => 'um_google_maps_api_version',
+												'type'    => 'select',
+												'label'   => __( 'Google Maps API version', 'ultimate-member' ),
+												'size'    => 'small',
+												'options' => array(
+													'2.0' => __( 'Version 2.0', 'ultimate-member' ),
+													'3.0' => __( 'Version 3.0', 'ultimate-member' ),
+												),
+												'conditional' => array( 'um_google_maps_js_api_key', '!=', '' ),
 											),
 										),
 									),
