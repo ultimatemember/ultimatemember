@@ -44,6 +44,10 @@ class Google_Maps_Api {
 	 * @return void
 	 */
 	public function add_inline_script() {
+		if ( version_compare( self::get_version(), '3.0', '!=' ) ) {
+			return;
+		}
+
 		static $script_added = false;
 		if ( ! $script_added ) {
 			ob_start();
