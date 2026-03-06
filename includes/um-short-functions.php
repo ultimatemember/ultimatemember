@@ -1718,23 +1718,15 @@ function um_is_myprofile() {
 	return false;
 }
 
-
 /**
  * Returns the edit profile link
  *
- * @param int $user_id
+ * @param int|null $user_id
  *
  * @return string
  */
 function um_edit_profile_url( $user_id = null ) {
-	if ( um_is_core_page( 'user' ) ) {
-		$url = UM()->permalinks()->get_current_url();
-	} else {
-		$url = isset( $user_id ) ? um_user_profile_url( $user_id ) : um_user_profile_url();
-	}
-
-	$url = remove_query_arg( 'profiletab', $url );
-	$url = remove_query_arg( 'subnav', $url );
+	$url = um_user_profile_url( $user_id );
 	$url = add_query_arg( 'um_action', 'edit', $url );
 
 	/**
@@ -1755,11 +1747,8 @@ function um_edit_profile_url( $user_id = null ) {
 	 * }
 	 * add_filter( 'um_edit_profile_url', 'my_um_edit_profile_url', 10, 2 );
 	 */
-	$url = apply_filters( 'um_edit_profile_url', $url, $user_id );
-
-	return $url;
+	return apply_filters( 'um_edit_profile_url', $url, $user_id );
 }
-
 
 /**
  * Checks if user can edit his profile
@@ -1802,29 +1791,27 @@ function um_multi_admin_email() {
 	return $emails_array;
 }
 
-
 /**
  * Display a link to profile page
  *
- * @param int|bool $user_id
+ * @param int|null $user_id
  *
  * @return bool|string
  */
-function um_user_profile_url( $user_id = false ) {
+function um_user_profile_url( $user_id = null ) {
 	if ( ! $user_id ) {
 		$user_id = um_user( 'ID' );
 	}
 
 	$url = UM()->user()->get_profile_link( $user_id );
 	if ( empty( $url ) ) {
-		//if empty profile slug - generate it and re-get profile URL
+		// If empty profile slug - generate it and re-get profile URL
 		UM()->user()->generate_profile_slug( $user_id );
 		$url = UM()->user()->get_profile_link( $user_id );
 	}
 
 	return $url;
 }
-
 
 /**
  * Get all UM roles in array
