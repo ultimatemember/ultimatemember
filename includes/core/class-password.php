@@ -41,7 +41,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 * @return string
 		 */
 		public function reset_url( $user_id = null ) {
-			static $reset_key = null;
+			static $reset_keys = array();
 
 			if ( is_null( $user_id ) ) {
 				$user_id = um_user( 'ID' );
@@ -56,15 +56,15 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				return '';
 			}
 
-			if ( empty( $reset_key ) ) {
-				$reset_key = UM()->common()->users()->maybe_generate_password_reset_key( $user_data );
+			if ( empty( $reset_keys[ $user_id ] ) ) {
+				$reset_keys[ $user_id ] = UM()->common()->users()->maybe_generate_password_reset_key( $user_data );
 			}
 
 			// This link looks like WordPress native link e.g. wp-login.php?action=rp&key={hash}&login={user_login}
 			return add_query_arg(
 				array(
 					'act'   => 'reset_password',
-					'hash'  => $reset_key,
+					'hash'  => $reset_keys[ $user_id ],
 					'login' => rawurlencode( $user_data->user_login ),
 				),
 				um_get_core_page( 'password-reset' )
@@ -566,8 +566,9 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your email address', 'ultimate-member' ) );
 				}
 
-				if ( ! UM()->validation()->strong_pass( $args['user_password'] ) ) {
-					UM()->form()->add_error( 'user_password', __( 'Your password must contain at least one lowercase letter, one capital letter and one number', 'ultimate-member' ) );
+				$strong_pass_result = UM()->validation()->strong_pass( $args['user_password'] );
+				if ( true !== $strong_pass_result ) {
+					UM()->form()->add_error( 'user_password', $strong_pass_result );
 				}
 			}
 

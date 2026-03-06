@@ -558,6 +558,28 @@ add_filter( 'um_user_pre_updating_files_array', array( UM()->validation(), 'vali
 // @todo maybe remove that because double validate
 add_filter( 'um_before_save_filter_submitted', array( UM()->validation(), 'validate_fields_values' ), 10, 3 );
 
+function um_profile_before_header_errors( $args ) {
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
+	if ( empty( $_REQUEST['um_action_error'] ) ) {
+		return;
+	}
+
+	$output = '';
+
+	$request_error = sanitize_key( $_REQUEST['um_action_error'] );
+	$message       = UM()->frontend()->actions_listener()->get_error_message( $request_error );
+
+	if ( ! empty( $message ) ) {
+		$output .= '<p class="um-notice err" style="margin-bottom: 8px !important;"><i class="um_action_error_close um-icon-ios-close-empty"></i>' . $message . '</p>';
+	}
+
+	echo wp_kses( $output, UM()->get_allowed_html( 'templates' ) );
+}
+add_action( 'um_profile_before_header', 'um_profile_before_header_errors' );
+
 /**
  * Leave roles for User, which are not in the list of update profile (are default WP or 3rd plugins roles)
  *

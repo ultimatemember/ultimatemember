@@ -113,3 +113,13 @@ wp.hooks.addAction( 'um_after_removing_preview', 'um_common_frontend', function(
 wp.hooks.addAction( 'um_window_resize', 'um_common_frontend', function() {
 	UM.frontend.cropper.destroy();
 });
+
+jQuery(document).ready(function ($) {
+	$(document.body).on('click', '.um_action_error_close', function(e) {
+		e.preventDefault();
+		$(this).parent().fadeOut();
+		let url = new URL(window.location.href);
+		url.searchParams.delete('um_action_error');
+		window.history.replaceState({}, '', url);
+	});
+});

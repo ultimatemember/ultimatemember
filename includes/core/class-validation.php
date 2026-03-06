@@ -169,29 +169,65 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 			return $name;
 		}
 
-
 		/**
 		 * Password strength test
 		 *
-		 * @param string $candidate
+		 * @since 2.0
+		 * @since 2.11.3 Added error message returning instead of just `false`.
 		 *
-		 * @return bool
+		 * @param string $candidate Password candidate to test.
+		 *
+		 * @return bool|string If password is valid then return `true`. Otherwise, error message.
 		 */
-		function strong_pass( $candidate ) {
+		public function strong_pass( $candidate ) {
 			// are used Unicode Regular Expressions
-			$regexps = [
-				'/[\p{Lu}]/u', // any Letter Uppercase symbol
-				'/[\p{Ll}]/u', // any Letter Lowercase symbol
-				'/[\p{N}]/u', // any Number symbol
-			];
-			foreach ( $regexps as $regexp ) {
+			$regexps = array(
+				'/[\p{Lu}]/u' => __( 'Your password must contain at least one capital letter', 'ultimate-member' ), // any Letter Uppercase symbol
+				'/[\p{Ll}]/u' => __( 'Your password must contain at least one lowercase letter', 'ultimate-member' ), // any Letter Lowercase symbol
+				'/[\p{N}]/u'  => __( 'Your password must contain at least one number', 'ultimate-member' ),  // any Number symbol
+			);
+
+			$require_special_char = UM()->options()->get( 'require_strongpass_special_char' );
+
+			// Require at least one special character (non-letter, non-number, non-whitespace).
+			if ( ! empty( $require_special_char ) ) {
+				$regexps['/[^\p{L}\p{N}\s]/u'] = __( 'Your password must contain at least one special character (e.g. !@#$%^&*)', 'ultimate-member' );
+			}
+
+			/**
+			 * Filters Ultimate Member strong password regular expression patterns.
+			 *
+			 * @param {array}  $regexps  Default regular expressions in format pattern => error code.
+			 * @param {string} $password Checking password candidate.
+			 *
+			 * @return {array} Regular expressions in format pattern => error code.
+			 *
+			 * @since 2.11.3
+			 * @hook um_strong_pass_regexps
+			 *
+			 * @example <caption>Change Ultimate Member strong password regular expression patterns.</caption>
+			 * function custom_um_strong_pass_regexps( $regexps ) {
+			 *     foreach ( $regexps as $regexp => &$error_message ) {
+			 *         if ( '/[^\p{L}\p{N}\s]/u' === $regexp ) {
+			 *             $error_message = __( 'Your password must contain at least one lowercase letter, one capital letter, one number, and one special character (e.g. !@#$%^&*)', 'ultimate-member' );
+			 *         } else {
+			 *             $error_message = __( 'Your password must contain at least one lowercase letter, one capital letter, one number', 'ultimate-member' );
+			 *         }
+			 *     }
+			 *     unset( $error_message );
+			 *     return $regexps;
+			 * }
+			 * add_filter( 'um_strong_pass_regexps', 'custom_um_strong_pass_regexps' );
+			 */
+			$regexps = apply_filters( 'um_strong_pass_regexps', $regexps, $candidate );
+			foreach ( $regexps as $regexp => $error_message ) {
 				if ( preg_match_all( $regexp, $candidate, $o ) < 1 ) {
-					return false;
+					return $error_message;
 				}
 			}
+
 			return true;
 		}
-
 
 		/**
 		 * Space, dash, underscore

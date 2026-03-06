@@ -6,14 +6,14 @@
  *
  * Call: function taxonomy_message()
  *
- * @version 2.6.1
+ * @version 2.11.3
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-get_header(); ?>
-
+get_header();
+?>
 <div class="wrap">
 
 	<?php if ( have_posts() ) : ?>
@@ -27,8 +27,10 @@ get_header(); ?>
 
 	<div id="primary" class="content-area">
 		<main id="main" class="site-main" role="main">
-
-			<?php if ( is_tag() ) {
+			<?php
+			$message     = '';
+			$restriction = array();
+			if ( is_tag() ) {
 				$tag_id = get_query_var( 'tag_id' );
 				if ( ! empty( $tag_id ) ) {
 					$restriction = get_term_meta( $tag_id, 'um_content_restriction', true );
@@ -40,27 +42,28 @@ get_header(); ?>
 					$restriction = get_term_meta( $um_category->term_id, 'um_content_restriction', true );
 				}
 			} elseif ( is_tax() ) {
-				$tax_name = get_query_var( 'taxonomy' );
-				$term_name = get_query_var( 'term' );
-				$term = get_term_by( 'slug', $term_name, $tax_name );
-				if ( ! empty( $term->term_id ) ) {
-					$restriction = get_term_meta( $term->term_id, 'um_content_restriction', true );
+				$tax_name     = get_query_var( 'taxonomy' );
+				$term_name    = get_query_var( 'term' );
+				$current_term = get_term_by( 'slug', $term_name, $tax_name );
+				if ( ! empty( $current_term->term_id ) ) {
+					$restriction = get_term_meta( $current_term->term_id, 'um_content_restriction', true );
 				}
 			}
 
-			if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
-				$restricted_global_message = UM()->options()->get( 'restricted_access_message' );
-				$message = stripslashes( $restricted_global_message );
-			} elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
-				$message = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
+			if ( ! array_key_exists( '_um_restrict_by_custom_message', $restriction ) || empty( $restriction['_um_restrict_by_custom_message'] ) ) {
+				$message = UM()->options()->get( 'restricted_access_message' );
+			} elseif ( ! empty( $restriction['_um_restrict_custom_message'] ) ) {
+				$message = $restriction['_um_restrict_custom_message'];
 			}
 
-			// translators: %s: Restricted taxonomy message.
-			printf( __( '%s', 'ultimate-member' ), $message ); ?>
-
+			// Restricted taxonomy message from plugin settings or term meta.
+			// Output with safe HTML escaping to allow basic formatting.
+			echo wp_kses_post( stripslashes( $message ) );
+			?>
 		</main><!-- #main -->
 	</div><!-- #primary -->
 	<?php get_sidebar(); ?>
 </div><!-- .wrap -->
 
-<?php get_footer();
+<?php
+get_footer();

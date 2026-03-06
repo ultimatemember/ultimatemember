@@ -1594,9 +1594,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 * }
 			 * add_filter( 'um_change_field_label', 'my_change_field_label', 10, 3 );
 			 */
-			$label = apply_filters( 'um_change_field_label', $label, $key, $field_data );
-
-			return sprintf( __( '%s', 'ultimate-member' ), $label );
+			return apply_filters( 'um_change_field_label', $label, $key, $field_data );
 		}
 
 		/**
@@ -2188,6 +2186,29 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$cache[ $cache_key ] = apply_filters( 'um_user_profile_restricted_edit_fields', $arr_restricted_fields, $_um_profile_id );
 
 			return $cache[ $cache_key ];
+		}
+
+		/**
+		 * Fixed changing quotes by this function.
+		 *
+		 * $text = htmlspecialchars( $text, ENT_NOQUOTES, get_option( 'blog_charset' ) );
+		 *
+		 * Reason the line equals:
+		 * `<span style="color:#ff0000">2</span>`
+		 * Is displayed as:
+		 * `<span style=”color:#ff0000″>2</span>`
+		 *
+		 * @param string $content
+		 * @param string $default_editor
+		 *
+		 * @return string
+		 */
+		public function flush_wp_editor_formatting( $content, $default_editor ) {
+			if ( 'html' === $default_editor ) {
+				$content = htmlspecialchars_decode( $content, ENT_NOQUOTES );
+			}
+
+			return $content;
 		}
 
 		/**
@@ -2876,6 +2897,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$field_value = empty( $field_value ) ? '' : $field_value;
 
+						add_filter( 'format_for_editor', array( &$this, 'flush_wp_editor_formatting' ), 10, 2 );
+
 						// turn on the output buffer
 						ob_start();
 
@@ -2884,6 +2907,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						// Add the contents of the buffer to the output variable.
 						$output .= ob_get_clean();
+
+						remove_filter( 'format_for_editor', array( &$this, 'flush_wp_editor_formatting' ), 10 );
+
 						$output .= '<br /><span class="description">' . esc_html( $placeholder ) . '</span>';
 					} else {
 						// User 'description' field uses `<textarea>` block everytime.

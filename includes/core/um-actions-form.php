@@ -642,8 +642,9 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 				UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your email address', 'ultimate-member' ));
 			}
 
-			if ( ! UM()->validation()->strong_pass( $submitted_data[ $key ] ) ) {
-				UM()->form()->add_error( $key, __( 'Your password must contain at least one lowercase letter, one capital letter and one number', 'ultimate-member' ) );
+			$strong_pass_result = UM()->validation()->strong_pass( $submitted_data[ $key ] );
+			if ( true !== $strong_pass_result ) {
+				UM()->form()->add_error( $key, $strong_pass_result );
 			}
 		}
 
