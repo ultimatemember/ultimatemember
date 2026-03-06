@@ -1026,6 +1026,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'disable_restriction_pre_queries'      => array(
 						'sanitize' => 'bool',
 					),
+					'um_google_maps_js_api_key'            => array(
+						'sanitize' => 'text',
+					),
+					'um_google_lang_as_default'            => array(
+						'sanitize' => 'bool',
+					),
+					'um_google_lang'                       => array(
+						'sanitize' => 'text',
+					),
+					'um_google_maps_api_version'           => array(
+						'sanitize' => 'text',
+					),
 					'uninstall_on_delete'                  => array(
 						'sanitize' => 'bool',
 					),
@@ -2244,6 +2256,49 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									),
 								),
 							),
+							'apis'               => array(
+								'title'         => __( 'APIs', 'ultimate-member' ),
+								'form_sections' => array(
+									'google-maps' => array( // section key `google-maps` means the API $key used for filters in code.
+										'title'       => __( 'Google Maps', 'ultimate-member' ),
+										'description' => __( 'This section is designed to help you integrate Ultimate Member functionality with Google Maps API.', 'ultimate-member' ),
+										'fields'      => array(
+											array(
+												'id'    => 'um_google_maps_js_api_key',
+												'type'  => 'text',
+												'label' => __( 'Maps JavaScript API Key', 'ultimate-member' ),
+												'size'  => 'medium',
+											),
+											array(
+												'id'    => 'um_google_lang_as_default',
+												'type'  => 'checkbox',
+												'label' => __( 'Google Maps locale', 'ultimate-member' ),
+												'checkbox_label' => __( 'Use current site\'s locale as language for Google Maps', 'ultimate-member' ),
+												'description' => __( 'Disable this option if you are planning to use static locale for Google Maps API.', 'ultimate-member' ),
+											),
+											array(
+												'id'      => 'um_google_lang',
+												'type'    => 'select',
+												'label'   => __( 'Custom Google Maps locale', 'ultimate-member' ),
+												'size'    => 'small',
+												'options' => UM()->config()->get( 'google_maps_locales' ),
+												'conditional' => array( 'um_google_lang_as_default', '=', 0 ),
+											),
+											array(
+												'id'      => 'um_google_maps_api_version',
+												'type'    => 'select',
+												'label'   => __( 'Google Maps API version', 'ultimate-member' ),
+												'size'    => 'small',
+												'options' => array(
+													'2.0' => __( 'Version 2.0', 'ultimate-member' ),
+													'3.0' => __( 'Version 3.0', 'ultimate-member' ),
+												),
+												'conditional' => array( 'um_google_maps_js_api_key', '!=', '' ),
+											),
+										),
+									),
+								),
+							),
 						),
 					),
 					'system_info' => array(
@@ -2273,6 +2328,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				unset( $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][2] );
 			} else {
 				unset( $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][1] );
+			}
+
+			// Hide un-existed API
+			foreach ( $this->settings_structure['advanced']['sections']['apis']['form_sections'] as $api => $section_data ) {
+				if ( ! UM()->common()->apis()::has_api( $api ) ) {
+					unset( $this->settings_structure['advanced']['sections']['apis']['form_sections'][ $api ] );
+				}
+			}
+			// Hide APIs tab when there aren't any APIs
+			if ( count( $this->settings_structure['advanced']['sections']['apis']['form_sections'] ) < 1 ) {
+				unset( $this->settings_structure['advanced']['sections']['apis'] );
 			}
 		}
 

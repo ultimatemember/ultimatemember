@@ -1479,6 +1479,32 @@ class Site_Health {
 			),
 		);
 
+		$um_google_lang_as_default = UM()->options()->get( 'um_google_lang_as_default' );
+
+		$feature = array_merge(
+			$feature,
+			array(
+				'um_google_maps_js_api_key' => array(
+					'label' => __( 'Google Maps Javascript API Key', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'um_google_maps_js_api_key' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um_google_lang_as_default' => array(
+					'label' => __( 'Use site\'s locale as language for Google Maps', 'ultimate-member' ),
+					'value' => $um_google_lang_as_default ? $labels['yes'] : $labels['no'],
+				),
+			)
+		);
+
+		if ( empty( $um_google_lang_as_default ) ) {
+			$options = UM()->config()->get( 'google_maps_locales' );
+			$lang    = UM()->options()->get( 'um_google_lang' );
+
+			$feature['um_google_lang'] = array(
+				'label' => __( 'Google Maps language', 'ultimate-member' ),
+				'value' => array_key_exists( $lang, $options ) ? $options[ $lang ] : __( 'Invalid', 'ultimate-member' ),
+			);
+		}
+
 		// Secure settings
 		$secure_ban_admins_accounts = UM()->options()->get( 'secure_ban_admins_accounts' );
 

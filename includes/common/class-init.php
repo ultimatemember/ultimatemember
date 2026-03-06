@@ -47,6 +47,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		}
 
 		/**
+		 * @since 2.11.3
+		 *
+		 * @return APIs
+		 */
+		public function apis() {
+			if ( empty( UM()->classes['um\common\apis'] ) ) {
+				UM()->classes['um\common\apis'] = new APIs();
+			}
+			return UM()->classes['um\common\apis'];
+		}
+
+		/**
 		 * @since 2.6.8
 		 *
 		 * @return CPT
