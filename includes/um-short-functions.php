@@ -207,6 +207,24 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 
 	$keys_blacklist = array( 'password_reset_link' );
 	$keys_blacklist = array_merge( $keys_blacklist, UM()->builtin()->blacklist_fields );
+	/**
+	 * Filters Ultimate Member usermeta keys to avoid displaying sensitive information via {usermeta:{meta_key}} placeholder.
+	 *
+	 * @param {array} $keys_blacklist Usermeta fields.
+	 *
+	 * @return {array} Usermeta fields.
+	 *
+	 * @since 2.11.3
+	 * @hook um_convert_tags_blacklist_fields
+	 *
+	 * @example <caption>Set `my_custom_key` as blacklisted hide for `um_convert_tags()` function.</caption>
+	 * function custom_convert_tags_blacklist_fields( $keys_blacklist ) {
+	 *     $keys_blacklist[] = 'my_custom_key';
+	 *     return $keys_blacklist;
+	 * }
+	 * add_filter( 'um_convert_tags_blacklist_fields', 'custom_convert_tags_blacklist_fields' );
+	 */
+	$keys_blacklist = apply_filters( 'um_convert_tags_blacklist_fields', $keys_blacklist );
 
 	// Support for all usermeta keys
 	if ( ! empty( $matches[1] ) && is_array( $matches[1] ) ) {
