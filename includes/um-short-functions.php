@@ -205,10 +205,18 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 	$regex = '~\{(usermeta:[^}]*)\}~';
 	preg_match_all( $regex, $content, $matches );
 
+	$keys_blacklist = array( 'password_reset_link' );
+	$keys_blacklist = array_merge( $keys_blacklist, UM()->builtin()->blacklist_fields );
+
 	// Support for all usermeta keys
 	if ( ! empty( $matches[1] ) && is_array( $matches[1] ) ) {
 		foreach ( $matches[1] as $match ) {
-			$key   = str_replace( 'usermeta:', '', $match );
+			$key = str_replace( 'usermeta:', '', $match );
+			if ( in_array( $key, $keys_blacklist, true ) || UM()->user()->is_metakey_banned( $key ) ) {
+				$content = str_replace( '{' . $match . '}', '', $content );
+				continue;
+			}
+
 			$value = um_user( $key );
 			if ( is_array( $value ) ) {
 				$value = implode( ', ', $value );

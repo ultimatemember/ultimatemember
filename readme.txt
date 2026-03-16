@@ -181,6 +181,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Bugfixes**
 
+* Fixed: Security issue, CVE ID: CVE-2026-4248. Added blacklist filter for convert_tag replace placeholders function.
 * Fixed: HTML sanitization logic for textarea-type custom fields with enabled HTML using setting.
 * Fixed: WP editor formatting to prevent incorrect HTML entity conversion when using html-mode in the textarea-type custom fields. Applied and removed this filter dynamically to avoid interfering with other processes.
 * Fixed: Dynamic string translation pattern and improve escaping. Replaced incorrect __('%s') pattern. (@faisalahammad)
@@ -260,6 +261,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.11.3 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.11.2 =
 This version fixes a security related bug. Upgrade immediately.
