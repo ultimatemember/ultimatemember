@@ -2290,8 +2290,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'label'   => __( 'Google Maps API version', 'ultimate-member' ),
 												'size'    => 'small',
 												'options' => array(
-													'2.0' => __( 'Version 2.0', 'ultimate-member' ),
-													'3.0' => __( 'Version 3.0', 'ultimate-member' ),
+													'3.5'  => __( 'Version 3.5x (legacy)', 'ultimate-member' ),
+													'3.64' => __( 'Version 3.64', 'ultimate-member' ),
 												),
 												'conditional' => array( 'um_google_maps_js_api_key', '!=', '' ),
 											),

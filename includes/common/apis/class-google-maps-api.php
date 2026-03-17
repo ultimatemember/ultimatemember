@@ -44,7 +44,7 @@ class Google_Maps_Api {
 	 * @return void
 	 */
 	public function add_inline_script() {
-		if ( version_compare( self::get_version(), '3.0', '!=' ) ) {
+		if ( version_compare( self::get_version(), '3.5', '<=' ) ) {
 			return;
 		}
 
@@ -66,10 +66,10 @@ class Google_Maps_Api {
 	/**
 	 * Retrieve the Google Maps API version from the options
 	 *
-	 * @return string The Google Maps API version from the options or the default version '2.0'
+	 * @return string The Google Maps API version from the options or the default version '3.5'
 	 */
 	public static function get_version() {
 		$api_version = UM()->options()->get( 'um_google_maps_api_version' );
-		return empty( $api_version ) ? '2.0' : $api_version;
+		return empty( $api_version ) ? '3.5' : $api_version;
 	}
 }
