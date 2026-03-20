@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-03-20T11:38:57+00:00\n"
+"POT-Creation-Date: 2026-03-20T14:03:09+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -6849,7 +6849,7 @@ msgstr ""
 msgid "Cannot be empty"
 msgstr ""
 
-#: includes/ajax/class-directory.php:1547
+#: includes/ajax/class-directory.php:1543
 #: includes/core/class-form.php:122
 #: includes/core/class-member-directory-meta.php:468
 #: includes/core/class-member-directory.php:2249
@@ -6862,8 +6862,8 @@ msgstr ""
 msgid "Too many requests"
 msgstr ""
 
-#: includes/ajax/class-directory.php:1553
-#: includes/ajax/class-directory.php:1559
+#: includes/ajax/class-directory.php:1549
+#: includes/ajax/class-directory.php:1555
 #: includes/core/class-member-directory-meta.php:476
 #: includes/core/class-member-directory-meta.php:481
 #: includes/core/class-member-directory.php:2255
@@ -6871,14 +6871,14 @@ msgstr ""
 msgid "Wrong member directory data"
 msgstr ""
 
-#: includes/ajax/class-directory.php:1563
+#: includes/ajax/class-directory.php:1559
 #: includes/core/class-member-directory-meta.php:486
 #: includes/core/class-member-directory.php:2265
 msgid "You cannot see this member directory"
 msgstr ""
 
 #. translators: %d is the count of users
-#: includes/ajax/class-directory.php:1750
+#: includes/ajax/class-directory.php:1746
 #, php-format
 msgid "%d Member"
 msgid_plural "%d Members"
@@ -8460,30 +8460,30 @@ msgstr ""
 msgid "Undefined"
 msgstr ""
 
-#: includes/common/class-directory.php:553
+#: includes/common/class-directory.php:699
 msgid "<strong>Age:</strong>&nbsp;{{{value}}} years old"
 msgstr ""
 
-#: includes/common/class-directory.php:554
+#: includes/common/class-directory.php:700
 msgid "<strong>Age:</strong>&nbsp;{{{value_from}}} - {{{value_to}}} years old"
 msgstr ""
 
-#: includes/common/class-directory.php:565
-#: includes/common/class-directory.php:566
+#: includes/common/class-directory.php:711
+#: includes/common/class-directory.php:712
 #: includes/core/class-member-directory.php:505
 #: includes/core/class-member-directory.php:506
 msgid " stars"
 msgstr ""
 
-#: includes/common/class-directory.php:1464
-#: includes/common/class-directory.php:1535
-#: includes/common/class-directory.php:1588
+#: includes/common/class-directory.php:1418
+#: includes/common/class-directory.php:1490
+#: includes/common/class-directory.php:1543
 msgid "From"
 msgstr ""
 
-#: includes/common/class-directory.php:1469
-#: includes/common/class-directory.php:1539
-#: includes/common/class-directory.php:1592
+#: includes/common/class-directory.php:1423
+#: includes/common/class-directory.php:1494
+#: includes/common/class-directory.php:1547
 msgid "To"
 msgstr ""
 
