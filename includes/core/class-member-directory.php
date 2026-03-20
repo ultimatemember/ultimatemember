@@ -760,7 +760,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @param array $directory_data
 		 */
 		function show_only_with_cover( $directory_data ) {
-			if ( ! UM()->is_new_ui() && ! empty( $directory_data['has_cover_photo'] ) ) { // @todo maybe remove if cover photos backs to user profile
+			if ( ! empty( $directory_data['has_cover_photo'] ) ) {
 				$this->query_args['meta_query'] = array_merge(
 					$this->query_args['meta_query'],
 					array(

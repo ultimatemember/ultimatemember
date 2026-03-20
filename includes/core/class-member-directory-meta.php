@@ -536,7 +536,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			}
 
 			$cover_photo_where = '';
-			if ( ! UM()->is_new_ui() && ! empty( $directory_data['has_cover_photo'] ) ) { // @todo maybe remove if cover photos backs to user profile
+			if ( ! empty( $directory_data['has_cover_photo'] ) ) {
 				$cover_photo_where = " AND umm_general.um_value LIKE '%s:11:\"cover_photo\";b:1;%'";
 			}
 

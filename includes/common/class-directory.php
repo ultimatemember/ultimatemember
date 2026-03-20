@@ -509,73 +509,6 @@ class Directory extends Directory_Config {
 		return $data_array;
 	}
 
-	/**
-	 * @param string $filter
-	 * @param array $directory_data
-	 *
-	 * @return mixed
-	 */
-	protected function slider_filters_range( $filter, $directory_data ) {
-		$range = false;
-
-		switch ( $filter ) {
-			default:
-				$meta = $this->pre_filter_query( $filter, $directory_data );
-				if ( isset( $meta['min_meta'], $meta['max_meta'], $meta['amount'] ) && $meta['amount'] > 1 ) {
-					$range = array( (float) $meta['min_meta'], (float) $meta['max_meta'] );
-				}
-
-				$range = apply_filters( 'um_member_directory_filter_slider_common', $range, $directory_data, $filter );
-				$range = apply_filters( "um_member_directory_filter_{$filter}_slider", $range, $directory_data );
-				break;
-
-			case 'birth_date':
-				$meta = $this->pre_filter_query( $filter, $directory_data );
-				if ( isset( $meta['min_meta'], $meta['max_meta'], $meta['amount'] ) && $meta['amount'] > 1 ) {
-					$range = array( $this->borndate( strtotime( $meta['max_meta'] ) ), $this->borndate( strtotime( $meta['min_meta'] ) ) );
-				}
-				break;
-
-		}
-
-		return $range;
-	}
-
-	/**
-	 * @param string $filter
-	 * @param array  $attrs
-	 *
-	 * @return string[]
-	 */
-	protected function slider_range_placeholder( $filter, $attrs ) {
-		if ( 'birth_date' === $filter ) {
-			return array(
-				__( '<strong>Age:</strong>&nbsp;{{{value}}} years old', 'ultimate-member' ),
-				__( '<strong>Age:</strong>&nbsp;{{{value_from}}} - {{{value_to}}} years old', 'ultimate-member' ),
-			);
-		}
-
-		$label        = ! empty( $attrs['label'] ) ? $attrs['label'] : $filter;
-		$label        = ucwords( str_replace( array( 'um_', '_' ), array( '', ' ' ), $label ) );
-		$placeholders = apply_filters( 'um_member_directory_filter_slider_range_placeholder', false, $filter );
-
-		if ( false === $placeholders ) {
-			if ( 'rating' === $attrs['type'] ) {
-				return array(
-					"<strong>$label:</strong>&nbsp;{{{value}}}" . __( ' stars', 'ultimate-member' ),
-					"<strong>$label:</strong>&nbsp;{{{value_from}}} - {{{value_to}}}" . __( ' stars', 'ultimate-member' ),
-				);
-			}
-
-			$placeholders = array(
-				"<strong>$label:</strong>&nbsp;{{{value}}}",
-				"<strong>$label:</strong>&nbsp;{{{value_from}}} - {{{value_to}}}",
-			);
-		}
-
-		return $placeholders;
-	}
-
 	private function pre_filter_query( $filter, $directory_data, $admin = false ) {
 		global $wpdb;
 
@@ -662,7 +595,7 @@ class Directory extends Directory_Config {
 				),
 				ARRAY_A
 			);
-		} elseif ( isset( $this->filter_types[ $filter ] ) && 'slider' === $this->filter_types[ $filter ] ) {
+		} elseif ( array_key_exists( $filter, $this->filter_types ) && 'slider' === $this->filter_types[ $filter ] ) {
 			$join_clause  = '';
 			$where_clause = '';
 			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
@@ -724,12 +657,77 @@ class Directory extends Directory_Config {
 	}
 
 	/**
+	 * @param string $filter
+	 * @param array $directory_data
+	 *
+	 * @return mixed
+	 */
+	protected function slider_filters_range( $filter, $directory_data ) {
+		$directory_id = $directory_data['form_id'];
+
+		// Cannot disable pre query for filters where we need to get the min and max amount based on DB values.
+		// So slider filter can have disabled pre query for filters only for the "Age" filter.
+		$disable_filters_pre_query = (bool) get_post_meta( $directory_id, '_um_disable_filters_pre_query', true );
+		if ( true === $disable_filters_pre_query && 'birth_date' === $filter ) {
+			// Set default age range in the case when pre query for filters is disabled.
+			return array( 0, 150 );
+		}
+
+		$range = false;
+		$meta  = $this->pre_filter_query( $filter, $directory_data );
+		if ( isset( $meta['min_meta'], $meta['max_meta'], $meta['amount'] ) && $meta['amount'] > 1 ) {
+			if ( 'birth_date' === $filter ) {
+				$range = array( $this->borndate( strtotime( $meta['max_meta'] ) ), $this->borndate( strtotime( $meta['min_meta'] ) ) );
+			} else {
+				$range = array( (float) $meta['min_meta'], (float) $meta['max_meta'] );
+			}
+		}
+
+		$range = apply_filters( 'um_member_directory_filter_slider_common', $range, $directory_data, $filter );
+		return apply_filters( "um_member_directory_filter_{$filter}_slider", $range, $directory_data );
+	}
+
+	/**
+	 * @param string $filter
+	 * @param array  $attrs
+	 *
+	 * @return string[]
+	 */
+	protected function slider_range_placeholder( $filter, $attrs ) {
+		if ( 'birth_date' === $filter ) {
+			return array(
+				__( '<strong>Age:</strong>&nbsp;{{{value}}} years old', 'ultimate-member' ),
+				__( '<strong>Age:</strong>&nbsp;{{{value_from}}} - {{{value_to}}} years old', 'ultimate-member' ),
+			);
+		}
+
+		$label        = ! empty( $attrs['label'] ) ? $attrs['label'] : $filter;
+		$label        = ucwords( str_replace( array( 'um_', '_' ), array( '', ' ' ), $label ) );
+		$placeholders = apply_filters( 'um_member_directory_filter_slider_range_placeholder', false, $filter );
+
+		if ( false === $placeholders ) {
+			if ( 'rating' === $attrs['type'] ) {
+				return array(
+					"<strong>$label:</strong>&nbsp;{{{value}}}" . __( ' stars', 'ultimate-member' ),
+					"<strong>$label:</strong>&nbsp;{{{value_from}}} - {{{value_to}}}" . __( ' stars', 'ultimate-member' ),
+				);
+			}
+
+			$placeholders = array(
+				"<strong>$label:</strong>&nbsp;{{{value}}}",
+				"<strong>$label:</strong>&nbsp;{{{value_from}}} - {{{value_to}}}",
+			);
+		}
+
+		return $placeholders;
+	}
+
+	/**
 	 * Handle members can view restrictions.
 	 */
 	protected function restriction_options() {
 //		$this->hide_not_approved();
 		$this->hide_by_role();
-//		$this->hide_by_account_settings();
 
 		do_action( 'um_member_directory_restrictions_handle_extend' );
 	}
@@ -776,30 +774,6 @@ class Directory extends Directory_Config {
 			$this->query_args['role__in'] = $roles;
 		}
 	}
-
-	/**
-	 *
-	 */
-//	private function hide_by_account_settings() {
-//		if ( ! UM()->options()->get( 'account_hide_in_directory' ) ) {
-//			return;
-//		}
-//
-//		if ( UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
-//			return;
-//		}
-//
-//		$this->query_args['meta_query'] = array_merge(
-//			$this->query_args['meta_query'],
-//			array(
-//				array(
-//					'key'     => 'um_member_directory_data',
-//					'value'   => 's:15:"hide_in_members";b:0;',
-//					'compare' => 'LIKE',
-//				),
-//			)
-//		);
-//	}
 
 	/**
 	 * Handle "General Options" metabox settings
@@ -864,10 +838,6 @@ class Directory extends Directory_Config {
 	 * @param array $directory_data
 	 */
 	private function show_only_with_cover( $directory_data ) {
-		if ( UM()->is_new_ui() ) { // @todo maybe remove if cover photos backs to user profile
-			return;
-		}
-
 		if ( empty( $directory_data['has_cover_photo'] ) ) {
 			return;
 		}
@@ -957,39 +927,23 @@ class Directory extends Directory_Config {
 
 		$disable_filters_pre_query = (bool) get_post_meta( $directory_id, '_um_disable_filters_pre_query', true );
 		if ( true === $disable_filters_pre_query ) {
-			return array( gmdate( 'Y-m-d' ), gmdate( 'Y-m-d' ) );
+			$min_date = apply_filters( 'um_member_directory_datepicker_filter_disabled_filters_pre_query_min_date', gmdate( 'Y-m-d', strtotime( '1900-01-01 00:00:00' ) ), $filter, $directory_data );
+			return array( $min_date, gmdate( 'Y-m-d' ) ); // TODO check the format for min/max range in the new UI. gmdate for now.
 		}
 
 		$range = false;
+		$meta  = $this->pre_filter_query( $filter, $directory_data );
 
-		switch ( $filter ) {
-			default:
-				$meta = $this->pre_filter_query( $filter, $directory_data );
-				if ( ! empty( $meta ) && count( $meta ) > 1 ) {
-					$range = array( min( $meta ), max( $meta ) );
-				}
-
-				$range = apply_filters( "um_member_directory_filter_{$filter}_datepicker", $range );
-				break;
-
-			case 'last_login':
-				$meta = $this->pre_filter_query( $filter, $directory_data );
-				if ( ! empty( $meta['total'] ) && absint( $meta['total'] ) > 1 && array_key_exists( 'min', $meta ) && array_key_exists( 'max', $meta ) ) {
-					$range = array( strtotime( $meta['min'] ), strtotime( $meta['max'] ) );
-				}
-				break;
-
-			case 'user_registered':
-				$meta = $this->pre_filter_query( $filter, $directory_data );
-
-				if ( ! empty( $meta ) && count( $meta ) > 1 ) {
-					$range = array( min( $meta ), max( $meta ) );
-				}
-				break;
-
+		if ( 'last_login' === $filter ) {
+			if ( array_key_exists( 'min', $meta ) && array_key_exists( 'max', $meta ) && ! empty( $meta['total'] ) && absint( $meta['total'] ) > 1 ) {
+				// $range = array( strtotime( $meta['min'] ), strtotime( $meta['max'] ) );
+				$range = array( $meta['min'], $meta['max'] ); // TODO check the format for min/max range in the new UI. gmdate for now.
+			}
+		} elseif ( ! empty( $meta ) && count( $meta ) > 1 ) {
+			$range = array( min( $meta ), max( $meta ) ); // TODO check the format for min/max range in the new UI. gmdate for now.
 		}
 
-		return $range;
+		return apply_filters( "um_member_directory_filter_{$filter}_datepicker", $range );
 	}
 
 	/**
@@ -1478,6 +1432,7 @@ class Directory extends Directory_Config {
 		$unique_hash = $this->get_directory_hash( $directory_data['form_id'] );
 
 		// Ignore '_um_disable_filters_pre_query' meta here because range can be different for different fields and need to know the real range or hide this filter.
+		// Only the "Age" filter can display different default range when filter pre-queries are disabled.
 		$range = $this->slider_filters_range( $filter, $directory_data );
 		if ( ! $range ) {
 			return '';
