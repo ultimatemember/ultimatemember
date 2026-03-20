@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-03-04T18:51:03+00:00\n"
+"POT-Creation-Date: 2026-03-20T11:38:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -6852,7 +6852,7 @@ msgstr ""
 #: includes/ajax/class-directory.php:1547
 #: includes/core/class-form.php:122
 #: includes/core/class-member-directory-meta.php:468
-#: includes/core/class-member-directory.php:2250
+#: includes/core/class-member-directory.php:2249
 #: includes/legacy/class-files.php:356
 #: includes/legacy/class-files.php:409
 #: includes/legacy/class-files.php:546
@@ -6866,14 +6866,14 @@ msgstr ""
 #: includes/ajax/class-directory.php:1559
 #: includes/core/class-member-directory-meta.php:476
 #: includes/core/class-member-directory-meta.php:481
-#: includes/core/class-member-directory.php:2256
-#: includes/core/class-member-directory.php:2262
+#: includes/core/class-member-directory.php:2255
+#: includes/core/class-member-directory.php:2261
 msgid "Wrong member directory data"
 msgstr ""
 
 #: includes/ajax/class-directory.php:1563
 #: includes/core/class-member-directory-meta.php:486
-#: includes/core/class-member-directory.php:2266
+#: includes/core/class-member-directory.php:2265
 msgid "You cannot see this member directory"
 msgstr ""
 
@@ -7940,7 +7940,7 @@ msgid "Register"
 msgstr ""
 
 #: includes/class-config.php:279
-#: includes/core/class-member-directory.php:1960
+#: includes/core/class-member-directory.php:1959
 #: includes/core/um-actions-profile.php:1367
 #: includes/core/um-actions-user.php:19
 #: includes/frontend/class-users.php:119
@@ -8456,34 +8456,34 @@ msgstr ""
 
 #: includes/common/class-directory.php:416
 #: includes/common/class-users.php:472
-#: includes/core/class-member-directory.php:2000
+#: includes/core/class-member-directory.php:1999
 msgid "Undefined"
 msgstr ""
 
-#: includes/common/class-directory.php:576
+#: includes/common/class-directory.php:553
 msgid "<strong>Age:</strong>&nbsp;{{{value}}} years old"
 msgstr ""
 
-#: includes/common/class-directory.php:577
+#: includes/common/class-directory.php:554
 msgid "<strong>Age:</strong>&nbsp;{{{value_from}}} - {{{value_to}}} years old"
 msgstr ""
 
-#: includes/common/class-directory.php:588
-#: includes/common/class-directory.php:589
+#: includes/common/class-directory.php:565
+#: includes/common/class-directory.php:566
+#: includes/core/class-member-directory.php:505
 #: includes/core/class-member-directory.php:506
-#: includes/core/class-member-directory.php:507
 msgid " stars"
 msgstr ""
 
-#: includes/common/class-directory.php:1173
-#: includes/common/class-directory.php:1244
-#: includes/common/class-directory.php:1297
+#: includes/common/class-directory.php:1464
+#: includes/common/class-directory.php:1535
+#: includes/common/class-directory.php:1588
 msgid "From"
 msgstr ""
 
-#: includes/common/class-directory.php:1178
-#: includes/common/class-directory.php:1248
-#: includes/common/class-directory.php:1301
+#: includes/common/class-directory.php:1469
+#: includes/common/class-directory.php:1539
+#: includes/common/class-directory.php:1592
 msgid "To"
 msgstr ""
 
@@ -10769,16 +10769,16 @@ msgstr ""
 msgid "%s To"
 msgstr ""
 
-#: includes/core/class-member-directory.php:517
+#: includes/core/class-member-directory.php:516
 msgid "<strong>Age:</strong>&nbsp;{value} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:518
+#: includes/core/class-member-directory.php:517
 msgid "<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1921
-#: includes/core/class-member-directory.php:1949
+#: includes/core/class-member-directory.php:1920
+#: includes/core/class-member-directory.php:1948
 #: includes/core/um-actions-profile.php:1334
 #: includes/core/um-actions-profile.php:1365
 #: includes/frontend/class-users.php:115
@@ -10787,7 +10787,7 @@ msgstr ""
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1955
+#: includes/core/class-member-directory.php:1954
 #: includes/core/um-actions-profile.php:1366
 #: includes/frontend/class-users.php:116
 #: includes/frontend/class-users.php:128
