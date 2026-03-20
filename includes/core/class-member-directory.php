@@ -422,8 +422,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					break;
 			}
 
-			$filter = ob_get_clean();
-			return $filter;
+			return ob_get_clean();
 		}
 
 		/**

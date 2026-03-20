@@ -516,25 +516,11 @@ class Directory extends Directory_Config {
 	 * @return mixed
 	 */
 	protected function slider_filters_range( $filter, $directory_data ) {
-		global $wpdb;
-
 		$range = false;
 
 		switch ( $filter ) {
 			default:
-				$meta = $wpdb->get_row(
-					$wpdb->prepare(
-						"SELECT MIN( CONVERT( meta_value, DECIMAL ) ) as min_meta,
-						MAX( CONVERT( meta_value, DECIMAL ) ) as max_meta,
-						COUNT( DISTINCT meta_value ) as amount
-						FROM {$wpdb->usermeta}
-						WHERE meta_key = %s AND
-							  meta_value != ''",
-						$filter
-					),
-					ARRAY_A
-				);
-
+				$meta = $this->pre_filter_query( $filter, $directory_data );
 				if ( isset( $meta['min_meta'], $meta['max_meta'], $meta['amount'] ) && $meta['amount'] > 1 ) {
 					$range = array( (float) $meta['min_meta'], (float) $meta['max_meta'] );
 				}
@@ -544,16 +530,7 @@ class Directory extends Directory_Config {
 				break;
 
 			case 'birth_date':
-				$meta = $wpdb->get_row(
-					"SELECT MIN( meta_value ) as min_meta,
-					MAX( meta_value ) as max_meta,
-					COUNT( DISTINCT meta_value ) as amount
-					FROM {$wpdb->usermeta}
-					WHERE meta_key = 'birth_date' AND
-						  meta_value != ''",
-					ARRAY_A
-				);
-
+				$meta = $this->pre_filter_query( $filter, $directory_data );
 				if ( isset( $meta['min_meta'], $meta['max_meta'], $meta['amount'] ) && $meta['amount'] > 1 ) {
 					$range = array( $this->borndate( strtotime( $meta['max_meta'] ) ), $this->borndate( strtotime( $meta['min_meta'] ) ) );
 				}
@@ -599,6 +576,376 @@ class Directory extends Directory_Config {
 		return $placeholders;
 	}
 
+	private function pre_filter_query( $filter, $directory_data, $admin = false ) {
+		global $wpdb;
+
+		if ( 'role' === $filter ) {
+			if ( $admin ) {
+				$pre_query_results = array_reverse( get_editable_roles() );
+			} else {
+				$pre_query_results = UM()->roles()->get_roles();
+			}
+		} elseif ( 'last_login' === $filter ) {
+			$join_clause  = '';
+			$where_clause = '';
+			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+				$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
+				$where_clause .= " AND um2.meta_value LIKE '%" . 's:15:"hide_in_members";b:0;%';
+			}
+
+			if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+				if ( empty( $join_clause ) ) {
+					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
+				}
+				$where_clause .= " AND um2.meta_value LIKE '%" . 's:14:"account_status";s:8:"approved";%';
+			}
+
+			$pre_query_results = $wpdb->get_row(
+				"SELECT DISTINCT COUNT(*) AS total,
+						MIN(um.meta_value) AS min,
+						MAX(um.meta_value) AS max
+				FROM {$wpdb->usermeta} um
+				{$join_clause}
+				WHERE um.meta_key = '_um_last_login' AND
+					  um.meta_value != ''
+					  {$where_clause}",
+				ARRAY_A
+			);
+		} elseif ( 'user_registered' === $filter ) {
+			$join_clause  = '';
+			$where_clause = '';
+			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+				$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'um_member_directory_data'";
+				$where_clause .= " AND um.meta_value LIKE '%" . 's:15:"hide_in_members";b:0;%';
+			}
+
+			if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+				if ( empty( $join_clause ) ) {
+					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'um_member_directory_data'";
+				}
+				$where_clause .= " AND um.meta_value LIKE '%" . 's:14:"account_status";s:8:"approved";%';
+			}
+
+			$pre_query_results = $wpdb->get_col(
+				"SELECT DISTINCT user_registered
+				FROM {$wpdb->users} u
+				{$join_clause}
+				WHERE 1=1 {$where_clause}
+				ORDER BY user_registered DESC"
+			);
+		} elseif ( 'birth_date' === $filter ) {
+			$join_clause  = '';
+			$where_clause = '';
+			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+				$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
+				$where_clause .= " AND um2.meta_value LIKE '%" . 's:15:"hide_in_members";b:0;%';
+			}
+
+			if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+				if ( empty( $join_clause ) ) {
+					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
+				}
+				$where_clause .= " AND um2.meta_value LIKE '%" . 's:14:"account_status";s:8:"approved";%';
+			}
+
+			$pre_query_results = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT MIN( um.meta_value ) as min_meta,
+					MAX( um.meta_value ) as max_meta,
+					COUNT( DISTINCT um.meta_value ) as amount
+					FROM {$wpdb->usermeta} um
+					{$join_clause}
+					WHERE um.meta_key = %s AND
+						  um.meta_value != ''
+						  {$where_clause}",
+					$filter
+				),
+				ARRAY_A
+			);
+		} elseif ( isset( $this->filter_types[ $filter ] ) && 'slider' === $this->filter_types[ $filter ] ) {
+			$join_clause  = '';
+			$where_clause = '';
+			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+				$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
+				$where_clause .= " AND um2.meta_value LIKE '%" . 's:15:"hide_in_members";b:0;%';
+			}
+
+			if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+				if ( empty( $join_clause ) ) {
+					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
+				}
+				$where_clause .= " AND um2.meta_value LIKE '%" . 's:14:"account_status";s:8:"approved";%';
+			}
+
+			$pre_query_results = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT MIN( CONVERT( um.meta_value, DECIMAL ) ) as min_meta,
+					MAX( CONVERT( um.meta_value, DECIMAL ) ) as max_meta,
+					COUNT( DISTINCT um.meta_value ) as amount
+					FROM {$wpdb->usermeta} um
+					{$join_clause}
+					WHERE um.meta_key = %s AND
+						  um.meta_value != ''
+						  {$where_clause}",
+					$filter
+				),
+				ARRAY_A
+			);
+		} else {
+			$join_clause  = '';
+			$where_clause = '';
+			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+				$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
+				$where_clause .= " AND um2.meta_value LIKE '%" . 's:15:"hide_in_members";b:0;%';
+			}
+
+			if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+				if ( empty( $join_clause ) ) {
+					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
+				}
+				$where_clause .= " AND um2.meta_value LIKE '%" . 's:14:"account_status";s:8:"approved";%';
+			}
+
+			$pre_query_results = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT DISTINCT um.meta_value
+					FROM {$wpdb->usermeta} um
+					{$join_clause}
+					WHERE um.meta_key = %s AND
+						  um.meta_value != ''
+						  {$where_clause}
+					ORDER BY um.meta_value DESC",
+					$filter
+				)
+			);
+		}
+
+		return $pre_query_results;
+	}
+
+	/**
+	 * Handle members can view restrictions.
+	 */
+	protected function restriction_options() {
+//		$this->hide_not_approved();
+		$this->hide_by_role();
+//		$this->hide_by_account_settings();
+
+		do_action( 'um_member_directory_restrictions_handle_extend' );
+	}
+
+	/**
+	 *
+	 */
+//	private function hide_not_approved() {
+//		if ( UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+//			return;
+//		}
+//
+//		$this->query_args['meta_query'] = array_merge(
+//			$this->query_args['meta_query'],
+//			array(
+//				array(
+//					'key'     => 'um_member_directory_data',
+//					'value'   => 's:14:"account_status";s:8:"approved";',
+//					'compare' => 'LIKE',
+//				),
+//			)
+//		);
+//	}
+
+	/**
+	 *
+	 */
+	private function hide_by_role() {
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
+		$roles = um_user( 'can_view_roles' );
+		$roles = maybe_unserialize( $roles );
+
+		if ( empty( $roles ) && UM()->roles()->um_user_can( 'can_view_all' ) ) {
+			return;
+		}
+
+		if ( ! empty( $this->query_args['role__in'] ) ) {
+			$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
+			$this->query_args['role__in'] = array_intersect( $this->query_args['role__in'], $roles );
+		} else {
+			$this->query_args['role__in'] = $roles;
+		}
+	}
+
+	/**
+	 *
+	 */
+//	private function hide_by_account_settings() {
+//		if ( ! UM()->options()->get( 'account_hide_in_directory' ) ) {
+//			return;
+//		}
+//
+//		if ( UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+//			return;
+//		}
+//
+//		$this->query_args['meta_query'] = array_merge(
+//			$this->query_args['meta_query'],
+//			array(
+//				array(
+//					'key'     => 'um_member_directory_data',
+//					'value'   => 's:15:"hide_in_members";b:0;',
+//					'compare' => 'LIKE',
+//				),
+//			)
+//		);
+//	}
+
+	/**
+	 * Handle "General Options" metabox settings
+	 *
+	 * @param array $directory_data
+	 */
+	private function general_options( $directory_data ) {
+		$this->show_selected_roles( $directory_data );
+		$this->show_only_with_avatar( $directory_data );
+		$this->show_only_with_cover( $directory_data );
+		$this->show_only_these_users( $directory_data );
+		$this->exclude_these_users( $directory_data );
+
+		do_action( 'um_member_directory_general_options_handle_extend', $directory_data );
+	}
+
+	/**
+	 * Handle "User Roles to Display" option
+	 *
+	 * @param array $directory_data
+	 */
+	private function show_selected_roles( $directory_data ) {
+		// add roles to appear in directory
+		if ( empty( $directory_data['roles'] ) ) {
+			return;
+		}
+
+		// Since WP4.4 use 'role__in' argument
+		if ( ! empty( $this->query_args['role__in'] ) ) {
+			$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
+			$this->query_args['role__in'] = array_intersect( $this->query_args['role__in'], maybe_unserialize( $directory_data['roles'] ) );
+		} else {
+			$this->query_args['role__in'] = maybe_unserialize( $directory_data['roles'] );
+		}
+	}
+
+	/**
+	 * Handle "Only show members who have uploaded a profile photo" option
+	 *
+	 * @param array $directory_data
+	 */
+	private function show_only_with_avatar( $directory_data ) {
+		if ( empty( $directory_data['has_profile_photo'] ) ) {
+			return;
+		}
+
+		$this->query_args['meta_query'] = array_merge(
+			$this->query_args['meta_query'],
+			array(
+				array(
+					'key'     => 'um_member_directory_data',
+					'value'   => 's:13:"profile_photo";b:1;',
+					'compare' => 'LIKE',
+				),
+			)
+		);
+	}
+
+	/**
+	 * Handle "Only show members who have uploaded a cover photo" option
+	 *
+	 * @param array $directory_data
+	 */
+	private function show_only_with_cover( $directory_data ) {
+		if ( UM()->is_new_ui() ) { // @todo maybe remove if cover photos backs to user profile
+			return;
+		}
+
+		if ( empty( $directory_data['has_cover_photo'] ) ) {
+			return;
+		}
+
+		$this->query_args['meta_query'] = array_merge(
+			$this->query_args['meta_query'],
+			array(
+				array(
+					'key'     => 'um_member_directory_data',
+					'value'   => 's:11:"cover_photo";b:1;',
+					'compare' => 'LIKE',
+				),
+			)
+		);
+	}
+
+	/**
+	 * Handle "Only show specific users (Enter one username per line)" option
+	 *
+	 * @param array $directory_data
+	 */
+	private function show_only_these_users( $directory_data ) {
+		if ( empty( $directory_data['show_these_users'] ) ) {
+			return;
+		}
+
+		$show_these_users = maybe_unserialize( $directory_data['show_these_users'] );
+		if ( is_array( $show_these_users ) && ! empty( $show_these_users ) ) {
+			$users_array = array();
+			foreach ( $show_these_users as $username ) {
+				$exists_id = username_exists( $username );
+				if ( false !== $exists_id ) {
+					$users_array[] = $exists_id;
+				}
+			}
+
+			if ( ! empty( $users_array ) ) {
+				if ( ! empty( $this->query_args['include'] ) ) {
+					$this->query_args['include'] = is_array( $this->query_args['include'] ) ? $this->query_args['include'] : array( $this->query_args['include'] );
+					$this->query_args['include'] = array_intersect( $this->query_args['include'], $users_array );
+				} else {
+					$this->query_args['include'] = $users_array;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Handle "Exclude specific users (Enter one username per line)" option
+	 *
+	 * @param array $directory_data
+	 */
+	private function exclude_these_users( $directory_data ) {
+		if ( empty( $directory_data['exclude_these_users'] ) ) {
+			return;
+		}
+
+		$exclude_these_users = maybe_unserialize( $directory_data['exclude_these_users'] );
+		if ( is_array( $exclude_these_users ) && ! empty( $exclude_these_users ) ) {
+			$users_array = array();
+			foreach ( $exclude_these_users as $username ) {
+				$exists_id = username_exists( $username );
+				if ( false !== $exists_id ) {
+					$users_array[] = $exists_id;
+				}
+			}
+
+			if ( ! empty( $users_array ) ) {
+				if ( ! empty( $this->query_args['exclude'] ) ) {
+					$this->query_args['exclude'] = is_array( $this->query_args['exclude'] ) ? $this->query_args['exclude'] : array( $this->query_args['exclude'] );
+					$this->query_args['exclude'] = array_intersect( $this->query_args['exclude'], $users_array );
+				} else {
+					$this->query_args['exclude'] = $users_array;
+				}
+			}
+		}
+	}
+
 	/**
 	 * @param string $filter
 	 * @param array  $directory_data
@@ -606,8 +953,6 @@ class Directory extends Directory_Config {
 	 * @return array
 	 */
 	public function datepicker_filters_range( $filter, $directory_data ) {
-		global $wpdb;
-
 		$directory_id = $directory_data['form_id'];
 
 		$disable_filters_pre_query = (bool) get_post_meta( $directory_id, '_um_disable_filters_pre_query', true );
@@ -619,17 +964,7 @@ class Directory extends Directory_Config {
 
 		switch ( $filter ) {
 			default:
-				$meta = $wpdb->get_col(
-					$wpdb->prepare(
-						"SELECT DISTINCT meta_value
-						FROM {$wpdb->usermeta}
-						WHERE meta_key = %s AND
-							  meta_value != ''
-						ORDER BY meta_value DESC",
-						$filter
-					)
-				);
-
+				$meta = $this->pre_filter_query( $filter, $directory_data );
 				if ( ! empty( $meta ) && count( $meta ) > 1 ) {
 					$range = array( min( $meta ), max( $meta ) );
 				}
@@ -638,27 +973,14 @@ class Directory extends Directory_Config {
 				break;
 
 			case 'last_login':
-				$meta = $wpdb->get_row(
-					"SELECT DISTINCT COUNT(*) AS total,
-							MIN(meta_value) AS min,
-							MAX(meta_value) AS max
-					FROM {$wpdb->usermeta}
-					WHERE meta_key = '_um_last_login' AND
-						  meta_value != ''",
-					ARRAY_A
-				);
-
+				$meta = $this->pre_filter_query( $filter, $directory_data );
 				if ( ! empty( $meta['total'] ) && absint( $meta['total'] ) > 1 && array_key_exists( 'min', $meta ) && array_key_exists( 'max', $meta ) ) {
 					$range = array( strtotime( $meta['min'] ), strtotime( $meta['max'] ) );
 				}
 				break;
 
 			case 'user_registered':
-				$meta = $wpdb->get_col(
-					"SELECT DISTINCT user_registered
-					FROM {$wpdb->users}
-					ORDER BY user_registered DESC"
-				);
+				$meta = $this->pre_filter_query( $filter, $directory_data );
 
 				if ( ! empty( $meta ) && count( $meta ) > 1 ) {
 					$range = array( min( $meta ), max( $meta ) );
@@ -677,8 +999,6 @@ class Directory extends Directory_Config {
 	 * @return array
 	 */
 	protected function timepicker_filters_range( $filter, $directory_data ) {
-		global $wpdb;
-
 		$directory_id = $directory_data['form_id'];
 
 		$disable_filters_pre_query = (bool) get_post_meta( $directory_id, '_um_disable_filters_pre_query', true );
@@ -686,17 +1006,7 @@ class Directory extends Directory_Config {
 			return array( '00:00', '23:59' );
 		}
 
-		$meta = $wpdb->get_col(
-			$wpdb->prepare(
-				"SELECT DISTINCT meta_value
-				FROM {$wpdb->usermeta}
-				WHERE meta_key = %s AND
-					  meta_value != ''
-				ORDER BY meta_value DESC",
-				$filter
-			)
-		);
-
+		$meta = $this->pre_filter_query( $filter, $directory_data );
 		$meta = array_filter( $meta );
 
 		$range = false;
@@ -892,8 +1202,6 @@ class Directory extends Directory_Config {
 	 * @return false|string
 	 */
 	private function render_dropdown_filter( $attrs, $filter, $directory_data, $default_value, $admin ) {
-		global $wpdb;
-
 		$directory_id = $directory_data['form_id'];
 		$unique_hash  = $this->get_directory_hash( $directory_id );
 		$values_array = isset( $attrs['options'] ) ? $attrs['options'] : array(); // Fallback
@@ -953,16 +1261,7 @@ class Directory extends Directory_Config {
 			}
 
 			if ( ! $admin && true !== $disable_filters_pre_query ) {
-				$values_array = $wpdb->get_col(
-					$wpdb->prepare(
-						"SELECT DISTINCT meta_value
-						FROM $wpdb->usermeta
-						WHERE meta_key = %s AND
-							  meta_value != ''",
-						$attrs['metakey']
-					)
-				);
-
+				$values_array = $this->pre_filter_query( $attrs['metakey'], $directory_data );
 				if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
 					$values_array = array_map( 'maybe_unserialize', $values_array );
 					$values_array = array_map(
@@ -1039,15 +1338,7 @@ class Directory extends Directory_Config {
 					$attrs['options'] = $values_array;
 				} else {
 					if ( true !== $disable_filters_pre_query && empty( $attrs['disable_filters_pre_query'] ) ) {
-						$values_array = $wpdb->get_col(
-							$wpdb->prepare(
-								"SELECT DISTINCT meta_value
-								FROM $wpdb->usermeta
-								WHERE meta_key = %s AND
-									  meta_value != ''",
-								$attrs['metakey']
-							)
-						);
+						$values_array = $this->pre_filter_query( $attrs['metakey'], $directory_data );
 
 						if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
 							$values_array = array_map(
