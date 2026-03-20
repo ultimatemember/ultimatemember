@@ -1215,32 +1215,30 @@ class Directory extends Directory_Config {
 			}
 
 			if ( ! $admin && true !== $disable_filters_pre_query ) {
-				$values_array = $this->pre_filter_query( $attrs['metakey'], $directory_data );
-				if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
-					$values_array = array_map( 'maybe_unserialize', $values_array );
-					$values_array = array_map(
-						function ( $item ) {
-							$item = maybe_unserialize( $item );
-							return is_array( $item ) ? $item : (array) $item;
-						},
-						$values_array
-					);
-					$values_array = array_unique( array_merge( ...$values_array ) );
+				if ( in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
+					$values_array = $this->pre_filter_query( $attrs['metakey'], $directory_data );
+					if ( ! empty( $values_array ) ) {
+						$values_array = array_map( 'maybe_unserialize', $values_array );
+						$values_array = array_map(
+							function ( $item ) {
+								$item = maybe_unserialize( $item );
+								return is_array( $item ) ? $item : (array) $item;
+							},
+							$values_array
+						);
+						$values_array = array_unique( array_merge( ...$values_array ) );
+					}
 				}
 
 				$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
 			}
 		} else {
-			if ( $admin ) {
-				$disable_filters_pre_query = true;
-
-				if ( 'role' === $filter ) {
-					$values_array = array();
-
-					$editable_roles  = array_reverse( get_editable_roles() );
-					$shortcode_roles = get_post_meta( $directory_id, '_um_roles', true );
-					$shortcode_roles = maybe_unserialize( $shortcode_roles );
-
+			if ( 'role' === $filter ) {
+				$values_array    = array();
+				$shortcode_roles = get_post_meta( $directory_id, '_um_roles', true );
+				$shortcode_roles = maybe_unserialize( $shortcode_roles );
+				if ( $admin ) {
+					$editable_roles = array_reverse( get_editable_roles() );
 					if ( ! empty( $shortcode_roles ) && is_array( $shortcode_roles ) ) {
 						foreach ( $editable_roles as $role => $details ) {
 							if ( in_array( $role, $shortcode_roles, true ) ) {
@@ -1252,18 +1250,8 @@ class Directory extends Directory_Config {
 							$values_array[ $role ] = translate_user_role( $details['name'] );
 						}
 					}
-
-					$attrs['options'] = $values_array;
-				}
-			} else {
-				if ( 'role' === $filter ) {
-					$values_array = array();
-
-					$shortcode_roles = get_post_meta( $directory_data['form_id'], '_um_roles', true );
-					$shortcode_roles = maybe_unserialize( $shortcode_roles );
-
+				} else {
 					$um_roles = UM()->roles()->get_roles();
-
 					if ( true !== $disable_filters_pre_query ) {
 						$users_roles = count_users();
 						$roles_exist = ( ! empty( $users_roles['avail_roles'] ) && is_array( $users_roles['avail_roles'] ) ) ? array_keys( array_filter( $users_roles['avail_roles'] ) ) : array();
@@ -1277,40 +1265,38 @@ class Directory extends Directory_Config {
 								$values_array[ $key ] = $value;
 							}
 						}
-					} else {
+					} elseif ( ! empty( $shortcode_roles ) && is_array( $shortcode_roles ) ) {
 						foreach ( $um_roles as $key => $value ) {
-							if ( ! empty( $shortcode_roles ) && is_array( $shortcode_roles ) ) {
-								if ( in_array( $key, $shortcode_roles, true ) ) {
-									$values_array[ $key ] = $value;
-								}
-							} else {
+							if ( in_array( $key, $shortcode_roles, true ) ) {
 								$values_array[ $key ] = $value;
 							}
 						}
+					} else {
+						$values_array = $um_roles;
 					}
+				}
 
-					$attrs['options'] = $values_array;
+				$attrs['options'] = $values_array;
+			}
+
+			if ( ! $admin && true !== $disable_filters_pre_query && empty( $attrs['disable_filters_pre_query'] ) ) {
+				$values_array = $this->pre_filter_query( $attrs['metakey'], $directory_data );
+
+				if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
+					$values_array = array_map(
+						function ( $item ) {
+							$item = maybe_unserialize( $item );
+							return is_array( $item ) ? $item : (array) $item;
+						},
+						$values_array
+					);
+					$values_array = array_unique( array_merge( ...$values_array ) );
+				}
+
+				if ( empty( $option_pairs ) ) {
+					$attrs['options'] = array_intersect( array_map( 'stripslashes', array_map( 'trim', $attrs['options'] ) ), $values_array );
 				} else {
-					if ( true !== $disable_filters_pre_query && empty( $attrs['disable_filters_pre_query'] ) ) {
-						$values_array = $this->pre_filter_query( $attrs['metakey'], $directory_data );
-
-						if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
-							$values_array = array_map(
-								function ( $item ) {
-									$item = maybe_unserialize( $item );
-									return is_array( $item ) ? $item : (array) $item;
-								},
-								$values_array
-							);
-							$values_array = array_unique( array_merge( ...$values_array ) );
-						}
-
-						if ( empty( $option_pairs ) ) {
-							$attrs['options'] = array_intersect( array_map( 'stripslashes', array_map( 'trim', $attrs['options'] ) ), $values_array );
-						} else {
-							$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
-						}
-					}
+					$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
 				}
 			}
 		}
