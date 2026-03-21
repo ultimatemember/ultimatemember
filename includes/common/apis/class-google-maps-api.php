@@ -70,6 +70,9 @@ class Google_Maps_Api {
 	 * @return string The Google Maps API version from the options or the default version '3.5'
 	 */
 	public static function get_version() {
+		if ( UM()->is_new_ui() ) {
+			return '3.64';
+		}
 		$api_version = UM()->options()->get( 'um_google_maps_api_version' );
 		return empty( $api_version ) ? '3.5' : $api_version;
 	}
