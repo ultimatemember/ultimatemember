@@ -205,10 +205,36 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 	$regex = '~\{(usermeta:[^}]*)\}~';
 	preg_match_all( $regex, $content, $matches );
 
+	$keys_blacklist = array( 'password_reset_link' );
+	$keys_blacklist = array_merge( $keys_blacklist, UM()->builtin()->blacklist_fields );
+	/**
+	 * Filters Ultimate Member usermeta keys to avoid displaying sensitive information via {usermeta:{meta_key}} placeholder.
+	 *
+	 * @param {array} $keys_blacklist Usermeta fields.
+	 *
+	 * @return {array} Usermeta fields.
+	 *
+	 * @since 2.11.3
+	 * @hook um_convert_tags_blacklist_fields
+	 *
+	 * @example <caption>Set `my_custom_key` as blacklisted hide for `um_convert_tags()` function.</caption>
+	 * function custom_convert_tags_blacklist_fields( $keys_blacklist ) {
+	 *     $keys_blacklist[] = 'my_custom_key';
+	 *     return $keys_blacklist;
+	 * }
+	 * add_filter( 'um_convert_tags_blacklist_fields', 'custom_convert_tags_blacklist_fields' );
+	 */
+	$keys_blacklist = apply_filters( 'um_convert_tags_blacklist_fields', $keys_blacklist );
+
 	// Support for all usermeta keys
 	if ( ! empty( $matches[1] ) && is_array( $matches[1] ) ) {
 		foreach ( $matches[1] as $match ) {
-			$key   = str_replace( 'usermeta:', '', $match );
+			$key = str_replace( 'usermeta:', '', $match );
+			if ( in_array( $key, $keys_blacklist, true ) || UM()->user()->is_metakey_banned( $key ) ) {
+				$content = str_replace( '{' . $match . '}', '', $content );
+				continue;
+			}
+
 			$value = um_user( $key );
 			if ( is_array( $value ) ) {
 				$value = implode( ', ', $value );
