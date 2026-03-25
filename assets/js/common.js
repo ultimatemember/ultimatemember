@@ -1,3 +1,22 @@
+// Custom jQuery functions.
+jQuery.fn.extend({
+	umShow: function() {
+		return this.each(function() {
+			jQuery(this).removeClass( 'um-display-none' );
+		});
+	},
+	umHide: function() {
+		return this.each(function() {
+			jQuery(this).addClass( 'um-display-none' );
+		});
+	},
+	umToggle: function() {
+		return this.each(function() {
+			jQuery(this).toggleClass( 'um-display-none' );
+		});
+	}
+});
+
 if ( typeof ( window.UM ) !== 'object' ) {
 	window.UM = {};
 }

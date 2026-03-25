@@ -33,3 +33,7 @@
 .um-page .tipsy-arrow-w {
   border-right-color: #333;
 }
+.um .um-display-none,
+.um-page .um-display-none {
+  display: none !important;
+}

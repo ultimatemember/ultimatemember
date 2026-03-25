@@ -1,24 +1,24 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
+<?php
+/**
+ * Make public functions without class creation
+ */
 
-
-//Make public functions without class creation
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Trim string by char length
  *
  *
- * @param $s
- * @param int $length
+ * @param string $s
+ * @param int    $length
  *
  * @return string
  */
 function um_trim_string( $s, $length = 20 ) {
-	$s = mb_strlen( $s ) > $length ? substr( $s, 0, $length ) . "..." : $s;
-
-	return $s;
+	return mb_strlen( $s, 'UTF-8' ) > $length ? mb_substr( $s, 0, $length, 'UTF-8' ) . '...' : $s;
 }
-
 
 /**
  * Get where user should be headed after logging
