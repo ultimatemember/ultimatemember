@@ -529,8 +529,14 @@ function um_user_edit_profile( $args, $form_data ) {
 	 */
 	do_action( 'um_user_after_updating_profile', $to_update, $user_id, $args );
 
-	// Finally redirect to profile.
-	$url = um_user_profile_url( $user_id );
+	if ( ! um_is_predefined_page( 'user' ) ) {
+		// Finally redirect to 3rd-party page with User Profile shortcode.
+		$current_page_id = get_the_ID();
+		$url             = get_permalink( $current_page_id );
+	} else {
+		// Finally redirect to predefined user profile page.
+		$url = um_user_profile_url( $user_id );
+	}
 	$url = apply_filters( 'um_update_profile_redirect_after', $url, $user_id, $args );
 	// Not `um_safe_redirect()` because predefined user profile page is situated on the same host.
 	wp_safe_redirect( um_edit_my_profile_cancel_uri( $url ) );
@@ -1484,15 +1490,16 @@ function um_add_edit_icon( $args ) {
 	}
 
 	// do not proceed if user cannot edit
-
-	if ( true === UM()->fields()->editing ) { ?>
-
+	if ( true === UM()->fields()->editing ) {
+		?>
 		<div class="um-profile-edit um-profile-headericon">
 			<a href="javascript:void(0);" class="um-profile-edit-a um-profile-save"><i class="um-faicon-check"></i></a>
 		</div>
-
-		<?php return;
+		<?php
+		return;
 	}
+
+	$current_page_id = get_the_ID(); // Get the current page ID to make a proper Edit User Profile link.
 
 	if ( ! um_is_myprofile() ) {
 
@@ -1502,7 +1509,7 @@ function um_add_edit_icon( $args ) {
 
 		$items = UM()->user()->get_admin_actions();
 		if ( UM()->roles()->um_current_user_can( 'edit', um_profile_id() ) ) {
-			$items['editprofile'] = '<a href="' . esc_url( um_edit_profile_url() ) . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>';
+			$items['editprofile'] = '<a href="' . esc_url( um_edit_profile_url( um_profile_id(), $current_page_id ) ) . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>';
 		}
 
 		/**
@@ -1533,7 +1540,7 @@ function um_add_edit_icon( $args ) {
 
 	} else {
 		$items = array(
-			'editprofile' => '<a href="' . esc_url( um_edit_profile_url() ) . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>',
+			'editprofile' => '<a href="' . esc_url( um_edit_profile_url( um_profile_id(), $current_page_id ) ) . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>',
 			'myaccount'   => '<a href="' . esc_url( um_get_core_page( 'account' ) ) . '" class="real_url">' . __( 'My Account', 'ultimate-member' ) . '</a>',
 			'logout'      => '<a href="' . esc_url( um_get_core_page( 'logout' ) ) . '" class="real_url">' . __( 'Logout', 'ultimate-member' ) . '</a>',
 			'cancel'      => '<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
