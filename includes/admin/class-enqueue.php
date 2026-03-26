@@ -174,7 +174,12 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_register_script( 'um_account', $js_url . 'um-account' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
 
 		wp_register_script( 'um_functions', $js_url . 'um-functions' . $suffix . '.js', array( 'jquery', 'jquery-masonry', 'wp-util' ), UM_VERSION, true );
-		wp_register_script( 'um_responsive', $js_url . 'um-responsive' . $suffix . '.js', array( 'jquery', 'um_functions', 'um_crop' ), UM_VERSION, true );
+
+		// Cropper.js
+		wp_register_script( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.js', array( 'jquery' ), '1.6.1', true );
+		wp_register_style( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.css', array(), '1.6.1' );
+
+		wp_register_script( 'um_responsive', $js_url . 'um-responsive' . $suffix . '.js', array( 'um_functions', 'um_crop' ), UM_VERSION, true );
 
 		// render blocks
 		wp_enqueue_script( 'um_conditional' );

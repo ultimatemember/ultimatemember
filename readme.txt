@@ -193,9 +193,11 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: `wp_die()` function triggering on the frontend actions. Added UM notice above the User Profile page. (based on @faisalahammad suggestions)
 * Fixed: Password reset key handling for multiple users. Previously, the static reset key caused issues when handling password resets for multiple users simultaneously.
 * Fixed: `um_trim_string()` function for using with UTF-8 symbols.
+* Fixed: PHP Notice: Function WP_Scripts::add was called incorrectly.
 
 **Templates Requiring Update**
 
+* members.php
 * message.php
 * restricted-blog.php
 * restricted-taxonomy.php

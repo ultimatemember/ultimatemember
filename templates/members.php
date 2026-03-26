@@ -6,7 +6,7 @@
  *
  * Page: "Members"
  *
- * @version 2.11.2
+ * @version 2.11.3
  *
  * @var array $args
  */
@@ -176,7 +176,8 @@ if ( $filters_expanded ) {
 //send $args variable to the templates
 $args['args'] = $args;
 foreach ( $args['view_types'] as $type ) {
-	$basename = UM()->member_directory()->get_type_basename( $type );
+	$basename         = UM()->member_directory()->get_type_basename( $type );
+	$args['no_users'] = ! empty( $args['no_users'] ) ? $args['no_users'] : __( 'We are sorry. We cannot find any users who match your search criteria.', 'ultimate-member' );
 	UM()->get_template( 'members-' . $type . '.php', $basename, $args, true );
 }
 UM()->get_template( 'members-header.php', '', $args, true );
