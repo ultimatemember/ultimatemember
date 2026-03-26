@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-03-26T04:50:34+00:00\n"
+"POT-Creation-Date: 2026-03-26T15:39:29+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -2350,7 +2350,7 @@ msgstr ""
 #: includes/core/class-form.php:247
 #: includes/core/class-form.php:637
 #: includes/core/class-password.php:497
-#: includes/core/um-actions-profile.php:551
+#: includes/core/um-actions-profile.php:557
 msgid "This is not possible for security reasons."
 msgstr ""
 
@@ -4543,8 +4543,8 @@ msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:1479
 #: includes/admin/core/class-admin-settings.php:1685
-#: includes/core/um-actions-profile.php:837
-#: includes/core/um-actions-profile.php:855
+#: includes/core/um-actions-profile.php:843
+#: includes/core/um-actions-profile.php:861
 msgid "Profile photo"
 msgstr ""
 
@@ -6386,12 +6386,12 @@ msgstr ""
 #: includes/class-config.php:242
 #: includes/core/class-fields.php:3106
 #: includes/core/class-fields.php:3231
-#: includes/core/um-actions-profile.php:919
-#: includes/core/um-actions-profile.php:928
-#: includes/core/um-actions-profile.php:1107
-#: includes/core/um-actions-profile.php:1140
-#: includes/core/um-actions-profile.php:1532
+#: includes/core/um-actions-profile.php:925
+#: includes/core/um-actions-profile.php:934
+#: includes/core/um-actions-profile.php:1113
+#: includes/core/um-actions-profile.php:1146
 #: includes/core/um-actions-profile.php:1539
+#: includes/core/um-actions-profile.php:1546
 msgid "Cancel"
 msgstr ""
 
@@ -7009,7 +7009,7 @@ msgstr ""
 #: includes/class-config.php:961
 #: includes/class-config.php:1025
 #: includes/core/class-member-directory.php:2657
-#: includes/core/um-actions-profile.php:1538
+#: includes/core/um-actions-profile.php:1545
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
 msgstr ""
@@ -8182,7 +8182,7 @@ msgid "Cover Photo"
 msgstr ""
 
 #: includes/core/class-builtin.php:1296
-#: includes/core/um-actions-profile.php:997
+#: includes/core/um-actions-profile.php:1003
 msgid "Change your cover photo"
 msgstr ""
 
@@ -9894,8 +9894,8 @@ msgstr ""
 
 #: includes/core/class-fields.php:3061
 #: includes/core/class-fields.php:3105
-#: includes/core/um-actions-profile.php:1105
-#: includes/core/um-actions-profile.php:1138
+#: includes/core/um-actions-profile.php:1111
+#: includes/core/um-actions-profile.php:1144
 msgid "Change photo"
 msgstr ""
 
@@ -10256,13 +10256,13 @@ msgstr ""
 
 #: includes/core/class-member-directory.php:2618
 #: includes/core/class-member-directory.php:2646
-#: includes/core/um-actions-profile.php:1505
-#: includes/core/um-actions-profile.php:1536
+#: includes/core/um-actions-profile.php:1512
+#: includes/core/um-actions-profile.php:1543
 msgid "Edit Profile"
 msgstr ""
 
 #: includes/core/class-member-directory.php:2652
-#: includes/core/um-actions-profile.php:1537
+#: includes/core/um-actions-profile.php:1544
 msgid "My Account"
 msgstr ""
 
@@ -10969,39 +10969,39 @@ msgstr ""
 msgid "Your choosed %s"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:913
-#: includes/core/um-actions-profile.php:914
-#: includes/core/um-actions-profile.php:927
-#: includes/core/um-actions-profile.php:987
+#: includes/core/um-actions-profile.php:919
+#: includes/core/um-actions-profile.php:920
+#: includes/core/um-actions-profile.php:933
+#: includes/core/um-actions-profile.php:993
 #: assets/js/um-profile.js:73
 msgid "Upload a cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:913
-#: includes/core/um-actions-profile.php:914
+#: includes/core/um-actions-profile.php:919
+#: includes/core/um-actions-profile.php:920
 msgid "Change cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:918
+#: includes/core/um-actions-profile.php:924
 msgid "Remove cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1105
-#: includes/core/um-actions-profile.php:1138
+#: includes/core/um-actions-profile.php:1111
+#: includes/core/um-actions-profile.php:1144
 msgid "Upload photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1106
-#: includes/core/um-actions-profile.php:1139
+#: includes/core/um-actions-profile.php:1112
+#: includes/core/um-actions-profile.php:1145
 msgid "Remove photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1340
+#: includes/core/um-actions-profile.php:1346
 msgid "Tell us a bit about yourself..."
 msgstr ""
 
 #. translators: %s: profile status.
-#: includes/core/um-actions-profile.php:1360
+#: includes/core/um-actions-profile.php:1366
 #, php-format
 msgid "This user account status is %s"
 msgstr ""
