@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 6.9
-Stable tag: 2.11.2
+Stable tag: 2.11.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -167,6 +167,43 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.11.3 2026-03-26 =
+
+**Enhancements**
+
+* Added: UM > Settings > Advanced > APIs section for set available APIs settings.
+* Added: GoogleMaps API setting when it's available.
+* Added: Function `UM()->mail()->enabled_email()` for checking if the email notification is enabled by the user.
+* Added: `color` type of sanitize settings saved in wp-admin.
+* Added: Checking array type of submission data when `url` type of sanitize is used in wp-admin.
+* Added: Enhance UM form sanitization filter with $form_data param. Added the $form_data parameter to the `um_sanitize_form_submission` filter.
+* Added: Option for special character requirement for passwords. It's situated in "General > Users > Password requires special character" (based on @faisalahammad suggestions)
+* Added: Filter hook `um_before_account_delete_text` for changing before delete account text by 3rd-party plugins. End-customers can use it for translations.
+* Added: Filter hook `um_custom_{$message_key}` (`um_custom_pending_message`, `um_custom_checkmail_message`) for changing after-registration message based on the user status by 3rd-party plugins. End-customers can use it for translations.
+* Added: Filter hook `um_convert_tags_blacklist_fields` For 3rd-party integrations to control the usermeta keys in `um_convert_tags()` function.
+* Added: `.um-display-none` CSS utility + `umShow()/umHide()/umToggle()` jQuery helpers.
+* Added: `um-notice` JS library.
+
+**Bugfixes**
+
+* Fixed: Security issue, CVE ID: CVE-2026-4248. Added blacklist filter for convert_tag replace placeholders function.
+* Fixed: HTML sanitization logic for textarea-type custom fields with enabled HTML using setting.
+* Fixed: WP editor formatting to prevent incorrect HTML entity conversion when using html-mode in the textarea-type custom fields. Applied and removed this filter dynamically to avoid interfering with other processes.
+* Fixed: Dynamic string translation pattern and improve escaping. Replaced incorrect __('%s') pattern. (@faisalahammad)
+* Fixed: `wp_die()` function triggering on the frontend actions. Added UM notice above the User Profile page. (based on @faisalahammad suggestions)
+* Fixed: Password reset key handling for multiple users. Previously, the static reset key caused issues when handling password resets for multiple users simultaneously.
+* Fixed: `um_trim_string()` function for using with UTF-8 symbols.
+* Fixed: PHP Notice: Function WP_Scripts::add was called incorrectly.
+
+**Templates Requiring Update**
+
+* members.php
+* message.php
+* restricted-blog.php
+* restricted-taxonomy.php
+
+**Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
+
 = 2.11.2 2026-02-10 =
 
 **Enhancements**
@@ -232,6 +269,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.11.3 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.11.2 =
 This version fixes a security related bug. Upgrade immediately.

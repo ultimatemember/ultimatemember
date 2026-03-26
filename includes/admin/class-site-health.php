@@ -695,6 +695,10 @@ class Site_Health {
 			$user_settings = array_merge(
 				$user_settings,
 				array(
+					'require_strongpass_special_char' => array(
+						'label' => __( 'Password requires special character', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'require_strongpass_special_char' ) ? $labels['yes'] : $labels['no'],
+					),
 					'password_min_chars' => array(
 						'label' => __( 'Password minimum length', 'ultimate-member' ),
 						'value' => UM()->options()->get( 'password_min_chars' ),
@@ -1474,6 +1478,45 @@ class Site_Health {
 				'value' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? $labels['yes'] : $labels['no'],
 			),
 		);
+
+		$google_maps_api_key = UM()->options()->get( 'um_google_maps_js_api_key' );
+		if ( ! empty( $google_maps_api_key ) ) {
+			$um_google_lang_as_default = UM()->options()->get( 'um_google_lang_as_default' );
+
+			$feature = array_merge(
+				$feature,
+				array(
+					'um_google_maps_js_api_key' => array(
+						'label' => __( 'Google Maps Javascript API Key', 'ultimate-member' ),
+						'value' => $labels['yes'],
+					),
+					'um_google_lang_as_default' => array(
+						'label' => __( 'Use site\'s locale as language for Google Maps', 'ultimate-member' ),
+						'value' => $um_google_lang_as_default ? $labels['yes'] : $labels['no'],
+					),
+				)
+			);
+
+			if ( empty( $um_google_lang_as_default ) ) {
+				$options = UM()->config()->get( 'google_maps_locales' );
+				$lang    = UM()->options()->get( 'um_google_lang' );
+
+				$feature['um_google_lang'] = array(
+					'label' => __( 'Google Maps language', 'ultimate-member' ),
+					'value' => array_key_exists( $lang, $options ) ? $options[ $lang ] : __( 'Invalid', 'ultimate-member' ),
+				);
+			}
+
+			$feature['um_google_maps_api_version'] = array(
+				'label' => __( 'Google Maps API version', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'um_google_maps_api_version' ),
+			);
+		} else {
+			$feature['um_google_maps_js_api_key'] = array(
+				'label' => __( 'Google Maps Javascript API Key', 'ultimate-member' ),
+				'value' => $labels['no'],
+			);
+		}
 
 		// Secure settings
 		$secure_ban_admins_accounts = UM()->options()->get( 'secure_ban_admins_accounts' );

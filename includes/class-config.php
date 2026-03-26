@@ -93,6 +93,15 @@ if ( ! class_exists( 'um\Config' ) ) {
 		public $display_name_options = array();
 
 		/**
+		 * List of supporting languages of Google Maps API.
+		 *
+		 * @since 2.11.3
+		 *
+		 * @var array
+		 */
+		public $google_maps_locales = array();
+
+		/**
 		 * Config constructor.
 		 */
 		public function __construct() {
@@ -663,6 +672,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'admin_ignore_user_status'              => false,
 				'toggle_password'                       => false,
 				'require_strongpass'                    => false,
+				'require_strongpass_special_char'       => false,
 				'password_min_chars'                    => 8,
 				'password_max_chars'                    => 30,
 				'account_tab_password'                  => true,
@@ -738,6 +748,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'secure_allowed_redirect_hosts'         => '',
 				'delete_comments'                       => false,
 				'enable_as_email_sending'               => UM()->options()->get( 'enable_action_scheduler' ), // Use legacy option value by default. It helps during update to set the same value. The last version when we used 'enable_action_scheduler' is 2.10.2
+				'um_google_lang_as_default'             => true, // The same option name as we use in User Locations. Legacy support.
+				'um_google_lang'                        => '', // The same option name as we use in User Locations. Legacy support.
+				'um_google_maps_js_api_key'             => '', // The same option name as we use in User Locations. Legacy support.
+				'um_google_maps_api_version'            => '3.5', // Legacy Google Maps API support.
 			);
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );
@@ -1045,6 +1059,101 @@ if ( ! class_exists( 'um\Config' ) ) {
 			// @todo remove in 3.0 version
 			$this->predefined_pages = apply_filters( 'um_core_pages', $this->predefined_pages );
 			$this->core_pages       = $this->predefined_pages;
+		}
+
+		/**
+		 * List of supporting languages is here:
+		 * https://developers.google.com/maps/faq#languagesupport
+		 *
+		 * @since 2.11.3
+		 *
+		 * @return void
+		 */
+		public function init_google_maps_locales() {
+			$this->google_maps_locales = array(
+				'af'      => __( 'Afrikaans', 'ultimate-member' ),
+				'sq'      => __( 'Albanian', 'ultimate-member' ),
+				'am'      => __( 'Amharic', 'ultimate-member' ),
+				'ar'      => __( 'Arabic', 'ultimate-member' ),
+				'hy'      => __( 'Armenian', 'ultimate-member' ),
+				'az'      => __( 'Azerbaijani', 'ultimate-member' ),
+				'eu'      => __( 'Basque', 'ultimate-member' ),
+				'be'      => __( 'Belarusian', 'ultimate-member' ),
+				'bn'      => __( 'Bengali', 'ultimate-member' ),
+				'bs'      => __( 'Bosnian', 'ultimate-member' ),
+				'bg'      => __( 'Bulgarian', 'ultimate-member' ),
+				'my'      => __( 'Burmese', 'ultimate-member' ),
+				'ca'      => __( 'Catalan', 'ultimate-member' ),
+				'zh'      => __( 'Chinese', 'ultimate-member' ),
+				'zh-CN'   => __( 'Chinese (Simplified)', 'ultimate-member' ),
+				'zh-HK'   => __( 'Chinese (Hong Kong)', 'ultimate-member' ),
+				'zh-TW'   => __( 'Chinese (Traditional)', 'ultimate-member' ),
+				'hr'      => __( 'Croatian', 'ultimate-member' ),
+				'cs'      => __( 'Czech', 'ultimate-member' ),
+				'da'      => __( 'Danish', 'ultimate-member' ),
+				'nl'      => __( 'Dutch', 'ultimate-member' ),
+				'en'      => __( 'English', 'ultimate-member' ),
+				'en-AU'   => __( 'English (Australian)', 'ultimate-member' ),
+				'en-GB'   => __( 'English (Great Britain)', 'ultimate-member' ),
+				'et'      => __( 'Estonian', 'ultimate-member' ),
+				'fa'      => __( 'Farsi', 'ultimate-member' ),
+				'fi'      => __( 'Finnish', 'ultimate-member' ),
+				'fil'     => __( 'Filipino', 'ultimate-member' ),
+				'fr'      => __( 'French', 'ultimate-member' ),
+				'fr-CA'   => __( 'French (Canada)', 'ultimate-member' ),
+				'gl'      => __( 'Galician', 'ultimate-member' ),
+				'ka'      => __( 'Georgian', 'ultimate-member' ),
+				'de'      => __( 'German', 'ultimate-member' ),
+				'el'      => __( 'Greek', 'ultimate-member' ),
+				'gu'      => __( 'Gujarati', 'ultimate-member' ),
+				'iw'      => __( 'Hebrew', 'ultimate-member' ),
+				'hi'      => __( 'Hindi', 'ultimate-member' ),
+				'hu'      => __( 'Hungarian', 'ultimate-member' ),
+				'is'      => __( 'Icelandic', 'ultimate-member' ),
+				'id'      => __( 'Indonesian', 'ultimate-member' ),
+				'it'      => __( 'Italian', 'ultimate-member' ),
+				'ja'      => __( 'Japanese', 'ultimate-member' ),
+				'kn'      => __( 'Kannada', 'ultimate-member' ),
+				'kk'      => __( 'Kazakh', 'ultimate-member' ),
+				'km'      => __( 'Khmer', 'ultimate-member' ),
+				'ko'      => __( 'Korean', 'ultimate-member' ),
+				'ky'      => __( 'Kyrgyz', 'ultimate-member' ),
+				'lo'      => __( 'Lao', 'ultimate-member' ),
+				'lv'      => __( 'Latvian', 'ultimate-member' ),
+				'lt'      => __( 'Lithuanian', 'ultimate-member' ),
+				'mk'      => __( 'Macedonian', 'ultimate-member' ),
+				'ms'      => __( 'Malay', 'ultimate-member' ),
+				'ml'      => __( 'Malayalam', 'ultimate-member' ),
+				'mr'      => __( 'Marathi', 'ultimate-member' ),
+				'mn'      => __( 'Mongolian', 'ultimate-member' ),
+				'ne'      => __( 'Nepali', 'ultimate-member' ),
+				'no'      => __( 'Norwegian', 'ultimate-member' ),
+				'pl'      => __( 'Polish', 'ultimate-member' ),
+				'pt'      => __( 'Portuguese', 'ultimate-member' ),
+				'pt-BR'   => __( 'Portuguese (Brazil)', 'ultimate-member' ),
+				'pt-PT'   => __( 'Portuguese (Portugal)', 'ultimate-member' ),
+				'pa'      => __( 'Punjabi', 'ultimate-member' ),
+				'ro'      => __( 'Romanian', 'ultimate-member' ),
+				'ru'      => __( 'Russian', 'ultimate-member' ),
+				'sr'      => __( 'Serbian (Cyrillic)', 'ultimate-member' ),
+				'sr-Latn' => __( 'Serbian (Latin script)', 'ultimate-member' ),
+				'si'      => __( 'Sinhalese', 'ultimate-member' ),
+				'sk'      => __( 'Slovak', 'ultimate-member' ),
+				'sl'      => __( 'Slovenian', 'ultimate-member' ),
+				'es'      => __( 'Spanish', 'ultimate-member' ),
+				'es-419'  => __( 'Spanish (Latin America)', 'ultimate-member' ),
+				'sw'      => __( 'Swahili', 'ultimate-member' ),
+				'sv'      => __( 'Swedish', 'ultimate-member' ),
+				'ta'      => __( 'Tamil', 'ultimate-member' ),
+				'te'      => __( 'Telugu', 'ultimate-member' ),
+				'th'      => __( 'Thai', 'ultimate-member' ),
+				'tr'      => __( 'Turkish', 'ultimate-member' ),
+				'uk'      => __( 'Ukrainian', 'ultimate-member' ),
+				'ur'      => __( 'Urdu', 'ultimate-member' ),
+				'uz'      => __( 'Uzbek', 'ultimate-member' ),
+				'vi'      => __( 'Vietnamese', 'ultimate-member' ),
+				'zu'      => __( 'Zulu', 'ultimate-member' ),
+			);
 		}
 	}
 }

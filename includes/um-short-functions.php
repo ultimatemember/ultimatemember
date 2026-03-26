@@ -1,24 +1,24 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
+<?php
+/**
+ * Make public functions without class creation
+ */
 
-
-//Make public functions without class creation
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Trim string by char length
  *
  *
- * @param $s
- * @param int $length
+ * @param string $s
+ * @param int    $length
  *
  * @return string
  */
 function um_trim_string( $s, $length = 20 ) {
-	$s = mb_strlen( $s ) > $length ? substr( $s, 0, $length ) . "..." : $s;
-
-	return $s;
+	return mb_strlen( $s, 'UTF-8' ) > $length ? mb_substr( $s, 0, $length, 'UTF-8' ) . '...' : $s;
 }
-
 
 /**
  * Get where user should be headed after logging
@@ -205,10 +205,36 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 	$regex = '~\{(usermeta:[^}]*)\}~';
 	preg_match_all( $regex, $content, $matches );
 
+	$keys_blacklist = array( 'password_reset_link' );
+	$keys_blacklist = array_merge( $keys_blacklist, UM()->builtin()->blacklist_fields );
+	/**
+	 * Filters Ultimate Member usermeta keys to avoid displaying sensitive information via {usermeta:{meta_key}} placeholder.
+	 *
+	 * @param {array} $keys_blacklist Usermeta fields.
+	 *
+	 * @return {array} Usermeta fields.
+	 *
+	 * @since 2.11.3
+	 * @hook um_convert_tags_blacklist_fields
+	 *
+	 * @example <caption>Set `my_custom_key` as blacklisted hide for `um_convert_tags()` function.</caption>
+	 * function custom_convert_tags_blacklist_fields( $keys_blacklist ) {
+	 *     $keys_blacklist[] = 'my_custom_key';
+	 *     return $keys_blacklist;
+	 * }
+	 * add_filter( 'um_convert_tags_blacklist_fields', 'custom_convert_tags_blacklist_fields' );
+	 */
+	$keys_blacklist = apply_filters( 'um_convert_tags_blacklist_fields', $keys_blacklist );
+
 	// Support for all usermeta keys
 	if ( ! empty( $matches[1] ) && is_array( $matches[1] ) ) {
 		foreach ( $matches[1] as $match ) {
-			$key   = str_replace( 'usermeta:', '', $match );
+			$key = str_replace( 'usermeta:', '', $match );
+			if ( in_array( $key, $keys_blacklist, true ) || UM()->user()->is_metakey_banned( $key ) ) {
+				$content = str_replace( '{' . $match . '}', '', $content );
+				continue;
+			}
+
 			$value = um_user( $key );
 			if ( is_array( $value ) ) {
 				$value = implode( ', ', $value );
@@ -1718,23 +1744,15 @@ function um_is_myprofile() {
 	return false;
 }
 
-
 /**
  * Returns the edit profile link
  *
- * @param int $user_id
+ * @param int|null $user_id
  *
  * @return string
  */
 function um_edit_profile_url( $user_id = null ) {
-	if ( um_is_core_page( 'user' ) ) {
-		$url = UM()->permalinks()->get_current_url();
-	} else {
-		$url = isset( $user_id ) ? um_user_profile_url( $user_id ) : um_user_profile_url();
-	}
-
-	$url = remove_query_arg( 'profiletab', $url );
-	$url = remove_query_arg( 'subnav', $url );
+	$url = um_user_profile_url( $user_id );
 	$url = add_query_arg( 'um_action', 'edit', $url );
 
 	/**
@@ -1755,11 +1773,8 @@ function um_edit_profile_url( $user_id = null ) {
 	 * }
 	 * add_filter( 'um_edit_profile_url', 'my_um_edit_profile_url', 10, 2 );
 	 */
-	$url = apply_filters( 'um_edit_profile_url', $url, $user_id );
-
-	return $url;
+	return apply_filters( 'um_edit_profile_url', $url, $user_id );
 }
-
 
 /**
  * Checks if user can edit his profile
@@ -1802,29 +1817,27 @@ function um_multi_admin_email() {
 	return $emails_array;
 }
 
-
 /**
  * Display a link to profile page
  *
- * @param int|bool $user_id
+ * @param int|null $user_id
  *
  * @return bool|string
  */
-function um_user_profile_url( $user_id = false ) {
+function um_user_profile_url( $user_id = null ) {
 	if ( ! $user_id ) {
 		$user_id = um_user( 'ID' );
 	}
 
 	$url = UM()->user()->get_profile_link( $user_id );
 	if ( empty( $url ) ) {
-		//if empty profile slug - generate it and re-get profile URL
+		// If empty profile slug - generate it and re-get profile URL
 		UM()->user()->generate_profile_slug( $user_id );
 		$url = UM()->user()->get_profile_link( $user_id );
 	}
 
 	return $url;
 }
-
 
 /**
  * Get all UM roles in array
