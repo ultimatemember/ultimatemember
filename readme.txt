@@ -167,10 +167,12 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.11.3 2026-03-04 =
+= 2.11.3 2026-03-26 =
 
 **Enhancements**
 
+* Added: UM > Settings > Advanced > APIs section for set available APIs settings.
+* Added: GoogleMaps API setting when it's available.
 * Added: Function `UM()->mail()->enabled_email()` for checking if the email notification is enabled by the user.
 * Added: `color` type of sanitize settings saved in wp-admin.
 * Added: Checking array type of submission data when `url` type of sanitize is used in wp-admin.
@@ -179,6 +181,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Added: Filter hook `um_before_account_delete_text` for changing before delete account text by 3rd-party plugins. End-customers can use it for translations.
 * Added: Filter hook `um_custom_{$message_key}` (`um_custom_pending_message`, `um_custom_checkmail_message`) for changing after-registration message based on the user status by 3rd-party plugins. End-customers can use it for translations.
 * Added: Filter hook `um_convert_tags_blacklist_fields` For 3rd-party integrations to control the usermeta keys in `um_convert_tags()` function.
+* Added: `.um-display-none` CSS utility + `umShow()/umHide()/umToggle()` jQuery helpers.
+* Added: `um-notice` JS library.
 
 **Bugfixes**
 
@@ -188,6 +192,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Dynamic string translation pattern and improve escaping. Replaced incorrect __('%s') pattern. (@faisalahammad)
 * Fixed: `wp_die()` function triggering on the frontend actions. Added UM notice above the User Profile page. (based on @faisalahammad suggestions)
 * Fixed: Password reset key handling for multiple users. Previously, the static reset key caused issues when handling password resets for multiple users simultaneously.
+* Fixed: `um_trim_string()` function for using with UTF-8 symbols.
 
 **Templates Requiring Update**
 
