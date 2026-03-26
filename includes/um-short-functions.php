@@ -1756,7 +1756,8 @@ function um_is_myprofile() {
  * @return string
  */
 function um_edit_profile_url( $user_id = null, $base_page_id = null ) {
-	if ( ! is_null( $base_page_id ) && absint( $base_page_id ) !== um_get_predefined_page_id( 'user' ) ) {
+	$predefined_user_page_id = um_get_predefined_page_id( 'user' );
+	if ( ! is_null( $base_page_id ) && absint( $base_page_id ) !== absint( $predefined_user_page_id ) ) {
 		// It uses 3rd-party page with User Profile shortcode.
 		$url = get_permalink( $base_page_id );
 	} else {
