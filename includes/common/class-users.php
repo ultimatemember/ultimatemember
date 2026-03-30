@@ -1379,7 +1379,7 @@ class Users {
 		 * UM hook
 		 *
 		 * @type filter
-		 * @title um_user_cover_photo_uri__filter
+		 * @title um_user_cover_photo_url
 		 * @description Change user avatar URL
 		 * @input_vars
 		 * [{"var":"$cover_uri","type":"string","desc":"Cover URL"},

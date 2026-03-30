@@ -51,13 +51,15 @@ if ( is_user_logged_in() && UM()->roles()->um_current_user_can( 'edit', $user_pr
 		$actions['cancel'] = $cancel;
 		$actions['submit'] = $submit;
 	} else {
+		$current_page_id = get_the_ID(); // Get the current page ID to make a proper Edit User Profile link.
+
 		$actions['edit_profile'] = UM()->frontend()::layouts()::link(
 			__( 'Edit Profile', 'ultimate-member' ),
 			array(
 				'design'  => 'primary',
 				'type'    => 'button',
 				'size'    => 's',
-				'url'     => um_edit_profile_url( $user_profile_id ),
+				'url'     => um_edit_profile_url( $user_profile_id, $current_page_id ),
 				'classes' => array(
 					'um-profile-edit-link',
 				),

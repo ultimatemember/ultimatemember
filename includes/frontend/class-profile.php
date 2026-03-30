@@ -1039,8 +1039,14 @@ class Profile {
 		 */
 		do_action( 'um_user_after_updating_profile', $to_update, $user_id, $args );
 
-		// Finally redirect to profile.
-		$url = um_user_profile_url( $user_id );
+		if ( ! um_is_predefined_page( 'user' ) ) {
+			// Finally redirect to 3rd-party page with User Profile shortcode.
+			$current_page_id = get_the_ID();
+			$url             = get_permalink( $current_page_id );
+		} else {
+			// Finally redirect to predefined user profile page.
+			$url = um_user_profile_url( $user_id );
+		}
 		$url = apply_filters( 'um_update_profile_redirect_after', $url, $user_id, $args );
 		// Not `um_safe_redirect()` because predefined user profile page is situated on the same host.
 		wp_safe_redirect( um_edit_my_profile_cancel_uri( $url ) );
