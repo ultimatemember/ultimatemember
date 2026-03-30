@@ -292,6 +292,12 @@ class Enqueue {
 		wp_register_script( 'um_tipsy', $libs_url . 'tipsy/tipsy' . $suffix . '.js', array( 'jquery' ), '1.0.0a', true );
 		wp_register_style( 'um_tipsy', $libs_url . 'tipsy/tipsy' . $suffix . '.css', array(), '1.0.0a' );
 
+		wp_register_script( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.js', array( 'jquery' ), '1.0', true );
+		wp_register_style( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.css', array(), '1.0' );
+
+		wp_register_script( 'um_notice', $libs_url . 'um-notice/um-notice' . $suffix . '.js', array( 'jquery' ), '1.0', true );
+		wp_register_style( 'um_notice', $libs_url . 'um-notice/um-notice' . $suffix . '.css', array(), '1.0' );
+
 		// Raty JS for rating field-type.
 		wp_register_script( 'um_raty', $libs_url . 'raty/um-raty' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), '2.6.0', true );
 		wp_set_script_translations( 'um_raty', 'ultimate-member' );
@@ -330,8 +336,8 @@ class Enqueue {
 		wp_register_script( 'um_choices', $libs_url . 'choices-js/choices' . $suffix . '.js', array(), '11.1.0', true );
 		wp_register_style( 'um_choices', $css_url . 'um-choices' . $suffix . '.css', array(), UM_VERSION );
 
-		$common_js_deps  = array( 'jquery', 'wp-util', 'wp-hooks', 'wp-i18n', 'um_tipsy', 'um_raty', 'um_choices', 'um_conditional' );
-		$common_css_deps = array_merge( array( 'um_tipsy', 'um_raty', 'um_choices' ), self::$fonticons_handlers );
+		$common_js_deps  = array( 'jquery', 'wp-util', 'wp-hooks', 'wp-i18n', 'um_tipsy', 'um_confirm', 'um_notice', 'um_raty', 'um_choices', 'um_conditional' );
+		$common_css_deps = array_merge( array( 'um_tipsy', 'um_confirm', 'um_notice', 'um_raty', 'um_choices' ), self::$fonticons_handlers );
 		if ( ! UM()->is_new_ui() ) {
 			// Date-time picker (Pickadate.JS)
 			wp_register_script( 'um_datetime', $libs_url . 'pickadate/picker' . $suffix . '.js', array( 'jquery' ), '3.6.2', true );

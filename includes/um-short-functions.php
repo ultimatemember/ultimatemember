@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *
  * @param string $s
- * @param int    $length
+ * @param int $length
  *
  * @return string
  */

@@ -161,17 +161,13 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_script( 'um_dropdown', $libs_url . 'dropdown/dropdown' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
 			wp_register_style( 'um_dropdown', $libs_url . 'dropdown/dropdown' . $suffix . '.css', array(), UM_VERSION );
 
-			wp_register_script( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.js', array( 'jquery' ), '1.0', true );
-
-			wp_register_script( 'um_notice', $libs_url . 'um-notice/um-notice' . $suffix . '.js', array( 'jquery' ), '1.0', true );
-
 			// Emoji-mart
 			wp_register_script( 'um-emoji-mart', $libs_url . 'emoji-mart/emoji.js', array(), '5.6.0', true );
 
 			wp_register_script(
 				'um_frontend_common',
 				$js_url . 'v3/common-frontend' . $suffix . '.js',
-				array( 'um_common', 'um_crop', 'um_dropdown', 'um_choices', 'um_confirm', 'um_notice', 'um-emoji-mart' ),
+				array( 'um_common', 'um_crop', 'um_dropdown', 'um_choices', 'um-emoji-mart' ),
 				UM_VERSION,
 				array(
 					'strategy'  => 'defer',
@@ -230,13 +226,10 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_enqueue_script( 'um_profile' );
 			wp_enqueue_script( 'um_register' );
 
-			wp_register_style( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.css', array(), '1.0' );
-			wp_register_style( 'um_notice', $libs_url . 'um-notice/um-notice' . $suffix . '.css', array(), '1.0' );
-
-			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array( 'um_common', 'um_tipsy', 'um_dropdown', 'um_crop', 'um_modal', 'um_choices', 'um_confirm', 'um_notice' ), UM_VERSION );
+			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array( 'um_common', 'um_tipsy', 'um_dropdown', 'um_crop', 'um_modal', 'um_choices' ), UM_VERSION );
 
 			wp_register_style( 'um_directory', $css_url . 'v3/directory' . $suffix . '.css', array( 'um_new_design' ), UM_VERSION );
-			wp_register_style( 'um_profile', $css_url . 'v3/profile' . $suffix . '.css', array( 'um_new_design', 'um_raty' ), UM_VERSION );
+			wp_register_style( 'um_profile', $css_url . 'v3/profile' . $suffix . '.css', array( 'um_new_design' ), UM_VERSION );
 
 			wp_register_style( 'um_account', $css_url . 'v3/account' . $suffix . '.css', array( 'um_new_design' ), UM_VERSION );
 

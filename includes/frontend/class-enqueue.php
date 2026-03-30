@@ -149,17 +149,13 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_script( 'um_dropdown', $libs_url . 'dropdown/dropdown' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
 			wp_register_style( 'um_dropdown', $libs_url . 'dropdown/dropdown' . $suffix . '.css', array(), UM_VERSION );
 
-			wp_register_script( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.js', array( 'jquery' ), '1.0', true );
-
-			wp_register_script( 'um_notice', $libs_url . 'um-notice/um-notice' . $suffix . '.js', array( 'jquery' ), '1.0', true );
-
 			// Emoji-mart
 			wp_register_script( 'um-emoji-mart', $libs_url . 'emoji-mart/emoji.js', array(), self::$emoji_version, true );
 
 			wp_register_script(
 				'um_frontend_common',
 				$js_url . 'v3/common-frontend' . $suffix . '.js',
-				array( 'um_common', 'um_crop', 'um_dropdown', 'um_choices', 'um_confirm', 'um_notice', 'um-emoji-mart' ),
+				array( 'um_common', 'um_crop', 'um_dropdown', 'um_choices', 'um-emoji-mart' ),
 				UM_VERSION,
 				array(
 					'strategy'  => 'defer',
@@ -274,8 +270,6 @@ final class Enqueue extends \um\common\Enqueue {
 //			wp_register_script( 'um_profile', $js_url . 'um-profile' . $suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'um_scripts' ), UM_VERSION, true );
 //			wp_set_script_translations( 'um_profile', 'ultimate-member' );
 		} else {
-			wp_register_script( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.js', array( 'jquery' ), '1.0', true );
-
 			wp_register_script( 'um_frontend_common', $js_url . 'common-frontend' . $suffix . '.js', array( 'um_common', 'um_crop' ), UM_VERSION, true );
 			$um_common_variables = array();
 			/**
@@ -311,7 +305,7 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_script( 'um_responsive', $js_url . 'um-responsive' . $suffix . '.js', array( 'um_functions' ), UM_VERSION, true );
 
 			wp_register_script( 'um-gdpr', $js_url . 'um-gdpr' . $suffix . '.js', array( 'jquery' ), UM_VERSION, false );
-			wp_register_script( 'um_scripts', $js_url . 'um-scripts' . $suffix . '.js', array( 'um_frontend_common', 'um_conditional', self::$select2_handle, 'um_raty' ), UM_VERSION, true );
+			wp_register_script( 'um_scripts', $js_url . 'um-scripts' . $suffix . '.js', array( 'um_frontend_common', 'um_conditional', self::$select2_handle ), UM_VERSION, true );
 
 			$max_upload_size = wp_max_upload_size();
 			if ( ! $max_upload_size ) {
@@ -376,19 +370,14 @@ final class Enqueue extends \um\common\Enqueue {
 	 * @since 2.0.30
 	 */
 	public function register_styles() {
-		$suffix   = self::get_suffix();
-		$libs_url = self::get_url( 'libs' );
-		$css_url  = self::get_url( 'css' );
-
-		wp_register_style( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.css', array(), '1.0' );
+		$suffix  = self::get_suffix();
+		$css_url = self::get_url( 'css' );
 
 		if ( UM()->is_new_ui() ) {
-			wp_register_style( 'um_notice', $libs_url . 'um-notice/um-notice' . $suffix . '.css', array(), '1.0' );
-
-			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array( 'um_common', 'um_tipsy', 'um_dropdown', 'um_crop', 'um_modal', 'um_choices', 'um_confirm', 'um_notice' ), UM_VERSION );
+			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array( 'um_common', 'um_dropdown', 'um_crop', 'um_modal', 'um_choices' ), UM_VERSION );
 
 			wp_register_style( 'um_directory', $css_url . 'v3/directory' . $suffix . '.css', array( 'um_new_design' ), UM_VERSION );
-			wp_register_style( 'um_profile', $css_url . 'v3/profile' . $suffix . '.css', array( 'um_new_design', 'um_raty' ), UM_VERSION );
+			wp_register_style( 'um_profile', $css_url . 'v3/profile' . $suffix . '.css', array( 'um_new_design' ), UM_VERSION );
 
 			wp_register_style( 'um_account', $css_url . 'v3/account' . $suffix . '.css', array( 'um_new_design' ), UM_VERSION );
 
@@ -406,7 +395,7 @@ final class Enqueue extends \um\common\Enqueue {
 			// Workaround when select2 deregistered (e.g. Woo + Impreza theme activated).
 			$this->register_select2();
 
-			$deps = array_merge( array( 'um_ui', 'um_tipsy', 'um_raty', 'select2', 'um_fileupload', 'um_common', 'um_responsive', 'um_modal' ), self::$fonticons_handlers );
+			$deps = array_merge( array( 'um_ui', 'select2', 'um_fileupload', 'um_common', 'um_responsive', 'um_modal' ), self::$fonticons_handlers );
 			wp_register_style( 'um_styles', $css_url . 'um-styles' . $suffix . '.css', $deps, UM_VERSION );
 
 			wp_register_style( 'um_members', $css_url . 'um-members' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
