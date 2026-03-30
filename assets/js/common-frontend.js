@@ -130,6 +130,14 @@ wp.hooks.addAction( 'um_member_directory_build_template', 'um_common_frontend', 
 	UM.frontend.dropdown.init();
 });
 
-jQuery(document).ready(function() {
+jQuery(document).ready(function ($) {
+	$(document.body).on('click', '.um_action_error_close', function(e) {
+		e.preventDefault();
+		$(this).parent().fadeOut();
+		let url = new URL(window.location.href);
+		url.searchParams.delete('um_action_error');
+		window.history.replaceState({}, '', url);
+	});
+
 	UM.frontend.dropdown.init();
 });

@@ -50,7 +50,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.9.3
+		 * @since 2.11.3
 		 *
 		 * @return APIs
 		 */

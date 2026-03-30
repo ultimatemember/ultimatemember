@@ -12,7 +12,7 @@ if ( ! class_exists( 'um\common\APIs' ) ) {
 	 *
 	 * @package um\common
 	 *
-	 * @since 2.9.3
+	 * @since 2.11.3
 	 */
 	class APIs {
 
@@ -26,8 +26,7 @@ if ( ! class_exists( 'um\common\APIs' ) ) {
 		 * @return false
 		 */
 		public static function has_api( $api ) {
-			$exists = false;
-			return apply_filters( 'um_has_api', $exists, $api );
+			return apply_filters( 'um_has_api', false, $api );
 		}
 
 		/**
@@ -36,8 +35,7 @@ if ( ! class_exists( 'um\common\APIs' ) ) {
 		 * @return false
 		 */
 		public static function is_active( $api ) {
-			$active = false;
-			return apply_filters( 'um_api_is_active', $active, $api );
+			return apply_filters( 'um_api_is_active', false, $api );
 		}
 
 		/**
@@ -50,12 +48,15 @@ if ( ! class_exists( 'um\common\APIs' ) ) {
 				return null;
 			}
 
-			if ( empty( UM()->classes[ "um\common\apis\\$api" ] ) ) {
+			$class_key = "um\common\apis\\$api";
+
+			if ( empty( UM()->classes[ $class_key ] ) ) {
 				$class = '\um\common\apis\\' . self::$api_map[ $api ];
 
-				UM()->classes[ "um\common\apis\\$api" ] = new $class();
+				UM()->classes[ $class_key ] = new $class();
 			}
-			return UM()->classes[ "um\common\apis\\$api" ];
+
+			return UM()->classes[ $class_key ];
 		}
 	}
 }

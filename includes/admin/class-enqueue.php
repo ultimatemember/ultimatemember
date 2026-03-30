@@ -214,7 +214,7 @@ final class Enqueue extends \um\common\Enqueue {
 			ob_start();
 			?>
 			jQuery( window ).on( 'load', function() {
-				jQuery('input[name="<?php echo esc_js( UM()->honeypot ); ?>"]').val('');
+			jQuery('input[name="<?php echo esc_js( UM()->honeypot ); ?>"]').val('');
 			});
 			<?php
 			$inline_script = ob_get_clean();

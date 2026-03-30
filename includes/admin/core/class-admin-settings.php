@@ -766,6 +766,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'require_strongpass'                   => array(
 						'sanitize' => 'bool',
 					),
+					'require_strongpass_special_char'      => array(
+						'sanitize' => 'bool',
+					),
 					'password_min_chars'                   => array(
 						'sanitize' => 'absint',
 					),
@@ -1027,13 +1030,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'enable_as_email_sending'              => array(
 						'sanitize' => 'bool',
 					),
+					'um_google_maps_js_api_key'            => array(
+						'sanitize' => 'text',
+					),
 					'um_google_lang_as_default'            => array(
 						'sanitize' => 'bool',
 					),
 					'um_google_lang'                       => array(
 						'sanitize' => 'text',
 					),
-					'um_google_maps_js_api_key'            => array(
+					'um_google_maps_api_version'           => array(
 						'sanitize' => 'text',
 					),
 					'rest_api_version'                     => array(
@@ -1323,6 +1329,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'label' => __( 'Require Strong Passwords', 'ultimate-member' ),
 												'checkbox_label' => __( 'Enable strong passwords', 'ultimate-member' ),
 												'description' => __( 'Enable this option to apply strong password rules to all password fields (user registration, password reset and password change).', 'ultimate-member' ),
+											),
+											array(
+												'id'    => 'require_strongpass_special_char',
+												'type'  => 'checkbox',
+												'label' => __( 'Password requires special character', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable special character requirement', 'ultimate-member' ),
+												'description' => __( 'Require at least one special character (e.g. !@#$%^&*) in passwords.', 'ultimate-member' ),
+												'conditional' => array( 'require_strongpass', '=', '1' ),
 											),
 											array(
 												'id'    => 'password_min_chars',
@@ -2351,7 +2365,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 											array(
 												'id'    => 'um_google_lang_as_default',
 												'type'  => 'checkbox',
-												'label' => __( 'Use site\'s locale as language for Google Maps', 'ultimate-member' ),
+												'label' => __( 'Google Maps locale', 'ultimate-member' ),
+												'checkbox_label' => __( 'Use current site\'s locale as language for Google Maps', 'ultimate-member' ),
+												'description' => __( 'Disable this option if you are planning to use static locale for Google Maps API.', 'ultimate-member' ),
 											),
 											array(
 												'id'      => 'um_google_lang',
@@ -2360,6 +2376,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'size'    => 'small',
 												'options' => UM()->config()->get( 'google_maps_locales' ),
 												'conditional' => array( 'um_google_lang_as_default', '=', 0 ),
+											),
+											array(
+												'id'      => 'um_google_maps_api_version',
+												'type'    => 'select',
+												'label'   => __( 'Google Maps API version', 'ultimate-member' ),
+												'size'    => 'small',
+												'options' => array(
+													'3.5'  => __( 'Version 3.5x (legacy)', 'ultimate-member' ),
+													'3.64' => __( 'Version 3.64', 'ultimate-member' ),
+												),
+												'conditional' => array( 'um_google_maps_js_api_key', '!=', '' ),
 											),
 										),
 									),

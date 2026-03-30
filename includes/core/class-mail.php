@@ -637,7 +637,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		/**
 		 * Checks if user enabled email notification
 		 *
-		 * @since 3.0
+		 * @since 2.11.3
 		 *
 		 * @param int    $user_id
 		 * @param string $key

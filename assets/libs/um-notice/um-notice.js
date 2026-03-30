@@ -4,8 +4,11 @@
 	var $step_size = 10;
 
 	var default_options = {
-		'message'   : '',
-		'type'      : 'update'
+		'message'    : '',
+		'type'       : 'update',
+		'dismissible': false,
+		'param'      : '', // maybe can be displayed via $_GET param in url.
+		'timeout'    : 3000 // or displayed via JS code and hidden in timeout interval.
 	};
 
 	var methods = {
@@ -15,8 +18,14 @@
 
 			$( this ).data( 'options', options );
 
-			var obj = $( '<div class="um-notice-message"></div>').appendTo( 'body' ).html( '<span class="um-notice-message-text"></span>' +
-				'<span class="um-notice-message-progress"></span>' );
+			let html = '<span class="um-notice-message-text"></span>' +
+				'<span class="um-notice-message-progress"></span>';
+			if ( false !== options.dismissible ) {
+				html =  '<span class="um-notice-message-text"></span><span class="um-notice-message-dismiss"></span>' +
+					'<span class="um-notice-message-progress"></span>'
+			}
+
+			var obj = $( '<div class="um-notice-message"></div>').appendTo( 'body' ).html( html );
 
 			obj.find( '.um-notice-message-text' ).html( options.message );
 
@@ -37,26 +46,25 @@
 				$step_size = $step_size + $notice_size;
 			}
 
-
 			obj.animate({
 				bottom: $step_size
 			}, 1000);
 
-			setTimeout( function () {
-				obj.fadeOut( 1000, function () {
-					obj.remove();
+			if ( false === options.dismissible ) {
+				setTimeout( function () {
+					obj.fadeOut( 1000, function () {
+						obj.remove();
 
-					if ( 0 < $count ) {
-						$step_size = $step_size - $notice_size;
-					}
+						if ( 0 < $count ) {
+							$step_size = $step_size - $notice_size;
+						}
 
-					$count--;
-				});
-			}, 3000 );
+						$count--;
+					});
+				}, options.timeout );
+			}
 
 			//methods.show.apply();
-
-
 		},
 		show : function() {
 
