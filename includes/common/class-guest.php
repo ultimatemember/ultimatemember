@@ -31,7 +31,6 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 		 */
 		public function __construct() {
 			add_action( 'um_core_loaded', array( &$this, 'set_guest_token' ) );
-		//	add_action( 'init', array( &$this, 'maybe_add_scheduled_action' ) );
 			add_action( 'wp_logout', array( &$this, 'flush_cookies' ) );
 			add_action( 'wp_login', array( &$this, 'flush_cookies' ) );
 		}
@@ -171,11 +170,6 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 			return $download_count >= $limit;
 		}
 
-		public function maybe_add_scheduled_action() {
-			$flush_interval = apply_filters( 'um_flush_guest_tokens_scheduled_action_interval', DAY_IN_SECONDS );
-			UM()->maybe_action_scheduler()->schedule_recurring_action( strtotime( 'midnight tonight' ), $flush_interval, 'um_flush_guest_tokens' );
-		}
-
 		/**
 		 * Flush cookies for secure access to temp uploaded files.
 		 * @return void
@@ -206,22 +200,6 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 					'%s',
 				)
 			);
-		}
-
-		private function flush_guest_tokens() {
-			global $wpdb;
-
-			// Delete all expired tokens (e.g., older than 24 hours)
-			$wpdb->query("DELETE FROM {$wpdb->prefix}um_guest_tokens WHERE created_at < NOW() - INTERVAL 1 DAY");
-		}
-
-		private function flush_guest_tokens_index() {
-			global $wpdb;
-
-			// Delete all tokens
-			$wpdb->query("DELETE FROM {$wpdb->prefix}um_guest_tokens");
-			// Reset auto-increment value
-			$wpdb->query("ALTER TABLE {$wpdb->prefix}um_guest_tokens AUTO_INCREMENT = 1");
 		}
 	}
 }

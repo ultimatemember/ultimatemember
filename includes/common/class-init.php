@@ -46,6 +46,10 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			if ( empty( UM()->classes['um\common\actions\users'] ) ) {
 				UM()->classes['um\common\actions\users'] = new actions\Users();
 			}
+
+			if ( empty( UM()->classes['um\common\actions\guests'] ) ) {
+				UM()->classes['um\common\actions\guests'] = new actions\Guests();
+			}
 			// Other classes init here as soon as possible.
 		}
 
