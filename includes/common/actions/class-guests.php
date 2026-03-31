@@ -63,14 +63,14 @@ if ( ! class_exists( 'um\common\actions\Guests' ) ) {
 			 *
 			 * @param int $days
 			 */
-			$tokens_ttl_days = absint( apply_filters( 'um_guest_tokens_ttl_days', 0 ) );
+			$tokens_ttl_days = absint( apply_filters( 'um_guest_tokens_ttl_days', 1 ) );
 
 			/**
 			 * How many days download attempts should live.
 			 *
 			 * @param int $days
 			 */
-			$attempts_ttl_days = absint( apply_filters( 'um_guest_download_attempts_ttl_days', 0 ) );
+			$attempts_ttl_days = absint( apply_filters( 'um_guest_download_attempts_ttl_days', 1 ) );
 
 			if ( UM()->is_new_ui() ) {
 				$temp_folder = UM()->common()->filesystem()->get_tempdir();
@@ -90,12 +90,6 @@ if ( ! class_exists( 'um\common\actions\Guests' ) ) {
 
 			// Remove temp folders for collected tokens.
 			foreach ( $expired_guest_tokens as $token ) {
-				$token = sanitize_file_name( $token );
-
-				if ( empty( $token ) ) {
-					continue;
-				}
-
 				$folder_path = trailingslashit( $temp_folder ) . $token;
 
 				if ( is_dir( $folder_path ) ) {
@@ -119,10 +113,9 @@ if ( ! class_exists( 'um\common\actions\Guests' ) ) {
 				)
 			);
 
-			// Reset auto-increment value (if $tokens_ttl_days and $attempts_ttl_days = 0)
-			if ( 0 === $attempts_ttl_days && 0 === $attempts_ttl_days ) {
-				$wpdb->query("ALTER TABLE {$wpdb->prefix}um_guest_tokens AUTO_INCREMENT = 1");
-			}
+			// Reset auto-increment value
+			$wpdb->query( "ALTER TABLE {$tokens_table} AUTO_INCREMENT = 1" );
+			$wpdb->query( "ALTER TABLE {$attempts_table} AUTO_INCREMENT = 1" );
 		}
 	}
 }
