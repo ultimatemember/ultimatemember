@@ -72,11 +72,8 @@ if ( ! class_exists( 'um\common\actions\Guests' ) ) {
 			 */
 			$attempts_ttl_days = absint( apply_filters( 'um_guest_download_attempts_ttl_days', 1 ) );
 
-			if ( UM()->is_new_ui() ) {
-				$temp_folder = UM()->common()->filesystem()->get_tempdir();
-			} else {
-				$temp_folder = UM()->files()->upload_temp;
-			}
+			// New UI only, so don't need the old filesystem here.
+			$temp_folder = UM()->common()->filesystem()->get_tempdir();
 
 			// Get expired guest tokens
 			$expired_guest_tokens = $wpdb->get_col(
