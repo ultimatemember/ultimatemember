@@ -90,7 +90,7 @@ if ( ! class_exists( 'um\common\actions\Guests' ) ) {
 
 			// Remove temp folders for collected tokens.
 			foreach ( $expired_guest_tokens as $token ) {
-				$folder_path = trailingslashit( $temp_folder ) . $token;
+				$folder_path = wp_normalize_path( $temp_folder . DIRECTORY_SEPARATOR . $token );
 
 				if ( is_dir( $folder_path ) ) {
 					UM()->common()->filesystem()::remove_dir( $folder_path );
