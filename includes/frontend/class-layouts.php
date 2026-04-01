@@ -984,7 +984,7 @@ class Layouts {
 			return '';
 		}
 
-		$srcset = empty( $args['size'] ) ? '' : UM()->common()->users()->get_cover_photo_url( $user_id, $args['size'] * 2 );
+		$srcset = empty( $args['size'] ) ? '' : UM()->common()->users()->get_cover_photo_url( $user_id, absint( $args['size'] ) * 2 );
 		if ( $srcset ) {
 			$srcset = sprintf( ' srcset="%s 2x"', esc_attr( $srcset ) );
 		}
