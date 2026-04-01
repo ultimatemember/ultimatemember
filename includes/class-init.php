@@ -32,9 +32,9 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Social_Login_API Social_Login_API()
 	 * @method UM_Stripe_API Stripe_API()
 	 * @method UM_Terms_Conditions Terms_Conditions() Reviewed branch: master
-	 * @method UM_Unsplash Unsplash() Not reviewed branch: feature/new_ui
+	 * @method UM_Unsplash Unsplash() Reviewed branch: master
 	 * @method UM_User_Bookmarks User_Bookmarks() Not reviewed branch: dev/new_ui
-	 * @method UM_User_Locations User_Locations() Under dev branch: dev/wall-lib
+	 * @method UM_User_Locations User_Locations() Under dev branch: dev/new-ui (member directory map in new UI only)
 	 * @method UM_User_Notes User_Notes() Reviewed branch: master
 	 * @method UM_User_Photos User_Photos() Reviewed branch: master
 	 * @method UM_User_Tags User_Tags() Reviewed branch: master
