@@ -109,29 +109,29 @@ class Filesystem {
 
 		$basedir = $upload_dir['basedir'] . '/' . $um_dir;
 
-		if ( is_multisite() ) {
-			/**
-			 * Filters the multisite suffix for base UM uploads directory.
-			 *
-			 * @param {string} $prefix  The multisite suffix for base UM uploads directory.
-			 * @param {int}    $blog_id Current blog ID. For no-multisite installation equals 1.
-			 *
-			 * @return {string} The multisite suffix for base UM uploads directory.
-			 *
-			 * @since 1.3.84
-			 * @hook um_multisite_upload_sites_directory
-			 *
-			 * @example <caption>Change the multisite suffix for base UM uploads directory.</caption>
-			 * function my_um_multisite_upload_sites_directory( $sites_dir, $blog_id ) {
-			 *      $sites_dir = 'sub-site/';
-			 *      return $sites_dir;
-			 * }
-			 * add_filter( 'um_multisite_upload_sites_directory', 'my_um_multisite_upload_sites_directory', 10, 2 );
-			 */
-			$sites_dir = apply_filters( 'um_multisite_upload_sites_directory', 'sites', $blog_id );
-
-			$basedir .= '/' . $sites_dir . '/' . $blog_id;
-		}
+//		if ( is_multisite() ) {
+//			/**
+//			 * Filters the multisite suffix for base UM uploads directory.
+//			 *
+//			 * @param {string} $prefix  The multisite suffix for base UM uploads directory.
+//			 * @param {int}    $blog_id Current blog ID. For no-multisite installation equals 1.
+//			 *
+//			 * @return {string} The multisite suffix for base UM uploads directory.
+//			 *
+//			 * @since 1.3.84
+//			 * @hook um_multisite_upload_sites_directory
+//			 *
+//			 * @example <caption>Change the multisite suffix for base UM uploads directory.</caption>
+//			 * function my_um_multisite_upload_sites_directory( $sites_dir, $blog_id ) {
+//			 *      $sites_dir = 'sub-site/';
+//			 *      return $sites_dir;
+//			 * }
+//			 * add_filter( 'um_multisite_upload_sites_directory', 'my_um_multisite_upload_sites_directory', 10, 2 );
+//			 */
+//			$sites_dir = apply_filters( 'um_multisite_upload_sites_directory', 'sites', $blog_id );
+//
+//			$basedir .= '/' . $sites_dir . '/' . $blog_id;
+//		}
 
 		if ( is_multisite() ) {
 			restore_current_blog();
@@ -236,12 +236,12 @@ class Filesystem {
 
 		$baseurl = $upload_dir['baseurl'] . '/' . $um_dir;
 
-		if ( is_multisite() ) {
-			/** This filter is documented in includes/common/class-filesystem.php */
-			$sites_dir = apply_filters( 'um_multisite_upload_sites_directory', 'sites', $blog_id );
-
-			$baseurl .= '/' . $sites_dir . '/' . $blog_id;
-		}
+//		if ( is_multisite() ) {
+//			/** This filter is documented in includes/common/class-filesystem.php */
+//			$sites_dir = apply_filters( 'um_multisite_upload_sites_directory', 'sites', $blog_id );
+//
+//			$baseurl .= '/' . $sites_dir . '/' . $blog_id;
+//		}
 
 		if ( is_multisite() ) {
 			restore_current_blog();
