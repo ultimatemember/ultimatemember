@@ -841,7 +841,7 @@ function um_profile_header_cover_area( $args ) {
 			if ( $user_cover ) {
 
 				$cover_size = null; // Means original.
-				if ( ! empty( $args['coversize'] ) ) {
+				if ( ! empty( $args['coversize'] ) && 'original' !== $args['coversize'] ) {
 					$cover_size = $args['coversize']; // Gets from form setting and if empty goes to global UM > Appearance settings.
 				}
 
