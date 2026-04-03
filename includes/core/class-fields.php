@@ -3068,106 +3068,106 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					break;
 				/* Single Image Upload */
 				case 'image':
-					if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) || UM()->is_new_ui() ) {
-						// User Profile Photo/Cover Photo fields aren't supported in old UI on the form.
-						$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . ' data-mode="' . esc_attr( $this->set_mode ) . '" data-upload-label="' . ( ! empty( $data['button_text'] ) ? esc_attr( $data['button_text'] ) : esc_attr__( 'Upload', 'ultimate-member' ) ) . '">';
-						if ( in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) ) {
-							$field_value = '';
-						} else {
-							$field_value = $this->field_value( $key, $default, $data );
-						}
+//					if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) || UM()->is_new_ui() ) {
+					// User Profile Photo/Cover Photo fields aren't supported in old UI on the form.
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . ' data-mode="' . esc_attr( $this->set_mode ) . '" data-upload-label="' . ( ! empty( $data['button_text'] ) ? esc_attr( $data['button_text'] ) : esc_attr__( 'Upload', 'ultimate-member' ) ) . '">';
+					if ( in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) ) {
+						$field_value = '';
+					} else {
+						$field_value = $this->field_value( $key, $default, $data );
+					}
 
-						if ( is_array( $field_value ) ) {
-							$field_value = ! empty( $field_value['filename'] ) ? $field_value['filename'] : 'empty_file';
-						}
+					if ( is_array( $field_value ) ) {
+						$field_value = ! empty( $field_value['filename'] ) ? $field_value['filename'] : 'empty_file';
+					}
 
-						$field_name = $key . $form_suffix;
+					$field_name = $key . $form_suffix;
 
-						$output .= '<input type="hidden" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
-						if ( isset( $data['label'] ) ) {
-							$output .= $this->field_label( $data['label'], $key, $data );
-						}
-						$modal_label = array_key_exists( 'label', $data ) ? $data['label'] : __( 'Upload Photo', 'ultimate-member' );
-						$output     .= '<div class="um-field-area" style="text-align: center;">';
+					$output .= '<input type="hidden" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+					if ( isset( $data['label'] ) ) {
+						$output .= $this->field_label( $data['label'], $key, $data );
+					}
+					$modal_label = array_key_exists( 'label', $data ) ? $data['label'] : __( 'Upload Photo', 'ultimate-member' );
+					$output     .= '<div class="um-field-area" style="text-align: center;">';
 
-						if ( ! empty( $field_value ) && 'empty_file' !== $field_value ) {
-							if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) ) {
-								if ( ( isset( $this->set_mode ) && 'register' === $this->set_mode ) || file_exists( UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $field_value ) ) {
-									$img_value = UM()->uploader()->get_core_temp_url() . '/' . $this->field_value( $key, $default, $data );
-								} else {
-									$img_value = UM()->files()->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
-								}
-								$img = '<img class="fusion-lazyload-ignore" src="' . esc_attr( $img_value ) . '" alt="" />';
+					if ( ! empty( $field_value ) && 'empty_file' !== $field_value ) {
+						if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) ) {
+							if ( ( isset( $this->set_mode ) && 'register' === $this->set_mode ) || file_exists( UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $field_value ) ) {
+								$img_value = UM()->uploader()->get_core_temp_url() . '/' . $this->field_value( $key, $default, $data );
 							} else {
-								$img = '';
+								$img_value = UM()->files()->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
 							}
-							$output .= '<div class="um-single-image-preview show ' . esc_attr( $data['crop_class'] ) . '" data-crop="' . esc_attr( $data['crop_data'] ) . '" data-key="' . esc_attr( $key ) . '">';
-							if ( empty( $disabled ) ) {
-								$output .= '<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>';
-							}
-							$output .= $img;
-							$output .= '</div>';
-							if ( empty( $disabled ) ) {
-								$output .= '<a href="javascript:void(0);" data-modal="um_upload_single" data-modal-size="' . esc_attr( $data['modal_size'] ) . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . esc_html__( 'Change photo', 'ultimate-member' ) . '</a>';
-							}
+							$img = '<img class="fusion-lazyload-ignore" src="' . esc_attr( $img_value ) . '" alt="" />';
 						} else {
-							$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '" data-crop="' . esc_attr( $data['crop_data'] ) . '" data-key="' . esc_attr( $key ) . '">';
-							if ( empty( $disabled ) ) {
-								$output .= '<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>';
-							}
-							$output .= '<img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div>';
-							if ( empty( $disabled ) ) {
-								$output .= '<a href="javascript:void(0);" data-modal="um_upload_single" data-modal-size="' . esc_attr( $data['modal_size'] ) . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . esc_html( $data['button_text'] ) . '</a>';
-							}
+							$img = '';
 						}
-						$output .= '</div>';
-						/* modal hidden */
+						$output .= '<div class="um-single-image-preview show ' . esc_attr( $data['crop_class'] ) . '" data-crop="' . esc_attr( $data['crop_data'] ) . '" data-key="' . esc_attr( $key ) . '">';
 						if ( empty( $disabled ) ) {
-							if ( ! isset( $data['allowed_types'] ) ) {
-								$allowed_types = 'gif,jpg,jpeg,png';
-							} elseif ( is_array( $data['allowed_types'] ) ) {
-								$allowed_types = implode( ',', $data['allowed_types'] );
-							} else {
-								$allowed_types = $data['allowed_types'];
-							}
-
-							$output .= '<div class="um-modal-hidden-content">';
-							$output .= '<div class="um-modal-header"> ' . esc_html( $modal_label ) . '</div>';
-							$output .= '<div class="um-modal-body">';
-							if ( isset( $this->set_id ) ) {
-								$set_id   = $this->set_id;
-								$set_mode = $this->set_mode;
-							} else {
-								$set_id   = 0;
-								$set_mode = '';
-							}
-
-							$data_icon = '';
-							if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-								$data_icon = ' data-icon="' . esc_attr( $data['icon'] ) . '"';
-							}
-
-							$nonce   = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
-							$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '"  data-crop="' . esc_attr( $data['crop_data'] ) . '" data-ratio="' . esc_attr( $data['ratio'] ) . '" data-min_width="' . esc_attr( $data['min_width'] ) . '" data-min_height="' . esc_attr( $data['min_height'] ) . '" data-coord=""><a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a><img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
-							$output .= '<div class="um-single-image-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-nonce="' . esc_attr( $nonce ) . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" ' . $data_icon . ' data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $data['max_size'] ) . '" data-max_size_error="' . esc_attr( $data['max_size_error'] ) . '" data-min_size_error="' . esc_attr( $data['min_size_error'] ) . '" data-extension_error="' . esc_attr( $data['extension_error'] ) . '"  data-allowed_types="' . esc_attr( $allowed_types ) . '" data-upload_text="' . esc_attr( $data['upload_text'] ) . '" data-max_files_error="' . esc_attr( $data['max_files_error'] ) . '" data-upload_help_text="' . esc_attr( $data['upload_help_text'] ) . '">' . esc_html( $data['button_text'] ) . '</div>';
-							$output .= '<div class="um-modal-footer">
-									<div class="um-modal-right">
-										<a href="javascript:void(0);" class="um-modal-btn um-finish-upload image disabled" data-key="' . esc_attr( $key ) . '" data-change="' . esc_attr__( 'Change photo', 'ultimate-member' ) . '" data-processing="' . esc_attr__( 'Processing...', 'ultimate-member' ) . '">' . esc_html__( 'Apply', 'ultimate-member' ) . '</a>
-										<a href="javascript:void(0);" class="um-modal-btn alt" data-action="um_remove_modal"> ' . esc_html__( 'Cancel', 'ultimate-member' ) . '</a>
-									</div>
-									<div class="um-clear"></div>
-								</div>';
-							$output .= '</div>';
-							$output .= '</div>';
+							$output .= '<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>';
 						}
-						/* end */
-						if ( $this->is_error( $key ) ) {
-							$output .= $this->field_error( $this->show_error( $key ), $field_name );
-						} elseif ( $this->is_notice( $key ) ) {
-							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						$output .= $img;
+						$output .= '</div>';
+						if ( empty( $disabled ) ) {
+							$output .= '<a href="javascript:void(0);" data-modal="um_upload_single" data-modal-size="' . esc_attr( $data['modal_size'] ) . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . esc_html__( 'Change photo', 'ultimate-member' ) . '</a>';
 						}
+					} else {
+						$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '" data-crop="' . esc_attr( $data['crop_data'] ) . '" data-key="' . esc_attr( $key ) . '">';
+						if ( empty( $disabled ) ) {
+							$output .= '<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>';
+						}
+						$output .= '<img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div>';
+						if ( empty( $disabled ) ) {
+							$output .= '<a href="javascript:void(0);" data-modal="um_upload_single" data-modal-size="' . esc_attr( $data['modal_size'] ) . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . esc_html( $data['button_text'] ) . '</a>';
+						}
+					}
+					$output .= '</div>';
+					/* modal hidden */
+					if ( empty( $disabled ) ) {
+						if ( ! isset( $data['allowed_types'] ) ) {
+							$allowed_types = 'gif,jpg,jpeg,png';
+						} elseif ( is_array( $data['allowed_types'] ) ) {
+							$allowed_types = implode( ',', $data['allowed_types'] );
+						} else {
+							$allowed_types = $data['allowed_types'];
+						}
+
+						$output .= '<div class="um-modal-hidden-content">';
+						$output .= '<div class="um-modal-header"> ' . esc_html( $modal_label ) . '</div>';
+						$output .= '<div class="um-modal-body">';
+						if ( isset( $this->set_id ) ) {
+							$set_id   = $this->set_id;
+							$set_mode = $this->set_mode;
+						} else {
+							$set_id   = 0;
+							$set_mode = '';
+						}
+
+						$data_icon = '';
+						if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+							$data_icon = ' data-icon="' . esc_attr( $data['icon'] ) . '"';
+						}
+
+						$nonce   = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
+						$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '"  data-crop="' . esc_attr( $data['crop_data'] ) . '" data-ratio="' . esc_attr( $data['ratio'] ) . '" data-min_width="' . esc_attr( $data['min_width'] ) . '" data-min_height="' . esc_attr( $data['min_height'] ) . '" data-coord=""><a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a><img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
+						$output .= '<div class="um-single-image-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-nonce="' . esc_attr( $nonce ) . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" ' . $data_icon . ' data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $data['max_size'] ) . '" data-max_size_error="' . esc_attr( $data['max_size_error'] ) . '" data-min_size_error="' . esc_attr( $data['min_size_error'] ) . '" data-extension_error="' . esc_attr( $data['extension_error'] ) . '"  data-allowed_types="' . esc_attr( $allowed_types ) . '" data-upload_text="' . esc_attr( $data['upload_text'] ) . '" data-max_files_error="' . esc_attr( $data['max_files_error'] ) . '" data-upload_help_text="' . esc_attr( $data['upload_help_text'] ) . '">' . esc_html( $data['button_text'] ) . '</div>';
+						$output .= '<div class="um-modal-footer">
+								<div class="um-modal-right">
+									<a href="javascript:void(0);" class="um-modal-btn um-finish-upload image disabled" data-key="' . esc_attr( $key ) . '" data-change="' . esc_attr__( 'Change photo', 'ultimate-member' ) . '" data-processing="' . esc_attr__( 'Processing...', 'ultimate-member' ) . '">' . esc_html__( 'Apply', 'ultimate-member' ) . '</a>
+									<a href="javascript:void(0);" class="um-modal-btn alt" data-action="um_remove_modal"> ' . esc_html__( 'Cancel', 'ultimate-member' ) . '</a>
+								</div>
+								<div class="um-clear"></div>
+							</div>';
+						$output .= '</div>';
 						$output .= '</div>';
 					}
+					/* end */
+					if ( $this->is_error( $key ) ) {
+						$output .= $this->field_error( $this->show_error( $key ), $field_name );
+					} elseif ( $this->is_notice( $key ) ) {
+						$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+					}
+					$output .= '</div>';
+//					}
 					break;
 
 				/* Single File Upload */
