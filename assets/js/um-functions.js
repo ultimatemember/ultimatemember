@@ -272,6 +272,9 @@ function um_responsive(){
 
 
 function initImageUpload_UM( trigger ) {
+	if ( ! trigger.length ) {
+		return;
+	}
 
 	if (trigger.data('upload_help_text')){
 		upload_help_text = '<span class="help">' + trigger.data('upload_help_text') + '</span>';
@@ -374,6 +377,9 @@ function initImageUpload_UM( trigger ) {
 }
 
 function initFileUpload_UM( trigger ) {
+	if ( ! trigger.length ) {
+		return;
+	}
 
 	if (trigger.data('upload_help_text')){
 		upload_help_text = '<span class="help">' + trigger.data('upload_help_text') + '</span>';
