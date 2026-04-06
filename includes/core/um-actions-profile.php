@@ -923,6 +923,7 @@ function um_profile_header( $args ) {
 
 	if ( ! empty( $disable_photo_uploader ) ) {
 		$args['disable_photo_upload'] = 1;
+
 		$overlay = '';
 	} else {
 		$overlay = '<span class="um-profile-photo-overlay">
@@ -932,8 +933,8 @@ function um_profile_header( $args ) {
 				</ins>
 			</span>
 		</span>';
-	} ?>
-
+	}
+	?>
 	<div class="um-header<?php echo esc_attr( $classes ); ?>">
 
 		<?php
@@ -956,33 +957,36 @@ function um_profile_header( $args ) {
 		 * }
 		 * add_action( 'um_pre_header_editprofile', 'my_um_pre_header_editprofile' );
 		 */
-		do_action( 'um_pre_header_editprofile', $args ); ?>
-
+		do_action( 'um_pre_header_editprofile', $args );
+		?>
 		<div class="um-profile-photo" data-user_id="<?php echo esc_attr( um_profile_id() ); ?>" <?php echo wp_kses( UM()->fields()->aria_valid_attributes( UM()->fields()->is_error( 'profile_photo' ), 'profile_photo' ), UM()->get_allowed_html( 'templates' ) ); ?>>
 
 			<a href="<?php echo esc_url( um_user_profile_url() ); ?>" class="um-profile-photo-img" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
-				<?php if ( ! $default_size || $default_size == 'original' ) {
-					$profile_photo = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/" . um_profile( 'profile_photo' );
+				<?php
+				if ( ! $default_size || 'original' === $default_size ) {
+					$profile_photo = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . um_profile( 'profile_photo' );
+					$data          = um_get_user_avatar_data( um_user( 'ID' ) );
 
-					$data = um_get_user_avatar_data( um_user( 'ID' ) );
-					echo $overlay . sprintf( '<img src="%s" class="%s" alt="%s" data-default="%s" onerror="%s" />',
-							esc_url( $profile_photo ),
-							esc_attr( $data['class'] ),
-							esc_attr( $data['alt'] ),
-							esc_attr( $data['default'] ),
-							'if ( ! this.getAttribute(\'data-load-error\') ){ this.setAttribute(\'data-load-error\', \'1\');this.setAttribute(\'src\', this.getAttribute(\'data-default\'));}'
-						);
+					echo $overlay;
+					printf(
+						'<img src="%s" class="%s" alt="%s" data-default="%s" onerror="%s" />',
+						esc_url( $profile_photo ),
+						esc_attr( $data['class'] ),
+						esc_attr( $data['alt'] ),
+						esc_attr( $data['default'] ),
+						'if ( ! this.getAttribute(\'data-load-error\') ){ this.setAttribute(\'data-load-error\', \'1\');this.setAttribute(\'src\', this.getAttribute(\'data-default\'));}'
+					);
 				} else {
 					echo $overlay . get_avatar( um_user( 'ID' ), $default_size );
-				} ?>
+				}
+				?>
 			</a>
-
-			<?php if ( empty( $disable_photo_uploader ) && empty( UM()->user()->cannot_edit ) ) {
+			<?php
+			if ( empty( $disable_photo_uploader ) && empty( UM()->user()->cannot_edit ) ) {
 
 				UM()->fields()->add_hidden_field( 'profile_photo' );
 
 				if ( ! um_profile( 'profile_photo' ) ) { // has profile photo
-
 					$items = array(
 						'<a href="#" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width" data-alt_text="' . esc_attr__( 'Change photo', 'ultimate-member' ) . '">' . esc_html__( 'Upload photo', 'ultimate-member' ) . '</a>',
 						'<a href="#" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '" style="display:none;">' . esc_html__( 'Remove photo', 'ultimate-member' ) . '</a>',
@@ -1046,11 +1050,9 @@ function um_profile_header( $args ) {
 					$items = apply_filters( 'um_user_photo_menu_edit', $items );
 
 					UM()->profile()->new_ui( 'bc', 'div.um-profile-photo', 'click', $items );
-
 				}
-
-			} ?>
-
+			}
+			?>
 		</div>
 
 		<div class="um-profile-meta">
