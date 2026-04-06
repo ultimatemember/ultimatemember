@@ -1834,7 +1834,21 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 
 				if ( ! in_array( $key, $this->update_user_keys, true ) ) {
-					if ( $value === 0 ) {
+					if ( is_multisite() ) {
+						$data = UM()->fields()->get_field( $key );
+						if ( array_key_exists( 'type', $data ) && in_array( $data['type'], array( 'image', 'file' ), true ) ) {
+							// We store files in the separate sub-site directories (sites/BLOG_ID), so need to store the user options per sub-site.
+							if ( $value === 0 ) {
+								update_user_option( $this->id, $key, '0' );
+							} else {
+								update_user_option( $this->id, $key, $value );
+							}
+						} elseif ( $value === 0 ) {
+							update_user_meta( $this->id, $key, '0' );
+						} else {
+							update_user_meta( $this->id, $key, $value );
+						}
+					} elseif ( $value === 0 ) {
 						update_user_meta( $this->id, $key, '0' );
 					} else {
 						update_user_meta( $this->id, $key, $value );

@@ -1772,6 +1772,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 		/**
 		 * Clear all users cache.
+		 *
+		 * For multisite installation it clears the user cache per subsite on the current blog_id.
+		 * {$wpdb->options} will automatically refer to the table of the current subsite.
 		 */
 		public function user_cache() {
 			global $wpdb;

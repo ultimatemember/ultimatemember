@@ -217,11 +217,22 @@ class Users {
 	 * Reset User cache
 	 *
 	 * @since 2.8.7
+	 * @since 2.11.4 Added $blog_id for multisite cases.
 	 *
 	 * @param int $user_id User ID.
+	 * @param null|int $blog_id Blog ID. Since 2.11.4.
 	 */
-	public function remove_cache( $user_id ) {
-		delete_option( "um_cache_userdata_{$user_id}" );
+	public function remove_cache( $user_id, $blog_id = null ) {
+		if ( is_multisite() && ! is_null( $blog_id ) ) {
+			$current_blog = get_current_blog_id();
+			if ( $current_blog !== absint( $blog_id ) ) {
+				switch_to_blog( $blog_id );
+				delete_option( "um_cache_userdata_{$user_id}" );
+				restore_current_blog();
+			}
+		} else {
+			delete_option( "um_cache_userdata_{$user_id}" );
+		}
 	}
 
 	/**
