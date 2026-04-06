@@ -171,6 +171,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Bugfixes**
 
+* Fixed: Added uploader fields accept argument for set allowed mime-types in the upload dialog window. Updated 3.1.2 version of this library [hayageek/jquery-upload-file](https://github.com/hayageek/jquery-upload-file/). Don't use 4.0.11 version for now.
 * Fixed: JS initialization of the empty uploader fields.
 
 **Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
