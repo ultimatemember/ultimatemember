@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-04-03T08:52:15+00:00\n"
+"POT-Creation-Date: 2026-04-06T12:14:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -2426,7 +2426,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-forms.php:343
 #: includes/common/class-fields.php:135
-#: includes/core/class-fields.php:756
+#: includes/core/class-fields.php:752
 msgid "Required"
 msgstr ""
 
@@ -3472,10 +3472,10 @@ msgstr ""
 #: includes/admin/core/class-admin-metabox.php:2266
 #: includes/common/class-fields.php:1503
 #: includes/common/class-fields.php:1678
-#: includes/core/class-fields.php:2006
-#: includes/core/class-fields.php:2047
-#: includes/core/class-fields.php:3073
-#: includes/core/class-fields.php:3175
+#: includes/core/class-fields.php:2002
+#: includes/core/class-fields.php:2043
+#: includes/core/class-fields.php:3069
+#: includes/core/class-fields.php:3171
 msgid "Upload"
 msgstr ""
 
@@ -6615,14 +6615,14 @@ msgstr ""
 #: includes/ajax/class-files.php:274
 #: includes/ajax/class-files.php:561
 #: includes/class-config.php:837
-#: includes/core/class-fields.php:3156
-#: includes/core/class-fields.php:3286
+#: includes/core/class-fields.php:3152
+#: includes/core/class-fields.php:3282
 #: includes/core/um-actions-profile.php:820
 #: includes/core/um-actions-profile.php:829
-#: includes/core/um-actions-profile.php:989
-#: includes/core/um-actions-profile.php:1022
-#: includes/core/um-actions-profile.php:1369
-#: includes/core/um-actions-profile.php:1376
+#: includes/core/um-actions-profile.php:993
+#: includes/core/um-actions-profile.php:1026
+#: includes/core/um-actions-profile.php:1371
+#: includes/core/um-actions-profile.php:1378
 #: templates/v3/profile/header.php:41
 msgid "Cancel"
 msgstr ""
@@ -7081,7 +7081,7 @@ msgstr ""
 
 #: includes/ajax/class-files.php:258
 #: includes/ajax/class-files.php:541
-#: includes/core/class-fields.php:3155
+#: includes/core/class-fields.php:3151
 msgid "Apply"
 msgstr ""
 
@@ -7994,7 +7994,7 @@ msgstr ""
 
 #: includes/class-config.php:291
 #: includes/core/class-member-directory.php:1959
-#: includes/core/um-actions-profile.php:1375
+#: includes/core/um-actions-profile.php:1377
 #: includes/core/um-actions-user.php:19
 #: includes/frontend/class-users.php:119
 #: includes/frontend/class-users.php:129
@@ -8542,12 +8542,12 @@ msgid "To"
 msgstr ""
 
 #: includes/common/class-fields.php:1110
-#: includes/core/class-fields.php:2651
+#: includes/core/class-fields.php:2647
 msgid "Current Password"
 msgstr ""
 
 #: includes/common/class-fields.php:1142
-#: includes/core/class-fields.php:2691
+#: includes/core/class-fields.php:2687
 msgid "New Password"
 msgstr ""
 
@@ -8556,9 +8556,9 @@ msgstr ""
 #: includes/common/class-fields.php:1184
 #: includes/common/class-fields.php:1196
 #: includes/common/class-fields.php:1199
-#: includes/core/class-fields.php:2742
-#: includes/core/class-fields.php:2760
-#: includes/core/class-fields.php:2763
+#: includes/core/class-fields.php:2738
+#: includes/core/class-fields.php:2756
+#: includes/core/class-fields.php:2759
 #, php-format
 msgid "Confirm %s"
 msgstr ""
@@ -8596,16 +8596,16 @@ msgid "Action 2"
 msgstr ""
 
 #: includes/common/class-shortcodes.php:1352
-#: includes/core/class-fields.php:3111
-#: includes/core/class-fields.php:3155
-#: includes/core/um-actions-profile.php:987
-#: includes/core/um-actions-profile.php:1020
+#: includes/core/class-fields.php:3107
+#: includes/core/class-fields.php:3151
+#: includes/core/um-actions-profile.php:991
+#: includes/core/um-actions-profile.php:1024
 msgid "Change photo"
 msgstr ""
 
 #: includes/common/class-shortcodes.php:1353
-#: includes/core/um-actions-profile.php:988
-#: includes/core/um-actions-profile.php:1021
+#: includes/core/um-actions-profile.php:992
+#: includes/core/um-actions-profile.php:1025
 msgid "Remove photo"
 msgstr ""
 
@@ -10698,90 +10698,90 @@ msgid_plural "%s years old"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/core/class-fields.php:1631
+#: includes/core/class-fields.php:1627
 msgid "Custom Field"
 msgstr ""
 
-#: includes/core/class-fields.php:1995
+#: includes/core/class-fields.php:1991
 msgid "Please upload a valid image!"
 msgstr ""
 
-#: includes/core/class-fields.php:2009
+#: includes/core/class-fields.php:2005
 msgid "Sorry this is not a valid image."
 msgstr ""
 
-#: includes/core/class-fields.php:2012
+#: includes/core/class-fields.php:2008
 msgid "This image is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:2015
+#: includes/core/class-fields.php:2011
 msgid "This image is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:2018
+#: includes/core/class-fields.php:2014
 msgid "You can only upload one image"
 msgstr ""
 
-#: includes/core/class-fields.php:2050
+#: includes/core/class-fields.php:2046
 msgid "Sorry this is not a valid file."
 msgstr ""
 
-#: includes/core/class-fields.php:2053
+#: includes/core/class-fields.php:2049
 msgid "This file is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:2056
+#: includes/core/class-fields.php:2052
 msgid "This file is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:2059
+#: includes/core/class-fields.php:2055
 msgid "You can only upload one file"
 msgstr ""
 
-#: includes/core/class-fields.php:3090
+#: includes/core/class-fields.php:3086
 msgid "Upload Photo"
 msgstr ""
 
-#: includes/core/class-fields.php:3155
-#: includes/core/class-fields.php:3285
+#: includes/core/class-fields.php:3151
+#: includes/core/class-fields.php:3281
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:3188
+#: includes/core/class-fields.php:3184
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:3233
+#: includes/core/class-fields.php:3229
 #: includes/core/um-filters-fields.php:360
 #: includes/core/um-filters-fields.php:454
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:3237
-#: includes/core/class-fields.php:3285
+#: includes/core/class-fields.php:3233
+#: includes/core/class-fields.php:3281
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:3285
+#: includes/core/class-fields.php:3281
 #: templates/v3/profile/header.php:30
 msgid "Save"
 msgstr ""
 
 #. translators: %s: edit user link.
-#: includes/core/class-fields.php:4742
+#: includes/core/class-fields.php:4738
 #, php-format
 msgid "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some information!"
 msgstr ""
 
-#: includes/core/class-fields.php:4744
+#: includes/core/class-fields.php:4740
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
-#: includes/core/class-fields.php:4995
+#: includes/core/class-fields.php:4991
 msgid "Please login as administrator."
 msgstr ""
 
-#: includes/core/class-fields.php:4999
+#: includes/core/class-fields.php:4995
 msgid "Invalid action."
 msgstr ""
 
@@ -10821,8 +10821,8 @@ msgstr ""
 
 #: includes/core/class-member-directory.php:1920
 #: includes/core/class-member-directory.php:1948
-#: includes/core/um-actions-profile.php:1342
-#: includes/core/um-actions-profile.php:1373
+#: includes/core/um-actions-profile.php:1344
+#: includes/core/um-actions-profile.php:1375
 #: includes/frontend/class-users.php:115
 #: includes/frontend/class-users.php:135
 #: templates/v3/profile/header.php:57
@@ -10830,7 +10830,7 @@ msgid "Edit Profile"
 msgstr ""
 
 #: includes/core/class-member-directory.php:1954
-#: includes/core/um-actions-profile.php:1374
+#: includes/core/um-actions-profile.php:1376
 #: includes/frontend/class-users.php:116
 #: includes/frontend/class-users.php:128
 msgid "My Account"
@@ -11546,17 +11546,17 @@ msgstr ""
 msgid "Remove cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:987
-#: includes/core/um-actions-profile.php:1020
+#: includes/core/um-actions-profile.php:991
+#: includes/core/um-actions-profile.php:1024
 msgid "Upload photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1170
+#: includes/core/um-actions-profile.php:1172
 msgid "Tell us a bit about yourself..."
 msgstr ""
 
 #. translators: %s: profile status.
-#: includes/core/um-actions-profile.php:1190
+#: includes/core/um-actions-profile.php:1192
 #: templates/v3/profile/header.php:354
 #, php-format
 msgid "This user account status is %s"
