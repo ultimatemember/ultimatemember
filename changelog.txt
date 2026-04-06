@@ -1,5 +1,13 @@
 ﻿== Changelog ==
 
+= 2.11.4 April xx, 2026 =
+
+* Bugfixes:
+
+  - Fixed: JS initialization of the empty uploader fields.
+
+* Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade *
+
 = 2.11.3 March 26, 2026 =
 
 * Enhancements:
