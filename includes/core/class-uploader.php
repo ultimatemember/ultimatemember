@@ -1283,8 +1283,20 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 						}
 					}
 
-					delete_user_meta( $user_id, $key );
-					delete_user_meta( $user_id, "{$key}_metadata" );
+					if ( is_multisite() ) {
+						$data = UM()->fields()->get_field( $key );
+						if ( array_key_exists( 'type', $data ) && in_array( $data['type'], array( 'image', 'file' ), true ) ) {
+							delete_user_option( $user_id, $key );
+							delete_user_option( $user_id, "{$key}_metadata" );
+						} else {
+							delete_user_meta( $user_id, $key );
+							delete_user_meta( $user_id, "{$key}_metadata" );
+						}
+					} else {
+						delete_user_meta( $user_id, $key );
+						delete_user_meta( $user_id, "{$key}_metadata" );
+					}
+
 					delete_transient( "um_{$filename}" );
 
 					continue;
@@ -1320,7 +1332,18 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 							$new_files[ $key ] = $new_filename;
 							$old_files[ $key ] = get_user_meta( $user_id, $key, true );
 
-							update_user_meta( $user_id, $key, $new_filename );
+
+							if ( is_multisite() ) {
+								$data = UM()->fields()->get_field( $key );
+								if ( array_key_exists( 'type', $data ) && in_array( $data['type'], array( 'image', 'file' ), true ) ) {
+									// We store files in the separate sub-site directories (sites/BLOG_ID), so need to store the user options per sub-site.
+									update_user_option( $user_id, $key, $new_filename );
+								} else {
+									update_user_meta( $user_id, $key, $new_filename );
+								}
+							} else {
+								update_user_meta( $user_id, $key, $new_filename );
+							}
 
 							$file_info = get_transient( "um_{$filename}" );
 							if ( ! $file_info ) {
@@ -1329,7 +1352,18 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 							}
 
 							if ( $file_info ) {
-								update_user_meta( $user_id, "{$key}_metadata", $file_info );
+								if ( is_multisite() ) {
+									$data = UM()->fields()->get_field( $key );
+									if ( array_key_exists( 'type', $data ) && in_array( $data['type'], array( 'image', 'file' ), true ) ) {
+										// We store files in the separate sub-site directories (sites/BLOG_ID), so need to store the user options per sub-site.
+										update_user_option( $user_id, "{$key}_metadata", $file_info );
+									} else {
+										update_user_meta( $user_id, "{$key}_metadata", $file_info );
+									}
+								} else {
+									update_user_meta( $user_id, "{$key}_metadata", $file_info );
+								}
+
 								delete_transient( "um_{$filename}" );
 							}
 						}

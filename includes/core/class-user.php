@@ -1254,6 +1254,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 */
 		function set( $user_id = null, $clean = false ) {
+			global $wpdb;
+
 			if ( isset( $this->profile ) ) {
 				unset( $this->profile );
 			}
@@ -1322,6 +1324,21 @@ if ( ! class_exists( 'um\core\User' ) ) {
 							continue;
 						}
 						$this->profile[ $k ] = $v[0];
+					}
+
+					// add multisite-specific user meta
+					if ( is_multisite() ) {
+						foreach ( $this->usermeta as $k => $v ) {
+							$prefix = $wpdb->get_blog_prefix();
+							if ( strpos( $k, $prefix ) === 0 ) {
+								$k = str_replace( $prefix, '', $k );
+							}
+							$data = UM()->builtin()->get_a_field( $k );
+							if ( is_array( $data ) && array_key_exists( 'type', $data ) && in_array( $data['type'], array( 'image', 'file' ), true ) ) {
+								$this->profile[ $k ] = get_user_option( $k, $this->id );
+								$this->profile[ $k . '_metadata' ] = get_user_option( $k . '_metadata', $this->id );
+							}
+						}
 					}
 
 					// add permissions

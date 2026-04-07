@@ -2373,13 +2373,9 @@ function um_get_default_cover_uri() {
  * @return int|string|array
  */
 function um_user( $data, $attrs = null ) {
-
-	switch ($data) {
-
+	switch ( $data ) {
 		default:
-
 			$value = um_profile( $data );
-
 			$value = maybe_unserialize( $value );
 
 			if ( in_array( $data, array( 'role', 'gender' ) ) ) {
@@ -2391,37 +2387,26 @@ function um_user( $data, $attrs = null ) {
 			}
 
 			return $value;
-			break;
 
 		case 'user_email':
-
 			$user_email_in_meta = get_user_meta( um_user( 'ID' ), 'user_email', true );
 			if ( $user_email_in_meta ) {
 				delete_user_meta( um_user( 'ID' ), 'user_email' );
 			}
 
-			$value = um_profile( $data );
-
-			return $value;
-			break;
+			return um_profile( $data );
 
 		case 'user_login':
-
 			$user_login_in_meta = get_user_meta( um_user( 'ID' ), 'user_login', true );
 			if ( $user_login_in_meta ) {
 				delete_user_meta( um_user( 'ID' ), 'user_login' );
 			}
 
-			$value = um_profile( $data );
-
-			return $value;
-			break;
+			return um_profile( $data );
 
 		case 'first_name':
 		case 'last_name':
-
 			$name = um_profile( $data );
-
 			/**
 			 * UM hook
 			 *
@@ -2442,14 +2427,9 @@ function um_user( $data, $attrs = null ) {
 			 * }
 			 * ?>
 			 */
-			$name = apply_filters( "um_user_{$data}_case", $name );
-
-			return $name;
-
-			break;
+			return apply_filters( "um_user_{$data}_case", $name );
 
 		case 'full_name':
-
 			if ( um_user( 'first_name' ) && um_user( 'last_name' ) ) {
 				$full_name = um_user( 'first_name' ) . ' ' . um_user( 'last_name' );
 			} else {
@@ -2465,12 +2445,7 @@ function um_user( $data, $attrs = null ) {
 
 			return $full_name;
 
-			break;
-
 		case 'first_and_last_name_initial':
-
-			$f_and_l_initial = '';
-
 			if ( um_user( 'first_name' ) && um_user( 'last_name' ) ) {
 				$initial = um_user( 'last_name' );
 				$f_and_l_initial = um_user( 'first_name' ) . ' ' . $initial[0];
@@ -2478,13 +2453,9 @@ function um_user( $data, $attrs = null ) {
 				$f_and_l_initial = um_profile( $data );
 			}
 
-			$name = UM()->validation()->safe_name_in_url( $f_and_l_initial );
-			return $name;
-
-			break;
+			return UM()->validation()->safe_name_in_url( $f_and_l_initial );
 
 		case 'display_name':
-
 			$op = UM()->options()->get( 'display_name' );
 
 			$name = '';
@@ -2588,23 +2559,16 @@ function um_user( $data, $attrs = null ) {
 			 */
 			return apply_filters( 'um_user_display_name_filter', $name, um_user( 'ID' ), ( $attrs == 'html' ) ? 1 : 0 );
 
-			break;
-
 		case 'role_select':
 		case 'role_radio':
-
 			return UM()->roles()->get_role_name( UM()->roles()->get_editable_priority_user_role( um_user( 'ID' ) ) );
-			break;
 
 		case 'submitted':
 			$array = um_profile( $data );
 			if ( empty( $array ) ) {
 				return '';
 			}
-			$array = maybe_unserialize( $array );
-
-			return $array;
-			break;
+			return maybe_unserialize( $array );
 
 		case 'password_reset_link':
 			// Avoid using and make it directly with `UM()->password()->reset_url( $user_id )`
@@ -2626,10 +2590,8 @@ function um_user( $data, $attrs = null ) {
 				esc_attr( $data['default'] ),
 				'if ( ! this.getAttribute(\'data-load-error\') ){ this.setAttribute(\'data-load-error\', \'1\');this.setAttribute(\'src\', this.getAttribute(\'data-default\'));}'
 			);
-			break;
 
 		case 'cover_photo':
-
 			$is_default = false;
 
 			if ( um_profile( 'cover_photo' ) ) {
@@ -2669,22 +2631,12 @@ function um_user( $data, $attrs = null ) {
 
 			$cover_html = $cover_uri ? '<img src="' . esc_attr( $cover_uri ) . '" alt="' . esc_attr( $alt ) . '" loading="lazy" />' : '';
 
-			$cover_html = apply_filters( 'um_user_cover_photo_html__filter', $cover_html, $cover_uri, $alt, $is_default, $attrs );
-			return $cover_html;
-
-			break;
+			return apply_filters( 'um_user_cover_photo_html__filter', $cover_html, $cover_uri, $alt, $is_default, $attrs );
 
 		case 'user_url':
-
-			$value = um_profile( $data );
-
-			return $value;
-
-			break;
-
+			return um_profile( $data );
 
 	}
-
 }
 
 
