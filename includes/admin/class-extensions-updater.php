@@ -191,7 +191,10 @@ class Extensions_Updater {
 	 * @param string $version The version to set as the last upgrade version.
 	 */
 	private function set_last_version_upgrade( $version ) {
-		update_option( 'um_' . $this->updater_data['slug'] . '_last_version_upgrade', $version );
+		$last_version = $this->get_last_version_upgrade();
+		if ( version_compare( $last_version, $version, '!=' ) ) {
+			update_option( 'um_' . $this->updater_data['slug'] . '_last_version_upgrade', $version );
+		}
 	}
 
 	/**
