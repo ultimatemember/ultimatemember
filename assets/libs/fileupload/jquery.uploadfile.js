@@ -51,7 +51,7 @@
             onError: function (files, status, message) {},
             deleteCallback: false,
             afterUploadAll: false,
-            uploadButtonClass: "ajax-file-upload",
+            uploadButtonClass: "upload",
             dragDropStr: "<span><b>Drag &amp; Drop Files</b></span>",
             abortStr: "Abort",
             cancelStr: "Cancel",
@@ -70,7 +70,7 @@
         this.fCounter = 0; //failed uploads
         this.sCounter = 0; //success uploads
         this.tCounter = 0; //total uploads
-        var formGroup = "ajax-file-upload-" + (new Date().getTime());
+        var formGroup = "upload-" + (new Date().getTime());
         this.formGroup = formGroup;
         this.hide();
         this.errorLog = $("<div></div>"); //Writing errors
@@ -115,7 +115,7 @@
             });
         }
         this.stopUpload = function () {
-            $(".ajax-file-upload-red").each(function (i, items) {
+            $(".upload-red").each(function (i, items) {
                 if ($(this).hasClass(obj.formGroup)) $(this).click();
             });
         }
@@ -271,9 +271,9 @@
 		{
 			if(s.showFileCounter)
 			{
-			var count=$(".ajax-file-upload-filename").length;
+			var count=$(".upload-filename").length;
 			obj.fileCounter=count+1;
-			$(".ajax-file-upload-filename").each(function (i, items)
+			$(".upload-filename").each(function (i, items)
              {
              	var arr=$(this).html().split(s.fileCounterStyle);
              	var fileNum = parseInt(arr[0]) -1;//decrement;
@@ -412,14 +412,14 @@
 
 
         function createProgressDiv(obj, s) {
-            this.statusbar = $("<div class='ajax-file-upload-statusbar'></div>");
-            this.filename = $("<div class='ajax-file-upload-filename'></div>").appendTo(this.statusbar);
-            this.progressDiv = $("<div class='ajax-file-upload-progress'>").appendTo(this.statusbar).hide();
-            this.progressbar = $("<div class='ajax-file-upload-bar " + obj.formGroup + "'></div>").appendTo(this.progressDiv);
-            this.abort = $("<div class='ajax-file-upload-red " + obj.formGroup + "'>" + s.abortStr + "</div>").appendTo(this.statusbar).hide();
-            this.cancel = $("<div class='ajax-file-upload-red'>" + s.cancelStr + "</div>").appendTo(this.statusbar).hide();
-            this.done = $("<div class='ajax-file-upload-green'>" + s.doneStr + "</div>").appendTo(this.statusbar).hide();
-            this.del = $("<div class='ajax-file-upload-red'>" + s.deletelStr + "</div>").appendTo(this.statusbar).hide();
+            this.statusbar = $("<div class='upload-statusbar'></div>");
+            this.filename = $("<div class='upload-filename'></div>").appendTo(this.statusbar);
+            this.progressDiv = $("<div class='upload-progress'>").appendTo(this.statusbar).hide();
+            this.progressbar = $("<div class='upload-bar " + obj.formGroup + "'></div>").appendTo(this.progressDiv);
+            this.abort = $("<div class='upload-red " + obj.formGroup + "'>" + s.abortStr + "</div>").appendTo(this.statusbar).hide();
+            this.cancel = $("<div class='upload-red'>" + s.cancelStr + "</div>").appendTo(this.statusbar).hide();
+            this.done = $("<div class='upload-green'>" + s.doneStr + "</div>").appendTo(this.statusbar).hide();
+            this.del = $("<div class='upload-red'>" + s.deletelStr + "</div>").appendTo(this.statusbar).hide();
             obj.errorLog.after(this.statusbar);
             return this;
         }

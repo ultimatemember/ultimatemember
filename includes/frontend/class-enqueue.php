@@ -102,7 +102,6 @@ final class Enqueue extends \um\common\Enqueue {
 
 		// uploadFiles scripts + UM custom styles for uploader.
 		wp_register_script( 'um_jquery_form', $libs_url . 'jquery-form/jquery-form' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
-//		wp_register_script( 'um_fileupload', $libs_url . 'fileupload/fileupload.js', array( 'um_jquery_form' ), '3.1.2', true );
 		wp_register_script( 'um_fileupload', $libs_url . 'fileupload/jquery.uploadfile' . $suffix . '.js', array( 'um_jquery_form' ), '3.1.2', true );
 
 		wp_register_script( 'um_functions', $js_url . 'um-functions' . $suffix . '.js', array( 'um_frontend_common', 'um_fileupload' ), UM_VERSION, true );
