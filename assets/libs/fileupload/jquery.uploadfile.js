@@ -97,7 +97,7 @@
                     var dragDrop = $('<div class="ajax-upload-dragdrop" style="vertical-align:top;"></div>');
                     $(obj).before(dragDrop);
                     $(dragDrop).append(uploadLabel);
-                    $(dragDrop).append($(s.dragDropStr));
+                    $(dragDrop).prepend($(s.dragDropStr));
                     setDragDropHandlers(obj, s, dragDrop);
 
                 } else {
