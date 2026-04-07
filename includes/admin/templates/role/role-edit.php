@@ -170,7 +170,7 @@ if ( ! empty( $_POST['role'] ) ) {
 
 			update_option( "um_role_{$id}_meta", $role_meta );
 
-			UM()->user()->remove_cache_all_users();
+			UM()->common()->users()->remove_cache_all_users();
 
 			um_js_redirect( $redirect );
 		}

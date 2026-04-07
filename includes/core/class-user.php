@@ -680,9 +680,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 			}
 
-			$this->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 		}
-
 
 		/**
 		 * Multisite add existing user
@@ -701,7 +700,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 			}
 
-			$this->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 		}
 
 
@@ -789,7 +788,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return;
 			}
 
-			delete_option( "um_cache_userdata_{$user_id}" );
+			UM()->common()->users()->remove_cache( $user_id );
 
 			$current_profile_slug = $this->get_profile_slug( $user_id, true );
 
@@ -1014,7 +1013,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			//Update permalink
 			$this->generate_profile_slug( $user_id, true );
 
-			$this->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 		}
 
 
@@ -1160,58 +1159,81 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		}
 
 		/**
-		 * @param $user_id
+		 * @param int $user_id
+		 * @param null|int $blog_id
 		 *
-		 * @return mixed|string
+		 * @return mixed|null
 		 */
-		public function get_cached_data( $user_id ) {
+		public function get_cached_data( $user_id, $blog_id = null ) {
 			$disallow_cache = UM()->options()->get( 'um_profile_object_cache_stop' );
 			if ( $disallow_cache ) {
-				return '';
+				return null;
 			}
 
-			if ( is_numeric( $user_id ) && $user_id > 0 ) {
-				$find_user = get_option( "um_cache_userdata_{$user_id}" );
-				if ( $find_user ) {
-					/** This filter is documented in includes/core/class-roles-capabilities.php */
-					return apply_filters( 'um_user_permissions_filter', $find_user, $user_id );
-				}
+			$user_id = absint( $user_id );
+			if ( empty( $user_id ) ) {
+				return null;
 			}
-			return '';
+
+			if ( ! UM()->common()->users()::user_exists( $user_id ) ) {
+				return null;
+			}
+
+			if ( is_multisite() && ! is_null( $blog_id ) ) {
+				$current_blog = get_current_blog_id();
+				if ( absint( $blog_id ) !== $current_blog ) {
+					switch_to_blog( $blog_id );
+				}
+
+				$cache_data = get_option( "um_cache_userdata_{$user_id}" );
+
+				if ( absint( $blog_id ) !== $current_blog ) {
+					restore_current_blog();
+				}
+			} else {
+				$cache_data = get_option( "um_cache_userdata_{$user_id}" );
+			}
+
+			if ( $cache_data ) {
+				/** This filter is documented in includes/core/class-roles-capabilities.php */
+				return apply_filters( 'um_user_permissions_filter', $cache_data, $user_id );
+			}
+
+			return null;
 		}
 
-
 		/**
-		 * @param $user_id
-		 * @param $profile
+		 * @param int   $user_id
+		 * @param array $profile
 		 */
-		function setup_cache( $user_id, $profile ) {
-
+		private function setup_cache( $user_id, $profile, $blog_id = null ) {
 			$disallow_cache = UM()->options()->get( 'um_profile_object_cache_stop' );
 			if ( $disallow_cache ) {
 				return;
 			}
 
-			update_option( "um_cache_userdata_{$user_id}", $profile, false );
-		}
+			if ( is_multisite() && ! is_null( $blog_id ) ) {
+				$current_blog = get_current_blog_id();
+				if ( absint( $blog_id ) !== $current_blog ) {
+					switch_to_blog( $blog_id );
+				}
 
+				update_option( "um_cache_userdata_{$user_id}", $profile, false );
+
+				if ( absint( $blog_id ) !== $current_blog ) {
+					restore_current_blog();
+				}
+			} else {
+				update_option( "um_cache_userdata_{$user_id}", $profile, false );
+			}
+		}
 
 		/**
 		 * @param $user_id
 		 */
-		function remove_cache( $user_id ) {
-			delete_option( "um_cache_userdata_{$user_id}" );
+		public function remove_cache( $user_id ) {
+			UM()->common()->users()->remove_cache( $user_id );
 		}
-
-
-		/**
-		 * Remove cache for all users
-		 */
-		function remove_cache_all_users() {
-			global $wpdb;
-			$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'um_cache_userdata_%'" );
-		}
-
 
 		/**
 		 * This method lets you set a user. For example, to retrieve a profile or anything related to that user.
@@ -1244,8 +1266,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				$this->id = 0;
 			}
 
-			if ( $this->get_cached_data( $this->id ) ) {
-				$this->profile = $this->get_cached_data( $this->id );
+			$cache = $this->get_cached_data( $this->id );
+			if ( $cache ) {
+				$this->profile = $cache;
 			} else {
 
 				if ( $user_id ) {
@@ -2267,6 +2290,16 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		public function add_activation_replace_placeholder( $replace_placeholders ) {
 			_deprecated_function( __METHOD__, '2.10.5' );
 			return $replace_placeholders;
+		}
+
+		/**
+		 * Remove cache for all users
+		 *
+		 * @deprecated 2.11.4
+		 */
+		public function remove_cache_all_users() {
+			_deprecated_function( __METHOD__, '2.11.4', 'UM()->common()->users()->remove_cache_all_users()' );
+			UM()->common()->users()->remove_cache_all_users();
 		}
 	}
 }

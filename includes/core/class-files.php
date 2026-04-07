@@ -445,7 +445,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			UM()->uploader()->replace_upload_dir = false;
 
-			delete_option( "um_cache_userdata_{$user_id}" );
+			UM()->common()->users()->remove_cache( $user_id );
+
 			// phpcs:enable WordPress.Security.NonceVerification -- verified by the `check_ajax_nonce()`
 			wp_send_json_success( $output );
 		}
@@ -1403,9 +1404,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				rmdir( $dir );
 			}
 
-			UM()->user()->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 		}
-
 
 		/**
 		 * Resize a local image

@@ -129,8 +129,8 @@ if ( ! empty( $delete_options ) ) {
 	delete_transient( 'um_count_users_pending_dot' );
 	delete_transient( 'um_count_users_unassigned' ); // legacy but still need to delete while uninstall.
 
-	//remove all users cache
-	UM()->user()->remove_cache_all_users();
+	// Remove all users cache
+	UM()->common()->users()->remove_cache_all_users();
 
 	global $wpdb;
 

@@ -14,7 +14,7 @@ function um_upgrade_cache2010() {
 
 	um_maybe_unset_time_limit();
 
-	UM()->user()->remove_cache_all_users();
+	UM()->common()->users()->remove_cache_all_users();
 
 	update_option( 'um_last_version_upgrade', '2.0.10' );
 

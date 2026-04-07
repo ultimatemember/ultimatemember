@@ -1352,13 +1352,12 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @param array $new_files
 		 * @param array $old_files
 		 */
-		function remove_unused_uploads( $user_id, $new_files, $old_files = array() ) {
-
+		public function remove_unused_uploads( $user_id, $new_files, $old_files = array() ) {
 			if ( ! file_exists( $this->get_upload_user_base_dir( $user_id ) ) ) {
 				return;
 			}
 
-			UM()->user()->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 			UM()->user()->set( $user_id );
 			$user_meta_keys = UM()->user()->profile;
 

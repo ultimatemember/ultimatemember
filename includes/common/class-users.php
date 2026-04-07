@@ -225,13 +225,41 @@ class Users {
 	public function remove_cache( $user_id, $blog_id = null ) {
 		if ( is_multisite() && ! is_null( $blog_id ) ) {
 			$current_blog = get_current_blog_id();
-			if ( $current_blog !== absint( $blog_id ) ) {
+			if ( absint( $blog_id ) !== $current_blog ) {
 				switch_to_blog( $blog_id );
-				delete_option( "um_cache_userdata_{$user_id}" );
+			}
+
+			delete_option( "um_cache_userdata_{$user_id}" );
+
+			if ( absint( $blog_id ) !== $current_blog ) {
 				restore_current_blog();
 			}
 		} else {
 			delete_option( "um_cache_userdata_{$user_id}" );
+		}
+	}
+
+	/**
+	 * Remove cache for all users.
+	 *
+	 * @since 2.11.4
+	 */
+	public function remove_cache_all_users( $blog_id = null ) {
+		global $wpdb;
+
+		if ( is_multisite() && ! is_null( $blog_id ) ) {
+			$current_blog = get_current_blog_id();
+			if ( absint( $blog_id ) !== $current_blog ) {
+				switch_to_blog( $blog_id );
+			}
+
+			$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'um_cache_userdata_%'" );
+
+			if ( absint( $blog_id ) !== $current_blog ) {
+				restore_current_blog();
+			}
+		} else {
+			$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'um_cache_userdata_%'" );
 		}
 	}
 
@@ -1040,6 +1068,6 @@ class Users {
 	public function set_last_login( $user_id ) {
 		update_user_meta( $user_id, '_um_last_login', current_time( 'mysql', true ) );
 		// Flush user cache after updating last_login timestamp.
-		UM()->user()->remove_cache( $user_id );
+		$this->remove_cache( $user_id );
 	}
 }

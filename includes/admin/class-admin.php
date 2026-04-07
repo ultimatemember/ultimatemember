@@ -1777,9 +1777,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * {$wpdb->options} will automatically refer to the table of the current subsite.
 		 */
 		public function user_cache() {
-			global $wpdb;
-
-			$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'um_cache_userdata_%'" );
+			UM()->common()->users()->remove_cache_all_users();
 
 			$url = add_query_arg(
 				array(

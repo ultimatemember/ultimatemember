@@ -122,7 +122,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 					exit;
 				}
 
-				delete_option( "um_cache_userdata_{$user_id}" );
+				UM()->common()->users()->remove_cache( $user_id );
 
 				$account_secret_hash = get_user_meta( $user_id, 'account_secret_hash', true );
 				if ( empty( $account_secret_hash ) || strtolower( sanitize_text_field( $_REQUEST['hash'] ) ) !== strtolower( $account_secret_hash ) ) {
