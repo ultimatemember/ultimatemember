@@ -134,7 +134,7 @@ if ( ! empty( $delete_options ) ) {
 
 	global $wpdb;
 
-	// profile_photo, cover_photo, synced_profile_photo, synced_cover_photo has blog_id prefix.
+	// profile_photo, cover_photo have blog_id prefix.
 	$wpdb->query(
 		"DELETE
 		FROM {$wpdb->usermeta}
@@ -156,8 +156,8 @@ if ( ! empty( $delete_options ) ) {
 			  meta_key = '_profile_progress' OR
 			  meta_key = '_completed' OR
 			  meta_key = '_cannot_add_review' OR
-			  meta_key LIKE '%synced_profile_photo' OR
-			  meta_key LIKE '%synced_cover_photo' OR
+			  meta_key = 'synced_profile_photo' OR
+			  meta_key = 'synced_cover_photo' OR
 			  meta_key = 'full_name' OR
 			  meta_key = '_reviews' OR
 			  meta_key = '_reviews_compound' OR

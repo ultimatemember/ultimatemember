@@ -1023,12 +1023,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				$image->multi_resize( $sizes_array );
 
-				if ( is_multisite() ) {
-					// Synced profile photo is subsite unique. Delete user option only for the current subsite.
-					delete_user_option( $user_id, 'synced_profile_photo' );
-				} else {
-					delete_user_meta( $user_id, 'synced_profile_photo' );
-				}
+				// Synced profile photo is network-wide because it's just a link in the usermeta.
+				delete_user_meta( $user_id, 'synced_profile_photo' );
 
 				unlink( $temp_image_path );
 
@@ -1117,12 +1113,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 					rename( dirname( $image_path ) . DIRECTORY_SEPARATOR . $old_filename, dirname( $image_path ) . DIRECTORY_SEPARATOR . $new_filename );
 				}
 
-				if ( is_multisite() ) {
-					// Synced cover photo is subsite unique. Delete user option only for the current subsite.
-					delete_user_option( $user_id, 'synced_cover_photo' );
-				} else {
-					delete_user_meta( $user_id, 'synced_cover_photo' );
-				}
+				// Synced cover photo is network-wide because it's just a link in the usermeta.
+				delete_user_meta( $user_id, 'synced_cover_photo' );
 
 				unlink( $temp_image_path );
 
