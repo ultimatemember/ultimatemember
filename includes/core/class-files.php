@@ -1357,16 +1357,19 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 		}
 
-
 		/**
 		 * Delete a main user photo
 		 *
 		 * @param $user_id
 		 * @param $type
 		 */
-		function delete_core_user_photo( $user_id, $type ) {
-
-			delete_user_meta( $user_id, $type );
+		public function delete_core_user_photo( $user_id, $type ) {
+			if ( is_multisite() ) {
+				// Profile/Cover photos are subsite unique. Delete user option only for the current subsite.
+				delete_user_option( $user_id, $type );
+			} else {
+				delete_user_meta( $user_id, $type );
+			}
 
 			/**
 			 * UM hook

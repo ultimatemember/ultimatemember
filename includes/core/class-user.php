@@ -1328,11 +1328,26 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 					// add multisite-specific user meta
 					if ( is_multisite() ) {
+						// Profile/Cover and synced profile/cover photos are subsite unique. Check user option only for the current subsite and set for profile.
+						$avatar_cover_fields = array(
+							'profile_photo',
+							'cover_photo',
+							'synced_profile_photo',
+							'synced_cover_photo',
+						);
+
+						$prefix = $wpdb->get_blog_prefix();
 						foreach ( $this->usermeta as $k => $v ) {
-							$prefix = $wpdb->get_blog_prefix();
 							if ( strpos( $k, $prefix ) === 0 ) {
 								$k = str_replace( $prefix, '', $k );
 							}
+
+							// Profile/Cover and synced profile/cover photos are subsite unique. Check user option only for the current subsite and set for profile.
+							if ( in_array( $k, $avatar_cover_fields, true ) ) {
+								$this->profile[ $k ] = get_user_option( $k, $this->id );
+								continue;
+							}
+
 							$data = UM()->builtin()->get_a_field( $k );
 							if ( is_array( $data ) && array_key_exists( 'type', $data ) && in_array( $data['type'], array( 'image', 'file' ), true ) ) {
 								$this->profile[ $k ] = get_user_option( $k, $this->id );

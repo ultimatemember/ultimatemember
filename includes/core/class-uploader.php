@@ -1023,7 +1023,12 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				$image->multi_resize( $sizes_array );
 
-				delete_user_meta( $user_id, 'synced_profile_photo' );
+				if ( is_multisite() ) {
+					// Synced profile photo is subsite unique. Delete user option only for the current subsite.
+					delete_user_option( $user_id, 'synced_profile_photo' );
+				} else {
+					delete_user_meta( $user_id, 'synced_profile_photo' );
+				}
 
 				unlink( $temp_image_path );
 
@@ -1034,7 +1039,12 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				$response['image']['source_path'] = $save_result['path'];
 				$response['image']['filename']    = $save_result['file'];
 
-				update_user_meta( $this->user_id, $key, $save_result['file'] );
+				if ( is_multisite() ) {
+					// Profile photo is subsite unique. Set user option only for the current subsite.
+					update_user_option( $this->user_id, $key, $save_result['file'] );
+				} else {
+					update_user_meta( $this->user_id, $key, $save_result['file'] );
+				}
 				delete_user_meta( $this->user_id, "{$key}_metadata_temp" );
 			} else {
 				// translators: %s is the file src.
@@ -1107,6 +1117,13 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 					rename( dirname( $image_path ) . DIRECTORY_SEPARATOR . $old_filename, dirname( $image_path ) . DIRECTORY_SEPARATOR . $new_filename );
 				}
 
+				if ( is_multisite() ) {
+					// Synced cover photo is subsite unique. Delete user option only for the current subsite.
+					delete_user_option( $user_id, 'synced_cover_photo' );
+				} else {
+					delete_user_meta( $user_id, 'synced_cover_photo' );
+				}
+
 				unlink( $temp_image_path );
 
 				$basename = $key . '_temp.' . $photo_ext;
@@ -1116,7 +1133,12 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				$response['image']['source_path'] = $save_result['path'];
 				$response['image']['filename']    = $save_result['file'];
 
-				update_user_meta( $this->user_id, $key, $save_result['file'] );
+				if ( is_multisite() ) {
+					// Cover photo is subsite unique. Set user option only for the current subsite.
+					update_user_option( $this->user_id, $key, $save_result['file'] );
+				} else {
+					update_user_meta( $this->user_id, $key, $save_result['file'] );
+				}
 				delete_user_meta( $this->user_id, "{$key}_metadata_temp" );
 			} else {
 				// translators: %s is the file src.
