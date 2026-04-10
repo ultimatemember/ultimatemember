@@ -1665,13 +1665,17 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		public function get_field( $key ) {
 			$fields = $this->get_fields();
 
-			if ( isset( $fields ) && is_array( $fields ) && isset( $fields[ $key ] ) ) {
+			if ( is_array( $fields ) && isset( $fields[ $key ] ) ) {
 				$array = $fields[ $key ];
 			} else {
 				if ( ! isset( UM()->builtin()->predefined_fields[ $key ] ) && ! isset( UM()->builtin()->all_user_fields[ $key ] ) ) {
 					return '';
 				}
-				$array = ( isset( UM()->builtin()->predefined_fields[ $key ] ) ) ? UM()->builtin()->predefined_fields[ $key ] : UM()->builtin()->all_user_fields[ $key ];
+				$array = isset( UM()->builtin()->predefined_fields[ $key ] ) ? UM()->builtin()->predefined_fields[ $key ] : UM()->builtin()->all_user_fields[ $key ];
+			}
+
+			if ( empty( $array ) || ! is_array( $array ) ) {
+				return '';
 			}
 
 			if ( empty( $array['type'] ) ) {
