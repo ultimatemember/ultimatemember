@@ -1624,7 +1624,11 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			if ( empty( $last_request ) || time() > $last_request + DAY_IN_SECONDS ) {
 
 				if ( is_multisite() ) {
-					$blogs_ids = get_sites();
+					$blogs_ids = get_sites(
+						array(
+							'number' => -1,
+						)
+					);
 					foreach ( $blogs_ids as $b ) {
 						switch_to_blog( $b->blog_id );
 						wp_clean_update_cache();

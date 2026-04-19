@@ -1344,7 +1344,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			do_action( 'um_member_directory_restrictions_handle_extend' );
 		}
 
-
 		/**
 		 *
 		 */
@@ -1353,13 +1352,38 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				return;
 			}
 
-			$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( array(
-				'key'       => 'um_member_directory_data',
-				'value'     => 's:14:"account_status";s:8:"approved";',
-				'compare'   => 'LIKE'
-			) ) );
-		}
+			if ( is_multisite() ) {
+				global $wpdb;
 
+				$this->query_args['meta_query'] = array_merge(
+					$this->query_args['meta_query'],
+					array(
+						'relation' => 'OR',
+						array(
+							'key'     => $wpdb->get_blog_prefix() . 'um_member_directory_data',
+							'value'   => 's:14:"account_status";s:8:"approved";',
+							'compare' => 'LIKE',
+						),
+						array( // fallback when `um_member_directory_data` was network-wide.
+							'key'     => 'um_member_directory_data',
+							'value'   => 's:14:"account_status";s:8:"approved";',
+							'compare' => 'LIKE',
+						),
+					)
+				);
+			} else {
+				$this->query_args['meta_query'] = array_merge(
+					$this->query_args['meta_query'],
+					array(
+						array(
+							'key'     => 'um_member_directory_data',
+							'value'   => 's:14:"account_status";s:8:"approved";',
+							'compare' => 'LIKE',
+						),
+					)
+				);
+			}
+		}
 
 		/**
 		 *
@@ -1397,13 +1421,37 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				return;
 			}
 
-			$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( array(
-				'key'       => 'um_member_directory_data',
-				'value'     => 's:15:"hide_in_members";b:0;',
-				'compare'   => 'LIKE'
-			) ) );
+			if ( is_multisite() ) {
+				global $wpdb;
+				$this->query_args['meta_query'] = array_merge(
+					$this->query_args['meta_query'],
+					array(
+						'relation' => 'OR',
+						array(
+							'key'     => $wpdb->get_blog_prefix() . 'um_member_directory_data',
+							'value'   => 's:15:"hide_in_members";b:0;',
+							'compare' => 'LIKE',
+						),
+						array( // fallback when `um_member_directory_data` was network-wide.
+							'key'     => 'um_member_directory_data',
+							'value'   => 's:15:"hide_in_members";b:0;',
+							'compare' => 'LIKE',
+						),
+					)
+				);
+			} else {
+				$this->query_args['meta_query'] = array_merge(
+					$this->query_args['meta_query'],
+					array(
+						array(
+							'key'     => 'um_member_directory_data',
+							'value'   => 's:15:"hide_in_members";b:0;',
+							'compare' => 'LIKE',
+						),
+					)
+				);
+			}
 		}
-
 
 		/**
 		 * Handle "General Options" metabox settings
@@ -1447,11 +1495,36 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 */
 		function show_only_with_avatar( $directory_data ) {
 			if ( $directory_data['has_profile_photo'] == 1 ) {
-				$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( array(
-					'key'       => 'um_member_directory_data',
-					'value'     => 's:13:"profile_photo";b:1;',
-					'compare'   => 'LIKE'
-				) ) );
+				if ( is_multisite() ) {
+					global $wpdb;
+					$this->query_args['meta_query'] = array_merge(
+						$this->query_args['meta_query'],
+						array(
+							'relation' => 'OR',
+							array(
+								'key'     => $wpdb->get_blog_prefix() . 'um_member_directory_data',
+								'value'   => 's:13:"profile_photo";b:1;',
+								'compare' => 'LIKE',
+							),
+							array( // fallback when `um_member_directory_data` was network-wide.
+								'key'     => 'um_member_directory_data',
+								'value'   => 's:13:"profile_photo";b:1;',
+								'compare' => 'LIKE',
+							),
+						)
+					);
+				} else {
+					$this->query_args['meta_query'] = array_merge(
+						$this->query_args['meta_query'],
+						array(
+							array(
+								'key'     => 'um_member_directory_data',
+								'value'   => 's:13:"profile_photo";b:1;',
+								'compare' => 'LIKE',
+							),
+						)
+					);
+				}
 			}
 		}
 
@@ -1463,14 +1536,38 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 */
 		function show_only_with_cover( $directory_data ) {
 			if ( $directory_data['has_cover_photo'] == 1 ) {
-				$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( array(
-					'key'       => 'um_member_directory_data',
-					'value'     => 's:11:"cover_photo";b:1;',
-					'compare'   => 'LIKE'
-				) ) );
+				if ( is_multisite() ) {
+					global $wpdb;
+					$this->query_args['meta_query'] = array_merge(
+						$this->query_args['meta_query'],
+						array(
+							'relation' => 'OR',
+							array(
+								'key'     => $wpdb->get_blog_prefix() . 'um_member_directory_data',
+								'value'   => 's:11:"cover_photo";b:1;',
+								'compare' => 'LIKE',
+							),
+							array( // fallback when `um_member_directory_data` was network-wide.
+								'key'     => 'um_member_directory_data',
+								'value'   => 's:11:"cover_photo";b:1;',
+								'compare' => 'LIKE',
+							),
+						)
+					);
+				} else {
+					$this->query_args['meta_query'] = array_merge(
+						$this->query_args['meta_query'],
+						array(
+							array(
+								'key'     => 'um_member_directory_data',
+								'value'   => 's:11:"cover_photo";b:1;',
+								'compare' => 'LIKE',
+							),
+						)
+					);
+				}
 			}
 		}
-
 
 		/**
 		 * Handle "Only show specific users (Enter one username per line)" option

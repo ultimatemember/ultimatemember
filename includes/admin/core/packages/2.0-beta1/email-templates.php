@@ -174,6 +174,7 @@ if ( is_multisite() ) {
 
 	$blog_ids = get_sites(
 		array(
+			'number' => -1,
 			'fields' => 'ids',
 		)
 	);

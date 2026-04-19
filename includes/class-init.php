@@ -398,9 +398,13 @@ if ( ! class_exists( 'UM' ) ) {
 
 				if ( is_plugin_active_for_network( UM_PLUGIN ) ) {
 					// get all blogs
-					$blogs = get_sites();
+					$blogs = get_sites(
+						array(
+							'number' => -1,
+						)
+					);
 					if ( ! empty( $blogs ) ) {
-						foreach( $blogs as $blog ) {
+						foreach ( $blogs as $blog ) {
 							switch_to_blog( $blog->blog_id );
 							//make activation script for each sites blog
 							$this->single_site_activation();

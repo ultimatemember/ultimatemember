@@ -185,7 +185,11 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 			$active_um_plugins = array();
 			if ( is_multisite() ) {
 				// Per site activated
-				$sites = get_sites();
+				$sites = get_sites(
+					array(
+						'number' => -1,
+					)
+				);
 
 				$sitewide_plugins = get_site_option( 'active_sitewide_plugins' );
 				$sitewide_plugins = array_keys( $sitewide_plugins );
