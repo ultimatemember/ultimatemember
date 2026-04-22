@@ -39,7 +39,7 @@ class Uploader extends \um\common\Uploader {
 		$temp_hash_name = $args['name'] . '[temp_hash]';
 
 		// Reset hidden keys to handler removed file and flush usermeta once update.
-		$hash = md5( '' . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
+		$hash = md5( '' . $user_id . $form_id . '_um_uploader_security_salt' . \NONCE_KEY );
 		?>
 		<input type="hidden" class="um-uploaded-value-hidden" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $name ); ?>" value="" <?php disabled( ! empty( $list_rows ) ); ?> />
 		<input type="hidden" class="um-uploaded-value-hash-hidden" name="<?php echo esc_attr( $hash_name ); ?>" value="<?php echo esc_attr( $hash ); ?>"  <?php disabled( ! empty( $list_rows ) ); ?> />
@@ -147,7 +147,7 @@ class Uploader extends \um\common\Uploader {
 		$temp_hash_name = $args['name'] . '[temp_hash]';
 
 		$label = isset( $args['field_data']['label'] ) ? $args['field_data']['label'] : __( 'Untitled photo', 'ultimate-member' );
-		$hash  = md5( $edit_value_row . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
+		$hash  = md5( $edit_value_row . $user_id . $form_id . '_um_uploader_security_salt' . \NONCE_KEY );
 
 		$image = UM()->frontend()::layouts()::lazy_image(
 			$uri,
@@ -272,7 +272,7 @@ class Uploader extends \um\common\Uploader {
 		$temp_hash_name = $args['name'] . '[temp_hash]';
 
 		$icon = UM()->frontend()::layouts()::get_file_extension_icon( $file_type['ext'] );
-		$hash = md5( $edit_value_row . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
+		$hash = md5( $edit_value_row . $user_id . $form_id . '_um_uploader_security_salt' . \NONCE_KEY );
 
 		ob_start();
 		?>
