@@ -494,6 +494,11 @@ UM.frontend.directory.prototype = {
 		});
 	},
 	request: function ( args ) {
+		let instance = this;
+		if ( args.hasOwnProperty('instance') ) {
+			instance = args.instance;
+		}
+
 		let paginationAction = false;
 		if ( 'undefined' !== typeof( args ) && args.hasOwnProperty('pagination') && false !== args.pagination ) {
 			paginationAction = true;
@@ -501,22 +506,22 @@ UM.frontend.directory.prototype = {
 
 		// On pagination, we use skeleton load so don't show the loader.
 		if ( ! paginationAction ) {
-			this.preloaderShow();
+			instance.preloaderShow();
 		}
 
-		this.wrapper.find('.um-member-directory-must-search').umHide();
-		this.wrapper.find('.um-member-directory-empty-search-result' ).umHide();
-		this.wrapper.find('.um-member-directory-empty-no-search-result' ).umHide();
-		this.wrapper.find( '.um-member-directory-sorting .um-dropdown-wrapper .um-button' ).prop( 'disabled', true );
-		this.wrapper.find( '.um-member-view-switcher' ).addClass( 'um-disabled' );
+		instance.wrapper.find('.um-member-directory-must-search').umHide();
+		instance.wrapper.find('.um-member-directory-empty-search-result' ).umHide();
+		instance.wrapper.find('.um-member-directory-empty-no-search-result' ).umHide();
+		instance.wrapper.find( '.um-member-directory-sorting .um-dropdown-wrapper .um-button' ).prop( 'disabled', true );
+		instance.wrapper.find( '.um-member-view-switcher' ).addClass( 'um-disabled' );
 
 		// Hide wrapper and pagination on every action otherwise pagination
 		if ( ! paginationAction ) {
-			this.wrapper.find( '.um-members-counter' ).text( '' );
-			this.wrapper.find( '.um-members-wrapper' ).umHide();
-			this.wrapper.find( '.um-members-pagination-box' ).umHide();
+			instance.wrapper.find( '.um-members-counter' ).text( '' );
+			instance.wrapper.find( '.um-members-wrapper' ).umHide();
+			instance.wrapper.find( '.um-members-pagination-box' ).umHide();
 		} else {
-			this.wrapper.find( '.um-members-wrapper .um-member' ).addClass( 'um-skeleton-mode' );
+			instance.wrapper.find( '.um-members-wrapper .um-member' ).addClass( 'um-skeleton-mode' );
 		}
 
 		/**
@@ -529,9 +534,11 @@ UM.frontend.directory.prototype = {
 		 *
 		 */
 
-		let allow = wp.hooks.applyFilters( 'um_member_directory_get_members_allow', true, this );
+		let allow = wp.hooks.applyFilters( 'um_member_directory_get_members_allow', true, instance );
 		if ( ! allow ) {
-			setTimeout( this.request, 600, args );
+			let timeoutArgs = args;
+			timeoutArgs.instance = instance;
+			setTimeout( instance.request, 600, timeoutArgs );
 			return;
 		}
 
@@ -539,23 +546,21 @@ UM.frontend.directory.prototype = {
 		var gmt_hours = -local_date.getTimezoneOffset() / 60;
 
 		var request = {
-			directory_id:   this.getHash(),
-			page:           this.getPage(),
-			search:         this.getSearch(),
-			sorting:        this.getOrder(),
+			directory_id:   instance.getHash(),
+			page:           instance.getPage(),
+			search:         instance.getSearch(),
+			sorting:        instance.getOrder(),
 			gmt_offset:     gmt_hours,
-			post_refferer:  this.wrapper.data('base-post'),
-			nonce:          this.wrapper.data('nonce')
+			post_refferer:  instance.wrapper.data('base-post'),
+			nonce:          instance.wrapper.data('nonce')
 		};
 
-		let filters = this.getFilters();
+		let filters = instance.getFilters();
 		for ( const key in filters ) {
 			request[ key ] = filters[ key ];
 		}
 
 		request = wp.hooks.applyFilters( 'um_member_directory_filter_request', request );
-
-		let instance = this;
 
 		wp.ajax.send( 'um_get_members', {
 			data:  request,
