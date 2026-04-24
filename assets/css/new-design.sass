@@ -1817,14 +1817,81 @@
     .#{$prefix}tabs-wrapper.#{$prefix}vertical-tabs
       +flex( column, flex-start, stretch, nowrap )
       gap: $spacing-3xl
+      &.#{$prefix}responsive-tabs
+        &.#{$prefix}responsive-tabs-no-dropdown
+          .#{$prefix}tabs-list
+            gap: $spacing-xs
+        &.#{$prefix}responsive-tabs-has-dropdown
+          .#{$prefix}tabs-list
+            gap: $spacing-xl
       .#{$prefix}tabs-list
         +flex( column, flex-start, stretch, nowrap )
-        gap: $spacing-xl
         min-width: unset
         width: 100%
+        ul
+          border-bottom: 1px solid $gray-200
+        .#{$prefix}tab
+          .#{$prefix}link
+            text-align: center
       .#{$prefix}tabs-content
         min-width: unset
         width: 100%
+    .#{$prefix}tabs-wrapper
+      &.#{$prefix}responsive-tabs.#{$prefix}responsive-tabs-no-dropdown
+        &.#{$prefix}horizontal-tabs
+          .#{$prefix}tabs-list
+            +flex( column, flex-start, stretch, nowrap )
+            gap: $spacing-xl
+            min-width: unset
+            width: 100%
+            ul
+              +flex( column, flex-start, stretch, nowrap )
+              list-style: none
+              margin: 0
+              padding: 0
+              gap: $spacing-xs
+              //border: none
+              li
+                width: 100%
+                position: static
+                top: unset
+                a.#{$prefix}link
+                  width: 100%
+                  text-align: center
+                  display: inline-block
+                  +border-box
+                  border-radius: $radius-sm
+                  border-bottom: none
+                  padding: $spacing-md $spacing-lg
+                  color: $gray-500
+                  background-color: transparent
+                  &:hover
+                    color: $primary-700
+                    background-color: $primary-50
+                  &:focus
+                    color: $gray-500
+                    background-color: transparent
+                    box-shadow: $ring-brand
+                &.#{$prefix}tab-current
+                  a.#{$prefix}link
+                    border-radius: $radius-sm
+                    border-bottom: none
+                    color: $primary-700
+                    background-color: $primary-50
+                    &:hover
+                      color: $primary-700
+                      background-color: $primary-50
+                    &:focus
+                      color: $primary-700
+                      background-color: $primary-50
+                      box-shadow: $ring-brand
+                &.#{$prefix}tab-has-notifier
+                  a.#{$prefix}link
+                    +flex( row, center, center, nowrap )
+                    column-gap: $spacing-sm
+            .#{$prefix}tab
+              .#{$prefix}link
+                text-align: center
 
 
 // Divider

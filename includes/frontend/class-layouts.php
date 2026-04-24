@@ -1224,6 +1224,7 @@ class Layouts {
 				'wrapper_class' => array(),
 				'tabs_only'     => false,
 				'responsive'    => true,
+				'max_tabs'      => 5, // is used for responsive style when need to use the dropdown
 				'orientation'   => 'vertical',
 				'color'         => 'primary', // secondary, underline, underline-fill, gray-line
 				'size'          => 's', // s, m
@@ -1249,6 +1250,14 @@ class Layouts {
 			'um-' . $args['color'] . '-color-tabs',
 			'um-tabs-size-' . $args['size'],
 		);
+		if ( true === $args['responsive'] ) {
+			$wrapper_classes[] = 'um-responsive-tabs';
+			if ( $args['max_tabs'] < count( $args['tabs'] ) ) {
+				$wrapper_classes[] = 'um-responsive-tabs-has-dropdown';
+			} else {
+				$wrapper_classes[] = 'um-responsive-tabs-no-dropdown';
+			}
+		}
 		if ( ! empty( $args['wrapper_class'] ) ) {
 			$wrapper_classes = array_merge( $wrapper_classes, $args['wrapper_class'] );
 		}
@@ -1326,7 +1335,7 @@ class Layouts {
 			<?php
 			$desktop_list .= ob_get_clean();
 
-			if ( true === $args['responsive'] ) {
+			if ( true === $args['responsive'] && $args['max_tabs'] < count( $args['tabs'] ) ) {
 				ob_start();
 				?>
 				<option value="<?php echo esc_attr( $tab_id ); ?>" <?php selected( $current_tab === $tab_id ); ?> data-href="<?php echo esc_url( $tab_data['url'] ); ?>">
@@ -1353,13 +1362,13 @@ class Layouts {
 		}
 
 		$list_classes = '';
-		if ( true === $args['responsive'] ) {
+		if ( true === $args['responsive'] && $args['max_tabs'] < count( $args['tabs'] ) ) {
 			$list_classes = 'um-responsive um-ui-m um-ui-l um-ui-xl';
 		}
 
 		$list_html = '<ul class="' . esc_attr( $list_classes ) . '">' . $desktop_list . '</ul>';
 
-		if ( true === $args['responsive'] ) {
+		if ( true === $args['responsive'] && $args['max_tabs'] < count( $args['tabs'] ) ) {
 			$list_html .= '<select id="' . esc_attr( $args['id'] . '-select' ) . '" class="um-tabs-mobile-dropdown js-choice um-no-search um-no-native-sorting um-responsive um-ui-s um-ui-xs" aria-label="' . esc_attr__( 'Select a tab', 'ultimate-member' ) . '">' . $mobile_list . '</select>';
 		}
 

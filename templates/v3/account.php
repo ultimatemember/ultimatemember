@@ -56,6 +56,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				'id'            => 'um-account-navigation-' . $form_id,
 				'wrapper_class' => array( 'um-account-navigation' ),
 				'tabs'          => $account_tabs,
+				'max_tabs'      => 4,
 			)
 		),
 		UM()->get_allowed_html( 'templates' )
