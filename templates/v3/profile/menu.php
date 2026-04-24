@@ -29,6 +29,8 @@ echo wp_kses(
 			'color'         => 'underline',
 			'size'          => 'm',
 			'tabs'          => $tabs,
+			'responsive'    => count( $tabs ) > 3,
+			'max_tabs'      => 3,
 		)
 	),
 	UM()->get_allowed_html( 'templates' )
@@ -44,6 +46,8 @@ if ( ! empty( $subnav ) ) {
 				'tabs_only'     => true,
 				'color'         => 'secondary',
 				'tabs'          => $subnav,
+				'responsive'    => count( $subnav ) > 2,
+				'max_tabs'      => 2,
 			)
 		),
 		UM()->get_allowed_html( 'templates' )
