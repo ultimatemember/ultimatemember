@@ -478,7 +478,7 @@ class Files extends Uploader {
 
 		// Set form submission hash, but create temp_hash for properly temp file routing.
 		$fileinfo['temp_hash'] = $fileinfo['hash'];
-		$fileinfo['hash']      = md5( $fileinfo['name_saved'] . $user_id . $form_id . '_um_uploader_security_salt' . \NONCE_KEY );
+		$fileinfo['hash']      = md5( $fileinfo['name_saved'] . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
 		return $fileinfo;
 	}
 
@@ -746,7 +746,7 @@ class Files extends Uploader {
 		);
 
 		$filename = wp_basename( $file_path );
-		$hash     = md5( $filename . $user_id . $form_id . '_um_uploader_security_salt' . \NONCE_KEY );
+		$hash     = md5( $filename . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
 
 		wp_send_json_success(
 			array(
