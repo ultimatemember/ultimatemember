@@ -2172,20 +2172,38 @@ class Layouts {
 		return apply_filters( 'um_handle_pagination_arguments', $pagination_data );
 	}
 
+	/**
+	 * Get formatted mime types
+	 *
+	 * @param array $filter Array of extensions to filter by
+	 *
+	 * @return array Formatted mime types array
+	 * @since 3.0.0
+	 */
 	public static function get_formatted_mime_types( $filter ) {
-		$types         = array();
-		$allowed_mimes = get_allowed_mime_types();
-		foreach ( $allowed_mimes as $extensions => $mime_type ) {
-			$types[] = explode( '|', $extensions );
+		$formatted_mime_types  = array();
+		$wp_allowed_mimes      = get_allowed_mime_types();
+		$wp_allowed_extensions = array();
+		foreach ( $wp_allowed_mimes as $extensions => $mime_type ) {
+			$wp_allowed_extensions[] = explode( '|', $extensions );
 		}
-		$allowed_mimes = array_merge( ...$types );
-		$all_mimes     = wp_get_ext_types();
+		$wp_allowed_extensions = array_merge( ...$wp_allowed_extensions );
 
-		$mime_types = array();
+		$all_mimes = wp_get_ext_types();
 		foreach ( $all_mimes as $type => $extensions ) {
-			$extensions = ! empty( $filter ) ? array_intersect( $allowed_mimes, $extensions, $filter ) : array_intersect( $allowed_mimes, $extensions );
+			$extensions = ! empty( $filter ) ? array_intersect( $wp_allowed_extensions, $extensions, $filter ) : array_intersect( $wp_allowed_extensions, $extensions );
 			if ( empty( $extensions ) ) {
 				continue;
+			}
+
+			$mime_types = array();
+			foreach ( $extensions as $ext ) {
+				foreach ( $wp_allowed_mimes as $exts => $mtype ) {
+					$exts = explode( '|', $exts );
+					if ( in_array( $ext, $exts, true ) ) {
+						$mime_types[] = $mtype;
+					}
+				}
 			}
 
 			switch ( $type ) {
@@ -2221,13 +2239,14 @@ class Layouts {
 					break;
 			}
 
-			$mime_types[] = array(
+			$formatted_mime_types[] = array(
 				'title'      => $title_type,
 				'extensions' => implode( ',', $extensions ),
+				'mime_type'  => implode( ',', $mime_types ),
 			);
 		}
 
-		return $mime_types;
+		return $formatted_mime_types;
 	}
 
 	public static function get_svg_by_ext( $ext ) {
@@ -2479,7 +2498,7 @@ class Layouts {
 		$id = $args['id'];
 
 		$mime_types_raw = self::get_formatted_mime_types( $args['types'] );
-		$mime_types     = wp_json_encode( $mime_types_raw );
+		$mime_types     = wp_json_encode( $mime_types_raw, JSON_UNESCAPED_SLASHES );
 
 		if ( empty( $mime_types ) ) {
 			return '';
