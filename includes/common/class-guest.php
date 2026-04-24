@@ -101,7 +101,11 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 
 			// Extra Security: Verify IP and User-Agent
 			wp_fix_server_vars();
-			if ( $guest_data->ip_address !== $_SERVER['REMOTE_ADDR'] || $guest_data->user_agent !== $_SERVER['HTTP_USER_AGENT'] ) {
+
+			$ip_address = isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0'; // Capture IP
+			$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : 'undefined'; // Capture browser details
+
+			if ( $guest_data->ip_address !== $ip_address || $guest_data->user_agent !== $user_agent ) {
 				// Possible hijacking attempt.
 				return null;
 			}
@@ -121,7 +125,7 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 			}
 
 			wp_fix_server_vars();
-			$ip_address = $_SERVER['REMOTE_ADDR'];
+			$ip_address = isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0'; // Capture IP
 
 			// Log this download attempt
 			$wpdb->insert(
@@ -149,7 +153,7 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 			}
 
 			wp_fix_server_vars();
-			$ip_address = $_SERVER['REMOTE_ADDR'];
+			$ip_address = isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0'; // Capture IP
 			$interval   = apply_filters( 'um_guest_download_attempts_limit_interval', 5 );
 			$limit      = apply_filters( 'um_guest_download_attempts_limit', 5 );
 
@@ -183,8 +187,8 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 
 			wp_fix_server_vars();
 
-			$ip_address = $_SERVER['REMOTE_ADDR']; // Capture IP
-			$user_agent = $_SERVER['HTTP_USER_AGENT']; // Capture browser details
+			$ip_address = isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0'; // Capture IP
+			$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : 'undefined'; // Capture browser details
 
 			// Store token in the database
 			$wpdb->insert(
