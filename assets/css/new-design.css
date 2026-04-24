@@ -3249,6 +3249,7 @@
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: nowrap;
+  gap: 4px;
 }
 .um .um-uploader .um-uploader-filelist .um-uploader-file .um-uploader-file-data .um-uploader-file-data-header .um-uploader-file-name {
   color: var(--um-gray-700, #344054);
