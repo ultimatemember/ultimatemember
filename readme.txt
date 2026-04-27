@@ -167,12 +167,17 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.11.4 2026-04-xx =
+= 2.11.4 2026-04-29 =
+
+**Enhancements**
+
+* Added: Checking format of the 3rd-party registered custom fields. Avoid PHP errors related to the wrong format or unexpected attributes.
 
 **Bugfixes**
 
-* Fixed: Added uploader fields accept argument for set allowed mime-types in the upload dialog window. Updated 3.1.2 version of this library [hayageek/jquery-upload-file](https://github.com/hayageek/jquery-upload-file/). Don't use 4.0.11 version for now.
+* Fixed: Added uploader fields `accept` argument for set allowed mime-types in the upload dialog window. Updated 3.1.2 version of this library [hayageek/jquery-upload-file](https://github.com/hayageek/jquery-upload-file/). Don't use 4.0.11 version for now.
 * Fixed: JS initialization of the empty uploader fields.
+* Fixed: User Profile URLs in the User Profile form on the not-predefined pages placed via shortcode.
 
 **Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
 
