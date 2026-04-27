@@ -422,6 +422,26 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 		}
 
+		public function get_user_member_directory_data( $user_id ) {
+			// Set default if empty or has a wrong format.
+			if ( is_multisite() ) {
+				$md_data = get_user_option( $user_id, 'um_member_directory_data' );
+			} else {
+				$md_data = get_user_meta( $user_id, 'um_member_directory_data', true );
+			}
+			if ( empty( $md_data ) || ! is_array( $md_data ) ) {
+				$md_data = array(
+					'account_status'  => 'approved',
+					'hide_in_members' => UM()->member_directory()->get_hide_in_members_default(),
+					'profile_photo'   => false,
+					'cover_photo'     => false,
+					'verified'        => false,
+				);
+			}
+
+			return $md_data;
+		}
+
 		/**
 		 * When you delete usermeta connected with member directory - reset it to  default value
 		 *
@@ -435,50 +455,176 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return;
 			}
 
+			global $wpdb;
+
 			$metakeys = array( 'account_status', 'hide_in_members', 'synced_gravatar_hashed_id', 'synced_profile_photo', 'profile_photo', 'cover_photo', '_um_verified' );
+			if ( is_multisite() ) {
+				$blog_ids = get_sites(
+					array(
+						'number' => -1,
+						'fields' => 'ids',
+					)
+				);
+				foreach ( $blog_ids as $b_id ) {
+					switch_to_blog( $b_id );
+
+					$metakeys[] = $wpdb->get_blog_prefix() . 'cover_photo';
+					$metakeys[] = $wpdb->get_blog_prefix() . 'profile_photo';
+				}
+
+				restore_current_blog();
+			}
+
 			if ( ! in_array( $meta_key, $metakeys, true ) ) {
 				return;
 			}
 
-			// Set default if empty or has a wrong format.
-			$md_data = get_user_meta( $object_id, 'um_member_directory_data', true );
-			if ( empty( $md_data ) || ! is_array( $md_data ) ) {
-				$md_data = array(
-					'account_status'  => 'approved',
-					'hide_in_members' => UM()->member_directory()->get_hide_in_members_default(),
-					'profile_photo'   => false,
-					'cover_photo'     => false,
-					'verified'        => false,
-				);
+			if ( is_multisite() ) {
+				$prefix = $wpdb->get_blog_prefix();
+				if ( strpos( $meta_key, $prefix ) === 0 ) {
+					$meta_key = str_replace( $prefix, '', $meta_key );
+				}
 			}
 
 			switch ( $meta_key ) {
 				case 'account_status':
-					$md_data['account_status'] = 'approved';
+					if ( is_multisite() ) {
+						$blog_ids = get_sites(
+							array(
+								'number' => -1,
+								'fields' => 'ids',
+							)
+						);
+
+						foreach ( $blog_ids as $b_id ) {
+							switch_to_blog( $b_id );
+
+							$md_data = $this->get_user_member_directory_data( $object_id );
+
+							$md_data['account_status'] = 'approved';
+
+							update_user_option( $object_id, 'um_member_directory_data', $md_data );
+						}
+
+						restore_current_blog();
+					} else {
+						$md_data = $this->get_user_member_directory_data( $object_id );
+
+						$md_data['account_status'] = 'approved';
+						update_user_meta( $object_id, 'um_member_directory_data', $md_data );
+					}
 					break;
+
 				case 'hide_in_members':
-					$md_data['hide_in_members'] = UM()->member_directory()->get_hide_in_members_default();
+					if ( is_multisite() ) {
+						$blog_ids = get_sites(
+							array(
+								'number' => -1,
+								'fields' => 'ids',
+							)
+						);
+
+						foreach ( $blog_ids as $b_id ) {
+							switch_to_blog( $b_id );
+
+							$md_data = $this->get_user_member_directory_data( $object_id );
+
+							$md_data['hide_in_members'] = UM()->member_directory()->get_hide_in_members_default();
+
+							update_user_option( $object_id, 'um_member_directory_data', $md_data );
+						}
+
+						restore_current_blog();
+					} else {
+						$md_data = $this->get_user_member_directory_data( $object_id );
+
+						$md_data['hide_in_members'] = UM()->member_directory()->get_hide_in_members_default();
+						update_user_meta( $object_id, 'um_member_directory_data', $md_data );
+					}
 					break;
+
 				case 'synced_gravatar_hashed_id':
-					if ( UM()->options()->get( 'use_gravatars' ) ) {
+					if ( is_multisite() ) {
+						$blog_ids = get_sites(
+							array(
+								'number' => -1,
+								'fields' => 'ids',
+							)
+						);
+
+						$synced_profile_photo = get_user_meta( $object_id, 'synced_profile_photo', true );
+
+						foreach ( $blog_ids as $b_id ) {
+							switch_to_blog( $b_id );
+
+							$md_data = $this->get_user_member_directory_data( $object_id );
+
+							$profile_photo = get_user_option( $object_id, 'profile_photo' );
+
+							$md_data['profile_photo'] = ! empty( $profile_photo ) || ! empty( $synced_profile_photo );
+
+							update_user_option( $object_id, 'um_member_directory_data', $md_data );
+						}
+
+						restore_current_blog();
+					} else {
+						$md_data = $this->get_user_member_directory_data( $object_id );
+
 						$profile_photo        = get_user_meta( $object_id, 'profile_photo', true );
 						$synced_profile_photo = get_user_meta( $object_id, 'synced_profile_photo', true );
 
 						$md_data['profile_photo'] = ! empty( $profile_photo ) || ! empty( $synced_profile_photo );
-					}
 
+						update_user_meta( $object_id, 'um_member_directory_data', $md_data );
+					}
 					break;
+
 				case 'synced_profile_photo':
-					$profile_photo = get_user_meta( $object_id, 'profile_photo', true );
+					if ( is_multisite() ) {
+						$blog_ids = get_sites(
+							array(
+								'number' => -1,
+								'fields' => 'ids',
+							)
+						);
 
-					$synced_gravatar_hashed_id = false;
-					if ( UM()->options()->get( 'use_gravatars' ) ) {
-						$synced_gravatar_hashed_id = get_user_meta( $object_id, 'synced_gravatar_hashed_id', true );
+						$synced_gravatar_hashed_id = false;
+						if ( UM()->options()->get( 'use_gravatars' ) ) {
+							$synced_gravatar_hashed_id = get_user_meta( $object_id, 'synced_gravatar_hashed_id', true );
+						}
+
+						foreach ( $blog_ids as $b_id ) {
+							switch_to_blog( $b_id );
+
+							$md_data = $this->get_user_member_directory_data( $object_id );
+
+							$profile_photo = get_user_option( $object_id, 'profile_photo' );
+
+							$md_data['profile_photo'] = ! empty( $profile_photo ) || ! empty( $synced_gravatar_hashed_id );
+
+							update_user_option( $object_id, 'um_member_directory_data', $md_data );
+						}
+
+						restore_current_blog();
+					} else {
+						$md_data = $this->get_user_member_directory_data( $object_id );
+
+						$profile_photo = get_user_meta( $object_id, 'profile_photo', true );
+
+						$synced_gravatar_hashed_id = false;
+						if ( UM()->options()->get( 'use_gravatars' ) ) {
+							$synced_gravatar_hashed_id = get_user_meta( $object_id, 'synced_gravatar_hashed_id', true );
+						}
+
+						$md_data['profile_photo'] = ! empty( $profile_photo ) || ! empty( $synced_gravatar_hashed_id );
+
+						update_user_meta( $object_id, 'um_member_directory_data', $md_data );
 					}
-
-					$md_data['profile_photo'] = ! empty( $profile_photo ) || ! empty( $synced_gravatar_hashed_id );
 					break;
+
 				case 'profile_photo':
+					$md_data = $this->get_user_member_directory_data( $object_id );
+
 					$synced_profile_photo = get_user_meta( $object_id, 'synced_profile_photo', true );
 
 					$synced_gravatar_hashed_id = false;
@@ -487,16 +633,55 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					}
 
 					$md_data['profile_photo'] = ! empty( $synced_profile_photo ) || ! empty( $synced_gravatar_hashed_id );
-					break;
-				case 'cover_photo':
-					$md_data['cover_photo'] = false;
-					break;
-				case '_um_verified':
-					$md_data['verified'] = false;
-					break;
-			}
 
-			update_user_meta( $object_id, 'um_member_directory_data', $md_data );
+					if ( is_multisite() ) {
+						update_user_option( $object_id, 'um_member_directory_data', $md_data );
+					} else {
+						update_user_meta( $object_id, 'um_member_directory_data', $md_data );
+					}
+					break;
+
+				case 'cover_photo':
+					$md_data = $this->get_user_member_directory_data( $object_id );
+
+					$md_data['cover_photo'] = false;
+
+					if ( is_multisite() ) {
+						update_user_option( $object_id, 'um_member_directory_data', $md_data );
+					} else {
+						update_user_meta( $object_id, 'um_member_directory_data', $md_data );
+					}
+					break;
+
+				case '_um_verified':
+					if ( is_multisite() ) {
+						$blog_ids = get_sites(
+							array(
+								'number' => -1,
+								'fields' => 'ids',
+							)
+						);
+
+						foreach ( $blog_ids as $b_id ) {
+							switch_to_blog( $b_id );
+
+							$md_data = $this->get_user_member_directory_data( $object_id );
+
+							$md_data['verified'] = false;
+
+							update_user_option( $object_id, 'um_member_directory_data', $md_data );
+						}
+
+						restore_current_blog();
+					} else {
+						$md_data = $this->get_user_member_directory_data( $object_id );
+
+						$md_data['verified'] = false;
+						update_user_meta( $object_id, 'um_member_directory_data', $md_data );
+					}
+					break;
+
+			}
 		}
 
 		/**
@@ -508,27 +693,66 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param mixed $_meta_value
 		 */
 		public function on_update_usermeta( $meta_id, $object_id, $meta_key, $_meta_value ) {
+			global $wpdb;
+
 			$metakeys = array( 'account_status', 'hide_in_members', 'synced_gravatar_hashed_id', 'synced_profile_photo', 'profile_photo', 'cover_photo', '_um_verified' );
+			if ( is_multisite() ) {
+				$blog_ids = get_sites(
+					array(
+						'number' => -1,
+						'fields' => 'ids',
+					)
+				);
+				foreach ( $blog_ids as $b_id ) {
+					switch_to_blog( $b_id );
+
+					$metakeys[] = $wpdb->get_blog_prefix() . 'cover_photo';
+					$metakeys[] = $wpdb->get_blog_prefix() . 'profile_photo';
+				}
+
+				restore_current_blog();
+			}
+
 			if ( ! in_array( $meta_key, $metakeys, true ) ) {
 				return;
 			}
 
-			// Set default if empty or has a wrong format.
-			$md_data = get_user_meta( $object_id, 'um_member_directory_data', true );
-			if ( empty( $md_data ) || ! is_array( $md_data ) ) {
-				$md_data = array(
-					'account_status'  => 'approved',
-					'hide_in_members' => UM()->member_directory()->get_hide_in_members_default(),
-					'profile_photo'   => false,
-					'cover_photo'     => false,
-					'verified'        => false,
-				);
+			if ( is_multisite() ) {
+				$prefix = $wpdb->get_blog_prefix();
+				if ( strpos( $meta_key, $prefix ) === 0 ) {
+					$meta_key = str_replace( $prefix, '', $meta_key );
+				}
 			}
 
 			switch ( $meta_key ) {
 				case 'account_status':
-					$md_data['account_status'] = $_meta_value;
+					if ( is_multisite() ) {
+						$blog_ids = get_sites(
+							array(
+								'number' => -1,
+								'fields' => 'ids',
+							)
+						);
+
+						foreach ( $blog_ids as $b_id ) {
+							switch_to_blog( $b_id );
+
+							$md_data = $this->get_user_member_directory_data( $object_id );
+
+							$md_data['account_status'] = $_meta_value;
+
+							update_user_option( $object_id, 'um_member_directory_data', $md_data );
+						}
+
+						restore_current_blog();
+					} else {
+						$md_data = $this->get_user_member_directory_data( $object_id );
+
+						$md_data['account_status'] = $_meta_value;
+						update_user_meta( $object_id, 'um_member_directory_data', $md_data );
+					}
 					break;
+
 				case 'hide_in_members':
 					$hide_in_members = UM()->member_directory()->get_hide_in_members_default();
 					if ( UM()->is_new_ui() ) {
@@ -542,32 +766,152 @@ if ( ! class_exists( 'um\core\User' ) ) {
 						}
 					}
 
-					$md_data['hide_in_members'] = $hide_in_members;
+					if ( is_multisite() ) {
+						$blog_ids = get_sites(
+							array(
+								'number' => -1,
+								'fields' => 'ids',
+							)
+						);
 
+						foreach ( $blog_ids as $b_id ) {
+							switch_to_blog( $b_id );
+
+							$md_data = $this->get_user_member_directory_data( $object_id );
+
+							$md_data['hide_in_members'] = $hide_in_members;
+
+							update_user_option( $object_id, 'um_member_directory_data', $md_data );
+						}
+
+						restore_current_blog();
+					} else {
+						$md_data = $this->get_user_member_directory_data( $object_id );
+
+						$md_data['hide_in_members'] = $hide_in_members;
+						update_user_meta( $object_id, 'um_member_directory_data', $md_data );
+					}
 					break;
+
 				case 'synced_gravatar_hashed_id':
 					if ( UM()->options()->get( 'use_gravatars' ) ) {
+						if ( is_multisite() ) {
+							$blog_ids = get_sites(
+								array(
+									'number' => -1,
+									'fields' => 'ids',
+								)
+							);
+
+							foreach ( $blog_ids as $b_id ) {
+								switch_to_blog( $b_id );
+
+								$md_data = $this->get_user_member_directory_data( $object_id );
+
+								if ( empty( $md_data['profile_photo'] ) ) {
+									$md_data['profile_photo'] = ! empty( $_meta_value );
+								}
+
+								update_user_option( $object_id, 'um_member_directory_data', $md_data );
+							}
+
+							restore_current_blog();
+						} else {
+							$md_data = $this->get_user_member_directory_data( $object_id );
+
+							if ( empty( $md_data['profile_photo'] ) ) {
+								$md_data['profile_photo'] = ! empty( $_meta_value );
+							}
+
+							update_user_meta( $object_id, 'um_member_directory_data', $md_data );
+						}
+					}
+					break;
+
+				case 'synced_profile_photo':
+					if ( is_multisite() ) {
+						$blog_ids = get_sites(
+							array(
+								'number' => -1,
+								'fields' => 'ids',
+							)
+						);
+
+						foreach ( $blog_ids as $b_id ) {
+							switch_to_blog( $b_id );
+
+							$md_data = $this->get_user_member_directory_data( $object_id );
+							if ( empty( $md_data['profile_photo'] ) ) {
+								$md_data['profile_photo'] = ! empty( $_meta_value );
+							}
+
+							update_user_option( $object_id, 'um_member_directory_data', $md_data );
+						}
+
+						restore_current_blog();
+					} else {
+						$md_data = $this->get_user_member_directory_data( $object_id );
 						if ( empty( $md_data['profile_photo'] ) ) {
 							$md_data['profile_photo'] = ! empty( $_meta_value );
 						}
-					}
 
+						update_user_meta( $object_id, 'um_member_directory_data', $md_data );
+					}
 					break;
-				case 'synced_profile_photo':
+
 				case 'profile_photo':
+					$md_data = $this->get_user_member_directory_data( $object_id );
+
 					if ( empty( $md_data['profile_photo'] ) ) {
 						$md_data['profile_photo'] = ! empty( $_meta_value );
 					}
+					if ( is_multisite() ) {
+						update_user_option( $object_id, 'um_member_directory_data', $md_data );
+					} else {
+						update_user_meta( $object_id, 'um_member_directory_data', $md_data );
+					}
 					break;
-				case 'cover_photo':
-					$md_data['cover_photo'] = ! empty( $_meta_value );
-					break;
-				case '_um_verified':
-					$md_data['verified'] = 'verified' === $_meta_value;
-					break;
-			}
 
-			update_user_meta( $object_id, 'um_member_directory_data', $md_data );
+				case 'cover_photo':
+					$md_data = $this->get_user_member_directory_data( $object_id );
+
+					$md_data['cover_photo'] = ! empty( $_meta_value );
+					if ( is_multisite() ) {
+						update_user_option( $object_id, 'um_member_directory_data', $md_data );
+					} else {
+						update_user_meta( $object_id, 'um_member_directory_data', $md_data );
+					}
+					break;
+
+				case '_um_verified':
+					if ( is_multisite() ) {
+						$blog_ids = get_sites(
+							array(
+								'number' => -1,
+								'fields' => 'ids',
+							)
+						);
+
+						foreach ( $blog_ids as $b_id ) {
+							switch_to_blog( $b_id );
+
+							$md_data = $this->get_user_member_directory_data( $object_id );
+
+							$md_data['verified'] = 'verified' === $_meta_value;
+
+							update_user_option( $object_id, 'um_member_directory_data', $md_data );
+						}
+
+						restore_current_blog();
+					} else {
+						$md_data = $this->get_user_member_directory_data( $object_id );
+
+						$md_data['verified'] = 'verified' === $_meta_value;
+						update_user_meta( $object_id, 'um_member_directory_data', $md_data );
+					}
+					break;
+
+			}
 		}
 
 		/**
@@ -621,6 +965,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			if ( UM()->options()->get( 'delete_comments' ) ) {
 				$user = get_user_by( 'id', um_user( 'ID' ) );
 
+				// TODO check the comments query to delete user comments thru the network when it's multisite installation.
 				$comments = array_merge( get_comments( 'author_email=' . $user->user_email ), get_comments( 'user_id=' . um_user( 'ID' ) ) );
 				foreach ( $comments as $comment ) {
 					wp_delete_comment( $comment->comment_ID, true );
@@ -643,6 +988,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 			}
 
+			// TODO check the removing all user's folders thru the network when it's multisite installation. Maybe get_sites query + loop is needed
 			// remove user's uploads
 			if ( UM()->is_new_ui() ) {
 				UM()->common()->filesystem()::remove_dir( UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) ) . DIRECTORY_SEPARATOR );
@@ -676,7 +1022,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param $user_id
 		 * @param $result
 		 */
-		function add_um_role_existing_user( $user_id, $result ) {
+		public function add_um_role_existing_user( $user_id, $result ) {
 			// Bail if no user ID was passed
 			if ( empty( $user_id ) ) {
 				return;
@@ -690,14 +1036,13 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			UM()->common()->users()->remove_cache( $user_id );
 		}
-
 
 		/**
 		 * Multisite add existing user
 		 *
 		 * @param $user_id
 		 */
-		function add_um_role_wpmu_new_user( $user_id ) {
+		public function add_um_role_wpmu_new_user( $user_id ) {
 			// Bail if no user ID was passed
 			if ( empty( $user_id ) ) {
 				return;
@@ -711,7 +1056,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			UM()->common()->users()->remove_cache( $user_id );
 		}
-
 
 		/**
 		 * @param int  $user_id
@@ -759,7 +1103,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 * @return bool|string
 		 */
-		function get_profile_link( $user_id ) {
+		public function get_profile_link( $user_id ) {
 			$profile_slug = $this->get_profile_slug( $user_id );
 
 			if ( empty( $profile_slug ) ) {
@@ -797,7 +1141,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return;
 			}
 
-			delete_option( "um_cache_userdata_{$user_id}" );
+			UM()->common()->users()->remove_cache( $user_id );
 
 			$current_profile_slug = $this->get_profile_slug( $user_id, true );
 
@@ -953,7 +1297,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 * @param $user_id
 		 */
-		function user_register_via_admin( $user_id ) {
+		public function user_register_via_admin( $user_id ) {
 			if ( empty( $user_id ) ) {
 				return;
 			}
@@ -971,14 +1315,13 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 		}
 
-
 		/**
 		 * On wp_update_user function complete
 		 *
 		 * @param int $user_id
 		 * @param WP_User $old_data
 		 */
-		function profile_update( $user_id, $old_data ) {
+		public function profile_update( $user_id, $old_data ) {
 			// Bail if no user ID was passed
 			if ( empty( $user_id ) ) {
 				return;
@@ -1237,58 +1580,84 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		}
 
 		/**
-		 * @param $user_id
+		 * @param int      $user_id User ID.
+		 * @param null|int $blog_id Blog ID. Since 2.11.4
 		 *
-		 * @return mixed|string
+		 * @return mixed|null
 		 */
-		public function get_cached_data( $user_id ) {
+		public function get_cached_data( $user_id, $blog_id = null ) {
 			$disallow_cache = UM()->options()->get( 'um_profile_object_cache_stop' );
 			if ( $disallow_cache ) {
-				return '';
+				return null;
 			}
 
-			if ( is_numeric( $user_id ) && $user_id > 0 ) {
-				$find_user = get_option( "um_cache_userdata_{$user_id}" );
-				if ( $find_user ) {
-					/** This filter is documented in includes/core/class-roles-capabilities.php */
-					return apply_filters( 'um_user_permissions_filter', $find_user, $user_id );
-				}
+			$user_id = absint( $user_id );
+			if ( empty( $user_id ) ) {
+				return null;
 			}
-			return '';
+
+			if ( ! UM()->common()->users()::user_exists( $user_id ) ) {
+				return null;
+			}
+
+			if ( is_multisite() && ! is_null( $blog_id ) ) {
+				$current_blog = get_current_blog_id();
+				if ( absint( $blog_id ) !== $current_blog ) {
+					switch_to_blog( $blog_id );
+				}
+
+				$cache_data = get_option( "um_cache_userdata_{$user_id}" );
+
+				if ( absint( $blog_id ) !== $current_blog ) {
+					restore_current_blog();
+				}
+			} else {
+				$cache_data = get_option( "um_cache_userdata_{$user_id}" );
+			}
+
+			if ( $cache_data ) {
+				/** This filter is documented in includes/core/class-roles-capabilities.php */
+				return apply_filters( 'um_user_permissions_filter', $cache_data, $user_id );
+			}
+
+			return null;
 		}
 
-
 		/**
-		 * @param $user_id
-		 * @param $profile
+		 * @param int      $user_id User ID.
+		 * @param array    $profile Cache data.
+		 * @param null|int $blog_id Blog ID. Since 2.11.4
 		 */
-		function setup_cache( $user_id, $profile ) {
-
+		public function setup_cache( $user_id, $profile, $blog_id = null ) {
 			$disallow_cache = UM()->options()->get( 'um_profile_object_cache_stop' );
 			if ( $disallow_cache ) {
 				return;
 			}
 
-			update_option( "um_cache_userdata_{$user_id}", $profile, false );
+			if ( is_multisite() && ! is_null( $blog_id ) ) {
+				$current_blog = get_current_blog_id();
+				if ( absint( $blog_id ) !== $current_blog ) {
+					switch_to_blog( $blog_id );
+				}
+
+				update_option( "um_cache_userdata_{$user_id}", $profile, false );
+
+				if ( absint( $blog_id ) !== $current_blog ) {
+					restore_current_blog();
+				}
+			} else {
+				update_option( "um_cache_userdata_{$user_id}", $profile, false );
+			}
 		}
 
-
 		/**
+		 * Helper for using as callback function of a hook.
+		 *
 		 * @param $user_id
 		 */
 		public function remove_cache( $user_id ) {
 			UM()->common()->users()->remove_cache( $user_id );
 		}
-
-
-		/**
-		 * Remove cache for all users
-		 */
-		function remove_cache_all_users() {
-			global $wpdb;
-			$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'um_cache_userdata_%'" );
-		}
-
 
 		/**
 		 * This method lets you set a user. For example, to retrieve a profile or anything related to that user.
@@ -1308,7 +1677,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		?>
 		 *
 		 */
-		function set( $user_id = null, $clean = false ) {
+		public function set( $user_id = null, $clean = false ) {
+			global $wpdb;
+
 			if ( isset( $this->profile ) ) {
 				unset( $this->profile );
 			}
@@ -1321,8 +1692,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				$this->id = 0;
 			}
 
-			if ( $this->get_cached_data( $this->id ) ) {
-				$this->profile = $this->get_cached_data( $this->id );
+			$cache = $this->get_cached_data( $this->id );
+			if ( $cache ) {
+				$this->profile = $cache;
 			} else {
 
 				if ( $user_id ) {
@@ -1378,6 +1750,34 @@ if ( ! class_exists( 'um\core\User' ) ) {
 						$this->profile[ $k ] = $v[0];
 					}
 
+					// add multisite-specific user meta
+					if ( is_multisite() ) {
+						// Profile/Cover photos are subsite unique. Check user option only for the current subsite and set for profile.
+						$avatar_cover_fields = array(
+							'profile_photo',
+							'cover_photo',
+						);
+
+						$prefix = $wpdb->get_blog_prefix();
+						foreach ( $this->usermeta as $k => $v ) {
+							if ( strpos( $k, $prefix ) === 0 ) {
+								$k = str_replace( $prefix, '', $k );
+							}
+
+							// Profile/Cover and synced profile/cover photos are subsite unique. Check user option only for the current subsite and set for profile.
+							if ( in_array( $k, $avatar_cover_fields, true ) ) {
+								$this->profile[ $k ] = get_user_option( $k, $this->id );
+								continue;
+							}
+
+							$data = UM()->builtin()->get_a_field( $k );
+							if ( is_array( $data ) && array_key_exists( 'type', $data ) && in_array( $data['type'], array( 'image', 'file' ), true ) ) {
+								$this->profile[ $k ]               = get_user_option( $k, $this->id );
+								$this->profile[ $k . '_metadata' ] = get_user_option( $k . '_metadata', $this->id );
+							}
+						}
+					}
+
 					// add permissions
 					$user_role              = UM()->roles()->get_priority_user_role( $this->id );
 					$this->profile['role']  = $user_role;
@@ -1399,16 +1799,14 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 				}
 			}
-
 		}
-
 
 		/**
 		 * Reset user data
 		 *
 		 * @param bool $clean
 		 */
-		function reset( $clean = false ) {
+		public function reset( $clean = false ) {
 			$this->set( 0, $clean );
 		}
 
@@ -1656,7 +2054,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 		}
 
-
 		/**
 		 * Update one key in user meta
 		 *
@@ -1667,7 +2064,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			delete_user_meta( $this->id, $key );
 			update_user_meta( $this->id, $key, $this->profile[ $key ] );
 		}
-
 
 		/**
 		 * This method can be used to delete user's meta key.
@@ -1765,7 +2161,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			return apply_filters( 'um_user_is_profile_noindex', $profile_noindex, $user_id, $this );
 		}
 
-
 		/**
 		 * This method checks if give user profile is private.
 		 *
@@ -1795,7 +2190,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 			return $this->is_private_case( $user_id, $privacy );
 		}
-
 
 		/**
 		 * This method can be used to determine If a certain user is approved or not.
@@ -1911,7 +2305,21 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 
 				if ( ! in_array( $key, $this->update_user_keys, true ) ) {
-					if ( $value === 0 ) {
+					if ( is_multisite() ) {
+						$data = UM()->fields()->get_field( $key );
+						if ( array_key_exists( 'type', $data ) && in_array( $data['type'], array( 'image', 'file' ), true ) ) {
+							// We store files in the separate sub-site directories (sites/BLOG_ID), so need to store the user options per sub-site.
+							if ( $value === 0 ) {
+								update_user_option( $this->id, $key, '0' );
+							} else {
+								update_user_option( $this->id, $key, $value );
+							}
+						} elseif ( $value === 0 ) {
+							update_user_meta( $this->id, $key, '0' );
+						} else {
+							update_user_meta( $this->id, $key, $value );
+						}
+					} elseif ( $value === 0 ) {
 						update_user_meta( $this->id, $key, '0' );
 					} else {
 						update_user_meta( $this->id, $key, $value );
@@ -2329,6 +2737,16 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		public function add_activation_replace_placeholder( $replace_placeholders ) {
 			_deprecated_function( __METHOD__, '2.10.5' );
 			return $replace_placeholders;
+		}
+
+		/**
+		 * Remove cache for all users
+		 *
+		 * @deprecated 2.11.4
+		 */
+		public function remove_cache_all_users() {
+			_deprecated_function( __METHOD__, '2.11.4', 'UM()->common()->users()->remove_cache_all_users()' );
+			UM()->common()->users()->remove_cache_all_users();
 		}
 	}
 }

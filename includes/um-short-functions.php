@@ -2347,12 +2347,11 @@ function um_user( $data, $attrs = null ) {
 	switch ( $data ) {
 		default:
 			$value = um_profile( $data );
-
 			$value = maybe_unserialize( $value );
 
-			if ( in_array( $data, array( 'role', 'gender' ), true ) ) {
+			if ( in_array( $data, array( 'role', 'gender' ) ) ) {
 				if ( is_array( $value ) ) {
-					$value = implode( ',', $value );
+					$value = implode( ",", $value );
 				}
 
 				return $value;

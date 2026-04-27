@@ -1635,9 +1635,14 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			if ( empty( $last_request ) || time() > $last_request + DAY_IN_SECONDS ) {
 
 				if ( is_multisite() ) {
-					$blogs_ids = get_sites();
-					foreach ( $blogs_ids as $b ) {
-						switch_to_blog( $b->blog_id );
+					$blogs_ids = get_sites(
+						array(
+							'number' => -1,
+							'fields' => 'ids',
+						)
+					);
+					foreach ( $blogs_ids as $blog_id ) {
+						switch_to_blog( $blog_id );
 						wp_clean_update_cache();
 
 						UM()->plugin_updater()->um_checklicenses();
@@ -1783,11 +1788,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 		/**
 		 * Clear all users cache.
+		 *
+		 * For multisite installation it clears the user cache per subsite on the current blog_id.
+		 * {$wpdb->options} will automatically refer to the table of the current subsite.
 		 */
 		public function user_cache() {
-			global $wpdb;
-
-			$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'um_cache_userdata_%'" );
+			UM()->common()->users()->remove_cache_all_users();
 
 			$url = add_query_arg(
 				array(

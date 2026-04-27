@@ -389,7 +389,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @since 2.1.7
 		 */
-		function maybe_network_activation() {
+		public function maybe_network_activation() {
 			$maybe_activation = get_network_option( get_current_network_id(), 'um_maybe_network_wide_activation' );
 
 			if ( $maybe_activation ) {
@@ -398,11 +398,16 @@ if ( ! class_exists( 'UM' ) ) {
 
 				if ( is_plugin_active_for_network( UM_PLUGIN ) ) {
 					// get all blogs
-					$blogs = get_sites();
+					$blogs = get_sites(
+						array(
+							'number' => -1,
+							'fields' => 'ids',
+						)
+					);
 					if ( ! empty( $blogs ) ) {
-						foreach( $blogs as $blog ) {
-							switch_to_blog( $blog->blog_id );
-							//make activation script for each sites blog
+						foreach ( $blogs as $blog_id ) {
+							switch_to_blog( $blog_id );
+							// Make activation script for each site blog
 							$this->single_site_activation();
 							restore_current_blog();
 						}

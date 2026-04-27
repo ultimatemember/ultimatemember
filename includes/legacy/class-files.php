@@ -531,7 +531,7 @@ if ( ! class_exists( 'um\legacy\Files' ) ) {
 
 			UM()->uploader()->replace_upload_dir = false;
 
-			delete_option( "um_cache_userdata_{$user_id}" );
+			UM()->common()->users()->remove_cache( $user_id );
 			// phpcs:enable WordPress.Security.NonceVerification -- verified by the `check_ajax_nonce()`
 			wp_send_json_success( $output );
 		}
@@ -1039,7 +1039,12 @@ if ( ! class_exists( 'um\legacy\Files' ) ) {
 		 * @param $type
 		 */
 		public function delete_core_user_photo( $user_id, $type ) {
-			delete_user_meta( $user_id, $type );
+			if ( is_multisite() ) {
+				// Profile/Cover photos are subsite unique. Delete user option only for the current subsite.
+				delete_user_option( $user_id, $type );
+			} else {
+				delete_user_meta( $user_id, $type );
+			}
 
 			/** This filter is documented in ultimate-member/includes/common/class-users.php */
 			do_action( "um_after_remove_{$type}", $user_id );
@@ -1061,7 +1066,7 @@ if ( ! class_exists( 'um\legacy\Files' ) ) {
 				rmdir( $dir );
 			}
 
-			UM()->user()->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 		}
 
 		/**

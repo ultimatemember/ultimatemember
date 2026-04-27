@@ -55,13 +55,14 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 * Builtin constructor.
 		 */
 		public function __construct() {
-			add_action( 'init', array( &$this, 'set_core_fields' ), 1 );
-			add_action( 'init', array( &$this, 'set_predefined_fields' ), 1 );
-			add_action( 'init', array( &$this, 'set_custom_fields' ), 1 );
-			add_action( 'init', array( &$this, 'set_blacklist_fields' ), 1 );
+			// Set user function has `1` priority and use get field data in it. add_action( 'init', array( &$this, 'set' ), 1 );
+			// So we have to set all fields before this hook. So there is `0` priority.
+			add_action( 'init', array( &$this, 'set_core_fields' ), 0 );
+			add_action( 'init', array( &$this, 'set_predefined_fields' ), 0 );
+			add_action( 'init', array( &$this, 'set_custom_fields' ), 0 );
+			add_action( 'init', array( &$this, 'set_blacklist_fields' ), 0 );
 			$this->saved_fields = get_option( 'um_fields', array() );
 		}
-
 
 		/**
 		 * @return array

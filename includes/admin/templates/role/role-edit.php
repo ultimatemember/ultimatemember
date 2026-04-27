@@ -190,7 +190,7 @@ if ( ! empty( $_POST['role'] ) ) {
 			 */
 			do_action( 'um_role_update', $role_meta, $id, $update );
 
-			UM()->user()->remove_cache_all_users();
+			UM()->common()->users()->remove_cache_all_users();
 
 			um_js_redirect( $redirect );
 		}

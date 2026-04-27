@@ -985,6 +985,7 @@ if ( ! class_exists( 'um\legacy\Uploader' ) ) {
 
 				$image->multi_resize( $sizes_array );
 
+				// Synced profile photo is network-wide because it's just a link in the usermeta.
 				delete_user_meta( $user_id, 'synced_profile_photo' );
 
 				wp_delete_file( $temp_image_path );
@@ -996,7 +997,12 @@ if ( ! class_exists( 'um\legacy\Uploader' ) ) {
 				$response['image']['source_path'] = $save_result['path'];
 				$response['image']['filename']    = $save_result['file'];
 
-				update_user_meta( $this->user_id, $key, $save_result['file'] );
+				if ( is_multisite() ) {
+					// Profile photo is subsite unique. Set user option only for the current subsite.
+					update_user_option( $this->user_id, $key, $save_result['file'] );
+				} else {
+					update_user_meta( $this->user_id, $key, $save_result['file'] );
+				}
 				delete_user_meta( $this->user_id, "{$key}_metadata_temp" );
 			} else {
 				// translators: %s is the file src.
@@ -1069,6 +1075,9 @@ if ( ! class_exists( 'um\legacy\Uploader' ) ) {
 					rename( dirname( $image_path ) . DIRECTORY_SEPARATOR . $old_filename, dirname( $image_path ) . DIRECTORY_SEPARATOR . $new_filename );
 				}
 
+				// Synced cover photo is network-wide because it's just a link in the usermeta.
+				delete_user_meta( $user_id, 'synced_cover_photo' );
+
 				wp_delete_file( $temp_image_path );
 
 				$basename = $key . '_temp.' . $photo_ext;
@@ -1078,7 +1087,12 @@ if ( ! class_exists( 'um\legacy\Uploader' ) ) {
 				$response['image']['source_path'] = $save_result['path'];
 				$response['image']['filename']    = $save_result['file'];
 
-				update_user_meta( $this->user_id, $key, $save_result['file'] );
+				if ( is_multisite() ) {
+					// Cover photo is subsite unique. Set user option only for the current subsite.
+					update_user_option( $this->user_id, $key, $save_result['file'] );
+				} else {
+					update_user_meta( $this->user_id, $key, $save_result['file'] );
+				}
 				delete_user_meta( $this->user_id, "{$key}_metadata_temp" );
 			} else {
 				// translators: %s is the file src.
@@ -1243,8 +1257,19 @@ if ( ! class_exists( 'um\legacy\Uploader' ) ) {
 						}
 					}
 
-					delete_user_meta( $user_id, $key );
-					delete_user_meta( $user_id, "{$key}_metadata" );
+					if ( is_multisite() ) {
+						$data = UM()->fields()->get_field( $key );
+						if ( array_key_exists( 'type', $data ) && in_array( $data['type'], array( 'image', 'file' ), true ) ) {
+							delete_user_option( $user_id, $key );
+							delete_user_option( $user_id, "{$key}_metadata" );
+						} else {
+							delete_user_meta( $user_id, $key );
+							delete_user_meta( $user_id, "{$key}_metadata" );
+						}
+					} else {
+						delete_user_meta( $user_id, $key );
+						delete_user_meta( $user_id, "{$key}_metadata" );
+					}
 					delete_transient( "um_{$filename}" );
 
 					continue;
@@ -1280,7 +1305,17 @@ if ( ! class_exists( 'um\legacy\Uploader' ) ) {
 							$new_files[ $key ] = $new_filename;
 							$old_files[ $key ] = get_user_meta( $user_id, $key, true );
 
-							update_user_meta( $user_id, $key, $new_filename );
+							if ( is_multisite() ) {
+								$data = UM()->fields()->get_field( $key );
+								if ( array_key_exists( 'type', $data ) && in_array( $data['type'], array( 'image', 'file' ), true ) ) {
+									// We store files in the separate sub-site directories (sites/BLOG_ID), so need to store the user options per sub-site.
+									update_user_option( $user_id, $key, $new_filename );
+								} else {
+									update_user_meta( $user_id, $key, $new_filename );
+								}
+							} else {
+								update_user_meta( $user_id, $key, $new_filename );
+							}
 
 							$file_info = get_transient( "um_{$filename}" );
 							if ( ! $file_info ) {
@@ -1289,7 +1324,17 @@ if ( ! class_exists( 'um\legacy\Uploader' ) ) {
 							}
 
 							if ( $file_info ) {
-								update_user_meta( $user_id, "{$key}_metadata", $file_info );
+								if ( is_multisite() ) {
+									$data = UM()->fields()->get_field( $key );
+									if ( array_key_exists( 'type', $data ) && in_array( $data['type'], array( 'image', 'file' ), true ) ) {
+										// We store files in the separate sub-site directories (sites/BLOG_ID), so need to store the user options per sub-site.
+										update_user_option( $user_id, "{$key}_metadata", $file_info );
+									} else {
+										update_user_meta( $user_id, "{$key}_metadata", $file_info );
+									}
+								} else {
+									update_user_meta( $user_id, "{$key}_metadata", $file_info );
+								}
 								delete_transient( "um_{$filename}" );
 							}
 						}
@@ -1315,7 +1360,7 @@ if ( ! class_exists( 'um\legacy\Uploader' ) ) {
 				return;
 			}
 
-			UM()->user()->remove_cache( $user_id );
+			UM()->common()->users()->remove_cache( $user_id );
 			UM()->user()->set( $user_id );
 			$user_meta_keys = UM()->user()->profile;
 

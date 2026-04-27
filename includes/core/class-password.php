@@ -47,7 +47,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				$user_id = um_user( 'ID' );
 			}
 
-			delete_option( "um_cache_userdata_{$user_id}" );
+			UM()->common()->users()->remove_cache( $user_id );
 
 			// New reset password key via WordPress native field. It maybe already exists here but generated twice to make sure that emailed with a proper and fresh hash.
 			// But doing that only once in 1 request using static variable. Different email placeholders can use reset_url() and we have to use 1 time generated to avoid invalid keys.

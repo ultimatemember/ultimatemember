@@ -547,8 +547,14 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					$this->general_meta_joined = true;
 				}
 				// $profile_photo_where and $cover_photo_where are static in code.
-				$this->where_clauses[] = "( umm_general.um_key = 'um_member_directory_data' AND
-				umm_general.um_value LIKE '%s:14:\"account_status\";s:8:\"approved\";%' AND umm_general.um_value LIKE '%s:15:\"hide_in_members\";b:0;%'{$profile_photo_where}{$cover_photo_where} )";
+				if ( is_multisite() ) {
+					// fallback when `um_member_directory_data` was network-wide.
+					$this->where_clauses[] = "( ( umm_general.um_key = '{$wpdb->get_blog_prefix()}um_member_directory_data' OR umm_general.um_key = 'um_member_directory_data' ) AND
+					umm_general.um_value LIKE '%s:14:\"account_status\";s:8:\"approved\";%' AND umm_general.um_value LIKE '%s:15:\"hide_in_members\";b:0;%'{$profile_photo_where}{$cover_photo_where} )";
+				} else {
+					$this->where_clauses[] = "( umm_general.um_key = 'um_member_directory_data' AND
+					umm_general.um_value LIKE '%s:14:\"account_status\";s:8:\"approved\";%' AND umm_general.um_value LIKE '%s:15:\"hide_in_members\";b:0;%'{$profile_photo_where}{$cover_photo_where} )";
+				}
 			} else {
 				if ( ! empty( $cover_photo_where ) || ! empty( $profile_photo_where ) ) {
 					if ( ! $this->general_meta_joined ) {
@@ -557,7 +563,12 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 						$this->general_meta_joined = true;
 					}
 					// $profile_photo_where and $cover_photo_where are static in code.
-					$this->where_clauses[] = "( umm_general.um_key = 'um_member_directory_data'{$profile_photo_where}{$cover_photo_where} )";
+					if ( is_multisite() ) {
+						// fallback when `um_member_directory_data` was network-wide.
+						$this->where_clauses[] = "( ( umm_general.um_key = '{$wpdb->get_blog_prefix()}um_member_directory_data' OR umm_general.um_key = 'um_member_directory_data' ){$profile_photo_where}{$cover_photo_where} )";
+					} else {
+						$this->where_clauses[] = "( umm_general.um_key = 'um_member_directory_data'{$profile_photo_where}{$cover_photo_where} )";
+					}
 				}
 			}
 

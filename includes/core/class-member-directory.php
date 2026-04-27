@@ -630,11 +630,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			return (date('Y') - date('Y', $borndate));
 		}
 
-
 		/**
 		 * Handle members can view restrictions
 		 */
-		function restriction_options() {
+		public function restriction_options() {
 			$this->hide_not_approved();
 			$this->hide_by_role();
 			$this->hide_by_account_settings();
@@ -642,27 +641,51 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			do_action( 'um_member_directory_restrictions_handle_extend' );
 		}
 
-
 		/**
 		 *
 		 */
-		function hide_not_approved() {
+		public function hide_not_approved() {
 			if ( UM()->roles()->um_user_can( 'can_edit_everyone' )  ) {
 				return;
 			}
 
-			$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( array(
-				'key'       => 'um_member_directory_data',
-				'value'     => 's:14:"account_status";s:8:"approved";',
-				'compare'   => 'LIKE'
-			) ) );
-		}
+			if ( is_multisite() ) {
+				global $wpdb;
 
+				$this->query_args['meta_query'] = array_merge(
+					$this->query_args['meta_query'],
+					array(
+						'relation' => 'OR',
+						array(
+							'key'     => $wpdb->get_blog_prefix() . 'um_member_directory_data',
+							'value'   => 's:14:"account_status";s:8:"approved";',
+							'compare' => 'LIKE',
+						),
+						array( // fallback when `um_member_directory_data` was network-wide.
+							'key'     => 'um_member_directory_data',
+							'value'   => 's:14:"account_status";s:8:"approved";',
+							'compare' => 'LIKE',
+						),
+					)
+				);
+			} else {
+				$this->query_args['meta_query'] = array_merge(
+					$this->query_args['meta_query'],
+					array(
+						array(
+							'key'     => 'um_member_directory_data',
+							'value'   => 's:14:"account_status";s:8:"approved";',
+							'compare' => 'LIKE',
+						),
+					)
+				);
+			}
+		}
 
 		/**
 		 *
 		 */
-		function hide_by_role() {
+		public function hide_by_role() {
 			if ( ! is_user_logged_in() ) {
 				return;
 			}
@@ -682,11 +705,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 		}
 
-
 		/**
 		 *
 		 */
-		function hide_by_account_settings() {
+		public function hide_by_account_settings() {
 			if ( ! UM()->options()->get( 'account_hide_in_directory' ) ) {
 				return;
 			}
@@ -695,20 +717,44 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				return;
 			}
 
-			$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( array(
-				'key'       => 'um_member_directory_data',
-				'value'     => 's:15:"hide_in_members";b:0;',
-				'compare'   => 'LIKE'
-			) ) );
+			if ( is_multisite() ) {
+				global $wpdb;
+				$this->query_args['meta_query'] = array_merge(
+					$this->query_args['meta_query'],
+					array(
+						'relation' => 'OR',
+						array(
+							'key'     => $wpdb->get_blog_prefix() . 'um_member_directory_data',
+							'value'   => 's:15:"hide_in_members";b:0;',
+							'compare' => 'LIKE',
+						),
+						array( // fallback when `um_member_directory_data` was network-wide.
+							'key'     => 'um_member_directory_data',
+							'value'   => 's:15:"hide_in_members";b:0;',
+							'compare' => 'LIKE',
+						),
+					)
+				);
+			} else {
+				$this->query_args['meta_query'] = array_merge(
+					$this->query_args['meta_query'],
+					array(
+						array(
+							'key'     => 'um_member_directory_data',
+							'value'   => 's:15:"hide_in_members";b:0;',
+							'compare' => 'LIKE',
+						),
+					)
+				);
+			}
 		}
-
 
 		/**
 		 * Handle "General Options" metabox settings
 		 *
 		 * @param array $directory_data
 		 */
-		function general_options( $directory_data ) {
+		public function general_options( $directory_data ) {
 			$this->show_selected_roles( $directory_data );
 			$this->show_only_with_avatar( $directory_data );
 			$this->show_only_with_cover( $directory_data );
@@ -718,13 +764,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			do_action( 'um_member_directory_general_options_handle_extend', $directory_data );
 		}
 
-
 		/**
 		 * Handle "User Roles to Display" option
 		 *
 		 * @param array $directory_data
 		 */
-		function show_selected_roles( $directory_data ) {
+		public function show_selected_roles( $directory_data ) {
 			// add roles to appear in directory
 			if ( ! empty( $directory_data['roles'] ) ) {
 				//since WP4.4 use 'role__in' argument
@@ -737,30 +782,77 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 		}
 
-
 		/**
 		 * Handle "Only show members who have uploaded a profile photo" option
 		 *
 		 * @param array $directory_data
 		 */
-		function show_only_with_avatar( $directory_data ) {
-			if ( $directory_data['has_profile_photo'] == 1 ) {
-				$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( array(
-					'key'       => 'um_member_directory_data',
-					'value'     => 's:13:"profile_photo";b:1;',
-					'compare'   => 'LIKE'
-				) ) );
+		public function show_only_with_avatar( $directory_data ) {
+			if ( empty( $directory_data['has_profile_photo'] ) ) {
+				return;
+			}
+
+			if ( is_multisite() ) {
+				global $wpdb;
+				$this->query_args['meta_query'] = array_merge(
+					$this->query_args['meta_query'],
+					array(
+						'relation' => 'OR',
+						array(
+							'key'     => $wpdb->get_blog_prefix() . 'um_member_directory_data',
+							'value'   => 's:13:"profile_photo";b:1;',
+							'compare' => 'LIKE',
+						),
+						array( // fallback when `um_member_directory_data` was network-wide.
+							'key'     => 'um_member_directory_data',
+							'value'   => 's:13:"profile_photo";b:1;',
+							'compare' => 'LIKE',
+						),
+					)
+				);
+			} else {
+				$this->query_args['meta_query'] = array_merge(
+					$this->query_args['meta_query'],
+					array(
+						array(
+							'key'     => 'um_member_directory_data',
+							'value'   => 's:13:"profile_photo";b:1;',
+							'compare' => 'LIKE',
+						),
+					)
+				);
 			}
 		}
-
 
 		/**
 		 * Handle "Only show members who have uploaded a cover photo" option
 		 *
 		 * @param array $directory_data
 		 */
-		function show_only_with_cover( $directory_data ) {
-			if ( ! empty( $directory_data['has_cover_photo'] ) ) {
+		public function show_only_with_cover( $directory_data ) {
+			if ( empty( $directory_data['has_cover_photo'] ) ) {
+				return;
+			}
+
+			if ( is_multisite() ) {
+				global $wpdb;
+				$this->query_args['meta_query'] = array_merge(
+					$this->query_args['meta_query'],
+					array(
+						'relation' => 'OR',
+						array(
+							'key'     => $wpdb->get_blog_prefix() . 'um_member_directory_data',
+							'value'   => 's:11:"cover_photo";b:1;',
+							'compare' => 'LIKE',
+						),
+						array( // fallback when `um_member_directory_data` was network-wide.
+							'key'     => 'um_member_directory_data',
+							'value'   => 's:11:"cover_photo";b:1;',
+							'compare' => 'LIKE',
+						),
+					)
+				);
+			} else {
 				$this->query_args['meta_query'] = array_merge(
 					$this->query_args['meta_query'],
 					array(
@@ -774,13 +866,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 		}
 
-
 		/**
 		 * Handle "Only show specific users (Enter one username per line)" option
 		 *
 		 * @param array $directory_data
 		 */
-		function show_only_these_users( $directory_data ) {
+		public function show_only_these_users( $directory_data ) {
 			if ( ! empty( $directory_data['show_these_users'] ) ) {
 				$show_these_users = maybe_unserialize( $directory_data['show_these_users'] );
 
@@ -802,13 +893,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 		}
 
-
 		/**
 		 * Handle "Exclude specific users (Enter one username per line)" option
 		 *
 		 * @param array $directory_data
 		 */
-		function exclude_these_users( $directory_data ) {
+		public function exclude_these_users( $directory_data ) {
 			if ( ! empty( $directory_data['exclude_these_users'] ) ) {
 				$exclude_these_users = maybe_unserialize( $directory_data['exclude_these_users'] );
 
@@ -830,13 +920,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 		}
 
-
 		/**
 		 * Handle "Pagination Options" metabox settings
 		 *
 		 * @param array $directory_data
 		 */
-		function pagination_options( $directory_data ) {
+		public function pagination_options( $directory_data ) {
 			// number of profiles for mobile
 			$profiles_per_page = $directory_data['profiles_per_page'];
 			if ( wp_is_mobile() && isset( $directory_data['profiles_per_page_mobile'] ) ) {

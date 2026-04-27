@@ -499,7 +499,7 @@ if ( UM()->is_new_ui() ) {
 		}
 
 		// if value is an image tag
-		if( preg_match( '/\<img.*src=\"([^"]+).*/', $value, $matches ) ) {
+		if ( preg_match( '/\<img.*src=\"([^"]+).*/', $value, $matches ) ) {
 			$uri   = $matches[1];
 			$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="' . esc_attr( $uri ) . '"><img src="' . esc_attr( $uri ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" class="" /></a></div>';
 		} else if ( ! $removed ) {

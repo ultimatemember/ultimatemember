@@ -96,12 +96,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$metakeys = apply_filters( 'um_metadata_same_page_update_ajax', $metakeys, UM()->builtin()->all_user_fields );
 
 				if ( is_multisite() ) {
-					$sites = get_sites( array( 'fields' => 'ids' ) );
+					$sites = get_sites(
+						array(
+							'number' => -1,
+							'fields' => 'ids',
+						)
+					);
 					foreach ( $sites as $blog_id ) {
 						$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
 						$metakeys[] = 'wc_money_spent_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' ); // Is used since Woocommerce 9.1.0
 						$metakeys[] = 'wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' ); // Is used since Woocommerce 9.1.0 TODO remove as soon as used 'um_wc_order_count_'
 						$metakeys[] = 'um_wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
+
+						// Member directory data.
+						$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'um_member_directory_data';
 					}
 				} else {
 					$blog_id    = get_current_blog_id();
@@ -109,10 +117,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					$metakeys[] = 'wc_money_spent_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' ); // Is used since Woocommerce 9.1.0
 					$metakeys[] = 'wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' ); // Is used since Woocommerce 9.1.0 TODO remove as soon as used 'um_wc_order_count_'
 					$metakeys[] = 'um_wc_order_count_' . rtrim( $wpdb->get_blog_prefix( $blog_id ), '_' );
+
+					// Member directory data
+					$metakeys[] = 'um_member_directory_data';
 				}
 
-				//member directory data
-				$metakeys[] = 'um_member_directory_data';
 				$metakeys[] = '_um_verified';
 				$metakeys[] = '_money_spent'; // Legacy since Woocommerce 9.1.0. TODO remove as soon as stop support Woo below 9.1.0 version
 				$metakeys[] = '_completed';
@@ -157,7 +166,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				$real_usermeta = $wpdb->get_col( "SELECT DISTINCT meta_key FROM {$wpdb->usermeta}" );
 				$real_usermeta = ! empty( $real_usermeta ) ? $real_usermeta : array();
-				$real_usermeta = array_merge( $real_usermeta, array( 'um_member_directory_data' ) );
+
+				$md_data_keys = array( 'um_member_directory_data' );
+				if ( is_multisite() ) {
+					$sites = get_sites(
+						array(
+							'number' => -1,
+							'fields' => 'ids',
+						)
+					);
+					foreach ( $sites as $blog_id ) {
+						$md_data_keys[] = $wpdb->get_blog_prefix( $blog_id ) . 'um_member_directory_data';
+					}
+				}
+				$real_usermeta = array_merge( $real_usermeta, $md_data_keys );
 
 				if ( ! empty( $sortby_custom_keys ) ) {
 					$real_usermeta = array_merge( $real_usermeta, $sortby_custom_keys );
@@ -3124,32 +3146,74 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 							if ( ! empty( $_POST['um_options']['use_gravatars'] ) ) {
 
-								$results = $wpdb->get_col(
-									"SELECT u.ID FROM {$wpdb->users} AS u
-									LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'synced_gravatar_hashed_id' )
-									LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
-									WHERE um.meta_value != '' AND um.meta_value IS NOT NULL AND
-										um2.meta_value LIKE '%s:13:\"profile_photo\";b:0;%'"
-								);
+								if ( is_multisite() ) {
+									$results = $wpdb->get_col(
+										"SELECT u.ID FROM {$wpdb->users} AS u
+										LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'synced_gravatar_hashed_id' )
+										LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = '{$wpdb->get_blog_prefix()}um_member_directory_data' )
+										WHERE um.meta_value != '' AND um.meta_value IS NOT NULL AND
+											um2.meta_value LIKE '%s:13:\"profile_photo\";b:0;%'"
+									);
+								} else {
+									$results = $wpdb->get_col(
+										"SELECT u.ID FROM {$wpdb->users} AS u
+										LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'synced_gravatar_hashed_id' )
+										LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
+										WHERE um.meta_value != '' AND um.meta_value IS NOT NULL AND
+											um2.meta_value LIKE '%s:13:\"profile_photo\";b:0;%'"
+									);
+								}
 
 							} else {
 
-								$results = $wpdb->get_col(
-									"SELECT u.ID FROM {$wpdb->users} AS u
-									LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND ( um.meta_key = 'synced_profile_photo' || um.meta_key = 'profile_photo' ) )
-									LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
-									WHERE ( um.meta_value IS NULL OR um.meta_value = '' ) AND
-										um2.meta_value LIKE '%s:13:\"profile_photo\";b:1;%'"
-								);
+								if ( is_multisite() ) {
+									$results = $wpdb->get_col(
+										"SELECT u.ID FROM {$wpdb->users} AS u
+										LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND ( um.meta_key = 'synced_profile_photo' || um.meta_key = '{$wpdb->get_blog_prefix()}profile_photo' ) )
+										LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = '{$wpdb->get_blog_prefix()}um_member_directory_data' )
+										WHERE ( um.meta_value IS NULL OR um.meta_value = '' ) AND
+											um2.meta_value LIKE '%s:13:\"profile_photo\";b:1;%'"
+									);
+								} else {
+									$results = $wpdb->get_col(
+										"SELECT u.ID FROM {$wpdb->users} AS u
+										LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND ( um.meta_key = 'synced_profile_photo' || um.meta_key = 'profile_photo' ) )
+										LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
+										WHERE ( um.meta_value IS NULL OR um.meta_value = '' ) AND
+											um2.meta_value LIKE '%s:13:\"profile_photo\";b:1;%'"
+									);
+								}
 
 							}
 
 							if ( ! empty( $results ) ) {
 								foreach ( $results as $user_id ) {
-									$md_data = get_user_meta( $user_id, 'um_member_directory_data', true );
-									if ( ! empty( $md_data ) && is_array( $md_data ) ) {
-										$md_data['profile_photo'] = ! empty( $_POST['um_options']['use_gravatars'] );
-										update_user_meta( $user_id, 'um_member_directory_data', $md_data );
+									if ( is_multisite() ) {
+										$blog_ids = get_sites(
+											array(
+												'number' => -1,
+												'fields' => 'ids',
+											)
+										);
+
+										foreach ( $blog_ids as $b_id ) {
+											switch_to_blog( $b_id );
+
+											$md_data = get_user_option( $user_id, 'um_member_directory_data' );
+
+											if ( ! empty( $md_data ) && is_array( $md_data ) ) {
+												$md_data['profile_photo'] = ! empty( $_POST['um_options']['use_gravatars'] );
+												update_user_option( $user_id, 'um_member_directory_data', $md_data );
+											}
+										}
+
+										restore_current_blog();
+									} else {
+										$md_data = get_user_meta( $user_id, 'um_member_directory_data', true );
+										if ( ! empty( $md_data ) && is_array( $md_data ) ) {
+											$md_data['profile_photo'] = ! empty( $_POST['um_options']['use_gravatars'] );
+											update_user_meta( $user_id, 'um_member_directory_data', $md_data );
+										}
 									}
 								}
 							}
@@ -3173,32 +3237,74 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 					if ( $_POST['um_options']['account_hide_in_directory_default'] === 'No' ) {
 
-						$results = $wpdb->get_col(
-							"SELECT u.ID FROM {$wpdb->users} AS u
-							LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'hide_in_members' )
-							LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
-							WHERE um.meta_value IS NULL AND
-								um2.meta_value LIKE '%s:15:\"hide_in_members\";b:1;%'"
-						);
+						if ( is_multisite() ) {
+							$results = $wpdb->get_col(
+								"SELECT u.ID FROM {$wpdb->users} AS u
+								LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'hide_in_members' )
+								LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = '{$wpdb->get_blog_prefix()}um_member_directory_data' )
+								WHERE um.meta_value IS NULL AND
+									um2.meta_value LIKE '%s:15:\"hide_in_members\";b:1;%'"
+							);
+						} else {
+							$results = $wpdb->get_col(
+								"SELECT u.ID FROM {$wpdb->users} AS u
+								LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'hide_in_members' )
+								LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
+								WHERE um.meta_value IS NULL AND
+									um2.meta_value LIKE '%s:15:\"hide_in_members\";b:1;%'"
+							);
+						}
 
 					} else {
 
-						$results = $wpdb->get_col(
-							"SELECT u.ID FROM {$wpdb->users} AS u
-							LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'hide_in_members' )
-							LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
-							WHERE um.meta_value IS NULL AND
-								um2.meta_value LIKE '%s:15:\"hide_in_members\";b:0;%'"
-						);
+						if ( is_multisite() ) {
+							$results = $wpdb->get_col(
+								"SELECT u.ID FROM {$wpdb->users} AS u
+								LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'hide_in_members' )
+								LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = '{$wpdb->get_blog_prefix()}um_member_directory_data' )
+								WHERE um.meta_value IS NULL AND
+									um2.meta_value LIKE '%s:15:\"hide_in_members\";b:0;%'"
+							);
+						} else {
+							$results = $wpdb->get_col(
+								"SELECT u.ID FROM {$wpdb->users} AS u
+								LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'hide_in_members' )
+								LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
+								WHERE um.meta_value IS NULL AND
+									um2.meta_value LIKE '%s:15:\"hide_in_members\";b:0;%'"
+							);
+						}
 
 					}
 
 					if ( ! empty( $results ) ) {
 						foreach ( $results as $user_id ) {
-							$md_data = get_user_meta( $user_id, 'um_member_directory_data', true );
-							if ( ! empty( $md_data ) && is_array( $md_data ) ) {
-								$md_data['hide_in_members'] = ( $_POST['um_options']['account_hide_in_directory_default'] === 'No' ) ? false : true;
-								update_user_meta( $user_id, 'um_member_directory_data', $md_data );
+							if ( is_multisite() ) {
+								$blog_ids = get_sites(
+									array(
+										'number' => -1,
+										'fields' => 'ids',
+									)
+								);
+
+								foreach ( $blog_ids as $b_id ) {
+									switch_to_blog( $b_id );
+
+									$md_data = get_user_option( $user_id, 'um_member_directory_data' );
+
+									if ( ! empty( $md_data ) && is_array( $md_data ) ) {
+										$md_data['hide_in_members'] = ( $_POST['um_options']['account_hide_in_directory_default'] === 'No' ) ? false : true;
+										update_user_option( $user_id, 'um_member_directory_data', $md_data );
+									}
+								}
+
+								restore_current_blog();
+							} else {
+								$md_data = get_user_meta( $user_id, 'um_member_directory_data', true );
+								if ( ! empty( $md_data ) && is_array( $md_data ) ) {
+									$md_data['hide_in_members'] = ( $_POST['um_options']['account_hide_in_directory_default'] === 'No' ) ? false : true;
+									update_user_meta( $user_id, 'um_member_directory_data', $md_data );
+								}
 							}
 						}
 					}
