@@ -863,6 +863,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						<?php
 						if ( UM()->builtin()->predefined_fields ) {
 							foreach ( UM()->builtin()->predefined_fields as $field_key => $field_data ) {
+								if ( empty( $field_data ) || ! is_array( $field_data ) ) {
+									continue; // Avoid wrong format of the registered predefined fields.
+								}
 								if ( array_key_exists( 'account_only', $field_data ) && true === $field_data['account_only'] ) {
 									continue;
 								}

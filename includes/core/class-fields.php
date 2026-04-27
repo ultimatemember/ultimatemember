@@ -1665,13 +1665,17 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		public function get_field( $key ) {
 			$fields = $this->get_fields();
 
-			if ( isset( $fields ) && is_array( $fields ) && isset( $fields[ $key ] ) ) {
+			if ( is_array( $fields ) && isset( $fields[ $key ] ) ) {
 				$array = $fields[ $key ];
 			} else {
 				if ( ! isset( UM()->builtin()->predefined_fields[ $key ] ) && ! isset( UM()->builtin()->all_user_fields[ $key ] ) ) {
 					return '';
 				}
-				$array = ( isset( UM()->builtin()->predefined_fields[ $key ] ) ) ? UM()->builtin()->predefined_fields[ $key ] : UM()->builtin()->all_user_fields[ $key ];
+				$array = isset( UM()->builtin()->predefined_fields[ $key ] ) ? UM()->builtin()->predefined_fields[ $key ] : UM()->builtin()->all_user_fields[ $key ];
+			}
+
+			if ( empty( $array ) || ! is_array( $array ) ) {
+				return '';
 			}
 
 			if ( empty( $array['type'] ) ) {
@@ -3081,6 +3085,24 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$allowed_types = $data['allowed_types'];
 						}
 
+						$accept_types = array();
+						if ( ! empty( $allowed_types ) ) {
+							$mime_types   = wp_get_mime_types();
+							$accept_types = array_map(
+								function ( $type ) use ( $mime_types ) {
+									foreach ( $mime_types as $exts => $mime ) {
+										if ( preg_match( '!^(' . $exts . ')$!i', $type ) ) {
+											return $mime;
+										}
+									}
+
+									return $type;
+								},
+								explode( ',', $allowed_types )
+							);
+						}
+						$accept_types = ! empty( $accept_types ) ? implode( ',', $accept_types ) : '';
+
 						$output .= '<div class="um-modal-hidden-content">';
 						$output .= '<div class="um-modal-header"> ' . esc_html( $modal_label ) . '</div>';
 						$output .= '<div class="um-modal-body">';
@@ -3099,7 +3121,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$nonce   = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
 						$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '"  data-crop="' . esc_attr( $data['crop_data'] ) . '" data-ratio="' . esc_attr( $data['ratio'] ) . '" data-min_width="' . esc_attr( $data['min_width'] ) . '" data-min_height="' . esc_attr( $data['min_height'] ) . '" data-coord=""><a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a><img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
-						$output .= '<div class="um-single-image-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-nonce="' . esc_attr( $nonce ) . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" ' . $data_icon . ' data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $data['max_size'] ) . '" data-max_size_error="' . esc_attr( $data['max_size_error'] ) . '" data-min_size_error="' . esc_attr( $data['min_size_error'] ) . '" data-extension_error="' . esc_attr( $data['extension_error'] ) . '"  data-allowed_types="' . esc_attr( $allowed_types ) . '" data-upload_text="' . esc_attr( $data['upload_text'] ) . '" data-max_files_error="' . esc_attr( $data['max_files_error'] ) . '" data-upload_help_text="' . esc_attr( $data['upload_help_text'] ) . '">' . esc_html( $data['button_text'] ) . '</div>';
+						$output .= '<div class="um-single-image-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-nonce="' . esc_attr( $nonce ) . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" ' . $data_icon . ' data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $data['max_size'] ) . '" data-max_size_error="' . esc_attr( $data['max_size_error'] ) . '" data-min_size_error="' . esc_attr( $data['min_size_error'] ) . '" data-extension_error="' . esc_attr( $data['extension_error'] ) . '" data-allowed_types="' . esc_attr( $allowed_types ) . '" data-accept="' . esc_attr( $accept_types ) . '" data-upload_text="' . esc_attr( $data['upload_text'] ) . '" data-max_files_error="' . esc_attr( $data['max_files_error'] ) . '" data-upload_help_text="' . esc_attr( $data['upload_help_text'] ) . '">' . esc_html( $data['button_text'] ) . '</div>';
 						$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">
 										<a href="javascript:void(0);" class="um-modal-btn um-finish-upload image disabled" data-key="' . esc_attr( $key ) . '" data-change="' . esc_attr__( 'Change photo', 'ultimate-member' ) . '" data-processing="' . esc_attr__( 'Processing...', 'ultimate-member' ) . '">' . esc_html__( 'Apply', 'ultimate-member' ) . '</a>
@@ -3198,6 +3220,24 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$allowed_types = $data['allowed_types'];
 						}
 
+						$accept_types = array();
+						if ( ! empty( $allowed_types ) ) {
+							$mime_types   = wp_get_mime_types();
+							$accept_types = array_map(
+								function ( $type ) use ( $mime_types ) {
+									foreach ( $mime_types as $exts => $mime ) {
+										if ( preg_match( '!^(' . $exts . ')$!i', $type ) ) {
+											return $mime;
+										}
+									}
+
+									return $type;
+								},
+								explode( ',', $allowed_types )
+							);
+						}
+						$accept_types = ! empty( $accept_types ) ? implode( ',', $accept_types ) : '';
+
 						$output .= '<div class="um-modal-hidden-content">';
 						$output .= '<div class="um-modal-header"> ' . esc_html( $modal_label ) . '</div>';
 						$output .= '<div class="um-modal-body">';
@@ -3224,7 +3264,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 
 						$nonce   = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
-						$output .= '<div class="um-single-file-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" data-nonce="' . esc_attr( $nonce ) . '" ' . $data_icon . ' data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $data['max_size'] ) . '" data-max_size_error="' . esc_attr( $data['max_size_error'] ) . '" data-min_size_error="' . esc_attr( $data['min_size_error'] ) . '" data-extension_error="' . esc_attr( $data['extension_error'] ) . '"  data-allowed_types="' . esc_attr( $allowed_types ) . '" data-upload_text="' . esc_attr( $data['upload_text'] ) . '" data-max_files_error="' . esc_attr( $data['max_files_error'] ) . '" data-upload_help_text="' . esc_attr( $data['upload_help_text'] ) . '">' . esc_html( $data['button_text'] ) . '</div>';
+						$output .= '<div class="um-single-file-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" data-nonce="' . esc_attr( $nonce ) . '" ' . $data_icon . ' data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $data['max_size'] ) . '" data-max_size_error="' . esc_attr( $data['max_size_error'] ) . '" data-min_size_error="' . esc_attr( $data['min_size_error'] ) . '" data-extension_error="' . esc_attr( $data['extension_error'] ) . '" data-allowed_types="' . esc_attr( $allowed_types ) . '" data-accept="' . esc_attr( $accept_types ) . '" data-upload_text="' . esc_attr( $data['upload_text'] ) . '" data-max_files_error="' . esc_attr( $data['max_files_error'] ) . '" data-upload_help_text="' . esc_attr( $data['upload_help_text'] ) . '">' . esc_html( $data['button_text'] ) . '</div>';
 						$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">
 										<a href="javascript:void(0);" class="um-modal-btn um-finish-upload file disabled" data-key="' . esc_attr( $key ) . '" data-change="' . esc_attr__( 'Change file', 'ultimate-member' ) . '" data-processing="' . esc_attr__( 'Processing...', 'ultimate-member' ) . '"> ' . esc_html__( 'Save', 'ultimate-member' ) . '</a>

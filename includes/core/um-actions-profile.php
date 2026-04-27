@@ -1056,7 +1056,17 @@ function um_profile_header( $args ) {
 				</ins>
 			</span>
 		</span>';
-	} ?>
+	}
+
+	if ( ! um_is_predefined_page( 'user' ) ) {
+		// Get the permalink 3rd-party page with User Profile shortcode.
+		$current_page_id  = get_the_ID();
+		$user_profile_url = get_permalink( $current_page_id );
+	} else {
+		// Get the permalink of the predefined user profile page.
+		$user_profile_url = um_user_profile_url();
+	}
+	?>
 
 	<div class="um-header<?php echo esc_attr( $classes ); ?>">
 
@@ -1084,7 +1094,7 @@ function um_profile_header( $args ) {
 
 		<div class="um-profile-photo" data-user_id="<?php echo esc_attr( um_profile_id() ); ?>" <?php echo wp_kses( UM()->fields()->aria_valid_attributes( UM()->fields()->is_error( 'profile_photo' ), 'profile_photo' ), UM()->get_allowed_html( 'templates' ) ); ?>>
 
-			<a href="<?php echo esc_url( um_user_profile_url() ); ?>" class="um-profile-photo-img" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
+			<a href="<?php echo esc_url( $user_profile_url ); ?>" class="um-profile-photo-img" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
 				<?php if ( ! $default_size || $default_size == 'original' ) {
 					$profile_photo = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/" . um_profile( 'profile_photo' );
 
@@ -1199,15 +1209,16 @@ function um_profile_header( $args ) {
 			 * }
 			 * ?>
 			 */
-			do_action( 'um_before_profile_main_meta', $args ); ?>
+			do_action( 'um_before_profile_main_meta', $args );
+			?>
 
 			<div class="um-main-meta">
 
 				<?php if ( $args['show_name'] ) { ?>
 					<div class="um-name">
 
-						<a href="<?php echo esc_url( um_user_profile_url() ); ?>"
-						   title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>"><?php echo um_user( 'display_name', 'html' ); ?></a>
+						<a href="<?php echo esc_url( $user_profile_url ); ?>"
+							title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>"><?php echo wp_kses( um_user( 'display_name', 'html' ), UM()->get_allowed_html( 'templates' ) ); ?></a>
 
 						<?php
 						/**

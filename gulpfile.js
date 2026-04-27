@@ -211,6 +211,12 @@ function defaultTask( done ) {
 		.pipe( rename( { suffix: '.min' } ) )
 		.pipe( dest( 'assets/libs/legacy/fonticons/' ) );
 
+	// FileUpload lib
+	src(['assets/libs/fileupload/*.js', '!assets/libs/fileupload/*.min.js',])
+		.pipe( uglify() )
+		.pipe( rename({ suffix: '.min' }) )
+		.pipe( dest( 'assets/libs/fileupload/' ) );
+
 	// Dropdown lib
 	// full CSS files
 	src(['assets/libs/dropdown/*.sass'])
