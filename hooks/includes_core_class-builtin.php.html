@@ -1585,7 +1585,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				$this->fields_dropdown = $fields_without_metakey;
 			}
 
-			$custom = $this->custom_fields;
+			$custom     = $this->custom_fields;
 			$predefined = $this->predefined_fields;
 
 			if ( $exclude_types ) {
@@ -1593,41 +1593,45 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			}
 
 			$all = array( 0 => '' );
-
 			if ( is_array( $custom ) ) {
-				$all = $all + array_merge( $predefined, $custom );
+				$all += array_merge( $predefined, $custom );
 			} else {
-				$all = $all + $predefined;
+				$all += $predefined;
+			}
+
+			$exclude_array = $this->fields_dropdown;
+			if ( $exclude_types &amp;&amp; is_array( $exclude_types ) ) {
+				$exclude_array = array_merge( $exclude_array, $exclude_types );
 			}
 
 			foreach ( $all as $k => $arr ) {
-
-				if ( $k == 0 ) {
+				if ( empty( $arr ) || ! is_array( $arr ) ) {
 					unset( $all[ $k ] );
+					continue;
+				}
+
+				if ( 0 === $k ) {
+					unset( $all[ $k ] );
+					continue;
+				}
+
+				if ( isset( $arr['type'] ) &amp;&amp; in_array( $arr['type'], $exclude_array, true ) ) {
+					unset( $all[ $k ] );
+					continue;
+				}
+
+				if ( ( isset( $arr['account_only'] ) || isset( $arr['private_use'] ) ) &amp;&amp; ! $show_all ) {
+					unset( $all[ $k ] );
+					continue;
 				}
 
 				if ( isset( $arr['title'] ) ) {
 					$all[ $k ]['title'] = stripslashes( $arr['title'] );
 				}
-
-				if ( $exclude_types &amp;&amp; isset( $arr['type'] ) &amp;&amp; in_array( $arr['type'], $exclude_types ) ) {
-					unset( $all[ $k ] );
-				}
-				if ( isset( $arr['account_only'] ) || isset( $arr['private_use'] ) ) {
-					if ( ! $show_all ) {
-						unset( $all[ $k ] );
-					}
-				}
-				if ( isset( $arr['type'] ) &amp;&amp; in_array( $arr['type'], $this->fields_dropdown ) ) {
-					unset( $all[ $k ] );
-				}
 			}
 
-			$all = UM()->fields()->array_sort_by_column( $all, 'title' );
-
-			return $all;
+			return UM()->fields()->array_sort_by_column( $all, 'title' );
 		}
-
 
 		/**
 		 * Possible validation types for fields

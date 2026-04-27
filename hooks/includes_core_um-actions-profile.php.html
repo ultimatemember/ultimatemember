@@ -1089,7 +1089,17 @@ function um_profile_header( $args ) {
 				&lt;/ins>
 			&lt;/span>
 		&lt;/span>';
-	} ?>
+	}
+
+	if ( ! um_is_predefined_page( 'user' ) ) {
+		// Get the permalink 3rd-party page with User Profile shortcode.
+		$current_page_id  = get_the_ID();
+		$user_profile_url = get_permalink( $current_page_id );
+	} else {
+		// Get the permalink of the predefined user profile page.
+		$user_profile_url = um_user_profile_url();
+	}
+	?>
 
 	&lt;div class="um-header&lt;?php echo esc_attr( $classes ); ?>">
 
@@ -1117,7 +1127,7 @@ function um_profile_header( $args ) {
 
 		&lt;div class="um-profile-photo" data-user_id="&lt;?php echo esc_attr( um_profile_id() ); ?>" &lt;?php echo wp_kses( UM()->fields()->aria_valid_attributes( UM()->fields()->is_error( 'profile_photo' ), 'profile_photo' ), UM()->get_allowed_html( 'templates' ) ); ?>>
 
-			&lt;a href="&lt;?php echo esc_url( um_user_profile_url() ); ?>" class="um-profile-photo-img" title="&lt;?php echo esc_attr( um_user( 'display_name' ) ); ?>">
+			&lt;a href="&lt;?php echo esc_url( $user_profile_url ); ?>" class="um-profile-photo-img" title="&lt;?php echo esc_attr( um_user( 'display_name' ) ); ?>">
 				&lt;?php if ( ! $default_size || $default_size == 'original' ) {
 					$profile_photo = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/" . um_profile( 'profile_photo' );
 
@@ -1232,15 +1242,16 @@ function um_profile_header( $args ) {
 			 * }
 			 * ?>
 			 */
-			do_action( 'um_before_profile_main_meta', $args ); ?>
+			do_action( 'um_before_profile_main_meta', $args );
+			?>
 
 			&lt;div class="um-main-meta">
 
 				&lt;?php if ( $args['show_name'] ) { ?>
 					&lt;div class="um-name">
 
-						&lt;a href="&lt;?php echo esc_url( um_user_profile_url() ); ?>"
-						   title="&lt;?php echo esc_attr( um_user( 'display_name' ) ); ?>">&lt;?php echo um_user( 'display_name', 'html' ); ?>&lt;/a>
+						&lt;a href="&lt;?php echo esc_url( $user_profile_url ); ?>"
+							title="&lt;?php echo esc_attr( um_user( 'display_name' ) ); ?>">&lt;?php echo wp_kses( um_user( 'display_name', 'html' ), UM()->get_allowed_html( 'templates' ) ); ?>&lt;/a>
 
 						&lt;?php
 						/**
