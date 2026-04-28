@@ -225,22 +225,25 @@ echo wp_kses(
 			}
 		}
 	}
-
-	echo wp_kses(
-		UM()->frontend()::layouts()::link(
-			__( 'View Profile', 'ultimate-member' ),
-			array(
-				'size'   => 'm',
-				'design' => 'primary',
-				'type'   => 'button',
-				'url'    => $member['profile_url'],
-			)
-		),
-		UM()->get_allowed_html( 'templates' )
-	);
-
-	do_action( 'um_members_after_view_profile', $member['id'], $directory_data );
 	?>
+	<div class="um-member-action-buttons">
+		<?php
+		echo wp_kses(
+			UM()->frontend()::layouts()::link(
+				__( 'View Profile', 'ultimate-member' ),
+				array(
+					'size'   => 's',
+					'design' => 'primary',
+					'type'   => 'button',
+					'url'    => $member['profile_url'],
+				)
+			),
+			UM()->get_allowed_html( 'templates' )
+		);
+
+		do_action( 'um_members_after_view_profile', $member['id'], $directory_data );
+		?>
+	</div>
 </div>
 <?php
 $content = ob_get_clean();

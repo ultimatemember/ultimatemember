@@ -374,6 +374,9 @@
                     display: inline-block
                     &:hover
                       opacity: 1
+              .#{$prefix}member-action-buttons
+                +flex( row, center, center, wrap )
+                gap: $spacing-sm
             &.#{$prefix}member-with-cover
               padding: 0 0 $spacing-3xl 0
               .#{$prefix}member-photos

@@ -1368,14 +1368,21 @@ UM.frontend = {
 	autosize: {
 		init: function ( selector, maxLines = 5 ) {
 			jQuery( document.body ).on('input', selector, function () {
-				let lineHeight = parseInt( jQuery(this).css('line-height'), 10 );
-				jQuery(this).height('auto');
-				if(jQuery(this)[0].scrollHeight < lineHeight * maxLines){
-					jQuery(this).height(jQuery(this)[0].scrollHeight);
-				} else {
-					jQuery(this).height(lineHeight * maxLines);
-				}
+				UM.frontend.autosize.setHeight( jQuery(this), maxLines );
 			});
+
+			jQuery( selector ).each( function() {
+				UM.frontend.autosize.setHeight( jQuery(this), maxLines );
+			});
+		},
+		setHeight: function( $selector, maxLines = 5 ) {
+			let lineHeight = parseInt( $selector.css('line-height'), 10 );
+			$selector.height('auto');
+			if ( $selector[0].scrollHeight < lineHeight * maxLines ) {
+				$selector.height($selector[0].scrollHeight);
+			} else {
+				$selector.height(lineHeight * maxLines);
+			}
 		}
 	}
 }

@@ -218,7 +218,7 @@ ob_start();
 		UM()->frontend()::layouts()::link(
 			__( 'View Profile', 'ultimate-member' ),
 			array(
-				'size'   => 'm',
+				'size'   => 's',
 				'design' => 'primary',
 				'type'   => 'button',
 				'url'    => $member['profile_url'],

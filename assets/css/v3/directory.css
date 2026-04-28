@@ -483,6 +483,14 @@
 .um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member .um-member-box-main .um-member-meta .um-member-connect a:hover {
   opacity: 1;
 }
+.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member .um-member-box-main .um-member-action-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
 .um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover {
   padding: 0 0 24px 0;
 }
