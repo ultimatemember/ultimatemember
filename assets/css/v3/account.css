@@ -24,6 +24,9 @@
   background-color: transparent;
   box-shadow: 0 0 0 4px var(--um-primary-500-a-24, rgba(158, 119, 237, 0.24));
 }
+.um.um-account.um-ui-m .um-form-submit .um-button.um-full-width, .um.um-account.um-ui-l .um-form-submit .um-button.um-full-width, .um.um-account.um-ui-xl .um-form-submit .um-button.um-full-width {
+  width: unset;
+}
 .um.um-account .um-tabs-wrapper.um-vertical-tabs {
   width: 100%;
 }

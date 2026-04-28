@@ -138,10 +138,11 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				}
 
 				$tabs[99999]['delete'] = array(
-					'icon'         => 'um-faicon-trash-o',
-					'title'        => __( 'Delete Account', 'ultimate-member' ),
-					'submit_title' => __( 'Delete Account', 'ultimate-member' ),
-					'description'  => $text,
+					'icon'          => 'um-faicon-trash-o',
+					'title'         => __( 'Delete Account', 'ultimate-member' ),
+					'submit_title'  => __( 'Delete Account', 'ultimate-member' ),
+					'submit_design' => 'primary-destructive',
+					'description'   => $text,
 				);
 			}
 
@@ -1062,7 +1063,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 									$submit_title,
 									array(
 										'type'   => 'submit',
-										'design' => 'primary',
+										'design' => ! empty( $tab_data['submit_design'] ) ? $tab_data['submit_design'] : 'primary',
 										'width'  => 'full',
 										'id'     => 'um_account_submit_' . $tab_id,
 									)
