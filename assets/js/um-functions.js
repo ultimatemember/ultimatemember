@@ -272,6 +272,9 @@ function um_responsive(){
 
 
 function initImageUpload_UM( trigger ) {
+	if ( ! trigger.length ) {
+		return;
+	}
 
 	if (trigger.data('upload_help_text')){
 		upload_help_text = '<span class="help">' + trigger.data('upload_help_text') + '</span>';
@@ -311,7 +314,9 @@ function initImageUpload_UM( trigger ) {
 			user_id: user_id
 		 },
 		fileName: trigger.data('key'),
+		uploadButtonClass: 'upload',
 		allowedTypes: trigger.data('allowed_types'),
+		acceptFiles: trigger.data('accept'),
 		maxFileSize: trigger.data('max_size'),
 		dragDropStr: icon + upload_text + upload_help_text,
 		sizeErrorStr: trigger.data('max_size_error'),
@@ -374,6 +379,9 @@ function initImageUpload_UM( trigger ) {
 }
 
 function initFileUpload_UM( trigger ) {
+	if ( ! trigger.length ) {
+		return;
+	}
 
 	if (trigger.data('upload_help_text')){
 		upload_help_text = '<span class="help">' + trigger.data('upload_help_text') + '</span>';
@@ -411,7 +419,9 @@ function initFileUpload_UM( trigger ) {
 			timestamp: trigger.data('timestamp')
 		},
 		fileName: trigger.data('key'),
+		uploadButtonClass: 'upload',
 		allowedTypes: trigger.data('allowed_types'),
+		acceptFiles: trigger.data('accept'),
 		maxFileSize: trigger.data('max_size'),
 		dragDropStr: icon + upload_text + upload_help_text,
 		sizeErrorStr: trigger.data('max_size_error'),

@@ -1,5 +1,24 @@
 ﻿== Changelog ==
 
+= 2.11.5 May xx, 2026 =
+
+
+
+
+= 2.11.4 April 30, 2026 =
+
+* Enhancements:
+
+  - Added: Checking format of the 3rd-party registered custom fields. Avoid PHP errors related to the wrong format or unexpected attributes.
+
+* Bugfixes:
+
+  - Fixed: Added uploader fields accept argument for set allowed mime-types in the upload dialog window. Updated 3.1.2 version of this library [hayageek/jquery-upload-file](https://github.com/hayageek/jquery-upload-file/). Don't use 4.0.11 version for now.
+  - Fixed: JS initialization of the empty uploader fields.
+  - Fixed: User Profile URLs in the User Profile form on the not-predefined pages placed via shortcode.
+
+* Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade *
+
 = 2.11.3 March 26, 2026 =
 
 * Enhancements:
