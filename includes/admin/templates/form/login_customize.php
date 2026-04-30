@@ -8,6 +8,15 @@ $use_custom_settings    = ! isset( $post_id ) ? false : get_post_meta( $post_id,
 $login_secondary_btn    = ! isset( $post_id ) ? UM()->options()->get( 'login_secondary_btn' ) : get_post_meta( $post_id, '_um_login_secondary_btn', true );
 $login_forgot_pass_link = ! isset( $post_id ) ? UM()->options()->get( 'login_forgot_pass_link' ) : get_post_meta( $post_id, '_um_login_forgot_pass_link', true );
 $login_show_rememberme  = ! isset( $post_id ) ? UM()->options()->get( 'login_show_rememberme' ) : get_post_meta( $post_id, '_um_login_show_rememberme', true );
+
+$icons_position = array(
+	'field' => __( 'Show inside text field', 'ultimate-member' ),
+	'label' => __( 'Show with label', 'ultimate-member' ),
+	'off'   => __( 'Turn off', 'ultimate-member' ),
+);
+if ( UM()->is_new_ui() ) {
+	unset( $icons_position['field'] );
+}
 ?>
 
 <div class="um-admin-metabox">
@@ -50,11 +59,7 @@ $login_show_rememberme  = ! isset( $post_id ) ? UM()->options()->get( 'login_sho
 					'label'       => __( 'Field Icons', 'ultimate-member' ),
 					'tooltip'     => __( 'Whether to show field icons and where to show them relative to the field', 'ultimate-member' ),
 					'value'       => UM()->query()->get_meta_value( '_um_login_icons', null, UM()->options()->get( 'login_icons' ) ),
-					'options'     => array(
-						'field' => __( 'Show inside text field', 'ultimate-member' ),
-						'label' => __( 'Show with label', 'ultimate-member' ),
-						'off'   => __( 'Turn off', 'ultimate-member' ),
-					),
+					'options'     => $icons_position,
 					'conditional' => array( '_um_login_use_custom_settings', '=', 1 ),
 				),
 				array(

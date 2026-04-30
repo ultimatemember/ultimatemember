@@ -17,8 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 global $post;
 
 // Get default and real arguments
-$def_args = array();
-foreach ( UM()->config()->core_directory_meta['members'] as $k => $v ) {
+$def_args            = array();
+$core_directory_meta = UM()->config()->get( 'core_directory_meta' );
+foreach ( $core_directory_meta['members'] as $k => $v ) {
 	$key = str_replace( '_um_', '', $k );
 	$def_args[ $key ] = $v;
 }
@@ -36,13 +37,16 @@ if ( is_user_logged_in() ) {
 $args = apply_filters( 'um_member_directory_agruments_on_load', $args );
 
 // Views
-$single_view = false;
+$single_view  = false;
 $current_view = 'grid';
 
 if ( ! empty( $args['view_types'] ) && is_array( $args['view_types'] ) ) {
-	$args['view_types'] = array_filter( $args['view_types'], function( $item ) {
-		return in_array( $item, array_keys( UM()->member_directory()->view_types ) );
-	});
+	$args['view_types'] = array_filter(
+		$args['view_types'],
+		function ( $item ) {
+			return array_key_exists( $item, UM()->member_directory()->view_types );
+		}
+	);
 }
 
 if ( empty( $args['view_types'] ) || ! is_array( $args['view_types'] ) ) {

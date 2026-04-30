@@ -5,6 +5,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $wpdb;
 
+/**
+ * Get all users cache count.
+ *
+ * For multisite installation it gets the user cache per subsite on the current blog_id.
+ * {$wpdb->options} will automatically refer to the table of the current subsite.
+ */
 $count = $wpdb->get_var(
 	"SELECT COUNT( option_id )
 	FROM {$wpdb->options}

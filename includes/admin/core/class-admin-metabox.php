@@ -1,6 +1,7 @@
 <?php
 namespace um\admin\core;
 
+use DateTimeZone;
 use WP_Post;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -85,7 +86,136 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			add_filter( 'um_builtin_validation_types_continue_loop', array( &$this, 'validation_types_continue_loop' ), 1, 4 );
 			add_filter( 'um_restrict_content_hide_metabox', array( &$this, 'hide_metabox_restrict_content_shop' ), 10, 1 );
 
-			add_filter( 'um_member_directory_meta_value_before_save', array( UM()->member_directory(), 'before_save_data' ), 10, 3 );
+			add_filter( 'um_member_directory_meta_value_before_save', array( &$this, 'before_save_data' ), 10, 3 );
+		}
+
+		/**
+		 * @param $value
+		 * @param $key
+		 * @param $post_id
+		 *
+		 * @return array
+		 */
+		public function before_save_data( $value, $key, $post_id ) {
+			$post = get_post( $post_id );
+
+			if ( 'um_directory' !== $post->post_type ) {
+				return $value;
+			}
+
+			if ( ! empty( $value ) && in_array( $key, array( '_um_view_types', '_um_roles', '_um_roles_can_search', '_um_roles_can_filter' ), true ) ) {
+				$value = array_keys( $value );
+			} elseif ( '_um_search_filters' === $key ) {
+				$temp_value = array();
+
+				// phpcs:disable WordPress.Security.NonceVerification -- already verified here
+				if ( ! empty( $value ) ) {
+					foreach ( $value as $k ) {
+						$filter_type = UM()->member_directory()->filter_types[ $k ];
+						if ( ! empty( $filter_type ) ) {
+							if ( 'slider' === $filter_type ) {
+								if ( UM()->is_new_ui() ) {
+									$temp_value[ $k ] = array( 0, 0 ); // Set default value for fallback.
+									if ( isset( $_POST[ $k . '_min' ] ) ) {
+										$temp_value[ $k ][0] = (int) $_POST[ $k . '_min' ];
+									}
+									if ( isset( $_POST[ $k . '_max' ] ) ) {
+										$temp_value[ $k ][1] = (int) $_POST[ $k . '_max' ];
+									}
+								} else {
+									if ( ! empty( $_POST[ $k ] ) ) {
+										if ( count( $_POST[ $k ] ) > 1 ) {
+											$temp_value[ $k ] = array_map( 'intval', $_POST[ $k ] );
+										} else {
+											$temp_value[ $k ] = (int) $_POST[ $k ];
+										}
+									}
+								}
+							} elseif ( 'datepicker' === $filter_type ) {
+								if ( UM()->is_new_ui() ) {
+									if ( ! empty( $_POST[ $k . '_from' ] ) ) {
+										$temp_value[ $k ][0] = gmdate( 'Y-m-d', strtotime( wp_unslash( $_POST[ $k . '_from' ] ) ) );
+									}
+									if ( ! empty( $_POST[ $k . '_to' ] ) ) {
+										$temp_value[ $k ][1] = gmdate( 'Y-m-d', strtotime( wp_unslash( $_POST[ $k . '_to' ] ) ) );
+									}
+								} else {
+									if ( ! empty( $_POST[ $k . '_from' ] ) ) {
+										$temp_value[ $k ][0] = sanitize_text_field( wp_unslash( $_POST[ $k . '_from' ] ) );
+									}
+									if ( ! empty( $_POST[ $k . '_to' ] ) ) {
+										$temp_value[ $k ][1] = sanitize_text_field( wp_unslash( $_POST[ $k . '_to' ] ) );
+									}
+								}
+							} elseif ( 'timepicker' === $filter_type ) {
+								if ( ! empty( $_POST[ $k . '_from' ] ) ) {
+									$temp_value[ $k ][0] = sanitize_text_field( wp_unslash( $_POST[ $k . '_from' ] ) );
+								}
+								if ( ! empty( $_POST[ $k . '_to' ] ) ) {
+									$temp_value[ $k ][1] = sanitize_text_field( wp_unslash( $_POST[ $k . '_to' ] ) );
+								}
+							} elseif ( 'select' === $filter_type ) {
+								if ( ! empty( $_POST[ $k ] ) ) {
+									if ( is_array( $_POST[ $k ] ) ) {
+										$temp_value[ $k ] = array_map( 'trim', wp_unslash( $_POST[ $k ] ) );
+									} else {
+										$temp_value[ $k ] = array( trim( wp_unslash( $_POST[ $k ] ) ) );
+									}
+
+									$temp_value[ $k ] = array_map( 'sanitize_text_field', $temp_value[ $k ] );
+								}
+							} else {
+								if ( ! empty( $_POST[ $k ] ) ) {
+									$temp_value[ $k ] = trim( sanitize_text_field( wp_unslash( $_POST[ $k ] ) ) );
+								}
+							}
+						}
+					}
+				}
+
+				$value = $temp_value;
+
+				// phpcs:enable WordPress.Security.NonceVerification -- already verified here
+			} elseif ( '_um_sorting_fields' === $key ) {
+				if ( ! empty( $value['other_data'] ) ) {
+					$other_data = $value['other_data'];
+					unset( $value['other_data'] );
+
+					foreach ( $value as $k => &$row ) {
+						if ( ! empty( $other_data[ $k ]['meta_key'] ) ) {
+							$metakey = sanitize_text_field( $other_data[ $k ]['meta_key'] );
+							if ( ! empty( $metakey ) ) {
+								if ( ! empty( $other_data[ $k ]['label'] ) ) {
+									$metalabel = wp_strip_all_tags( $other_data[ $k ]['label'] );
+								}
+								if ( ! empty( $other_data[ $k ]['data_type'] ) ) {
+									$data_type = sanitize_text_field( $other_data[ $k ]['data_type'] );
+								}
+								if ( ! empty( $other_data[ $k ]['order'] ) ) {
+									$order = sanitize_text_field( $other_data[ $k ]['order'] );
+								}
+								$row = array(
+									$metakey => $metakey,
+									'label'  => ! empty( $metalabel ) ? $metalabel : $metakey,
+									'type'   => ! empty( $data_type ) ? $data_type : '',
+									'order'  => ! empty( $order ) ? $order : '',
+								);
+							}
+						}
+					}
+					unset( $row );
+				}
+			} elseif ( '_um_sortby_custom' === $key ) {
+				$value = sanitize_text_field( $value );
+			} elseif ( '_um_sortby_custom_label' === $key ) {
+				$value = wp_strip_all_tags( $value );
+			} elseif ( '_um_sortby_custom_type' === $key ) {
+				$value = sanitize_text_field( $value );
+			} elseif ( '_um_sortby_custom_order' === $key ) {
+				$value = sanitize_text_field( $value );
+			}
+
+			return $value;
 		}
 
 		public function remove_meta_box() {
@@ -199,7 +329,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				add_action( 'save_post', array( &$this, 'save_metabox_directory' ), 10, 2 );
 			}
 
-			//restrict content metabox
+			// Restrict content metabox
 			$post_types = UM()->options()->get( 'restricted_access_post_metabox' );
 			if ( ! empty( $post_types[ $current_screen->id ] ) ) {
 
@@ -230,16 +360,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					add_action( 'save_post', array( &$this, 'save_metabox_restrict_content' ), 10, 2 );
 				}
 
-				if ( $current_screen->id == 'attachment' ) {
+				if ( 'attachment' === $current_screen->id ) {
 					add_action( 'add_attachment', array( &$this, 'save_attachment_metabox_restrict_content' ), 10, 2 );
 					add_action( 'edit_attachment', array( &$this, 'save_attachment_metabox_restrict_content' ), 10, 2 );
 				}
 			}
 
-
+			// Any custom metabox save process.
 			add_action( 'save_post', array( &$this, 'save_metabox_custom' ), 10, 2 );
 		}
-
 
 		/**
 		 * @param $post_id
@@ -251,35 +380,28 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				 ! wp_verify_nonce( $_POST['um_admin_save_metabox_custom_nonce'], basename( __FILE__ ) ) ) {
 				return;
 			}
-
 			/**
-			 * UM hook
+			 * Fires to save UM custom metabox rendered via `UM()->metabox()-load_metabox_custom()` function.
 			 *
-			 * @type action
-			 * @title um_admin_custom_restrict_content_metaboxes
-			 * @description Save metabox custom with restrict content
-			 * @input_vars
-			 * [{"var":"$post_id","type":"int","desc":"Post ID"},
-			 * {"var":"$post","type":"array","desc":"Post data"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_admin_custom_restrict_content_metaboxes', 'function_name', 10, 2 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_admin_custom_restrict_content_metaboxes', 'my_admin_custom_restrict_content', 10, 2 );
-			 * function my_admin_custom_restrict_content( $post_id, $post ) {
+			 * @param {int}    $post_id Post ID.
+			 * @param {object} $post    Post object.
+			 *
+			 * @since 2.0
+			 * @hook um_admin_save_custom_metabox
+			 *
+			 * @example <caption>Make some action during save UM custom metabox.</caption>
+			 * function my_admin_save_custom_metabox( $post_id, $post ) {
 			 *     // your code here
 			 * }
-			 * ?>
+			 * add_action( 'um_admin_save_custom_metabox', 'my_admin_save_custom_metabox', 10, 2 );
 			 */
-			do_action( 'um_admin_custom_restrict_content_metaboxes', $post_id, $post );
+			do_action( 'um_admin_save_custom_metabox', $post_id, $post );
 		}
-
 
 		/**
 		 *
 		 */
-		function add_metabox_restrict_content() {
+		public function add_metabox_restrict_content() {
 			global $current_screen;
 
 			add_meta_box(
@@ -287,8 +409,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				__( 'Ultimate Member: Content Restriction', 'ultimate-member' ),
 				array( &$this, 'restrict_content_cb' ),
 				$current_screen->id,
-				'normal',
-				'default'
+				'normal'
 			);
 
 			/**
@@ -819,14 +940,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			}
 		}
 
-
 		/**
 		 * Load admin custom metabox
 		 *
 		 * @param $object
 		 * @param $box
 		 */
-		function load_metabox_custom( $object, $box ) {
+		public function load_metabox_custom( $object, $box ) {
 			global $post;
 
 			$box['id'] = str_replace('um-admin-custom-','', $box['id']);
@@ -2039,59 +2159,76 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_crop':
+					if ( UM()->is_new_ui() ) {
+						if ( array_key_exists( 'metakey', $field_args ) && 'profile_photo' === $field_args['metakey'] ) {
+							?>
+							<input type="hidden" name="_crop" id="_hidden" value="1" />
+							<?php
+						} elseif ( array_key_exists( 'metakey', $field_args ) && 'cover_photo' === $field_args['metakey'] ) {
+							// Note: The value 2 is used for cover photo crop that set up from UM settings.
+							?>
+							<input type="hidden" name="_crop" id="_hidden" value="2" />
+							<?php
+						}
+					}
 					?>
-
-					<p><label for="_crop"><?php _e( 'Crop Feature', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Enable/disable crop feature for this image upload and define ratio', 'ultimate-member' ) ); ?></label>
-						<select name="_crop" id="_crop" style="width: 100%">
-							<option value="0" <?php selected( '0', $this->edit_mode_value ); ?>><?php _e( 'Turn Off (Default)', 'ultimate-member' ) ?></option>
-							<option value="1" <?php selected( '1', $this->edit_mode_value ); ?>><?php _e( 'Crop and force 1:1 ratio', 'ultimate-member' ) ?></option>
-							<option value="3" <?php selected( '3', $this->edit_mode_value ); ?>><?php _e( 'Crop and force user-defined ratio', 'ultimate-member' ) ?></option>
+					<p>
+						<label for="_crop"><?php esc_html_e( 'Crop Feature', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Enable/disable crop feature for this image upload and define ratio', 'ultimate-member' ) ); ?></label>
+						<select name="_crop" id="_crop" style="width: 100%" <?php disabled( UM()->is_new_ui() && array_key_exists( 'metakey', $field_args ) && ( 'profile_photo' === $field_args['metakey'] || 'cover_photo' === $field_args['metakey'] ) ); ?>>
+							<option value="0" <?php selected( '0', $this->edit_mode_value ); ?>><?php esc_html_e( 'Turn Off (Default)', 'ultimate-member' ); ?></option>
+							<option value="1" <?php selected( '1', $this->edit_mode_value ); ?>><?php esc_html_e( 'Crop and force 1:1 ratio', 'ultimate-member' ); ?></option>
+							<?php
+							if ( UM()->is_new_ui() && array_key_exists( 'metakey', $field_args ) && 'cover_photo' === $field_args['metakey'] ) {
+								?>
+								<option value="2" selected>
+									<?php
+									// translators: %s is the cover photo ratio value.
+									echo esc_html( sprintf( __( 'Crop and force %s ratio', 'ultimate-member' ), UM()->options()->get( 'profile_cover_ratio' ) ) );
+									?>
+								</option>
+								<?php
+							}
+							?>
+							<option value="3" <?php selected( '3', $this->edit_mode_value ); ?>><?php esc_html_e( 'Crop and force user-defined ratio', 'ultimate-member' ); ?></option>
 						</select>
 					</p>
-
 					<?php
 					break;
 
 				case '_allowed_types':
-
-					if ( $this->set_field_type == 'image' ) {
-
+					if ( 'image' === $this->set_field_type ) {
 						if ( isset( $this->edit_mode_value ) && is_array( $this->edit_mode_value ) ) {
 							$values = $this->edit_mode_value;
 						} else {
 							$values = array( 'png','jpeg','jpg','gif' );
-						} ?>
-
-						<p><label for="_allowed_types"><?php _e( 'Allowed Image Types', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Select the image types that you want to allow to be uploaded via this field.', 'ultimate-member' ) ); ?></label>
+						}
+						?>
+						<p>
+							<label for="_allowed_types"><?php esc_html_e( 'Allowed Image Types', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select the image types that you want to allow to be uploaded via this field.', 'ultimate-member' ) ); ?></label>
 							<select name="_allowed_types[]" id="_allowed_types" multiple="multiple" style="width: 100%">
-								<?php foreach( UM()->files()->allowed_image_types() as $e => $n ) { ?>
-									<option value="<?php echo $e; ?>" <?php if ( in_array( $e, $values ) ) { echo 'selected'; } ?>><?php echo $n; ?></option>
+								<?php foreach ( UM()->common()->filesystem()::image_mimes() as $n ) { ?>
+									<option value="<?php echo esc_attr( $n ); ?>" <?php selected( in_array( $n, $values, true ) ); ?>><?php echo esc_html( $n ); ?></option>
 								<?php } ?>
 							</select>
 						</p>
-
 						<?php
-
 					} else {
-
 						if ( isset( $this->edit_mode_value ) && is_array( $this->edit_mode_value ) ) {
 							$values = $this->edit_mode_value;
 						} else {
 							$values = array( 'pdf', 'txt' );
-						} ?>
-
-						<p><label for="_allowed_types"><?php _e( 'Allowed File Types', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Select the image types that you want to allow to be uploaded via this field.', 'ultimate-member' ) ); ?></label>
+						}
+						?>
+						<p>
+							<label for="_allowed_types"><?php esc_html_e( 'Allowed File Types', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select the file types that you want to allow to be uploaded via this field.', 'ultimate-member' ) ); ?></label>
 							<select name="_allowed_types[]" id="_allowed_types" multiple="multiple" style="width: 100%">
-								<?php foreach( UM()->files()->allowed_file_types() as $e => $n ) { ?>
-									<option value="<?php echo $e; ?>" <?php if ( in_array( $e, $values ) ) { echo 'selected'; } ?>><?php echo $n; ?></option>
+								<?php foreach ( UM()->common()->filesystem()::file_mimes() as $n ) { ?>
+									<option value="<?php echo esc_attr( $n ); ?>" <?php selected( in_array( $n, $values, true ) ); ?>><?php echo esc_html( $n ); ?></option>
 								<?php } ?>
 							</select>
 						</p>
-
 						<?php
-
 					}
-
 					break;
 
 				case '_upload_text':
@@ -2136,7 +2273,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p><label for="_max_size"><?php _e( 'Maximum Size in bytes', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'The maximum size for image that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_max_size" id="_max_size" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="number" name="_max_size" id="_max_size" value="<?php echo $this->edit_mode_value; ?>" />
 					</p>
 
 					<?php
@@ -2334,41 +2471,55 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_default':
-					?>
-
-					<?php if ( $this->set_field_type == 'textarea' ) { ?>
-
-					<p><label for="_default"><?php _e( 'Default Text', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Text to display by default in this field', 'ultimate-member' ) ); ?></label>
-						<textarea name="_default" id="_default"><?php echo $this->edit_mode_value; ?></textarea>
-					</p>
-
-				<?php } elseif ( $this->set_field_type == 'date' ) { ?>
-
-					<p class="um"><label for="_default"><?php _e( 'Default Date', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'You may use all PHP compatible date formats such as: 2020-02-02, 02/02/2020, yesterday, today, tomorrow, next monday, first day of next month, +3 day', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" class="um-datepicker" data-format="yyyy/mm/dd" />
-					</p>
-
-				<?php } elseif ( $this->set_field_type == 'time' ) { ?>
-
-					<p class="um"><label for="_default"><?php _e( 'Default Time', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'You may use all PHP compatible date formats such as: 2020-02-02, 02/02/2020, yesterday, today, tomorrow, next monday, first day of next month, +3 day', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" class="um-timepicker" data-format="HH:i" />
-					</p>
-
-				<?php } elseif ( $this->set_field_type == 'rating' ) { ?>
-
-					<p><label for="_default"><?php _e( 'Default Rating', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'If you wish the rating field to be prefilled with a number of stars, enter it here.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" />
-					</p>
-
-				<?php } else { ?>
-
-					<p><label for="_default"><?php _e( 'Default Value', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_default" id="_default" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
-					</p>
-
-				<?php } ?>
-
-					<?php
+					if ( 'textarea' === $this->set_field_type ) {
+						?>
+						<p><label for="_default"><?php esc_html_e( 'Default Text', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Text to display by default in this field', 'ultimate-member' ) ); ?></label>
+							<textarea name="_default" id="_default"><?php echo $this->edit_mode_value; ?></textarea>
+						</p>
+						<?php
+					} elseif ( 'date' === $this->set_field_type ) {
+						?>
+						<p class="um"><label for="_default"><?php esc_html_e( 'Default Date', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'You may use all PHP compatible date formats such as: 2020-02-02, 02/02/2020, yesterday, today, tomorrow, next monday, first day of next month, +3 day', 'ultimate-member' ) ); ?></label>
+							<?php
+							if ( UM()->is_new_ui() ) {
+								// Maybe convert to proper date format of native input type="date".
+								if ( ! empty( $this->edit_mode_value ) && false === strpos( $this->edit_mode_value, '-' ) ) {
+									$this->edit_mode_value = wp_date( 'Y-m-d', strtotime( $this->edit_mode_value ), new DateTimeZone( 'UTC' ) );
+								}
+								?>
+								<input type="date" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" />
+								<?php
+							} else {
+								?>
+								<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" class="um-datepicker" data-format="yyyy/mm/dd" />
+								<?php
+							}
+							?>
+						</p>
+						<?php
+					} elseif ( 'time' === $this->set_field_type ) {
+						?>
+						<p class="um"><label for="_default"><?php esc_html_e( 'Default Time', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'You may use all PHP compatible date formats such as: 2020-02-02, 02/02/2020, yesterday, today, tomorrow, next monday, first day of next month, +3 day', 'ultimate-member' ) ); ?></label>
+							<?php if ( UM()->is_new_ui() ) { ?>
+								<input type="time" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" />
+							<?php } else { ?>
+								<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" class="um-timepicker" data-format="HH:i" />
+							<?php } ?>
+						</p>
+						<?php
+					} elseif ( 'rating' === $this->set_field_type ) {
+						?>
+						<p><label for="_default"><?php esc_html_e( 'Default Rating', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'If you wish the rating field to be prefilled with a number of stars, enter it here.', 'ultimate-member' ) ); ?></label>
+							<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" />
+						</p>
+						<?php
+					} else {
+						?>
+						<p><label for="_default"><?php esc_html_e( 'Default Value', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value', 'ultimate-member' ) ); ?></label>
+							<input type="text" name="_default" id="_default" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						</p>
+						<?php
+					}
 					break;
 
 				case '_label':
@@ -2513,7 +2664,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_custom_dropdown_options_source':
 					?>
 
-					<p><label for="_custom_dropdown_options_source"><?php esc_html_e( 'Choices Callback', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Add a callback source to retrieve choices.', 'ultimate-member' ) ); ?></label>
+					<p><label for="_custom_dropdown_options_source"><?php esc_html_e( 'Choices Callback', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Add a callback source to retrieve choices.', 'ultimate-member' ) ); ?></label>
 						<input type="text" name="_custom_dropdown_options_source" id="_custom_dropdown_options_source" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
@@ -2521,27 +2672,61 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_parent_dropdown_relationship':
+					/**
+					 * Filters the fields list available to be the parent dropdowns.
+					 *
+					 * @param {array}  $fields  Fields list for the parent dropdowns.
+					 * @param {string} $metakey Current field meta key.
+					 *
+					 * @return {array} Fields list for the parent dropdowns.
+					 *
+					 * @since 3.0.0
+					 * @hook um_field_parent_dropdown_relationship
+					 *
+					 * @example <caption>Extends parent options for 'my_key' field. Added 'Parent title' field.</caption>
+					 * function my_custom_um_field_parent_dropdown_relationship( $fields, $metakey ) {
+					 *     if ( 'my_key' === $metakey ) {
+					 *         $fields[] = array(
+					 *             'type'    => 'select',
+					 *             'metakey' => 'parent_metakey',
+					 *             'title'   => 'Parent title',
+					 *         );
+					 *     }
+					 *     return $fields;
+					 * }
+					 * add_filter( 'um_field_parent_dropdown_relationship', 'my_custom_um_field_parent_dropdown_relationship', 10, 2 );
+					 */
+					$relationship_options = apply_filters( 'um_field_parent_dropdown_relationship', UM()->builtin()->custom_fields, $field_args['metakey'] );
 					?>
-
 					<p><label for="_parent_dropdown_relationship"><?php esc_html_e( 'Parent Option', 'ultimate-member' ); ?><?php UM()->tooltip( __( 'Dynamically populates the option based from selected parent option.', 'ultimate-member' ) ); ?></label>
 						<select name="_parent_dropdown_relationship" id="_parent_dropdown_relationship" style="width: 100%">
 							<option value=""><?php esc_html_e( 'No Selected', 'ultimate-member' ); ?></option>
 							<?php
-							if ( UM()->builtin()->custom_fields ) {
-								foreach ( UM()->builtin()->custom_fields as $array ) {
-									if ( array_key_exists( 'type', $array ) && 'select' === $array['type'] && ( ! isset( $field_args['metakey'] ) || $field_args['metakey'] != $array['metakey'] ) && isset( $array['title'] ) ) {
-										?>
-										<option value="<?php echo esc_attr( $array['metakey'] ); ?>" <?php selected( $array['metakey'], $this->edit_mode_value ); ?>><?php echo esc_html( $array['title'] ); ?></option>
-										<?php
+							if ( $relationship_options ) {
+								foreach ( $relationship_options as $array ) {
+									if ( empty( $array['title'] ) ) {
+										continue;
 									}
+
+									if ( ! array_key_exists( 'type', $array ) || 'select' !== $array['type'] ) {
+										continue;
+									}
+
+									// Skip current field.
+									if ( ! empty( $field_args['metakey'] ) && $field_args['metakey'] === $array['metakey'] ) {
+										continue;
+									}
+									?>
+									<option value="<?php echo esc_attr( $array['metakey'] ); ?>" <?php selected( $array['metakey'], $this->edit_mode_value ); ?>><?php echo esc_html( $array['title'] ); ?></option>
+									<?php
 								}
 							}
 							?>
 						</select>
 					</p>
-
 					<?php
 					break;
+
 			}
 
 			// Flush class variable.
