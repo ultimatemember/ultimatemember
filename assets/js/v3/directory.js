@@ -494,6 +494,7 @@ UM.frontend.directory.prototype = {
 		});
 	},
 	request: function ( args ) {
+		args = args || {};
 		let instance = this;
 		if ( args.hasOwnProperty('instance') ) {
 			instance = args.instance;
