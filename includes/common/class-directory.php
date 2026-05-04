@@ -600,14 +600,14 @@ class Directory extends Directory_Config {
 			$where_clause = '';
 			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
 				$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
-				$where_clause .= " AND um2.meta_value LIKE '%" . 's:15:"hide_in_members";b:0;%';
+				$where_clause .= " AND um2.meta_value LIKE '%%" . 's:15:"hide_in_members";b:0;' . "%%'";
 			}
 
 			if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
 				if ( empty( $join_clause ) ) {
 					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
 				}
-				$where_clause .= " AND um2.meta_value LIKE '%" . 's:14:"account_status";s:8:"approved";%';
+				$where_clause .= " AND um2.meta_value LIKE '%%" . 's:14:"account_status";s:8:"approved";' . "%%'";
 			}
 
 			$pre_query_results = $wpdb->get_row(
