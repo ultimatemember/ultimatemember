@@ -279,6 +279,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					FROM {$wpdb->postmeta} pm
 					LEFT JOIN {$wpdb->posts} p ON pm.post_id = p.ID
 					WHERE p.post_type = 'um_directory' AND
+						  p.post_status = 'publish' AND
 						  pm.meta_key = '_um_directory_token' AND
 						  pm.meta_value = %s
 					LIMIT 1",
@@ -292,7 +293,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						"SELECT ID
 						FROM {$wpdb->posts}
 						WHERE SUBSTRING( MD5( ID ), 11, 5 ) = %s AND
-							  post_type='um_directory'",
+							  post_type='um_directory' AND
+							  post_status = 'publish'",
 						$hash
 					)
 				);
