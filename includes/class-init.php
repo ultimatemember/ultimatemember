@@ -34,12 +34,12 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Terms_Conditions Terms_Conditions() Reviewed branch: master
 	 * @method UM_Unsplash Unsplash() Reviewed branch: master
 	 * @method UM_User_Bookmarks User_Bookmarks() Not reviewed branch: dev/new_ui
-	 * @method UM_User_Locations User_Locations() Under dev branch: dev/new-ui (member directory map in new UI only)
+	 * @method UM_User_Locations User_Locations() Under dev branch: dev/new-ui (left only member directory map in new UI)
 	 * @method UM_User_Notes User_Notes() Reviewed branch: master
 	 * @method UM_User_Photos User_Photos() Reviewed branch: master
 	 * @method UM_User_Tags User_Tags() Reviewed branch: master
 	 * @method UM_Verified_Users Verified_Users() Reviewed branch: master
-	 * @method UM_WooCommerce WooCommerce() Partially Reviewed branch: dev/new_ui (member directory filter + usermeta update)
+	 * @method UM_WooCommerce WooCommerce() Reviewed branch: master
 	 * @method UM_Zapier Zapier() Reviewed branch: dev/new_ui
 	 *
 	 * @method UM_Frontend_Posting Frontend_Posting()
