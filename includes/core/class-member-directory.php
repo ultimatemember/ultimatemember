@@ -262,9 +262,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			return $default;
 		}
 
-
 		/**
-		 * Getting member directory post ID via hash
+		 * Getting member directory post ID via hash.
 		 * Hash is unique attr, which we use visible at frontend
 		 *
 		 * @param string $hash
@@ -277,9 +276,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$directory_id = $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT post_id
-					FROM {$wpdb->postmeta}
-					WHERE meta_key = '_um_directory_token' AND
-						  meta_value = %s
+					FROM {$wpdb->postmeta} pm
+					LEFT JOIN {$wpdb->posts} p ON pm.post_id = p.ID
+					WHERE p.post_type = 'um_directory' AND
+						  pm.meta_key = '_um_directory_token' AND
+						  pm.meta_value = %s
 					LIMIT 1",
 					$hash
 				)
@@ -290,7 +291,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$wpdb->prepare(
 						"SELECT ID
 						FROM {$wpdb->posts}
-						WHERE SUBSTRING( MD5( ID ), 11, 5 ) = %s",
+						WHERE SUBSTRING( MD5( ID ), 11, 5 ) = %s AND
+							  post_type='um_directory'",
 						$hash
 					)
 				);
