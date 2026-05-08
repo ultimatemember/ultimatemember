@@ -247,7 +247,7 @@
 * Bugfixes:
 
   - Fixed: Security issue CVE ID: CVE-2024-12276.
-  - Fixed: Custom usermeta table metakeys for filtering in member directory (from `_money_spent` to `wc_money_spent_` and added `wc_order_count_`).
+  - Fixed: Custom usermeta table metakeys for filtering in member directory (from `_money_spent` to `um_woo_money_spent_` and added `um_woo_order_count_`).
   - Fixed: Layout for "Download your data" and "Erase of your data" fields.
   - Fixed: Image sizes used for Open Graph meta in User Profile headers are now corrected.
   - Fixed: "Delete account text" settings visibility issue in wp-admin.
