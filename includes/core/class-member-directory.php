@@ -2699,9 +2699,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$data_array = array(
 				'card_anchor'          => esc_html( $this->get_user_hash( $user_id ) ),
-				'role'                 => is_user_logged_in() ? esc_html( um_user( 'role' ) ) : 'undefined', // make the role hidden for the nopriv requests.
-				'account_status'       => is_user_logged_in() ? esc_html( UM()->common()->users()->get_status( $user_id ) ) : 'undefined', // make the status hidden for the nopriv requests.
-				'account_status_name'  => is_user_logged_in() ? esc_html( UM()->common()->users()->get_status( $user_id, 'formatted' ) ) : __( 'Undefined', 'ultimate-member' ), // make the status hidden for the nopriv requests.
+				'role'                 => 'undefined', // make the role hidden here.
+				'account_status'       => 'undefined', // make the status hidden here.
+				'account_status_name'  => esc_html__( 'Undefined', 'ultimate-member' ), // make the status hidden here.
 				'cover_photo'          => wp_kses( um_user( 'cover_photo', $this->cover_size ), UM()->get_allowed_html( 'templates' ) ),
 				'display_name'         => esc_html( um_user( 'display_name' ) ),
 				'profile_url'          => esc_url( um_user_profile_url() ),
@@ -2713,6 +2713,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'hook_just_after_name' => wp_kses( preg_replace( '/^\s+/im', '', $hook_just_after_name ), UM()->get_allowed_html( 'templates' ) ),
 				'hook_after_user_name' => wp_kses( preg_replace( '/^\s+/im', '', $hook_after_user_name ), UM()->get_allowed_html( 'templates' ) ),
 			);
+
+			// Make the role and status visible for the user who can edit these users in the request.
+			if ( is_user_logged_in() && UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
+				$data_array['role']                = esc_html( um_user( 'role' ) );
+				$data_array['account_status']      = esc_html( UM()->common()->users()->get_status( $user_id ) );
+				$data_array['account_status_name'] = esc_html( UM()->common()->users()->get_status( $user_id, 'formatted' ) );
+			}
 
 			if ( ! empty( $directory_data['show_tagline'] ) && ! empty( $directory_data['tagline_fields'] ) ) {
 				$directory_data['tagline_fields'] = maybe_unserialize( $directory_data['tagline_fields'] );
