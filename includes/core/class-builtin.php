@@ -1540,7 +1540,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return array
 		 */
-		function all_user_fields( $exclude_types = null, $show_all = false ) {
+		public function all_user_fields( $exclude_types = null, $show_all = false ) {
 
 			$fields_without_metakey = $this->get_fields_without_metakey();
 			$fields_without_metakey = apply_filters( 'um_all_user_fields_without_metakey', $fields_without_metakey );
