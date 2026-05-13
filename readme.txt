@@ -169,7 +169,12 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 = 2.11.5 2026-05-xx =
 
+**Bugfixes**
 
+* Fixed: Security issue, CVE ID: CVE-2026-7761.
+  ** Resricted `get_directory_by_hash()` function to only match posts with post_type='um_directory' and publish post status.
+  ** Used `0 === strpos()` instead of `strstr()` for getting proper post_data.
+  ** Added condition for getting only allowed fields in tagline_fields and reveal_fields to `build_user_card_data()`.
 
 = 2.11.4 2026-04-30 =
 
@@ -287,6 +292,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.11.5 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.11.3 =
 This version fixes a security related bug. Upgrade immediately.
