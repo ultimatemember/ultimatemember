@@ -427,8 +427,6 @@ if ( ! class_exists( 'UM' ) ) {
 				if ( ! get_option( 'show_avatars' ) ) {
 					update_option( 'show_avatars', 1 );
 				}
-			} else {
-				UM()->options()->update( 'rest_api_version', '1.0' );
 			}
 
 			if ( $version != UM_VERSION ) {
@@ -442,14 +440,12 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->cron()->schedule_events();
 		}
 
-
 		/**
 		 *
 		 */
 		function extensions_init() {
 			do_action( 'um_core_loaded' );
 		}
-
 
 		/**
 		 * Include required core files used in admin and on the frontend.
@@ -523,13 +519,7 @@ if ( ! class_exists( 'UM' ) ) {
 			if ( is_multisite() ) {
 				$this->multisite();
 			}
-
-			// Call only when REST_API request
-			if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
-				$this->rest_api();
-			}
 		}
-
 
 		/**
 		 * @since 2.1.0
@@ -938,27 +928,6 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\core\rest\API_v1|um\core\rest\API_v2
-		 */
-		public function rest_api() {
-			$api_version = $this->options()->get( 'rest_api_version' );
-
-			if ( empty( $this->classes['rest_api'] ) ) {
-				if ( '1.0' === $api_version ) {
-					$this->classes['rest_api'] = new um\core\rest\API_v1();
-				} elseif ( '2.0' === $api_version ) {
-					$this->classes['rest_api'] = new um\core\rest\API_v2();
-				} else {
-					$this->classes['rest_api'] = new um\core\rest\API_v1();
-				}
-			}
-
-			return $this->classes['rest_api'];
-		}
-
-		/**
-		 * @since 2.0
-		 *
 		 * @return um\core\Rewrite
 		 */
 		function rewrite() {
@@ -968,7 +937,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 			return $this->classes['rewrite'];
 		}
-
 
 		/**
 		 * @since 2.0

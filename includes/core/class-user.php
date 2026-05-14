@@ -110,6 +110,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				'user_activation_key',
 				'level_',
 				$wpdb->get_blog_prefix() . 'user_level',
+				'um_user_public_key', // UM REST API public. Legacy, not used for now!
+				'um_user_secret_key', // UM REST API secret. Legacy, not used for now!
 			);
 
 			// a list of keys that should never be in wp_usermeta
