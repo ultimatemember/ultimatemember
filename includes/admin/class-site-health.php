@@ -1595,10 +1595,6 @@ class Site_Health {
 				'label' => __( 'Allowed Choice Callbacks', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'allowed_choice_callbacks' ),
 			),
-			'rest_api_version'              => array(
-				'label' => __( 'REST API version', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'rest_api_version' ),
-			),
 			'allow_url_redirect_confirm'    => array(
 				'label' => __( 'Allow external link redirect confirm (enable JS.confirm for external links)', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'allow_url_redirect_confirm' ) ? $labels['yes'] : $labels['no'],

@@ -172,7 +172,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 **Bugfixes**
 
 * Fixed: Security issue, CVE ID: CVE-2026-7761.
-  ** Resricted `get_directory_by_hash()` function to only match posts with post_type='um_directory' and publish post status.
+  ** Restricted `get_directory_by_hash()` function to only match posts with post_type='um_directory' and publish post status.
   ** Used `0 === strpos()` instead of `strstr()` for getting proper post_data.
   ** Added condition for getting only allowed fields in tagline_fields and reveal_fields to `build_user_card_data()`.
 
