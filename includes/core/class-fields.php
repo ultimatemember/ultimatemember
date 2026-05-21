@@ -834,7 +834,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return $classes;
 		}
 
-
 		/**
 		 * Gets field value
 		 *
@@ -844,26 +843,26 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return mixed
 		 */
-		function field_value( $key, $default = false, $data = null ) {
-			// preview in backend
+		public function field_value( $key, $default = false, $data = null ) {
+			// Preview in backend
 			if ( isset( UM()->user()->preview ) && UM()->user()->preview ) {
-				if ( $this->set_mode == 'login' || $this->set_mode == 'register' ) {
+				if ( 'login' === $this->set_mode || 'register' === $this->set_mode ) {
 					return '';
-				} else {
-					$val = um_user( $key );
-					if ( ! empty( $val ) ) {
-						return $val;
-					} else {
-						return '';
-					}
 				}
+
+				$val = um_user( $key );
+				if ( ! empty( $val ) ) {
+					return $val;
+				}
+
+				return '';
 			}
 
-			if ( isset( $_SESSION ) && isset( $_SESSION['um_social_profile'][ $key ] ) && isset( $this->set_mode ) && $this->set_mode == 'register' ) {
+			if ( isset( $_SESSION ) && isset( $_SESSION['um_social_profile'][ $key ] ) && isset( $this->set_mode ) && 'register' === $this->set_mode ) {
 				return $_SESSION['um_social_profile'][ $key ];
 			}
 
-			$type = ( isset( $data['type'] ) ) ? $data['type'] : '';
+			$type = isset( $data['type'] ) ? $data['type'] : '';
 
 			// normal state
 			if ( isset( UM()->form()->post_form[ $key ] ) ) {
@@ -4384,7 +4383,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 
 		/**
-		 * Gets a field in `view mode`
+		 * Gets a field in `view mode`. Works in the User Profile form > View mode only.
 		 *
 		 * @param string $key
 		 * @param array $data
@@ -4436,7 +4435,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			$default = array_key_exists( 'default', $data ) ? $data['default'] : false;
 
-			// Hide if empty.
+			// Hide if the value of the field with metakey is empty.
+			$_field_value           = null;
 			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
 			if ( ! in_array( $type, $fields_without_metakey, true ) ) {
 				$_field_value = $this->field_value( $key, $default, $data );
@@ -4467,8 +4467,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			switch ( $type ) {
 				/* Default */
 				default:
-					$_field_value = $this->field_value( $key, $default, $data );
-
 					if ( ( isset( $_field_value ) && '' !== $_field_value ) || in_array( $type, $fields_without_metakey, true ) ) {
 						$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 

@@ -247,56 +247,6 @@ function um_profile_field_filter_hook__last_login( $value, $data ) {
 add_filter( 'um_profile_field_filter_hook__last_login', 'um_profile_field_filter_hook__last_login', 99, 2 );
 add_filter( 'um_profile_field_filter_hook___um_last_login', 'um_profile_field_filter_hook__last_login', 99, 2 );
 
-
-/**
- * URLs in textarea
- *
- * @param $value
- * @param $data
- *
- * @return mixed|string|void
- */
-function um_profile_field_filter_hook__textarea( $value, $data ) {
-	if ( ! $value ) {
-		return '';
-	}
-
-	if ( ! empty( $data['html'] ) ) {
-		return wp_kses_post( $value );
-	}
-
-	$description_key = UM()->profile()->get_show_bio_key( UM()->fields()->global_args );
-
-	$value = wp_kses( $value, 'strip' );
-	$value = html_entity_decode( $value );
-	$value = preg_replace( '$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', ' <a href="$1" target="_blank">$1</a> ', $value . ' ' );
-	$value = preg_replace( '$(www\.[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', '<a target="_blank" href="http://$1">$1</a> ', $value . ' ' );
-
-	if ( ! ( isset( $data['metakey'] ) && $description_key === $data['metakey'] ) ) {
-		$value = wpautop( $value );
-	}
-
-	return $value;
-}
-add_filter( 'um_profile_field_filter_hook__textarea', 'um_profile_field_filter_hook__textarea', 99, 2 );
-
-    /***
-     ***	@urls in description
-     ***/
-/*    add_filter('um_profile_field_filter_hook__description', 'um_profile_field_filter_hook__description', 99, 2);
-    function um_profile_field_filter_hook__description( $value, $data ) {
-
-        if ( isset( $data ) && isset( $data['html'] ) && $data['html'] == 1 )
-            return $value;
-
-        $value = esc_textarea( $value );
-        $value = preg_replace('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', ' <a href="$1" target="_blank">$1</a> ', $value." ");
-        $value = preg_replace('$(www\.[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', '<a target="_blank" href="http://$1">$1</a> ', $value." ");
-
-        return $value;
-    }*/
-
-
 /**
  * Time field
  *
