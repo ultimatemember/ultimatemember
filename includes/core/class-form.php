@@ -841,9 +841,10 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 											$form[ $k ] = '' !== $form[ $k ] ? (int) $form[ $k ] : '';
 											break;
 										case 'textarea':
-											if ( ! empty( $field['html'] ) || ( UM()->profile()->get_show_bio_key( $form ) === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
+											$description_key = UM()->profile()->get_show_bio_key( $form );
+											if ( ! empty( $field['html'] ) || ( $description_key === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
 												$allowed_html = UM()->get_allowed_html( 'templates' );
-												if ( UM()->profile()->get_show_bio_key( $form ) === $k ) {
+												if ( $description_key === $k ) {
 													$allowed_html = 'user_description';
 												}
 
@@ -851,6 +852,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 												$form[ $k ] = self::maybe_apply_tidy( $form[ $k ], $field );
 												$form[ $k ] = wp_kses( strip_shortcodes( $form[ $k ] ), $allowed_html );
 											} else {
+												// When save textarea value without HTML supported property, strip shortcodes, sanitize like a standard textarea.
 												$form[ $k ] = sanitize_textarea_field( strip_shortcodes( $form[ $k ] ) );
 											}
 											break;
@@ -961,8 +963,10 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				}
 
 				$description_key = UM()->profile()->get_show_bio_key( $this->form_data );
+				// Case when user_description is added to the User Profile header, and it's editable and not empty.
 				if ( $show_bio && ! empty( $form[ $description_key ] ) ) {
 					$field_exists = false;
+					// Check the case when user_description is also added to the User Profile form, and it's editable and not empty.
 					if ( ! empty( $this->form_data['custom_fields'] ) ) {
 						$custom_fields = maybe_unserialize( $this->form_data['custom_fields'] );
 						if ( array_key_exists( $description_key, $custom_fields ) ) {
@@ -972,6 +976,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 								$form[ $description_key ] = self::maybe_apply_tidy( $form[ $description_key ], $custom_fields[ $description_key ] );
 								$form[ $description_key ] = wp_kses( strip_shortcodes( $form[ $description_key ] ), 'user_description' );
 							} else {
+								// When save user_description value without HTML supported property, strip shortcodes, sanitize like a standard textarea.
 								$form[ $description_key ] = sanitize_textarea_field( strip_shortcodes( $form[ $description_key ] ) );
 							}
 						}
@@ -983,6 +988,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 							$form[ $description_key ] = self::maybe_apply_tidy( $form[ $description_key ], array() );
 							$form[ $description_key ] = wp_kses( strip_shortcodes( $form[ $description_key ] ), 'user_description' );
 						} else {
+							// When save user_description value without HTML supported property, strip shortcodes, sanitize like a standard textarea.
 							$form[ $description_key ] = sanitize_textarea_field( strip_shortcodes( $form[ $description_key ] ) );
 						}
 					}

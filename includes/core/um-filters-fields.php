@@ -248,6 +248,27 @@ add_filter( 'um_profile_field_filter_hook__last_login', 'um_profile_field_filter
 add_filter( 'um_profile_field_filter_hook___um_last_login', 'um_profile_field_filter_hook__last_login', 99, 2 );
 
 /**
+ * Clickable URLs in textarea
+ *
+ * @param $value
+ * @param $data
+ *
+ * @return mixed|string|void
+ */
+function um_profile_field_filter_hook__textarea( $value, $data ) {
+	if ( ! $value ) {
+		return '';
+	}
+
+	$description_key = UM()->profile()->get_show_bio_key( UM()->fields()->global_args );
+	if ( ! ( isset( $data['metakey'] ) && $description_key === $data['metakey'] ) ) {
+		$value = wpautop( make_clickable( $value ) );
+	}
+	return $value;
+}
+add_filter( 'um_profile_field_filter_hook__textarea', 'um_profile_field_filter_hook__textarea', 99, 2 );
+
+/**
  * Time field
  *
  * @param $value

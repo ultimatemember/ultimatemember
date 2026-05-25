@@ -4506,16 +4506,30 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							if ( $show_bio ) {
 								if ( true === $bio_html && ! empty( $data['html'] ) ) {
-									$res = wp_kses_post( make_clickable( wpautop( $res ) ) );
+									$res = wp_kses( make_clickable( $res ), 'user_description' );
 								} else {
-									$res = esc_html( $res );
+									$res = wp_kses(
+										make_clickable( $res ),
+										array(
+											'a' => array(
+												'href' => array(),
+												'rel'  => array(),
+											),
+										)
+									);
 								}
+							} elseif ( ! empty( $data['html'] ) ) {
+								$res = wp_kses( make_clickable( $res ), 'user_description' );
 							} else {
-								if ( ! empty( $data['html'] ) ) {
-									$res = wp_kses_post( make_clickable( wpautop( $res ) ) );
-								} else {
-									$res = esc_html( $res );
-								}
+								$res = wp_kses(
+									make_clickable( $res ),
+									array(
+										'a' => array(
+											'href' => array(),
+											'rel'  => array(),
+										),
+									)
+								);
 							}
 
 							$res = nl2br( $res );
