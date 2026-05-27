@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-08T12:42:24+00:00\n"
+"POT-Creation-Date: 2026-05-27T07:10:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -5314,21 +5314,21 @@ msgid "Version 3.64"
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:2413
-msgid "Tenor GIF"
+msgid "GIPHY GIF"
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:2414
-msgid "This section is designed to help you integrate Ultimate Member functionality with Tenor GIF API."
+msgid "This section is designed to help you integrate Ultimate Member functionality with GIPHY API."
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:2419
-msgid "Tenor API Key"
+msgid "GIPHY API Key"
 msgstr ""
 
-#. translators: %s is the link ti Tenor API docs.
+#. translators: %s is the link to GIPHY API docs.
 #: includes/admin/core/class-admin-settings.php:2421
 #, php-format
-msgid "Used for paste GIF images in content. Get more details <a href=\"%s\" title=\"Tenor API Docs\">here</a>."
+msgid "Used for paste GIF images in content. Get more details <a href=\"%s\" title=\"GIPHY API Docs\">here</a>."
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:2431
@@ -11779,12 +11779,12 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2914
-#: includes/frontend/class-layouts.php:2915
+#: includes/frontend/class-layouts.php:2946
+#: includes/frontend/class-layouts.php:2947
 msgid "Search.."
 msgstr ""
 
-#: includes/frontend/class-layouts.php:2923
+#: includes/frontend/class-layouts.php:2955
 #: templates/members.php:261
 #: templates/members.php:263
 #: templates/v3/directory/wrapper.php:65
