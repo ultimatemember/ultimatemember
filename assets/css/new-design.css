@@ -13,6 +13,19 @@
 .um.um-ui-xl .um-responsive:not(.um-ui-xl) {
   display: none !important;
 }
+.um:not(.um-not-responsive) {
+  position: relative;
+}
+.um:not(.um-not-responsive) .um-main-skeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #fff;
+  min-height: 300px;
+  z-index: 4;
+}
 
 @-webkit-keyframes um-ajax-shimmer {
   100% {
@@ -129,10 +142,6 @@
   justify-content: flex-start;
   align-items: stretch;
   flex-wrap: nowrap;
-}
-.um .um-main-skeleton {
-  width: 100%;
-  min-height: 300px;
 }
 
 .um .um-button {
