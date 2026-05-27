@@ -1212,7 +1212,7 @@ UM.frontend = {
 				let $list  = jQuery(this);
 
 				// Check if we scrolled to the bottom of the container
-				if ( $list.scrollTop() + $list.innerHeight() >= $list[0].scrollHeight ) {
+				if ( $list.scrollTop() + $list.innerHeight() + 8 >= $list[0].scrollHeight ) {
 					let nextHash = $list.parents('.um-gif-list-wrapper').data('next');
 
 					// Check if we've loaded all pages already
