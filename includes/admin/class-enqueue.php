@@ -65,7 +65,7 @@ final class Enqueue extends \um\common\Enqueue {
 		add_action( 'load-post.php', array( &$this, 'enqueue_cpt_scripts' ) );
 
 		add_filter( 'block_categories_all', array( &$this, 'blocks_category' ) );
-		add_action( 'enqueue_block_assets', array( &$this, 'block_editor' ), 11 );
+		add_action( 'enqueue_block_editor_assets', array( &$this, 'block_editor' ), 11 );
 	}
 
 	/**
