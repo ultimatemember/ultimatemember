@@ -13,10 +13,10 @@
 .um.um-ui-xl .um-responsive:not(.um-ui-xl) {
   display: none !important;
 }
-.um:not(.um-not-responsive) {
+.um:not(.um-not-responsive):not(.um-modal) {
   position: relative;
 }
-.um:not(.um-not-responsive) .um-main-skeleton {
+.um:not(.um-not-responsive):not(.um-modal) .um-main-skeleton {
   position: absolute;
   top: 0;
   left: 0;

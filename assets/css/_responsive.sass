@@ -8,7 +8,7 @@ $resolutions: ( xs:320, s:576, m:768, l:992, xl:1024 )
   @each $size, $number in $resolutions
     &.#{$prefix}ui-#{$size} .#{$prefix}responsive:not(.#{$prefix}ui-#{$size})
       display: none !important
-  &:not(.um-not-responsive)
+  &:not(.#{$prefix}not-responsive):not(.#{$prefix}modal)
     position: relative
     .#{$prefix}main-skeleton
       position: absolute
