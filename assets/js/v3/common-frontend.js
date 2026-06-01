@@ -1132,8 +1132,11 @@ UM.frontend = {
 
 				let args = {
 					onEmojiSelect: function (selectedEmoji) {
+						let customSelect = wp.hooks.applyFilters( 'um_emoji_picker_custom_on_select', false, selectedEmoji, $emojiPicker[ $item ], $emojiPickerLink );
+						if ( false === customSelect ) {
+							$emojiList.style.display = 'none';
+						}
 						wp.hooks.doAction( 'um_emoji_picker_on_select', selectedEmoji, $emojiPicker[ $item ], $emojiPickerLink );
-						$emojiList.style.display = 'none';
 					},
 					skinTonePosition: 'none',
 					theme: 'light',
