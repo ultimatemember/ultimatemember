@@ -1313,41 +1313,40 @@ function um_profile_header( $args ) {
 			}
 
 			if ( $show_bio ) {
-				$description_key = UM()->profile()->get_show_bio_key( $args );
+				$description_key   = UM()->profile()->get_show_bio_key( $args );
+				$description_value = UM()->fields()->field_value( $description_key );
 
-				if ( true === UM()->fields()->viewing && um_user( $description_key ) ) {
+				if ( ! empty( $description_value ) && true === UM()->fields()->viewing ) {
 					?>
 					<div class="um-meta-text">
 						<?php
-						$description = get_user_meta( um_user( 'ID' ), $description_key, true );
-
 						if ( $bio_html ) {
-							echo wp_kses_post( nl2br( make_clickable( wpautop( $description ) ) ) );
+							echo nl2br( wp_kses( make_clickable( $description_value ), 'user_description' ) );
 						} else {
-							echo nl2br( esc_html( $description ) );
+							echo nl2br(
+								wp_kses(
+									make_clickable( $description_value ),
+									array(
+										'a' => array(
+											'href' => array(),
+											'rel'  => array(),
+										),
+									)
+								)
+							);
 						}
 						?>
 					</div>
 					<?php
 				} elseif ( true === UM()->fields()->editing ) {
-					if ( ! empty( $args['custom_fields'][ $description_key ] ) ) {
-						if ( ! empty( $args['custom_fields'][ $description_key ]['html'] ) && $bio_html ) {
-							$description_value = UM()->fields()->field_value( $description_key );
-						} else {
-							$description_value = wp_strip_all_tags( UM()->fields()->field_value( $description_key ) );
-						}
-					} else {
-						if ( $bio_html ) {
-							$description_value = UM()->fields()->field_value( $description_key );
-						} else {
-							$description_value = wp_strip_all_tags( UM()->fields()->field_value( $description_key ) );
-						}
+					if ( empty( $args['custom_fields'][ $description_key ]['html'] ) && ! $bio_html ) {
+						// Strip all HTML tags in the user_description.
+						$description_value = wp_strip_all_tags( $description_value );
 					}
 
+					$limit = UM()->options()->get( 'profile_bio_maxchars' );
 					if ( ! empty( $args['custom_fields'][ $description_key ]['max_chars'] ) ) {
 						$limit = $args['custom_fields'][ $description_key ]['max_chars'];
-					} else {
-						$limit = UM()->options()->get( 'profile_bio_maxchars' );
 					}
 					?>
 

@@ -1009,6 +1009,7 @@ function um_filtered_social_link( $key, $match = null ) {
  */
 function um_filtered_value( $key, $data = false ) {
 	$value = um_user( $key );
+
 	if ( is_array( $value ) ) {
 		$value = add_magic_quotes( $value );
 	}
@@ -2373,53 +2374,37 @@ function um_get_default_cover_uri() {
  * @return int|string|array
  */
 function um_user( $data, $attrs = null ) {
-
-	switch ($data) {
-
+	switch ( $data ) {
 		default:
-
 			$value = um_profile( $data );
-
 			$value = maybe_unserialize( $value );
 
-			if ( in_array( $data, array( 'role', 'gender' ) ) ) {
+			if ( in_array( $data, array( 'role', 'gender' ), true ) ) {
 				if ( is_array( $value ) ) {
-					$value = implode( ",", $value );
+					$value = implode( ',', $value );
 				}
-
 				return $value;
 			}
-
 			return $value;
-			break;
 
 		case 'user_email':
-
 			$user_email_in_meta = get_user_meta( um_user( 'ID' ), 'user_email', true );
 			if ( $user_email_in_meta ) {
 				delete_user_meta( um_user( 'ID' ), 'user_email' );
 			}
 
-			$value = um_profile( $data );
-
-			return $value;
-			break;
+			return um_profile( $data );
 
 		case 'user_login':
-
 			$user_login_in_meta = get_user_meta( um_user( 'ID' ), 'user_login', true );
 			if ( $user_login_in_meta ) {
 				delete_user_meta( um_user( 'ID' ), 'user_login' );
 			}
 
-			$value = um_profile( $data );
-
-			return $value;
-			break;
+			return um_profile( $data );
 
 		case 'first_name':
 		case 'last_name':
-
 			$name = um_profile( $data );
 
 			/**
@@ -2442,14 +2427,9 @@ function um_user( $data, $attrs = null ) {
 			 * }
 			 * ?>
 			 */
-			$name = apply_filters( "um_user_{$data}_case", $name );
-
-			return $name;
-
-			break;
+			return apply_filters( "um_user_{$data}_case", $name );
 
 		case 'full_name':
-
 			if ( um_user( 'first_name' ) && um_user( 'last_name' ) ) {
 				$full_name = um_user( 'first_name' ) . ' ' . um_user( 'last_name' );
 			} else {

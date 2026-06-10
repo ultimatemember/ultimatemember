@@ -2721,6 +2721,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				$data_array['account_status_name'] = esc_html( UM()->common()->users()->get_status( $user_id, 'formatted' ) );
 			}
 
+			$description_key = UM()->profile()->get_show_bio_key( UM()->fields()->global_args );
+
 			if ( ! empty( $directory_data['show_tagline'] ) && ! empty( $directory_data['tagline_fields'] ) ) {
 				$directory_data['tagline_fields'] = maybe_unserialize( $directory_data['tagline_fields'] );
 
@@ -2738,9 +2740,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						}
 
 						$value = um_filtered_value( $key );
-
 						if ( ! $value ) {
 							continue;
+						}
+
+						if ( $description_key === $key ) {
+							$value = nl2br( wp_kses( make_clickable( $value ), 'user_description' ) );
 						}
 
 						$data_array[ $key ] = wp_kses( $value, UM()->get_allowed_html( 'templates' ) );
@@ -2769,6 +2774,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							$value = um_filtered_value( $key );
 							if ( ! $value ) {
 								continue;
+							}
+
+							if ( $description_key === $key ) {
+								$value = nl2br( wp_kses( make_clickable( $value ), 'user_description' ) );
 							}
 
 							$label = UM()->fields()->get_label( $key );
