@@ -5,7 +5,7 @@ Contributors: ultimatemember, champsupertramp, nsinelnikov
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
-Tested up to: 6.9
+Tested up to: 7.0
 Stable tag: 2.12.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -167,7 +167,7 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.12.0 2026-05-20 =
+= 2.12.0 2026-06-12 =
 
 **Bugfixes**
 
@@ -175,7 +175,10 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
   ** Restricted `get_directory_by_hash()` function to only match posts with post_type='um_directory' and publish post status.
   ** Used `0 === strpos()` instead of `strstr()` for getting proper post_data.
   ** Added condition for getting only allowed fields in tagline_fields and reveal_fields to `build_user_card_data()`.
-* Fixed: Security issue, CVE ID: CVE-2026-xxxx. Make the role and status visible for the user who can edit these users in the request.
+* Fixed: Security issue, CVE ID: CVE-2026-8489.
+  ** Used WordPress native `wp_kses()` escaper for displaying user_description field. Used WordPress native `make_clickable()` function to make raw links clickable.
+* Fixed: Security issue, CVE ID: CVE-2026-xxxx. Make the role and status visible for the user who can edit these users in the request. Reported by [Ben Tamam](bentamam.github.io).
+* Fixed: Remove UM option function when the option value equals "0".
 
 **Deprecated**
 
