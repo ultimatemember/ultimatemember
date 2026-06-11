@@ -110,6 +110,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				'user_activation_key',
 				'level_',
 				$wpdb->get_blog_prefix() . 'user_level',
+				'um_user_public_key', // UM REST API public. Legacy, not used for now!
+				'um_user_secret_key', // UM REST API secret. Legacy, not used for now!
 			);
 
 			// a list of keys that should never be in wp_usermeta
@@ -1180,13 +1182,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			return '';
 		}
 
-
 		/**
 		 * @param $user_id
 		 * @param $profile
 		 */
-		function setup_cache( $user_id, $profile ) {
-
+		public function setup_cache( $user_id, $profile ) {
 			$disallow_cache = UM()->options()->get( 'um_profile_object_cache_stop' );
 			if ( $disallow_cache ) {
 				return;
@@ -1195,11 +1195,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			update_option( "um_cache_userdata_{$user_id}", $profile, false );
 		}
 
-
 		/**
 		 * @param $user_id
 		 */
-		function remove_cache( $user_id ) {
+		public function remove_cache( $user_id ) {
 			delete_option( "um_cache_userdata_{$user_id}" );
 		}
 
@@ -1319,12 +1318,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 					// Setup cache
 					$this->setup_cache( $this->id, $this->profile );
-
 				}
 			}
-
 		}
-
 
 		/**
 		 * Reset user data

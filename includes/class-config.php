@@ -731,7 +731,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'cover_photo_max_size'                  => 999999999,
 				'custom_roles_increment'                => 1,
 				'um_profile_object_cache_stop'          => false,
-				'rest_api_version'                      => '2.0',
 				'member_directory_own_table'            => false,
 				'profile_show_bio'                      => false,
 				'profile_show_html_bio'                 => false,

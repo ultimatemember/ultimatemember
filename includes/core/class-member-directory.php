@@ -262,9 +262,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			return $default;
 		}
 
-
 		/**
-		 * Getting member directory post ID via hash
+		 * Getting member directory post ID via hash.
 		 * Hash is unique attr, which we use visible at frontend
 		 *
 		 * @param string $hash
@@ -277,9 +276,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$directory_id = $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT post_id
-					FROM {$wpdb->postmeta}
-					WHERE meta_key = '_um_directory_token' AND
-						  meta_value = %s
+					FROM {$wpdb->postmeta} pm
+					LEFT JOIN {$wpdb->posts} p ON pm.post_id = p.ID
+					WHERE p.post_type = 'um_directory' AND
+						  p.post_status = 'publish' AND
+						  pm.meta_key = '_um_directory_token' AND
+						  pm.meta_value = %s
 					LIMIT 1",
 					$hash
 				)
@@ -290,7 +292,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$wpdb->prepare(
 						"SELECT ID
 						FROM {$wpdb->posts}
-						WHERE SUBSTRING( MD5( ID ), 11, 5 ) = %s",
+						WHERE SUBSTRING( MD5( ID ), 11, 5 ) = %s AND
+							  post_type='um_directory' AND
+							  post_status = 'publish'",
 						$hash
 					)
 				);
@@ -1183,43 +1187,46 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		}
 
 		/**
-		 * @param $filter
+		 * Get the placeholders array for the slider-type filter.
+		 * Format `array( 'singular-placeholder', 'plural-placeholder' )`.
 		 *
-		 * @return mixed
+		 * @param string $filter
+		 * @param array  $attrs
+		 *
+		 * @return array
 		 */
-		function slider_range_placeholder( $filter, $attrs ) {
+		public function slider_range_placeholder( $filter, $attrs ) {
 			switch ( $filter ) {
-				default: {
-					$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $filter;
-					$label = ucwords( str_replace( array( 'um_', '_' ), array( '', ' ' ), $label ) );
+				default:
+					$label        = ! empty( $attrs['label'] ) ? $attrs['label'] : $filter;
+					$label        = ucwords( str_replace( array( 'um_', '_' ), array( '', ' ' ), $label ) );
 					$placeholders = apply_filters( 'um_member_directory_filter_slider_range_placeholder', false, $filter );
 
 					if ( ! $placeholders ) {
 						switch ( $attrs['type'] ) {
 							default:
 								$placeholders = array(
-									"<strong>$label:</strong>&nbsp;{value}",
-									"<strong>$label:</strong>&nbsp;{min_range} - {max_range}",
+									"$label:&nbsp;{value}",
+									"$label:&nbsp;{min_range} - {max_range}",
 								);
 								break;
 							case 'rating':
 								$placeholders = array(
-									"<strong>$label:</strong>&nbsp;{value}" . __( ' stars', 'ultimate-member' ),
-									"<strong>$label:</strong>&nbsp;{min_range} - {max_range}" . __( ' stars', 'ultimate-member' )
+									"$label:&nbsp;{value}" . __( ' stars', 'ultimate-member' ),
+									"$label:&nbsp;{min_range} - {max_range}" . __( ' stars', 'ultimate-member' ),
 								);
 								break;
 						}
 					}
-
 					break;
-				}
-				case 'birth_date': {
+
+				case 'birth_date':
 					$placeholders = array(
-						__( '<strong>Age:</strong>&nbsp;{value} years old', 'ultimate-member' ),
-						__( '<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old', 'ultimate-member' )
+						__( 'Age:&nbsp;{value} years old', 'ultimate-member' ),
+						__( 'Age:&nbsp;{min_range} - {max_range} years old', 'ultimate-member' ),
 					);
 					break;
-				}
+
 			}
 
 			return $placeholders;
@@ -2671,6 +2678,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @return array
 		 */
 		public function build_user_card_data( $user_id, $directory_data ) {
+			$user_fields = UM()->builtin()->all_user_fields();
+
 			um_fetch_user( $user_id );
 
 			$dropdown_actions = $this->build_user_actions_list( $user_id );
@@ -2690,9 +2699,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$data_array = array(
 				'card_anchor'          => esc_html( $this->get_user_hash( $user_id ) ),
-				'role'                 => is_user_logged_in() ? esc_html( um_user( 'role' ) ) : 'undefined', // make the role hidden for the nopriv requests.
-				'account_status'       => is_user_logged_in() ? esc_html( UM()->common()->users()->get_status( $user_id ) ) : 'undefined', // make the status hidden for the nopriv requests.
-				'account_status_name'  => is_user_logged_in() ? esc_html( UM()->common()->users()->get_status( $user_id, 'formatted' ) ) : __( 'Undefined', 'ultimate-member' ), // make the status hidden for the nopriv requests.
+				'role'                 => 'undefined', // make the role hidden here.
+				'account_status'       => 'undefined', // make the status hidden here.
+				'account_status_name'  => esc_html__( 'Undefined', 'ultimate-member' ), // make the status hidden here.
 				'cover_photo'          => wp_kses( um_user( 'cover_photo', $this->cover_size ), UM()->get_allowed_html( 'templates' ) ),
 				'display_name'         => esc_html( um_user( 'display_name' ) ),
 				'profile_url'          => esc_url( um_user_profile_url() ),
@@ -2705,45 +2714,53 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'hook_after_user_name' => wp_kses( preg_replace( '/^\s+/im', '', $hook_after_user_name ), UM()->get_allowed_html( 'templates' ) ),
 			);
 
-			if ( ! empty( $directory_data['show_tagline'] ) ) {
+			// Make the role and status visible for the user who can edit these users in the request.
+			if ( is_user_logged_in() && UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
+				$data_array['role']                = esc_html( um_user( 'role' ) );
+				$data_array['account_status']      = esc_html( UM()->common()->users()->get_status( $user_id ) );
+				$data_array['account_status_name'] = esc_html( UM()->common()->users()->get_status( $user_id, 'formatted' ) );
+			}
 
-				if ( ! empty( $directory_data['tagline_fields'] ) ) {
-					$directory_data['tagline_fields'] = maybe_unserialize( $directory_data['tagline_fields'] );
+			$description_key = UM()->profile()->get_show_bio_key( UM()->fields()->global_args );
 
-					if ( is_array( $directory_data['tagline_fields'] ) ) {
-						foreach ( $directory_data['tagline_fields'] as $key ) {
-							if ( ! $key ) {
-								continue;
-							}
+			if ( ! empty( $directory_data['show_tagline'] ) && ! empty( $directory_data['tagline_fields'] ) ) {
+				$directory_data['tagline_fields'] = maybe_unserialize( $directory_data['tagline_fields'] );
 
-							if ( '_um_last_login' === $key ) {
-								$show_last_login = get_user_meta( $user_id, 'um_show_last_login', true );
-								if ( ! empty( $show_last_login ) && 'no' === $show_last_login[0] ) {
-									continue;
-								}
-							}
-
-							$value = um_filtered_value( $key );
-
-							if ( ! $value ) {
-								continue;
-							}
-
-							$data_array[ $key ] = wp_kses( $value, UM()->get_allowed_html( 'templates' ) );
+				if ( is_array( $directory_data['tagline_fields'] ) ) {
+					foreach ( $directory_data['tagline_fields'] as $key ) {
+						if ( ! $key || ! array_key_exists( $key, $user_fields ) ) {
+							continue;
 						}
+
+						if ( '_um_last_login' === $key ) {
+							$show_last_login = get_user_meta( $user_id, 'um_show_last_login', true );
+							if ( ! empty( $show_last_login ) && 'no' === $show_last_login[0] ) {
+								continue;
+							}
+						}
+
+						$value = um_filtered_value( $key );
+						if ( ! $value ) {
+							continue;
+						}
+
+						if ( $description_key === $key ) {
+							$value = nl2br( wp_kses( make_clickable( $value ), 'user_description' ) );
+						}
+
+						$data_array[ $key ] = wp_kses( $value, UM()->get_allowed_html( 'templates' ) );
 					}
 				}
 			}
 
 			if ( ! empty( $directory_data['show_userinfo'] ) ) {
-
 				if ( ! empty( $directory_data['reveal_fields'] ) ) {
 
 					$directory_data['reveal_fields'] = maybe_unserialize( $directory_data['reveal_fields'] );
 
 					if ( is_array( $directory_data['reveal_fields'] ) ) {
 						foreach ( $directory_data['reveal_fields'] as $key ) {
-							if ( ! $key ) {
+							if ( ! $key || ! array_key_exists( $key, $user_fields ) ) {
 								continue;
 							}
 
@@ -2759,16 +2776,23 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								continue;
 							}
 
-							$label = UM()->fields()->get_label( $key );
-							if ( $key == 'role_select' || $key == 'role_radio' ) {
-								$label = strtr( $label, array(
-									' (Dropdown)'   => '',
-									' (Radio)'      => ''
-								) );
+							if ( $description_key === $key ) {
+								$value = nl2br( wp_kses( make_clickable( $value ), 'user_description' ) );
 							}
 
-							$data_array[ "label_{$key}" ] = esc_html__( $label, 'ultimate-member' );
-							$data_array[ $key ] = wp_kses( $value, UM()->get_allowed_html( 'templates' ) );
+							$label = UM()->fields()->get_label( $key );
+							if ( 'role_select' === $key || 'role_radio' === $key ) {
+								$label = strtr(
+									$label,
+									array(
+										' (Dropdown)' => '',
+										' (Radio)'    => '',
+									)
+								);
+							}
+
+							$data_array[ "label_{$key}" ] = esc_html( $label );
+							$data_array[ $key ]           = wp_kses( $value, UM()->get_allowed_html( 'templates' ) );
 						}
 					}
 				}
