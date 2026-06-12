@@ -1352,17 +1352,30 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		}
 
 		/**
+		 * Determine if the current user can edit other users
 		 *
+		 * @return bool Returns true if the current user can edit users, false otherwise
 		 */
-		public function hide_not_approved() {
+		protected function can_edit_users() {
 			if ( is_user_logged_in() ) {
 				$rolename = UM()->roles()->get_priority_user_role( get_current_user_id() );
 				$role     = get_role( $rolename );
 
 				// Don't specify only approved users  when the current user has 'edit_users' capability.
 				if ( current_user_can( 'edit_users' ) || ( ! is_null( $role ) && $role->has_cap( 'edit_users' ) ) ) {
-					return;
+					return true;
 				}
+			}
+
+			return false;
+		}
+
+		/**
+		 *
+		 */
+		public function hide_not_approved() {
+			if ( $this->can_edit_users() ) {
+				return;
 			}
 
 			$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( array(
@@ -1404,7 +1417,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				return;
 			}
 
-			if ( UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+			if ( $this->can_edit_users() ) {
 				return;
 			}
 
