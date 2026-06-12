@@ -1351,13 +1351,18 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			do_action( 'um_member_directory_restrictions_handle_extend' );
 		}
 
-
 		/**
 		 *
 		 */
-		function hide_not_approved() {
-			if ( UM()->roles()->um_user_can( 'can_edit_everyone' )  ) {
-				return;
+		public function hide_not_approved() {
+			if ( is_user_logged_in() ) {
+				$rolename = UM()->roles()->get_priority_user_role( get_current_user_id() );
+				$role     = get_role( $rolename );
+
+				// Don't specify only approved users  when the current user has 'edit_users' capability.
+				if ( current_user_can( 'edit_users' ) || ( ! is_null( $role ) && $role->has_cap( 'edit_users' ) ) ) {
+					return;
+				}
 			}
 
 			$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( array(
@@ -1366,7 +1371,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'compare'   => 'LIKE'
 			) ) );
 		}
-
 
 		/**
 		 *
