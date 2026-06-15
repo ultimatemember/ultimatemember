@@ -27,6 +27,40 @@
   z-index: 4;
 }
 
+.um {
+  container-type: inline-size;
+}
+.um .um-tabs-wrapper .um-tabs-mobile-dropdown,
+.um .um-tabs-wrapper .um-tabs-list .choices {
+  display: none;
+}
+.um .um-profile-header-actions .um-dropdown-wrapper .um-dropdown-toggle-dots {
+  display: none;
+}
+
+@container (max-width: 768px) {
+  .um .um-tabs-wrapper.um-horizontal-tabs .um-tabs-list > ul,
+  .um .um-tabs-wrapper.um-vertical-tabs .um-tabs-list > ul {
+    display: none;
+  }
+  .um .um-tabs-wrapper.um-horizontal-tabs .um-tabs-list .choices,
+  .um .um-tabs-wrapper.um-vertical-tabs .um-tabs-list .choices {
+    display: block;
+  }
+  .um .um-profile-header-actions .um-dropdown-wrapper .um-dropdown-toggle-button {
+    display: none;
+  }
+  .um .um-profile-header-actions .um-dropdown-wrapper .um-dropdown-toggle-dots {
+    display: block;
+  }
+  .um .um-profile-messages .um-private-messages-conversation-view,
+  .um .um-profile-messages .um-private-messages-sidebar {
+    width: 100%;
+  }
+  .um .um-profile-messages .um-mobile-inactive {
+    display: none;
+  }
+}
 .um-notice-message {
   position: fixed;
   padding: 0;

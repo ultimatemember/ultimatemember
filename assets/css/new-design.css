@@ -1,32 +1,3 @@
-.um.um-ui-xs .um-responsive:not(.um-ui-xs) {
-  display: none !important;
-}
-.um.um-ui-s .um-responsive:not(.um-ui-s) {
-  display: none !important;
-}
-.um.um-ui-m .um-responsive:not(.um-ui-m) {
-  display: none !important;
-}
-.um.um-ui-l .um-responsive:not(.um-ui-l) {
-  display: none !important;
-}
-.um.um-ui-xl .um-responsive:not(.um-ui-xl) {
-  display: none !important;
-}
-.um:not(.um-not-responsive):not(.um-modal) {
-  position: relative;
-}
-.um:not(.um-not-responsive):not(.um-modal) .um-main-skeleton {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: #fff;
-  min-height: 300px;
-  z-index: 4;
-}
-
 @-webkit-keyframes um-ajax-shimmer {
   100% {
     transform: translateX(100%);
@@ -3761,4 +3732,68 @@
 }
 .um-gif-list-wrapper .um-gif-list .um-gif-img {
   cursor: pointer;
+}
+
+.um.um-ui-xs .um-responsive:not(.um-ui-xs) {
+  display: none !important;
+}
+.um.um-ui-s .um-responsive:not(.um-ui-s) {
+  display: none !important;
+}
+.um.um-ui-m .um-responsive:not(.um-ui-m) {
+  display: none !important;
+}
+.um.um-ui-l .um-responsive:not(.um-ui-l) {
+  display: none !important;
+}
+.um.um-ui-xl .um-responsive:not(.um-ui-xl) {
+  display: none !important;
+}
+.um:not(.um-not-responsive):not(.um-modal) {
+  position: relative;
+}
+.um:not(.um-not-responsive):not(.um-modal) .um-main-skeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #fff;
+  min-height: 300px;
+  z-index: 4;
+}
+
+.um {
+  container-type: inline-size;
+}
+.um .um-tabs-wrapper .um-tabs-mobile-dropdown,
+.um .um-tabs-wrapper .um-tabs-list .choices {
+  display: none;
+}
+.um .um-profile-header-actions .um-dropdown-wrapper .um-dropdown-toggle-dots {
+  display: none;
+}
+
+@container (max-width: 768px) {
+  .um .um-tabs-wrapper.um-horizontal-tabs .um-tabs-list > ul,
+  .um .um-tabs-wrapper.um-vertical-tabs .um-tabs-list > ul {
+    display: none;
+  }
+  .um .um-tabs-wrapper.um-horizontal-tabs .um-tabs-list .choices,
+  .um .um-tabs-wrapper.um-vertical-tabs .um-tabs-list .choices {
+    display: block;
+  }
+  .um .um-profile-header-actions .um-dropdown-wrapper .um-dropdown-toggle-button {
+    display: none;
+  }
+  .um .um-profile-header-actions .um-dropdown-wrapper .um-dropdown-toggle-dots {
+    display: block;
+  }
+  .um .um-profile-messages .um-private-messages-conversation-view,
+  .um .um-profile-messages .um-private-messages-sidebar {
+    width: 100%;
+  }
+  .um .um-profile-messages .um-mobile-inactive {
+    display: none;
+  }
 }

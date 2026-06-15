@@ -19,3 +19,36 @@ $resolutions: ( xs:320, s:576, m:768, l:992, xl:1024 )
       background: $um-white
       min-height: 300px
       z-index: 4
+
+// TEST the @container
+.um
+  container-type: inline-size
+  .um-tabs-wrapper
+    .um-tabs-mobile-dropdown,
+    .um-tabs-list .choices
+      display: none
+  .um-profile-header-actions
+    .um-dropdown-wrapper
+      .um-dropdown-toggle-dots
+        display: none
+
+@container (max-width: 768px)
+  .um
+    .um-tabs-wrapper.um-horizontal-tabs,
+    .um-tabs-wrapper.um-vertical-tabs
+      .um-tabs-list > ul
+        display: none
+      .um-tabs-list .choices
+        display: block
+    .um-profile-header-actions
+      .um-dropdown-wrapper
+        .um-dropdown-toggle-button
+          display: none
+        .um-dropdown-toggle-dots
+          display: block
+    .um-profile-messages
+      .um-private-messages-conversation-view,
+      .um-private-messages-sidebar
+        width: 100%
+      .um-mobile-inactive
+        display: none

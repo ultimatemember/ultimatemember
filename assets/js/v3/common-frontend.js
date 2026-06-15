@@ -1433,7 +1433,7 @@ jQuery(document).ready(function($) {
 	UM.frontend.tabs.init();
 
 	$( window ).on( 'resize', function() {
-		UM.frontend.responsive.setClass();
+		// UM.frontend.responsive.setClass();
 	});
 
 	$(document.body).on('click', '.um-alert-dismiss', function (e) {
@@ -1443,5 +1443,5 @@ jQuery(document).ready(function($) {
 });
 
 jQuery( window ).on( 'load', function() {
-	UM.frontend.responsive.setClass();
+	// UM.frontend.responsive.setClass();
 });
