@@ -5,8 +5,8 @@ Contributors: ultimatemember, champsupertramp, nsinelnikov
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
-Tested up to: 6.9
-Stable tag: 2.11.5
+Tested up to: 7.0
+Stable tag: 2.12.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -233,9 +233,22 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Deprecated function `um_get_domain_protocol()` because it is unused helper.
 * Deprecated function `UM()->password()->setcookie()`. Use function `UM()::setcookie()` instead.
 
-= 2.11.5 2026-05-xx =
+= 2.12.0 2026-06-12 =
 
+**Bugfixes**
 
+* Fixed: Security issue, CVE ID: CVE-2026-7761.
+  ** Restricted `get_directory_by_hash()` function to only match posts with post_type='um_directory' and publish post status.
+  ** Used `0 === strpos()` instead of `strstr()` for getting proper post_data.
+  ** Added condition for getting only allowed fields in tagline_fields and reveal_fields to `build_user_card_data()`.
+* Fixed: Security issue, CVE ID: CVE-2026-8489.
+  ** Used WordPress native `wp_kses()` escaper for displaying user_description field. Used WordPress native `make_clickable()` function to make raw links clickable.
+* Fixed: Security issue, CVE ID: CVE-2026-xxxx. Make the role and status visible for the user who can edit these users in the request. Reported by [Ben Tamam](bentamam.github.io).
+* Fixed: Remove UM option function when the option value equals "0".
+
+**Deprecated**
+
+* Temporary deprecated: UM REST API. Legacy feature that has to be refactored. Will be refactored and re-released soon.
 
 = 2.11.4 2026-04-30 =
 
@@ -353,6 +366,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.12.0 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.11.3 =
 This version fixes a security related bug. Upgrade immediately.

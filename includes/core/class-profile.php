@@ -36,7 +36,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		/**
 		 * Profile constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_action( 'template_redirect', array( &$this, 'active_tab' ), 10002 );
 			add_action( 'template_redirect', array( &$this, 'active_subnav' ), 10002 );
 		}
@@ -46,9 +46,8 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 *
 		 * @return string
 		 */
-		function get_show_bio_key( $args ) {
-			$key = apply_filters( 'um_profile_bio_key', 'description', $args );
-			return $key;
+		public function get_show_bio_key( $args ) {
+			return apply_filters( 'um_profile_bio_key', 'description', $args );
 		}
 
 		/**
@@ -464,22 +463,25 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 						if ( $description_key === $key ) {
 							$global_setting = UM()->options()->get( 'profile_show_html_bio' );
 							$bio_html       = ! empty( $global_setting );
-
-							if ( ! empty( $args['custom_fields'][ $description_key ] ) ) {
-								if ( empty( $args['custom_fields'][ $description_key ]['html'] ) ) {
-									$bio_html = false;
-								}
+							if ( ! empty( $args['custom_fields'][ $description_key ] ) && empty( $args['custom_fields'][ $description_key ]['html'] ) ) {
+								$bio_html = false;
 							}
 
 							if ( $bio_html ) {
-								$data['html'] = true;
-								$value = um_filtered_value( $key, $data );
-								$res = wp_kses_post( make_clickable( wpautop( $value ) ) );
+								$value = wp_kses( make_clickable( $value ), 'user_description' );
 							} else {
-								$res = esc_html( $value );
+								$value = wp_kses(
+									make_clickable( $value ),
+									array(
+										'a' => array(
+											'href' => array(),
+											'rel'  => array(),
+										),
+									)
+								);
 							}
 
-							$value = nl2br( $res );
+							$value = nl2br( $value );
 						}
 
 						if ( ! $value && ( ! array_key_exists( 'type', $data ) || ! in_array( $data['type'], $fields_without_metakey, true ) ) ) {

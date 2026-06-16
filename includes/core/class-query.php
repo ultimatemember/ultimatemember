@@ -426,29 +426,38 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 * @return array
 		 */
 		public function post_data( $post_id ) {
-			$array['form_id'] = $post_id;
-			$mode             = $this->get_attr( 'mode', $post_id );
-			$meta             = get_post_custom( $post_id );
+			$mode = $this->get_attr( 'mode', $post_id );
+
+			$array = array(
+				'form_id' => $post_id,
+				'mode'    => $mode,
+			);
+
+			$meta = get_post_custom( $post_id );
 			foreach ( $meta as $k => $v ) {
-				if ( strstr( $k, '_um_' . $mode . '_' ) ) {
+				if ( '_um_mode' === $k ) {
+					continue;
+				}
+
+				if ( 0 === strpos( $k, '_um_' . $mode . '_' ) ) {
 					$k           = str_replace( '_um_' . $mode . '_', '', $k );
 					$array[ $k ] = $v[0];
-				} elseif ( '_um_mode' === $k ) {
-					$k           = str_replace( '_um_', '', $k );
-					$array[ $k ] = $v[0];
-				} elseif ( strstr( $k, '_um_' ) ) {
+				} elseif ( 0 === strpos( $k, '_um_' ) ) {
 					$k           = str_replace( '_um_', '', $k );
 					$array[ $k ] = $v[0];
 				}
 			}
 
-			foreach ( $array as $k => $v ) {
-				if ( strstr( $k, 'login_' ) || strstr( $k, 'register_' ) || strstr( $k, 'profile_' ) ) {
-					if ( 'directory' !== $mode ) {
+			// Remove another form mode meta if exists. E.g. login meta for the profile-mode form.
+			if ( 'directory' !== $mode ) {
+				// There isn't such meta in the member directory mode, so skip this.
+				foreach ( $array as $k => $v ) {
+					if ( 0 === strpos( $k, 'login_' ) || 0 === strpos( $k, 'register_' ) || 0 === strpos( $k, 'profile_' ) ) {
 						unset( $array[ $k ] );
 					}
 				}
 			}
+
 			return $array;
 		}
 

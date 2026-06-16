@@ -1061,9 +1061,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'um_google_maps_api_version'           => array(
 						'sanitize' => 'text',
 					),
-					'rest_api_version'                     => array(
-						'sanitize' => 'text',
-					),
 					'disable_restriction_pre_queries'      => array(
 						'sanitize' => 'bool',
 					),
@@ -2340,16 +2337,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'type'  => 'textarea',
 												'label' => __( 'Allowed Choice Callbacks (Enter one PHP function per line)', 'ultimate-member' ),
 												'description' => __( 'This option lets you specify the choice callback functions to prevent anyone from using 3rd-party functions that may put your site at risk.', 'ultimate-member' ),
-											),
-											array(
-												'id'      => 'rest_api_version',
-												'type'    => 'select',
-												'label'   => __( 'REST API Version', 'ultimate-member' ),
-												'description' => __( 'This controls the REST API version, we recommend to use the last version.', 'ultimate-member' ),
-												'options' => array(
-													'1.0' => __( '1.0 version', 'ultimate-member' ),
-													'2.0' => __( '2.0 version', 'ultimate-member' ),
-												),
 											),
 										),
 									),
