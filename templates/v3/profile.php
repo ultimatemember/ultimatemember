@@ -229,9 +229,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 		 * add_action( 'um_profile_body_wrapper_classes', 'my_profile_body_wrapper_classes', 10, 2 );
 		 */
 		$content_wrapper_classes = apply_filters( 'um_profile_body_wrapper_classes', $content_wrapper_classes, $args, $nav );
+
+		/**
+		 * Filters User Profile Body wrapper classes.
+		 *
+		 * @param {array}  $allowed_tags User Profile body classes.
+		 * @param {string} $nav          Profile menu slug.
+		 * @param {array}  $args         User Profile data.
+		 *
+		 * @since 3.0
+		 * @hook  um_profile_tab_content_allowed_tags
+		 *
+		 * @example <caption>Extends profile tab content allowed tags.</caption>
+		 * function my_profile_tab_content_allowed_tags( $allowed_tags, $nav, $args ) {
+		 *     // your code here
+		 *     if ( 'private-content' === $nav ) {
+		 *         $allowed_tags[] = array( 'iframe' => array(), );
+		 *     }
+		 *     return $allowed_tags;
+		 * }
+		 * add_action( 'um_profile_tab_content_allowed_tags', 'my_profile_tab_content_allowed_tags', 10, 3 );
+		 */
+		$profile_tab_allowed_tags = apply_filters( 'um_profile_tab_content_allowed_tags', UM()->get_allowed_html( 'templates' ), $nav, $args );
 		?>
 		<div class="<?php echo esc_attr( implode( ' ', $content_wrapper_classes ) ); ?>">
-			<?php echo wp_kses( $content, UM()->get_allowed_html( 'templates' ) ); ?>
+			<?php echo wp_kses( $content, $profile_tab_allowed_tags ); ?>
 		</div>
 		<?php
 	}
