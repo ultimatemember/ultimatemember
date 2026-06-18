@@ -1662,4 +1662,25 @@ class Directory extends Directory_Config {
 
 		return false;
 	}
+
+	/**
+	 * Get member directory id by page id.
+	 *
+	 * @param int $page_id Page ID.
+	 *
+	 * @return array Member directories ID.
+	 */
+	public function get_member_directory_id( $page_id ) {
+		$members_page = get_post( $page_id );
+		if ( ! empty( $members_page ) && ! is_wp_error( $members_page ) ) {
+			if ( ! empty( $members_page->post_content ) ) {
+				preg_match_all( '/\[ultimatemember[^\]]*?form_id\=[\'"]*?(\d+)[\'"]*?/i', $members_page->post_content, $matches );
+				if ( ! empty( $matches[1] ) && is_array( $matches[1] ) ) {
+					return array_map( 'absint', $matches[1] );
+				}
+			}
+		}
+
+		return array();
+	}
 }
