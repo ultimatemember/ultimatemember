@@ -306,6 +306,7 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_style( 'um_account', $css_url . 'um-account' . $suffix . '.css', array(), UM_VERSION );
 			wp_register_style( 'um_default_css', $css_url . 'um-old-default' . $suffix . '.css', array(), UM_VERSION );
 			wp_register_style( 'um_misc', $css_url . 'um-misc' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
+			wp_register_style( 'um_modal', $css_url . 'um-modal' . $suffix . '.css', array(), UM_VERSION );
 
 			wp_register_style( 'um_datetime', $libs_url . 'pickadate/default' . $suffix . '.css', array(), '3.6.2' );
 			wp_register_style( 'um_datetime_date', $libs_url . 'pickadate/default.date' . $suffix . '.css', array( 'um_datetime' ), '3.6.2' );
@@ -318,6 +319,7 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_enqueue_style( 'um_responsive' );
 			wp_enqueue_style( 'um_account' );
 			wp_enqueue_style( 'um_misc' );
+			wp_enqueue_style( 'um_modal' );
 
 			wp_enqueue_style( 'um_datetime_date' );
 			wp_enqueue_style( 'um_datetime_time' );
@@ -694,6 +696,32 @@ final class Enqueue extends \um\common\Enqueue {
 
 			// Register select2 script only on wp-admin for new UI.
 			if ( UM()->is_new_ui() ) {
+				/**
+				 * Filters marker for dequeue myCRED select2.JS library.
+				 *
+				 * @since 3.0.0
+				 * @hook um_dequeue_mycred_select2_scripts
+				 *
+				 * @param {bool} $dequeue_select2 Dequeue select2 assets marker. Set to `true` for dequeue scripts.
+				 *
+				 * @return {bool} Dequeue mycred-select2 assets. By default `true`.
+				 *
+				 * @example <caption>Dequeue select2 assets.</caption>
+				 * function custom_um_dequeue_select2_scripts( $dequeue_select2 ) {
+				 *     $dequeue_select2 = true;
+				 *     return $dequeue_select2;
+				 * }
+				 * add_filter( 'um_dequeue_mycred_select2_scripts', 'custom_um_dequeue_select2_scripts' );
+				 */
+				$dequeue_select2 = apply_filters( 'um_dequeue_mycred_select2_scripts', true );
+				if ( $dequeue_select2 ) {
+					wp_dequeue_style( 'mycred-select2-style' );
+					wp_deregister_style( 'mycred-select2-style' );
+
+					wp_dequeue_script( 'mycred-select2-script' );
+					wp_deregister_script( 'mycred-select2-script' );
+				}
+
 				// Select2 JS.
 				$this->register_select2();
 			}

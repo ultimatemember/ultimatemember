@@ -390,6 +390,8 @@ class Directory extends Directory_Config {
 	 * @return array
 	 */
 	public function build_user_card_data( $user_id, $directory_data ) {
+		$user_fields = UM()->builtin()->all_user_fields();
+
 		um_fetch_user( $user_id );
 
 		$dropdown_actions = UM()->frontend()->users()->get_dropdown_items( $user_id, 'directory' );
@@ -411,9 +413,9 @@ class Directory extends Directory_Config {
 		$data_array = array(
 			'id'                   => $user_id,
 			'card_anchor'          => esc_html( $this->get_user_hash( $user_id ) ),
-			'role'                 => is_user_logged_in() ? esc_html( um_user( 'role' ) ) : 'undefined', // make the role hidden for the nopriv requests.
-			'account_status'       => is_user_logged_in() ? esc_html( UM()->common()->users()->get_status( $user_id ) ) : 'undefined', // make the status hidden for the nopriv requests.
-			'account_status_name'  => is_user_logged_in() ? esc_html( UM()->common()->users()->get_status( $user_id, 'formatted' ) ) : __( 'Undefined', 'ultimate-member' ), // make the status hidden for the nopriv requests.
+			'role'                 => 'undefined', // make the role hidden here.
+			'account_status'       => 'undefined', // make the status hidden here.
+			'account_status_name'  => esc_html__( 'Undefined', 'ultimate-member' ), // make the status hidden here.
 			'cover_photo'          => UM()->frontend()::layouts()::cover_photo( $user_id, array( 'size' => $this->cover_size ) ),
 			'display_name'         => esc_html( um_user( 'display_name' ) ),
 			'profile_url'          => esc_url( um_user_profile_url( $user_id ) ),
@@ -425,31 +427,41 @@ class Directory extends Directory_Config {
 			'hook_after_user_name' => wp_kses( preg_replace( '/^\s+/im', '', $hook_after_user_name ), UM()->get_allowed_html( 'templates' ) ),
 		);
 
-		if ( ! empty( $directory_data['show_tagline'] ) ) {
-			if ( ! empty( $directory_data['tagline_fields'] ) ) {
-				$directory_data['tagline_fields'] = maybe_unserialize( $directory_data['tagline_fields'] );
+		$description_key = UM()->profile()->get_show_bio_key( UM()->fields()->global_args );
 
-				if ( is_array( $directory_data['tagline_fields'] ) ) {
-					foreach ( $directory_data['tagline_fields'] as $key ) {
-						if ( ! $key ) {
-							continue;
-						}
+		// Make the role and status visible for the user who can edit these users in the request.
+		if ( is_user_logged_in() && UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
+			$data_array['role']                = esc_html( um_user( 'role' ) );
+			$data_array['account_status']      = esc_html( UM()->common()->users()->get_status( $user_id ) );
+			$data_array['account_status_name'] = esc_html( UM()->common()->users()->get_status( $user_id, 'formatted' ) );
+		}
 
-						if ( '_um_last_login' === $key ) {
-							$show_last_login = get_user_meta( $user_id, 'um_show_last_login', true );
-							if ( ! empty( $show_last_login ) && 'no' === $show_last_login[0] ) {
-								continue;
-							}
-						}
+		if ( ! empty( $directory_data['show_tagline'] ) && ! empty( $directory_data['tagline_fields'] ) ) {
+			$directory_data['tagline_fields'] = maybe_unserialize( $directory_data['tagline_fields'] );
 
-						$value = um_filtered_value( $key );
-
-						if ( ! $value ) {
-							continue;
-						}
-
-						$data_array[ $key ] = wp_kses( $value, UM()->get_allowed_html( 'templates' ) );
+			if ( is_array( $directory_data['tagline_fields'] ) ) {
+				foreach ( $directory_data['tagline_fields'] as $key ) {
+					if ( ! $key || ! array_key_exists( $key, $user_fields ) ) {
+						continue;
 					}
+
+					if ( '_um_last_login' === $key ) {
+						$show_last_login = get_user_meta( $user_id, 'um_show_last_login', true );
+						if ( ! empty( $show_last_login ) && 'no' === $show_last_login[0] ) {
+							continue;
+						}
+					}
+
+					$value = um_filtered_value( $key );
+					if ( ! $value ) {
+						continue;
+					}
+
+					if ( $description_key === $key ) {
+						$value = nl2br( wp_kses( make_clickable( $value ), 'user_description' ) );
+					}
+
+					$data_array[ $key ] = wp_kses( $value, UM()->get_allowed_html( 'templates' ) );
 				}
 			}
 		}
@@ -457,12 +469,11 @@ class Directory extends Directory_Config {
 		if ( ! empty( $directory_data['show_userinfo'] ) ) {
 
 			if ( ! empty( $directory_data['reveal_fields'] ) ) {
-
 				$directory_data['reveal_fields'] = maybe_unserialize( $directory_data['reveal_fields'] );
 
 				if ( is_array( $directory_data['reveal_fields'] ) ) {
 					foreach ( $directory_data['reveal_fields'] as $key ) {
-						if ( ! $key ) {
+						if ( ! $key || ! array_key_exists( $key, $user_fields ) ) {
 							continue;
 						}
 
@@ -476,6 +487,10 @@ class Directory extends Directory_Config {
 						$value = um_filtered_value( $key );
 						if ( ! $value ) {
 							continue;
+						}
+
+						if ( $description_key === $key ) {
+							$value = nl2br( wp_kses( make_clickable( $value ), 'user_description' ) );
 						}
 
 						$label = UM()->fields()->get_label( $key );
@@ -521,12 +536,12 @@ class Directory extends Directory_Config {
 		} elseif ( 'last_login' === $filter ) {
 			$join_clause  = '';
 			$where_clause = '';
-			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! $this->can_edit_users() ) {
 				$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
 				$where_clause .= " AND um2.meta_value LIKE '%" . 's:15:"hide_in_members";b:0;%';
 			}
 
-			if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+			if ( ! $this->can_edit_users() ) {
 				if ( empty( $join_clause ) ) {
 					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
 				}
@@ -547,12 +562,12 @@ class Directory extends Directory_Config {
 		} elseif ( 'user_registered' === $filter ) {
 			$join_clause  = '';
 			$where_clause = '';
-			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! $this->can_edit_users() ) {
 				$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'um_member_directory_data'";
 				$where_clause .= " AND um.meta_value LIKE '%" . 's:15:"hide_in_members";b:0;%';
 			}
 
-			if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+			if ( ! $this->can_edit_users() ) {
 				if ( empty( $join_clause ) ) {
 					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'um_member_directory_data'";
 				}
@@ -569,12 +584,12 @@ class Directory extends Directory_Config {
 		} elseif ( 'birth_date' === $filter ) {
 			$join_clause  = '';
 			$where_clause = '';
-			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! $this->can_edit_users() ) {
 				$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
 				$where_clause .= " AND um2.meta_value LIKE '%" . 's:15:"hide_in_members";b:0;%';
 			}
 
-			if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+			if ( ! $this->can_edit_users() ) {
 				if ( empty( $join_clause ) ) {
 					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
 				}
@@ -598,12 +613,12 @@ class Directory extends Directory_Config {
 		} elseif ( array_key_exists( $filter, $this->filter_types ) && 'slider' === $this->filter_types[ $filter ] ) {
 			$join_clause  = '';
 			$where_clause = '';
-			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! $this->can_edit_users() ) {
 				$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
 				$where_clause .= " AND um2.meta_value LIKE '%" . 's:15:"hide_in_members";b:0;%';
 			}
 
-			if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+			if ( ! $this->can_edit_users() ) {
 				if ( empty( $join_clause ) ) {
 					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
 				}
@@ -627,12 +642,12 @@ class Directory extends Directory_Config {
 		} else {
 			$join_clause  = '';
 			$where_clause = '';
-			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! $this->can_edit_users() ) {
 				$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
 				$where_clause .= " AND um2.meta_value LIKE '%" . 's:15:"hide_in_members";b:0;%';
 			}
 
-			if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+			if ( ! $this->can_edit_users() ) {
 				if ( empty( $join_clause ) ) {
 					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
 				}
@@ -1627,5 +1642,24 @@ class Directory extends Directory_Config {
 				),
 			)
 		);
+	}
+
+	/**
+	 * Determine if the current user can edit other users
+	 *
+	 * @return bool Returns true if the current user can edit users, false otherwise
+	 */
+	protected function can_edit_users() {
+		if ( is_user_logged_in() ) {
+			$rolename = UM()->roles()->get_priority_user_role( get_current_user_id() );
+			$role     = get_role( $rolename );
+
+			// Don't specify only approved users  when the current user has 'edit_users' capability.
+			if ( current_user_can( 'edit_users' ) || ( ! is_null( $role ) && $role->has_cap( 'edit_users' ) ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

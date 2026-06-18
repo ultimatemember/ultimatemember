@@ -1132,8 +1132,11 @@ UM.frontend = {
 
 				let args = {
 					onEmojiSelect: function (selectedEmoji) {
+						let customSelect = wp.hooks.applyFilters( 'um_emoji_picker_custom_on_select', false, selectedEmoji, $emojiPicker[ $item ], $emojiPickerLink );
+						if ( false === customSelect ) {
+							$emojiList.style.display = 'none';
+						}
 						wp.hooks.doAction( 'um_emoji_picker_on_select', selectedEmoji, $emojiPicker[ $item ], $emojiPickerLink );
-						$emojiList.style.display = 'none';
 					},
 					skinTonePosition: 'none',
 					theme: 'light',
@@ -1212,7 +1215,7 @@ UM.frontend = {
 				let $list  = jQuery(this);
 
 				// Check if we scrolled to the bottom of the container
-				if ( $list.scrollTop() + $list.innerHeight() >= $list[0].scrollHeight ) {
+				if ( $list.scrollTop() + $list.innerHeight() + 8 >= $list[0].scrollHeight ) {
 					let nextHash = $list.parents('.um-gif-list-wrapper').data('next');
 
 					// Check if we've loaded all pages already

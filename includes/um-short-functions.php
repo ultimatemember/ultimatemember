@@ -1022,6 +1022,7 @@ function um_filtered_social_link( $key, $match = null, $user_id = null ) {
  */
 function um_filtered_value( $key, $data = false ) {
 	$value = um_user( $key );
+
 	if ( is_array( $value ) ) {
 		$value = add_magic_quotes( $value );
 	}
@@ -2349,14 +2350,12 @@ function um_user( $data, $attrs = null ) {
 			$value = um_profile( $data );
 			$value = maybe_unserialize( $value );
 
-			if ( in_array( $data, array( 'role', 'gender' ) ) ) {
+			if ( in_array( $data, array( 'role', 'gender' ), true ) ) {
 				if ( is_array( $value ) ) {
-					$value = implode( ",", $value );
+					$value = implode( ',', $value );
 				}
-
 				return $value;
 			}
-
 			return $value;
 
 		case 'user_email':

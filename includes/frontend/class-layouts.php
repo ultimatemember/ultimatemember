@@ -2825,7 +2825,7 @@ class Layouts {
 	 * @return string
 	 */
 	public static function gif_picker( $args = array() ) {
-		$api_key = UM()->options()->get( 'tenor_api_key' );
+		$api_key = UM()->options()->get( 'giphy_api_key' );
 		if ( empty( $api_key ) ) {
 			return '';
 		}
@@ -2856,7 +2856,7 @@ class Layouts {
 	}
 
 	public static function gif_list( $args = array() ) {
-		$api_key = UM()->options()->get( 'tenor_api_key' );
+		$api_key = UM()->options()->get( 'giphy_api_key' );
 		if ( empty( $api_key ) ) {
 			return '';
 		}
@@ -2880,7 +2880,15 @@ class Layouts {
 		if ( false === $args['async'] ) {
 			$classes[] = 'um-gif-list-async';
 
-			$url = 'https://tenor.googleapis.com/v2/search?key=' . $api_key . '&q=' . esc_attr( $args['keyword'] ) . '&limit=' . esc_attr( $args['per_page'] );
+			$url = add_query_arg(
+				array(
+					'api_key' => $api_key,
+					'q'       => sanitize_text_field( $args['keyword'] ),
+					'limit'   => absint( $args['per_page'] ),
+					'offset'  => 0,
+				),
+				'https://api.giphy.com/v1/gifs/search'
+			);
 
 			$request_args = array(
 				'headers' => array(
@@ -2892,14 +2900,38 @@ class Layouts {
 			$result   = json_decode( wp_remote_retrieve_body( $response ), true );
 
 			$images = array();
-			foreach ( $result['results'] as $image ) {
-				$images[] = array(
-					'preview' => $image['media_formats']['nanogif']['url'],
-					'image'   => $image['media_formats']['gif']['url'],
-				);
+			if ( ! is_wp_error( $response ) && ! empty( $result['data'] ) && ! empty( $result['meta']['status'] ) && 200 === absint( $result['meta']['status'] ) ) {
+				foreach ( $result['data'] as $image ) {
+					$preview = '';
+					if ( ! empty( $image['images']['fixed_width_small']['url'] ) ) {
+						$preview = $image['images']['fixed_width_small']['url'];
+					} elseif ( ! empty( $image['images']['preview_gif']['url'] ) ) {
+						$preview = $image['images']['preview_gif']['url'];
+					}
+
+					$full = '';
+					if ( ! empty( $image['images']['original']['url'] ) ) {
+						$full = $image['images']['original']['url'];
+					} elseif ( ! empty( $image['images']['downsized']['url'] ) ) {
+						$full = $image['images']['downsized']['url'];
+					}
+
+					if ( empty( $preview ) || empty( $full ) ) {
+						continue;
+					}
+
+					$images[] = array(
+						'preview' => $preview,
+						'image'   => $full,
+					);
+				}
 			}
 
-			$pagination = ! empty( $result['next'] ) ? $result['next'] : '';
+			if ( ! empty( $result['data'] ) ) {
+				$count       = count( $result['data'] );
+				$next_offset = absint( $args['per_page'] );
+				$pagination  = $count >= absint( $args['per_page'] ) ? $next_offset : '';
+			}
 
 			foreach ( $images as $im ) {
 				$gifs_content .= '<img class="um-gif-img" data-um_gif_img data-image="' . esc_attr( $im['image'] ) . '" src="' . esc_url( $im['preview'] ) . '" />';

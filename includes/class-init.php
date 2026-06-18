@@ -427,8 +427,6 @@ if ( ! class_exists( 'UM' ) ) {
 				update_option( 'um_last_version_upgrade', UM_VERSION );
 
 				add_option( 'um_first_activation_date', time() );
-			} else {
-				UM()->options()->update( 'rest_api_version', '1.0' );
 			}
 
 			if ( $version != UM_VERSION ) {
@@ -525,11 +523,6 @@ if ( ! class_exists( 'UM' ) ) {
 			// If multisite networks active
 			if ( is_multisite() ) {
 				$this->multisite();
-			}
-
-			// Call only when REST_API request
-			if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
-				$this->rest_api();
 			}
 		}
 
@@ -939,27 +932,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 
 			return $this->classes['config'];
-		}
-
-		/**
-		 * @since 2.0
-		 *
-		 * @return um\core\rest\API_v1|um\core\rest\API_v2
-		 */
-		public function rest_api() {
-			$api_version = $this->options()->get( 'rest_api_version' );
-
-			if ( empty( $this->classes['rest_api'] ) ) {
-				if ( '1.0' === $api_version ) {
-					$this->classes['rest_api'] = new um\core\rest\API_v1();
-				} elseif ( '2.0' === $api_version ) {
-					$this->classes['rest_api'] = new um\core\rest\API_v2();
-				} else {
-					$this->classes['rest_api'] = new um\core\rest\API_v1();
-				}
-			}
-
-			return $this->classes['rest_api'];
 		}
 
 		/**

@@ -78,6 +78,10 @@ class Color {
 	 * @return array[]
 	 */
 	public function generate_palette( $base_color ) {
+		if ( empty( $base_color ) ) {
+			$base_color = '#7f56d9'; // Set default base color
+		}
+
 		$palette = array(
 			'600' => array(
 				'bg' => $base_color,

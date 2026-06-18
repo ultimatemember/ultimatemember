@@ -85,7 +85,7 @@ class Directory extends \um\common\Directory {
 	 *
 	 */
 	private function hide_not_approved() {
-		if ( UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+		if ( $this->can_edit_users() ) {
 			return;
 		}
 
@@ -153,7 +153,7 @@ class Directory extends \um\common\Directory {
 			return;
 		}
 
-		if ( UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+		if ( $this->can_edit_users() ) {
 			return;
 		}
 

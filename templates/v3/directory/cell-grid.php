@@ -241,7 +241,7 @@ echo wp_kses(
 			UM()->get_allowed_html( 'templates' )
 		);
 
-		do_action( 'um_members_after_view_profile', $member['id'], $directory_data );
+		do_action_ref_array( 'um_members_after_view_profile', array( $member['id'], $directory_data, &$index ) );
 		?>
 	</div>
 </div>

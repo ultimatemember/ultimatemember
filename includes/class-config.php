@@ -1134,7 +1134,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'cover_photo_max_size'                  => 999999999,
 				'custom_roles_increment'                => 1,
 				'um_profile_object_cache_stop'          => false,
-				'rest_api_version'                      => '2.0',
 				'member_directory_own_table'            => false,
 				'profile_show_bio'                      => false,
 				'profile_show_html_bio'                 => false,
@@ -1155,7 +1154,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'um_google_lang'                        => '', // The same option name as we use in User Locations. Legacy support.
 				'um_google_maps_js_api_key'             => '', // The same option name as we use in User Locations. Legacy support.
 				'um_google_maps_api_version'            => '3.5', // Legacy Google Maps API support.
-				'tenor_api_key'                         => '',
+				'giphy_api_key'                         => '',
 				'primary_color'                         => '#7f56d9',
 				// NEW UI default settings.
 				'files_secure_links'                    => true,

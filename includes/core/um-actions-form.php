@@ -424,6 +424,8 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 		$restricted_fields = UM()->fields()->get_restricted_fields_for_edit();
 	}
 
+	$description_key = UM()->profile()->get_show_bio_key( $form_data );
+
 	foreach ( $fields as $key => $array ) {
 
 		if ( 'profile' === $mode && is_array( $restricted_fields ) && in_array( $key, $restricted_fields, true ) ) {
@@ -615,7 +617,7 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 			}
 		}
 
-		if ( ! empty( $array['max_chars'] ) && UM()->profile()->get_show_bio_key( $submitted_data ) !== $key ) {
+		if ( ! empty( $array['max_chars'] ) && $description_key !== $key ) {
 			if ( ! empty( $array['html'] ) ) {
 				// Count words without html tags when HTML is enabled.
 				$text_value = wp_strip_all_tags( $submitted_data[ $key ] );
@@ -634,11 +636,9 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 			}
 		}
 
-		if ( isset( $array['type'] ) && 'textarea' === $array['type'] && UM()->profile()->get_show_bio_key( $submitted_data ) !== $key ) {
-			if ( empty( $array['html'] ) ) {
-				if ( wp_strip_all_tags( $submitted_data[ $key ] ) !== trim( $submitted_data[ $key ] ) ) {
-					UM()->form()->add_error( $key, __( 'You can not use HTML tags here', 'ultimate-member' ) );
-				}
+		if ( isset( $array['type'] ) && 'textarea' === $array['type'] && $description_key !== $key ) {
+			if ( empty( $array['html'] ) && wp_strip_all_tags( $submitted_data[ $key ] ) !== trim( $submitted_data[ $key ] ) ) {
+				UM()->form()->add_error( $key, __( 'You can not use HTML tags here', 'ultimate-member' ) );
 			}
 		}
 
@@ -698,7 +698,6 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 			}
 		}
 
-		$description_key = UM()->profile()->get_show_bio_key( $form_data );
 		if ( isset( $form_data['mode'] ) && 'profile' === $form_data['mode'] && $description_key === $key ) {
 			$show_bio       = false;
 			$bio_html       = false;
