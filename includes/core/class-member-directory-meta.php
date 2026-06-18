@@ -540,7 +540,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				$cover_photo_where = " AND umm_general.um_value LIKE '%s:11:\"cover_photo\";b:1;%'";
 			}
 
-			if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+			if ( ! $this->can_edit_users() ) {
 				if ( ! $this->general_meta_joined ) {
 					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_general ON umm_general.user_id = u.ID";
 

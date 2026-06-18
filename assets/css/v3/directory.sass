@@ -530,87 +530,93 @@
               padding: 0 $spacing-2xl 0 0
               margin: 0
               +border-box
-              +flex( row, space-between, start, nowrap )
+              +flex( column, space-between, start, nowrap )
               column-gap: $spacing-xl
-              .#{$prefix}avatar
-                flex: 0 0 64px
-              & > .#{$prefix}link
-                flex: 1
-              .#{$prefix}member-list-data
-                flex: 4
-                +flex( column, flex-start, flex-start, nowrap )
-                padding: 0
-                margin: 0
-                +border-box
-              .#{$prefix}member-nameline
-                +flex( row, flex-start, center, nowrap )
-                padding: 0 0 $spacing-sm 0
-                gap: $spacing-xl
+              .#{$prefix}member-box-info
+                +flex( row, flex-start, flex-start, nowrap )
+                column-gap: $spacing-sm
                 width: 100%
-                margin: 0
-                +border-box
-                .#{$prefix}member-name
-                  +typography( text, md, semibold )
-                  color: $gray-900
-                  text-align: left
-                  word-break: break-word
+                .#{$prefix}avatar
+                  flex: 0 0 64px
+                & > .#{$prefix}link
+                  flex: 1
+                .#{$prefix}member-list-data
+                  flex: 4
+                  +flex( column, flex-start, flex-start, nowrap )
                   padding: 0
-              .#{$prefix}member-taglines
-                +flex( row, flex-start, baseline, wrap )
-                padding: 0 0 $spacing-sm 0
-                margin: 0
-                +border-box
-                width: 100%
-                align-self: stretch
-                column-gap: $spacing-xl
-                .#{$prefix}member-tagline
-                  +typography( text, sm, regular )
-                  color: $gray-600
-                  word-break: break-word
-              .#{$prefix}member-meta
-                width: 100%
-                padding: 0
-                margin: 0
-                +border-box
-                .#{$prefix}member-meta-inner
-                  +flex( column, flex-start, stretch, nowrap )
-                  row-gap: $spacing-sm
-                .#{$prefix}member-metaline
-                  +flex( column, flex-start, stretch, nowrap )
+                  margin: 0
+                  +border-box
+                .#{$prefix}member-nameline
+                  +flex( row, flex-start, center, nowrap )
+                  padding: 0 0 $spacing-sm 0
+                  gap: $spacing-xl
+                  width: 100%
+                  margin: 0
+                  +border-box
+                  .#{$prefix}member-name
+                    +typography( text, md, semibold )
+                    color: $gray-900
+                    text-align: left
+                    word-break: break-word
+                    padding: 0
+                .#{$prefix}member-taglines
+                  +flex( row, flex-start, baseline, wrap )
+                  padding: 0 0 $spacing-sm 0
+                  margin: 0
+                  +border-box
+                  width: 100%
+                  align-self: stretch
+                  column-gap: $spacing-xl
+                  .#{$prefix}member-tagline
+                    +typography( text, sm, regular )
+                    color: $gray-600
+                    word-break: break-word
+                .#{$prefix}member-meta
                   width: 100%
                   padding: 0
                   margin: 0
-                  word-break: break-word
-                  +typography( text, sm, regular )
-                  color: $gray-600
-                  gap: $spacing-xs
-                  strong
-                    +typography( text, sm, semibold )
-                    color: $gray-700
-                  &:last-child
-                    margin-bottom: $spacing-sm
-                .#{$prefix}member-connect
-                  +flex( row, flex-start, center, wrap )
-                  margin: 0 0 $spacing-sm 0
-                  padding: 0
-                  gap: $spacing-md
-                  a
-                    text-align: center
-                    width: 36px
-                    line-height: 36px
-                    height: 36px
-                    font-size: 20px
-                    border-radius: 100%
-                    color: $um-white
-                    opacity: 0.85
-                    margin: 0 1px
-                    transition: 0.25s
-                    display: inline-block
-                    &:hover
-                      opacity: 1
-                &.#{$prefix}member-meta-no-animate
-                  display: grid
-                  grid-template-rows: 1fr
+                  +border-box
+                  .#{$prefix}member-meta-inner
+                    +flex( column, flex-start, stretch, nowrap )
+                    row-gap: $spacing-sm
+                  .#{$prefix}member-metaline
+                    +flex( column, flex-start, stretch, nowrap )
+                    width: 100%
+                    padding: 0
+                    margin: 0
+                    word-break: break-word
+                    +typography( text, sm, regular )
+                    color: $gray-600
+                    gap: $spacing-xs
+                    strong
+                      +typography( text, sm, semibold )
+                      color: $gray-700
+                    &:last-child
+                      margin-bottom: $spacing-sm
+                  .#{$prefix}member-connect
+                    +flex( row, flex-start, center, wrap )
+                    margin: 0 0 $spacing-sm 0
+                    padding: 0
+                    gap: $spacing-md
+                    a
+                      text-align: center
+                      width: 36px
+                      line-height: 36px
+                      height: 36px
+                      font-size: 20px
+                      border-radius: 100%
+                      color: $um-white
+                      opacity: 0.85
+                      margin: 0 1px
+                      transition: 0.25s
+                      display: inline-block
+                      &:hover
+                        opacity: 1
+                  &.#{$prefix}member-meta-no-animate
+                    display: grid
+                    grid-template-rows: 1fr
+              .#{$prefix}member-box-footer
+                width: 100%
             &.#{$prefix}member-no-actions
               .#{$prefix}member-box-main
                 padding: 0

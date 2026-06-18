@@ -43,7 +43,7 @@ final class Enqueue extends \um\common\Enqueue {
 	 */
 	public function scripts_enqueue_priority() {
 		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts' ), $this->get_priority() );
-		add_action( 'enqueue_block_assets', array( &$this, 'add_to_global_styles' ) );
+		add_action( 'enqueue_block_editor_assets', array( &$this, 'add_to_global_styles' ) );
 		add_filter( 'um_frontend_common_js_variables', array( &$this, 'add_style_variables' ) );
 	}
 

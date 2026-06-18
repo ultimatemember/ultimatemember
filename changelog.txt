@@ -1,9 +1,21 @@
 ﻿== Changelog ==
 
-= 2.11.5 May xx, 2026 =
+= 2.12.0 June 12, 2026 =
 
+* Bugfixes:
 
+  - Fixed: Security issue, CVE ID: CVE-2026-7761.
+    - Restricted `get_directory_by_hash()` function to only match posts with post_type='um_directory' and publish post status.
+    - Used `0 === strpos()` instead of `strstr()` for getting proper post_data.
+    - Added condition for getting only allowed fields in tagline_fields and reveal_fields to `build_user_card_data()`.
+  - Fixed: Security issue, CVE ID: CVE-2026-8489.
+    - Used WordPress native `wp_kses()` escaper for displaying user_description field. Used WordPress native `make_clickable()` function to make raw links clickable.
+  - Fixed: Security issue, CVE ID: CVE-2026-xxxx. Make the role and status visible for the user who can edit these users in the request. Reported by [Ben Tamam](bentamam.github.io).
+  - Fixed: Remove UM option function when the option value equals "0".
 
+* Deprecated:
+
+  - Temporary deprecated: UM REST API. Legacy feature that has to be refactored. Will be refactored and re-released soon.
 
 = 2.11.4 April 30, 2026 =
 
@@ -247,7 +259,7 @@
 * Bugfixes:
 
   - Fixed: Security issue CVE ID: CVE-2024-12276.
-  - Fixed: Custom usermeta table metakeys for filtering in member directory (from `_money_spent` to `wc_money_spent_` and added `wc_order_count_`).
+  - Fixed: Custom usermeta table metakeys for filtering in member directory (from `_money_spent` to `um_woo_money_spent_` and added `um_woo_order_count_`).
   - Fixed: Layout for "Download your data" and "Erase of your data" fields.
   - Fixed: Image sizes used for Open Graph meta in User Profile headers are now corrected.
   - Fixed: "Delete account text" settings visibility issue in wp-admin.

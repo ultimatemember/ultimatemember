@@ -13,6 +13,19 @@
 .um.um-ui-xl .um-responsive:not(.um-ui-xl) {
   display: none !important;
 }
+.um:not(.um-not-responsive):not(.um-modal) {
+  position: relative;
+}
+.um:not(.um-not-responsive):not(.um-modal) .um-main-skeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #fff;
+  min-height: 300px;
+  z-index: 4;
+}
 
 @-webkit-keyframes um-ajax-shimmer {
   100% {
@@ -129,10 +142,6 @@
   justify-content: flex-start;
   align-items: stretch;
   flex-wrap: nowrap;
-}
-.um .um-main-skeleton {
-  width: 100%;
-  min-height: 300px;
 }
 
 .um .um-button {
@@ -1709,6 +1718,12 @@
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_block[data-key=gdpr_details] .um-gdpr-post-content-wrap:not(.um-toggle-block-collapsed) .um-gdpr-post-content {
+  max-height: 300px;
+  overflow: auto;
+  padding: 0 8px 0 0;
+  margin-bottom: 6px;
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-hint {
   box-sizing: border-box;

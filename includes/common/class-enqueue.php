@@ -53,7 +53,7 @@ class Enqueue {
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( &$this, 'common_libs' ), 9 );
 		add_action( 'wp_enqueue_scripts', array( &$this, 'common_libs' ), 9 );
-		add_action( 'enqueue_block_assets', array( &$this, 'common_libs' ), 9 );
+		add_action( 'enqueue_block_editor_assets', array( &$this, 'common_libs' ), 9 );
 		add_filter( 'um_common_js_variables', array( &$this, 'add_style_variables' ) );
 	}
 

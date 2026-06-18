@@ -97,7 +97,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 * @param $option_id
 		 */
 		public function remove( $option_id ) {
-			if ( ! empty( $this->options[ $option_id ] ) ) {
+			if ( isset( $this->options[ $option_id ] ) ) {
 				unset( $this->options[ $option_id ] );
 			}
 

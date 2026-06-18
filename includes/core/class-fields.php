@@ -4367,7 +4367,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		}
 
 		/**
-		 * Gets a field in `view mode`
+		 * Gets a field in `view mode`. Works in the User Profile form > View mode only.
 		 *
 		 * @param string $key
 		 * @param array $data
@@ -4422,7 +4422,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			$default = array_key_exists( 'default', $data ) ? $data['default'] : false;
 
-			// Hide if empty.
+			// Hide if the value of the field with metakey is empty.
+			$_field_value           = null;
 			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
 			if ( ! in_array( $type, $fields_without_metakey, true ) ) {
 				$_field_value = $this->field_value( $key, $default, $data );
@@ -4453,8 +4454,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			switch ( $type ) {
 				/* Default */
 				default:
-					$_field_value = $this->field_value( $key, $default, $data );
-
 					if ( ( isset( $_field_value ) && '' !== $_field_value ) || in_array( $type, $fields_without_metakey, true ) ) {
 						$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
@@ -4494,15 +4493,31 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							if ( $show_bio ) {
 								if ( true === $bio_html && ! empty( $data['html'] ) ) {
-									$res = wp_kses_post( make_clickable( wpautop( $res ) ) );
+									$res = wp_kses( make_clickable( $res ), 'user_description' );
 								} else {
-									$res = esc_html( $res );
+									$res = wp_kses(
+										make_clickable( $res ),
+										array(
+											'a' => array(
+												'href' => array(),
+												'rel'  => array(),
+											),
+										)
+									);
 								}
 							} else {
 								if ( ! empty( $data['html'] ) ) {
-									$res = wp_kses_post( make_clickable( wpautop( $res ) ) );
+									$res = wp_kses( make_clickable( $res ), 'user_description' );
 								} else {
-									$res = esc_html( $res );
+									$res = wp_kses(
+										make_clickable( $res ),
+										array(
+											'a' => array(
+												'href' => array(),
+												'rel'  => array(),
+											),
+										)
+									);
 								}
 							}
 

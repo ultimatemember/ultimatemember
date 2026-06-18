@@ -67,9 +67,6 @@
 // Make parent block flexible.
 .um
   +flex( column, flex-start, stretch, nowrap )
-  .#{$prefix}main-skeleton
-    width: 100%
-    min-height: 300px
 
 // Buttons.
 .um
@@ -1260,6 +1257,11 @@
                 .#{$prefix}gdpr-post-content-wrap:not(.#{$prefix}toggle-block-collapsed)
                   padding-top: $spacing-sm
                   +border-box
+                  .#{$prefix}gdpr-post-content
+                    max-height: 300px
+                    overflow: auto
+                    padding: 0 $spacing-md 0 0
+                    margin-bottom: $spacing-sm
             //.#{$prefix}field
             //  & > input[type="date"],
             //  & > input[type="datetime"],

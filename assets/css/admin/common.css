@@ -1,3 +1,7 @@
+.um-display-none {
+  display: none !important;
+}
+
 .um-adm-ico {
   font-size: 18px;
   width: 18px;
