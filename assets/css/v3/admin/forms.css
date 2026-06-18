@@ -1,6 +1,7 @@
-.um-form-table .um-forms-line[data-conditional] {
-  display: none;
+.um-display-none {
+  display: none !important;
 }
+
 .um-form-table .um-forms-line label .um-req {
   color: #a00;
   margin: 0 0 0 3px;
