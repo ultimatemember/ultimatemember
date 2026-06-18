@@ -228,6 +228,7 @@ echo wp_kses(
 	?>
 	<div class="um-member-action-buttons">
 		<?php
+		$index = 1;
 		echo wp_kses(
 			UM()->frontend()::layouts()::link(
 				__( 'View Profile', 'ultimate-member' ),
