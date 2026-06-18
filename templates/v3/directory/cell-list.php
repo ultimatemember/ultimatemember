@@ -238,7 +238,7 @@ ob_start();
 	$footer_classes = array( 'um-member-box-footer' );
 	if ( $index > 1 ) {
 		$footer_classes[] = 'um-grid';
-		$footer_classes[] = 'um-grid-col-' . $index;
+		$footer_classes[] = 'um-grid-col-' . min( $index, 3 );
 	}
 	?>
 	<div class="<?php echo esc_attr( implode( ' ', $footer_classes ) ); ?>">
