@@ -65,7 +65,7 @@ final class Enqueue extends \um\common\Enqueue {
 		add_action( 'load-post.php', array( &$this, 'enqueue_cpt_scripts' ) );
 
 		add_filter( 'block_categories_all', array( &$this, 'blocks_category' ) );
-		add_action( 'enqueue_block_assets', array( &$this, 'block_editor' ), 11 );
+		add_action( 'enqueue_block_editor_assets', array( &$this, 'block_editor' ), 11 );
 	}
 
 	/**
@@ -150,6 +150,25 @@ final class Enqueue extends \um\common\Enqueue {
 		 */
 		$um_account_settings = apply_filters( 'um_extend_account_settings', $um_account_settings );
 		wp_localize_script( 'um_admin_blocks_shortcodes', 'um_account_settings', $um_account_settings );
+
+		// Expose form modes so Gutenberg previews can avoid rendering login forms for logged-in admins.
+		$um_forms_settings = array();
+		$um_forms          = get_posts(
+			array(
+				'post_type'      => 'um_form',
+				'posts_per_page' => -1,
+				'post_status'    => 'publish',
+				'fields'         => 'ids',
+			)
+		);
+
+		foreach ( $um_forms as $form_id ) {
+			$um_forms_settings[ $form_id ] = array(
+				'mode' => get_post_meta( $form_id, '_um_mode', true ),
+			);
+		}
+
+		wp_localize_script( 'um_admin_blocks_shortcodes', 'um_forms_settings', $um_forms_settings );
 		wp_enqueue_script( 'um_admin_blocks_shortcodes' );
 
 		// Cropper.js

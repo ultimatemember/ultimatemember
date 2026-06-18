@@ -1,5 +1,5 @@
 import { useSelect } from '@wordpress/data';
-import { PanelBody, SelectControl, Spinner } from '@wordpress/components';
+import { PanelBody, Placeholder, SelectControl, Spinner } from '@wordpress/components';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import ServerSideRender from '@wordpress/server-side-render';
 import { registerBlockType } from '@wordpress/blocks';
@@ -29,10 +29,16 @@ registerBlockType('um-block/um-forms', {
 		}, [posts]);
 
 		const onFormChange = (value) => setAttributes({ form_id: value });
+		const formSettings = window.um_forms_settings && form_id ? window.um_forms_settings[form_id] : null;
+		const isLoginForm = formSettings && 'login' === formSettings.mode;
 
 		return (
 			<div {...blockProps}>
-				<ServerSideRender block="um-block/um-forms" attributes={attributes} />
+				{isLoginForm ? (
+					<Placeholder label={wp.i18n.__('Login form', 'ultimate-member')} />
+				) : (
+					<ServerSideRender block="um-block/um-forms" attributes={attributes} />
+				)}
 				<InspectorControls>
 					<PanelBody title={wp.i18n.__('Select Forms', 'ultimate-member')}>
 						<SelectControl

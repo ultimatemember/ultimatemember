@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-18T10:38:48+00:00\n"
+"POT-Creation-Date: 2026-06-18T10:40:36+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -220,7 +220,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/class-enqueue.php:651
+#: includes/admin/class-enqueue.php:670
 msgid "Ultimate Member Blocks"
 msgstr ""
 
@@ -12342,8 +12342,8 @@ msgid "Select Tab"
 msgstr ""
 
 #: blocks-src/um-forms/src/index.js:21
-#: blocks-src/um-member-directories/src/index.js:23
-#: blocks-src/um-member-directories/src/index.js:42
+#: blocks-src/um-member-directories/src/index.js:155
+#: blocks-src/um-member-directories/src/index.js:174
 #: includes/blocks/um-forms/src/index.js:1
 #: includes/blocks/um-member-directories/src/index.js:1
 msgid "Loading..."
@@ -12359,24 +12359,29 @@ msgstr ""
 msgid "Select Form"
 msgstr ""
 
-#: blocks-src/um-forms/src/index.js:37
-#: blocks-src/um-forms/src/index.js:39
+#: blocks-src/um-forms/src/index.js:38
+#: includes/blocks/um-forms/src/index.js:1
+msgid "Login form"
+msgstr ""
+
+#: blocks-src/um-forms/src/index.js:43
+#: blocks-src/um-forms/src/index.js:45
 #: includes/blocks/um-forms/src/index.js:1
 msgid "Select Forms"
 msgstr ""
 
-#: blocks-src/um-member-directories/src/index.js:26
+#: blocks-src/um-member-directories/src/index.js:158
 #: includes/blocks/um-member-directories/src/index.js:1
 msgid "No posts found."
 msgstr ""
 
-#: blocks-src/um-member-directories/src/index.js:28
+#: blocks-src/um-member-directories/src/index.js:160
 #: includes/blocks/um-member-directories/src/index.js:1
 msgid "Select Directory"
 msgstr ""
 
-#: blocks-src/um-member-directories/src/index.js:51
-#: blocks-src/um-member-directories/src/index.js:53
+#: blocks-src/um-member-directories/src/index.js:183
+#: blocks-src/um-member-directories/src/index.js:185
 #: includes/blocks/um-member-directories/src/index.js:1
 msgid "Select Directories"
 msgstr ""
