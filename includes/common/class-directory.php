@@ -1013,14 +1013,15 @@ class Directory extends Directory_Config {
 
 		$range = false;
 		$meta  = $this->pre_filter_query( $filter, $directory_data );
-
-		if ( 'last_login' === $filter ) {
-			if ( array_key_exists( 'min', $meta ) && array_key_exists( 'max', $meta ) && ! empty( $meta['total'] ) && absint( $meta['total'] ) > 1 ) {
-				// $range = array( strtotime( $meta['min'] ), strtotime( $meta['max'] ) );
-				$range = array( $meta['min'], $meta['max'] ); // TODO check the format for min/max range in the new UI. gmdate for now.
+		if ( $meta && is_array( $meta ) ) {
+			if ( 'last_login' === $filter ) {
+				if ( array_key_exists( 'min', $meta ) && array_key_exists( 'max', $meta ) && ! empty( $meta['total'] ) && absint( $meta['total'] ) > 1 ) {
+					// $range = array( strtotime( $meta['min'] ), strtotime( $meta['max'] ) );
+					$range = array( $meta['min'], $meta['max'] ); // TODO check the format for min/max range in the new UI. gmdate for now.
+				}
+			} elseif ( ! empty( $meta ) && count( $meta ) > 1 ) {
+				$range = array( min( $meta ), max( $meta ) ); // TODO check the format for min/max range in the new UI. gmdate for now.
 			}
-		} elseif ( ! empty( $meta ) && count( $meta ) > 1 ) {
-			$range = array( min( $meta ), max( $meta ) ); // TODO check the format for min/max range in the new UI. gmdate for now.
 		}
 
 		return apply_filters( "um_member_directory_filter_{$filter}_datepicker", $range );
@@ -1040,12 +1041,13 @@ class Directory extends Directory_Config {
 			return array( '00:00', '23:59' );
 		}
 
-		$meta = $this->pre_filter_query( $filter, $directory_data );
-		$meta = array_filter( $meta );
-
 		$range = false;
-		if ( ! empty( $meta ) && count( $meta ) > 1 ) {
-			$range = array( min( $meta ), max( $meta ) );
+		$meta  = $this->pre_filter_query( $filter, $directory_data );
+		if ( $meta && is_array( $meta ) ) {
+			$meta = array_filter( $meta );
+			if ( ! empty( $meta ) && count( $meta ) > 1 ) {
+				$range = array( min( $meta ), max( $meta ) );
+			}
 		}
 
 		return apply_filters( "um_member_directory_filter_{$filter}_timepicker", $range );
