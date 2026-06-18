@@ -132,7 +132,7 @@ echo wp_kses(
 		<?php
 	}
 
-	if ( 'approved' !== $member['account_status'] && is_user_logged_in() ) {
+	if ( 'undefined' !== $member['account_status'] && 'approved' !== $member['account_status'] && UM()->member_directory()->can_edit_users() ) {
 		$status_badge = array(
 			'class' => array( 'um-member-status' ),
 		);

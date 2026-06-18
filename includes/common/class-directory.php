@@ -1655,7 +1655,7 @@ class Directory extends Directory_Config {
 	 *
 	 * @return bool Returns true if the current user can edit users, false otherwise
 	 */
-	protected function can_edit_users() {
+	public function can_edit_users() {
 		if ( is_user_logged_in() ) {
 			$rolename = UM()->roles()->get_priority_user_role( get_current_user_id() );
 			$role     = get_role( $rolename );

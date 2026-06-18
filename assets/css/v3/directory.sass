@@ -534,7 +534,7 @@
               column-gap: $spacing-xl
               .#{$prefix}member-box-info
                 +flex( row, flex-start, flex-start, nowrap )
-                column-gap: $spacing-sm
+                column-gap: $spacing-xl
                 width: 100%
                 .#{$prefix}avatar
                   flex: 0 0 64px
@@ -554,6 +554,7 @@
                   margin: 0
                   +border-box
                   .#{$prefix}member-name
+                    +flex( row, flex-start, center, nowrap )
                     +typography( text, md, semibold )
                     color: $gray-900
                     text-align: left
@@ -567,10 +568,10 @@
                   width: 100%
                   align-self: stretch
                   column-gap: $spacing-xl
-                  .#{$prefix}member-tagline
-                    +typography( text, sm, regular )
-                    color: $gray-600
-                    word-break: break-word
+                .#{$prefix}member-tagline
+                  +typography( text, sm, regular )
+                  color: $gray-600
+                  word-break: break-word
                 .#{$prefix}member-meta
                   width: 100%
                   padding: 0
@@ -617,6 +618,7 @@
                     grid-template-rows: 1fr
               .#{$prefix}member-box-footer
                 width: 100%
+                padding: $spacing-xl 0 0 0
             &.#{$prefix}member-no-actions
               .#{$prefix}member-box-main
                 padding: 0

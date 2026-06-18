@@ -113,7 +113,7 @@ ob_start();
 					<?php
 				}
 
-				if ( 'approved' !== $member['account_status'] && is_user_logged_in() ) {
+				if ( 'undefined' !== $member['account_status'] && 'approved' !== $member['account_status'] && UM()->member_directory()->can_edit_users() ) {
 					$status_badge = array(
 						'class' => array( 'um-member-status' ),
 						'size'  => 's',
@@ -122,7 +122,8 @@ ob_start();
 						$status_badge['color'] = 'error';
 					}
 					echo wp_kses( UM()->frontend()::layouts()::badge( $member['account_status_name'], $status_badge ), UM()->get_allowed_html( 'templates' ) );
-				} ?>
+				}
+				?>
 			</div>
 			<?php
 			// {{{user.hook_just_after_name}}}
