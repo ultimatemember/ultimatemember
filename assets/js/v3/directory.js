@@ -494,6 +494,8 @@ UM.frontend.directory.prototype = {
 		});
 	},
 	request: function ( args ) {
+		args = args || {}; // set to empty object if null.
+
 		let instance = this;
 		if ( args.hasOwnProperty('instance') ) {
 			instance = args.instance;

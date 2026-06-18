@@ -525,7 +525,11 @@ class Directory extends Directory_Config {
 	}
 
 	private function pre_filter_query( $filter, $directory_data, $admin = false ) {
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_clause and $where_clause is code generated variables ok.
 		global $wpdb;
+
+		$hide_in_members = '%s:15:"hide_in_members";b:0;%';
+		$account_status  = '%s:14:"account_status";s:8:"approved";%';
 
 		if ( 'role' === $filter ) {
 			if ( $admin ) {
@@ -538,14 +542,14 @@ class Directory extends Directory_Config {
 			$where_clause = '';
 			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! $this->can_edit_users() ) {
 				$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
-				$where_clause .= " AND um2.meta_value LIKE '%" . 's:15:"hide_in_members";b:0;%';
+				$where_clause .= " AND um2.meta_value LIKE '" . $hide_in_members . "'";
 			}
 
 			if ( ! $this->can_edit_users() ) {
 				if ( empty( $join_clause ) ) {
 					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
 				}
-				$where_clause .= " AND um2.meta_value LIKE '%" . 's:14:"account_status";s:8:"approved";%';
+				$where_clause .= " AND um2.meta_value LIKE '" . $account_status . "'";
 			}
 
 			$pre_query_results = $wpdb->get_row(
@@ -564,14 +568,14 @@ class Directory extends Directory_Config {
 			$where_clause = '';
 			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! $this->can_edit_users() ) {
 				$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'um_member_directory_data'";
-				$where_clause .= " AND um.meta_value LIKE '%" . 's:15:"hide_in_members";b:0;%';
+				$where_clause .= " AND um.meta_value LIKE '" . $hide_in_members . "'";
 			}
 
 			if ( ! $this->can_edit_users() ) {
 				if ( empty( $join_clause ) ) {
 					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'um_member_directory_data'";
 				}
-				$where_clause .= " AND um.meta_value LIKE '%" . 's:14:"account_status";s:8:"approved";%';
+				$where_clause .= " AND um.meta_value LIKE '" . $account_status . "'";
 			}
 
 			$pre_query_results = $wpdb->get_col(
@@ -586,14 +590,14 @@ class Directory extends Directory_Config {
 			$where_clause = '';
 			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! $this->can_edit_users() ) {
 				$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
-				$where_clause .= " AND um2.meta_value LIKE '%" . 's:15:"hide_in_members";b:0;%';
+				$where_clause .= " AND um2.meta_value LIKE '%" . $hide_in_members . "'"; // don't remove % here because $wpdb->prepare is used below and it think that %s is the placeholder.
 			}
 
 			if ( ! $this->can_edit_users() ) {
 				if ( empty( $join_clause ) ) {
 					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
 				}
-				$where_clause .= " AND um2.meta_value LIKE '%" . 's:14:"account_status";s:8:"approved";%';
+				$where_clause .= " AND um2.meta_value LIKE '%" . $account_status . "'"; // don't remove % here because $wpdb->prepare is used below and it think that %s is the placeholder.
 			}
 
 			$pre_query_results = $wpdb->get_row(
@@ -615,14 +619,14 @@ class Directory extends Directory_Config {
 			$where_clause = '';
 			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! $this->can_edit_users() ) {
 				$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
-				$where_clause .= " AND um2.meta_value LIKE '%" . 's:15:"hide_in_members";b:0;%';
+				$where_clause .= " AND um2.meta_value LIKE '%" . $hide_in_members . "'"; // don't remove % here because $wpdb->prepare is used below and it think that %s is the placeholder.
 			}
 
 			if ( ! $this->can_edit_users() ) {
 				if ( empty( $join_clause ) ) {
 					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
 				}
-				$where_clause .= " AND um2.meta_value LIKE '%" . 's:14:"account_status";s:8:"approved";%';
+				$where_clause .= " AND um2.meta_value LIKE '%" . $account_status . "'"; // don't remove % here because $wpdb->prepare is used below and it think that %s is the placeholder.
 			}
 
 			$pre_query_results = $wpdb->get_row(
@@ -644,14 +648,14 @@ class Directory extends Directory_Config {
 			$where_clause = '';
 			if ( UM()->options()->get( 'account_hide_in_directory' ) && ! $this->can_edit_users() ) {
 				$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
-				$where_clause .= " AND um2.meta_value LIKE '%" . 's:15:"hide_in_members";b:0;%';
+				$where_clause .= " AND um2.meta_value LIKE '%" . $hide_in_members . "'"; // don't remove % here because $wpdb->prepare is used below and it think that %s is the placeholder.
 			}
 
 			if ( ! $this->can_edit_users() ) {
 				if ( empty( $join_clause ) ) {
 					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
 				}
-				$where_clause .= " AND um2.meta_value LIKE '%" . 's:14:"account_status";s:8:"approved";%';
+				$where_clause .= " AND um2.meta_value LIKE '%" . $account_status . "'"; // don't remove % here because $wpdb->prepare is used below and it think that %s is the placeholder.
 			}
 
 			$pre_query_results = $wpdb->get_col(
@@ -667,7 +671,7 @@ class Directory extends Directory_Config {
 				)
 			);
 		}
-
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		return $pre_query_results;
 	}
 
