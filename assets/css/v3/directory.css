@@ -618,7 +618,7 @@
   display: grid;
   grid-template-rows: 1fr;
 }
-.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-no-cover .um-dropdown-wrapper {
+.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-no-cover .um-dropdown-wrapper.um-member-actions-dropdown-wrapper {
   position: absolute;
   right: 24px;
 }
@@ -906,6 +906,9 @@
 .um.um-directory .um-members-wrapper.um-members-list .um-box.um-member .um-member-box-main .um-member-box-footer {
   width: 100%;
   padding: 16px 0 0 0;
+}
+.um.um-directory .um-members-wrapper.um-members-list .um-box.um-member .um-member-box-main .um-member-box-footer .um-dropdown-toggle-button .um-button-has-icon {
+  justify-content: space-between;
 }
 .um.um-directory .um-members-wrapper.um-members-list .um-box.um-member.um-member-no-actions .um-member-box-main {
   padding: 0;

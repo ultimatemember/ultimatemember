@@ -454,7 +454,7 @@
                     display: grid
                     grid-template-rows: 1fr
             &.#{$prefix}member-no-cover
-              .#{$prefix}dropdown-wrapper
+              .#{$prefix}dropdown-wrapper.#{$prefix}member-actions-dropdown-wrapper
                 position: absolute
                 right: $spacing-3xl
               .#{$prefix}member-box-main
@@ -619,6 +619,9 @@
               .#{$prefix}member-box-footer
                 width: 100%
                 padding: $spacing-xl 0 0 0
+                .#{$prefix}dropdown-toggle-button
+                  .#{$prefix}button-has-icon
+                    justify-content: space-between
             &.#{$prefix}member-no-actions
               .#{$prefix}member-box-main
                 padding: 0
