@@ -1,5 +1,5 @@
 import { useSelect } from '@wordpress/data';
-import { PanelBody, Placeholder, SelectControl, Spinner } from '@wordpress/components';
+import { PanelBody, Placeholder, SelectControl } from '@wordpress/components';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import ServerSideRender from '@wordpress/server-side-render';
 import { registerBlockType } from '@wordpress/blocks';
@@ -30,12 +30,19 @@ registerBlockType('um-block/um-forms', {
 
 		const onFormChange = (value) => setAttributes({ form_id: value });
 		const formSettings = window.um_forms_settings && form_id ? window.um_forms_settings[form_id] : null;
-		const isLoginForm = formSettings && 'login' === formSettings.mode;
+		const selectedForm = posts ? posts.find((post) => post.id === Number(form_id)) : null;
+		const formName = selectedForm ? selectedForm.title.rendered : '';
+		const showFormPlaceholder = formSettings && ['login', 'register'].includes(formSettings.mode);
 
 		return (
 			<div {...blockProps}>
-				{isLoginForm ? (
-					<Placeholder label={wp.i18n.__('Login form', 'ultimate-member')} />
+				{showFormPlaceholder ? (
+					<Placeholder
+						label={wp.i18n.sprintf(
+							wp.i18n.__('Ultimate Member - Form: "%s"', 'ultimate-member'),
+							formName
+						)}
+					/>
 				) : (
 					<ServerSideRender block="um-block/um-forms" attributes={attributes} />
 				)}
@@ -57,22 +64,85 @@ registerBlockType('um-block/um-forms', {
 	save: () => null
 });
 
-jQuery(window).on( 'load', function($) {
+const initProfileForm = (form) => {
+	const isProfileForm =
+		form.dataset.mode === 'profile' ||
+		form.classList.contains('um-profile') ||
+		!!form.querySelector('.um-profile-photo, .um-profile-body, .um-profile-header-core');
+
+	if (!isProfileForm || !window.UM || !window.UM.frontend) {
+		return;
+	}
+
+	const initResponsive = () => {
+		if (window.UM.frontend.responsive) {
+			window.UM.frontend.responsive.setClass();
+		}
+	};
+	const scheduleResponsive = () => {
+		initResponsive();
+		window.requestAnimationFrame(initResponsive);
+	};
+	const profileRoot = form.classList.contains('um') ? form : form.closest('.um') || form;
+
+	if (profileRoot.dataset.umBlockProfileInitialized === '1') {
+		scheduleResponsive();
+		return;
+	}
+
+	profileRoot.dataset.umBlockProfileInitialized = '1';
+
+	if (window.UM.frontend.image && window.UM.frontend.image.lazyload) {
+		window.UM.frontend.image.lazyload.init();
+	}
+
+	if (window.UM.common && window.UM.common.choices) {
+		window.UM.common.choices.init();
+		window.UM.common.choices.initChild();
+	}
+
+	if (window.UM.frontend.tabs) {
+		window.UM.frontend.tabs.init();
+	}
+
+	scheduleResponsive();
+
+	if (window.ResizeObserver) {
+		const observer = new ResizeObserver(initResponsive);
+		observer.observe(profileRoot);
+	}
+};
+
+const initRenderedForms = (nodes) => {
+	const forms = jQuery(nodes)
+		.filter('.um, .um-form, .um-form-new, .um-profile')
+		.add(jQuery(nodes).find('.um, .um-form, .um-form-new, .um-profile'));
+
+	forms.each(function() {
+		let wrapper = this;
+
+		if (wrapper) {
+			if (wrapper.dataset.umBlockClickInitialized !== '1') {
+				wrapper.dataset.umBlockClickInitialized = '1';
+				wrapper.addEventListener('click', (event) => {
+					if (event.target !== wrapper) {
+						event.preventDefault();
+						event.stopPropagation();
+					}
+				});
+			}
+
+			initProfileForm(wrapper);
+		}
+	});
+};
+
+jQuery(function() {
+	initRenderedForms(document);
+
 	let observer = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
-
-			jQuery(mutation.addedNodes).find('.um-form').each(function() {
-				let wrapper = document.querySelector('.um-form');
-
-				if (wrapper) {
-					wrapper.addEventListener('click', (event) => {
-						if (event.target !== wrapper) {
-							event.preventDefault();
-							event.stopPropagation();
-						}
-					});
-				}
-			});
+			initRenderedForms(mutation.addedNodes);
 		});
 	});
 
