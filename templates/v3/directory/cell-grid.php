@@ -132,7 +132,7 @@ echo wp_kses(
 		<?php
 	}
 
-	if ( 'approved' !== $member['account_status'] && is_user_logged_in() ) {
+	if ( 'undefined' !== $member['account_status'] && 'approved' !== $member['account_status'] && UM()->member_directory()->can_edit_users() ) {
 		$status_badge = array(
 			'class' => array( 'um-member-status' ),
 		);
@@ -228,6 +228,7 @@ echo wp_kses(
 	?>
 	<div class="um-member-action-buttons">
 		<?php
+		$index = 1;
 		echo wp_kses(
 			UM()->frontend()::layouts()::link(
 				__( 'View Profile', 'ultimate-member' ),

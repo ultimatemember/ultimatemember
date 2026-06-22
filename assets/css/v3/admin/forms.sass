@@ -2,10 +2,13 @@
 @import "../../mixins"
 @import "../../colors"
 
+.#{$prefix}display-none
+  display: none !important
+
 .#{$prefix}form-table
   .#{$prefix}forms-line
-    &[data-conditional]
-      display: none
+    //&[data-conditional]
+    //  display: none
     label
       .#{$prefix}req
         color: $required-asterisk

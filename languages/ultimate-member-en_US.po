@@ -8506,30 +8506,30 @@ msgstr ""
 msgid "Undefined"
 msgstr ""
 
-#: includes/common/class-directory.php:714
+#: includes/common/class-directory.php:718
 msgid "<strong>Age:</strong>&nbsp;{{{value}}} years old"
 msgstr ""
 
-#: includes/common/class-directory.php:715
+#: includes/common/class-directory.php:719
 msgid "<strong>Age:</strong>&nbsp;{{{value_from}}} - {{{value_to}}} years old"
 msgstr ""
 
-#: includes/common/class-directory.php:726
-#: includes/common/class-directory.php:727
+#: includes/common/class-directory.php:730
+#: includes/common/class-directory.php:731
 #: includes/core/class-member-directory.php:505
 #: includes/core/class-member-directory.php:506
 msgid " stars"
 msgstr ""
 
-#: includes/common/class-directory.php:1477
-#: includes/common/class-directory.php:1549
-#: includes/common/class-directory.php:1602
+#: includes/common/class-directory.php:1483
+#: includes/common/class-directory.php:1555
+#: includes/common/class-directory.php:1608
 msgid "From"
 msgstr ""
 
-#: includes/common/class-directory.php:1482
-#: includes/common/class-directory.php:1553
-#: includes/common/class-directory.php:1606
+#: includes/common/class-directory.php:1488
+#: includes/common/class-directory.php:1559
+#: includes/common/class-directory.php:1612
 msgid "To"
 msgstr ""
 
@@ -12087,17 +12087,17 @@ msgid "Request erase"
 msgstr ""
 
 #: templates/v3/directory/cell-grid.php:223
-#: templates/v3/directory/cell-list.php:210
+#: templates/v3/directory/cell-list.php:211
 msgid "Hide details"
 msgstr ""
 
 #: templates/v3/directory/cell-grid.php:223
-#: templates/v3/directory/cell-list.php:210
+#: templates/v3/directory/cell-list.php:211
 msgid "More details"
 msgstr ""
 
-#: templates/v3/directory/cell-grid.php:233
-#: templates/v3/directory/cell-list.php:224
+#: templates/v3/directory/cell-grid.php:234
+#: templates/v3/directory/cell-list.php:225
 msgid "View Profile"
 msgstr ""
 

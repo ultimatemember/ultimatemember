@@ -618,7 +618,7 @@
   display: grid;
   grid-template-rows: 1fr;
 }
-.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-no-cover .um-dropdown-wrapper {
+.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-no-cover .um-dropdown-wrapper.um-member-actions-dropdown-wrapper {
   position: absolute;
   right: 24px;
 }
@@ -760,7 +760,7 @@
   justify-content: flex-start;
   align-items: flex-start;
   flex-wrap: nowrap;
-  column-gap: 6px;
+  column-gap: 16px;
   width: 100%;
 }
 .um.um-directory .um-members-wrapper.um-members-list .um-box.um-member .um-member-box-main .um-member-box-info .um-avatar {
@@ -797,6 +797,11 @@
   -webkit-box-sizing: border-box;
 }
 .um.um-directory .um-members-wrapper.um-members-list .um-box.um-member .um-member-box-main .um-member-box-info .um-member-nameline .um-member-name {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
   font-size: var(--um-text-font-size-md, 16px);
   line-height: var(--um-text-line-height-md, 24px);
   font-weight: var(--um-text-font-weight-semibold, 600);
@@ -820,7 +825,7 @@
   align-self: stretch;
   column-gap: 16px;
 }
-.um.um-directory .um-members-wrapper.um-members-list .um-box.um-member .um-member-box-main .um-member-box-info .um-member-taglines .um-member-tagline {
+.um.um-directory .um-members-wrapper.um-members-list .um-box.um-member .um-member-box-main .um-member-box-info .um-member-tagline {
   font-size: var(--um-text-font-size-sm, 14px);
   line-height: var(--um-text-line-height-sm, 20px);
   font-weight: var(--um-text-font-weight-regular, 400);
@@ -900,6 +905,10 @@
 }
 .um.um-directory .um-members-wrapper.um-members-list .um-box.um-member .um-member-box-main .um-member-box-footer {
   width: 100%;
+  padding: 16px 0 0 0;
+}
+.um.um-directory .um-members-wrapper.um-members-list .um-box.um-member .um-member-box-main .um-member-box-footer .um-dropdown-toggle-button .um-button-has-icon {
+  justify-content: space-between;
 }
 .um.um-directory .um-members-wrapper.um-members-list .um-box.um-member.um-member-no-actions .um-member-box-main {
   padding: 0;
