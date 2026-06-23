@@ -2570,9 +2570,14 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 				}
 			}
 
-			// Validate traversal file.
 			$file_path = UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $field_value;
-			if ( validate_file( $file_path ) === 1 && file_exists( $file_path ) ) {
+			// Validate not exists file.
+			if ( ! file_exists( $file_path ) ) {
+				return '';
+			}
+
+			// Validate traversal file.
+			if ( validate_file( $file_path ) === 1 ) {
 				return '';
 			}
 
