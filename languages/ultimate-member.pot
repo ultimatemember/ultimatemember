@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-23T11:58:53+00:00\n"
+"POT-Creation-Date: 2026-06-23T12:26:25+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -187,10 +187,10 @@ msgstr ""
 
 #: includes/admin/class-enqueue.php:118
 #: includes/admin/core/class-admin-settings.php:1332
+#: includes/class-config.php:930
 #: includes/class-config.php:933
-#: includes/class-config.php:936
+#: includes/class-config.php:1004
 #: includes/class-config.php:1007
-#: includes/class-config.php:1010
 #: includes/core/class-builtin.php:850
 #: includes/core/class-builtin.php:853
 #: includes/core/class-builtin.php:1438
@@ -8011,8 +8011,8 @@ msgstr ""
 
 #: includes/class-config.php:372
 #: includes/class-config.php:606
+#: includes/class-config.php:898
 #: includes/class-config.php:901
-#: includes/class-config.php:904
 #: includes/common/class-directory-config.php:164
 #: includes/core/class-builtin.php:826
 #: includes/core/class-builtin.php:829
@@ -8203,43 +8203,43 @@ msgstr ""
 msgid "Update Profile"
 msgstr ""
 
+#: includes/class-config.php:915
 #: includes/class-config.php:918
-#: includes/class-config.php:921
 msgid "E-mail Address"
 msgstr ""
 
+#: includes/class-config.php:948
 #: includes/class-config.php:951
-#: includes/class-config.php:954
 #: includes/common/class-directory-config.php:250
 #: includes/core/class-builtin.php:865
 #: includes/core/class-builtin.php:868
 msgid "First Name"
 msgstr ""
 
+#: includes/class-config.php:962
 #: includes/class-config.php:965
-#: includes/class-config.php:968
 #: includes/common/class-directory-config.php:251
 #: includes/core/class-builtin.php:875
 #: includes/core/class-builtin.php:878
 msgid "Last Name"
 msgstr ""
 
+#: includes/class-config.php:989
 #: includes/class-config.php:992
-#: includes/class-config.php:995
 msgid "Username or E-mail"
 msgstr ""
 
-#: includes/class-config.php:1084
+#: includes/class-config.php:1081
 #: includes/core/class-account.php:135
 msgid "Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account enter your password below."
 msgstr ""
 
-#: includes/class-config.php:1085
+#: includes/class-config.php:1082
 #: includes/core/class-account.php:137
 msgid "Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account, click on the button below."
 msgstr ""
 
-#: includes/class-config.php:1101
+#: includes/class-config.php:1098
 msgid "Restricted content"
 msgstr ""
 
