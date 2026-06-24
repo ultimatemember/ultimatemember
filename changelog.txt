@@ -1,5 +1,11 @@
 ﻿== Changelog ==
 
+= 2.12.1 July 01, 2026 =
+
+* Bugfixes:
+
+  - Fixed: Security issue when accidentally `manage_options` level user role can be listed in the User Role dropdown on the registration/edit profile forms. (Researched by Haitam Lazaar)
+
 = 2.12.0 June 12, 2026 =
 
 * Bugfixes:
