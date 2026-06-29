@@ -171,8 +171,13 @@ class Users {
 			return $args;
 		}
 
-		$url           = '';
-		$profile_photo = get_user_meta( $user->ID, 'profile_photo', true );
+		$url = '';
+		if ( is_multisite() ) {
+			$profile_photo = get_user_option( 'profile_photo', $user->ID );
+		} else {
+			$profile_photo = get_user_meta( $user->ID, 'profile_photo', true );
+		}
+
 		if ( ! empty( $profile_photo ) ) {
 			$ext       = '.' . pathinfo( $profile_photo, PATHINFO_EXTENSION );
 			$all_sizes = UM()->config()->get( 'avatar_thumbnail_sizes' );
@@ -344,7 +349,11 @@ class Users {
 			return false;
 		}
 
-		$meta = get_user_meta( $user_id, $type, true );
+		if ( is_multisite() ) {
+			$meta = get_user_option( $type, $user_id );
+		} else {
+			$meta = get_user_meta( $user_id, $type, true );
+		}
 		/**
 		 * Filters the `has_photo` condition value for the selected user.
 		 *
@@ -1366,7 +1375,11 @@ class Users {
 			$external_cover_photo_url = apply_filters( 'um_user_cover_photo_external_url', false, $user_id, $args );
 
 			if ( false === $external_cover_photo_url ) {
-				$cover_photo = get_user_meta( $user_id, 'cover_photo', true );
+				if ( is_multisite() ) {
+					$cover_photo = get_user_option( 'cover_photo', $user_id );
+				} else {
+					$cover_photo = get_user_meta( $user_id, 'cover_photo', true );
+				}
 
 				if ( ! empty( $cover_photo ) ) {
 					$user_dir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );

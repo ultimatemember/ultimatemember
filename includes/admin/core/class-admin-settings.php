@@ -3183,7 +3183,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										foreach ( $blog_ids as $b_id ) {
 											switch_to_blog( $b_id );
 
-											$md_data = get_user_option( $user_id, 'um_member_directory_data' );
+											$md_data = get_user_option( 'um_member_directory_data', $user_id );
 
 											if ( ! empty( $md_data ) && is_array( $md_data ) ) {
 												$md_data['profile_photo'] = ! empty( $_POST['um_options']['use_gravatars'] );
@@ -3274,7 +3274,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								foreach ( $blog_ids as $b_id ) {
 									switch_to_blog( $b_id );
 
-									$md_data = get_user_option( $user_id, 'um_member_directory_data' );
+									$md_data = get_user_option( 'um_member_directory_data', $user_id );
 
 									if ( ! empty( $md_data ) && is_array( $md_data ) ) {
 										$md_data['hide_in_members'] = ( $_POST['um_options']['account_hide_in_directory_default'] === 'No' ) ? false : true;

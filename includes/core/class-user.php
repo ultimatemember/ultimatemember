@@ -427,7 +427,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		public function get_user_member_directory_data( $user_id ) {
 			// Set default if empty or has a wrong format.
 			if ( is_multisite() ) {
-				$md_data = get_user_option( $user_id, 'um_member_directory_data' );
+				$md_data = get_user_option( 'um_member_directory_data', $user_id );
 			} else {
 				$md_data = get_user_meta( $user_id, 'um_member_directory_data', true );
 			}
@@ -561,7 +561,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 							$md_data = $this->get_user_member_directory_data( $object_id );
 
-							$profile_photo = get_user_option( $object_id, 'profile_photo' );
+							$profile_photo = get_user_option( 'profile_photo', $object_id );
 
 							$md_data['profile_photo'] = ! empty( $profile_photo ) || ! empty( $synced_profile_photo );
 
@@ -600,7 +600,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 							$md_data = $this->get_user_member_directory_data( $object_id );
 
-							$profile_photo = get_user_option( $object_id, 'profile_photo' );
+							$profile_photo = get_user_option( 'profile_photo', $object_id );
 
 							$md_data['profile_photo'] = ! empty( $profile_photo ) || ! empty( $synced_gravatar_hashed_id );
 
