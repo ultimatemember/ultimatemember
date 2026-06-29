@@ -31,6 +31,7 @@ class Profile {
 		add_action( 'um_profile_content_main', array( &$this, 'about' ) );
 		add_action( 'um_profile_content_posts', array( &$this, 'posts' ) );
 		add_action( 'um_profile_content_comments', array( &$this, 'comments' ) );
+		add_filter( 'um_profile_tab_content_allowed_tags', array( $this, 'main_allowed_tags' ), 10, 2 );
 
 		add_action( 'um_after_profile_fields', array( &$this, 'submit_button' ), 1000 );
 
@@ -399,6 +400,54 @@ class Profile {
 			</div>
 			<?php
 		}
+	}
+
+	/**
+	 * Adjusts allowed HTML tags for private_content profile tab.
+	 *
+	 * @param array  $allowed_tags Array of currently allowed HTML tags.
+	 * @param string $profile_tab  The profile tab being checked.
+	 *
+	 * @return array Updated array of allowed HTML tags for private_content tab.
+	 */
+	public function main_allowed_tags( $allowed_tags, $profile_tab ) {
+		if ( 'main' !== $profile_tab || um_is_on_edit_profile() ) {
+			return $allowed_tags;
+		}
+
+		// Text formatting short-tags
+		$allowed_tags['u'] = true;
+		$allowed_tags['i'] = true;
+		$allowed_tags['b'] = true;
+
+		// It's required for displaying WordPress native oembed elements. That was converted via WP_Oembed to iframes and figures.
+		$allowed_tags['figure'] = array();
+		$allowed_tags['iframe'] = array(
+			'allow'          => true,
+			'frameborder'    => true,
+			'loading'        => true,
+			'name'           => true,
+			'referrerpolicy' => true,
+			'sandbox'        => true,
+			'src'            => true,
+			'srcdoc'         => true,
+			'title'          => true,
+		);
+
+		// Allows Audio and Video in the private content.
+		$allowed_tags['audio'] = array(
+			'controls' => true,
+			'src'      => true,
+		);
+		$allowed_tags['video'] = array(
+			'controls' => true,
+			'height'   => true,
+			'src'      => true,
+			'style'    => true,
+			'width'    => true,
+		);
+
+		return $allowed_tags;
 	}
 
 	/**
