@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-29T12:59:17+00:00\n"
+"POT-Creation-Date: 2026-06-29T13:24:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -2671,7 +2671,7 @@ msgstr ""
 #: includes/admin/core/class-admin-navmenu.php:129
 #: includes/admin/core/class-admin-navmenu.php:206
 #: includes/admin/templates/access/restrict_content.php:65
-#: includes/common/class-users.php:1543
+#: includes/common/class-users.php:1556
 #: includes/core/class-builtin.php:782
 #: assets/js/admin/block-restrictions.js:150
 msgid "Everyone"
@@ -6179,7 +6179,7 @@ msgid "Pending Review"
 msgstr ""
 
 #: includes/admin/templates/dashboard/users.php:36
-#: includes/common/class-users.php:379
+#: includes/common/class-users.php:388
 msgid "Approved"
 msgstr ""
 
@@ -8501,7 +8501,7 @@ msgid "Mobile Number"
 msgstr ""
 
 #: includes/common/class-directory.php:418
-#: includes/common/class-users.php:472
+#: includes/common/class-users.php:481
 #: includes/core/class-member-directory.php:2089
 msgid "Undefined"
 msgstr ""
@@ -8641,35 +8641,35 @@ msgstr ""
 msgid "Theme version is out of date"
 msgstr ""
 
-#: includes/common/class-users.php:380
+#: includes/common/class-users.php:389
 msgid "Pending administrator review"
 msgstr ""
 
-#: includes/common/class-users.php:381
+#: includes/common/class-users.php:390
 msgid "Waiting email confirmation"
 msgstr ""
 
-#: includes/common/class-users.php:382
+#: includes/common/class-users.php:391
 msgid "Membership inactive"
 msgstr ""
 
-#: includes/common/class-users.php:383
+#: includes/common/class-users.php:392
 msgid "Membership rejected"
 msgstr ""
 
-#: includes/common/class-users.php:1086
-#: includes/common/class-users.php:1204
+#: includes/common/class-users.php:1095
+#: includes/common/class-users.php:1213
 #: includes/core/class-mail.php:633
 msgid "Your set password"
 msgstr ""
 
-#: includes/common/class-users.php:1096
-#: includes/common/class-users.php:1210
+#: includes/common/class-users.php:1105
+#: includes/common/class-users.php:1219
 msgid "Login to our site"
 msgstr ""
 
-#: includes/common/class-users.php:1099
-#: includes/common/class-users.php:1213
+#: includes/common/class-users.php:1108
+#: includes/common/class-users.php:1222
 msgid "Set your password"
 msgstr ""
 
