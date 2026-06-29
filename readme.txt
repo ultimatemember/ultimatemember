@@ -167,6 +167,12 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.12.1 2026-07-01 =
+
+**Bugfixes**
+
+* Fixed: Security issue when accidentally `manage_options` level user role can be listed in the User Role dropdown on the registration/edit profile forms. (Researched by Haitam Lazaar)
+
 = 2.12.0 2026-06-12 =
 
 **Bugfixes**
@@ -300,6 +306,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.12.1 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.12.0 =
 This version fixes a security related bug. Upgrade immediately.

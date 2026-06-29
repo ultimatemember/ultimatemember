@@ -747,17 +747,16 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$this->core_fields = apply_filters( 'um_core_fields_hook', $this->core_fields );
 		}
 
-
 		/**
 		 * Predefined Fields
 		 */
-		function set_predefined_fields() {
+		public function set_predefined_fields() {
 			global $wp_roles;
 
 			$um_roles = array();
 			if ( ! empty( $wp_roles->roles ) ) {
 				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
-				$um_roles = UM()->roles()->get_roles( false, $exclude_roles );
+				$um_roles      = UM()->roles()->get_roles( false, $exclude_roles );
 			}
 
 			/**
