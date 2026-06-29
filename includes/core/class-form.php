@@ -393,6 +393,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 * Validate form on submit
 		 */
 		public function form_init() {
+			global $wpdb;
+
 			if ( isset( $_SERVER['REQUEST_METHOD'] ) ) {
 				$http_post = ( 'POST' === $_SERVER['REQUEST_METHOD'] );
 			} else {
@@ -442,6 +444,12 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					'confirm_user_password',
 				);
 
+				$ms_field_types    = array(
+					'image',
+					'file',
+				);
+				$ms_field_metakeys = array();
+
 				$field_types_without_metakey = UM()->builtin()->get_fields_without_metakey();
 				foreach ( $custom_fields as $cf_k => $cf_data ) {
 					if ( ! array_key_exists( 'type', $cf_data ) || in_array( $cf_data['type'], $field_types_without_metakey, true ) ) {
@@ -476,8 +484,21 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 							$ignore_keys[] = $cf_k;
 						}
 					}
+
+					// Extend whitelist with the WordPress Multisite field metakeys.
+					if ( is_multisite() ) {
+						if ( array_key_exists( 'type', $cf_data ) || in_array( $cf_data['type'], $ms_field_types, true ) ) {
+							$ms_field_metakeys[] = $wpdb->get_blog_prefix() . $cf_data['metakey'];
+						}
+					}
 				}
-				$cf_metakeys     = array_column( $custom_fields, 'metakey' );
+
+				$cf_metakeys = array_column( $custom_fields, 'metakey' );
+				if ( ! empty( $ms_field_metakeys ) && is_multisite() ) {
+					// Extend whitelist with the WordPress Multisite field metakeys.
+					$cf_metakeys = array_merge( $cf_metakeys, $ms_field_metakeys );
+				}
+
 				$all_cf_metakeys = $cf_metakeys;
 
 				// The '_um_last_login' cannot be updated through UM form.
@@ -496,6 +517,11 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					if ( ! UM()->is_new_ui() ) {
 						$cf_metakeys[] = 'profile_photo';
 						$cf_metakeys[] = 'cover_photo';
+
+						if ( is_multisite() ) {
+							$cf_metakeys[] = $wpdb->get_blog_prefix() . 'profile_photo';
+							$cf_metakeys[] = $wpdb->get_blog_prefix() . 'cover_photo';
+						}
 					}
 
 					if ( ! empty( $this->form_data['use_custom_settings'] ) && ! empty( $this->form_data['show_bio'] ) ) {
