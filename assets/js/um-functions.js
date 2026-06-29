@@ -250,8 +250,19 @@ function um_responsive(){
 			jQuery('.um-account-side li a.current').trigger('click');
 		}
 
-		jQuery(this).css('opacity',1);
+		// set iframe height and width.
+		const $iframes = jQuery(this).find('.um-field-value iframe[height][width]');
+		$iframes.each(function (i, item) {
+			let itemAttrHeight = parseInt(item.getAttribute('height'));
+			let itemAttrWidth  = parseInt(item.getAttribute('width'));
+			let parentWidth    = item.parentElement.clientWidth;
+			let scale          = parentWidth / itemAttrWidth;
 
+			item.height = parseInt(itemAttrHeight * scale);
+			item.width  = parseInt(itemAttrWidth * scale);
+		});
+
+		jQuery(this).css('opacity',1);
 	});
 
 	jQuery('.um-cover, .um-member-cover, .um-cover-e').each(function(){
