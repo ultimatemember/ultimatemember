@@ -425,6 +425,7 @@ class Profile {
 		$allowed_tags['iframe'] = array(
 			'allow'          => true,
 			'frameborder'    => true,
+			'height'         => true,
 			'loading'        => true,
 			'name'           => true,
 			'referrerpolicy' => true,
@@ -432,6 +433,7 @@ class Profile {
 			'src'            => true,
 			'srcdoc'         => true,
 			'title'          => true,
+			'width'          => true,
 		);
 
 		// Allows Audio and Video in the private content.
