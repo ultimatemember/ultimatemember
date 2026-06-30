@@ -16,10 +16,12 @@ function um_profile_field_filter_hook__oembed( $value, $data ) {
 		return '';
 	}
 	$responce = wp_oembed_get( $value );
-	if ( empty( $responce ) ) {
-		$value = '<a href="' . esc_url( $value ) . '" target="_blank">' . esc_html( $value ) . '</a>';
-	} else {
+	if ( ! empty( $responce ) ) {
 		$value = $responce;
+	} elseif ( 0 === strpos( $value, home_url() ) ) {
+		$value = '<iframe src="' . esc_url( $value ) . '" title="' . esc_attr( $data['label'] ) . '" width="800" height="450"></iframe>';
+	} else {
+		$value = '<a href="' . esc_url( $value ) . '" target="_blank">' . esc_html( $value ) . '</a>';
 	}
 
 	return $value;
