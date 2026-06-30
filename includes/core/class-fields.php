@@ -4611,6 +4611,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '<div class="um-field-area">';
 					$output .= '<div class="um-field-value">' . $response . '</div>';
 					$output .= '</div>';
+					$output .= '</div>';
 					break;
 					/* HTML */
 				case 'block':
