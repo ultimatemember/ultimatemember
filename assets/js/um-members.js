@@ -1624,6 +1624,13 @@ jQuery(document.body).ready( function() {
 
 		um_member_directories.push( hash );
 
+		// overlay.
+		directory.find('.um-members-overlay').on('mousewheel', function (event) {
+			if (event.ctrlKey) {
+				return false;
+			}
+		});
+
 		// slideup/slidedown animation fix for grid filters bar
 		if ( directory.find('.um-search').length ) {
 			if ( ! directory.find('.um-search').is(':visible') ) {

@@ -9907,11 +9907,16 @@ msgid "Save"
 msgstr ""
 
 #. translators: %s: edit user link.
+<<<<<<< CU-86d3h4rxc_Embed-local-resources
 #: includes/core/class-fields.php:4810
+=======
+#: includes/core/class-fields.php:4808
+>>>>>>> development/2.9.x
 #, php-format
 msgid "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some information!"
 msgstr ""
 
+<<<<<<< CU-86d3h4rxc_Embed-local-resources
 #: includes/core/class-fields.php:4812
 msgid "This user has not added any information to their profile yet."
 msgstr ""
@@ -9921,6 +9926,17 @@ msgid "Please login as administrator."
 msgstr ""
 
 #: includes/core/class-fields.php:5081
+=======
+#: includes/core/class-fields.php:4810
+msgid "This user has not added any information to their profile yet."
+msgstr ""
+
+#: includes/core/class-fields.php:5075
+msgid "Please login as administrator."
+msgstr ""
+
+#: includes/core/class-fields.php:5079
+>>>>>>> development/2.9.x
 msgid "Invalid action."
 msgstr ""
 
