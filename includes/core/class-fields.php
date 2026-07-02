@@ -4604,12 +4604,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( isset( $data['label'] ) || ! empty( $data['icon'] ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
-					$response = wp_oembed_get( $_field_value );
-					if ( empty( $response ) ) {
-						$response = $_field_value;
+					if ( ! empty( esc_url( $_field_value ) ) ) { // This variable can contain a URL or HTML code.
+						$response = wp_oembed_get( $_field_value );
+						if ( ! empty( $response ) ) {
+							$_field_value = $response;
+						}
 					}
 					$output .= '<div class="um-field-area">';
-					$output .= '<div class="um-field-value">' . $response . '</div>';
+					$output .= '<div class="um-field-value">' . $_field_value . '</div>';
+					$output .= '</div>';
 					$output .= '</div>';
 					$output .= '</div>';
 					break;

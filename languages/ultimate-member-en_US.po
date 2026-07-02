@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-02T10:59:43+00:00\n"
+"POT-Creation-Date: 2026-07-01T11:09:12+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -9893,7 +9893,7 @@ msgid "Upload File"
 msgstr ""
 
 #: includes/core/class-fields.php:3199
-#: includes/core/um-filters-fields.php:345
+#: includes/core/um-filters-fields.php:372
 msgid "This file has been removed."
 msgstr ""
 
@@ -9907,20 +9907,20 @@ msgid "Save"
 msgstr ""
 
 #. translators: %s: edit user link.
-#: includes/core/class-fields.php:4808
+#: includes/core/class-fields.php:4810
 #, php-format
 msgid "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some information!"
 msgstr ""
 
-#: includes/core/class-fields.php:4810
+#: includes/core/class-fields.php:4812
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
-#: includes/core/class-fields.php:5075
+#: includes/core/class-fields.php:5077
 msgid "Please login as administrator."
 msgstr ""
 
-#: includes/core/class-fields.php:5079
+#: includes/core/class-fields.php:5081
 msgid "Invalid action."
 msgstr ""
 
@@ -10196,8 +10196,8 @@ msgid "Random"
 msgstr ""
 
 #: includes/core/class-member-directory.php:614
-#: includes/core/um-filters-fields.php:978
-#: includes/core/um-filters-fields.php:995
+#: includes/core/um-filters-fields.php:1005
+#: includes/core/um-filters-fields.php:1022
 msgid "Age"
 msgstr ""
 
@@ -10928,26 +10928,26 @@ msgstr ""
 msgid "Your account"
 msgstr ""
 
-#: includes/core/um-filters-fields.php:51
+#: includes/core/um-filters-fields.php:78
 msgid "Invalid SoundCloud track ID"
 msgstr ""
 
-#: includes/core/um-filters-fields.php:108
+#: includes/core/um-filters-fields.php:135
 msgid "Invalid Spotify URL"
 msgstr ""
 
 #. translators: %s: date.
-#: includes/core/um-filters-fields.php:226
+#: includes/core/um-filters-fields.php:253
 #, php-format
 msgid "Joined %s"
 msgstr ""
 
-#: includes/core/um-filters-fields.php:379
+#: includes/core/um-filters-fields.php:406
 msgid "Untitled photo"
 msgstr ""
 
 #. translators: %s: link.
-#: includes/core/um-filters-fields.php:498
+#: includes/core/um-filters-fields.php:525
 #, php-format
 msgid "This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: '%s'"
 msgstr ""
