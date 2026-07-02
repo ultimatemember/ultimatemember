@@ -4609,7 +4609,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '<div class="um-field-value">' . $_field_value . '</div>'; // `$_field_value` variable can contain HTML code after filtered via the `um_profile_field_filter_hook__oembed()` function.
 					$output .= '</div>';
 					$output .= '</div>';
-					$output .= '</div>';
 					break;
 					/* HTML */
 				case 'block':
