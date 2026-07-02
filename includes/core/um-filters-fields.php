@@ -15,44 +15,35 @@ function um_profile_field_filter_hook__oembed( $value, $data ) {
 	if ( empty( $value ) ) {
 		return '';
 	}
-	$responce = wp_oembed_get( $value );
-	if ( ! empty( $responce ) ) {
-		// external resource from a supported provider.
-		$value = $responce;
-	} elseif ( str_starts_with( $value, home_url() ) ) {
+	$response = wp_oembed_get( $value );
+	if ( ! empty( $response ) ) {
+		// External resource from a supported oEmbed provider.
+		$value = $response;
+	} elseif ( 0 === strpos( $value, home_url() ) ) {
 		// local resource.
 		$attachment_id = attachment_url_to_postid( $value );
 		if ( $attachment_id ) {
-			// local resource from the Media Library.
+			// Local resource from the Media Library then using WordPress native function to display them.
 			$mime = get_post_mime_type( $attachment_id );
-			if ( str_starts_with( $mime, 'image/' ) ) {
+			if ( 0 === strpos( $mime, 'image/' ) ) {
 				$value = wp_get_attachment_image( $attachment_id, 'full' );
-			} elseif ( str_starts_with( $mime, 'audio/' ) ) {
-				$value = wp_audio_shortcode(
-					array(
-						'src' => $value,
-					)
-				);
-			} elseif ( str_starts_with( $mime, 'video/' ) ) {
-				$value = wp_video_shortcode(
-					array(
-						'src' => $value,
-					)
-				);
+			} elseif ( 0 === strpos( $mime, 'audio/' ) ) {
+				$value = apply_shortcodes( '[audio src="' . esc_url( $value ) . '"]' );
+			} elseif ( 0 === strpos( $mime, 'video/' ) ) {
+				$value = apply_shortcodes( '[video src="' . esc_url( $value ) . '"]' );
 			}
 		} else {
-			// local resource from the third-party plugin.
+			// Local resource from the third-party plugin that is not supported by WordPress Media Library.
 			$value = '<iframe src="' . esc_url( $value ) . '" title="' . esc_attr( $data['label'] ) . '" width="800" height="450"></iframe>';
 		}
 	} else {
-		// other.
+		// Other URL wrapped to the <a> tag.
 		$value = '<a href="' . esc_url( $value ) . '" target="_blank">' . esc_html( $value ) . '</a>';
 	}
 
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__oembed', 'um_profile_field_filter_hook__oembed', 99, 2 );
-
 
 /**
  * Outputs a SoundCloud track
