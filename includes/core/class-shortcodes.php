@@ -699,35 +699,47 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				return '';
 			}
 
-			/**
-			 * Filters variable for enable singleton shortcode loading on the same page.
-			 * Note: Set it to `false` if you don't need to render the same form twice or more on the same page.
-			 *
-			 * @since 2.6.8
-			 * @since 2.6.9 $disable argument set to `true` by default
-			 *
-			 * @hook  um_ultimatemember_shortcode_disable_singleton
-			 *
-			 * @param {bool}  $disable Disabled singleton. By default, it's `true`.
-			 * @param {array} $args    Shortcode arguments.
-			 *
-			 * @return {bool} Disabled singleton or not.
-			 *
-			 * @example <caption>Turn off ability to use ultimatemember shortcode twice.</caption>
-			 * add_filter( 'um_ultimatemember_shortcode_disable_singleton', '__return_false' );
-			 */
-			$disable_singleton_shortcode = apply_filters( 'um_ultimatemember_shortcode_disable_singleton', true, $args );
-			if ( false === $disable_singleton_shortcode ) {
-				if ( isset( $args['form_id'] ) ) {
-					$id = $args['form_id'];
-					if ( isset( $this->forms_exist[ $id ] ) && true === $this->forms_exist[ $id ] ) {
-						return '';
-					}
-					$this->forms_exist[ $id ] = true;
-				}
+			// Prevent infinite recursion when the_content filter re-triggers this shortcode
+			// (e.g. gdpr-register.php running apply_filters on privacy policy page content).
+			static $rendering = array();
+			if ( in_array( $args['form_id'], $rendering, true ) ) {
+				return '';
 			}
+			$rendering[] = $args['form_id'];
 
-			return $this->load( $args );
+			try {
+				/**
+				 * Filters variable for enable singleton shortcode loading on the same page.
+				 * Note: Set it to `false` if you don't need to render the same form twice or more on the same page.
+				 *
+				 * @since 2.6.8
+				 * @since 2.6.9 $disable argument set to `true` by default
+				 *
+				 * @hook  um_ultimatemember_shortcode_disable_singleton
+				 *
+				 * @param {bool}  $disable Disabled singleton. By default, it's `true`.
+				 * @param {array} $args    Shortcode arguments.
+				 *
+				 * @return {bool} Disabled singleton or not.
+				 *
+				 * @example <caption>Turn off ability to use ultimatemember shortcode twice.</caption>
+				 * add_filter( 'um_ultimatemember_shortcode_disable_singleton', '__return_false' );
+				 */
+				$disable_singleton_shortcode = apply_filters( 'um_ultimatemember_shortcode_disable_singleton', true, $args );
+				if ( false === $disable_singleton_shortcode ) {
+					if ( isset( $args['form_id'] ) ) {
+						$id = $args['form_id'];
+						if ( isset( $this->forms_exist[ $id ] ) && true === $this->forms_exist[ $id ] ) {
+							return '';
+						}
+						$this->forms_exist[ $id ] = true;
+					}
+				}
+
+				return $this->load( $args );
+			} finally {
+				array_pop( $rendering );
+			}
 		}
 
 		/**
