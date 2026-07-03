@@ -1498,21 +1498,33 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 								continue;
 							}
 						} elseif ( '1' == $restriction['_um_noaccess_action'] ) {
-							$curr = UM()->permalinks()->get_current_url();
+							if ( is_object( $query ) && is_a( $query, WP_Query::class ) &&
+							     ( $query->is_main_query() || ! empty( $query->query_vars['um_main_query'] ) ) ) {
+								$curr = UM()->permalinks()->get_current_url();
 
-							if ( ! isset( $restriction['_um_access_redirect'] ) || '0' == $restriction['_um_access_redirect'] ) {
+								if ( ! isset( $restriction['_um_access_redirect'] ) || '0' == $restriction['_um_access_redirect'] ) {
 
-								exit( wp_redirect( esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) ) ) );
+									exit( wp_redirect( esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) ) ) );
 
-							} elseif ( '1' == $restriction['_um_access_redirect'] ) {
+								} elseif ( '1' == $restriction['_um_access_redirect'] ) {
 
-								if ( ! empty( $restriction['_um_access_redirect_url'] ) ) {
-									$redirect = $restriction['_um_access_redirect_url'];
-								} else {
-									$redirect = esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
+									if ( ! empty( $restriction['_um_access_redirect_url'] ) ) {
+										$redirect = $restriction['_um_access_redirect_url'];
+									} else {
+										$redirect = esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
+									}
+
+									exit( wp_redirect( $redirect ) );
 								}
+							} else {
+								if ( ! isset( $restriction['_um_access_hide_from_queries'] ) || empty( $restriction['_um_access_hide_from_queries'] ) || UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
+									$filtered_post = $this->maybe_replace_title( $post );
+									/** This filter is documented in includes/core/class-access.php */
+									$filtered_post = apply_filters( 'um_access_restricted_post_instance', $filtered_post, $post, $query );
 
-								exit( wp_redirect( $redirect ) );
+									$filtered_posts[] = $filtered_post;
+									continue;
+								}
 							}
 						}
 					} else {
