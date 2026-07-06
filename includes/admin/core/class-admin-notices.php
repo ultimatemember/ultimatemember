@@ -62,6 +62,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$this->common_secure();
 
+			$this->api_key_notices();
+
 			/**
 			 * UM hook
 			 *
@@ -955,6 +957,98 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$this->check_new_user_role();
 			$this->check_registration_forms();
+		}
+
+		/**
+		 * Notices for the `api_key` field type whose secrets are stored as wp-config.php constants:
+		 *  - the bundled WPConfigTransformer library is missing (broken build),
+		 *  - a save couldn't write wp-config.php (manual instructions),
+		 *  - legacy keys still sit in the DB and should be migrated by re-saving.
+		 *
+		 * @since 2.12.1
+		 */
+		public function api_key_notices() {
+			$api_key_fields = UM()->admin_settings()->get_api_key_field_ids();
+			if ( empty( $api_key_fields ) ) {
+				return;
+			}
+
+			$allowed_html = array(
+				'p'      => array(),
+				'strong' => array(),
+				'code'   => array(),
+				'br'     => array(),
+				'a'      => array(
+					'href'   => array(),
+					'target' => array(),
+				),
+			);
+
+			// 1) Library missing — the feature can't function; keys would fail to save.
+			$wp_config = new WP_Config();
+			if ( ! $wp_config->is_available() ) {
+				$this->add_notice(
+					'um_api_key_lib_missing',
+					array(
+						'class'   => 'error',
+						// translators: %1$s - Plugin name, %2$s - Plugin version.
+						'message' => '<p>' . wp_kses( sprintf( __( '<strong>%1$s %2$s</strong> The file needed to securely store API keys in wp-config.php is missing. API keys cannot be saved until the plugin is reinstalled.', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION ), $allowed_html ) . '</p>',
+					),
+					1
+				);
+				return;
+			}
+
+			// 2) Last save couldn't write wp-config.php — show manual instructions.
+			$failures = get_transient( 'um_api_key_write_failures' );
+			if ( ! empty( $failures ) && is_array( $failures ) ) {
+				$defines = '';
+				foreach ( $failures as $constant ) {
+					$defines .= '<code>' . esc_html( sprintf( "define( '%s', 'your-key-here' );", $constant ) ) . '</code><br />';
+				}
+
+				$this->add_notice(
+					'um_api_key_write_failed',
+					array(
+						'class'   => 'error',
+						'message' => '<p>' . wp_kses( __( '<strong>Ultimate Member:</strong> the API key(s) could not be written to <code>wp-config.php</code> (the file is not writable). Your keys were <strong>not</strong> saved. Please add the following line(s) to your <code>wp-config.php</code> above the <code>/* That\'s all, stop editing! */</code> comment, replacing the placeholder with your key:', 'ultimate-member' ), $allowed_html ) . '</p>' .
+							'<p>' . wp_kses( $defines, $allowed_html ) . '</p>',
+					),
+					1
+				);
+
+				delete_transient( 'um_api_key_write_failures' );
+			}
+
+			// 3) Migration — keys still stored in the DB (no constant defined yet).
+			$legacy_link = '';
+			foreach ( $api_key_fields as $id => $location ) {
+				$constant = UM()->options()->get_constant_name( $id );
+				if ( ! defined( $constant ) && '' !== (string) UM()->options()->get( $id ) ) {
+					$args = array( 'page' => 'um_options' );
+					if ( ! empty( $location['tab'] ) ) {
+						$args['tab'] = $location['tab'];
+					}
+					if ( ! empty( $location['section'] ) ) {
+						$args['section'] = $location['section'];
+					}
+					$legacy_link = add_query_arg( $args, admin_url( 'admin.php' ) );
+					break;
+				}
+			}
+
+			if ( ! empty( $legacy_link ) ) {
+				$this->add_notice(
+					'um_api_key_migrate',
+					array(
+						'class'       => 'info',
+						// translators: %s - Settings page URL.
+						'message'     => '<p>' . wp_kses( sprintf( __( '<strong>Ultimate Member:</strong> some of your API keys are still stored in the database. For improved security they should be moved into <code>wp-config.php</code>. Please open the <a href="%s">settings</a> and re-save them to complete the move.', 'ultimate-member' ), esc_url( $legacy_link ) ), $allowed_html ) . '</p>',
+						'dismissible' => true,
+					),
+					1
+				);
+			}
 		}
 
 		private function check_new_user_role() {

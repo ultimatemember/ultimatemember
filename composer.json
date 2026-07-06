@@ -24,7 +24,8 @@
     "ext-iconv": "*",
     "ext-tidy": "*",
     "composer/installers": "^2.3",
-    "woocommerce/action-scheduler": "3.9.*"
+    "woocommerce/action-scheduler": "3.9.*",
+    "wp-cli/wp-config-transformer": "^1.4"
   },
   "require-dev": {
     "wp-cli/wp-cli": "*",
@@ -38,6 +39,15 @@
   "scripts": {
     "wordpress-excludes": [
       "@php -r \"$dest = 'includes/lib/php-scoper-wordpress-excludes/'; if (!is_dir($dest)) { mkdir($dest, 0755, true); }; copy('vendor/sniccowp/php-scoper-wordpress-excludes/generated/exclude-wordpress-functions.json', $dest . 'exclude-wordpress-functions.json');\""
+    ],
+    "wp-config-transformer": [
+      "@php -r \"@mkdir('includes/lib/wp-config-transformer', 0755, true); if (is_file('vendor/wp-cli/wp-config-transformer/src/WPConfigTransformer.php')) { copy('vendor/wp-cli/wp-config-transformer/src/WPConfigTransformer.php', 'includes/lib/wp-config-transformer/WPConfigTransformer.php'); }\""
+    ],
+    "post-install-cmd": [
+      "@wp-config-transformer"
+    ],
+    "post-update-cmd": [
+      "@wp-config-transformer"
     ]
   },
   "extra": {

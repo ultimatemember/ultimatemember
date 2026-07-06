@@ -19,6 +19,15 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		private $options = array();
 
 		/**
+		 * Cached list of option ids whose value is stored as a wp-config.php constant (the `api_key`
+		 * settings fields). Null until first resolved. Populated from the `um_api_key_option_ids`
+		 * option (kept in sync by {@see \um\admin\core\Admin_Settings::init_variables()}).
+		 *
+		 * @var array|null
+		 */
+		private $constant_backed_ids = null;
+
+		/**
 		 * Options constructor.
 		 */
 		public function __construct() {
@@ -33,6 +42,105 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		}
 
 		/**
+		 * Get the list of option ids whose value is stored as a wp-config.php constant.
+		 *
+		 * These are the `api_key` settings fields. The list is derived from the settings structure
+		 * (admin) and persisted to the `um_api_key_option_ids` option so it is also available on the
+		 * frontend, where the settings structure is not built. Extensions can add ids via the filter.
+		 *
+		 * @since 2.12.1
+		 *
+		 * @return array List of option ids.
+		 */
+		public function get_constant_backed_ids() {
+			if ( null === $this->constant_backed_ids ) {
+				$stored = get_option( 'um_api_key_option_ids', array() );
+				$this->constant_backed_ids = is_array( $stored ) ? $stored : array();
+			}
+
+			/**
+			 * Filters the list of option ids whose value is stored as a wp-config.php constant.
+			 *
+			 * @since 2.12.1
+			 * @hook um_api_key_option_ids
+			 *
+			 * @param {array} $ids Option ids.
+			 *
+			 * @return {array} Option ids.
+			 */
+			return apply_filters( 'um_api_key_option_ids', $this->constant_backed_ids );
+		}
+
+		/**
+		 * Persist the list of constant-backed option ids and refresh the in-memory cache.
+		 *
+		 * @since 2.12.1
+		 *
+		 * @param array $ids Option ids of the `api_key` fields.
+		 */
+		public function set_constant_backed_ids( $ids ) {
+			$ids = is_array( $ids ) ? array_values( array_unique( $ids ) ) : array();
+
+			if ( get_option( 'um_api_key_option_ids', array() ) !== $ids ) {
+				update_option( 'um_api_key_option_ids', $ids );
+			}
+
+			$this->constant_backed_ids = $ids;
+		}
+
+		/**
+		 * Whether an option's value is stored as a wp-config.php constant (i.e. it is an `api_key` field).
+		 *
+		 * @since 2.12.1
+		 *
+		 * @param string $option_id
+		 *
+		 * @return bool
+		 */
+		public function is_constant_backed( $option_id ) {
+			if ( ! is_string( $option_id ) || '' === $option_id ) {
+				return false;
+			}
+
+			return in_array( $option_id, $this->get_constant_backed_ids(), true );
+		}
+
+		/**
+		 * Get the wp-config.php constant name that backs a given option.
+		 *
+		 * Only `api_key` settings fields are constant-backed (see {@see is_constant_backed()}); for any
+		 * other option this returns an empty string so the constant lookup in {@see get()} is skipped.
+		 * The mapping is convention based: the uppercased option id prefixed with `UM_OPTION_`
+		 * (e.g. `stripe_test_secret_key` → `UM_OPTION_STRIPE_TEST_SECRET_KEY`).
+		 *
+		 * @since 2.12.1
+		 *
+		 * @param string $option_id
+		 *
+		 * @return string Constant name, or empty string when the option is not constant-backed.
+		 */
+		public function get_constant_name( $option_id ) {
+			if ( ! $this->is_constant_backed( $option_id ) ) {
+				return '';
+			}
+
+			$constant = 'UM_OPTION_' . strtoupper( $option_id );
+
+			/**
+			 * Filters the wp-config.php constant name that backs a UM option.
+			 *
+			 * @since 2.12.1
+			 * @hook um_option_constant_name
+			 *
+			 * @param {string} $constant  Constant name (or empty to disable constant backing).
+			 * @param {string} $option_id Option id.
+			 *
+			 * @return {string} Constant name.
+			 */
+			return apply_filters( 'um_option_constant_name', $constant, $option_id );
+		}
+
+		/**
 		 * Get UM option value.
 		 *
 		 * @param string $option_id
@@ -40,6 +148,12 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 * @return mixed
 		 */
 		public function get( $option_id ) {
+			// A defined wp-config.php constant (e.g. for `api_key` secret fields) always wins over the DB.
+			$constant = $this->get_constant_name( $option_id );
+			if ( $constant && defined( $constant ) ) {
+				return apply_filters( "um_get_option_filter__{$option_id}", constant( $constant ) );
+			}
+
 			if ( isset( $this->options[ $option_id ] ) ) {
 				/**
 				 * Filters the plugin option.
