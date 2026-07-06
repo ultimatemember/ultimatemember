@@ -442,6 +442,80 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 
 		/**
+		 * Render API key field.
+		 *
+		 * A masked/secret field with a show/hide toggle. The real value is stored in a hidden input
+		 * (submitted as um_options[<id>], exactly like a `text` field); a single visible, read-only
+		 * display input shows either the partially-masked value (first/last characters kept, middle
+		 * bulleted) or, once the eye button is toggled, the full editable value. Because only one
+		 * input is ever visible, the field can never look duplicated even if the stylesheet is stale.
+		 *
+		 * Extra field config keys: `reveal_prefix` (int, default 6), `reveal_suffix` (int, default 4).
+		 *
+		 * @param array $field_data
+		 *
+		 * @return bool|string
+		 */
+		function render_api_key( $field_data ) {
+
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+			$id_attr      = ' id="' . esc_attr( $id ) . '" ';
+			$mask_id_attr = ' id="' . esc_attr( $id ) . '_masked" ';
+
+			$size_class = ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
+
+			$data = array(
+				'field_id' => $field_data['id'],
+			);
+
+			if ( ! empty( $field_data['attr'] ) && is_array( $field_data['attr'] ) ) {
+				$data = array_merge( $data, $field_data['attr'] );
+			}
+
+			$data_attr = '';
+			foreach ( $data as $key => $value ) {
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
+			}
+
+			$placeholder_attr = ! empty( $field_data['placeholder'] ) ? ' placeholder="' . esc_attr( $field_data['placeholder'] ) . '"' : '';
+
+			$name = $field_data['id'];
+			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+			$name_attr = ' name="' . $name . '" ';
+
+			$value = $this->get_field_value( $field_data );
+			$value_attr = ' value="' . esc_attr( $value ) . '" ';
+
+			$readonly = '';
+			$title    = '';
+			if ( ! empty( $value ) ) {
+				$title    = ' title="' . esc_attr__( 'You can change the value only in the visible mode.', 'ultimate-member' ) . '" ';
+				$readonly = ' readonly ';
+			}
+
+			$prefix = isset( $field_data['reveal_prefix'] ) ? absint( $field_data['reveal_prefix'] ) : 6;
+			$suffix = isset( $field_data['reveal_suffix'] ) ? absint( $field_data['reveal_suffix'] ) : 4;
+
+			$show_label = esc_attr__( 'Show key', 'ultimate-member' );
+
+			// Inline layout so the input + toggle stay on one line even if the stylesheet is cached/stale.
+			$html  = '<span class="um-api-key-field" style="display:flex;align-items:center;gap:6px;max-width:100%" data-reveal-prefix="' . esc_attr( $prefix ) . '" data-reveal-suffix="' . esc_attr( $suffix ) . '">';
+			// Real value carrier — the only element submitted as um_options[<id>]. Never shown.
+			$html .= "<input type=\"hidden\" $id_attr $name_attr $data_attr $value_attr class=\"um-forms-field um-api-key-value\" />";
+			// Single visible display input (no name → not submitted). JS fills/masks it and toggles readonly.
+			$html .= "<input type=\"text\" $mask_id_attr $data_attr class=\"um-api-key-display " . esc_attr( $size_class ) . "\" autocomplete=\"off\" spellcheck=\"false\"" . $placeholder_attr . $readonly . $title . ' />';
+			// Show/hide toggle.
+			$html .= '<button type="button" class="button um-api-key-toggle" aria-label="' . $show_label . '" title="' . $show_label . '"><span class="dashicons dashicons-visibility"></span></button>';
+			$html .= '</span>';
+
+			return $html;
+		}
+
+		/**
 		 * Render text field
 		 *
 		 * @param $field_data

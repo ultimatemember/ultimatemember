@@ -205,7 +205,7 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 	$regex = '~\{(usermeta:[^}]*)\}~';
 	preg_match_all( $regex, $content, $matches );
 
-	$keys_blacklist = array( 'password_reset_link' );
+	$keys_blacklist = array( 'password_reset_link', 'account_secret_hash', 'account_secret_hash_expiry', 'account_activation_link' );
 	$keys_blacklist = array_merge( $keys_blacklist, UM()->builtin()->blacklist_fields );
 	/**
 	 * Filters Ultimate Member usermeta keys to avoid displaying sensitive information via {usermeta:{meta_key}} placeholder.

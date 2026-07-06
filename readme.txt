@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 7.0
-Stable tag: 2.12.0
+Stable tag: 2.12.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -167,6 +167,23 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.12.1 2026-07-06 =
+
+**Enhancements**
+
+* Added: Ability to handle local website URLs resources (image, audio, video from Media Library, 3rd-party local URLs embed to iframe) in the oEmbed-type field value.
+
+**Bugfixes**
+
+* Fixed: Security issue, CVE ID: CVE-2026-4248. Extern blacklist filter for convert_tag replace placeholders function. (Additional keys were researched by Hrro. This info added for the Wordfence team if they need this information).
+* Fixed: Security issue when accidentally `manage_options` level user role can be listed in the User Role dropdown on the registration/edit profile forms. (Researched by Haitam Lazaar).
+* Fixed: Set <iframe> size proportions during responsive handlers.
+* Fixed: mousewheel action during member directory loading and overlay is displayed.
+* Fixed: WP_Styles notice due to not loaded `um_modal` styles.
+* Fixed: oEmbed-type field styles.
+
+**Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
+
 = 2.12.0 2026-06-12 =
 
 **Bugfixes**
@@ -184,122 +201,12 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Temporary deprecated: UM REST API. Legacy feature that has to be refactored. Will be refactored and re-released soon.
 
-= 2.11.4 2026-04-30 =
-
-**Enhancements**
-
-* Added: Checking format of the 3rd-party registered custom fields. Avoid PHP errors related to the wrong format or unexpected attributes.
-
-**Bugfixes**
-
-* Fixed: Added uploader fields `accept` argument for set allowed mime-types in the upload dialog window. Updated 3.1.2 version of this library [hayageek/jquery-upload-file](https://github.com/hayageek/jquery-upload-file/). Don't use 4.0.11 version for now.
-* Fixed: JS initialization of the empty uploader fields.
-* Fixed: User Profile URLs in the User Profile form on the not-predefined pages placed via shortcode.
-
-**Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
-
-= 2.11.3 2026-03-26 =
-
-**Enhancements**
-
-* Added: UM > Settings > Advanced > APIs section for set available APIs settings.
-* Added: GoogleMaps API setting when it's available.
-* Added: Function `UM()->mail()->enabled_email()` for checking if the email notification is enabled by the user.
-* Added: `color` type of sanitize settings saved in wp-admin.
-* Added: Checking array type of submission data when `url` type of sanitize is used in wp-admin.
-* Added: Enhance UM form sanitization filter with $form_data param. Added the $form_data parameter to the `um_sanitize_form_submission` filter.
-* Added: Option for special character requirement for passwords. It's situated in "General > Users > Password requires special character" (based on @faisalahammad suggestions)
-* Added: Filter hook `um_before_account_delete_text` for changing before delete account text by 3rd-party plugins. End-customers can use it for translations.
-* Added: Filter hook `um_custom_{$message_key}` (`um_custom_pending_message`, `um_custom_checkmail_message`) for changing after-registration message based on the user status by 3rd-party plugins. End-customers can use it for translations.
-* Added: Filter hook `um_convert_tags_blacklist_fields` For 3rd-party integrations to control the usermeta keys in `um_convert_tags()` function.
-* Added: `.um-display-none` CSS utility + `umShow()/umHide()/umToggle()` jQuery helpers.
-* Added: `um-notice` JS library.
-
-**Bugfixes**
-
-* Fixed: Security issue, CVE ID: CVE-2026-4248. Added blacklist filter for convert_tag replace placeholders function.
-* Fixed: HTML sanitization logic for textarea-type custom fields with enabled HTML using setting.
-* Fixed: WP editor formatting to prevent incorrect HTML entity conversion when using html-mode in the textarea-type custom fields. Applied and removed this filter dynamically to avoid interfering with other processes.
-* Fixed: Dynamic string translation pattern and improve escaping. Replaced incorrect __('%s') pattern. (@faisalahammad)
-* Fixed: `wp_die()` function triggering on the frontend actions. Added UM notice above the User Profile page. (based on @faisalahammad suggestions)
-* Fixed: Password reset key handling for multiple users. Previously, the static reset key caused issues when handling password resets for multiple users simultaneously.
-* Fixed: `um_trim_string()` function for using with UTF-8 symbols.
-* Fixed: PHP Notice: Function WP_Scripts::add was called incorrectly.
-
-**Templates Requiring Update**
-
-* members.php
-* message.php
-* restricted-blog.php
-* restricted-taxonomy.php
-
-**Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
-
-= 2.11.2 2026-02-10 =
-
-**Enhancements**
-
-* Added: Server-side validation when the Search Form is submitted.
-* Added: Action hook `um_approve_user_on_email_confirmation` to natively approve the user after validating the email activation link.
-* Added: JS filter wp.hook `um_member_directory_popstate_ignore` to stop window.pushSate in the member directory for 3rd-party integrations.
-
-**Bugfixes**
-
-* Fixed: Security issue, CVE ID: CVE-2025-15064. Deprecated the ability to use HTML inside the user description. It's still allowed to use only predefined 'user_description' tags in `wp_kses()`.
-* Fixed: Security issue, CVE ID: CVE-2026-1404. Modified template item formatting to avoid using HTML characters in the filter values.
-* Fixed: Profile photo dropdown menu position for screens smaller than 340px.
-* Fixed: Display of the saved value of the "Privacy Options" > "Allowed roles" setting for the member directory.
-* Fixed: Information in Site-Health about the registration form's `Template` and `Role` settings.
-* Fixed: Information in Site-Health about the login and profile form's `Template` settings.
-
-**Templates Requiring Update**
-
-* members.php
-* searchform.php
-
-**Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
-
-= 2.11.1 2025-12-16 =
-
-**Enhancements**
-
-* Added: 'Privacy Options' for Member Directory. 'Who can see this member directory' and 'Allowed Roles'.
-* Added: 'Rate Limit' setting for nopriv AJAX actions.
-
-**Bugfixes**
-
-* Fixed: Security issue CVE ID: CVE-2025-13220. Used `shortcode_atts()` function to avoid using wrong attributes.
-* Fixed: Security issue CVE ID: CVE-2025-13217. Implementing proper input sanitization and escaping for iframe URLs in YouTube, Vimeo, and Google Maps embeds.
-* Fixed: Security issue CVE ID: CVE-2025-14081. Filtering fields based on user permissions during Account form submission.
-* Fixed: Security issue CVE ID: CVE-2025-12492. Added directory privacy settings and added rate limiting.
-
-**Templates Requiring Update**
-
-* members.php
-* members-grid.php
-* members-list.php
-
-= 2.11.0 2025-12-02 =
-
-**Enhancements**
-
-* Added: Extra condition for checking the license activation requests.
-* Added: 2nd `$args` attribute to the action hook 'um_cover_area_content'.
-* Added: `$args` and `$user_id` attributes to the action hook 'um_after_profile_header_name'.
-* Added: Class `um-profile-subnav-{$subnav_id}-link` to the sub navigation links in the User Profile page.
-* Tweak: Updated `Extensions_Updater` class to use Action Scheduler in the upgrade process of the UM extensions.
-
-**Bugfixes**
-
-* Fixed: User profile links in the comments section on the frontend when the `$comment->user_id` is empty.
-* Fixed: The `emotize` function regexp for better emoji converting.
-* Fixed: The conflict between the image uploader and lazy-loading attribute added by 3rd-party plugins.
-* Fixed: PHP warnings for roles without meta data.
-* Fixed: Typo in labels.
-
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.12.1 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.12.0 =
 This version fixes a security related bug. Upgrade immediately.
