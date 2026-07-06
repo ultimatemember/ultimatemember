@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-06T09:45:22+00:00\n"
+"POT-Creation-Date: 2026-07-06T14:13:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -1944,22 +1944,22 @@ msgid "Default sort users by"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2658
-#: includes/admin/core/class-admin-forms.php:1859
-#: includes/admin/core/class-admin-forms.php:1888
+#: includes/admin/core/class-admin-forms.php:1866
+#: includes/admin/core/class-admin-forms.php:1895
 #: includes/admin/templates/directory/sorting.php:22
 #: assets/js/admin/forms.js:357
 msgid "Meta key"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2662
-#: includes/admin/core/class-admin-forms.php:1860
+#: includes/admin/core/class-admin-forms.php:1867
 #: includes/admin/templates/directory/sorting.php:30
 #: assets/js/admin/forms.js:358
 msgid "Data type"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2666
-#: includes/admin/core/class-admin-forms.php:1863
+#: includes/admin/core/class-admin-forms.php:1870
 #: includes/admin/templates/directory/sorting.php:39
 #: assets/js/admin/forms.js:361
 msgid "Order"
@@ -2383,12 +2383,16 @@ msgid "Required"
 msgstr ""
 
 #: includes/admin/core/class-admin-forms.php:496
+msgid "You can change the value only in the visible mode."
+msgstr ""
+
+#: includes/admin/core/class-admin-forms.php:503
 #: assets/js/admin/settings.js:115
 msgid "Show key"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:630
-#: includes/admin/core/class-admin-forms.php:639
+#: includes/admin/core/class-admin-forms.php:637
+#: includes/admin/core/class-admin-forms.php:646
 #: includes/admin/core/class-admin-metabox.php:1601
 #: includes/admin/core/class-admin-metabox.php:1602
 #: includes/admin/core/class-admin-metabox.php:1611
@@ -2396,32 +2400,32 @@ msgstr ""
 msgid "Select Icon"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:642
+#: includes/admin/core/class-admin-forms.php:649
 #: includes/admin/core/class-admin-metabox.php:1615
 msgid "The selected icon is using an outdated version. Please select the icon above to use latest version."
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:721
+#: includes/admin/core/class-admin-forms.php:728
 msgid "Select Users"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1101
+#: includes/admin/core/class-admin-forms.php:1108
 #: includes/admin/core/class-admin-upgrade.php:274
 msgid "Run"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1237
+#: includes/admin/core/class-admin-forms.php:1244
 msgid "Create Default"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1315
-#: includes/admin/core/class-admin-forms.php:1334
-#: includes/admin/core/class-admin-forms.php:1472
-#: includes/admin/core/class-admin-forms.php:1481
-#: includes/admin/core/class-admin-forms.php:1728
-#: includes/admin/core/class-admin-forms.php:1742
-#: includes/admin/core/class-admin-forms.php:1858
-#: includes/admin/core/class-admin-forms.php:1887
+#: includes/admin/core/class-admin-forms.php:1322
+#: includes/admin/core/class-admin-forms.php:1341
+#: includes/admin/core/class-admin-forms.php:1479
+#: includes/admin/core/class-admin-forms.php:1488
+#: includes/admin/core/class-admin-forms.php:1735
+#: includes/admin/core/class-admin-forms.php:1749
+#: includes/admin/core/class-admin-forms.php:1865
+#: includes/admin/core/class-admin-forms.php:1894
 #: assets/js/admin/forms.js:355
 #: assets/js/admin/forms.js:429
 #: assets/js/admin/forms.js:718
@@ -2429,33 +2433,33 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1528
+#: includes/admin/core/class-admin-forms.php:1535
 msgid "Select media"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1558
+#: includes/admin/core/class-admin-forms.php:1565
 #: assets/js/admin/forms.js:799
 msgid "Select"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1559
+#: includes/admin/core/class-admin-forms.php:1566
 msgid "Clear"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1864
+#: includes/admin/core/class-admin-forms.php:1871
 #: includes/admin/templates/directory/sorting.php:43
 #: assets/js/admin/forms.js:362
 msgid "ASC"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1865
+#: includes/admin/core/class-admin-forms.php:1872
 #: includes/admin/templates/directory/sorting.php:44
 #: assets/js/admin/forms.js:363
 msgid "DESC"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1867
-#: includes/admin/core/class-admin-forms.php:1889
+#: includes/admin/core/class-admin-forms.php:1874
+#: includes/admin/core/class-admin-forms.php:1896
 #: includes/admin/core/class-admin-metabox.php:2377
 #: assets/js/admin/forms.js:365
 msgid "Label"
