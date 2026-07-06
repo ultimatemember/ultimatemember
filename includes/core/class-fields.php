@@ -4070,9 +4070,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if ( ! empty( $options ) ) {
 
-				$roles = array_map( function( $item ) {
-					return html_entity_decode( $item, ENT_QUOTES );
-				}, $roles );
+				$roles = array_map(
+					function ( $item ) {
+						return html_entity_decode( $item, ENT_QUOTES );
+					},
+					$roles
+				);
 
 				//fix when customers change options for role (radio/dropdown) fields
 				$intersected_options = array();
@@ -4590,12 +4593,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( isset( $data['label'] ) || ! empty( $data['icon'] ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
-					$response = wp_oembed_get( $_field_value );
-					if ( empty( $response ) ) {
-						$response = $_field_value;
-					}
+
 					$output .= '<div class="um-field-area">';
-					$output .= '<div class="um-field-value">' . $response . '</div>';
+					$output .= '<div class="um-field-value">' . $_field_value . '</div>'; // `$_field_value` variable can contain HTML code after filtered via the `um_profile_field_filter_hook__oembed()` function.
+					$output .= '</div>';
 					$output .= '</div>';
 					$output .= '</div>';
 					break;

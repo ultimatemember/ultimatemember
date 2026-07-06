@@ -233,3 +233,32 @@ th.column-email.column-primary
   .#{$prefix}media-upload-url
     margin-bottom: 5px
 
+// API key field ( type = 'api_key' ): single masked display input + show/hide toggle.
+.#{$prefix}api-key-field
+  display: flex
+  align-items: center
+  gap: 6px
+  max-width: 100%
+  .#{$prefix}api-key-display
+    font-family: Consolas, Monaco, monospace
+    letter-spacing: 1px
+  &:not(.is-revealed)
+    .#{$prefix}api-key-display
+      background-color: #f0f0f1
+      color: #50575e
+      cursor: default
+
+.wp-core-ui
+  .button.#{$prefix}api-key-toggle
+    flex: 0 0 auto
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    min-height: 30px
+    padding: 0 8px
+    .dashicons
+      width: 18px
+      height: 18px
+      font-size: 18px
+      line-height: 1
+

@@ -446,35 +446,47 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			// User has roles so look for a UM Role one
 			$um_roles_keys = get_option( 'um_roles', array() );
 			if ( ! empty( $um_roles_keys ) && is_array( $um_roles_keys ) ) {
-				$um_roles_keys = array_map( function( $item ) {
-					return 'um_' . $item;
-				}, $um_roles_keys );
+				$um_roles_keys = array_map(
+					static function ( $item ) {
+						return 'um_' . $item;
+					},
+					$um_roles_keys
+				);
 
 				$editable_roles = array_merge( $editable_roles, $um_roles_keys );
 			}
 
+			$banned_admin_capabilities = UM()->common()->secure()->get_banned_capabilities_list();
+			foreach ( $editable_roles as $k => $editable_role_slug ) {
+				$editable_role = get_role( $editable_role_slug );
+				if ( null !== $editable_role ) {
+					foreach ( $banned_admin_capabilities as $cap_key ) {
+						if ( $editable_role->has_cap( $cap_key ) ) {
+							unset( $editable_roles[ $k ] );
+							break;
+						}
+					}
+				}
+			}
+
 			/**
-			 * UM hook
+			 * Filters Ultimate Member editable roles list.
 			 *
-			 * @type filter
-			 * @title um_extend_editable_roles
-			 * @description Extend Editable User Roles
-			 * @input_vars
-			 * [{"var":"$editable_roles","type":"array","desc":"Editable Roles Keys"}]
-			 * @change_log
-			 * ["Since: 2.6.0"]
-			 * @usage add_filter( 'um_extend_editable_roles', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_extend_editable_roles', 'my_um_extend_editable_roles', 10, 1 );
-			 * function my_um_extend_editable_roles( $editable_roles ) {
-			 *     // your code here
+			 * @since 2.0.0
+			 * @hook um_extend_editable_roles
+			 *
+			 * @param {array} $editable_roles Ultimate Member editable roles list.
+			 *
+			 * @return {array} Ultimate Member editable roles list.
+			 *
+			 * @example <caption>Change Ultimate Member editable roles.</caption>
+			 * function custom_um_extend_editable_roles( $editable_roles ) {
+			 *     $editable_roles[] = 'editor';
 			 *     return $editable_roles;
 			 * }
-			 * ?>
+			 * add_filter( 'um_extend_editable_roles', 'custom_um_extend_editable_roles' );
 			 */
-			$editable_roles = apply_filters( 'um_extend_editable_roles', $editable_roles );
-			return $editable_roles;
+			return apply_filters( 'um_extend_editable_roles', array_values( $editable_roles ) );
 		}
 
 		/**
