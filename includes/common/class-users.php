@@ -1507,7 +1507,7 @@ class Users {
 
 		// Check if the current visit is from the guest.
 		if ( ! is_user_logged_in() && ! $this->is_user_profile_private( $user_id ) && $this->has_status( $user_id, 'approved' ) ) {
-			return true;
+			return true; // TODO Make the guests visibility and avoid using `is_user_profile_private` and `has_status` here.
 		}
 
 		$can_view_user = true;
