@@ -463,7 +463,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
-			$id_attr = ' id="' . esc_attr( $id ) . '" ';
+			$id_attr      = ' id="' . esc_attr( $id ) . '" ';
+			$mask_id_attr = ' id="' . esc_attr( $id ) . '_masked" ';
 
 			$size_class = ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
 
@@ -497,16 +498,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			// Inline layout so the input + toggle stay on one line even if the stylesheet is cached/stale.
 			$html  = '<span class="um-api-key-field" style="display:flex;align-items:center;gap:6px;max-width:100%" data-reveal-prefix="' . esc_attr( $prefix ) . '" data-reveal-suffix="' . esc_attr( $suffix ) . '">';
 			// Real value carrier — the only element submitted as um_options[<id>]. Never shown.
-			$html .= "<input type=\"hidden\" $name_attr $data_attr $value_attr class=\"um-forms-field um-api-key-value\" />";
+			$html .= "<input type=\"hidden\" $id_attr $name_attr $data_attr $value_attr class=\"um-forms-field um-api-key-value\" />";
 			// Single visible display input (no name → not submitted). JS fills/masks it and toggles readonly.
-			$html .= "<input type=\"text\" $id_attr class=\"um-api-key-display " . esc_attr( $size_class ) . "\" readonly=\"readonly\" autocomplete=\"off\" spellcheck=\"false\"" . $placeholder_attr . ' />';
+			$html .= "<input type=\"text\" $mask_id_attr $data_attr class=\"um-api-key-display " . esc_attr( $size_class ) . "\" autocomplete=\"off\" spellcheck=\"false\"" . $placeholder_attr . ' />';
 			// Show/hide toggle.
 			$html .= '<button type="button" class="button um-api-key-toggle" aria-label="' . $show_label . '" title="' . $show_label . '"><span class="dashicons dashicons-visibility"></span></button>';
 			$html .= '</span>';
 
 			return $html;
 		}
-
 
 		/**
 		 * Render text field
