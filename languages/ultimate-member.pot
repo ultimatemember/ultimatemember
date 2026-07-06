@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-06T08:43:39+00:00\n"
+"POT-Creation-Date: 2026-07-06T21:51:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -1975,8 +1975,8 @@ msgid "Default sort users by"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2695
-#: includes/admin/core/class-admin-forms.php:1791
-#: includes/admin/core/class-admin-forms.php:1820
+#: includes/admin/core/class-admin-forms.php:1865
+#: includes/admin/core/class-admin-forms.php:1894
 #: includes/admin/templates/directory/sorting.php:22
 #: assets/js/admin/forms.js:357
 #: assets/js/v3/admin/forms.js:375
@@ -1984,7 +1984,7 @@ msgid "Meta key"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2699
-#: includes/admin/core/class-admin-forms.php:1792
+#: includes/admin/core/class-admin-forms.php:1866
 #: includes/admin/templates/directory/sorting.php:30
 #: assets/js/admin/forms.js:358
 #: assets/js/v3/admin/forms.js:376
@@ -1992,7 +1992,7 @@ msgid "Data type"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2703
-#: includes/admin/core/class-admin-forms.php:1795
+#: includes/admin/core/class-admin-forms.php:1869
 #: includes/admin/templates/directory/sorting.php:39
 #: assets/js/admin/forms.js:361
 #: assets/js/v3/admin/forms.js:379
@@ -2426,8 +2426,17 @@ msgstr ""
 msgid "Required"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:558
-#: includes/admin/core/class-admin-forms.php:567
+#: includes/admin/core/class-admin-forms.php:491
+msgid "You can change the value only in the visible mode."
+msgstr ""
+
+#: includes/admin/core/class-admin-forms.php:498
+#: assets/js/admin/settings.js:115
+msgid "Show key"
+msgstr ""
+
+#: includes/admin/core/class-admin-forms.php:632
+#: includes/admin/core/class-admin-forms.php:641
 #: includes/admin/core/class-admin-metabox.php:1721
 #: includes/admin/core/class-admin-metabox.php:1722
 #: includes/admin/core/class-admin-metabox.php:1731
@@ -2435,32 +2444,32 @@ msgstr ""
 msgid "Select Icon"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:570
+#: includes/admin/core/class-admin-forms.php:644
 #: includes/admin/core/class-admin-metabox.php:1735
 msgid "The selected icon is using an outdated version. Please select the icon above to use latest version."
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:649
+#: includes/admin/core/class-admin-forms.php:723
 msgid "Select Users"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1029
+#: includes/admin/core/class-admin-forms.php:1103
 #: includes/admin/core/class-admin-upgrade.php:274
 msgid "Run"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1165
+#: includes/admin/core/class-admin-forms.php:1239
 msgid "Create Default"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1243
-#: includes/admin/core/class-admin-forms.php:1262
-#: includes/admin/core/class-admin-forms.php:1400
-#: includes/admin/core/class-admin-forms.php:1409
-#: includes/admin/core/class-admin-forms.php:1655
-#: includes/admin/core/class-admin-forms.php:1669
-#: includes/admin/core/class-admin-forms.php:1790
-#: includes/admin/core/class-admin-forms.php:1819
+#: includes/admin/core/class-admin-forms.php:1317
+#: includes/admin/core/class-admin-forms.php:1336
+#: includes/admin/core/class-admin-forms.php:1474
+#: includes/admin/core/class-admin-forms.php:1483
+#: includes/admin/core/class-admin-forms.php:1729
+#: includes/admin/core/class-admin-forms.php:1743
+#: includes/admin/core/class-admin-forms.php:1864
+#: includes/admin/core/class-admin-forms.php:1893
 #: includes/common/class-fields.php:1640
 #: includes/common/class-fields.php:1767
 #: assets/js/admin/forms.js:355
@@ -2474,37 +2483,37 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1455
+#: includes/admin/core/class-admin-forms.php:1529
 msgid "Select media"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1485
+#: includes/admin/core/class-admin-forms.php:1559
 #: assets/js/admin/forms.js:799
 #: assets/js/v3/admin/forms.js:613
 msgid "Select"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1486
+#: includes/admin/core/class-admin-forms.php:1560
 #: assets/js/v3/common-frontend.js:1015
 msgid "Clear"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1796
+#: includes/admin/core/class-admin-forms.php:1870
 #: includes/admin/templates/directory/sorting.php:43
 #: assets/js/admin/forms.js:362
 #: assets/js/v3/admin/forms.js:380
 msgid "ASC"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1797
+#: includes/admin/core/class-admin-forms.php:1871
 #: includes/admin/templates/directory/sorting.php:44
 #: assets/js/admin/forms.js:363
 #: assets/js/v3/admin/forms.js:381
 msgid "DESC"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1799
-#: includes/admin/core/class-admin-forms.php:1821
+#: includes/admin/core/class-admin-forms.php:1873
+#: includes/admin/core/class-admin-forms.php:1895
 #: includes/admin/core/class-admin-metabox.php:2528
 #: assets/js/admin/forms.js:365
 #: assets/js/v3/admin/forms.js:383
@@ -8460,8 +8469,8 @@ msgid "Languages"
 msgstr ""
 
 #: includes/common/class-directory-config.php:247
-#: includes/core/um-filters-fields.php:1059
-#: includes/core/um-filters-fields.php:1076
+#: includes/core/um-filters-fields.php:1077
+#: includes/core/um-filters-fields.php:1094
 msgid "Age"
 msgstr ""
 
@@ -10744,8 +10753,8 @@ msgid "Upload File"
 msgstr ""
 
 #: includes/core/class-fields.php:3251
-#: includes/core/um-filters-fields.php:331
-#: includes/core/um-filters-fields.php:425
+#: includes/core/um-filters-fields.php:349
+#: includes/core/um-filters-fields.php:443
 msgid "This file has been removed."
 msgstr ""
 
@@ -10760,20 +10769,20 @@ msgid "Save"
 msgstr ""
 
 #. translators: %s: edit user link.
-#: includes/core/class-fields.php:4793
+#: includes/core/class-fields.php:4794
 #, php-format
 msgid "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some information!"
 msgstr ""
 
-#: includes/core/class-fields.php:4795
+#: includes/core/class-fields.php:4796
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
-#: includes/core/class-fields.php:5046
+#: includes/core/class-fields.php:5047
 msgid "Please login as administrator."
 msgstr ""
 
-#: includes/core/class-fields.php:5050
+#: includes/core/class-fields.php:5051
 msgid "Invalid action."
 msgstr ""
 
@@ -11505,27 +11514,27 @@ msgstr ""
 msgid "Your account"
 msgstr ""
 
-#: includes/core/um-filters-fields.php:51
+#: includes/core/um-filters-fields.php:69
 msgid "Invalid SoundCloud track ID"
 msgstr ""
 
-#: includes/core/um-filters-fields.php:108
+#: includes/core/um-filters-fields.php:126
 msgid "Invalid Spotify URL"
 msgstr ""
 
 #. translators: %s: date.
-#: includes/core/um-filters-fields.php:226
+#: includes/core/um-filters-fields.php:244
 #, php-format
 msgid "Joined %s"
 msgstr ""
 
-#: includes/core/um-filters-fields.php:346
-#: includes/core/um-filters-fields.php:347
+#: includes/core/um-filters-fields.php:364
+#: includes/core/um-filters-fields.php:365
 msgid "Download"
 msgstr ""
 
-#: includes/core/um-filters-fields.php:370
-#: includes/core/um-filters-fields.php:457
+#: includes/core/um-filters-fields.php:388
+#: includes/core/um-filters-fields.php:475
 #: includes/frontend/class-uploader.php:61
 #: includes/frontend/class-uploader.php:149
 msgid "Untitled photo"
@@ -11533,7 +11542,7 @@ msgstr ""
 
 #. translators: %s is the field name
 #. translators: %s is the field label.
-#: includes/core/um-filters-fields.php:389
+#: includes/core/um-filters-fields.php:407
 #: includes/frontend/class-uploader.php:66
 #: includes/frontend/class-uploader.php:162
 #, php-format
@@ -11541,7 +11550,7 @@ msgid "Preview %s"
 msgstr ""
 
 #. translators: %s: link.
-#: includes/core/um-filters-fields.php:579
+#: includes/core/um-filters-fields.php:597
 #, php-format
 msgid "This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: '%s'"
 msgstr ""
@@ -12222,6 +12231,10 @@ msgstr ""
 
 #: assets/js/admin/settings.js:38
 msgid "Are sure, maybe some settings not saved"
+msgstr ""
+
+#: assets/js/admin/settings.js:111
+msgid "Hide key"
 msgstr ""
 
 #: assets/js/new-design.js:358
