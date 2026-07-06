@@ -72,13 +72,13 @@ jQuery( document ).ready( function() {
 		var revealed = $field.hasClass( 'is-revealed' );
 
 		if ( revealed ) {
-			$display.val( value );
+			$display.val( value ).prop( 'readonly', false );
 		} else {
 			var prefix = parseInt( $field.data( 'reveal-prefix' ), 10 );
 			var suffix = parseInt( $field.data( 'reveal-suffix' ), 10 );
 			prefix = isNaN( prefix ) ? 6 : prefix;
 			suffix = isNaN( suffix ) ? 4 : suffix;
-			$display.val( umApiKeyMask( value, prefix, suffix ) );
+			$display.val( umApiKeyMask( value, prefix, suffix ) ).prop( 'readonly', true );
 		}
 	}
 

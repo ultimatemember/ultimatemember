@@ -490,6 +490,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$value = $this->get_field_value( $field_data );
 			$value_attr = ' value="' . esc_attr( $value ) . '" ';
 
+			$readonly = '';
+			$title    = '';
+			if ( ! empty( $value ) ) {
+				$title    = ' title="' . esc_attr__( 'You can change the value only in the visible mode.', 'ultimate-member' ) . '" ';
+				$readonly = ' readonly ';
+			}
+
 			$prefix = isset( $field_data['reveal_prefix'] ) ? absint( $field_data['reveal_prefix'] ) : 6;
 			$suffix = isset( $field_data['reveal_suffix'] ) ? absint( $field_data['reveal_suffix'] ) : 4;
 
@@ -500,7 +507,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			// Real value carrier — the only element submitted as um_options[<id>]. Never shown.
 			$html .= "<input type=\"hidden\" $id_attr $name_attr $data_attr $value_attr class=\"um-forms-field um-api-key-value\" />";
 			// Single visible display input (no name → not submitted). JS fills/masks it and toggles readonly.
-			$html .= "<input type=\"text\" $mask_id_attr $data_attr class=\"um-api-key-display " . esc_attr( $size_class ) . "\" autocomplete=\"off\" spellcheck=\"false\"" . $placeholder_attr . ' />';
+			$html .= "<input type=\"text\" $mask_id_attr $data_attr class=\"um-api-key-display " . esc_attr( $size_class ) . "\" autocomplete=\"off\" spellcheck=\"false\"" . $placeholder_attr . $readonly . $title . ' />';
 			// Show/hide toggle.
 			$html .= '<button type="button" class="button um-api-key-toggle" aria-label="' . $show_label . '" title="' . $show_label . '"><span class="dashicons dashicons-visibility"></span></button>';
 			$html .= '</span>';
