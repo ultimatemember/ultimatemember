@@ -127,7 +127,7 @@ function um_send_registration_notification( $user_id ) {
 		'tags'          => array(
 			'{submitted_registration}',
 		),
-		'tags_replace'  => um_user_submitted_registration_formatted(),
+		'tags_replace'  => um_user_submitted_registration_formatted( $user_id ),
 	);
 
 	$emails = um_multi_admin_email();
