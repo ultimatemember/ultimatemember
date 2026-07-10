@@ -50,14 +50,20 @@
           &.#{$prefix}profile-header-no-actions
             +flex( row,flex-start,center,nowrap )
           .#{$prefix}profile-display-name-wrapper
-            +flex( row,flex-start,center,nowrap )
+            +flex( row,space-between,center,nowrap )
+            flex: 1 1 auto
             column-gap: $spacing-lg
-            .#{$prefix}profile-display-name
+            .#{$prefix}profile-display-name-content
               +flex( row,flex-start,center,nowrap )
-              +typography(header,sm,semibold)
-              margin: 0
-              padding: 0
-              color: $gray-900
+              column-gap: $spacing-lg
+              .#{$prefix}profile-display-name
+                +flex( row,flex-start,center,nowrap )
+                +typography(header,sm,semibold)
+                margin: 0
+                padding: 0
+                color: $gray-900
+            .#{$prefix}um-profile-form-actions
+              +flex( row,flex-start,center,nowrap )
           .#{$prefix}profile-header-actions
             +flex( row,flex-end,center,nowrap )
             column-gap: $spacing-xl
@@ -140,6 +146,63 @@
     +border-box
     .#{$prefix}form-new
       width: 100% !important
+  &.#{$prefix}ui-s,
+  &.#{$prefix}ui-xs
+    &.#{$prefix}profile-cover-enabled
+      &:not(.#{$prefix}profile-no-cover)
+        .#{$prefix}profile-header
+          .#{$prefix}profile-header-core
+            padding: 0
+            .#{$prefix}profile-header-content
+              margin-left: 0
+              .#{$prefix}profile-header-main-row
+                margin-left: $spacing-10xl + $spacing-2xl
+              .#{$prefix}profile-header-supporting-rows
+                margin-top: $spacing-5xl
+                margin-left: 0
+              &.#{$prefix}profile-header-editable
+                .#{$prefix}profile-header-supporting-rows
+                  margin-left: 0
+                  margin-top: 0
+        .#{$prefix}profile-navbar,
+        .#{$prefix}profile-nav,
+        .#{$prefix}profile-body
+          padding: 0
+    .#{$prefix}profile-header
+      .#{$prefix}profile-header-core
+        padding: 0
+        .#{$prefix}profile-header-content
+          .#{$prefix}profile-header-main-row
+            column-gap: $spacing-md
+            align-items: flex-start
+            .#{$prefix}profile-display-name-wrapper
+              flex-direction: column
+              align-items: flex-start
+              row-gap: $spacing-md
+              .#{$prefix}profile-display-name
+                +typography(header,xs,semibold)
+          .#{$prefix}profile-header-supporting-row
+            p
+              margin: 0
+  &.#{$prefix}ui-xs
+    .#{$prefix}profile-navbar
+      +flex( column, flex-start, center, nowrap )
+      >div
+        width: 100%
+  &.#{$prefix}editing
+    &.#{$prefix}ui-s,
+    &.#{$prefix}ui-xs
+      .#{$prefix}profile-header
+        .#{$prefix}profile-header-core
+          .#{$prefix}profile-header-content
+            .#{$prefix}profile-header-main-row
+              .#{$prefix}profile-display-name-wrapper
+                .#{$prefix}profile-form-actions
+                  +flex( row, space-between, center, nowrap )
+                  width: 100%
+                  a,
+                  button
+                    width: 49%
 
 .#{$prefix}profile-body
   // Profile > Empty content note in the profile tab.

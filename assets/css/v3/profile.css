@@ -98,12 +98,21 @@
 .um.um-profile .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+  flex: 1 1 auto;
+  column-gap: 12px;
+}
+.um.um-profile .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper .um-profile-display-name-content {
+  display: flex;
+  flex-direction: row;
   justify-content: flex-start;
   align-items: center;
   flex-wrap: nowrap;
   column-gap: 12px;
 }
-.um.um-profile .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper .um-profile-display-name {
+.um.um-profile .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper .um-profile-display-name-content .um-profile-display-name {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -115,6 +124,13 @@
   margin: 0;
   padding: 0;
   color: var(--um-gray-900, #101828);
+}
+.um.um-profile .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper .um-um-profile-form-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
 }
 .um.um-profile .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-header-actions {
   display: flex;
@@ -239,6 +255,73 @@
 }
 .um.um-profile .um-profile-body .um-form-new {
   width: 100% !important;
+}
+.um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core, .um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core {
+  padding: 0;
+}
+.um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content, .um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content {
+  margin-left: 0;
+}
+.um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row, .um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row {
+  margin-left: 148px;
+}
+.um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-supporting-rows, .um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-supporting-rows {
+  margin-top: 40px;
+  margin-left: 0;
+}
+.um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content.um-profile-header-editable .um-profile-header-supporting-rows, .um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content.um-profile-header-editable .um-profile-header-supporting-rows {
+  margin-left: 0;
+  margin-top: 0;
+}
+.um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-navbar,
+.um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-nav,
+.um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-body, .um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-navbar,
+.um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-nav,
+.um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-body {
+  padding: 0;
+}
+.um.um-profile.um-ui-s .um-profile-header .um-profile-header-core, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core {
+  padding: 0;
+}
+.um.um-profile.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row {
+  column-gap: 8px;
+  align-items: flex-start;
+}
+.um.um-profile.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper {
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: 8px;
+}
+.um.um-profile.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper .um-profile-display-name, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper .um-profile-display-name {
+  font-size: var(--um-header-font-size-xs, 24px);
+  line-height: var(--um-header-line-height-xs, 32px);
+  font-weight: var(--um-header-font-weight-semibold, 600);
+}
+.um.um-profile.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-supporting-row p, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-supporting-row p {
+  margin: 0;
+}
+.um.um-profile.um-ui-xs .um-profile-navbar {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.um.um-profile.um-ui-xs .um-profile-navbar > div {
+  width: 100%;
+}
+.um.um-profile.um-editing.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper .um-profile-form-actions, .um.um-profile.um-editing.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper .um-profile-form-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+.um.um-profile.um-editing.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper .um-profile-form-actions a,
+.um.um-profile.um-editing.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper .um-profile-form-actions button, .um.um-profile.um-editing.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper .um-profile-form-actions a,
+.um.um-profile.um-editing.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper .um-profile-form-actions button {
+  width: 49%;
 }
 
 .um-profile-body .um-profile-note {
