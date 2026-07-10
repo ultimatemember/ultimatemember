@@ -35,6 +35,7 @@ jQuery(document).ready(function() {
 	});
 
 	jQuery(document.body).on('click', '.um-reset-profile-photo', function(e) {
+		e.preventDefault();
 		let $obj = jQuery(this);
 		let user_id = $obj.data('user_id');
 
@@ -62,6 +63,7 @@ jQuery(document).ready(function() {
 	});
 
 	jQuery(document.body).on('click', '.um-reset-cover-photo', function(e){
+		e.preventDefault();
 		let $obj = jQuery(this);
 		let user_id = $obj.data('user_id');
 

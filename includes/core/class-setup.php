@@ -45,6 +45,21 @@ PRIMARY KEY  (umeta_id),
 KEY user_id_indx (user_id),
 KEY meta_key_indx (um_key),
 KEY meta_value_indx (um_value(191))
+) $charset_collate;
+CREATE TABLE {$wpdb->prefix}um_guest_tokens (
+id bigint(20) unsigned NOT NULL auto_increment,
+token varchar(64) NOT NULL UNIQUE,
+ip_address varchar(45),
+user_agent text,
+created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY  (id)
+) $charset_collate;
+CREATE TABLE {$wpdb->prefix}um_guest_download_attempts (
+id bigint(20) unsigned NOT NULL auto_increment,
+token varchar(64) NOT NULL,
+ip_address varchar(45),
+request_time timestamp DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY  (id)
 ) $charset_collate;";
 
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -70,22 +85,23 @@ KEY meta_value_indx (um_value(191))
 				update_option( 'um_is_installed', 1 );
 
 				//Install default options
-				foreach ( UM()->config()->settings_defaults as $key => $value ) {
+				foreach ( UM()->config()->get( 'settings_defaults' ) as $key => $value ) {
 					$options[ $key ] = $value;
 				}
 
+				$core_forms_config = UM()->config()->get( 'core_forms' );
+				$core_form_meta    = UM()->config()->get( 'core_form_meta' );
 				// Install Core Forms.
-				foreach ( UM()->config()->core_forms as $id ) {
+				foreach ( $core_forms_config as $id ) {
 					// If page does not exist - create it.
 					$page_exists = UM()->query()->find_post_id( 'um_form', '_um_core', $id );
 					if ( ! $page_exists ) {
-
 						if ( 'register' === $id ) {
-							$title = 'Default Registration';
+							$title = __( 'Default Registration', 'ultimate-member' );
 						} elseif ( 'login' === $id ) {
-							$title = 'Default Login';
+							$title = __( 'Default Login', 'ultimate-member' );
 						} else {
-							$title = 'Default Profile';
+							$title = __( 'Default Profile', 'ultimate-member' );
 						}
 
 						$form = array(
@@ -95,11 +111,11 @@ KEY meta_value_indx (um_value(191))
 							'post_author' => get_current_user_id(),
 						);
 
-						$form_id = wp_insert_post( $form );
-
-						foreach ( UM()->config()->core_form_meta[ $id ] as $meta_key => $meta_value ) {
-							update_post_meta( $form_id, $meta_key, $meta_value );
+						foreach ( $core_form_meta[ $id ] as $meta_key => $meta_value ) {
+							$form['meta_input'][ $meta_key ] = $meta_value;
 						}
+
+						$form_id = wp_insert_post( $form );
 
 						$core_forms[ $id ] = $form_id;
 					}
@@ -111,25 +127,24 @@ KEY meta_value_indx (um_value(191))
 				}
 
 				// Install Core Directories.
-				foreach ( UM()->config()->core_directories as $id ) {
+				$core_directories_config = UM()->config()->get( 'core_directories' );
+				$core_directory_meta     = UM()->config()->get( 'core_directory_meta' );
+				foreach ( $core_directories_config as $id ) {
 					// If page does not exist - create it.
 					$page_exists = UM()->query()->find_post_id( 'um_directory', '_um_core', $id );
 					if ( ! $page_exists ) {
-
-						$title = 'Members';
-
 						$form = array(
 							'post_type'   => 'um_directory',
-							'post_title'  => $title,
+							'post_title'  => __( 'Members', 'ultimate-member' ),
 							'post_status' => 'publish',
 							'post_author' => get_current_user_id(),
 						);
 
-						$form_id = wp_insert_post( $form );
-
-						foreach ( UM()->config()->core_directory_meta[ $id ] as $meta_key => $meta_value ) {
-							update_post_meta( $form_id, $meta_key, $meta_value );
+						foreach ( $core_directory_meta[ $id ] as $meta_key => $meta_value ) {
+							$form['meta_input'][ $meta_key ] = $meta_value;
 						}
+
+						$form_id = wp_insert_post( $form );
 
 						$core_directories[ $id ] = $form_id;
 					}
@@ -158,9 +173,9 @@ KEY meta_value_indx (um_value(191))
 			$setup_shortcodes = array_merge( $core_forms, $core_directories );
 
 			// Install Core Pages.
-			$core_pages = array();
-			foreach ( UM()->config()->core_pages as $slug => $array ) {
-
+			$core_pages       = array();
+			$predefined_pages = UM()->config()->get( 'predefined_pages' );
+			foreach ( $predefined_pages as $slug => $array ) {
 				$page_exists = UM()->query()->find_post_id( 'page', '_um_core', $slug );
 				if ( $page_exists ) {
 					$core_pages[ $slug ] = $page_exists;
@@ -285,7 +300,7 @@ KEY meta_value_indx (um_value(191))
 		public function set_default_settings() {
 			$options = get_option( 'um_options', array() );
 
-			foreach ( UM()->config()->settings_defaults as $key => $value ) {
+			foreach ( UM()->config()->get( 'settings_defaults' ) as $key => $value ) {
 				//set new options to default
 				if ( ! isset( $options[ $key ] ) ) {
 					$options[ $key ] = $value;
@@ -299,7 +314,7 @@ KEY meta_value_indx (um_value(191))
 		 * Set UM roles meta to Default WP roles.
 		 */
 		public function set_default_role_meta() {
-			foreach ( UM()->config()->default_roles_metadata as $role => $meta ) {
+			foreach ( UM()->config()->get( 'default_roles_metadata' ) as $role => $meta ) {
 				add_option( "um_role_{$role}_meta", $meta );
 			}
 		}
@@ -328,7 +343,12 @@ KEY meta_value_indx (um_value(191))
 		}
 
 		/**
+		 * Set icons options.
 		 *
+		 * This method retrieves the FontAwesome version and the list of icons from the options.
+		 * If the list of icons is empty or the FontAwesome version has changed, it fetches the icons metadata
+		 * from a JSON file and formats the common icons list based on styles (solid, regular, brands).
+		 * Finally, it updates the FontAwesome version and the common icons list in the options.
 		 */
 		public function set_icons_options() {
 			$fa_version    = get_option( 'um_fa_version' );
@@ -368,6 +388,38 @@ KEY meta_value_indx (um_value(191))
 				}
 
 				update_option( 'um_icons_list', $common_icons, false );
+			}
+		}
+
+		/**
+		 * Set emoji options.
+		 *
+		 * This function retrieves and updates emoji options based on emoji version and list.
+		 * If the emoji list is empty or the stored emoji version does not match the current emoji version,
+		 * it fetches the latest emoji list and updates the options accordingly.
+		 */
+		public function set_emoji_options() {
+			$emoji_version = get_option( 'um_emoji_version' );
+			$um_emoji_list = get_option( 'um_emoji_list' );
+
+			if ( empty( $um_emoji_list ) || UM()->frontend()->enqueue()::$emoji_version !== $emoji_version ) {
+				update_option( 'um_emoji_version', UM()->frontend()->enqueue()::$emoji_version, false );
+
+				$lib_content = file_get_contents( UM_PATH . '/assets/libs/emoji-mart/emoji-native.json' );
+				$emoji_list  = json_decode( $lib_content, true );
+
+				$emojis = array();
+				if ( array_key_exists( 'emojis', $emoji_list ) && is_array( $emoji_list['emojis'] ) ) {
+					foreach ( $emoji_list['emojis'] as $key => $emoji_data ) {
+						if ( ! isset( $emoji_data['skins'][0]['native'] ) ) {
+							continue;
+						}
+
+						$emojis[ ':' . $key . ':' ] = $emoji_data['skins'][0]['native'];
+					}
+				}
+
+				update_option( 'um_emoji_list', $emojis, false );
 			}
 		}
 	}

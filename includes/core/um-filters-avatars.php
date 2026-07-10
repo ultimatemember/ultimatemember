@@ -1,5 +1,8 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
+<?php
+// Old UI file. Avatars are handled in WordPress native way or ignore it based on UM setting.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Do not apply to backend default avatars

@@ -123,7 +123,7 @@ if ( ! empty( $member_directories ) && ! is_wp_error( $member_directories ) ) {
 if ( UM()->options()->get( 'members_page' ) ) {
 	$member_directory_id = false;
 
-	$page_id = UM()->config()->permalinks['members'];
+	$page_id = um_get_predefined_page_id( 'members' );
 	if ( ! empty( $page_id ) ) {
 		$members_page = get_post( $page_id );
 		if ( ! empty( $members_page ) && ! is_wp_error( $members_page ) ) {

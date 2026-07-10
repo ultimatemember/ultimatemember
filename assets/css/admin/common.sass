@@ -1,6 +1,9 @@
 @import "selectors"
 @import "colors"
 
+.#{$prefix}display-none
+  display: none !important
+
 .#{$prefix}adm-ico
   font-size: 18px
   width: 18px
@@ -52,7 +55,8 @@ body.#{$prefix}admin-modal-open
     font-size: 13px
     color: #666
 
-  input[type="text"]
+  input[type="text"],
+  input[type="number"]
     height: auto !important
     width: 100%
     max-width: 100%

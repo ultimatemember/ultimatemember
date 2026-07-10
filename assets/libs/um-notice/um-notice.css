@@ -1,3 +1,32 @@
+.um.um-ui-xs .um-responsive:not(.um-ui-xs) {
+  display: none !important;
+}
+.um.um-ui-s .um-responsive:not(.um-ui-s) {
+  display: none !important;
+}
+.um.um-ui-m .um-responsive:not(.um-ui-m) {
+  display: none !important;
+}
+.um.um-ui-l .um-responsive:not(.um-ui-l) {
+  display: none !important;
+}
+.um.um-ui-xl .um-responsive:not(.um-ui-xl) {
+  display: none !important;
+}
+.um:not(.um-not-responsive):not(.um-modal) {
+  position: relative;
+}
+.um:not(.um-not-responsive):not(.um-modal) .um-main-skeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #fff;
+  min-height: 300px;
+  z-index: 4;
+}
+
 .um-notice-message {
   position: fixed;
   padding: 0;

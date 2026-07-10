@@ -1,0 +1,21 @@
+@import "colors"
+@import "selectors"
+@import "mixins"
+
+$resolutions: ( xs:320, s:576, m:768, l:992, xl:1024 )
+
+.um
+  @each $size, $number in $resolutions
+    &.#{$prefix}ui-#{$size} .#{$prefix}responsive:not(.#{$prefix}ui-#{$size})
+      display: none !important
+  &:not(.#{$prefix}not-responsive):not(.#{$prefix}modal)
+    position: relative
+    .#{$prefix}main-skeleton
+      position: absolute
+      top: 0
+      left: 0
+      bottom: 0
+      right: 0
+      background: $um-white
+      min-height: 300px
+      z-index: 4

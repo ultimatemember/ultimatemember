@@ -126,7 +126,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Fires before UM REST API output.
  *
  * @since 1.3.x
- * @depecated 2.11.5
+ * @depecated 2.12.0
  * @hook um_api_output_before
  *
  * @param {array}  $data     API data.
@@ -138,7 +138,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Fires for displaying UM REST API output with other $format.
  *
  * @since 1.3.x
- * @depecated 2.11.5
+ * @depecated 2.12.0
  * @hook um_api_output_{$format}
  *
  * @param {array}  $data     API data.
@@ -149,7 +149,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Fires after UM REST API output.
  *
  * @since 1.3.x
- * @depecated 2.11.5
+ * @depecated 2.12.0
  * @hook um_api_output_after
  *
  * @param {array}  $data     API data.
@@ -166,7 +166,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {mixed} User data value.
  *
  * @since 2.0
- * @depecated 2.11.5
+ * @depecated 2.12.0
  * @hook um_rest_userdata
  *
  * @example <caption>Force change the output data for Rest API userdata call.</caption>
@@ -187,7 +187,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {array} REST API response.
  *
  * @since 2.0
- * @depecated 2.11.5
+ * @depecated 2.12.0
  * @hook um_rest_get_auser
  *
  * @example <caption>Force change the output data for Rest API user authentication call.</caption>
@@ -206,7 +206,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {string} REST API output format.
  *
  * @since 1.3.x
- * @depecated 2.11.5
+ * @depecated 2.12.0
  * @hook um_api_output_format
  *
  * @example <caption>Changing the REST API output format.</caption>
@@ -227,7 +227,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {bool} REST API log is allowed.
  *
  * @since 1.3.x
- * @depecated 2.11.5
+ * @depecated 2.12.0
  * @hook um_api_log_requests
  */
 
@@ -241,7 +241,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {array} REST API query data.
  *
  * @since 1.3.x
- * @depecated 2.11.5
+ * @depecated 2.12.0
  * @hook um_rest_query_mode
  */
 
@@ -255,7 +255,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {array} Output data.
  *
  * @since 1.3.x
- * @depecated 2.11.5
+ * @depecated 2.12.0
  * @hook um_api_output_data
  */
 
@@ -267,7 +267,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {array} Output data.
  *
  * @since 1.3.x
- * @depecated 2.11.5
+ * @depecated 2.12.0
  * @hook um_rest_api_get_stats
  */
 
@@ -279,7 +279,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {array} Allowed query modes.
  *
  * @since 1.3.x
- * @depecated 2.11.5
+ * @depecated 2.12.0
  * @hook um_api_valid_query_modes
  */
 
@@ -291,6 +291,104 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {array} UM REST API output format.
  *
  * @since 1.3.x
- * @depecated 2.11.5
+ * @depecated 2.12.0
  * @hook um_api_output_format
+ */
+
+/**
+ * Fires for displaying content in supporting header row on User Profile.
+ *
+ * @param {array} $args User Profile data.
+ *
+ * @since 1.3.x
+ * @depecated 3.0.0 Please use 'um_after_profile_header_name' hook instead.
+ * @hook  um_after_profile_header_name_args
+ */
+
+/**
+ * Filters the allowed image types.
+ *
+ * @param {array} $types Allowed image types.
+ *
+ * @return {array} Allowed image types.
+ *
+ * @since 1.3.x
+ * @depecated 3.0.0 Please use 'um_allowed_default_image_types' hook instead.
+ * @hook  um_allowed_image_types
+ */
+
+/**
+ * Filters the allowed file types.
+ *
+ * @param {array} $types Allowed file types.
+ *
+ * @return {array} Allowed file types.
+ *
+ * @since 1.3.x
+ * @depecated 3.0.0 Please use 'um_allowed_default_file_types' hook instead.
+ * @hook  um_allowed_file_types
+ */
+
+/**
+ * Filters the default cover URL.
+ *
+ * @param {string} $url Default cover URL.
+ *
+ * @return {string} Cover URL.
+ *
+ * @since 1.3.67
+ * @depecated 3.0.0 Please use 'um_default_cover_url' hook instead.
+ * @hook  um_get_default_cover_uri_filter
+ */
+
+/**
+ * Filters the cover photo size for mobile device.
+ *
+ * @param {string} $size Default cover photo size for mobile device.
+ *
+ * @return {string} Cover photo size.
+ *
+ * @since 2.0.0
+ * @depecated 3.0.0 Please use 'um_cover_photo_size' hook instead with checking `wp_is_mobile()` inside the callback.
+ * @hook  um_mobile_cover_photo
+ */
+
+/**
+ * Filters the users privacy.
+ *
+ * @param {bool}   $is_private_case Does the current case is privacy.
+ * @param {string} $privacy         Privacy value.
+ * @param {int}    $user_id         User ID to check for the current user.
+ *
+ * @return {bool} Current privacy case.
+ *
+ * @since 1.3.x
+ * @depecated 3.0.0 Please use 'um_can_view_private_user_profile' hook instead.
+ *
+ * @hook um_is_private_filter_hook
+ */
+
+/**
+ * Filters Ultimate Member predefined pages.
+ *
+ * @param {array} $pages Predefined pages.
+ *
+ * @return {array} Predefined pages.
+ *
+ * @since 1.3.x
+ * @depecated 3.0.0 Please use 'um_predefined_pages' hook instead.
+ * @hook um_core_pages
+ */
+
+/**
+ * Filters the base URL of the UM profile page.
+ *
+ * @since 1.3.x
+ * @deprecated 2.6.3 Use <a href="https://developer.wordpress.org/reference/hooks/post_link/" target="_blank" title="'post_link' hook article on developer.wordpress.org">'post_link'</a> instead.
+ * @hook um_localize_permalink_filter
+ *
+ * @param {string} $profile_url Profile URL.
+ * @param {int}    $page_id     Profile Page ID.
+ *
+ * @return {string} Profile URL.
  */

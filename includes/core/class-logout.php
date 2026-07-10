@@ -23,18 +23,15 @@ if ( ! class_exists( 'um\core\Logout' ) ) {
 			add_action( 'template_redirect', array( &$this, 'logout_page' ), 10000 );
 		}
 
-
 		/**
 		 * @param $redirect_url
 		 * @param $status
 		 *
 		 * @return false|string
 		 */
-		function safe_redirect_default( $redirect_url, $status ) {
-			$login_page_id = UM()->config()->permalinks['login'];
-			return get_permalink( $login_page_id );
+		public function safe_redirect_default( $redirect_url, $status ) {
+			return um_get_predefined_page_url( 'login' );
 		}
-
 
 		/**
 		 * Logout via logout page
@@ -63,7 +60,7 @@ if ( ! class_exists( 'um\core\Logout' ) ) {
 				}
 			}
 
-			$logout_page_id = UM()->config()->permalinks['logout'];
+			$logout_page_id = um_get_predefined_page_id( 'logout' );
 			if ( um_is_core_page( 'logout' ) || ( $trid > 0 && $trid == $logout_page_id ) ) {
 
 				if ( is_user_logged_in() ) {
