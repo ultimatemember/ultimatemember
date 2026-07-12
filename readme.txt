@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 7.0
-Stable tag: 2.12.1
+Stable tag: 2.12.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -166,6 +166,12 @@ No specific extensions are needed. But we highly recommended keep active these P
 = Important: =
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
+
+= 2.12.2 2026-07-xx =
+
+**Enhancements**
+
+* Added: Using `illegal_user_logins` filter to sanitize the `user_login` field value during registration or upgrade.
 
 = 2.12.1 2026-07-06 =
 

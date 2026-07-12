@@ -25,12 +25,12 @@ class Users {
 	/**
 	 * Integrates the "Blacklist Words" setting with the native WordPress functionality.
 	 *
-	 * @since 2.12.1
+	 * @since 2.12.2
 	 *
 	 * @param array $usernames Array of disallowed usernames.
 	 * @return array
 	 */
-	public function filter_illegal_user_logins( array $usernames ) {
+	public function filter_illegal_user_logins( $usernames ) {
 		$blocked_words = (string) UM()->options()->get( 'blocked_words' );
 		if ( $blocked_words ) {
 			$um_usernames = array_map( 'trim', explode( "\n", strtolower( $blocked_words ) ) );

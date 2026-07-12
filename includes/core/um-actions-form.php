@@ -76,6 +76,7 @@ add_action( 'um_submit_form_errors_hook__blockedips', 'um_submit_form_errors_hoo
  * @param array $form_data
  */
 function um_submit_form_errors_hook__blockedwords( $submitted_data, $form_data ) {
+	/** This filter is documented in wp-includes/user.php */
 	$words = (array) apply_filters( 'illegal_user_logins', array() );
 	if ( empty( $words ) ) {
 		return;
