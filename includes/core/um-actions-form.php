@@ -76,7 +76,7 @@ add_action( 'um_submit_form_errors_hook__blockedips', 'um_submit_form_errors_hoo
  * @param array $form_data
  */
 function um_submit_form_errors_hook__blockedwords( $submitted_data, $form_data ) {
-	$words = UM()->options()->get( 'blocked_words' );
+	$words = (array) apply_filters( 'illegal_user_logins', array() );
 	if ( empty( $words ) ) {
 		return;
 	}
@@ -86,8 +86,6 @@ function um_submit_form_errors_hook__blockedwords( $submitted_data, $form_data )
 		return;
 	}
 
-	$words = strtolower( $words );
-	$words = array_map( 'rtrim', explode( "\n", $words ) );
 	foreach ( $fields as $key => $array ) {
 		if ( isset( $array['validate'] ) && in_array( $array['validate'], array( 'unique_username', 'unique_email', 'unique_username_or_email' ), true ) ) {
 			if ( UM()->form()->has_error( $key ) ) {

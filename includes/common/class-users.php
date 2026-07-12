@@ -17,8 +17,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Users {
 
 	public function hooks() {
+		add_filter( 'illegal_user_logins', array( &$this, 'filter_illegal_user_logins' ) );
 		add_filter( 'user_has_cap', array( &$this, 'map_caps_by_role' ), 10, 3 );
 		add_filter( 'editable_roles', array( &$this, 'restrict_roles' ) );
+	}
+
+	/**
+	 * Integrates the "Blacklist Words" setting with the native WordPress functionality.
+	 *
+	 * @since 2.12.1
+	 *
+	 * @param array $usernames Array of disallowed usernames.
+	 * @return array
+	 */
+	public function filter_illegal_user_logins( array $usernames ) {
+		$blocked_words = (string) UM()->options()->get( 'blocked_words' );
+		if ( $blocked_words ) {
+			$um_usernames = array_map( 'trim', explode( "\n", strtolower( $blocked_words ) ) );
+			$usernames    = array_unique( array_merge( $usernames, $um_usernames ) );
+		}
+		return $usernames;
 	}
 
 	/**
