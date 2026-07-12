@@ -232,3 +232,34 @@ th.column-email.column-primary {
 .um-media-upload .um-media-upload-url {
   margin-bottom: 5px;
 }
+
+.um-api-key-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+}
+.um-api-key-field .um-api-key-display {
+  font-family: Consolas, Monaco, monospace;
+  letter-spacing: 1px;
+}
+.um-api-key-field:not(.is-revealed) .um-api-key-display {
+  background-color: #f0f0f1;
+  color: #50575e;
+  cursor: default;
+}
+
+.wp-core-ui .button.um-api-key-toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 0 8px;
+}
+.wp-core-ui .button.um-api-key-toggle .dashicons {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  line-height: 1;
+}

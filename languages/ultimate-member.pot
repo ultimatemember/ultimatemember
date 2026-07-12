@@ -1944,22 +1944,22 @@ msgid "Default sort users by"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2658
-#: includes/admin/core/class-admin-forms.php:1792
-#: includes/admin/core/class-admin-forms.php:1821
+#: includes/admin/core/class-admin-forms.php:1866
+#: includes/admin/core/class-admin-forms.php:1895
 #: includes/admin/templates/directory/sorting.php:22
 #: assets/js/admin/forms.js:357
 msgid "Meta key"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2662
-#: includes/admin/core/class-admin-forms.php:1793
+#: includes/admin/core/class-admin-forms.php:1867
 #: includes/admin/templates/directory/sorting.php:30
 #: assets/js/admin/forms.js:358
 msgid "Data type"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2666
-#: includes/admin/core/class-admin-forms.php:1796
+#: includes/admin/core/class-admin-forms.php:1870
 #: includes/admin/templates/directory/sorting.php:39
 #: assets/js/admin/forms.js:361
 msgid "Order"
@@ -2382,8 +2382,17 @@ msgstr ""
 msgid "Required"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:563
-#: includes/admin/core/class-admin-forms.php:572
+#: includes/admin/core/class-admin-forms.php:496
+msgid "You can change the value only in the visible mode."
+msgstr ""
+
+#: includes/admin/core/class-admin-forms.php:503
+#: assets/js/admin/settings.js:115
+msgid "Show key"
+msgstr ""
+
+#: includes/admin/core/class-admin-forms.php:637
+#: includes/admin/core/class-admin-forms.php:646
 #: includes/admin/core/class-admin-metabox.php:1601
 #: includes/admin/core/class-admin-metabox.php:1602
 #: includes/admin/core/class-admin-metabox.php:1611
@@ -2391,32 +2400,32 @@ msgstr ""
 msgid "Select Icon"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:575
+#: includes/admin/core/class-admin-forms.php:649
 #: includes/admin/core/class-admin-metabox.php:1615
 msgid "The selected icon is using an outdated version. Please select the icon above to use latest version."
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:654
+#: includes/admin/core/class-admin-forms.php:728
 msgid "Select Users"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1034
+#: includes/admin/core/class-admin-forms.php:1108
 #: includes/admin/core/class-admin-upgrade.php:274
 msgid "Run"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1170
+#: includes/admin/core/class-admin-forms.php:1244
 msgid "Create Default"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1248
-#: includes/admin/core/class-admin-forms.php:1267
-#: includes/admin/core/class-admin-forms.php:1405
-#: includes/admin/core/class-admin-forms.php:1414
-#: includes/admin/core/class-admin-forms.php:1661
-#: includes/admin/core/class-admin-forms.php:1675
-#: includes/admin/core/class-admin-forms.php:1791
-#: includes/admin/core/class-admin-forms.php:1820
+#: includes/admin/core/class-admin-forms.php:1322
+#: includes/admin/core/class-admin-forms.php:1341
+#: includes/admin/core/class-admin-forms.php:1479
+#: includes/admin/core/class-admin-forms.php:1488
+#: includes/admin/core/class-admin-forms.php:1735
+#: includes/admin/core/class-admin-forms.php:1749
+#: includes/admin/core/class-admin-forms.php:1865
+#: includes/admin/core/class-admin-forms.php:1894
 #: assets/js/admin/forms.js:355
 #: assets/js/admin/forms.js:429
 #: assets/js/admin/forms.js:718
@@ -2424,33 +2433,33 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1461
+#: includes/admin/core/class-admin-forms.php:1535
 msgid "Select media"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1491
+#: includes/admin/core/class-admin-forms.php:1565
 #: assets/js/admin/forms.js:799
 msgid "Select"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1492
+#: includes/admin/core/class-admin-forms.php:1566
 msgid "Clear"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1797
+#: includes/admin/core/class-admin-forms.php:1871
 #: includes/admin/templates/directory/sorting.php:43
 #: assets/js/admin/forms.js:362
 msgid "ASC"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1798
+#: includes/admin/core/class-admin-forms.php:1872
 #: includes/admin/templates/directory/sorting.php:44
 #: assets/js/admin/forms.js:363
 msgid "DESC"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1800
-#: includes/admin/core/class-admin-forms.php:1822
+#: includes/admin/core/class-admin-forms.php:1874
+#: includes/admin/core/class-admin-forms.php:1896
 #: includes/admin/core/class-admin-metabox.php:2377
 #: assets/js/admin/forms.js:365
 msgid "Label"
@@ -11288,6 +11297,10 @@ msgstr ""
 
 #: assets/js/admin/settings.js:38
 msgid "Are sure, maybe some settings not saved"
+msgstr ""
+
+#: assets/js/admin/settings.js:111
+msgid "Hide key"
 msgstr ""
 
 #: assets/js/um-modal.js:114

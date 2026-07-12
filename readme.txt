@@ -172,6 +172,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 **Enhancements**
 
 * Added: Ability to handle local website URLs resources (image, audio, video from Media Library, 3rd-party local URLs embed to iframe) in the oEmbed-type field value.
+* Added: The API key field type for the settings fields.
 
 **Bugfixes**
 
