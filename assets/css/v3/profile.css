@@ -256,22 +256,47 @@
 .um.um-profile .um-profile-body .um-form-new {
   width: 100% !important;
 }
+.um.um-profile.um-ui-s .um-profile-header .um-profile-header-core, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  row-gap: 8px;
+}
+.um.um-profile.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  row-gap: 8px;
+  width: 100%;
+}
+.um.um-profile.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row {
+  margin: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  row-gap: 8px;
+}
+.um.um-profile.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-supporting-rows, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-supporting-rows {
+  width: 100%;
+}
 .um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core, .um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core {
   padding: 0;
 }
+.um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-avatar, .um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-avatar {
+  left: 50%;
+  transform: translateX(-50%);
+  top: -96px;
+}
 .um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content, .um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content {
-  margin-left: 0;
-}
-.um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row, .um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row {
-  margin-left: 148px;
-}
-.um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-supporting-rows, .um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-supporting-rows {
-  margin-top: 40px;
-  margin-left: 0;
-}
-.um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content.um-profile-header-editable .um-profile-header-supporting-rows, .um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content.um-profile-header-editable .um-profile-header-supporting-rows {
-  margin-left: 0;
-  margin-top: 0;
+  margin: 32px 0 0;
 }
 .um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-navbar,
 .um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-nav,
@@ -280,22 +305,30 @@
 .um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-body {
   padding: 0;
 }
-.um.um-profile.um-ui-s .um-profile-header .um-profile-header-core, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core {
-  padding: 0;
+.um.um-profile.um-ui-s .um-profile-header, .um.um-profile.um-ui-xs .um-profile-header {
+  row-gap: 0;
 }
-.um.um-profile.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row {
-  column-gap: 8px;
-  align-items: flex-start;
+.um.um-profile.um-ui-s .um-profile-header .um-profile-header-core .um-avatar, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core .um-avatar {
+  margin: 0 auto;
+}
+.um.um-profile.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-header-actions, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-header-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 .um.um-profile.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper {
+  width: 100%;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   row-gap: 8px;
 }
 .um.um-profile.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper .um-profile-display-name, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-display-name-wrapper .um-profile-display-name {
   font-size: var(--um-header-font-size-xs, 24px);
   line-height: var(--um-header-line-height-xs, 32px);
   font-weight: var(--um-header-font-weight-semibold, 600);
+}
+.um.um-profile.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-supporting-row, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-supporting-row {
+  width: 100%;
 }
 .um.um-profile.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-supporting-row p, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-supporting-row p {
   margin: 0;

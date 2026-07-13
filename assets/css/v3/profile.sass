@@ -148,40 +148,57 @@
       width: 100% !important
   &.#{$prefix}ui-s,
   &.#{$prefix}ui-xs
+    .#{$prefix}profile-header
+      .#{$prefix}profile-header-core
+        padding: 0
+        +flex( column, flex-start, center, nowrap )
+        row-gap: $spacing-md
+        .#{$prefix}profile-header-content
+          +flex( column, flex-start, center, nowrap )
+          row-gap: $spacing-md
+          width: 100%
+          .#{$prefix}profile-header-main-row
+            margin: 0
+            width: 100%
+            +flex( column, flex-start, center, nowrap )
+            row-gap: $spacing-md
+          .#{$prefix}profile-header-supporting-rows
+            width: 100%
     &.#{$prefix}profile-cover-enabled
       &:not(.#{$prefix}profile-no-cover)
         .#{$prefix}profile-header
           .#{$prefix}profile-header-core
             padding: 0
+            .#{$prefix}avatar
+              left: 50%
+              transform: translateX(-50%)
+              top: -$spacing-9xl
             .#{$prefix}profile-header-content
-              margin-left: 0
-              .#{$prefix}profile-header-main-row
-                margin-left: $spacing-10xl + $spacing-2xl
-              .#{$prefix}profile-header-supporting-rows
-                margin-top: $spacing-5xl
-                margin-left: 0
-              &.#{$prefix}profile-header-editable
-                .#{$prefix}profile-header-supporting-rows
-                  margin-left: 0
-                  margin-top: 0
+              margin: $spacing-4xl 0 0
         .#{$prefix}profile-navbar,
         .#{$prefix}profile-nav,
         .#{$prefix}profile-body
           padding: 0
     .#{$prefix}profile-header
+      row-gap: 0
       .#{$prefix}profile-header-core
-        padding: 0
+        .#{$prefix}avatar
+          margin: 0 auto
         .#{$prefix}profile-header-content
           .#{$prefix}profile-header-main-row
-            column-gap: $spacing-md
-            align-items: flex-start
+            .#{$prefix}profile-header-actions
+              position: absolute
+              top: 0
+              right: 0
             .#{$prefix}profile-display-name-wrapper
+              width: 100%
               flex-direction: column
-              align-items: flex-start
+              align-items: center
               row-gap: $spacing-md
               .#{$prefix}profile-display-name
                 +typography(header,xs,semibold)
           .#{$prefix}profile-header-supporting-row
+            width: 100%
             p
               margin: 0
   &.#{$prefix}ui-xs
