@@ -120,6 +120,9 @@
       .#{$prefix}profile-header
         .#{$prefix}profile-header-core
           padding: 0 $spacing-4xl
+          .#{$prefix}profile-header-main-row
+            .#{$prefix}profile-header-actions
+              top: $spacing-md
       .#{$prefix}profile-navbar
         padding: 0 $spacing-4xl
       .#{$prefix}profile-nav,
@@ -155,7 +158,7 @@
         row-gap: $spacing-md
         .#{$prefix}profile-header-content
           +flex( column, flex-start, center, nowrap )
-          row-gap: $spacing-md
+          row-gap: $spacing-xl
           width: 100%
           .#{$prefix}profile-header-main-row
             margin: 0
@@ -175,6 +178,9 @@
               top: -$spacing-9xl
             .#{$prefix}profile-header-content
               margin: $spacing-4xl 0 0
+              .#{$prefix}profile-header-main-row
+                .#{$prefix}profile-header-actions
+                  top: $spacing-md
         .#{$prefix}profile-navbar,
         .#{$prefix}profile-nav,
         .#{$prefix}profile-body

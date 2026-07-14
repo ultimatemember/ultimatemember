@@ -216,6 +216,9 @@
 .um.um-profile.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core {
   padding: 0 32px;
 }
+.um.um-profile.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-main-row .um-profile-header-actions {
+  top: 8px;
+}
 .um.um-profile.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-navbar {
   padding: 0 32px;
 }
@@ -271,7 +274,7 @@
   justify-content: flex-start;
   align-items: center;
   flex-wrap: nowrap;
-  row-gap: 8px;
+  row-gap: 16px;
   width: 100%;
 }
 .um.um-profile.um-ui-s .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row, .um.um-profile.um-ui-xs .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row {
@@ -297,6 +300,9 @@
 }
 .um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content, .um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content {
   margin: 32px 0 0;
+}
+.um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-header-actions, .um.um-profile.um-ui-xs.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-header .um-profile-header-core .um-profile-header-content .um-profile-header-main-row .um-profile-header-actions {
+  top: 8px;
 }
 .um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-navbar,
 .um.um-profile.um-ui-s.um-profile-cover-enabled:not(.um-profile-no-cover) .um-profile-nav,
