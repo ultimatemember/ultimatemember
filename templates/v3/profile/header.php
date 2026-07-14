@@ -24,49 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $actions = array();
-if ( is_user_logged_in() && UM()->roles()->um_current_user_can( 'edit', $user_profile_id ) ) {
-	if ( true === UM()->fields()->editing ) {
-		$submit   = UM()->frontend()::layouts()::button(
-			__( 'Save', 'ultimate-member' ),
-			array(
-				'design'  => 'primary',
-				'type'    => 'submit',
-				'size'    => 's',
-				'classes' => array(
-					'um-profile-save',
-				),
-			)
-		);
-		$cancel   = UM()->frontend()::layouts()::link(
-			__( 'Cancel', 'ultimate-member' ),
-			array(
-				'type'    => 'button',
-				'size'    => 's',
-				'url'     => um_user_profile_url( $user_profile_id ),
-				'classes' => array(
-					'um-profile-form-cancel',
-				),
-			)
-		);
-		$actions['cancel'] = $cancel;
-		$actions['submit'] = $submit;
-	} else {
-		$current_page_id = get_the_ID(); // Get the current page ID to make a proper Edit User Profile link.
-
-		$actions['edit_profile'] = UM()->frontend()::layouts()::link(
-			__( 'Edit Profile', 'ultimate-member' ),
-			array(
-				'design'  => 'primary',
-				'type'    => 'button',
-				'size'    => 's',
-				'url'     => um_edit_profile_url( $user_profile_id, $current_page_id ),
-				'classes' => array(
-					'um-profile-edit-link',
-				),
-			)
-		);
-	}
-}
 
 if ( true !== UM()->fields()->editing ) {
 	$dropdown_actions = UM()->frontend()->users()->get_dropdown_items( $user_profile_id );
@@ -203,8 +160,15 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 				UM()->get_allowed_html( 'templates' )
 			);
 		}
+
+		$header_class = array(
+			'um-profile-header-content',
+		);
+		if ( is_user_logged_in() && UM()->roles()->um_current_user_can( 'edit', $user_profile_id ) && true !== UM()->fields()->editing ) {
+			$header_class[] = 'um-profile-header-editable';
+		}
 		?>
-		<div class="um-profile-header-content">
+		<div class="<?php echo esc_attr( implode( ' ', $header_class ) ); ?>">
 			<?php
 			/**
 			 * Fires for displaying content in header content wrapper on User Profile.
@@ -240,37 +204,84 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 				<div class="<?php echo esc_attr( implode( ' ', $row_classes ) ); ?>">
 					<?php if ( $profile_args['show_name'] ) { ?>
 						<div class="um-profile-display-name-wrapper">
-							<h2 class="um-profile-display-name">
+							<div class="um-profile-display-name-content">
+								<h2 class="um-profile-display-name">
+									<?php
+									// Construction `um_user( 'display_name', 'html' )` is used for displaying verified marker just after display name.
+									echo wp_kses( um_user( 'display_name', 'html' ), UM()->get_allowed_html( 'templates' ) );
+									?>
+								</h2>
 								<?php
-								// Construction `um_user( 'display_name', 'html' )` is used for displaying verified marker just after display name.
-								echo wp_kses( um_user( 'display_name', 'html' ), UM()->get_allowed_html( 'templates' ) );
+								/**
+								 * Fires just after user display name in header on User Profile.
+								 *
+								 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+								 * 10  - `um_online_show_user_status()` displays Online status.
+								 * 20  - `um_mc_after_profile_name_inline()` displays MailChimp marker.
+								 * 200 - `um_friends_add_state()` displays Friendship state.
+								 * 200 - `um_followers_add_state()` displays Followers state.
+								 *
+								 * @param {array} $args    User Profile data.
+								 * @param {int}   $user_id User Profile ID. Since 3.0.0.
+								 *
+								 * @since 1.3.x
+								 * @since 3.0.0 added $user_id attribute
+								 * @hook  um_after_profile_name_inline
+								 *
+								 * @example <caption>Display some content after display name in User Profile header.</caption>
+								 * function my_um_after_profile_name_inline( $args, $user_id ) {
+								 *     // your code here
+								 *     echo $content;
+								 * }
+								 * add_action( 'um_after_profile_name_inline', 'my_um_after_profile_name_inline', 10, 2 );
+								 */
+								do_action( 'um_after_profile_name_inline', $profile_args, $user_profile_id );
 								?>
-							</h2>
+							</div>
 							<?php
-							/**
-							 * Fires just after user display name in header on User Profile.
-							 *
-							 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
-							 * 10  - `um_online_show_user_status()` displays Online status.
-							 * 20  - `um_mc_after_profile_name_inline()` displays MailChimp marker.
-							 * 200 - `um_friends_add_state()` displays Friendship state.
-							 * 200 - `um_followers_add_state()` displays Followers state.
-							 *
-							 * @param {array} $args    User Profile data.
-							 * @param {int}   $user_id User Profile ID. Since 3.0.0.
-							 *
-							 * @since 1.3.x
-							 * @since 3.0.0 added $user_id attribute
-							 * @hook  um_after_profile_name_inline
-							 *
-							 * @example <caption>Display some content after display name in User Profile header.</caption>
-							 * function my_um_after_profile_name_inline( $args, $user_id ) {
-							 *     // your code here
-							 *     echo $content;
-							 * }
-							 * add_action( 'um_after_profile_name_inline', 'my_um_after_profile_name_inline', 10, 2 );
-							 */
-							do_action( 'um_after_profile_name_inline', $profile_args, $user_profile_id );
+							if ( is_user_logged_in() && UM()->roles()->um_current_user_can( 'edit', $user_profile_id ) ) {
+								if ( true === UM()->fields()->editing ) {
+									$submit = UM()->frontend()::layouts()::button(
+										__( 'Save', 'ultimate-member' ),
+										array(
+											'design'  => 'primary',
+											'type'    => 'submit',
+											'size'    => 's',
+											'classes' => array(
+												'um-profile-save',
+											),
+										)
+									);
+									$cancel = UM()->frontend()::layouts()::link(
+										__( 'Cancel', 'ultimate-member' ),
+										array(
+											'type'    => 'button',
+											'size'    => 's',
+											'url'     => um_user_profile_url( $user_profile_id ),
+											'classes' => array(
+												'um-profile-form-cancel',
+											),
+										)
+									);
+									echo '<div class="um-profile-form-actions">' . wp_kses( $cancel . $submit, UM()->get_allowed_html( 'templates' ) ) . '</div>';
+								} else {
+									$current_page_id = get_the_ID(); // Get the current page ID to make a proper Edit User Profile link.
+
+									$edit = UM()->frontend()::layouts()::link(
+										__( 'Edit Profile', 'ultimate-member' ),
+										array(
+											'design'  => 'primary',
+											'type'    => 'button',
+											'size'    => 's',
+											'url'     => um_edit_profile_url( $user_profile_id, $current_page_id ),
+											'classes' => array(
+												'um-profile-edit-link',
+											),
+										)
+									);
+									echo '<div class="um-profile-form-actions">' . wp_kses( $edit, UM()->get_allowed_html( 'templates' ) ) . '</div>';
+								}
+							}
 							?>
 						</div>
 					<?php } ?>

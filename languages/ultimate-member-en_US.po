@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-10T10:44:35+00:00\n"
+"POT-Creation-Date: 2026-07-14T10:35:42+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -6624,7 +6624,7 @@ msgstr ""
 #: includes/core/um-actions-profile.php:1035
 #: includes/core/um-actions-profile.php:1379
 #: includes/core/um-actions-profile.php:1386
-#: templates/v3/profile/header.php:41
+#: templates/v3/profile/header.php:256
 msgid "Cancel"
 msgstr ""
 
@@ -10764,7 +10764,7 @@ msgid "Change file"
 msgstr ""
 
 #: includes/core/class-fields.php:3321
-#: templates/v3/profile/header.php:30
+#: templates/v3/profile/header.php:245
 msgid "Save"
 msgstr ""
 
@@ -10826,7 +10826,7 @@ msgstr ""
 #: includes/core/um-actions-profile.php:1383
 #: includes/frontend/class-users.php:115
 #: includes/frontend/class-users.php:135
-#: templates/v3/profile/header.php:57
+#: templates/v3/profile/header.php:271
 msgid "Edit Profile"
 msgstr ""
 
@@ -11496,7 +11496,7 @@ msgstr ""
 
 #. translators: %s: profile status.
 #: includes/core/um-actions-profile.php:1200
-#: templates/v3/profile/header.php:354
+#: templates/v3/profile/header.php:365
 #, php-format
 msgid "This user account status is %s"
 msgstr ""
@@ -12145,15 +12145,15 @@ msgstr ""
 msgid "Load more"
 msgstr ""
 
-#: templates/v3/profile/header.php:79
+#: templates/v3/profile/header.php:36
 msgid "More actions"
 msgstr ""
 
-#: templates/v3/profile/header.php:418
+#: templates/v3/profile/header.php:429
 msgid "Update your photo and personal details."
 msgstr ""
 
-#: templates/v3/profile/header.php:420
+#: templates/v3/profile/header.php:431
 msgid "Update user's photo and personal details."
 msgstr ""
 
