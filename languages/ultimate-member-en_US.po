@@ -11458,7 +11458,7 @@ msgid "This activation link is expired."
 msgstr ""
 
 #: includes/core/um-actions-profile.php:212
-#: includes/frontend/class-profile.php:633
+#: includes/frontend/class-profile.php:628
 msgid "You are not allowed to edit this user."
 msgstr ""
 
@@ -11721,7 +11721,7 @@ msgid "Search"
 msgstr ""
 
 #. translators: %s: title.
-#: includes/frontend/class-profile.php:935
+#: includes/frontend/class-profile.php:930
 #, php-format
 msgid "Your choosed %s"
 msgstr ""
