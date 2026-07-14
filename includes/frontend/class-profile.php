@@ -415,11 +415,6 @@ class Profile {
 			return $allowed_tags;
 		}
 
-		// Text formatting short-tags
-		$allowed_tags['u'] = true;
-		$allowed_tags['i'] = true;
-		$allowed_tags['b'] = true;
-
 		// It's required for displaying WordPress native oembed elements. That was converted via WP_Oembed to iframes and figures.
 		$allowed_tags['figure'] = array();
 		$allowed_tags['iframe'] = array(
