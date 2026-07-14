@@ -375,6 +375,10 @@ final class Enqueue extends \um\common\Enqueue {
 
 		if ( UM()->is_new_ui() ) {
 			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array( 'um_common', 'um_dropdown', 'um_crop', 'um_modal', 'um_choices' ), UM_VERSION );
+			$inline_style = $this->get_inline_style_variables();
+			if ( ! empty( $inline_style ) ) {
+				wp_add_inline_style( 'um_new_design', $inline_style );
+			}
 
 			wp_register_style( 'um_directory', $css_url . 'v3/directory' . $suffix . '.css', array( 'um_new_design' ), UM_VERSION );
 			wp_register_style( 'um_profile', $css_url . 'v3/profile' . $suffix . '.css', array( 'um_new_design' ), UM_VERSION );
@@ -439,15 +443,7 @@ final class Enqueue extends \um\common\Enqueue {
 		}
 	}
 
-	/**
-	 * Adds our custom button colors to the global stylesheet.
-	 *
-	 * @since 2.8.4
-	 */
-	public function add_to_global_styles() {
-		if ( ! UM()->is_new_ui() ) {
-			return;
-		}
+	private function get_inline_style_variables() {
 		$styles = apply_filters(
 			'um_inline_styles_variables',
 			array(
@@ -501,17 +497,28 @@ final class Enqueue extends \um\common\Enqueue {
 			}
 		}
 
-		$rules = array();
 		if ( empty( $styles ) ) {
-			return;
-		}
-		$inline_style = 'body{' . implode( ' ', $styles ) . '}';
-		if ( ! empty( $rules ) ) {
-			$inline_style .= implode( ' ', $rules );
+			return '';
 		}
 
-		$stylesheet = 'wp-block-library';
-		wp_add_inline_style( $stylesheet, $inline_style );
+		return 'body{' . implode( ' ', $styles ) . '}';
+	}
+
+	/**
+	 * Adds our custom button colors to the global stylesheet.
+	 *
+	 * @since 2.8.4
+	 */
+	public function add_to_global_styles() {
+		if ( ! UM()->is_new_ui() ) {
+			return;
+		}
+
+		$stylesheet   = 'wp-block-library';
+		$inline_style = $this->get_inline_style_variables();
+		if ( ! empty( $inline_style ) ) {
+			wp_add_inline_style( $stylesheet, $inline_style );
+		}
 
 		$dynamic_styles = '';
 		$forms_query    = get_posts(
