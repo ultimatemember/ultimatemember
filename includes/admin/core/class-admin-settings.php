@@ -2402,7 +2402,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'fields'      => array(
 											array(
 												'id'    => 'giphy_api_key',
-												'type'  => 'text',
+												'type'  => 'api_key',
 												'label' => __( 'GIPHY API Key', 'ultimate-member' ),
 												// translators: %s is the link to GIPHY API docs.
 												'description' => sprintf( __( 'Used for paste GIF images in content. Get more details <a href="%s" title="GIPHY API Docs">here</a>.', 'ultimate-member' ), 'https://developers.giphy.com/docs/api/' ),

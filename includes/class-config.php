@@ -1157,6 +1157,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'files_secure_links'                    => true,
 				'profile_photo_enabled'                 => true,
 				'enable_user_cover'                     => true,
+				'profile_cover_enabled'                 => true,
+				'profile_coversize'                     => 'original',
+				'profile_cover_ratio'                   => '2.7:1',
 				'disable_cover_photo_upload'            => false,
 			);
 
