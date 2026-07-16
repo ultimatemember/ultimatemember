@@ -852,6 +852,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 				'i'      => array(),
 				'b'      => array(),
 				'u'      => array(),
+				'small'  => array(),
 				'q'      => array(
 					'cite' => true,
 				),
