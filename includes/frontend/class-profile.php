@@ -444,7 +444,7 @@ class Profile {
 			'width'    => true,
 		);
 
-		return $allowed_tags;
+		return array_map( '_wp_add_global_attributes', $allowed_tags );
 	}
 
 	/**

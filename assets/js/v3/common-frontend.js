@@ -185,7 +185,9 @@ UM.frontend = {
 			let $resolutions = Object.values( responsive.resolutions );
 			$resolutions.sort( function(a, b){ return b-a; });
 
-			jQuery('.um').each( function() {
+			let $wrapper = jQuery('.um');
+
+			$wrapper.each( function() {
 				let obj = jQuery(this);
 
 				if ( obj.hasClass('um-not-responsive') ) {
@@ -214,6 +216,20 @@ UM.frontend = {
 						obj.addClass('um-ui-' + $class );
 						return false;
 					}
+				});
+			});
+
+			// set iframe height and width.
+			$wrapper.each( function() {
+				const $iframes = jQuery(this).find('.um-field-value iframe[height][width], .um-profile-body iframe[height][width]');
+				$iframes.each(function (i, item) {
+					let itemAttrHeight = parseInt(item.getAttribute('height'));
+					let itemAttrWidth  = parseInt(item.getAttribute('width'));
+					let parentWidth    = item.parentElement.clientWidth;
+					let scale          = parentWidth / itemAttrWidth;
+
+					item.height = parseInt(itemAttrHeight * scale);
+					item.width  = parseInt(itemAttrWidth * scale);
 				});
 			});
 		}

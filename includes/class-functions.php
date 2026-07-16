@@ -877,7 +877,6 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			);
 
 			$allowed_html = array_merge_recursive( $global_allowed, $allowed_html );
-			$allowed_html = array_map( '_wp_add_global_attributes', $allowed_html );
 
 			/**
 			 * Filters the allowed HTML tags and their attributes in the late escaping before echo.
@@ -904,7 +903,9 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			 * }
 			 * add_filter( 'um_late_escaping_allowed_tags', 'add_extra_kses_allowed_tags', 10, 2 );
 			 */
-			return apply_filters( 'um_late_escaping_allowed_tags', $allowed_html, $context );
+			$allowed_html = apply_filters( 'um_late_escaping_allowed_tags', $allowed_html, $context );
+
+			return array_map( '_wp_add_global_attributes', $allowed_html );
 		}
 
 		/**
