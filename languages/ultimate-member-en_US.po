@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-16T17:38:27+00:00\n"
+"POT-Creation-Date: 2026-07-17T14:08:54+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -2078,24 +2078,24 @@ msgid "Admin filtering"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2871
-#: includes/admin/templates/directory/profile.php:38
+#: includes/admin/templates/directory/profile.php:42
 #: includes/admin/templates/form/profile_customize.php:158
 msgid "Enable Profile Photo"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2875
 #: includes/admin/templates/directory/profile.php:18
-#: includes/admin/templates/directory/profile.php:26
+#: includes/admin/templates/directory/profile.php:27
 msgid "Enable Cover Photo"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2879
-#: includes/admin/templates/directory/profile.php:45
+#: includes/admin/templates/directory/profile.php:49
 msgid "Show display name"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2906
-#: includes/admin/templates/directory/profile.php:51
+#: includes/admin/templates/directory/profile.php:55
 msgid "Show tagline below profile name"
 msgstr ""
 
@@ -2104,7 +2104,7 @@ msgid "Field to display in tagline"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2931
-#: includes/admin/templates/directory/profile.php:68
+#: includes/admin/templates/directory/profile.php:72
 msgid "Show extra user information below tagline?"
 msgstr ""
 
@@ -2113,12 +2113,12 @@ msgid "Field to display in extra user information section"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2956
-#: includes/admin/templates/directory/profile.php:85
+#: includes/admin/templates/directory/profile.php:89
 msgid "Show social connect icons in extra user information section"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2960
-#: includes/admin/templates/directory/profile.php:92
+#: includes/admin/templates/directory/profile.php:96
 msgid "Hide extra user information to the reveal section"
 msgstr ""
 
@@ -6285,29 +6285,29 @@ msgstr ""
 msgid "If turned on, the users cover photo will appear in the directory"
 msgstr ""
 
-#: includes/admin/templates/directory/profile.php:28
+#: includes/admin/templates/directory/profile.php:29
 msgid "Enable Cover Photo (for grid view only)."
 msgstr ""
 
-#: includes/admin/templates/directory/profile.php:29
+#: includes/admin/templates/directory/profile.php:30
 msgid "If turned on, the users cover photo will appear in the directory."
 msgstr ""
 
-#: includes/admin/templates/directory/profile.php:57
+#: includes/admin/templates/directory/profile.php:61
 msgid "Choose field(s) to display in tagline"
 msgstr ""
 
-#: includes/admin/templates/directory/profile.php:60
-#: includes/admin/templates/directory/profile.php:76
+#: includes/admin/templates/directory/profile.php:64
+#: includes/admin/templates/directory/profile.php:80
 #: includes/admin/templates/directory/search.php:104
 msgid "Add New Custom Field"
 msgstr ""
 
-#: includes/admin/templates/directory/profile.php:74
+#: includes/admin/templates/directory/profile.php:78
 msgid "Choose field(s) to display in extra user information section"
 msgstr ""
 
-#: includes/admin/templates/directory/profile.php:93
+#: includes/admin/templates/directory/profile.php:97
 msgid "If not checked always shown"
 msgstr ""
 
