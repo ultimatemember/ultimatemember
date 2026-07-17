@@ -20,15 +20,19 @@ $cover_photos_field = array(
 	'value'   => (bool) get_post_meta( $post_id, '_um_cover_photos', true ),
 );
 if ( UM()->is_new_ui() ) {
-	$cover_photos_field = array(
-		'id'             => '_um_cover_photos',
-		'type'           => 'checkbox',
-		'label'          => __( 'Enable Cover Photo', 'ultimate-member' ),
-		'value'          => (bool) get_post_meta( $post_id, '_um_cover_photos', true ),
-		'checkbox_label' => __( 'Enable Cover Photo (for grid view only).', 'ultimate-member' ),
-		'description'    => __( 'If turned on, the users cover photo will appear in the directory.', 'ultimate-member' ),
-		'conditional'    => array( '_um_view_types_grid', '~', 1 ),
-	);
+	if ( UM()->options()->get( 'enable_user_cover' ) ) {
+		$cover_photos_field = array(
+			'id'             => '_um_cover_photos',
+			'type'           => 'checkbox',
+			'label'          => __( 'Enable Cover Photo', 'ultimate-member' ),
+			'value'          => (bool) get_post_meta( $post_id, '_um_cover_photos', true ),
+			'checkbox_label' => __( 'Enable Cover Photo (for grid view only).', 'ultimate-member' ),
+			'description'    => __( 'If turned on, the users cover photo will appear in the directory.', 'ultimate-member' ),
+			'conditional'    => array( '_um_view_types_grid', '~', 1 ),
+		);
+	} else {
+		$cover_photos_field = null;
+	}
 }
 
 $fields = array(
