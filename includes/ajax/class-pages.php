@@ -19,6 +19,7 @@ class Pages {
 	 */
 	public function __construct() {
 		add_action( 'wp_ajax_um_get_pages_list', array( $this, 'get_pages_list' ) );
+		add_filter( 'um_admin_settings_get_pages_list_args', array( $this, 'get_pages_list_args' ), 10, 2 );
 
 		add_action( 'wp_ajax_um_search_widget_request', array( $this, 'search_widget_request' ) );
 		add_action( 'wp_ajax_nopriv_um_search_widget_request', array( $this, 'search_widget_request' ) );
@@ -51,21 +52,6 @@ class Pages {
 			}
 
 			$field_id = ! empty( $_GET['field_id'] ) ? sanitize_text_field( $_GET['field_id'] ) : null;
-			if ( 'form__um_register_use_gdpr_content_id' === $field_id ) {
-				$predefined_ids   = array();
-				$predefined_pages = array_keys( UM()->config()->get( 'predefined_pages' ) );
-				foreach ( $predefined_pages as $slug ) {
-					$p_id = um_get_predefined_page_id( $slug );
-					if ( empty( $p_id ) ) {
-						continue;
-					}
-					$predefined_ids[] = $p_id;
-				}
-				$predefined_ids = array_unique( $predefined_ids );
-				if ( ! empty( $predefined_ids ) ) {
-					$query_args['post__not_in'] = $predefined_ids;
-				}
-			}
 
 			/**
 			 * Filters WP_Query arguments for getting pages visible in the dropdown fields in UM Settings.
@@ -100,6 +86,49 @@ class Pages {
 		}
 
 		wp_send_json( $return );
+	}
+
+	/**
+	 * Retrieves arguments for listing pages.
+	 *
+	 * @param array       $query_args The current query arguments.
+	 * @param string|null $field_id   The ID of the field.
+	 *
+	 * @return array The updated query arguments.
+	 */
+	public function get_pages_list_args( $query_args, $field_id = null ) {
+		$exclude_ids = ! empty( $query_args['post__not_in'] ) ? $query_args['post__not_in'] : array();
+
+		if ( 'form__um_register_use_gdpr_content_id' === $field_id ) {
+			$predefined_pages = array_keys( UM()->config()->get( 'predefined_pages' ) );
+			foreach ( $predefined_pages as $slug ) {
+				$p_id = um_get_predefined_page_id( $slug );
+				if ( empty( $p_id ) ) {
+					continue;
+				}
+				$exclude_ids[] = $p_id;
+			}
+		}
+
+		$um_pages = get_posts(
+			array(
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+				's'              => '[ultimatemember',
+			)
+		);
+
+		if ( ! empty( $um_pages ) ) {
+			$exclude_ids = array_merge( $exclude_ids, $um_pages );
+		}
+
+		if ( ! empty( $exclude_ids ) ) {
+			$query_args['post__not_in'] = array_unique( $exclude_ids );
+		}
+
+		return $query_args;
 	}
 
 	/**
