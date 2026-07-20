@@ -491,6 +491,11 @@ final class Enqueue extends \um\common\Enqueue {
 	/**
 	 * Load global assets.
 	 *
+	 * Callers should gate this on `UM()->admin()->screen()->is_own_screen()` or
+	 * the `um_enqueue_global_admin_scripts` filter. Loading it on every wp-admin
+	 * page interfered with wp-auth-check/heartbeat load order and caused the
+	 * site-wide rest_cookie_invalid_nonce regression (GitHub issue #1842).
+	 *
 	 * @since 2.0.18
 	 */
 	public function load_global_scripts() {
@@ -565,7 +570,25 @@ final class Enqueue extends \um\common\Enqueue {
 		$js_url  = self::get_url( 'js' );
 		$css_url = self::get_url( 'css' );
 
-		$this->load_global_scripts();
+		// Load the global admin script only on UM-owned screens.
+		// Enqueueing it on every wp-admin page interferes with wp-auth-check/heartbeat
+		// load order and caused the site-wide rest_cookie_invalid_nonce regression (#1842).
+		$enqueue_global = UM()->admin()->screen()->is_own_screen();
+		/**
+		 * Filters whether the global UM admin script and styles are enqueued.
+		 *
+		 * @since 2.12.2
+		 * @hook um_enqueue_global_admin_scripts
+		 *
+		 * @param {bool}   $enqueue_global Whether to enqueue global admin assets. Default is the result of `is_own_screen()`.
+		 * @param {string} $hook           Current wp-admin screen hook.
+		 *
+		 * @return {bool} True to enqueue, false to skip.
+		 */
+		$enqueue_global = apply_filters( 'um_enqueue_global_admin_scripts', $enqueue_global, $hook );
+		if ( $enqueue_global ) {
+			$this->load_global_scripts();
+		}
 
 		if ( UM()->admin()->screen()->is_own_screen() ) {
 			wp_register_script( 'um_admin_common', $js_url . 'admin/common' . $suffix . '.js', array( 'wp-color-picker', 'jquery-ui-tooltip', 'um_common' ), UM_VERSION, true );
