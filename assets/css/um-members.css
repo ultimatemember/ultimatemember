@@ -225,6 +225,7 @@ body #content .um-directory a:hover, body #content .um-directory a:focus {
   font-size: 30px;
   line-height: 30px;
   margin: 0 10px 0 0;
+  height: 30px;
   width: 30px;
 }
 .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-view-type .um-member-directory-view-type-a {

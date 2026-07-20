@@ -1107,7 +1107,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 			$roles = UM()->roles()->get_roles( false, $exclude_roles );
 			$roles = array_map(
-				function( $item ) {
+				function ( $item ) {
 					return html_entity_decode( $item, ENT_QUOTES );
 				},
 				$roles

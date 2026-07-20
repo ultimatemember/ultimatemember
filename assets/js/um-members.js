@@ -910,27 +910,24 @@ jQuery(document.body).ready( function() {
 
 
 	//UI for change view type button
-	jQuery( document.body ).on( 'mouseover', '.um-directory .um-member-directory-view-type', function() {
-		if ( jQuery(this).hasClass('um-disabled') ) {
-			return;
-		}
+	jQuery( document.body ).on( 'mouseover', '.um-directory .um-member-directory-view-type', function( e ) {
+		let $switcher   = jQuery( e.currentTarget );
+		let view_type   = $switcher.closest('.um-directory').data('view_type');
+		let $this_view  = $switcher.find('.um-member-directory-view-type-a[data-type="' + view_type + '"]');
+		let $other_view = $this_view.siblings('.um-member-directory-view-type-a');
 
-		var $obj = jQuery(this).find('.um-member-directory-view-type-a:visible');
+		UM.common.tipsy.hide();
+		$this_view.hide();
+		$other_view.show().tipsy('show');
+	}).on( 'mouseout', '.um-directory .um-member-directory-view-type', function( e ) {
+		let $switcher   = jQuery( e.currentTarget );
+		let view_type   = $switcher.closest('.um-directory').data('view_type');
+		let $this_view  = $switcher.find('.um-member-directory-view-type-a[data-type="' + view_type + '"]');
+		let $other_view = $this_view.siblings('.um-member-directory-view-type-a');
 
-		$obj.hide();
-
-		if ( $obj.next().length ) {
-			$obj.next().show().tipsy('show');
-		} else {
-			jQuery(this).find( '.um-member-directory-view-type-a:first' ).show().tipsy('show');
-		}
-	}).on( 'mouseout', '.um-directory .um-member-directory-view-type', function() {
-		if ( jQuery(this).hasClass('um-disabled') ) {
-			return;
-		}
-
-		jQuery(this).find('.um-member-directory-view-type-a').hide().tipsy('hide');
-		jQuery(this).find('.um-member-directory-view-type-a[data-type="' + jQuery(this).parents( '.um-directory' ).data('view_type') + '"]').show();
+		UM.common.tipsy.hide();
+		$other_view.hide();
+		$this_view.show();
 	});
 
 	//change layout handler
@@ -1623,6 +1620,13 @@ jQuery(document.body).ready( function() {
 		var hash = um_members_get_hash( directory );
 
 		um_member_directories.push( hash );
+
+		// overlay.
+		directory.find('.um-members-overlay').on('mousewheel', function (event) {
+			if (event.ctrlKey) {
+				return false;
+			}
+		});
 
 		// slideup/slidedown animation fix for grid filters bar
 		if ( directory.find('.um-search').length ) {
