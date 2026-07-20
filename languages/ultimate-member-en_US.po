@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-06T14:13:40+00:00\n"
+"POT-Creation-Date: 2026-07-20T20:27:13+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -216,7 +216,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/class-enqueue.php:550
+#: includes/admin/class-enqueue.php:555
 msgid "Ultimate Member Blocks"
 msgstr ""
 
