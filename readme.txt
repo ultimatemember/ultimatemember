@@ -173,6 +173,11 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Added: Using `illegal_user_logins` filter to sanitize the `user_login` field value during registration or upgrade.
 
+**Bugfixes**
+
+* Fixed: `WP_Filesystem()` initialization optimization. Init `WP_Filesystem()` only once when it's necessary.
+* Fixed: Redirect on non-main queries (breaks Spectra and block themes). Added conditional check for the main query (based on @faisalahammad suggestions).
+
 = 2.12.1 2026-07-06 =
 
 **Enhancements**
