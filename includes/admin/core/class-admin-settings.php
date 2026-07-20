@@ -2252,7 +2252,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'fields'      => array(
 											array(
 												'id'    => 'um_google_maps_js_api_key',
-												'type'  => 'text',
+												'type'  => 'api_key',
 												'label' => __( 'Maps JavaScript API Key', 'ultimate-member' ),
 												'size'  => 'medium',
 											),

@@ -204,6 +204,7 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_register_style( 'um_account', $css_url . 'um-account' . $suffix . '.css', array(), UM_VERSION );
 		wp_register_style( 'um_default_css', $css_url . 'um-old-default' . $suffix . '.css', array(), UM_VERSION );
 		wp_register_style( 'um_misc', $css_url . 'um-misc' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
+		wp_register_style( 'um_modal', $css_url . 'um-modal' . $suffix . '.css', array(), UM_VERSION );
 
 		wp_register_style( 'um_datetime', $libs_url . 'pickadate/default' . $suffix . '.css', array(), '3.6.2' );
 		wp_register_style( 'um_datetime_date', $libs_url . 'pickadate/default.date' . $suffix . '.css', array( 'um_datetime' ), '3.6.2' );
@@ -216,6 +217,7 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_enqueue_style( 'um_responsive' );
 		wp_enqueue_style( 'um_account' );
 		wp_enqueue_style( 'um_misc' );
+		wp_enqueue_style( 'um_modal' );
 
 		wp_enqueue_style( 'um_datetime_date' );
 		wp_enqueue_style( 'um_datetime_time' );
