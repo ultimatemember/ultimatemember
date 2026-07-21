@@ -510,6 +510,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->form()->hooks();
 			$this->permalinks();
 			$this->cron();
+			$this->inactive();
 			$this->external_integrations();
 			$this->gdpr();
 			$this->member_directory();
@@ -1280,6 +1281,18 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['cron'];
 		}
 
+		/**
+		 * @since 2.12.1
+		 *
+		 * @return um\core\Inactive
+		 */
+		function inactive() {
+			if ( empty( $this->classes['inactive'] ) ) {
+				$this->classes['inactive'] = new um\core\Inactive();
+			}
+
+			return $this->classes['inactive'];
+		}
 
 		/**
 		 * @since 2.0
