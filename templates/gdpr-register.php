@@ -24,8 +24,11 @@ $content = '';
 if ( ! empty( $args['use_gdpr_content_id'] ) ) {
 	$um_content_query = get_post( $args['use_gdpr_content_id'] );
 	if ( ! empty( $um_content_query ) && ! is_wp_error( $um_content_query ) ) {
-		$content = apply_filters( 'um_gdpr_policies_page_content', $um_content_query->post_content, $args );
-		$content = apply_filters( 'the_content', $content, $um_content_query->ID );
+		$proper_content = ! has_shortcode( $um_content_query->post_content, 'ultimatemember' ) && ! um_post_is_predefined_page( $um_content_query->ID );
+		if ( $proper_content ) {
+			$content = apply_filters( 'um_gdpr_policies_page_content', $um_content_query->post_content, $args );
+			$content = apply_filters( 'the_content', $content, $um_content_query->ID );
+		}
 	}
 }
 
