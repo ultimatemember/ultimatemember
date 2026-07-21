@@ -177,6 +177,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Fixed: `WP_Filesystem()` initialization optimization. Init `WP_Filesystem()` only once when it's necessary.
 * Fixed: Redirect on non-main queries (breaks Spectra and block themes). Added conditional check for the main query (based on @faisalahammad suggestions).
+* Fixed: Registration form infinite loop - gdpr-register.php calls `the_content` recursively causing PHP fatal error. Excluded predefined UM pages and pages with [ultimatemember] shortcode from the list, render empty content for such pages if they are already selected to avoid PHP error (based on @faisalahammad suggestions).
 
 = 2.12.1 2026-07-06 =
 
