@@ -528,6 +528,19 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'recipient'   => 'user',
 					'default_active' => true
 				),
+				'inactive_warning_email' => array(
+					'key'           => 'inactive_warning_email',
+					'title'         => __( 'Inactive Account Warning Email', 'ultimate-member' ),
+					'subject'       => 'Your {site_name} account will be deactivated soon',
+					'body'          => 'Hi {display_name},<br /><br />' .
+					                   'This is an automated email to let you know that your {site_name} account will be deactivated in {days_until_deactivation} days due to inactivity.<br /><br />' .
+					                   'If you want to keep your account active, please login to your account: <a href="{login_url}">{login_url}</a><br /><br />' .
+					                   'Thanks,<br />' .
+					                   '{site_name}',
+					'description'   => __( 'Whether to send the user a warning email when their account is about to be deactivated due to inactivity.', 'ultimate-member' ),
+					'recipient'     => 'user',
+					'default_active' => true
+				),
 				'deletion_email' => array(
 					'key'           => 'deletion_email',
 					'title'         => __( 'Account Deleted Email','ultimate-member' ),

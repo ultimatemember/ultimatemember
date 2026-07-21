@@ -1058,6 +1058,27 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					),
 					'secure_allowed_redirect_hosts'        => array(
 						'sanitize' => 'textarea',
+						'inactive_cleanup_enabled'             => array(
+							'sanitize' => 'bool',
+						),
+						'inactive_cleanup_days'                => array(
+							'sanitize' => 'absint',
+						),
+						'inactive_cleanup_warnings'            => array(
+							'sanitize' => 'absint',
+						),
+						'inactive_cleanup_min_age_days'        => array(
+							'sanitize' => 'absint',
+						),
+						'inactive_cleanup_roles'               => array(
+							'sanitize' => array( UM()->admin(), 'sanitize_existed_role' ),
+						),
+						'inactive_cleanup_exempt_with_posts'   => array(
+							'sanitize' => 'bool',
+						),
+						'inactive_cleanup_exempt_with_comments' => array(
+							'sanitize' => 'bool',
+						),
 					),
 				)
 			);
@@ -1300,6 +1321,73 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 											),
 										),
 									),
+								'inactive_cleanup' => array(
+									'title'       => __( 'Inactive User Cleanup', 'ultimate-member' ),
+									'description' => __( 'Configure automatic detection and deactivation of dormant user accounts.', 'ultimate-member' ),
+									'fields'      => array(
+										array(
+											'id'    => 'inactive_cleanup_enabled',
+											'type'  => 'checkbox',
+											'label' => __( 'Enable Inactive User Cleanup', 'ultimate-member' ),
+											'checkbox_label' => __( 'Enable automatic deactivation of dormant accounts', 'ultimate-member' ),
+											'description' => __( 'If enabled, user accounts that have not logged in for the configured period will receive warning emails and be deactivated.', 'ultimate-member' ),
+										),
+										array(
+											'id'          => 'inactive_cleanup_days',
+											'type'        => 'number',
+											'label'       => __( 'Inactivity Threshold (days)', 'ultimate-member' ),
+											'description' => __( 'Days without login before an account is considered inactive.', 'ultimate-member' ),
+											'size'        => 'small',
+											'default'     => 365,
+											'conditional' => array( 'inactive_cleanup_enabled', '=', 1 ),
+										),
+										array(
+											'id'          => 'inactive_cleanup_warnings',
+											'type'        => 'number',
+											'label'       => __( 'Number of Warning Notifications', 'ultimate-member' ),
+											'description' => __( 'How many warning emails to send before deactivation. Warnings are evenly spaced across the inactivity period.', 'ultimate-member' ),
+											'size'        => 'small',
+											'default'     => 3,
+											'conditional' => array( 'inactive_cleanup_enabled', '=', 1 ),
+										),
+										array(
+											'id'          => 'inactive_cleanup_min_age_days',
+											'type'        => 'number',
+											'label'       => __( 'Minimum Account Age (days)', 'ultimate-member' ),
+											'description' => __( 'Only consider accounts older than this many days. Newer accounts are skipped.', 'ultimate-member' ),
+											'size'        => 'small',
+											'default'     => 0,
+											'conditional' => array( 'inactive_cleanup_enabled', '=', 1 ),
+										),
+										array(
+											'id'          => 'inactive_cleanup_roles',
+											'type'        => 'select',
+											'multi'       => true,
+											'label'       => __( 'User Roles', 'ultimate-member' ),
+											'description' => __( 'Limit cleanup to specific user roles. Leave empty to include all roles.', 'ultimate-member' ),
+											'options'     => UM()->roles()->get_roles(),
+											'placeholder' => __( 'Choose user roles...', 'ultimate-member' ),
+											'conditional' => array( 'inactive_cleanup_enabled', '=', 1 ),
+											'size'        => 'small',
+										),
+										array(
+											'id'    => 'inactive_cleanup_exempt_with_posts',
+											'type'  => 'checkbox',
+											'label' => __( 'Exempt Users With Published Posts', 'ultimate-member' ),
+											'checkbox_label' => __( 'Skip users who have published any posts', 'ultimate-member' ),
+											'description' => __( 'If enabled, users with at least one published post will be exempt from cleanup.', 'ultimate-member' ),
+											'conditional' => array( 'inactive_cleanup_enabled', '=', 1 ),
+										),
+										array(
+											'id'    => 'inactive_cleanup_exempt_with_comments',
+											'type'  => 'checkbox',
+											'label' => __( 'Exempt Users With Approved Comments', 'ultimate-member' ),
+											'checkbox_label' => __( 'Skip users who have any approved comments', 'ultimate-member' ),
+											'description' => __( 'If enabled, users with at least one approved comment will be exempt from cleanup.', 'ultimate-member' ),
+											'conditional' => array( 'inactive_cleanup_enabled', '=', 1 ),
+										),
+									),
+								),
 								),
 							),
 							'account' => array(
