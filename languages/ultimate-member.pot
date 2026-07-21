@@ -6522,7 +6522,7 @@ msgstr ""
 
 #: includes/admin/templates/form/register_gdpr.php:50
 #: includes/admin/templates/form/register_gdpr.php:51
-#: includes/core/class-gdpr.php:64
+#: includes/core/class-gdpr.php:67
 #: templates/gdpr-register.php:31
 #: templates/gdpr-register.php:33
 msgid "Show privacy policy"
@@ -6530,7 +6530,7 @@ msgstr ""
 
 #: includes/admin/templates/form/register_gdpr.php:58
 #: includes/admin/templates/form/register_gdpr.php:59
-#: includes/core/class-gdpr.php:65
+#: includes/core/class-gdpr.php:68
 #: templates/gdpr-register.php:32
 msgid "Hide privacy policy"
 msgstr ""
@@ -6538,14 +6538,14 @@ msgstr ""
 #: includes/admin/templates/form/register_gdpr.php:66
 #: includes/admin/templates/form/register_gdpr.php:67
 #: includes/core/class-builtin.php:1505
-#: includes/core/class-gdpr.php:109
+#: includes/core/class-gdpr.php:113
 #: templates/gdpr-register.php:34
 msgid "Please confirm that you agree to our privacy policy"
 msgstr ""
 
 #: includes/admin/templates/form/register_gdpr.php:74
 #: includes/admin/templates/form/register_gdpr.php:75
-#: includes/core/class-gdpr.php:148
+#: includes/core/class-gdpr.php:152
 #: templates/gdpr-register.php:37
 msgid "Please confirm your acceptance of our privacy policy"
 msgstr ""

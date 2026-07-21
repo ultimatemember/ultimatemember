@@ -61,48 +61,52 @@ if ( ! class_exists( 'um\core\GDPR' ) ) {
 							if ( ! empty( $args['use_gdpr_content_id'] ) ) {
 								$um_content_query = get_post( $args['use_gdpr_content_id'] );
 								if ( ! empty( $um_content_query ) && ! is_wp_error( $um_content_query ) ) {
-									$toggle_show = ! empty( $args['use_gdpr_toggle_show'] ) ? $args['use_gdpr_toggle_show'] : __( 'Show privacy policy', 'ultimate-member' );
-									$toggle_hide = ! empty( $args['use_gdpr_toggle_hide'] ) ? $args['use_gdpr_toggle_hide'] : __( 'Hide privacy policy', 'ultimate-member' );
+									$proper_content = ! has_shortcode( $um_content_query->post_content, 'ultimatemember' ) && ! um_post_is_predefined_page( $um_content_query->ID );
 
-									$button = UM()->frontend()::layouts()::link(
-										$toggle_show,
-										array(
-											'type'    => 'raw',
-											'size'    => 's',
-											'design'  => 'primary',
-											'title'   => $toggle_show,
-											'classes' => array(
-												'um-hide-gdpr',
-											),
-											'data'    => array(
-												'toggle-text' => $toggle_hide,
-												'um-toggle'   => '.um-gdpr-post-content-wrap',
-											),
-										)
-									);
-									ob_start();
-									?>
-									<span class="um-gdpr-toggle-link-wrapper"><?php echo wp_kses( $button, UM()->get_allowed_html( 'templates' ) ); ?></span>
-									<div class="um-gdpr-post-content-wrap um-toggle-block um-toggle-block-collapsed">
-										<div class="um-gdpr-post-content-inner um-toggle-block-inner">
-											<div class="um-gdpr-post-content">
-												<?php
-												$content = apply_filters( 'um_gdpr_policies_page_content', $um_content_query->post_content, $args );
-												echo wp_kses( apply_filters( 'the_content', $content, $um_content_query->ID ), UM()->get_allowed_html( 'templates' ) );
-												?>
+									if ( $proper_content ) {
+										$toggle_show = ! empty( $args['use_gdpr_toggle_show'] ) ? $args['use_gdpr_toggle_show'] : __( 'Show privacy policy', 'ultimate-member' );
+										$toggle_hide = ! empty( $args['use_gdpr_toggle_hide'] ) ? $args['use_gdpr_toggle_hide'] : __( 'Hide privacy policy', 'ultimate-member' );
+
+										$button = UM()->frontend()::layouts()::link(
+											$toggle_show,
+											array(
+												'type'    => 'raw',
+												'size'    => 's',
+												'design'  => 'primary',
+												'title'   => $toggle_show,
+												'classes' => array(
+													'um-hide-gdpr',
+												),
+												'data'    => array(
+													'toggle-text' => $toggle_hide,
+													'um-toggle'   => '.um-gdpr-post-content-wrap',
+												),
+											)
+										);
+										ob_start();
+										?>
+										<span class="um-gdpr-toggle-link-wrapper"><?php echo wp_kses( $button, UM()->get_allowed_html( 'templates' ) ); ?></span>
+										<div class="um-gdpr-post-content-wrap um-toggle-block um-toggle-block-collapsed">
+											<div class="um-gdpr-post-content-inner um-toggle-block-inner">
+												<div class="um-gdpr-post-content">
+													<?php
+													$content = apply_filters( 'um_gdpr_policies_page_content', $um_content_query->post_content, $args );
+													echo wp_kses( apply_filters( 'the_content', $content, $um_content_query->ID ), UM()->get_allowed_html( 'templates' ) );
+													?>
+												</div>
+												<?php echo wp_kses( $button, UM()->get_allowed_html( 'templates' ) ); ?>
 											</div>
-											<?php echo wp_kses( $button, UM()->get_allowed_html( 'templates' ) ); ?>
 										</div>
-									</div>
-									<?php
-									$data['content']    = ob_get_clean();
-									$data['in_row']     = $gdpr_row_key;
-									$data['in_sub_row'] = '0';
-									$data['in_column']  = '1';
-									$data['in_group']   = '';
-									$data['position']   = 1;
+										<?php
+										$data['content']    = ob_get_clean();
+										$data['in_row']     = $gdpr_row_key;
+										$data['in_sub_row'] = '0';
+										$data['in_column']  = '1';
+										$data['in_group']   = '';
+										$data['position']   = 1;
 
-									$fields[ $key ] = $data;
+										$fields[ $key ] = $data;
+									}
 								}
 							}
 						} elseif ( 'use_gdpr_agreement' === $key ) {
