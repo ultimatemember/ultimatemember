@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-20T13:15:09+00:00\n"
+"POT-Creation-Date: 2026-07-20T13:36:54+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -62,7 +62,7 @@ msgstr ""
 #: includes/admin/templates/form/profile_customize.php:216
 #: includes/admin/templates/form/register_customize.php:33
 #: includes/admin/templates/form/register_customize.php:89
-#: includes/admin/templates/form/register_gdpr.php:31
+#: includes/admin/templates/form/register_gdpr.php:40
 #: includes/admin/templates/role/profile.php:56
 #: includes/core/class-builtin.php:1346
 #: includes/core/class-builtin.php:1365
@@ -418,7 +418,7 @@ msgstr ""
 #: includes/admin/templates/form/profile_customize.php:217
 #: includes/admin/templates/form/register_customize.php:34
 #: includes/admin/templates/form/register_customize.php:90
-#: includes/admin/templates/form/register_gdpr.php:32
+#: includes/admin/templates/form/register_gdpr.php:41
 #: includes/admin/templates/role/profile.php:57
 #: includes/core/class-builtin.php:1347
 #: includes/core/class-builtin.php:1366
@@ -1761,22 +1761,22 @@ msgid "Privacy policy content"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2222
-#: includes/admin/templates/form/register_gdpr.php:46
+#: includes/admin/templates/form/register_gdpr.php:57
 msgid "Toggle Show text"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2226
-#: includes/admin/templates/form/register_gdpr.php:54
+#: includes/admin/templates/form/register_gdpr.php:65
 msgid "Toggle Hide text"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2230
-#: includes/admin/templates/form/register_gdpr.php:62
+#: includes/admin/templates/form/register_gdpr.php:73
 msgid "Checkbox agreement description"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2234
-#: includes/admin/templates/form/register_gdpr.php:70
+#: includes/admin/templates/form/register_gdpr.php:81
 msgid "Error Text"
 msgstr ""
 
@@ -4066,6 +4066,7 @@ msgid "%s page"
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:344
+#: includes/admin/templates/form/register_gdpr.php:48
 msgid "Choose a page..."
 msgstr ""
 
@@ -6272,39 +6273,39 @@ msgstr ""
 msgid "Assign role to form"
 msgstr ""
 
-#: includes/admin/templates/form/register_gdpr.php:8
+#: includes/admin/templates/form/register_gdpr.php:9
 msgid "Select page"
 msgstr ""
 
-#: includes/admin/templates/form/register_gdpr.php:28
+#: includes/admin/templates/form/register_gdpr.php:37
 msgid "Enable on this form"
 msgstr ""
 
-#: includes/admin/templates/form/register_gdpr.php:38
+#: includes/admin/templates/form/register_gdpr.php:47
 msgid "Content"
 msgstr ""
 
-#: includes/admin/templates/form/register_gdpr.php:47
-#: includes/admin/templates/form/register_gdpr.php:48
+#: includes/admin/templates/form/register_gdpr.php:58
+#: includes/admin/templates/form/register_gdpr.php:59
 #: templates/gdpr-register.php:32
 #: templates/gdpr-register.php:34
 msgid "Show privacy policy"
 msgstr ""
 
-#: includes/admin/templates/form/register_gdpr.php:55
-#: includes/admin/templates/form/register_gdpr.php:56
+#: includes/admin/templates/form/register_gdpr.php:66
+#: includes/admin/templates/form/register_gdpr.php:67
 #: templates/gdpr-register.php:33
 msgid "Hide privacy policy"
 msgstr ""
 
-#: includes/admin/templates/form/register_gdpr.php:63
-#: includes/admin/templates/form/register_gdpr.php:64
+#: includes/admin/templates/form/register_gdpr.php:74
+#: includes/admin/templates/form/register_gdpr.php:75
 #: templates/gdpr-register.php:35
 msgid "Please confirm that you agree to our privacy policy"
 msgstr ""
 
-#: includes/admin/templates/form/register_gdpr.php:71
-#: includes/admin/templates/form/register_gdpr.php:72
+#: includes/admin/templates/form/register_gdpr.php:82
+#: includes/admin/templates/form/register_gdpr.php:83
 #: templates/gdpr-register.php:38
 msgid "Please confirm your acceptance of our privacy policy"
 msgstr ""
@@ -6600,13 +6601,13 @@ msgstr ""
 msgid "Check All"
 msgstr ""
 
-#: includes/ajax/class-pages.php:91
+#: includes/ajax/class-pages.php:77
 #, php-format
 msgid "%s (ID: %s)"
 msgstr ""
 
-#: includes/ajax/class-pages.php:112
-#: includes/ajax/class-pages.php:123
+#: includes/ajax/class-pages.php:141
+#: includes/ajax/class-pages.php:152
 msgid "No members page enabled"
 msgstr ""
 
