@@ -43,13 +43,6 @@ class Filesystem {
 	public $temp_upload_url = array();
 
 	/**
-	 * @return void
-	 */
-	public function hooks() {
-		add_action( 'init', array( $this, 'init_paths' ), 0 );
-	}
-
-	/**
 	 * Init uploading URL and directory
 	 *
 	 * @since 2.8.7

@@ -23,7 +23,6 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			$this->actions();
 
 			$this->cpt()->hooks();
-			$this->filesystem()->hooks();
 			$this->guest();
 			$this->rewrite();
 			$this->screen();
