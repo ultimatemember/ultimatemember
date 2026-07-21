@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-20T13:36:51+00:00\n"
+"POT-Creation-Date: 2026-07-21T08:20:16+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -6287,26 +6287,26 @@ msgstr ""
 
 #: includes/admin/templates/form/register_gdpr.php:58
 #: includes/admin/templates/form/register_gdpr.php:59
-#: templates/gdpr-register.php:32
-#: templates/gdpr-register.php:34
+#: templates/gdpr-register.php:35
+#: templates/gdpr-register.php:37
 msgid "Show privacy policy"
 msgstr ""
 
 #: includes/admin/templates/form/register_gdpr.php:66
 #: includes/admin/templates/form/register_gdpr.php:67
-#: templates/gdpr-register.php:33
+#: templates/gdpr-register.php:36
 msgid "Hide privacy policy"
 msgstr ""
 
 #: includes/admin/templates/form/register_gdpr.php:74
 #: includes/admin/templates/form/register_gdpr.php:75
-#: templates/gdpr-register.php:35
+#: templates/gdpr-register.php:38
 msgid "Please confirm that you agree to our privacy policy"
 msgstr ""
 
 #: includes/admin/templates/form/register_gdpr.php:82
 #: includes/admin/templates/form/register_gdpr.php:83
-#: templates/gdpr-register.php:38
+#: templates/gdpr-register.php:41
 msgid "Please confirm your acceptance of our privacy policy"
 msgstr ""
 
