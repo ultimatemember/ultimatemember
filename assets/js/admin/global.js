@@ -28,25 +28,27 @@ jQuery(document).ready( function() {
 	});
 
 	jQuery(document.body).on( 'click', '.um-admin-notice.is-dismissible .notice-dismiss', function() {
-		let notice_key = jQuery(this).parents('.um-admin-notice').data('key');
+		let $notice =  jQuery(this).parents('.um-admin-notice');
+		let key = $notice.data('key');
+		let nonce = $notice.data('nonce');
 
 		wp.ajax.send( 'um_dismiss_notice', {
 			data: {
-				key: notice_key,
-				nonce: um_admin_scripts.nonce
+				key: key,
+				_wpnonce: nonce
 			},
 			success: function() {
 				return true;
 			},
 			error: function() {
-				// On error make the force notice's dismiss via action link.
+				// On error make the force notice's dismissing via action link.
 				let href_index;
 				if ( window.location.href.indexOf('?') > -1 ) {
 					href_index = window.location.href + '&';
 				} else {
 					href_index = window.location.href + '?';
 				}
-				window.location.href = href_index + 'um_dismiss_notice=' + notice_key + '&um_admin_nonce=' + um_admin_scripts.nonce;
+				window.location.href = href_index + 'um_dismiss_notice=' + key + '&_wpnonce=' + nonce;
 
 				return false;
 			}
