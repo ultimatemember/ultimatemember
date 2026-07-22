@@ -1681,14 +1681,37 @@ function um_add_submit_button_to_profile( $args ) {
 	}
 	if ( ! isset( $args['secondary_btn_word'] ) || $args['secondary_btn_word'] == '' ){
 		$args['secondary_btn_word'] = UM()->options()->get( 'profile_secondary_btn_word' );
-	} ?>
+	}
+
+	/**
+	 * Filters the classes applied to the primary button on the profile form.
+	 *
+	 * @hook um_profile_form_primary_btn_classes
+	 * @since 2.12.1
+	 *
+	 * @param {array} $classes An array of CSS classes applied to the primary button.
+	 * @param {array} $args    An array of arguments or configurations used in the profile form.
+	 *
+	 * @return {array} Button CSS classes.
+	 *
+	 * @example <caption>Extend the classes applied to the primary button on the profile form.</caption>
+	 * function my_custom_classes( $classes, $args ) {
+	 *     // Add a new class to the button
+	 *     $classes[] = 'new-button-class';
+	 *
+	 *     return $classes;
+	 * }
+	 * add_filter( 'um_profile_form_primary_btn_classes', 'my_custom_classes', 10, 2 );
+	 */
+	$primary_btn_classes = apply_filters( 'um_profile_form_primary_btn_classes', array( 'um-button' ), $args );
+	?>
 
 	<div class="um-col-alt">
 
 		<?php if ( ! empty( $args['secondary_btn'] ) ) { ?>
 
 			<div class="um-left um-half">
-				<input type="submit" value="<?php esc_attr_e( wp_unslash( $args['primary_btn_word'] ), 'ultimate-member' ); ?>" class="um-button" />
+				<input type="submit" value="<?php esc_attr_e( wp_unslash( $args['primary_btn_word'] ), 'ultimate-member' ); ?>" class="<?php echo esc_attr( implode( ' ', $primary_btn_classes ) ); ?>" />
 			</div>
 			<div class="um-right um-half">
 				<a href="<?php echo esc_url( um_edit_my_profile_cancel_uri() ); ?>" class="um-button um-alt">
@@ -1699,7 +1722,7 @@ function um_add_submit_button_to_profile( $args ) {
 		<?php } else { ?>
 
 			<div class="um-center">
-				<input type="submit" value="<?php esc_attr_e( wp_unslash( $args['primary_btn_word'] ), 'ultimate-member' ); ?>" class="um-button" />
+				<input type="submit" value="<?php esc_attr_e( wp_unslash( $args['primary_btn_word'] ), 'ultimate-member' ); ?>" class="<?php echo esc_attr( implode( ' ', $primary_btn_classes ) ); ?>" />
 			</div>
 
 		<?php } ?>

@@ -56,12 +56,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 			}
 			?>
 
+			<?php
+			/**
+			 * Filters the classes applied to the primary button on the password change form.
+			 *
+			 * @hook um_password_change_form_primary_btn_classes
+			 * @since 2.12.1
+			 *
+			 * @param {array} $classes An array of CSS classes applied to the primary button.
+			 * @param {array} $args    An array of arguments or configurations used in the password change form.
+			 *
+			 * @return {array} Button CSS classes.
+			 *
+			 * @example <caption>Extend the classes applied to the primary button on the password change form.</caption>
+			 * function my_custom_classes( $classes, $args ) {
+			 *     // Add a new class to the button
+			 *     $classes[] = 'new-button-class';
+			 *
+			 *     return $classes;
+			 * }
+			 * add_filter( 'um_password_change_form_primary_btn_classes', 'my_custom_classes', 10, 2 );
+			 */
+			$primary_btn_classes = apply_filters( 'um_password_change_form_primary_btn_classes', array( 'um-button' ), $args );
+			?>
+
 			<div class="um-col-alt um-col-alt-b">
 				<div class="um-center">
 					<?php if ( 'pw_set' === $rp_mode ) { ?>
-						<input type="submit" value="<?php esc_attr_e( 'Set password', 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+						<input type="submit" value="<?php esc_attr_e( 'Set password', 'ultimate-member' ); ?>" class="<?php echo esc_attr( implode( ' ', $primary_btn_classes ) ); ?>" id="um-submit-btn" />
 					<?php } else { ?>
-						<input type="submit" value="<?php esc_attr_e( 'Change password', 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+						<input type="submit" value="<?php esc_attr_e( 'Change password', 'ultimate-member' ); ?>" class="<?php echo esc_attr( implode( ' ', $primary_btn_classes ) ); ?>" id="um-submit-btn" />
 					<?php } ?>
 				</div>
 
