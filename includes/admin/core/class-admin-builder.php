@@ -727,7 +727,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		public function dynamic_modal_content() {
 			UM()->admin()->check_ajax_nonce();
 
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+			if ( ! is_user_logged_in() ) {
+				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
+			}
+
+			// The `um_admin_review_registration` action is also reachable by users with the
+			// UM "Can approve/deny newly registered members?" role permission. All other
+			// dynamic modal actions (form builder, field editor, font icon selector, ...)
+			// remain admin-only.
+			$act_id_preview = isset( $_POST['act_id'] ) ? sanitize_key( $_POST['act_id'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification -- nonce already verified
+			$is_review_action = ( 'um_admin_review_registration' === $act_id_preview );
+
+			if ( ! current_user_can( 'manage_options' )
+				&& ! ( $is_review_action
+					&& ( current_user_can( 'edit_users' )
+						|| UM()->roles()->um_user_can( 'can_approve_members' ) ) )
+			) {
 				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
 			}
 
@@ -1075,7 +1090,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					break;
 				case 'um_admin_review_registration':
 					// $arg1 means `user_id` variable in this case.
-					if ( ! current_user_can( 'administrator' ) && ! um_can_view_profile( $arg1 ) ) {
+					if ( ! current_user_can( 'manage_options' ) && ! um_can_view_profile( $arg1 ) ) {
 						$output = '';
 						break;
 					}

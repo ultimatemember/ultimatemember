@@ -55,7 +55,10 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			$action = sanitize_key( $_REQUEST['um_adm_action'] );
 			// phpcs:enable WordPress.Security.NonceVerification -- there is nonce verification below for each case
 
-			if ( in_array( $action, self::USER_ACTIONS, true ) && ! current_user_can( 'edit_users' ) ) {
+			if ( in_array( $action, self::USER_ACTIONS, true )
+				&& ! current_user_can( 'edit_users' )
+				&& ! UM()->roles()->um_user_can( 'can_approve_members' )
+			) {
 				return;
 			}
 

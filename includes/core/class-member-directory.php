@@ -1361,8 +1361,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				$rolename = UM()->roles()->get_priority_user_role( get_current_user_id() );
 				$role     = get_role( $rolename );
 
-				// Don't specify only approved users  when the current user has 'edit_users' capability.
-				if ( current_user_can( 'edit_users' ) || ( ! is_null( $role ) && $role->has_cap( 'edit_users' ) ) ) {
+				// Don't specify only approved users  when the current user has 'edit_users' capability
+				// or the UM "Can approve/deny newly registered members?" role permission.
+				if ( current_user_can( 'edit_users' )
+					|| ( ! is_null( $role ) && $role->has_cap( 'edit_users' ) )
+					|| UM()->roles()->um_user_can( 'can_approve_members' )
+				) {
 					return true;
 				}
 			}

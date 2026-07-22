@@ -143,6 +143,23 @@ function um_send_registration_notification( $user_id ) {
 			);
 		}
 	}
+
+	// Notify users whose role has the UM "Can approve/deny newly registered members?" permission.
+	if ( 'notification_review' === $email_template ) {
+		$moderator_emails = function_exists( 'um_get_moderator_emails' ) ? um_get_moderator_emails() : array();
+		if ( ! empty( $moderator_emails ) ) {
+			foreach ( $moderator_emails as $email ) {
+				UM()->maybe_action_scheduler()->enqueue_async_action(
+					'um_dispatch_email',
+					array(
+						$email,
+						$email_template,
+						$sending_args,
+					)
+				);
+			}
+		}
+	}
 }
 add_action( 'um_registration_complete', 'um_send_registration_notification' );
 
