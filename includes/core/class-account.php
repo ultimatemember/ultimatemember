@@ -863,13 +863,38 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				 */
 				do_action( "um_after_account_{$tab_id}", $args );
 
-				if ( ! isset( $tab_data['show_button'] ) || false !== $tab_data['show_button'] ) { ?>
+				if ( ! isset( $tab_data['show_button'] ) || false !== $tab_data['show_button'] ) {
+					/**
+					 * Filters the classes applied to the primary button on the account form.
+					 *
+					 * @hook um_account_form_primary_btn_classes
+					 * @since 2.12.1
+					 *
+					 * @param {array}  $classes An array of CSS classes applied to the primary button.
+					 * @param {array}  $args    An array of arguments or configurations used in the account form.
+					 * @param {string} $tab_id  Current account tab identifier.
+					 *
+					 * @return {array} Button CSS classes.
+					 *
+					 * @example <caption>Extend the classes applied to the primary button on the account form.</caption>
+					 * function my_custom_classes( $classes, $args, $tab_id ) {
+					 *     // Add a new class to the button on the password tab only
+					 *     if ( 'password' === $tab_id ) {
+					 *         $classes[] = 'new-button-class';
+					 *     }
+					 *
+					 *     return $classes;
+					 * }
+					 * add_filter( 'um_account_form_primary_btn_classes', 'my_custom_classes', 10, 3 );
+					 */
+					$primary_btn_classes = apply_filters( 'um_account_form_primary_btn_classes', array( 'um-button' ), $args, $tab_id );
+					?>
 
 					<div class="um-col-alt um-col-alt-b">
 						<div class="um-left">
 							<?php $submit_title = ! empty( $tab_data['submit_title'] ) ? $tab_data['submit_title'] : $tab_data['title']; ?>
 							<input type="hidden" name="um_account_nonce_<?php echo esc_attr( $tab_id ) ?>" value="<?php echo esc_attr( wp_create_nonce( 'um_update_account_' . $tab_id ) ) ?>" />
-							<input type="submit" name="um_account_submit" id="um_account_submit_<?php echo esc_attr( $tab_id ) ?>"  class="um-button" value="<?php echo esc_attr( $submit_title ) ?>" />
+							<input type="submit" name="um_account_submit" id="um_account_submit_<?php echo esc_attr( $tab_id ) ?>"  class="<?php echo esc_attr( implode( ' ', $primary_btn_classes ) ); ?>" value="<?php echo esc_attr( $submit_title ) ?>" />
 						</div>
 
 						<?php
