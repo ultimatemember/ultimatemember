@@ -585,7 +585,13 @@ function um_get_custom_field_array( $array, $fields ) {
 			$condition_metakey = $fields[ $value[1] ]['metakey'];
 
 			if ( isset( $_POST[ $condition_metakey ] ) ) {
-				$cond_value = ( $fields[ $value[1] ]['type'] === 'radio' ) ? $_POST[ $condition_metakey ][0] : $_POST[ $condition_metakey ];
+				// Radio fields now submit a scalar, but keep array shape support for backward compatibility.
+				if ( 'radio' === $fields[ $value[1] ]['type'] ) {
+					$posted_value = $_POST[ $condition_metakey ];
+					$cond_value   = is_array( $posted_value ) ? reset( $posted_value ) : $posted_value;
+				} else {
+					$cond_value = $_POST[ $condition_metakey ];
+				}
 				list( $visibility, $parent_key, $op, $parent_value ) = $value;
 
 				if ( $visibility == 'hide' ) {

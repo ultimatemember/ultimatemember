@@ -120,8 +120,17 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 				//the user cannot set invalid value in the hidden input at the page
 				if ( in_array( $fields[ $key ]['type'], array( 'multiselect', 'checkbox', 'radio' ) ) &&
 				     ! empty( $value ) && ! empty( $fields[ $key ]['options'] ) ) {
-					$value = array_map( 'stripslashes', array_map( 'trim', $value ) );
-					$changes[ $key ] = array_intersect( $value, array_map( 'trim', $fields[ $key ]['options'] ) );
+					if ( is_array( $value ) ) {
+						$value = array_map( 'stripslashes', array_map( 'trim', $value ) );
+						$changes[ $key ] = array_intersect( $value, array_map( 'trim', $fields[ $key ]['options'] ) );
+					} else {
+						$trimmed_options = array_map( 'trim', $fields[ $key ]['options'] );
+						if ( in_array( stripslashes( trim( $value ) ), $trimmed_options, true ) ) {
+							$changes[ $key ] = array( stripslashes( trim( $value ) ) );
+						} else {
+							$changes[ $key ] = array();
+						}
+					}
 				}
 			}
 

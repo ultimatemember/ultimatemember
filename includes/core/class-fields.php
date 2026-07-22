@@ -3823,7 +3823,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							$option_value = $this->filter_field_non_utf8_value( $option_value );
 
-							$output .= '<input ' . $disabled . ' type="radio" name="' . ( ( 'role' === $form_key ) ? esc_attr( $form_key ) : esc_attr( $form_key ) . '[]' ) . '" value="' . esc_attr( $option_value ) . '" ';
+							// Radio inputs submit a single scalar value, so the name attribute should not append `[]` (matches HTML semantics and single-select behavior).
+							$output .= '<input ' . $disabled . ' type="radio" name="' . esc_attr( $form_key ) . '" value="' . esc_attr( $option_value ) . '" ';
 
 							if ( $this->is_radio_checked( $key, $option_value, $data ) ) {
 								$output             .= 'checked';
