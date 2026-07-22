@@ -1560,10 +1560,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				return;
 			}
 
-			//also skip if we currently at UM Register|Login|Reset Password pages
-			if ( um_is_core_post( $post, 'register' ) ||
-				 um_is_core_post( $post, 'password-reset' ) ||
-				 um_is_core_post( $post, 'login' ) ) {
+			//skip access checks if we currently at UM Reset Password page
+			if ( um_is_core_post( $post, 'password-reset' ) ) {
 				return;
 			}
 
@@ -1987,11 +1985,10 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			}
 
 			$exclude = false;
-			//exclude from privacy UM default pages (except Members list and User(Profile) page)
+			//exclude from privacy UM default pages (except Login, Register, Members list and User(Profile) page)
 			if ( ! empty( $post->post_type ) && $post->post_type === 'page' ) {
 
-				if ( um_is_core_post( $post, 'login' ) || um_is_core_post( $post, 'register' ) ||
-					 um_is_core_post( $post, 'account' ) || um_is_core_post( $post, 'logout' ) ||
+				if ( um_is_core_post( $post, 'account' ) || um_is_core_post( $post, 'logout' ) ||
 					 um_is_core_post( $post, 'password-reset' ) || ( is_user_logged_in() && um_is_core_post( $post, 'user' ) ) )
 					$exclude = true;
 			}
