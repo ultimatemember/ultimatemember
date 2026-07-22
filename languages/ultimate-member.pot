@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-06T18:47:12+00:00\n"
+"POT-Creation-Date: 2026-07-22T19:31:29+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -7755,15 +7755,15 @@ msgstr ""
 msgid "Ultimate Member Scanner"
 msgstr ""
 
-#: includes/common/class-theme.php:214
+#: includes/common/class-theme.php:200
 msgid "Theme version up to date"
 msgstr ""
 
-#: includes/common/class-theme.php:218
+#: includes/common/class-theme.php:204
 msgid "Theme version is empty"
 msgstr ""
 
-#: includes/common/class-theme.php:221
+#: includes/common/class-theme.php:207
 msgid "Theme version is out of date"
 msgstr ""
 
@@ -10350,20 +10350,20 @@ msgstr ""
 msgid "The \"unassigned\" $status has been removed. Use `UM()->setup()->set_default_user_status()` for setting up default user account status."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:436
+#: includes/core/class-shortcodes.php:454
 msgid "This content has been restricted to logged-in users only. Please <a href=\"{login_referrer}\">log in</a> to view this content."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:523
-#: includes/core/class-shortcodes.php:544
+#: includes/core/class-shortcodes.php:541
+#: includes/core/class-shortcodes.php:562
 msgid "Go to profile"
 msgstr ""
 
-#: includes/core/class-shortcodes.php:866
+#: includes/core/class-shortcodes.php:884
 msgid "You are already registered."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:1125
+#: includes/core/class-shortcodes.php:1143
 msgid "Default Template"
 msgstr ""
 

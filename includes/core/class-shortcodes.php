@@ -352,13 +352,31 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$theme_file = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
 			if ( file_exists( $theme_file ) ) {
 				$file = $theme_file;
+			} elseif ( file_exists( get_stylesheet_directory() . "/ultimate-member/{$tpl}.php" ) ) {
+				// Legacy flat-path override (kept for backward compatibility).
+				$file = get_stylesheet_directory() . "/ultimate-member/{$tpl}.php";
 			}
 
 			if ( file_exists( $file ) ) {
 				// Avoid Directory Traversal vulnerability by the checking the realpath.
 				// Templates can be situated only in the get_stylesheet_directory() or plugindir templates.
-				$real_file = wp_normalize_path( realpath( $file ) );
-				if ( 0 === strpos( $real_file, wp_normalize_path( UM_PATH . "templates" . DIRECTORY_SEPARATOR ) ) || 0 === strpos( $real_file, wp_normalize_path( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR ) ) ) {
+				$real_file = wp_normalize_path( (string) realpath( $file ) );
+				if ( '' === $real_file ) {
+					return;
+				}
+				$allowed_prefixes = array(
+					wp_normalize_path( UM_PATH . 'templates' . DIRECTORY_SEPARATOR ),
+					wp_normalize_path( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR ),
+					wp_normalize_path( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR ), // legacy flat-path override
+				);
+				$is_allowed       = false;
+				foreach ( $allowed_prefixes as $prefix ) {
+					if ( 0 === strpos( $real_file, $prefix ) ) {
+						$is_allowed = true;
+						break;
+					}
+				}
+				if ( $is_allowed ) {
 					include $file;
 				}
 			}
