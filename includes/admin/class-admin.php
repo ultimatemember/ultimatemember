@@ -102,6 +102,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					'_um_can_edit_everyone'          => array(
 						'sanitize' => 'bool',
 					),
+					'_um_can_approve_members'        => array(
+						'sanitize' => 'bool',
+					),
 					'_um_can_edit_roles'             => array(
 						'sanitize' => array( $this, 'sanitize_existed_role' ),
 					),

@@ -1722,6 +1722,15 @@ class Site_Health {
 				);
 			}
 
+			if ( array_key_exists( '_um_can_approve_members', $rolemeta ) ) {
+				$debug_info[] = array(
+					'can_approve_members' => array(
+						'label' => __( 'Can approve/deny newly registered members?', 'ultimate-member' ),
+						'value' => $rolemeta['_um_can_approve_members'] ? $labels['yes'] : $labels['no'],
+					),
+				);
+			}
+
 			if ( array_key_exists( '_um_can_edit_everyone', $rolemeta ) && 1 === absint( $rolemeta['_um_can_edit_everyone'] ) ) {
 				$can_edit_roles_meta = ! empty( $rolemeta['_um_can_edit_roles'] ) ? $rolemeta['_um_can_edit_roles'] : array();
 				$can_edit_roles      = array();

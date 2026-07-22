@@ -316,8 +316,12 @@ class Users {
 			return false;
 		}
 
-		// Make Ultimate Member bulk actions only when the current user has 'edit_users' capability.
-		if ( ! current_user_can( 'edit_users' ) && ! $role->has_cap( 'edit_users' ) ) {
+		// Make Ultimate Member bulk actions only when the current user has 'edit_users' capability
+		// or the UM "Can approve/deny newly registered members?" role permission.
+		if ( ! current_user_can( 'edit_users' )
+			&& ! $role->has_cap( 'edit_users' )
+			&& ! UM()->roles()->um_user_can( 'can_approve_members' )
+		) {
 			return false;
 		}
 

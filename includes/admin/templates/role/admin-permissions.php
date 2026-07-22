@@ -33,6 +33,13 @@ $role = $object['data'];
 					'value'   => ! empty( $role['_um_can_edit_everyone'] ) ? $role['_um_can_edit_everyone'] : 0,
 				),
 				array(
+					'id'      => '_um_can_approve_members',
+					'type'    => 'checkbox',
+					'label'   => __( 'Can approve/deny newly registered members?', 'ultimate-member' ),
+					'tooltip' => __( 'Allow this role to approve, reject, put as pending, reactivate, or deactivate newly registered members, view the registration Info popup, and receive pending-approval email notifications.', 'ultimate-member' ),
+					'value'   => ! empty( $role['_um_can_approve_members'] ) ? $role['_um_can_approve_members'] : 0,
+				),
+				array(
 					'id'          => '_um_can_edit_roles',
 					'type'        => 'select',
 					'label'       => __( 'Can edit these user roles only', 'ultimate-member' ),

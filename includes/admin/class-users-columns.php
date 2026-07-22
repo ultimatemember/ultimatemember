@@ -245,8 +245,14 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 				// $actions['view_info'] = '<a href="#" class="um-preview-registration" data-user_id="' . esc_attr( $user_id ) . '">' . esc_html__( 'Info', 'ultimate-member' ) . '</a>';
 			}
 
-			// Remove row actions for now Administrator role and who cannot view profiles of row's user.
-			if ( ! current_user_can( 'manage_options' ) && ! um_can_view_profile( $user_id ) ) {
+			// Remove row actions for users that aren't allowed to view the row user's profile
+			// (admins, users with `edit_users`, users with the UM
+			// "Can approve/deny newly registered members?" permission, and users that can
+			// view the target profile keep them).
+			$can_moderate = current_user_can( 'manage_options' )
+				|| current_user_can( 'edit_users' )
+				|| UM()->roles()->um_user_can( 'can_approve_members' );
+			if ( ! $can_moderate && ! um_can_view_profile( $user_id ) ) {
 				unset( $actions['frontend_profile'], $actions['view_info'], $actions['view'] );
 			}
 
@@ -314,8 +320,12 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 				return $actions;
 			}
 
-			// Add Ultimate Member bulk actions only when the current user has 'edit_users' capability.
-			if ( ! current_user_can( 'edit_users' ) && ! $role->has_cap( 'edit_users' ) ) {
+			// Add Ultimate Member bulk actions only when the current user has 'edit_users' capability
+			// or the UM "Can approve/deny newly registered members?" role permission.
+			if ( ! current_user_can( 'edit_users' )
+				&& ! $role->has_cap( 'edit_users' )
+				&& ! UM()->roles()->um_user_can( 'can_approve_members' )
+			) {
 				return $actions;
 			}
 
@@ -401,8 +411,12 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 				return $sendback;
 			}
 
-			// Make Ultimate Member bulk actions only when the current user has 'edit_users' capability.
-			if ( ! current_user_can( 'edit_users' ) && ! $role->has_cap( 'edit_users' ) ) {
+			// Make Ultimate Member bulk actions only when the current user has 'edit_users' capability
+			// or the UM "Can approve/deny newly registered members?" role permission.
+			if ( ! current_user_can( 'edit_users' )
+				&& ! $role->has_cap( 'edit_users' )
+				&& ! UM()->roles()->um_user_can( 'can_approve_members' )
+			) {
 				wp_die( esc_html__( 'You do not have enough permissions to do that.', 'ultimate-member' ) );
 			}
 

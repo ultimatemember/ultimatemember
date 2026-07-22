@@ -1830,6 +1830,69 @@ function um_multi_admin_email() {
 }
 
 /**
+ * Get moderator emails.
+ *
+ * Returns the email addresses of users whose role has the
+ * `_um_can_approve_members` permission enabled. Used to send pending-approval
+ * notifications to non-admin moderators.
+ *
+ * @return array
+ */
+function um_get_moderator_emails() {
+	global $wpdb;
+
+	$option_keys = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
+			$wpdb->esc_like( 'um_role_' ) . '%' . $wpdb->esc_like( '_meta' )
+		)
+	);
+
+	$role_slugs = array();
+	foreach ( $option_keys as $option_key ) {
+		$rolemeta = get_option( $option_key, array() );
+		if ( ! empty( $rolemeta['_um_can_approve_members'] ) && 1 === (int) $rolemeta['_um_can_approve_members'] ) {
+			// Option name is "um_role_{slug}_meta" where {slug} may be "um_<key>" for UM roles.
+			$slug = preg_replace( '/^um_role_(.+)_meta$/', '$1', $option_key );
+			if ( ! in_array( $slug, $role_slugs, true ) ) {
+				$role_slugs[] = $slug;
+			}
+		}
+	}
+
+	if ( empty( $role_slugs ) ) {
+		return array();
+	}
+
+	$users = get_users(
+		array(
+			'role__in' => $role_slugs,
+			'fields'   => array( 'user_email' ),
+		)
+	);
+
+	$emails = array();
+	foreach ( $users as $user ) {
+		if ( ! empty( $user->user_email ) ) {
+			$emails[] = trim( $user->user_email );
+		}
+	}
+
+	$emails = array_unique( $emails );
+	/**
+	 * Filters the moderator email list used for pending-approval notifications.
+	 *
+	 * @since 2.12.0
+	 * @hook um_get_moderator_emails
+	 *
+	 * @param {array} $emails List of moderator email addresses.
+	 *
+	 * @return {array} Moderator email addresses.
+	 */
+	return apply_filters( 'um_get_moderator_emails', $emails );
+}
+
+/**
  * Display a link to profile page
  *
  * @param int|null $user_id

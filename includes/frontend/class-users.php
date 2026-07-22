@@ -28,7 +28,9 @@ class Users {
 		$priority_role = UM()->roles()->get_priority_user_role( get_current_user_id() );
 		$role          = get_role( $priority_role );
 
-		$can_edit_users = null !== $role && current_user_can( 'edit_users' ) && $role->has_cap( 'edit_users' );
+		$can_edit_users = null !== $role
+			&& ( ( current_user_can( 'edit_users' ) && $role->has_cap( 'edit_users' ) )
+				|| UM()->roles()->um_user_can( 'can_approve_members' ) );
 		if ( $can_edit_users ) {
 			if ( UM()->common()->users()->can_be_approved( $user_id ) ) {
 				$actions['approve_user'] = array( 'label' => __( 'Approve Membership', 'ultimate-member' ) );

@@ -9,7 +9,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param int $user_id
  */
 function um_access_profile( $user_id ) {
-	if ( ! um_is_myprofile() && um_is_core_page( 'user' ) && ! current_user_can( 'edit_users' ) ) {
+	if ( ! um_is_myprofile()
+		&& um_is_core_page( 'user' )
+		&& ! current_user_can( 'edit_users' )
+		&& ! UM()->roles()->um_user_can( 'can_approve_members' )
+	) {
 		$account_status = UM()->common()->users()->get_status( $user_id );
 		if ( 'approved' !== $account_status ) {
 			um_redirect_home();
