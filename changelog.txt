@@ -1,5 +1,11 @@
 ﻿== Changelog ==
 
+= 2.12.2 =
+
+* Bugfixes:
+
+  - Fixed: Unified theme override lookup so sub-templates (members-header, members-grid, members-list, members-pagination, searchform, login-to-view, profile/posts, profile/comments) use the same `ultimate-member/templates/` folder as the main template, matching the documented convention. The legacy flat-path `ultimate-member/<file>.php` is still honored for backward compatibility. Hardened the directory-traversal guard on `load_template()` and `get_template()` so a misbehaving `um_get_template` filter can no longer redirect to arbitrary files.
+
 = 2.12.1 July 06, 2026 =
 
 * Enhancements:

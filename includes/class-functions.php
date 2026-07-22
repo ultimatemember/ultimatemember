@@ -270,7 +270,27 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			 * ?>
 			 */
 			do_action( 'um_before_template_part', $template_name, $path, $located, $t_args );
-			include $located;
+
+			// Allow-list guard before include. The `um_get_template` filter above can
+			// rewrite $located to an arbitrary file; reject anything outside plugin or theme override.
+			$real_located          = wp_normalize_path( (string) realpath( $located ) );
+			$allowed_template_segs = array(
+				wp_normalize_path( UM_PATH . 'templates' . DIRECTORY_SEPARATOR ),
+				wp_normalize_path( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR ),
+				wp_normalize_path( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR ), // legacy BC
+			);
+			$allowed               = false;
+			if ( '' !== $real_located ) {
+				foreach ( $allowed_template_segs as $seg ) {
+					if ( 0 === strpos( $real_located, $seg ) ) {
+						$allowed = true;
+						break;
+					}
+				}
+			}
+			if ( $allowed ) {
+				include $located;
+			}
 
 			/**
 			 * UM hook
@@ -315,10 +335,20 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * @return string
 		 */
 		function locate_template( $template_name, $path = '' ) {
-			// check if there is template at theme folder
-			$template = locate_template( array(
-				trailingslashit( 'ultimate-member' . DIRECTORY_SEPARATOR . $path ) . $template_name
-			) );
+			// Canonical theme path is `ultimate-member/templates/<file>` (with `templates/`
+			// subdir matching the on-disk plugin layout). The flat `ultimate-member/<file>`
+			// is preserved as a backward-compatible fallback.
+			$candidates = array();
+			if ( ! $path ) {
+				$candidates[] = trailingslashit( 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' ) . $template_name;
+				$candidates[] = trailingslashit( 'ultimate-member' . DIRECTORY_SEPARATOR ) . $template_name;
+			} else {
+				$candidates[] = trailingslashit( 'ultimate-member' . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . 'templates' ) . $template_name;
+				$candidates[] = trailingslashit( 'ultimate-member' . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR ) . $template_name;
+				$candidates[] = trailingslashit( 'ultimate-member' . DIRECTORY_SEPARATOR ) . $template_name;
+			}
+
+			$template = locate_template( $candidates );
 
 			if ( ! $template ) {
 				if ( $path ) {
