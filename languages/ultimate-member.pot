@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-06T18:47:12+00:00\n"
+"POT-Creation-Date: 2026-07-22T14:59:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -6997,7 +6997,7 @@ msgstr ""
 #: includes/class-config.php:143
 #: includes/class-config.php:960
 #: includes/class-config.php:1024
-#: includes/core/class-member-directory.php:2681
+#: includes/core/class-member-directory.php:2717
 #: includes/core/um-actions-profile.php:1555
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
@@ -7784,7 +7784,7 @@ msgid "Membership rejected"
 msgstr ""
 
 #: includes/common/class-users.php:198
-#: includes/core/class-member-directory.php:2721
+#: includes/core/class-member-directory.php:2757
 msgid "Undefined"
 msgstr ""
 
@@ -9939,7 +9939,7 @@ msgstr ""
 #: includes/core/class-files.php:662
 #: includes/core/class-form.php:120
 #: includes/core/class-member-directory-meta.php:599
-#: includes/core/class-member-directory.php:2982
+#: includes/core/class-member-directory.php:3018
 #: includes/core/class-user-posts.php:109
 #: includes/core/class-user-posts.php:161
 msgid "Too many requests"
@@ -10104,13 +10104,13 @@ msgstr ""
 
 #: includes/core/class-member-directory-meta.php:607
 #: includes/core/class-member-directory-meta.php:612
-#: includes/core/class-member-directory.php:2988
-#: includes/core/class-member-directory.php:2994
+#: includes/core/class-member-directory.php:3024
+#: includes/core/class-member-directory.php:3030
 msgid "Wrong member directory data"
 msgstr ""
 
 #: includes/core/class-member-directory-meta.php:617
-#: includes/core/class-member-directory.php:2998
+#: includes/core/class-member-directory.php:3034
 msgid "You cannot see this member directory"
 msgstr ""
 
@@ -10216,41 +10216,41 @@ msgstr ""
 
 #. translators: %s: Datetime filter label.
 #. translators: %s: Timepicker filter label.
-#: includes/core/class-member-directory.php:1066
-#: includes/core/class-member-directory.php:1111
+#: includes/core/class-member-directory.php:1102
+#: includes/core/class-member-directory.php:1147
 #, php-format
 msgid "%s From"
 msgstr ""
 
 #. translators: %s: Datetime filter label.
 #. translators: %s: Timepicker filter label.
-#: includes/core/class-member-directory.php:1072
-#: includes/core/class-member-directory.php:1118
+#: includes/core/class-member-directory.php:1108
+#: includes/core/class-member-directory.php:1154
 #, php-format
 msgid "%s To"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1215
-#: includes/core/class-member-directory.php:1216
+#: includes/core/class-member-directory.php:1251
+#: includes/core/class-member-directory.php:1252
 msgid " stars"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1225
+#: includes/core/class-member-directory.php:1261
 msgid "Age:&nbsp;{value} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1226
+#: includes/core/class-member-directory.php:1262
 msgid "Age:&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:2642
-#: includes/core/class-member-directory.php:2670
+#: includes/core/class-member-directory.php:2678
+#: includes/core/class-member-directory.php:2706
 #: includes/core/um-actions-profile.php:1522
 #: includes/core/um-actions-profile.php:1553
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:2676
+#: includes/core/class-member-directory.php:2712
 #: includes/core/um-actions-profile.php:1554
 msgid "My Account"
 msgstr ""

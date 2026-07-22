@@ -872,6 +872,42 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$values_array = ( ! empty( $users_roles['avail_roles'] ) && is_array( $users_roles['avail_roles'] ) ) ? array_keys( array_filter( $users_roles['avail_roles'] ) ) : array();
 					}
 
+					/**
+					 * Filters the distinct meta values used to populate a member directory filter dropdown.
+					 *
+					 * Allows overriding the values for fields whose values are computed or transformed
+					 * by the `um_profile_{$key}__filter` hook and therefore never stored in `wp_usermeta`.
+					 *
+					 * Default behavior (returning the DB query result unchanged) preserves existing
+					 * functionality. Hook this filter only for fields that need synthetic options.
+					 *
+					 * Note: the returned values are intersected with the field's configured
+					 * `$attrs['options']` (see `array_intersect` below). To have the synthetic values
+					 * actually appear in the dropdown, the field's options must already include them
+					 * or the developer must also hook `um_member_directory_filter_select_options`
+					 * to add matching labels. The directory search side has no stored usermeta to
+					 * query for this field; pair this filter with `um_query_args_{$key}__filter` (or
+					 * the `_meta` variant) so the search query is wired to the same data source.
+					 *
+					 * @since 2.12.x
+					 * @hook um_member_directory_filter_values_{$key}
+					 *
+					 * @param array $values_array List of distinct meta values from the DB.
+					 * @param array $attrs        Field configuration array.
+					 *
+					 * @return array Modified values list.
+					 *
+					 * @example
+					 * function my_filter_values( $values_array, $attrs ) {
+					 *     if ( 'hospital_list' === $attrs['metakey'] ) {
+					 *         return array( 'Hospital A', 'Hospital B', 'Hospital C' );
+					 *     }
+					 *     return $values_array;
+					 * }
+					 * add_filter( 'um_member_directory_filter_values_hospital_list', 'my_filter_values', 10, 2 );
+					 */
+					$values_array = apply_filters( "um_member_directory_filter_values_{$attrs['metakey']}", $values_array, $attrs );
+
 					if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
 						$values_array = array_map( 'maybe_unserialize', $values_array );
 						$temp_values  = array();
