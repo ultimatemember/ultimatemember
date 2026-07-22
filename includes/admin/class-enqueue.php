@@ -491,41 +491,48 @@ final class Enqueue extends \um\common\Enqueue {
 	/**
 	 * Load global assets.
 	 *
-	 * Callers should gate this on `UM()->admin()->screen()->is_own_screen()` or
-	 * the `um_enqueue_global_admin_scripts` filter. Loading it on every wp-admin
-	 * page interfered with wp-auth-check/heartbeat load order and caused the
-	 * site-wide rest_cookie_invalid_nonce regression (GitHub issue #1842).
+	 * Register and enqueue the global UM admin JS/CSS. This runs on every
+	 * wp-admin page so admin notices with dismiss buttons work everywhere.
+	 * Nonce is no longer localized on this script — per-notice nonces on
+	 * the DOM element handle dismissal. The `um_admin_scripts` localize
+	 * lives in `um_admin_common` for UM-owned screens only.
 	 *
 	 * @since 2.0.18
+	 * @since 2.12.2 Added `$hook` param and `um_ignore_global_scripts` filter.
+	 *
+	 * @param string $hook Current wp-admin screen hook.
 	 */
-	public function load_global_scripts() {
+	public function load_global_scripts( $hook ) {
+		/**
+		 * Filters whether to skip registering and enqueuing UM global admin scripts.
+		 *
+		 * @since 2.12.2
+		 * @hook um_ignore_global_scripts
+		 *
+		 * @param {bool}   $ignore True to skip global script enqueue.
+		 * @param {string} $hook   Current wp-admin screen hook.
+		 *
+		 * @return {bool} Whether to ignore.
+		 *
+		 * @example <caption>Ignore UM global scripts on the settings screen.</caption>
+		 * function um_custom_ignore_global_scripts( $ignore, $hook ) {
+		 *     if ( 'ultimate-member_page_um_options' === $hook ) {
+		 *         $ignore = true;
+		 *     }
+		 *     return $ignore;
+		 * }
+		 * add_filter( 'um_ignore_global_scripts', 'um_custom_ignore_global_scripts', 10, 2 );
+		 */
+		$ignore_global_scripts = apply_filters( 'um_ignore_global_scripts', false, $hook );
+		if ( $ignore_global_scripts ) {
+			return;
+		}
+
 		$suffix  = self::get_suffix();
 		$js_url  = self::get_url( 'js' );
 		$css_url = self::get_url( 'css' );
 
 		wp_register_script( 'um_admin_global', $js_url . 'admin/global' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
-		$localize_data = array(
-			'nonce' => wp_create_nonce( 'um-admin-nonce' ),
-		);
-		/**
-		 * Filters data array for localize wp-admin global scripts.
-		 *
-		 * @since 2.0.0
-		 * @hook um_admin_enqueue_localize_data
-		 *
-		 * @param {array} $variables Data to localize.
-		 *
-		 * @return {array} Data to localize.
-		 *
-		 * @example <caption>Add `my_custom_variable` to wp-admin global scripts to be callable via `um_admin_scripts.my_custom_variable` in JS.</caption>
-		 * function um_custom_admin_enqueue_localize_data( $variables ) {
-		 *     $variables['{my_custom_variable}'] = '{my_custom_variable_value}';
-		 *     return $variables;
-		 * }
-		 * add_filter( 'um_admin_enqueue_localize_data', 'um_custom_admin_enqueue_localize_data' );
-		 */
-		$localize_data = apply_filters( 'um_admin_enqueue_localize_data', $localize_data );
-		wp_localize_script( 'um_admin_global', 'um_admin_scripts', $localize_data );
 		wp_enqueue_script( 'um_admin_global' );
 
 		wp_register_style( 'um_admin_global', $css_url . 'admin/global' . $suffix . '.css', array(), UM_VERSION );
@@ -570,28 +577,33 @@ final class Enqueue extends \um\common\Enqueue {
 		$js_url  = self::get_url( 'js' );
 		$css_url = self::get_url( 'css' );
 
-		// Load the global admin script only on UM-owned screens.
-		// Enqueueing it on every wp-admin page interferes with wp-auth-check/heartbeat
-		// load order and caused the site-wide rest_cookie_invalid_nonce regression (#1842).
-		$enqueue_global = UM()->admin()->screen()->is_own_screen();
-		/**
-		 * Filters whether the global UM admin script and styles are enqueued.
-		 *
-		 * @since 2.12.2
-		 * @hook um_enqueue_global_admin_scripts
-		 *
-		 * @param {bool}   $enqueue_global Whether to enqueue global admin assets. Default is the result of `is_own_screen()`.
-		 * @param {string} $hook           Current wp-admin screen hook.
-		 *
-		 * @return {bool} True to enqueue, false to skip.
-		 */
-		$enqueue_global = apply_filters( 'um_enqueue_global_admin_scripts', $enqueue_global, $hook );
-		if ( $enqueue_global ) {
-			$this->load_global_scripts();
-		}
+		$this->load_global_scripts( $hook );
 
 		if ( UM()->admin()->screen()->is_own_screen() ) {
 			wp_register_script( 'um_admin_common', $js_url . 'admin/common' . $suffix . '.js', array( 'wp-color-picker', 'jquery-ui-tooltip', 'um_common' ), UM_VERSION, true );
+			$localize_data = array(
+				'nonce' => wp_create_nonce( 'um-admin-nonce' ),
+			);
+			/**
+			 * Filters data array for localize wp-admin global scripts.
+			 *
+			 * @since 2.0.0
+			 * @since 2.12.2 Localized on `um_admin_common` instead of `um_admin_global`.
+			 * @hook um_admin_enqueue_localize_data
+			 *
+			 * @param {array} $variables Data to localize.
+			 *
+			 * @return {array} Data to localize.
+			 *
+			 * @example <caption>Add `my_custom_variable` to wp-admin global scripts to be callable via `um_admin_scripts.my_custom_variable` in JS.</caption>
+			 * function um_custom_admin_enqueue_localize_data( $variables ) {
+			 *     $variables['{my_custom_variable}'] = '{my_custom_variable_value}';
+			 *     return $variables;
+			 * }
+			 * add_filter( 'um_admin_enqueue_localize_data', 'um_custom_admin_enqueue_localize_data' );
+			 */
+			$localize_data = apply_filters( 'um_admin_enqueue_localize_data', $localize_data );
+			wp_localize_script( 'um_admin_common', 'um_admin_scripts', $localize_data );
 			wp_enqueue_script( 'um_admin_common' );
 
 			wp_register_style( 'um_admin_common', $css_url . 'admin/common' . $suffix . '.css', array( 'um_common', 'um_ui', 'dashicons' ), UM_VERSION );
