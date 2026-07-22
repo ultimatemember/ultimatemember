@@ -427,6 +427,33 @@ class Users {
 	}
 
 	/**
+	 * Determine if a user can self-trigger a resend of the activation email.
+	 *
+	 * Used by the login-page resend form (non-logged-in). Checks that the user
+	 * exists, is awaiting email confirmation, and is not rate-limited.
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return bool
+	 */
+	public function can_resend_activation( $user_id ) {
+		if ( ! self::user_exists( $user_id ) ) {
+			return false;
+		}
+
+		if ( ! $this->has_status( $user_id, 'awaiting_email_confirmation' ) ) {
+			return false;
+		}
+
+		$ratelimit_key = 'um_resend_activation_ratelimit_' . $user_id;
+		if ( get_transient( $ratelimit_key ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * @param int  $user_id User ID.
 	 *
 	 * @return bool
