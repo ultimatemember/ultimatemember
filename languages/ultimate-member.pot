@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-06T18:47:12+00:00\n"
+"POT-Creation-Date: 2026-07-22T18:53:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -7788,19 +7788,19 @@ msgstr ""
 msgid "Undefined"
 msgstr ""
 
-#: includes/common/class-users.php:774
-#: includes/common/class-users.php:892
+#: includes/common/class-users.php:801
+#: includes/common/class-users.php:919
 #: includes/core/class-mail.php:633
 msgid "Your set password"
 msgstr ""
 
-#: includes/common/class-users.php:784
-#: includes/common/class-users.php:898
+#: includes/common/class-users.php:811
+#: includes/common/class-users.php:925
 msgid "Login to our site"
 msgstr ""
 
-#: includes/common/class-users.php:787
-#: includes/common/class-users.php:901
+#: includes/common/class-users.php:814
+#: includes/common/class-users.php:928
 msgid "Set your password"
 msgstr ""
 
@@ -10820,6 +10820,18 @@ msgstr ""
 msgid "Forgot your password?"
 msgstr ""
 
+#: includes/core/um-actions-login.php:567
+msgid "Didn't receive your activation email? Enter the address you registered with and we'll send you a new one."
+msgstr ""
+
+#: includes/core/um-actions-login.php:568
+msgid "Your email"
+msgstr ""
+
+#: includes/core/um-actions-login.php:569
+msgid "Resend activation link"
+msgstr ""
+
 #: includes/core/um-actions-misc.php:110
 msgid "Your account was updated successfully."
 msgstr ""
@@ -10832,58 +10844,66 @@ msgstr ""
 msgid "Your account is now active! You can login."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:149
+#: includes/core/um-actions-misc.php:119
+msgid "A new activation link has been sent to your email."
+msgstr ""
+
+#: includes/core/um-actions-misc.php:152
 msgid "An error has been encountered"
 msgstr ""
 
-#: includes/core/um-actions-misc.php:153
+#: includes/core/um-actions-misc.php:156
 msgid "Registration is currently disabled"
 msgstr ""
 
-#: includes/core/um-actions-misc.php:156
+#: includes/core/um-actions-misc.php:159
 #: includes/core/um-filters-login.php:18
 msgid "This email address has been blocked."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:159
+#: includes/core/um-actions-misc.php:162
 msgid "We do not accept registrations from that domain."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:162
+#: includes/core/um-actions-misc.php:165
 #: includes/core/um-filters-login.php:21
 msgid "Your IP address has been blocked."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:165
+#: includes/core/um-actions-misc.php:168
 #: includes/core/um-filters-login.php:74
 msgid "Your account has been disabled."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:168
+#: includes/core/um-actions-misc.php:171
 #: includes/core/um-filters-login.php:77
 msgid "Your account has not been approved yet."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:171
+#: includes/core/um-actions-misc.php:174
 #: includes/core/um-filters-login.php:80
 msgid "Your account is awaiting email verification."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:174
+#: includes/core/um-actions-misc.php:177
 #: includes/core/um-filters-login.php:83
 msgid "Your membership request has been rejected."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:177
+#: includes/core/um-actions-misc.php:180
 msgid "An error has been encountered. Probably page was cached. Please try again."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:180
+#: includes/core/um-actions-misc.php:183
 msgid "This activation link is expired or have already been used."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:183
+#: includes/core/um-actions-misc.php:186
 msgid "This activation link is expired."
+msgstr ""
+
+#: includes/core/um-actions-misc.php:189
+msgid "No account was found for that email, or it does not need email verification."
 msgstr ""
 
 #: includes/core/um-actions-profile.php:203

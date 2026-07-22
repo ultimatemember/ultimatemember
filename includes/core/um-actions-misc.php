@@ -115,6 +115,9 @@ function um_add_update_notice( $args ) {
 			case 'account_active':
 				$success = __( 'Your account is now active! You can login.', 'ultimate-member' );
 				break;
+			case 'resend_activation_email_sent':
+				$success = __( 'A new activation link has been sent to your email.', 'ultimate-member' );
+				break;
 		}
 	}
 
@@ -181,6 +184,9 @@ function um_add_update_notice( $args ) {
 				break;
 			case 'activation_link_expired':
 				$err = __( 'This activation link is expired.', 'ultimate-member' );
+				break;
+			case 'resend_activation_invalid_email':
+				$err = __( 'No account was found for that email, or it does not need email verification.', 'ultimate-member' );
 				break;
 		}
 	}

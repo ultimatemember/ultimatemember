@@ -490,6 +490,107 @@ function um_after_login_submit( $args ) {
 }
 add_action( 'um_after_login_fields', 'um_after_login_submit', 1001 );
 
+/**
+ * Handle self-service activation email resend.
+ *
+ * Triggered via GET `um_resend_activation` query arg via JavaScript. Non-logged-in
+ * users entering an email on the login page can request a new activation
+ * email.
+ */
+function um_handle_resend_activation_request() {
+	// phpcs:disable WordPress.Security.NonceVerification -- nonce verified below
+	if ( ! isset( $_GET['um_resend_activation'] ) ) {
+		return;
+	}
+
+	if ( is_user_logged_in() ) {
+		return;
+	}
+
+	$nonce = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
+	if ( ! wp_verify_nonce( $nonce, 'um_resend_activation' ) ) {
+		return;
+	}
+
+	$email = isset( $_GET['user_email'] ) ? sanitize_email( wp_unslash( $_GET['user_email'] ) ) : '';
+	if ( empty( $email ) || ! is_email( $email ) ) {
+		return;
+	}
+	// phpcs:enable WordPress.Security.NonceVerification
+
+	$login_url = um_get_core_page( 'login' );
+	$user      = get_user_by( 'email', $email );
+
+	if ( ! $user ) {
+		um_safe_redirect( add_query_arg( 'err', 'resend_activation_invalid_email', $login_url ) );
+		exit;
+	}
+
+	$user_id = (int) $user->ID;
+	if ( ! UM()->common()->users()->can_resend_activation( $user_id ) ) {
+		// User exists but status changed or rate-limited. Don't reveal status.
+		um_safe_redirect( add_query_arg( 'updated', 'resend_activation_email_sent', $login_url ) );
+		exit;
+	}
+
+	$result = UM()->common()->users()->send_activation( $user_id, true );
+	if ( ! $result ) {
+		um_safe_redirect( add_query_arg( 'err', 'resend_activation_invalid_email', $login_url ) );
+		exit;
+	}
+
+	// Set per-user rate limit transient (60 seconds).
+	set_transient( 'um_resend_activation_ratelimit_' . $user_id, time(), 60 );
+
+	um_safe_redirect( add_query_arg( 'updated', 'resend_activation_email_sent', $login_url ) );
+	exit;
+}
+add_action( 'init', 'um_handle_resend_activation_request' );
+
+/**
+ * Display the resend activation email form on the login page.
+ *
+ * Rendered after the forgot-password link when the user attempted to log in
+ * while their account is awaiting email verification.
+ *
+ * @param array $args UM form arguments (unused, kept for hook signature).
+ */
+function um_after_login_resend_activation( $args ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
+	$err     = isset( $_GET['err'] ) ? sanitize_key( $_GET['err'] ) : '';
+	$updated = isset( $_GET['updated'] ) ? sanitize_key( $_GET['updated'] ) : '';
+	if ( 'awaiting_email_confirmation' !== $err && 'resend_activation_email_sent' !== $updated ) {
+		return;
+	}
+	?>
+
+	<div class="um-col-alt-b um-resend-activation-wrap">
+		<p class="um-resend-activation-desc"><?php esc_html_e( "Didn't receive your activation email? Enter the address you registered with and we'll send you a new one.", 'ultimate-member' ); ?></p>
+		<input type="email" name="um_resend_email" id="um-resend-email" placeholder="<?php esc_attr_e( 'Your email', 'ultimate-member' ); ?>" class="um-resend-email" required />
+		<button type="button" class="um-button um-resend-submit"><?php esc_html_e( 'Resend activation link', 'ultimate-member' ); ?></button>
+	</div>
+	<?php
+		$resend_url = wp_nonce_url(
+			add_query_arg( 'um_resend_activation', '1', um_get_core_page( 'login' ) ),
+			'um_resend_activation'
+		);
+	?>
+	<script>
+	( function() {
+		var btn = document.querySelector( '.um-resend-submit' );
+		var inp = document.getElementById( 'um-resend-email' );
+		if ( ! btn || ! inp ) { return; }
+		btn.addEventListener( 'click', function() {
+			var email = inp.value.trim();
+			if ( ! email ) { inp.focus(); return; }
+			window.location.href = '<?php echo esc_js( $resend_url ); ?>&user_email=' + encodeURIComponent( email );
+		} );
+	}() );
+	</script>
+
+	<?php
+}
+add_action( 'um_after_login_fields', 'um_after_login_resend_activation', 1002 );
+
 
 /**
  * Show Fields
