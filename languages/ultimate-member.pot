@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-06T18:47:12+00:00\n"
+"POT-Creation-Date: 2026-07-22T17:54:59+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -9916,20 +9916,20 @@ msgid "Save"
 msgstr ""
 
 #. translators: %s: edit user link.
-#: includes/core/class-fields.php:4805
+#: includes/core/class-fields.php:4806
 #, php-format
 msgid "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some information!"
 msgstr ""
 
-#: includes/core/class-fields.php:4807
+#: includes/core/class-fields.php:4808
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
-#: includes/core/class-fields.php:5072
+#: includes/core/class-fields.php:5073
 msgid "Please login as administrator."
 msgstr ""
 
-#: includes/core/class-fields.php:5076
+#: includes/core/class-fields.php:5077
 msgid "Invalid action."
 msgstr ""
 
@@ -10205,8 +10205,8 @@ msgid "Random"
 msgstr ""
 
 #: includes/core/class-member-directory.php:614
-#: includes/core/um-filters-fields.php:996
-#: includes/core/um-filters-fields.php:1013
+#: includes/core/um-filters-fields.php:1002
+#: includes/core/um-filters-fields.php:1019
 msgid "Age"
 msgstr ""
 
@@ -10293,13 +10293,13 @@ msgstr ""
 
 #: includes/core/class-password.php:562
 #: includes/core/um-actions-account.php:112
-#: includes/core/um-actions-form.php:638
+#: includes/core/um-actions-form.php:644
 msgid "Your password cannot contain the part of your username"
 msgstr ""
 
 #: includes/core/class-password.php:566
 #: includes/core/um-actions-account.php:116
-#: includes/core/um-actions-form.php:642
+#: includes/core/um-actions-form.php:648
 msgid "Your password cannot contain the part of your email address"
 msgstr ""
 
@@ -10308,7 +10308,7 @@ msgid "You must confirm your new password"
 msgstr ""
 
 #: includes/core/class-password.php:580
-#: includes/core/um-actions-form.php:659
+#: includes/core/um-actions-form.php:665
 msgid "Your passwords do not match"
 msgstr ""
 
@@ -10412,19 +10412,19 @@ msgstr ""
 msgid "&mdash; No role for Ultimate Member &mdash;"
 msgstr ""
 
-#: includes/core/class-validation.php:185
+#: includes/core/class-validation.php:194
 msgid "Your password must contain at least one capital letter"
 msgstr ""
 
-#: includes/core/class-validation.php:186
+#: includes/core/class-validation.php:195
 msgid "Your password must contain at least one lowercase letter"
 msgstr ""
 
-#: includes/core/class-validation.php:187
+#: includes/core/class-validation.php:196
 msgid "Your password must contain at least one number"
 msgstr ""
 
-#: includes/core/class-validation.php:194
+#: includes/core/class-validation.php:203
 msgid "Your password must contain at least one special character (e.g. !@#$%^&*)"
 msgstr ""
 
@@ -10465,8 +10465,8 @@ msgid "You must provide your last name"
 msgstr ""
 
 #: includes/core/um-actions-account.php:161
-#: includes/core/um-actions-form.php:927
-#: includes/core/um-actions-form.php:941
+#: includes/core/um-actions-form.php:933
+#: includes/core/um-actions-form.php:947
 msgid "You must provide your email"
 msgstr ""
 
@@ -10576,213 +10576,213 @@ msgstr ""
 msgid "You are not allowed to use this word as your username."
 msgstr ""
 
-#: includes/core/um-actions-form.php:405
+#: includes/core/um-actions-form.php:411
 msgid "Profile Photo is required."
 msgstr ""
 
 #. translators: %s: title.
-#: includes/core/um-actions-form.php:511
-#: includes/core/um-actions-form.php:513
+#: includes/core/um-actions-form.php:517
+#: includes/core/um-actions-form.php:519
 #, php-format
 msgid "%s - wrong conditions."
 msgstr ""
 
 #. translators: %s: title.
-#: includes/core/um-actions-form.php:523
-#: includes/core/um-actions-form.php:528
-#: includes/core/um-actions-form.php:533
-#: includes/core/um-actions-form.php:538
+#: includes/core/um-actions-form.php:529
+#: includes/core/um-actions-form.php:534
+#: includes/core/um-actions-form.php:539
+#: includes/core/um-actions-form.php:544
 #, php-format
 msgid "%s is required."
 msgstr ""
 
-#: includes/core/um-actions-form.php:543
+#: includes/core/um-actions-form.php:549
 msgid "Please specify account type."
 msgstr ""
 
-#: includes/core/um-actions-form.php:573
+#: includes/core/um-actions-form.php:579
 msgid "This field is required"
 msgstr ""
 
 #. translators: %s: title.
-#: includes/core/um-actions-form.php:576
+#: includes/core/um-actions-form.php:582
 #, php-format
 msgid "%s is required"
 msgstr ""
 
 #. translators: %s: max words.
-#: includes/core/um-actions-form.php:595
+#: includes/core/um-actions-form.php:601
 #, php-format
 msgid "You are only allowed to enter a maximum of %s words"
 msgstr ""
 
 #. translators: %s: min chars.
-#: includes/core/um-actions-form.php:603
+#: includes/core/um-actions-form.php:609
 #, php-format
 msgid "This field must contain at least %s characters"
 msgstr ""
 
 #. translators: %1$s is a label; %2$s is a min chars.
-#: includes/core/um-actions-form.php:606
+#: includes/core/um-actions-form.php:612
 #, php-format
 msgid "Your %1$s must contain at least %2$s characters"
 msgstr ""
 
 #. translators: %s: max chars.
-#: includes/core/um-actions-form.php:622
+#: includes/core/um-actions-form.php:628
 #, php-format
 msgid "This field must contain less than %s characters"
 msgstr ""
 
 #. translators: %1$s is a label; %2$s is a max chars.
-#: includes/core/um-actions-form.php:625
+#: includes/core/um-actions-form.php:631
 #, php-format
 msgid "Your %1$s must contain less than %2$s characters"
 msgstr ""
 
-#: includes/core/um-actions-form.php:632
+#: includes/core/um-actions-form.php:638
 msgid "You can not use HTML tags here"
 msgstr ""
 
-#: includes/core/um-actions-form.php:653
-#: includes/core/um-actions-form.php:656
+#: includes/core/um-actions-form.php:659
+#: includes/core/um-actions-form.php:662
 msgid "Please confirm your password"
 msgstr ""
 
 #. translators: %s: min selections.
-#: includes/core/um-actions-form.php:667
+#: includes/core/um-actions-form.php:673
 #, php-format
 msgid "Please select at least %s choices"
 msgstr ""
 
 #. translators: %s: max selections.
-#: includes/core/um-actions-form.php:674
+#: includes/core/um-actions-form.php:680
 #, php-format
 msgid "You can only select up to %s choices"
 msgstr ""
 
 #. translators: %s: min limit.
-#: includes/core/um-actions-form.php:681
+#: includes/core/um-actions-form.php:687
 #, php-format
 msgid "Minimum number limit is %s"
 msgstr ""
 
 #. translators: %s: max limit.
-#: includes/core/um-actions-form.php:688
+#: includes/core/um-actions-form.php:694
 #, php-format
 msgid "Maximum number limit is %s"
 msgstr ""
 
 #. translators: %s: max chars.
-#: includes/core/um-actions-form.php:747
-#: includes/core/um-actions-form.php:1073
+#: includes/core/um-actions-form.php:753
+#: includes/core/um-actions-form.php:1079
 #, php-format
 msgid "Your user description must contain less than %s characters"
 msgstr ""
 
-#: includes/core/um-actions-form.php:785
+#: includes/core/um-actions-form.php:791
 msgid "Please enter numbers only in this field"
 msgstr ""
 
-#: includes/core/um-actions-form.php:791
+#: includes/core/um-actions-form.php:797
 msgid "Please enter a valid phone number"
 msgstr ""
 
 #. translators: %s: label.
-#: includes/core/um-actions-form.php:798
-#: includes/core/um-actions-form.php:819
-#: includes/core/um-actions-form.php:826
-#: includes/core/um-actions-form.php:833
-#: includes/core/um-actions-form.php:840
-#: includes/core/um-actions-form.php:854
+#: includes/core/um-actions-form.php:804
+#: includes/core/um-actions-form.php:825
+#: includes/core/um-actions-form.php:832
+#: includes/core/um-actions-form.php:839
+#: includes/core/um-actions-form.php:846
+#: includes/core/um-actions-form.php:860
 #, php-format
 msgid "Please enter a valid %s username or profile URL"
 msgstr ""
 
 #. translators: %s: label.
-#: includes/core/um-actions-form.php:805
-#: includes/core/um-actions-form.php:812
+#: includes/core/um-actions-form.php:811
+#: includes/core/um-actions-form.php:818
 #, php-format
 msgid "Please enter a valid %s URL"
 msgstr ""
 
 #. translators: %s: label.
-#: includes/core/um-actions-form.php:847
-#: includes/core/um-actions-form.php:867
-#: includes/core/um-actions-form.php:874
-#: includes/core/um-actions-form.php:881
+#: includes/core/um-actions-form.php:853
+#: includes/core/um-actions-form.php:873
+#: includes/core/um-actions-form.php:880
+#: includes/core/um-actions-form.php:887
 #, php-format
 msgid "Please enter a valid %s profile URL"
 msgstr ""
 
-#: includes/core/um-actions-form.php:860
+#: includes/core/um-actions-form.php:866
 msgid "Please enter a valid Discord ID"
 msgstr ""
 
-#: includes/core/um-actions-form.php:887
+#: includes/core/um-actions-form.php:893
 msgid "Please enter a valid URL"
 msgstr ""
 
-#: includes/core/um-actions-form.php:893
+#: includes/core/um-actions-form.php:899
 msgid "You must provide a username"
 msgstr ""
 
-#: includes/core/um-actions-form.php:895
-#: includes/core/um-actions-form.php:907
+#: includes/core/um-actions-form.php:901
+#: includes/core/um-actions-form.php:913
 msgid "The username you entered is incorrect"
 msgstr ""
 
-#: includes/core/um-actions-form.php:897
+#: includes/core/um-actions-form.php:903
 msgid "Username cannot be an email"
 msgstr ""
 
-#: includes/core/um-actions-form.php:899
-#: includes/core/um-actions-form.php:911
+#: includes/core/um-actions-form.php:905
+#: includes/core/um-actions-form.php:917
 msgid "Your username contains invalid characters"
 msgstr ""
 
-#: includes/core/um-actions-form.php:905
+#: includes/core/um-actions-form.php:911
 msgid "You must provide a username or email"
 msgstr ""
 
-#: includes/core/um-actions-form.php:909
-#: includes/core/um-actions-form.php:929
-#: includes/core/um-actions-form.php:931
-#: includes/core/um-actions-form.php:933
-#: includes/core/um-actions-form.php:943
-#: includes/core/um-actions-form.php:960
+#: includes/core/um-actions-form.php:915
+#: includes/core/um-actions-form.php:935
+#: includes/core/um-actions-form.php:937
+#: includes/core/um-actions-form.php:939
+#: includes/core/um-actions-form.php:949
+#: includes/core/um-actions-form.php:966
 msgid "The email you entered is incorrect"
 msgstr ""
 
-#: includes/core/um-actions-form.php:935
+#: includes/core/um-actions-form.php:941
 msgid "Your email contains invalid characters"
 msgstr ""
 
-#: includes/core/um-actions-form.php:945
+#: includes/core/um-actions-form.php:951
 msgid "The secondary email cannot be the same as primary"
 msgstr ""
 
-#: includes/core/um-actions-form.php:970
+#: includes/core/um-actions-form.php:976
 msgid "This is not a valid email"
 msgstr ""
 
-#: includes/core/um-actions-form.php:991
+#: includes/core/um-actions-form.php:997
 msgid "You must provide a unique value"
 msgstr ""
 
-#: includes/core/um-actions-form.php:999
+#: includes/core/um-actions-form.php:1005
 msgid "You must provide alphabetic letters"
 msgstr ""
 
-#: includes/core/um-actions-form.php:1007
+#: includes/core/um-actions-form.php:1013
 msgid "You must provide alphabetic letters or numbers"
 msgstr ""
 
-#: includes/core/um-actions-form.php:1015
+#: includes/core/um-actions-form.php:1021
 msgid "You must provide lowercase letters."
 msgstr ""
 
-#: includes/core/um-actions-form.php:1023
+#: includes/core/um-actions-form.php:1029
 msgid "You must provide English letters."
 msgstr ""
 

@@ -312,7 +312,13 @@ function um_check_conditions_on_submit( $condition, $fields, $submitted_data, $r
 		}
 	}
 
-	$cond_value = ( $fields[ $parent_key ]['type'] == 'radio' ) ? $submitted_data[ $parent_key ][0] : $submitted_data[ $parent_key ];
+	// Radio fields now submit a scalar (single value), so handle both legacy array shape and current scalar shape.
+	if ( 'radio' === $fields[ $parent_key ]['type'] ) {
+		$radio_value = isset( $submitted_data[ $parent_key ] ) ? $submitted_data[ $parent_key ] : '';
+		$cond_value  = is_array( $radio_value ) ? reset( $radio_value ) : $radio_value;
+	} else {
+		$cond_value = isset( $submitted_data[ $parent_key ] ) ? $submitted_data[ $parent_key ] : '';
+	}
 
 	if ( $visibility == 'hide' ) {
 		if ( $op == 'empty' ) {
