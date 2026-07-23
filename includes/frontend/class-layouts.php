@@ -2285,6 +2285,7 @@ class Layouts {
 				'classes'         => array(),
 				'wrapper_classes' => array(),
 				'animate'         => false,
+				'data'            => array(),
 			)
 		);
 
@@ -2312,9 +2313,15 @@ class Layouts {
 			$style = 'width:' . $args['value'] . '%;';
 		}
 
+		$data_atts = array();
+		foreach ( $args['data'] as $data_k => $data_v ) {
+			$data_atts[] = 'data-' . $data_k . '="' . esc_attr( $data_v ) . '"';
+		}
+		$data_atts = implode( ' ', $data_atts );
+
 		ob_start();
-		?>
-		<div id="<?php echo esc_attr( $args['id'] ); ?>" class="<?php echo esc_attr( implode( ' ', $bar_classes ) ); ?>" data-value="<?php echo esc_attr( $args['value'] ); ?>" title="<?php echo esc_attr( $title ); ?>">
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $data_atts has been already escaped above. ?>
+		<div id="<?php echo esc_attr( $args['id'] ); ?>" class="<?php echo esc_attr( implode( ' ', $bar_classes ) ); ?>" data-value="<?php echo esc_attr( $args['value'] ); ?>" title="<?php echo esc_attr( $title ); ?>" <?php echo $data_atts; ?>>
 			<div class="<?php echo esc_attr( implode( ' ', $inner_classes ) ); ?>" style="<?php echo esc_attr( $style ); ?>" title="<?php echo empty( $args['tip'] ) ? esc_attr( $title ) : ''; ?>"></div>
 		</div>
 		<?php
