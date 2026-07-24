@@ -612,6 +612,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'languages'             => __( 'Languages', 'ultimate-member' ),
 				'role'                  => __( 'Roles', 'ultimate-member' ),
 				'birth_date'            => __( 'Age', 'ultimate-member' ),
+				'birth_date_period'     => __( 'Birthday', 'ultimate-member' ),
 				'last_login'            => __( 'Last Login', 'ultimate-member' ),
 				'user_registered'       => __( 'User Registered', 'ultimate-member' ),
 				'first_name'            => __( 'First Name', 'ultimate-member' ),
@@ -679,6 +680,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'languages'             => 'select',
 				'role'                  => 'select',
 				'birth_date'            => 'slider',
+				'birth_date_period'     => 'select',
 				'last_login'            => 'datepicker',
 				'user_registered'       => 'datepicker',
 				'first_name'            => 'text',
@@ -726,6 +728,20 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 
 			$this->filter_types = array_merge( $custom_fields_types, $this->filter_types );
+
+			add_filter(
+				'um_custom_search_field_birth_date_period',
+				function ( $attrs ) {
+					$attrs['type']    = 'select';
+					$attrs['label']   = __( 'Birthday', 'ultimate-member' );
+					$attrs['options'] = array(
+						'today' => __( 'Today', 'ultimate-member' ),
+						'week'  => __( 'This week', 'ultimate-member' ),
+						'month' => __( 'This month', 'ultimate-member' ),
+					);
+					return $attrs;
+				}
+			);
 		}
 
 
@@ -1955,7 +1971,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				$attrs = UM()->fields()->get_field( $field );
 				// skip private invisible fields
-				if ( ! um_can_view_field( $attrs ) ) {
+				if ( ! um_can_view_field( $attrs ) && 'birth_date_period' !== $field ) {
 					continue;
 				}
 
@@ -2153,7 +2169,77 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							$this->custom_filters_in_query[ $field ] = $this->query_args['role__in'];
 						}
 						break;
-					case 'birth_date':
+					case 'birth_date_period':
+						$now = current_time( 'timestamp' );
+						$md_list = array();
+						$period = is_array( $value ) ? $value[0] : $value;
+						if ( 'today' === $period ) {
+							$md_list[] = date( 'm-d', $now );
+						} elseif ( 'week' === $period ) {
+							for ( $i = 0; $i < 7; $i++ ) {
+								$md_list[] = date( 'm-d', strtotime( "+{$i} days", $now ) );
+							}
+						} else {
+							$month   = date( 'm', $now );
+							$days_in = (int) date( 't', $now );
+							for ( $i = 1; $i <= $days_in; $i++ ) {
+								$md_list[] = $month . '-' . sprintf( '%02d', $i );
+							}
+						}
+						$md_list = array_values( array_unique( $md_list ) );
+						$regex_parts = array();
+						foreach ( $md_list as $md ) {
+							$m = substr( $md, 0, 2 );
+							$d = substr( $md, 3, 2 );
+							$regex_parts[] = "[0-9]{4}/{$m}/{$d}";
+						}
+						$regex = '^(' . implode( '|', $regex_parts ) . ')$';
+
+						$field_query = array(
+							'key'     => 'birth_date',
+							'value'   => $regex,
+							'compare' => 'REGEXP',
+						);
+
+						$this->custom_filters_in_query[ $field ] = $value;
+						
+
+					case 'birth_date_period':
+						$now = current_time( 'timestamp' );
+						$md_list = array();
+						$period = is_array( $value ) ? $value[0] : $value;
+						if ( 'today' === $period ) {
+							$md_list[] = date( 'm-d', $now );
+						} elseif ( 'week' === $period ) {
+							for ( $i = 0; $i < 7; $i++ ) {
+								$md_list[] = date( 'm-d', strtotime( "+{$i} days", $now ) );
+							}
+						} else {
+							$month   = date( 'm', $now );
+							$days_in = (int) date( 't', $now );
+							for ( $i = 1; $i <= $days_in; $i++ ) {
+								$md_list[] = $month . '-' . sprintf( '%02d', $i );
+							}
+						}
+						$md_list = array_values( array_unique( $md_list ) );
+						$regex_parts = array();
+						foreach ( $md_list as $md ) {
+							$m = substr( $md, 0, 2 );
+							$d = substr( $md, 3, 2 );
+							$regex_parts[] = "[0-9]{4}/{$m}/{$d}";
+						}
+						$regex = '^(' . implode( '|', $regex_parts ) . ')$';
+
+						$field_query = array(
+							'key'     => 'birth_date',
+							'value'   => $regex,
+							'compare' => 'REGEXP',
+						);
+
+						$this->custom_filters_in_query[ $field ] = $value;
+						break;
+
+								case 'birth_date':
 						$from_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ), date( 'Y', time() - min( $value ) * YEAR_IN_SECONDS ) ) );
 						$to_date   = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ) + 1, date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) ) );
 

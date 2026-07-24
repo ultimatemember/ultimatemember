@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-06T14:13:40+00:00\n"
+"POT-Creation-Date: 2026-07-24T16:35:42+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -6997,7 +6997,7 @@ msgstr ""
 #: includes/class-config.php:143
 #: includes/class-config.php:960
 #: includes/class-config.php:1024
-#: includes/core/class-member-directory.php:2681
+#: includes/core/class-member-directory.php:2767
 #: includes/core/um-actions-profile.php:1555
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
@@ -7047,7 +7047,7 @@ msgstr ""
 #: includes/class-config.php:348
 #: includes/core/class-builtin.php:834
 #: includes/core/class-builtin.php:837
-#: includes/core/class-member-directory.php:617
+#: includes/core/class-member-directory.php:618
 msgid "First Name"
 msgstr ""
 
@@ -7055,7 +7055,7 @@ msgstr ""
 #: includes/class-config.php:362
 #: includes/core/class-builtin.php:844
 #: includes/core/class-builtin.php:847
-#: includes/core/class-member-directory.php:618
+#: includes/core/class-member-directory.php:619
 msgid "Last Name"
 msgstr ""
 
@@ -7224,7 +7224,7 @@ msgstr ""
 #: includes/core/class-builtin.php:854
 #: includes/core/class-builtin.php:857
 #: includes/core/class-member-directory.php:550
-#: includes/core/class-member-directory.php:619
+#: includes/core/class-member-directory.php:620
 msgid "Nickname"
 msgstr ""
 
@@ -7784,7 +7784,7 @@ msgid "Membership rejected"
 msgstr ""
 
 #: includes/common/class-users.php:198
-#: includes/core/class-member-directory.php:2721
+#: includes/core/class-member-directory.php:2807
 msgid "Undefined"
 msgstr ""
 
@@ -7973,7 +7973,7 @@ msgstr ""
 
 #: includes/core/class-builtin.php:886
 #: includes/core/class-builtin.php:889
-#: includes/core/class-member-directory.php:615
+#: includes/core/class-member-directory.php:616
 msgid "Last Login"
 msgstr ""
 
@@ -7984,13 +7984,13 @@ msgstr ""
 
 #: includes/core/class-builtin.php:908
 #: includes/core/class-builtin.php:911
-#: includes/core/class-member-directory.php:620
+#: includes/core/class-member-directory.php:621
 msgid "Secondary Email Address"
 msgstr ""
 
 #: includes/core/class-builtin.php:920
 #: includes/core/class-builtin.php:923
-#: includes/core/class-member-directory.php:621
+#: includes/core/class-member-directory.php:622
 msgid "Biography"
 msgstr ""
 
@@ -8144,13 +8144,13 @@ msgstr ""
 #: includes/core/class-builtin.php:1252
 #: includes/core/class-builtin.php:1255
 #: includes/core/class-builtin.php:1618
-#: includes/core/class-member-directory.php:622
+#: includes/core/class-member-directory.php:623
 msgid "Phone Number"
 msgstr ""
 
 #: includes/core/class-builtin.php:1264
 #: includes/core/class-builtin.php:1267
-#: includes/core/class-member-directory.php:623
+#: includes/core/class-member-directory.php:624
 msgid "Mobile Number"
 msgstr ""
 
@@ -9939,7 +9939,7 @@ msgstr ""
 #: includes/core/class-files.php:662
 #: includes/core/class-form.php:120
 #: includes/core/class-member-directory-meta.php:599
-#: includes/core/class-member-directory.php:2982
+#: includes/core/class-member-directory.php:3068
 #: includes/core/class-user-posts.php:109
 #: includes/core/class-user-posts.php:161
 msgid "Too many requests"
@@ -10104,13 +10104,13 @@ msgstr ""
 
 #: includes/core/class-member-directory-meta.php:607
 #: includes/core/class-member-directory-meta.php:612
-#: includes/core/class-member-directory.php:2988
-#: includes/core/class-member-directory.php:2994
+#: includes/core/class-member-directory.php:3074
+#: includes/core/class-member-directory.php:3080
 msgid "Wrong member directory data"
 msgstr ""
 
 #: includes/core/class-member-directory-meta.php:617
-#: includes/core/class-member-directory.php:2998
+#: includes/core/class-member-directory.php:3084
 msgid "You cannot see this member directory"
 msgstr ""
 
@@ -10210,47 +10210,64 @@ msgstr ""
 msgid "Age"
 msgstr ""
 
-#: includes/core/class-member-directory.php:616
+#: includes/core/class-member-directory.php:615
+#: includes/core/class-member-directory.php:736
+msgid "Birthday"
+msgstr ""
+
+#: includes/core/class-member-directory.php:617
 msgid "User Registered"
+msgstr ""
+
+#: includes/core/class-member-directory.php:738
+msgid "Today"
+msgstr ""
+
+#: includes/core/class-member-directory.php:739
+msgid "This week"
+msgstr ""
+
+#: includes/core/class-member-directory.php:740
+msgid "This month"
 msgstr ""
 
 #. translators: %s: Datetime filter label.
 #. translators: %s: Timepicker filter label.
-#: includes/core/class-member-directory.php:1066
-#: includes/core/class-member-directory.php:1111
+#: includes/core/class-member-directory.php:1082
+#: includes/core/class-member-directory.php:1127
 #, php-format
 msgid "%s From"
 msgstr ""
 
 #. translators: %s: Datetime filter label.
 #. translators: %s: Timepicker filter label.
-#: includes/core/class-member-directory.php:1072
-#: includes/core/class-member-directory.php:1118
+#: includes/core/class-member-directory.php:1088
+#: includes/core/class-member-directory.php:1134
 #, php-format
 msgid "%s To"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1215
-#: includes/core/class-member-directory.php:1216
+#: includes/core/class-member-directory.php:1231
+#: includes/core/class-member-directory.php:1232
 msgid " stars"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1225
+#: includes/core/class-member-directory.php:1241
 msgid "Age:&nbsp;{value} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1226
+#: includes/core/class-member-directory.php:1242
 msgid "Age:&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:2642
-#: includes/core/class-member-directory.php:2670
+#: includes/core/class-member-directory.php:2728
+#: includes/core/class-member-directory.php:2756
 #: includes/core/um-actions-profile.php:1522
 #: includes/core/um-actions-profile.php:1553
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:2676
+#: includes/core/class-member-directory.php:2762
 #: includes/core/um-actions-profile.php:1554
 msgid "My Account"
 msgstr ""
@@ -10350,20 +10367,26 @@ msgstr ""
 msgid "The \"unassigned\" $status has been removed. Use `UM()->setup()->set_default_user_status()` for setting up default user account status."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:436
+#: includes/core/class-shortcodes.php:444
 msgid "This content has been restricted to logged-in users only. Please <a href=\"{login_referrer}\">log in</a> to view this content."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:523
-#: includes/core/class-shortcodes.php:544
+#: includes/core/class-shortcodes.php:531
+#: includes/core/class-shortcodes.php:552
 msgid "Go to profile"
 msgstr ""
 
-#: includes/core/class-shortcodes.php:866
+#. translators: %s: formatted birthday date.
+#: includes/core/class-shortcodes.php:688
+#, php-format
+msgid "%s &ndash; Today"
+msgstr ""
+
+#: includes/core/class-shortcodes.php:1057
 msgid "You are already registered."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:1125
+#: includes/core/class-shortcodes.php:1316
 msgid "Default Template"
 msgstr ""
 

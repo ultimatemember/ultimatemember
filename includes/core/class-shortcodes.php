@@ -59,6 +59,13 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		public $set_args = array();
 
 		/**
+		 * Whether the [um_birthdays] inline styles have been printed for this request.
+		 *
+		 * @var bool
+		 */
+		private static $birthdays_css_done = false;
+
+		/**
 		 * Shortcodes constructor.
 		 */
 		public function __construct() {
@@ -75,6 +82,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			add_shortcode( 'ultimatemember_searchform', array( &$this, 'ultimatemember_searchform' ) );
 
 			add_shortcode( 'um_author_profile_link', array( &$this, 'author_profile_link' ) );
+			add_shortcode( 'um_birthdays', array( &$this, 'um_birthdays' ) );
 
 			add_filter( 'body_class', array( &$this, 'body_class' ), 0 );
 
@@ -545,6 +553,189 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$link_html = empty( $content ) ? $title : $content;
 
 			return '<a class="' . esc_attr( $atts['class'] ) . '" href="' . esc_url( $url ) . '" title="' . esc_attr( $title ) . '">' . wp_kses_post( $link_html ) . '</a>';
+		}
+
+		/**
+		 * Display users whose birthday falls in the selected period.
+		 *
+		 * @since 2.12.1
+		 * @param array $atts {
+		 *     Optional shortcode attributes.
+		 *
+		 *     @type string $period         today|week|month.
+		 *     @type int    $limit          Max users to display.
+		 *     @type int    $show_avatar    Whether to print avatar.
+		 *     @type int    $avatar_size    Avatar size in px.
+		 *     @type int    $show_name      Whether to print display name.
+		 *     @type int    $show_birthday  Whether to print birthday date label.
+		 *     @type string $role           Optional comma-separated WP roles to limit to.
+		 * }
+		 * @return string HTML output, empty string if no matches.
+		 */
+		public function um_birthdays( $atts = array() ) {
+			global $wpdb;
+
+			$atts = shortcode_atts(
+				array(
+					'period'        => 'week',
+					'limit'         => 10,
+					'show_avatar'   => 1,
+					'avatar_size'   => 50,
+					'show_name'     => 1,
+					'show_birthday' => 1,
+					'role'          => '',
+				),
+				$atts,
+				'um_birthdays'
+			);
+
+			$period = in_array( $atts['period'], array( 'today', 'week', 'month' ), true ) ? $atts['period'] : 'week';
+			$limit  = absint( $atts['limit'] );
+			if ( $limit < 1 ) {
+				$limit = 10;
+			}
+			$avatar_size   = absint( $atts['avatar_size'] );
+			$show_avatar   = ! empty( $atts['show_avatar'] );
+			$show_name     = ! empty( $atts['show_name'] );
+			$show_birthday = ! empty( $atts['show_birthday'] );
+
+			// Build the month/day window for the period.
+			$now      = current_time( 'timestamp' );
+			$today_md = date( 'm-d', $now );
+			$today_y  = date( 'Y', $now );
+
+			if ( 'today' === $period ) {
+				$md_list = array( $today_md );
+			} elseif ( 'week' === $period ) {
+				$md_list = array();
+				for ( $i = 0; $i < 7; $i++ ) {
+					$md_list[] = date( 'm-d', strtotime( "+{$i} days", $now ) );
+				}
+			} else {
+				// month: current calendar month.
+				$md_list = array();
+				$month   = date( 'm', $now );
+				$days_in = (int) date( 't', $now );
+				for ( $i = 1; $i <= $days_in; $i++ ) {
+					$md_list[] = $month . '-' . sprintf( '%02d', $i );
+				}
+			}
+
+			$md_list = array_values( array_unique( $md_list ) );
+
+			// Build a regex pattern matching the slash variants of m-d for any 4-digit year.
+			$md_regex_parts = array();
+			foreach ( $md_list as $md ) {
+				$m                = substr( $md, 0, 2 );
+				$d                = substr( $md, 3, 2 );
+				$md_regex_parts[] = "[0-9]{4}/{$m}/{$d}";
+			}
+			$md_regex = '^(' . implode( '|', $md_regex_parts ) . ')$';
+
+			$meta_table  = $wpdb->usermeta;
+			$users_table = $wpdb->users;
+
+			// Optional role restriction via capabilities meta.
+			$role_sql    = '';
+			$role_params = array();
+			if ( ! empty( $atts['role'] ) ) {
+				$roles = array_filter( array_map( 'sanitize_key', explode( ',', (string) $atts['role'] ) ) );
+				if ( ! empty( $roles ) ) {
+					$cap_meta    = $wpdb->get_blog_prefix() . 'capabilities';
+					$like_clauses = array();
+					foreach ( $roles as $r ) {
+						$like_clauses[] = 'rm.meta_value LIKE %s';
+						$role_params[]  = '%' . $wpdb->esc_like( '"' . $r . '"' ) . '%';
+					}
+					$role_sql = ' AND u.ID IN ( SELECT rm.user_id FROM ' . $meta_table . ' rm WHERE rm.meta_key = %s AND (' . implode( ' OR ', $like_clauses ) . ') )';
+					array_unshift( $role_params, $cap_meta );
+				}
+			}
+
+			$prepare_params   = array_merge( array( $md_regex ), $role_params );
+			$prepare_params[] = $limit;
+
+			$sql = "SELECT u.ID, u.display_name, um.meta_value AS birth_date
+				FROM {$users_table} u
+				INNER JOIN {$meta_table} um ON um.user_id = u.ID
+				WHERE um.meta_key = 'birth_date'
+					AND um.meta_value REGEXP %s"
+				. $role_sql . '
+				ORDER BY SUBSTRING( um.meta_value, 6 ) ASC, u.display_name ASC
+				LIMIT %d';
+
+			$user_rows = $wpdb->get_results(
+				$wpdb->prepare( $sql, $prepare_params ),
+				OBJECT_K
+			);
+
+			if ( empty( $user_rows ) ) {
+				return '';
+			}
+
+			$items = array();
+
+			foreach ( $user_rows as $user_id => $user_row ) {
+				$value = $user_row->birth_date;
+				if ( ! preg_match( '#^(\d{4})/(\d{2})/(\d{2})$#', $value, $bt ) ) {
+					continue;
+				}
+
+				$is_today   = ( $bt[2] . '-' . $bt[3] === $today_md );
+				$label_date = date_i18n( 'F j', mktime( 0, 0, 0, (int) $bt[2], (int) $bt[3], (int) $today_y ) );
+				if ( $is_today ) {
+					/* translators: %s: formatted birthday date. */
+					$label_date = sprintf( __( '%s &ndash; Today', 'ultimate-member' ), $label_date );
+				}
+
+				$parts = array();
+				if ( $show_avatar ) {
+					$alt     = $user_row->display_name;
+					$avatar  = get_avatar( (int) $user_id, $avatar_size, '', $alt );
+					$avatar  = str_replace( '<img ', '<img alt="' . esc_attr( $alt ) . '" ', $avatar );
+					$parts[] = '<span class="um-birthday-avatar">' . $avatar . '</span>';
+				}
+				if ( $show_name ) {
+					$profile_url = um_user_profile_url( (int) $user_id );
+					if ( $profile_url ) {
+						$parts[] = '<a class="um-birthday-name" href="' . esc_url( $profile_url ) . '">' . esc_html( $user_row->display_name ) . '</a>';
+					} else {
+						$parts[] = '<span class="um-birthday-name">' . esc_html( $user_row->display_name ) . '</span>';
+					}
+				}
+				if ( $show_birthday ) {
+					$parts[] = '<span class="um-birthday-date">' . esc_html( $label_date ) . '</span>';
+				}
+
+				$row_classes = 'um-birthday um-birthday-' . esc_attr( $period );
+				if ( $is_today ) {
+					$row_classes .= ' um-birthday-is-today';
+				}
+				$items[] = '<div class="' . $row_classes . '">' . implode( '', $parts ) . '</div>';
+			}
+
+			if ( empty( $items ) ) {
+				return '';
+			}
+
+			$css = '';
+			if ( ! self::$birthdays_css_done ) {
+				self::$birthdays_css_done = true;
+				$css                      = '<style id="um-birthdays-css">
+.um-birthdays{font-size:14px;line-height:1.5;color:#666}
+.um-birthdays .um-birthday{display:flex;align-items:center;padding:9px 10px;border-radius:4px;transition:background-color .15s ease-in-out}
+.um-birthdays .um-birthday + .um-birthday{border-top:1px solid #eee}
+.um-birthdays .um-birthday:hover{background-color:#f7f9fb}
+.um-birthdays .um-birthday-avatar{flex-shrink:0;margin-right:12px}
+.um-birthdays .um-birthday-avatar img{display:block;border-radius:50%;border:2px solid #eee}
+.um-birthdays .um-birthday-name{color:#444;font-weight:600;text-decoration:none}
+.um-birthdays a.um-birthday-name:hover{color:#44b0ec}
+.um-birthdays .um-birthday-date{margin-left:auto;padding:2px 10px;background-color:#f4f6f8;border:1px solid #e8ecef;border-radius:3px;font-size:12px;line-height:1.6;color:#8a959c;white-space:nowrap}
+.um-birthdays .um-birthday-is-today .um-birthday-date{background-color:#44b0ec;border-color:#44b0ec;color:#fff;font-weight:600}
+</style>';
+			}
+
+			return $css . '<div class="um-birthdays um-birthdays-' . esc_attr( $period ) . '">' . implode( '', $items ) . '</div>';
 		}
 
 		/**
