@@ -901,8 +901,34 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 						$this->profile_role = $args['role'];
 					} elseif ( $this->profile_role !== $args['role'] ) {
-						ob_get_clean();
-						return '';
+						/**
+						 * Filters the ability to render a role-specific profile form
+						 * after another role-specific profile form has already rendered
+						 * on the same page.
+						 *
+						 * Default behavior keeps the original shortcode suppression so
+						 * only the first matching profile form renders. Return `true`
+						 * to opt in to rendering the second form on the page, regardless
+						 * of how the matching of role-specific settings evolved.
+						 *
+						 * The filter only fires when an earlier role-specific profile
+						 * form on the same page has already set `$this-&gt;profile_role`.
+						 *
+						 * @since 2.12.2
+						 * @hook um_allow_multi_role_profile
+						 *
+						 * @param {bool}  $allow Render profile form or not. Default false (suppress).
+						 * @param {array} $args  Shortcode arguments.
+						 *
+						 * @example <caption>Allow multiple profile forms with role-specific settings on the same page.</caption>
+						 * add_filter( 'um_allow_multi_role_profile', '__return_true' );
+						 */
+						$allow = apply_filters( 'um_allow_multi_role_profile', false, $args );
+						if ( ! $allow ) {
+							ob_get_clean();
+							return '';
+						}
+						$this->profile_role = $args['role'];
 					}
 				}
 			}

@@ -1,5 +1,11 @@
 ﻿== Changelog ==
 
+= 2.12.2 July 24, 2026 =
+
+* Enhancements:
+
+  - Added: New filter `um_allow_multi_role_profile` to opt in to rendering multiple profile forms with role-specific settings on the same page.
+
 = 2.12.1 July 06, 2026 =
 
 * Enhancements:
