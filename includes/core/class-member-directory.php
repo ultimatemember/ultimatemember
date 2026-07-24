@@ -2619,8 +2619,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'total_users'   => $total_users,
 			);
 
-			$pagination_data['header'] = $this->convert_tags( $directory_data['header'], $pagination_data );
-			$pagination_data['header_single'] = $this->convert_tags( $directory_data['header_single'], $pagination_data );
+			$header        = ! empty( $directory_data['header'] ) ? $directory_data['header'] : __( '{total_users} Members', 'ultimate-member' );
+			$header_single = ! empty( $directory_data['header_single'] ) ? $directory_data['header_single'] : __( '{total_users} Member', 'ultimate-member' );
+			$header        = apply_filters( 'um_member_directory_default_header', $header, $directory_data, $pagination_data );
+			$header_single = apply_filters( 'um_member_directory_default_header_single', $header_single, $directory_data, $pagination_data );
+
+			$pagination_data['header']        = $this->convert_tags( $header, $pagination_data );
+			$pagination_data['header_single'] = $this->convert_tags( $header_single, $pagination_data );
 
 			return $pagination_data;
 		}
@@ -2965,8 +2970,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					'total_users'   => 0,
 				);
 
-				$pagination_data['header'] = $this->convert_tags( $directory_data['header'], $pagination_data );
-				$pagination_data['header_single'] = $this->convert_tags( $directory_data['header_single'], $pagination_data );
+				$header        = ! empty( $directory_data['header'] ) ? $directory_data['header'] : __( '{total_users} Members', 'ultimate-member' );
+				$header_single = ! empty( $directory_data['header_single'] ) ? $directory_data['header_single'] : __( '{total_users} Member', 'ultimate-member' );
+				$header        = apply_filters( 'um_member_directory_default_header', $header, $directory_data, $pagination_data );
+				$header_single = apply_filters( 'um_member_directory_default_header_single', $header_single, $directory_data, $pagination_data );
+
+				$pagination_data['header']        = $this->convert_tags( $header, $pagination_data );
+				$pagination_data['header_single'] = $this->convert_tags( $header_single, $pagination_data );
 
 				wp_send_json_success( array( 'users' => array(), 'pagination' => $pagination_data ) );
 			}
