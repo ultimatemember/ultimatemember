@@ -162,7 +162,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		public function enqueue_async_action( $hook, $args = array(), $group = '', $unique = false, $priority = 10 ) {
 			if ( $this->is_hook_enabled( $hook ) ) {
 				$group = $this->set_group( $group );
-				return as_enqueue_async_action( $hook, $args, $group, $unique, $priority );
+				return \as_enqueue_async_action( $hook, $args, $group, $unique, $priority );
 			}
 
 			// Make then standard action without Action Scheduler.
@@ -185,7 +185,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		public function schedule_single_action( $timestamp, $hook, $args = array(), $group = '', $unique = false, $priority = 10 ) {
 			if ( $this->is_hook_enabled( $hook ) ) {
 				$group = $this->set_group( $group );
-				return as_schedule_single_action( $timestamp, $hook, $args, $group, $unique, $priority );
+				return \as_schedule_single_action( $timestamp, $hook, $args, $group, $unique, $priority );
 			}
 
 			// Make then standard action without Action Scheduler.
@@ -209,7 +209,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		public function schedule_recurring_action( $timestamp, $interval_in_seconds, $hook, $args = array(), $group = '', $unique = false, $priority = 10 ) {
 			$group = $this->set_group( $group );
 
-			return as_schedule_recurring_action( $timestamp, $interval_in_seconds, $hook, $args, $group, $unique, $priority );
+			return \as_schedule_recurring_action( $timestamp, $interval_in_seconds, $hook, $args, $group, $unique, $priority );
 		}
 
 		/**
@@ -230,7 +230,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		public function schedule_cron_action( $timestamp, $schedule, $hook, $args = array(), $group = '', $unique = false, $priority = 10 ) {
 			$group = $this->set_group( $group );
 
-			return as_schedule_cron_action( $timestamp, $schedule, $hook, $args, $group, $unique, $priority );
+			return \as_schedule_cron_action( $timestamp, $schedule, $hook, $args, $group, $unique, $priority );
 		}
 
 		/**
@@ -245,7 +245,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		public function unschedule_action( $hook, $args = array(), $group = '' ) {
 			$group = $this->set_group( $group );
 
-			return as_unschedule_action( $hook, $args, $group );
+			return \as_unschedule_action( $hook, $args, $group );
 		}
 
 		/**
@@ -258,7 +258,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		public function unschedule_all_actions( $hook, $args = array(), $group = '' ) {
 			$group = $this->set_group( $group );
 
-			as_unschedule_all_actions( $hook, $args, $group );
+			\as_unschedule_all_actions( $hook, $args, $group );
 		}
 
 		/**
@@ -273,7 +273,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		public function next_scheduled_action( $hook, $args = array(), $group = '' ) {
 			$group = $this->set_group( $group );
 
-			return as_next_scheduled_action( $hook, $args, $group );
+			return \as_next_scheduled_action( $hook, $args, $group );
 		}
 
 		/**
@@ -289,7 +289,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		public function has_scheduled_action( $hook, $args = array(), $group = '' ) {
 			$group = $this->set_group( $group );
 
-			return as_has_scheduled_action( $hook, $args, $group );
+			return \as_has_scheduled_action( $hook, $args, $group );
 		}
 
 		/**
@@ -316,7 +316,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 			if ( ! empty( $args['group'] ) ) {
 				$args['group'] = $this->set_group( $args['group'] );
 			}
-			return as_get_scheduled_actions( $args, $return_format );
+			return \as_get_scheduled_actions( $args, $return_format );
 		}
 
 		public function set_group( $group ) {
