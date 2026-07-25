@@ -2472,6 +2472,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_editable':
+					// Field cannot be edited during registration; control is meaningless on Register forms.
+					if ( array_key_exists( 'mode', $form_data ) && 'register' === $form_data['mode'] ) {
+						break;
+					}
+
 					// Make a new field editable by default.
 					if ( false === $this->in_edit ) {
 						$this->edit_mode_value = true;
