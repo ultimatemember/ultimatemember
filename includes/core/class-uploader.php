@@ -1021,6 +1021,20 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 					$sizes_array[] = array( 'width' => $size );
 				}
 
+				// Remove stale thumbnails left from a previous upload so a smaller
+				// replacement photo does not leave larger sizes on disk and served.
+				$dir = UM()->files()->upload_basedir . $user_id . DIRECTORY_SEPARATOR;
+				if ( is_dir( $dir ) ) {
+					$stale = glob( $dir . $key . '-*' );
+					if ( is_array( $stale ) ) {
+						foreach ( $stale as $old ) {
+							if ( is_file( $old ) ) {
+								wp_delete_file( $old );
+							}
+						}
+					}
+				}
+
 				$image->multi_resize( $sizes_array );
 
 				delete_user_meta( $user_id, 'synced_profile_photo' );
@@ -1095,6 +1109,20 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				foreach ( $sizes as $size ) {
 					$sizes_array[] = array( 'width' => $size );
+				}
+
+				// Remove stale thumbnails left from a previous upload so a smaller
+				// replacement photo does not leave larger sizes on disk and served.
+				$dir = UM()->files()->upload_basedir . $user_id . DIRECTORY_SEPARATOR;
+				if ( is_dir( $dir ) ) {
+					$stale = glob( $dir . $key . '-*' );
+					if ( is_array( $stale ) ) {
+						foreach ( $stale as $old ) {
+							if ( is_file( $old ) ) {
+								wp_delete_file( $old );
+							}
+						}
+					}
 				}
 
 				$resize = $image->multi_resize( $sizes_array );

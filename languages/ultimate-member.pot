@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-06T18:47:12+00:00\n"
+"POT-Creation-Date: 2026-07-28T16:54:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -10397,9 +10397,9 @@ msgstr ""
 
 #. translators: %s is the file src.
 #: includes/core/class-uploader.php:1014
-#: includes/core/class-uploader.php:1041
-#: includes/core/class-uploader.php:1089
-#: includes/core/class-uploader.php:1123
+#: includes/core/class-uploader.php:1055
+#: includes/core/class-uploader.php:1103
+#: includes/core/class-uploader.php:1151
 #, php-format
 msgid "Unable to crop image file: %s"
 msgstr ""
