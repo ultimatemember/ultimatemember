@@ -750,17 +750,23 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		/**
 		 * User can (role settings)
 		 *
-		 * @param $permission
+		 * @since 3.0 added $user_id parameter
+		 *
+		 * @param string   $permission
+		 * @param int|null $user_id Added since 3.0
+		 *
 		 * @return bool|mixed
 		 */
-		public function um_user_can( $permission ) {
-			if ( ! is_user_logged_in() ) {
+		public function um_user_can( $permission, $user_id = null ) {
+			if ( is_null( $user_id ) && ! is_user_logged_in() ) {
 				return false;
 			}
 
-			$user_id = get_current_user_id();
-			$role    = UM()->roles()->get_priority_user_role( $user_id );
+			if ( is_null( $user_id ) ) {
+				$user_id = get_current_user_id();
+			}
 
+			$role        = UM()->roles()->get_priority_user_role( $user_id );
 			$permissions = $this->role_data( $role );
 			/**
 			 * Filters User Permissions.
