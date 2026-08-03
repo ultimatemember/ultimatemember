@@ -843,7 +843,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										case 'textarea':
 											$description_key = UM()->profile()->get_show_bio_key( $form );
 											if ( ! empty( $field['html'] ) || ( $description_key === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
-												$allowed_html = UM()->get_allowed_html( 'templates' );
+												$allowed_html = 'post';
 												if ( $description_key === $k ) {
 													$allowed_html = 'user_description';
 												}
