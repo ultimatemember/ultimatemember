@@ -100,6 +100,18 @@ UM.frontend = {
 			if ( $dropdown.length ) {
 				$dropdown.um_dropdownMenu();
 			}
+		},
+		enable: function( dropdown ) {
+			let $dropdown = dropdown ? jQuery( dropdown ) : jQuery('.um-dropdown');
+			if ( $dropdown.length ) {
+				$dropdown.removeClass('um-dropdown-disabled');
+			}
+		},
+		disable: function( dropdown ) {
+			let $dropdown = dropdown ? jQuery( dropdown ) : jQuery('.um-dropdown');
+			if ( $dropdown.length ) {
+				$dropdown.addClass('um-dropdown-disabled');
+			}
 		}
 	},
 	toggleElements: {

@@ -71,6 +71,10 @@
   -webkit-mask-image: url(../../icons/chevron-up.svg);
 }
 
+.um-dropdown-disabled {
+  pointer-events: none;
+}
+
 .um-dropdown {
   font-size: 16px;
   margin: 0;
