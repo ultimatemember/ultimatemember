@@ -73,6 +73,8 @@
 
 .um-dropdown-disabled {
   pointer-events: none;
+  filter: grayscale(100%);
+  cursor: not-allowed;
 }
 
 .um-dropdown {
