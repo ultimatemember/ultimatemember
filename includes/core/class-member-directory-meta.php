@@ -456,13 +456,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 		 * Main Query function for getting members via AJAX
 		 */
 		public function ajax_get_members() {
-			if ( UM()->is_new_ui() ) {
-				if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'um_member_directory' ) ) {
-					wp_send_json_error( __( 'Wrong nonce.', 'ultimate-member' ) );
-				}
-			} else {
-				UM()->check_ajax_nonce();
-			}
+			UM()->check_ajax_nonce();
 
 			if ( UM()->is_rate_limited( 'member_directory' ) ) {
 				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );

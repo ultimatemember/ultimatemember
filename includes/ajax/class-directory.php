@@ -1612,12 +1612,7 @@ class Directory extends \um\common\Directory {
 		}
 	}
 
-	/**
-	 * Main Query function for getting members via AJAX
-	 *
-	 * @throws Exception
-	 */
-	public function ajax_get_members() {
+	public function ajax_get_members_inner() {
 		check_ajax_referer( 'um_member_directory', 'nonce' );
 
 		if ( UM()->is_rate_limited( 'member_directory' ) ) {
@@ -1845,5 +1840,14 @@ class Directory extends \um\common\Directory {
 
 		$response = apply_filters( 'um_ajax_get_members_response', $response, $directory_data );
 		wp_send_json_success( $response );
+	}
+
+	/**
+	 * Main Query function for getting members via AJAX
+	 *
+	 * @throws Exception
+	 */
+	public function ajax_get_members() {
+		$this->ajax_get_members_inner();
 	}
 }
