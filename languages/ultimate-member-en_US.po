@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-06T14:13:40+00:00\n"
+"POT-Creation-Date: 2026-08-09T17:58:12+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -2281,6 +2281,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-builder.php:559
 #: includes/admin/core/list-tables/roles-list-table.php:387
+#: includes/core/um-actions-profile.php:1589
 msgid "Edit"
 msgstr ""
 
@@ -6373,8 +6374,14 @@ msgstr ""
 #: includes/admin/templates/modal/forms/fonticons.php:26
 #: includes/admin/templates/role/publish.php:33
 #: includes/class-config.php:242
+#: includes/core/class-fields.php:3059
+#: includes/core/class-fields.php:3069
+#: includes/core/class-fields.php:3122
 #: includes/core/class-fields.php:3127
+#: includes/core/class-fields.php:3187
+#: includes/core/class-fields.php:3251
 #: includes/core/class-fields.php:3270
+#: includes/core/class-fields.php:4025
 #: includes/core/um-actions-profile.php:925
 #: includes/core/um-actions-profile.php:934
 #: includes/core/um-actions-profile.php:1123
@@ -9912,6 +9919,7 @@ msgid "Change file"
 msgstr ""
 
 #: includes/core/class-fields.php:3269
+#: includes/core/um-actions-profile.php:1506
 msgid "Save"
 msgstr ""
 
@@ -10899,6 +10907,7 @@ msgstr ""
 #: includes/core/um-actions-profile.php:919
 #: includes/core/um-actions-profile.php:920
 #: includes/core/um-actions-profile.php:933
+#: includes/core/um-actions-profile.php:991
 #: includes/core/um-actions-profile.php:993
 #: assets/js/um-profile.js:73
 msgid "Upload a cover photo"
@@ -11078,6 +11087,20 @@ msgstr ""
 msgid "Edit profile"
 msgstr ""
 
+#: templates/members-grid.php:130
+#: templates/members-list.php:155
+msgid "Expand"
+msgstr ""
+
+#: templates/members-grid.php:155
+#: templates/members-list.php:158
+msgid "Collapse"
+msgstr ""
+
+#: templates/members-list.php:134
+msgid "Member actions"
+msgstr ""
+
 #: templates/members-pagination.php:19
 msgid "Jump to page:"
 msgstr ""
@@ -11108,6 +11131,7 @@ msgstr ""
 
 #: templates/members.php:257
 #: templates/members.php:259
+#: templates/searchform.php:21
 msgid "Search"
 msgstr ""
 
@@ -11117,23 +11141,23 @@ msgstr ""
 msgid "Change to %s"
 msgstr ""
 
-#: templates/members.php:307
+#: templates/members.php:308
 msgid "Sort by:"
 msgstr ""
 
-#: templates/members.php:328
+#: templates/members.php:329
 msgid "More filters"
 msgstr ""
 
-#: templates/members.php:353
+#: templates/members.php:354
 msgid "Remove filter"
 msgstr ""
 
-#: templates/members.php:380
+#: templates/members.php:381
 msgid "Remove all filters"
 msgstr ""
 
-#: templates/members.php:380
+#: templates/members.php:381
 msgid "Clear all"
 msgstr ""
 
@@ -11303,7 +11327,7 @@ msgstr ""
 msgid "Hide key"
 msgstr ""
 
-#: assets/js/um-modal.js:114
+#: assets/js/um-modal.js:117
 msgid "UM Warning: No field associated with image uploader."
 msgstr ""
 
