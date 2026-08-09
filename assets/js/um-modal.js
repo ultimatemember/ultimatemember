@@ -5,11 +5,12 @@ jQuery(document).ready(function() {
 		remove_Modal();
 	});
 
-	jQuery(document).on('click', '.um-modal-overlay, a[data-action="um_remove_modal"]', function(){
+	jQuery(document).on('click', '.um-modal-overlay, [data-action="um_remove_modal"]', function(e){
+		e.preventDefault();
 		um_remove_modal();
 	});
 
-	jQuery(document).on('click', 'a[data-modal^="um_"], span[data-modal^="um_"], .um-modal:not(:has(.um-form)) a', function(e){
+	jQuery(document).on('click', '[data-modal^="um_"], span[data-modal^="um_"], .um-modal:not(:has(.um-form)) a', function(e){
 		e.preventDefault();
 		return false;
 	});
@@ -72,7 +73,8 @@ jQuery(document).ready(function() {
 	// 	return false;
 	// });
 
-	jQuery(document).on('click', '.um-finish-upload.file:not(.disabled)', function(){
+	jQuery(document).on('click', '.um-finish-upload.file:not(.disabled)', function(e){
+		e.preventDefault();
 
 		var key = jQuery(this).attr('data-key');
 
@@ -90,7 +92,8 @@ jQuery(document).ready(function() {
 
 	});
 
-	jQuery(document).on('click', '.um-finish-upload.image:not(.disabled)', function(){
+	jQuery(document).on('click', '.um-finish-upload.image:not(.disabled)', function(e){
+		e.preventDefault();
 
 		var elem = jQuery(this);
 		var key = jQuery(this).attr('data-key');
@@ -204,7 +207,8 @@ jQuery(document).ready(function() {
 		}
 	});
 
-	jQuery(document.body).on('click', 'a[data-modal^="um_"], span[data-modal^="um_"]', function(e){
+	jQuery(document.body).on('click', '[data-modal^="um_"], span[data-modal^="um_"]', function(e){
+		e.preventDefault();
 
 		var modal_id = jQuery(this).attr('data-modal');
 

@@ -920,9 +920,9 @@ function um_profile_header_cover_area( $args ) {
 			$alt_text = $user_cover ? __( 'Upload a cover photo', 'ultimate-member' ) : __( 'Change cover photo', 'ultimate-member' );
 
 			$items = array(
-				'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width" data-alt_text="' . esc_attr( $alt_text ) . '">' . esc_html( $text ) . '</a>',
-				'<a href="javascript:void(0);" class="' . esc_attr( implode( ' ', $remove_classes ) ) . '" data-user_id="' . esc_attr( um_profile_id() ) . '" ' . $hide_remove . '>' . esc_html__( 'Remove cover photo', 'ultimate-member' ) . '</a>',
-				'<a href="javascript:void(0);" class="um-dropdown-hide">' . esc_html__( 'Cancel', 'ultimate-member' ) . '</a>',
+				'<button type="button" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width" data-alt_text="' . esc_attr( $alt_text ) . '">' . esc_html( $text ) . '</button>',
+				'<button type="button" class="' . esc_attr( implode( ' ', $remove_classes ) ) . '" data-user_id="' . esc_attr( um_profile_id() ) . '" ' . $hide_remove . '>' . esc_html__( 'Remove cover photo', 'ultimate-member' ) . '</button>',
+				'<button type="button" class="um-dropdown-hide">' . esc_html__( 'Cancel', 'ultimate-member' ) . '</button>',
 			);
 
 			$items = apply_filters( 'um_cover_area_content_dropdown_items', $items, um_profile_id() );
@@ -930,8 +930,8 @@ function um_profile_header_cover_area( $args ) {
 			UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
 		} elseif ( ! $user_cover && ! isset( UM()->user()->cannot_edit ) ) {
 			$items = array(
-				'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . esc_html__( 'Upload a cover photo', 'ultimate-member' ) . '</a>',
-				'<a href="javascript:void(0);" class="um-dropdown-hide">' . esc_html__( 'Cancel', 'ultimate-member' ) . '</a>',
+				'<button type="button" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . esc_html__( 'Upload a cover photo', 'ultimate-member' ) . '</button>',
+				'<button type="button" class="um-dropdown-hide">' . esc_html__( 'Cancel', 'ultimate-member' ) . '</button>',
 			);
 
 			$items = apply_filters( 'um_cover_area_content_dropdown_items', $items, um_profile_id() );
@@ -988,9 +988,9 @@ function um_profile_header_cover_area( $args ) {
 
 			} elseif ( ! isset( UM()->user()->cannot_edit ) ) {
 				?>
-				<a href="javascript:void(0);" class="um-cover-add"><span class="um-cover-add-i"><i
+				<button type="button" class="um-cover-add" aria-label="<?php esc_attr_e( 'Upload a cover photo', 'ultimate-member' ); ?>"><span class="um-cover-add-i"><i
 					class="um-icon-plus um-tip-n"
-					title="<?php esc_attr_e( 'Upload a cover photo', 'ultimate-member' ); ?>"></i></span></a>
+					title="<?php esc_attr_e( 'Upload a cover photo', 'ultimate-member' ); ?>"></i></span></button>
 				<?php
 			}
 			?>
@@ -1118,9 +1118,9 @@ function um_profile_header( $args ) {
 				if ( ! um_profile( 'profile_photo' ) ) { // has profile photo
 
 					$items = array(
-						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width" data-alt_text="' . esc_attr__( 'Change photo', 'ultimate-member' ) . '">' . esc_html__( 'Upload photo', 'ultimate-member' ) . '</a>',
-						'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '" style="display:none;">' . esc_html__( 'Remove photo', 'ultimate-member' ) . '</a>',
-						'<a href="javascript:void(0);" class="um-dropdown-hide">' . esc_html__( 'Cancel', 'ultimate-member' ) . '</a>',
+						'<button type="button" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width" data-alt_text="' . esc_attr__( 'Change photo', 'ultimate-member' ) . '">' . esc_html__( 'Upload photo', 'ultimate-member' ) . '</button>',
+						'<button type="button" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '" style="display:none;">' . esc_html__( 'Remove photo', 'ultimate-member' ) . '</button>',
+						'<button type="button" class="um-dropdown-hide">' . esc_html__( 'Cancel', 'ultimate-member' ) . '</button>',
 					);
 
 					/**
@@ -1151,9 +1151,9 @@ function um_profile_header( $args ) {
 				} elseif ( true === UM()->fields()->editing ) {
 
 					$items = array(
-						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width" data-alt_text="' . esc_attr__( 'Upload photo', 'ultimate-member' ) . '">' . esc_html__( 'Change photo', 'ultimate-member' ) . '</a>',
-						'<a href="javascript:void(0);" class="um-reset-profile-photo um-is-visible" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . esc_html__( 'Remove photo', 'ultimate-member' ) . '</a>',
-						'<a href="javascript:void(0);" class="um-dropdown-hide">' . esc_html__( 'Cancel', 'ultimate-member' ) . '</a>',
+						'<button type="button" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width" data-alt_text="' . esc_attr__( 'Upload photo', 'ultimate-member' ) . '">' . esc_html__( 'Change photo', 'ultimate-member' ) . '</button>',
+						'<button type="button" class="um-reset-profile-photo um-is-visible" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . esc_html__( 'Remove photo', 'ultimate-member' ) . '</button>',
+						'<button type="button" class="um-dropdown-hide">' . esc_html__( 'Cancel', 'ultimate-member' ) . '</button>',
 					);
 
 					/**
@@ -1503,7 +1503,7 @@ function um_add_edit_icon( $args ) {
 	if ( true === UM()->fields()->editing ) {
 		?>
 		<div class="um-profile-edit um-profile-headericon">
-			<a href="javascript:void(0);" class="um-profile-edit-a um-profile-save"><i class="um-faicon-check"></i></a>
+			<button type="button" class="um-profile-edit-a um-profile-save" aria-label="<?php esc_attr_e( 'Save', 'ultimate-member' ); ?>"><i class="um-faicon-check"></i></button>
 		</div>
 		<?php
 		return;
@@ -1546,14 +1546,14 @@ function um_add_edit_icon( $args ) {
 		*/
 		$items = apply_filters( 'um_profile_edit_menu_items', $items, um_profile_id() );
 
-		$items['cancel'] = '<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>';
+		$items['cancel'] = '<button type="button" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</button>';
 
 	} else {
 		$items = array(
 			'editprofile' => '<a href="' . esc_url( um_edit_profile_url( um_profile_id(), $current_page_id ) ) . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>',
 			'myaccount'   => '<a href="' . esc_url( um_get_core_page( 'account' ) ) . '" class="real_url">' . __( 'My Account', 'ultimate-member' ) . '</a>',
 			'logout'      => '<a href="' . esc_url( um_get_core_page( 'logout' ) ) . '" class="real_url">' . __( 'Logout', 'ultimate-member' ) . '</a>',
-			'cancel'      => '<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
+			'cancel'      => '<button type="button" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</button>',
 		);
 
 		if ( ! empty( UM()->user()->cannot_edit ) ) {
@@ -1586,7 +1586,7 @@ function um_add_edit_icon( $args ) {
 
 	<div class="um-profile-edit um-profile-headericon">
 
-		<a href="javascript:void(0);" class="um-profile-edit-a"><i class="um-faicon-cog"></i></a>
+		<button type="button" class="um-profile-edit-a" aria-label="<?php esc_attr_e( 'Edit', 'ultimate-member' ); ?>"><i class="um-faicon-cog"></i></button>
 
 		<?php UM()->profile()->new_ui( $args['header_menu'], 'div.um-profile-edit', 'click', $items ); ?>
 

@@ -23,7 +23,7 @@ jQuery(document).ready(function() {
 		jQuery(this).addClass('active');
 	});
 
-	jQuery( document.body ).on( 'click', '.um-cover a.um-cover-add, .um-photo a', function(e){
+	jQuery( document.body ).on( 'click', '.um-cover a, .um-photo a', function(e){
 		e.preventDefault();
 	});
 
@@ -70,7 +70,7 @@ jQuery(document).ready(function() {
 		$dropdownItem.data( 'alt_text', $dropdownItem.text() ).text( altText );
 
 		jQuery('.um-cover-overlay').hide();
-		jQuery('.um-cover-e').html('<a href="javascript:void(0);" class="um-cover-add" style="height: 370px;"><span class="um-cover-add-i"><i class="um-icon-plus um-tip-n" title="' + wp.i18n.__( 'Upload a cover photo', 'ultimate-member' ) + '"></i></span></a>');
+		jQuery('.um-cover-e').html('<button type="button" class="um-cover-add" aria-label="' + wp.i18n.__( 'Upload a cover photo', 'ultimate-member' ) + '" style="height: 370px;"><span class="um-cover-add-i"><i class="um-icon-plus um-tip-n" title="' + wp.i18n.__( 'Upload a cover photo', 'ultimate-member' ) + '"></i></span></button>');
 
 		um_responsive();
 

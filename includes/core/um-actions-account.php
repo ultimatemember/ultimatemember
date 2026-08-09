@@ -729,9 +729,9 @@ function um_after_account_privacy( $args ) {
 
 			<?php } ?>
 
-			<a class="um-request-button um-export-data-button" data-action="um-export-data" href="javascript:void(0);">
+			<button type="button" class="um-request-button um-export-data-button" data-action="um-export-data">
 				<?php esc_html_e( 'Request data', 'ultimate-member' ); ?>
-			</a>
+			</button>
 		<?php } ?>
 
 	</div>
@@ -819,9 +819,9 @@ function um_after_account_privacy( $args ) {
 
 			<?php } ?>
 
-			<a class="um-request-button um-erase-data-button" data-action="um-erase-data" href="javascript:void(0);">
+			<button type="button" class="um-request-button um-erase-data-button" data-action="um-erase-data">
 				<?php esc_html_e( 'Request data erase', 'ultimate-member' ); ?>
-			</a>
+			</button>
 		<?php } ?>
 
 	</div>

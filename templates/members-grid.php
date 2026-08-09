@@ -127,7 +127,7 @@ $unique_hash = UM()->member_directory()->get_directory_hash( $args['form_id'] );
 
 									<?php if ( $userinfo_animate ) { ?>
 										<div class="um-member-more">
-											<a href="javascript:void(0);"><i class="um-faicon-angle-down"></i></a>
+											<button type="button" aria-label="<?php esc_attr_e( 'Expand', 'ultimate-member' ); ?>"><i class="um-faicon-angle-down"></i></button>
 										</div>
 									<?php } ?>
 
@@ -152,7 +152,7 @@ $unique_hash = UM()->member_directory()->get_directory_hash( $args['form_id'] );
 
 									<?php if ( $userinfo_animate ) { ?>
 										<div class="um-member-less">
-											<a href="javascript:void(0);"><i class="um-faicon-angle-up"></i></a>
+											<button type="button" aria-label="<?php esc_attr_e( 'Collapse', 'ultimate-member' ); ?>"><i class="um-faicon-angle-up"></i></button>
 										</div>
 									<?php } ?>
 								</div>

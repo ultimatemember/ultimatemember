@@ -689,21 +689,21 @@ body #content .um-directory a:hover, body #content .um-directory a:focus {
 .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-member-meta-main .um-member-less {
   display: none;
 }
-.um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-member-meta-main .um-member-less a {
+.um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-member-meta-main .um-member-less a, .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-member-meta-main .um-member-less button {
   color: #666;
   display: inline-block;
 }
-.um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-member-meta-main .um-member-less a i {
+.um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-member-meta-main .um-member-less a i, .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-member-meta-main .um-member-less button i {
   display: block;
   font-size: 32px;
   height: 32px;
   line-height: 32px;
 }
-.um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-member-meta-main .um-member-more a {
+.um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-member-meta-main .um-member-more a, .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-member-meta-main .um-member-more button {
   color: #666;
   display: inline-block;
 }
-.um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-member-meta-main .um-member-more a i {
+.um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-member-meta-main .um-member-more a i, .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-member-meta-main .um-member-more button i {
   display: block;
   font-size: 32px;
   height: 32px;
@@ -951,11 +951,11 @@ body #content .um-directory a:hover, body #content .um-directory a:focus {
   align-items: baseline;
   flex-wrap: nowrap;
 }
-.um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-reveal-buttons .um-member-more a {
+.um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-reveal-buttons .um-member-more a, .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-reveal-buttons .um-member-more button {
   color: #666;
   display: inline-block;
 }
-.um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-reveal-buttons .um-member-more a i {
+.um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-reveal-buttons .um-member-more a i, .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-reveal-buttons .um-member-more button i {
   display: block;
   font-size: 28px;
   height: 28px;
@@ -969,11 +969,11 @@ body #content .um-directory a:hover, body #content .um-directory a:focus {
   flex-wrap: nowrap;
   display: none;
 }
-.um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-reveal-buttons .um-member-less a {
+.um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-reveal-buttons .um-member-less a, .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-reveal-buttons .um-member-less button {
   color: #666;
   display: inline-block;
 }
-.um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-reveal-buttons .um-member-less a i {
+.um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-reveal-buttons .um-member-less a i, .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-reveal-buttons .um-member-less button i {
   display: block;
   font-size: 28px;
   height: 28px;

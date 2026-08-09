@@ -284,13 +284,14 @@ $postid = ! empty( $post->ID ) ? $post->ID : '';
 								$view_types++;
 								?>
 
-								<a href="javascript:void(0)"
+								<button type="button"
 									class="um-member-directory-view-type-a<?php if ( ! $not_searched ) { ?> um-tip-n<?php } ?>"
 									data-type="<?php echo esc_attr( $key ); ?>"
 									data-default="<?php echo ( $default_view === $key ) ? 1 : 0; ?>"
+									aria-label="<?php echo esc_attr( $data_title ); ?>"
 									title="<?php echo esc_attr( $data_title ); ?>"
 									default-title="<?php echo esc_attr( $value['title'] ); ?>"
-									next-item="" ><i class="<?php echo esc_attr( $value['icon'] ); ?>"></i></a>
+									next-item="" ><i class="<?php echo esc_attr( $value['icon'] ); ?>"></i></button>
 								<?php
 							}
 						}
@@ -306,7 +307,7 @@ $postid = ! empty( $post->ID ) ? $post->ID : '';
 						<div class="um-member-directory-sorting">
 							<span><?php _e( 'Sort by:', 'ultimate-member' ); ?>&nbsp;</span>
 							<div class="um-member-directory-sorting-a">
-								<a href="javascript:void(0);" class="um-member-directory-sorting-a-text"><?php echo $sorting_options[ $sort_from_url ] ?></a>
+								<button type="button" class="um-member-directory-sorting-a-text"><?php echo $sorting_options[ $sort_from_url ] ?></button>
 								&nbsp;<i class="um-faicon-caret-down"></i><i class="um-faicon-caret-up"></i>
 							</div>
 						</div>
@@ -314,7 +315,7 @@ $postid = ! empty( $post->ID ) ? $post->ID : '';
 						<?php $items = array();
 
 						foreach ( $sorting_options as $value => $title ) {
-							$items[] = '<a href="javascript:void(0);" data-directory-hash="' . esc_attr( $unique_hash ) . '" class="um-sortyng-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>'; ?>
+							$items[] = '<button type="button" data-directory-hash="' . esc_attr( $unique_hash ) . '" class="um-sortyng-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</button>'; ?>
 						<?php }
 
 						UM()->member_directory()->dropdown_menu( '.um-member-directory-sorting-a', 'click', $items ); ?>
@@ -324,9 +325,9 @@ $postid = ! empty( $post->ID ) ? $post->ID : '';
 					if ( $filters && $show_filters && count( $search_filters ) && $filters_collapsible ) { ?>
 						<span class="um-member-directory-filters">
 							<span class="um-member-directory-filters-a<?php if ( $filters_expanded ) { ?> um-member-directory-filters-visible<?php } ?>">
-								<a href="javascript:void(0);">
+								<button type="button">
 									<?php _e( 'More filters', 'ultimate-member' ); ?>
-								</a>
+								</button>
 								&nbsp;<i class="um-faicon-caret-down"></i><i class="um-faicon-caret-up"></i>
 							</span>
 						</span>
@@ -377,7 +378,7 @@ $postid = ! empty( $post->ID ) ? $post->ID : '';
 				</div>
 				<div class="um-member-directory-header-row">
 					<div class="um-filtered-line">
-						<div class="um-clear-filters"><a href="javascript:void(0);" class="um-clear-filters-a" title="<?php esc_attr_e( 'Remove all filters', 'ultimate-member' ) ?>"><?php _e( 'Clear all', 'ultimate-member' ); ?></a></div>
+						<div class="um-clear-filters"><button type="button" class="um-clear-filters-a" title="<?php esc_attr_e( 'Remove all filters', 'ultimate-member' ) ?>"><?php _e( 'Clear all', 'ultimate-member' ); ?></button></div>
 					</div>
 				</div>
 				<?php
