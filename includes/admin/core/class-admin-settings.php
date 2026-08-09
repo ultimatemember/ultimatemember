@@ -3646,7 +3646,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$protocols            = array_merge( $wp_default_protocols, array( 'data' ) );
 
 			$template = $settings['um_email_template'];
-			$content  = wp_kses( stripslashes( $settings[ $template ] ), 'post', $protocols );
+			$content  = $this->sanitize_email_template( stripslashes( $settings[ $template ] ), $protocols );
 
 			$theme_template_path = UM()->mail()->get_template_file( 'theme', $template );
 			if ( ! file_exists( $theme_template_path ) ) {
@@ -3665,6 +3665,189 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			}
 
 			return $settings;
+		}
+
+		/**
+		 * Sanitize email template content before it is written to the template file.
+		 *
+		 * WordPress kses passes every style="" value through safecss_filter_attr(),
+		 * which only allows url() schemes from wp_allowed_protocols(). That list is
+		 * cached before wp_loaded and never contains the data scheme, so background
+		 * images set with data: URLs are dropped on save. Here we scrub each style
+		 * value ourselves, hide it behind an inert token so core keeps the attribute,
+		 * then put the sanitized value back.
+		 *
+		 * @param string $content   Raw template HTML.
+		 * @param array  $protocols Allowed URL protocols.
+		 *
+		 * @return string Sanitized template HTML.
+		 */
+		private function sanitize_email_template( $content, $protocols ) {
+			$placeholders = array();
+
+			$content = preg_replace_callback(
+				'/\sstyle\s*=\s*(["\'])(.*?)\1(?=\s|>)/is',
+				function ( $m ) use ( &$placeholders, $protocols ) {
+					$key              = 'UMCSSPLACEHOLDER' . count( $placeholders );
+					$placeholders[ $key ] = $this->sanitize_email_template_style( $m[2], $protocols );
+
+					return ' style="' . $key . '"';
+				},
+				$content
+			);
+
+			$content = wp_kses( $content, 'post', $protocols );
+
+			// Restore only style attribute placeholders, so placeholder text that
+			// happens to appear in href or other attributes is never substituted.
+			// The restored value is escaped for the attribute context.
+			$content = preg_replace_callback(
+				'/\sstyle\s*=\s*(["\'])(UMCSSPLACEHOLDER\d+)\1(?=\s|>)/i',
+				function ( $m ) use ( $placeholders ) {
+					if ( ! isset( $placeholders[ $m[2] ] ) ) {
+						return $m[0];
+					}
+
+					return ' style="' . esc_attr( $placeholders[ $m[2] ] ) . '"';
+				},
+				$content
+			);
+
+			return $content;
+		}
+
+		/**
+		 * Clean a single style="" value so url() only uses safe schemes.
+		 *
+		 * @param string $css       Style attribute value.
+		 * @param array  $protocols Allowed URL protocols.
+		 *
+		 * @return string Sanitized CSS.
+		 */
+		private function sanitize_email_template_style( $css, $protocols ) {
+			$css = wp_kses_no_null( $css );
+			$css = str_replace( array( "\n", "\r", "\t" ), '', $css );
+
+			$allowed = array_merge( $protocols, array( 'data', 'blob', 'cid' ) );
+			$safe    = array();
+
+			foreach ( $this->split_css_declarations( trim( $css ) ) as $declaration ) {
+				$declaration = trim( $declaration );
+				if ( '' === $declaration ) {
+					continue;
+				}
+
+				// Decode escapes and entities so disallowed schemes and expression()
+				// are detected even when obfuscated (e.g. \6a avascript).
+				$normalized_declaration = wp_kses_decode_entities( $this->css_unescape( $declaration ) );
+
+				$urls_safe = true;
+				if ( preg_match_all( '/url\(\s*([\'"]?)(.*?)\1\s*\)/i', $normalized_declaration, $matches ) ) {
+					foreach ( $matches[2] as $url ) {
+						$scheme = strtolower( wp_kses_decode_entities( $this->css_unescape( trim( $url ) ) ) );
+						$scheme = explode( ':', $scheme, 2 );
+
+						// Relative paths carry no scheme and are always safe.
+						if ( 1 === count( $scheme ) ) {
+							continue;
+						}
+
+						if ( ! in_array( $scheme[0], $allowed, true ) ) {
+							$urls_safe = false;
+							break;
+						}
+					}
+				}
+
+				// css expression() can execute script in old browsers.
+				if ( preg_match( '/expression\s*\(/i', $normalized_declaration ) ) {
+					$urls_safe = false;
+				}
+
+				if ( $urls_safe ) {
+					$safe[] = $declaration;
+				}
+			}
+
+			return implode( ';', $safe );
+		}
+
+		/**
+		 * Split a style value into declarations on top-level semicolons.
+		 *
+		 * A naive explode( ';' ) would cut inside quoted url() values, for example
+		 * data:image/svg+xml;base64,... URIs. Only split on semicolons that are not
+		 * inside a quoted string or balanced parentheses.
+		 *
+		 * @param string $css Style attribute value.
+		 *
+		 * @return array Split declarations.
+		 */
+		private function split_css_declarations( $css ) {
+			$parts  = array();
+			$buffer = '';
+			$quote  = '';
+			$depth  = 0;
+			$length = strlen( $css );
+
+			for ( $i = 0; $i < $length; $i++ ) {
+				$char = $css[ $i ];
+
+				if ( '' !== $quote ) {
+					if ( $char === $quote && ( 0 === $i || '\\' !== $css[ $i - 1 ] ) ) {
+						$quote = '';
+					}
+					$buffer .= $char;
+					continue;
+				}
+
+				if ( '"' === $char || "'" === $char ) {
+					$quote = $char;
+				} elseif ( '(' === $char ) {
+					$depth++;
+				} elseif ( ')' === $char ) {
+					$depth = max( 0, $depth - 1 );
+				}
+
+				if ( ';' === $char && 0 === $depth ) {
+					$parts[] = $buffer;
+					$buffer  = '';
+					continue;
+				}
+
+				$buffer .= $char;
+			}
+
+			if ( '' !== trim( $buffer ) ) {
+				$parts[] = $buffer;
+			}
+
+			return $parts;
+		}
+
+		/**
+		 * Decode CSS escape sequences so url() schemes can be validated.
+		 *
+		 * CSS allows obfuscating scheme names, for example \6a avascript for
+		 * javascript. Without decoding these, a crafted escape could hide a
+		 * disallowed scheme from the protocol check.
+		 *
+		 * @param string $value Raw URL value.
+		 *
+		 * @return string Unescaped URL value.
+		 */
+		private function css_unescape( $value ) {
+			return preg_replace_callback(
+				'/\\\\(?:([0-9a-f]{1,6})\s?|(.))/i',
+				function ( $m ) {
+					if ( '' !== $m[1] ) {
+						return chr( hexdec( $m[1] ) );
+					}
+
+					return $m[2];
+				},
+				$value
+			);
 		}
 	}
 }
