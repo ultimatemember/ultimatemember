@@ -127,7 +127,8 @@ div.uimob340 .um-profile-photo-overlay i
 	float: none;
 }
 
-.um-modal.uimob340 .um-modal-footer a.um-modal-btn {
+.um-modal.uimob340 .um-modal-footer a.um-modal-btn,
+.um-modal.uimob340 .um-modal-footer button.um-modal-btn {
 	width: 48%;
 	margin: 0 1%;
 	float: left;

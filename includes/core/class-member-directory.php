@@ -3214,7 +3214,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			<div class="um-new-dropdown" data-element="<?php echo $element; ?>" data-trigger="<?php echo $trigger; ?>" data-parent="<?php echo $parent; ?>">
 				<ul>
 					<# _.each( <?php echo $item; ?>.dropdown_actions, function( action, key, list ) { #>
-						<li><a href="<# if ( typeof action.url != 'undefined' ) { #>{{{action.url}}}<# } else { #>javascript:void(0);<# }#>" class="{{{key}}}"<?php echo $additional_attributes ? " $additional_attributes" : '' ?>>{{{action.title}}}</a></li>
+						<li><# if ( typeof action.url != 'undefined' ) { #><a href="{{{action.url}}}" class="{{{key}}}"<?php echo $additional_attributes ? " $additional_attributes" : '' ?>>{{{action.title}}}</a><# } else { #><button type="button" class="{{{key}}}"<?php echo $additional_attributes ? " $additional_attributes" : '' ?>>{{{action.title}}}</button><# } #></li>
 					<# }); #>
 				</ul>
 			</div>

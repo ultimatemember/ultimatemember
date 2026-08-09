@@ -36,7 +36,7 @@ UM.frontend = {
 				ratio = ratioSplit[0];
 			}
 
-			var max_height = jQuery(window).height() - ( jQuery('.um-modal-footer a').height() + 20 ) - 50 - ( jQuery('.um-modal-header:visible').height() );
+			var max_height = jQuery(window).height() - ( jQuery('.um-modal-footer button, .um-modal-footer a').height() + 20 ) - 50 - ( jQuery('.um-modal-header:visible').height() );
 			target_img.css({'height' : 'auto'});
 			target_img_parent.css({'height' : 'auto'});
 			if ( jQuery(window).height() <= 400 ) {

@@ -18,6 +18,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="um-form um-search-area">
 		<span class="screen-reader-text"><?php echo esc_html_x( 'Search for:', 'label', 'ultimate-member' ); ?></span>
 		<input type="search" class="um-search-field search-field" placeholder="<?php echo esc_attr_x( 'Search &hellip;', 'placeholder', 'ultimate-member' ); ?>" value="<?php echo esc_attr( $search_value ); ?>" name="search" title="<?php echo esc_attr_x( 'Search for:', 'label', 'ultimate-member' ); ?>" />
-		<a href="#" id="um-search-button" class="um-search-icon um-faicon um-faicon-search"></a>
+		<button type="button" id="um-search-button" class="um-search-icon um-faicon um-faicon-search" aria-label="<?php esc_attr_e( 'Search', 'ultimate-member' ); ?>"></button>
 	</div>
 </div>

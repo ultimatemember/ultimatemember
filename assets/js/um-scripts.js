@@ -22,18 +22,21 @@ jQuery(document).ready(function() {
 		window.location = jQuery(this).attr('href');
 	});
 
-	jQuery( document.body ).on( 'click', '.um-trigger-menu-on-click', function() {
+	jQuery( document.body ).on( 'click', '.um-trigger-menu-on-click', function( e ) {
+		e.preventDefault();
 		var menu = jQuery(this).find('.um-dropdown');
 		UM.dropdown.show( menu );
 		return false;
 	});
 
-	jQuery( document.body ).on('click', '.um-dropdown-hide', function() {
+	jQuery( document.body ).on('click', '.um-dropdown-hide', function( e ) {
+		e.preventDefault();
 		UM.dropdown.hideAll();
 		return false;
 	});
 
-	jQuery( document.body ).on('click', 'a.um-manual-trigger', function() {
+	jQuery( document.body ).on('click', '.um-manual-trigger', function( e ) {
+		e.preventDefault();
 		var child = jQuery(this).attr('data-child');
 		var parent = jQuery(this).attr('data-parent');
 		jQuery(this).parents( parent ).find( child ).trigger('click');
@@ -163,7 +166,7 @@ jQuery(document).ready(function() {
 		}
 	});
 
-	jQuery(document.body).on('click', '.um-single-image-preview a.cancel', function(e) {
+	jQuery(document.body).on('click', '.um-single-image-preview .cancel', function(e) {
 		e.preventDefault();
 
 		let isModal = false;
@@ -225,7 +228,7 @@ jQuery(document).ready(function() {
 		wp.ajax.send( 'um_remove_file', args );
 	});
 
-	jQuery(document.body).on('click', '.um-single-file-preview a.cancel', function(e) {
+	jQuery(document.body).on('click', '.um-single-file-preview .cancel', function(e) {
 		e.preventDefault();
 
 		let isModal = false;
@@ -282,7 +285,8 @@ jQuery(document).ready(function() {
 	});
 
 	// @todo deprecate
-	jQuery(document).on('click', '.um-field-group-head:not(.disabled)', function() {
+	jQuery(document).on('click', '.um-field-group-head:not(.disabled)', function( e ) {
+		e.preventDefault();
 		var field = jQuery(this).parents('.um-field-group');
 		var limit = field.data('max_entries');
 

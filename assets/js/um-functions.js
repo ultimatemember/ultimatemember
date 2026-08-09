@@ -19,7 +19,7 @@ UM.dropdown = {
 	hide: function (menu) {
 
 		var $menu = jQuery(menu);
-		$menu.parents('div').find('a').removeClass('active');
+		$menu.parents('div').find('a, button').removeClass('active');
 		$menu.hide();
 
 	},
@@ -30,7 +30,7 @@ UM.dropdown = {
 	hideAll: function () {
 
 		var $menu = jQuery('.um-dropdown');
-		$menu.parents('div').find('a').removeClass('active');
+		$menu.parents('div').find('a, button').removeClass('active');
 		$menu.hide();
 
 	},
@@ -49,7 +49,7 @@ UM.dropdown = {
 				position = $menu.attr('data-position'),
 				trigger = $menu.attr('data-trigger');
 
-		var $element = element && jQuery(element).length ? jQuery(element) : ($menu.siblings('a').length ? $menu.siblings('a').first() : $menu.parent());
+		var $element = element && jQuery(element).length ? jQuery(element) : ($menu.siblings('a, button').length ? $menu.siblings('a, button').first() : $menu.parent());
 		$element.addClass('um-trigger-menu-on-' + trigger);
 
 		var gap_right = 0,

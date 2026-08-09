@@ -3,7 +3,9 @@
 .um .um-field-checkbox.active:not(.um-field-radio-state-disabled) i,
 .um .um-member-name a:hover,
 .um .um-member-more a:hover,
+.um .um-member-more button:hover,
 .um .um-member-less a:hover,
+.um .um-member-less button:hover,
 .um .um-members-pagi a:hover,
 .um .um-cover-add:hover,
 .um .um-profile-subnav a.active,
@@ -65,9 +67,13 @@ div.uimob800 .um-account-side li a.current:hover
 .um input[type=submit].um-button,
 .um input[type=submit].um-button:focus,
 .um a.um-button,
+.um button.um-button,
 .um a.um-button.um-disabled:hover,
 .um a.um-button.um-disabled:focus,
-.um a.um-button.um-disabled:active {
+.um a.um-button.um-disabled:active,
+.um button.um-button.um-disabled:hover,
+.um button.um-button.um-disabled:focus,
+.um button.um-button.um-disabled:active {
     background: #3ba1da;
 }
 
@@ -76,8 +82,20 @@ div.uimob800 .um-account-side li a.current:hover
 }
 
 .um input[type=submit].um-button:hover,
-.um a.um-button:hover {
+.um a.um-button:hover,
+.um button.um-button:hover {
     background-color: #44b0ec;
+}
+
+.um button.um-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 0;
+    padding: 0 12px;
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
 }
 
 .um a.um-link:hover,

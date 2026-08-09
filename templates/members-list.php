@@ -131,9 +131,9 @@ $unique_hash = UM()->member_directory()->get_directory_hash( $args['form_id'] );
 
 								<# if ( Object.keys( user.dropdown_actions ).length > 0 ) { #>
 									<div class="um-member-cog">
-										<a href="javascript:void(0);" class="um-member-actions-a">
+										<button type="button" class="um-member-actions-a" aria-label="<?php esc_attr_e( 'Member actions', 'ultimate-member' ); ?>">
 											<i class="um-faicon-cog"></i>
-										</a>
+										</button>
 										<?php UM()->member_directory()->dropdown_menu_js( '.um-member-cog', 'click', 'user' ); ?>
 									</div>
 								<# } #>
@@ -152,10 +152,10 @@ $unique_hash = UM()->member_directory()->get_directory_hash( $args['form_id'] );
 							<# if ( $show_block ) { #>
 								<div class="um-member-card-reveal-buttons">
 									<div class="um-member-more">
-										<a href="javascript:void(0);"><i class="um-faicon-angle-down"></i></a>
+										<button type="button" aria-label="<?php esc_attr_e( 'Expand', 'ultimate-member' ); ?>"><i class="um-faicon-angle-down"></i></button>
 									</div>
 									<div class="um-member-less">
-										<a href="javascript:void(0);"><i class="um-faicon-angle-up"></i></a>
+										<button type="button" aria-label="<?php esc_attr_e( 'Collapse', 'ultimate-member' ); ?>"><i class="um-faicon-angle-up"></i></button>
 									</div>
 								</div>
 							<# } #>

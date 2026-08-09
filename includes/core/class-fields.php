@@ -3056,21 +3056,21 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 						$output .= '<div class="um-single-image-preview show ' . esc_attr( $data['crop_class'] ) . '" data-crop="' . esc_attr( $data['crop_data'] ) . '" data-key="' . esc_attr( $key ) . '">';
 						if ( empty( $disabled ) ) {
-							$output .= '<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>';
+							$output .= '<button type="button" class="cancel" aria-label="' . esc_attr__( 'Cancel', 'ultimate-member' ) . '"><i class="um-icon-close"></i></button>';
 						}
 						$output .= $img;
 						$output .= '</div>';
 						if ( empty( $disabled ) ) {
-							$output .= '<a href="javascript:void(0);" data-modal="um_upload_single" data-modal-size="' . esc_attr( $data['modal_size'] ) . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . esc_html__( 'Change photo', 'ultimate-member' ) . '</a>';
+							$output .= '<button type="button" data-modal="um_upload_single" data-modal-size="' . esc_attr( $data['modal_size'] ) . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . esc_html__( 'Change photo', 'ultimate-member' ) . '</button>';
 						}
 					} else {
 						$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '" data-crop="' . esc_attr( $data['crop_data'] ) . '" data-key="' . esc_attr( $key ) . '">';
 						if ( empty( $disabled ) ) {
-							$output .= '<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>';
+							$output .= '<button type="button" class="cancel" aria-label="' . esc_attr__( 'Cancel', 'ultimate-member' ) . '"><i class="um-icon-close"></i></button>';
 						}
 						$output .= '<img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div>';
 						if ( empty( $disabled ) ) {
-							$output .= '<a href="javascript:void(0);" data-modal="um_upload_single" data-modal-size="' . esc_attr( $data['modal_size'] ) . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . esc_html( $data['button_text'] ) . '</a>';
+							$output .= '<button type="button" data-modal="um_upload_single" data-modal-size="' . esc_attr( $data['modal_size'] ) . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . esc_html( $data['button_text'] ) . '</button>';
 						}
 					}
 					$output .= '</div>';
@@ -3119,12 +3119,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 
 						$nonce   = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
-						$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '"  data-crop="' . esc_attr( $data['crop_data'] ) . '" data-ratio="' . esc_attr( $data['ratio'] ) . '" data-min_width="' . esc_attr( $data['min_width'] ) . '" data-min_height="' . esc_attr( $data['min_height'] ) . '" data-coord=""><a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a><img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
+						$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '"  data-crop="' . esc_attr( $data['crop_data'] ) . '" data-ratio="' . esc_attr( $data['ratio'] ) . '" data-min_width="' . esc_attr( $data['min_width'] ) . '" data-min_height="' . esc_attr( $data['min_height'] ) . '" data-coord=""><button type="button" class="cancel" aria-label="' . esc_attr__( 'Cancel', 'ultimate-member' ) . '"><i class="um-icon-close"></i></button><img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
 						$output .= '<div class="um-single-image-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-nonce="' . esc_attr( $nonce ) . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" ' . $data_icon . ' data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $data['max_size'] ) . '" data-max_size_error="' . esc_attr( $data['max_size_error'] ) . '" data-min_size_error="' . esc_attr( $data['min_size_error'] ) . '" data-extension_error="' . esc_attr( $data['extension_error'] ) . '" data-allowed_types="' . esc_attr( $allowed_types ) . '" data-accept="' . esc_attr( $accept_types ) . '" data-upload_text="' . esc_attr( $data['upload_text'] ) . '" data-max_files_error="' . esc_attr( $data['max_files_error'] ) . '" data-upload_help_text="' . esc_attr( $data['upload_help_text'] ) . '">' . esc_html( $data['button_text'] ) . '</div>';
 						$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">
-										<a href="javascript:void(0);" class="um-modal-btn um-finish-upload image disabled" data-key="' . esc_attr( $key ) . '" data-change="' . esc_attr__( 'Change photo', 'ultimate-member' ) . '" data-processing="' . esc_attr__( 'Processing...', 'ultimate-member' ) . '">' . esc_html__( 'Apply', 'ultimate-member' ) . '</a>
-										<a href="javascript:void(0);" class="um-modal-btn alt" data-action="um_remove_modal"> ' . esc_html__( 'Cancel', 'ultimate-member' ) . '</a>
+										<button type="button" class="um-modal-btn um-finish-upload image disabled" data-key="' . esc_attr( $key ) . '" data-change="' . esc_attr__( 'Change photo', 'ultimate-member' ) . '" data-processing="' . esc_attr__( 'Processing...', 'ultimate-member' ) . '">' . esc_html__( 'Apply', 'ultimate-member' ) . '</button>
+										<button type="button" class="um-modal-btn alt" data-action="um_remove_modal"> ' . esc_html__( 'Cancel', 'ultimate-member' ) . '</button>
 									</div>
 									<div class="um-clear"></div>
 								</div>';
@@ -3184,7 +3184,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						if ( file_exists( $file_dir ) ) {
 							$output .= '<div class="um-single-file-preview show" data-key="' . esc_attr( $key ) . '">';
 							if ( empty( $disabled ) ) {
-								$output .= '<a href="#" class="cancel"><i class="um-icon-close"></i></a>';
+								$output .= '<button type="button" class="cancel" aria-label="' . esc_attr__( 'Cancel', 'ultimate-member' ) . '"><i class="um-icon-close"></i></button>';
 							}
 
 							$fonticon_bg = UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] );
@@ -3200,12 +3200,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 
 						if ( empty( $disabled ) ) {
-							$output .= '<a href="#" data-modal="um_upload_single" data-modal-size="' . esc_attr( $data['modal_size'] ) . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . esc_html__( 'Change file', 'ultimate-member' ) . '</a>';
+							$output .= '<button type="button" data-modal="um_upload_single" data-modal-size="' . esc_attr( $data['modal_size'] ) . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . esc_html__( 'Change file', 'ultimate-member' ) . '</button>';
 						}
 					} else {
 						$output .= '<div class="um-single-file-preview" data-key="' . esc_attr( $key ) . '"></div>';
 						if ( empty( $disabled ) ) {
-							$output .= '<a href="#" data-modal="um_upload_single" data-modal-size="' . esc_attr( $data['modal_size'] ) . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . esc_html( $data['button_text'] ) . '</a>';
+							$output .= '<button type="button" data-modal="um_upload_single" data-modal-size="' . esc_attr( $data['modal_size'] ) . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . esc_html( $data['button_text'] ) . '</button>';
 						}
 					}
 					$output .= '</div>';
@@ -3248,7 +3248,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$set_mode = '';
 						}
 						$output .= '<div class="um-single-file-preview">
-										<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>
+										<button type="button" class="cancel" aria-label="' . esc_attr__( 'Cancel', 'ultimate-member' ) . '"><i class="um-icon-close"></i></button>
 										<div class="um-single-fileinfo">
 											<a href="" target="_blank">
 												<span class="icon"><i></i></span>
@@ -3266,8 +3266,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= '<div class="um-single-file-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" data-nonce="' . esc_attr( $nonce ) . '" ' . $data_icon . ' data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $data['max_size'] ) . '" data-max_size_error="' . esc_attr( $data['max_size_error'] ) . '" data-min_size_error="' . esc_attr( $data['min_size_error'] ) . '" data-extension_error="' . esc_attr( $data['extension_error'] ) . '" data-allowed_types="' . esc_attr( $allowed_types ) . '" data-accept="' . esc_attr( $accept_types ) . '" data-upload_text="' . esc_attr( $data['upload_text'] ) . '" data-max_files_error="' . esc_attr( $data['max_files_error'] ) . '" data-upload_help_text="' . esc_attr( $data['upload_help_text'] ) . '">' . esc_html( $data['button_text'] ) . '</div>';
 						$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">
-										<a href="javascript:void(0);" class="um-modal-btn um-finish-upload file disabled" data-key="' . esc_attr( $key ) . '" data-change="' . esc_attr__( 'Change file', 'ultimate-member' ) . '" data-processing="' . esc_attr__( 'Processing...', 'ultimate-member' ) . '"> ' . esc_html__( 'Save', 'ultimate-member' ) . '</a>
-										<a href="javascript:void(0);" class="um-modal-btn alt" data-action="um_remove_modal"> ' . esc_html__( 'Cancel', 'ultimate-member' ) . '</a>
+										<button type="button" class="um-modal-btn um-finish-upload file disabled" data-key="' . esc_attr( $key ) . '" data-change="' . esc_attr__( 'Change file', 'ultimate-member' ) . '" data-processing="' . esc_attr__( 'Processing...', 'ultimate-member' ) . '"> ' . esc_html__( 'Save', 'ultimate-member' ) . '</button>
+										<button type="button" class="um-modal-btn alt" data-action="um_remove_modal"> ' . esc_html__( 'Cancel', 'ultimate-member' ) . '</button>
 									</div>
 									<div class="um-clear"></div>
 								</div>';
@@ -4022,7 +4022,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$output .= '<div class="um-field-group" data-max_entries="' . esc_attr( $data['max_entries'] ) . '">
 								<div class="um-field-group-head"><i class="um-icon-plus"></i>' . esc_html__( $data['label'], 'ultimate-member' ) . '</div>';
-						$output .= '<div class="um-field-group-body"><a href="javascript:void(0);" class="um-field-group-cancel"><i class="um-icon-close"></i></a>';
+						$output .= '<div class="um-field-group-body"><button type="button" class="um-field-group-cancel" aria-label="' . esc_attr__( 'Cancel', 'ultimate-member' ) . '"><i class="um-icon-close"></i></button>';
 
 						foreach ( $fields as $subkey => $subdata ) {
 							$output .= $this->edit_field( $subkey, $subdata, 'group' );

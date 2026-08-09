@@ -153,11 +153,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 					if ( isset( $info['custom'] ) || ! empty( $tab_enabled ) || 'general' === $id ) {
 						?>
 						<div class="um-account-nav uimob340-show uimob500-show">
-							<a href="javascript:void(0);" data-tab="<?php echo esc_attr( $id ); ?>" class="<?php if ( $id === $current_tab ) echo 'current'; ?>">
+							<button type="button" data-tab="<?php echo esc_attr( $id ); ?>" class="<?php if ( $id === $current_tab ) echo 'current'; ?>">
 								<?php echo esc_html( $info['title'] ); ?>
 								<span class="ico"><i class="<?php echo esc_attr( $info['icon'] ); ?>"></i></span>
 								<span class="arr"><i class="um-faicon-angle-down"></i></span>
-							</a>
+							</button>
 						</div>
 
 						<div class="um-account-tab um-account-tab-<?php echo esc_attr( $id ); ?>" data-tab="<?php echo esc_attr( $id  )?>">

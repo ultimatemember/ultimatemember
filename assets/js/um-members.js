@@ -934,7 +934,8 @@ jQuery(document.body).ready( function() {
 	});
 
 	//change layout handler
-	jQuery( document.body ).on( 'click', '.um-directory .um-member-directory-view-type-a', function() {
+	jQuery( document.body ).on( 'click', '.um-directory .um-member-directory-view-type-a', function( e ) {
+		e.preventDefault();
 		var directory = jQuery(this).parents('.um-directory');
 		if ( um_is_directory_busy( directory ) ) {
 			return false;
@@ -985,7 +986,8 @@ jQuery(document.body).ready( function() {
 
 
 	//searching
-	jQuery( document.body ).on( 'click', '.um-directory .um-do-search', function() {
+	jQuery( document.body ).on( 'click', '.um-directory .um-do-search', function( e ) {
+		e.preventDefault();
 		var directory = jQuery(this).parents('.um-directory');
 		um_run_search( directory );
 	});
@@ -1010,7 +1012,8 @@ jQuery(document.body).ready( function() {
 	 * Sorting
 	 */
 
-	jQuery( document.body ).on( 'click', '.um-new-dropdown[data-element=".um-member-directory-sorting-a"] li a', function() {
+	jQuery( document.body ).on( 'click', '.um-new-dropdown[data-element=".um-member-directory-sorting-a"] li > *', function(e) {
+		e.preventDefault();
 		if ( jQuery( this ).data('selected') === 1 ) {
 			return;
 		}
@@ -1032,9 +1035,9 @@ jQuery(document.body).ready( function() {
 
 		um_ajax_get_members( directory );
 
-		directory.find('.um-new-dropdown[data-element=".um-member-directory-sorting-a"]').find('a').data('selected', 0).prop('data-selected', 0).attr('data-selected', 0);
-		directory.find('.um-new-dropdown[data-element=".um-member-directory-sorting-a"] a[data-value="' + sort + '"]').data('selected', 1).prop('data-selected', 1).attr('data-selected', 1);
-		directory.find('.um-member-directory-sorting-a').find('> a').html( sorting_label );
+		directory.find('.um-new-dropdown[data-element=".um-member-directory-sorting-a"]').find('button, a').data('selected', 0).prop('data-selected', 0).attr('data-selected', 0);
+		directory.find('.um-new-dropdown[data-element=".um-member-directory-sorting-a"] button[data-value="' + sort + '"], .um-new-dropdown[data-element=".um-member-directory-sorting-a"] a[data-value="' + sort + '"]').data('selected', 1).prop('data-selected', 1).attr('data-selected', 1);
+		directory.find('.um-member-directory-sorting-a').find('> button, > a').html( sorting_label );
 	});
 
 	/**
@@ -1048,7 +1051,8 @@ jQuery(document.body).ready( function() {
 	 */
 
 
-	jQuery( document.body ).on( 'click', '.um-directory .pagi:not(.current)', function() {
+	jQuery( document.body ).on( 'click', '.um-directory .pagi:not(.current)', function( e ) {
+		e.preventDefault();
 		if ( jQuery(this).hasClass('disabled') ) {
 			return;
 		}
@@ -1133,7 +1137,7 @@ jQuery(document.body).ready( function() {
 	 * Profile Cards actions
 	 */
 
-	jQuery( document.body ).on('click', '.um-directory .um-members.um-members-list .um-member-more a', function(e){
+	jQuery( document.body ).on('click', '.um-directory .um-members.um-members-list .um-member-more button, .um-directory .um-members.um-members-list .um-member-more a', function(e){
 		e.preventDefault();
 
 		var block = jQuery(this).parents('.um-member');
@@ -1145,7 +1149,7 @@ jQuery(document.body).ready( function() {
 		return false;
 	});
 
-	jQuery( document.body ).on('click', '.um-directory .um-members.um-members-list .um-member-less a', function(e){
+	jQuery( document.body ).on('click', '.um-directory .um-members.um-members-list .um-member-less button, .um-directory .um-members.um-members-list .um-member-less a', function(e){
 		e.preventDefault();
 
 		var block = jQuery(this).parents('.um-member');
@@ -1158,7 +1162,7 @@ jQuery(document.body).ready( function() {
 	});
 
 
-	jQuery( document.body ).on('click', '.um-directory .um-members.um-members-grid .um-member-more a', function(e){
+	jQuery( document.body ).on('click', '.um-directory .um-members.um-members-grid .um-member-more button, .um-directory .um-members.um-members-grid .um-member-more a', function(e){
 		e.preventDefault();
 
 		var block = jQuery(this).parents('.um-member');
@@ -1172,7 +1176,7 @@ jQuery(document.body).ready( function() {
 		return false;
 	});
 
-	jQuery( document.body ).on('click', '.um-directory .um-members.um-members-grid .um-member-less a', function(e){
+	jQuery( document.body ).on('click', '.um-directory .um-members.um-members-grid .um-member-less button, .um-directory .um-members.um-members-grid .um-member-less a', function(e){
 		e.preventDefault();
 
 		var block = jQuery(this).parents('.um-member');
@@ -1192,7 +1196,8 @@ jQuery(document.body).ready( function() {
 
 
 	//filters controls
-	jQuery('.um-member-directory-filters-a').on( 'click', function() {
+	jQuery('.um-member-directory-filters-a').on( 'click', function( e ) {
+		e.preventDefault();
 		var obj = jQuery(this);
 		var search_bar = obj.parents('.um-directory').find('.um-search');
 
@@ -1354,7 +1359,8 @@ jQuery(document.body).ready( function() {
 
 
 
-	jQuery( document.body ).on( 'click', '.um-directory .um-members-filter-remove', function() {
+	jQuery( document.body ).on( 'click', '.um-directory .um-members-filter-remove', function( e ) {
+		e.preventDefault();
 		var directory = jQuery(this).parents('.um-directory');
 
 		if ( um_is_directory_busy(directory) || ! directory ) {
@@ -1482,7 +1488,8 @@ jQuery(document.body).ready( function() {
 	});
 
 
-	jQuery( document.body ).on( 'click', '.um-directory .um-clear-filters-a', function() {
+	jQuery( document.body ).on( 'click', '.um-directory .um-clear-filters-a', function( e ) {
+		e.preventDefault();
 		var directory = jQuery(this).parents('.um-directory');
 		if ( um_is_directory_busy( directory ) ) {
 			return;
@@ -1715,14 +1722,14 @@ jQuery(document.body).ready( function() {
 			if ( directory.find( '.um-member-directory-sorting' ).length ) {
 				var sort = um_get_data_for_directory( directory, 'sort' );
 				if ( typeof sort == 'undefined' ) {
-					sort = directory.find( '.um-new-dropdown[data-element=".um-member-directory-sorting-a"]' ).find('a[data-default="1"]').data('value');
+					sort = directory.find( '.um-new-dropdown[data-element=".um-member-directory-sorting-a"]' ).find('button[data-default="1"], a[data-default="1"]').data('value');
 				}
 				directory.data( 'sorting', sort );
 
 				var sort_dropdown = directory.find( '.um-new-dropdown[data-element=".um-member-directory-sorting-a"]' );
-				sort_dropdown.find('a').data('selected', 0).prop('data-selected', 0).attr('data-selected', 0);
-				sort_dropdown.find('a[data-value="' + sort + '"]').data('selected', 1).prop('data-selected', 1).attr('data-selected', 1);
-				directory.find('.um-member-directory-sorting-a').find('> a').html( sort_dropdown.find('a[data-value="' + sort + '"]').html() );
+				sort_dropdown.find('button, a').data('selected', 0).prop('data-selected', 0).attr('data-selected', 0);
+				sort_dropdown.find('button[data-value="' + sort + '"], a[data-value="' + sort + '"]').data('selected', 1).prop('data-selected', 1).attr('data-selected', 1);
+				directory.find('.um-member-directory-sorting-a').find('> button, > a').html( sort_dropdown.find('button[data-value="' + sort + '"], a[data-value="' + sort + '"]').html() );
 			}
 
 			//view type from history
