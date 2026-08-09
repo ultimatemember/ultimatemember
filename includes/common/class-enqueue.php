@@ -237,8 +237,14 @@ class Enqueue {
 			}
 
 			if ( file_exists( UM_PATH . 'assets/libs/select2/i18n/' . $locale . '.js' ) ) {
-				wp_register_script( 'um_select2_locale', $libs_url . 'select2/i18n/' . $locale . '.js', array( 'jquery', 'select2' ), '4.0.13', true );
-				self::$select2_handle = 'um_select2_locale';
+				static $select2_locale_inline_added = false;
+
+				$locale_path = UM_PATH . 'assets/libs/select2/i18n/' . $locale . '.js';
+				$locale_src  = file_get_contents( $locale_path );
+				if ( false !== $locale_src && '' !== trim( $locale_src ) && ! $select2_locale_inline_added ) {
+					$inline                      = 'if ( jQuery && jQuery.fn && jQuery.fn.select2 && jQuery.fn.select2.amd ) { (function(){ ' . $locale_src . ' })(); }';
+					$select2_locale_inline_added = (bool) wp_add_inline_script( 'select2', $inline, 'after' );
+				}
 			}
 		}
 		wp_register_style( 'select2', $libs_url . 'select2/select2' . $suffix . '.css', array(), '4.0.13' );
