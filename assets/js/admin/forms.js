@@ -193,9 +193,9 @@ jQuery(document).ready( function() {
 		um_add_same_page_log( field_key, wp.i18n.__( 'Upgrade Process Started...', 'ultimate-member' ) );
 
 		if ( field_key === 'sync_metatable' ) {
-			var metadata_pages = 0;
 			var metadata_per_page = 500;
-			var current_page;
+			var last_id = 0;
+			var done = false;
 
 			jQuery.ajax({
 				url: wp.ajax.settings.url,
@@ -220,8 +220,6 @@ jQuery(document).ready( function() {
 			 * @returns {boolean}
 			 */
 			function get_metadata() {
-				current_page = 1;
-
 				um_add_same_page_log( field_key, wp.i18n.__( 'Getting metadata', 'ultimate-member' ) );
 				jQuery.ajax({
 					url: wp.ajax.settings.url,
@@ -236,8 +234,6 @@ jQuery(document).ready( function() {
 						if ( typeof response.data.count != 'undefined' ) {
 							um_add_same_page_log( field_key, wp.i18n.__( 'There are ', 'ultimate-member' ) + response.data.count + wp.i18n.__( ' metadata rows...', 'ultimate-member' ) );
 							um_add_same_page_log( field_key, wp.i18n.__( 'Start metadata upgrading...', 'ultimate-member' ) );
-
-							metadata_pages = Math.ceil( response.data.count / metadata_per_page );
 
 							update_metadata_per_page();
 						} else {
@@ -254,7 +250,7 @@ jQuery(document).ready( function() {
 
 
 			function update_metadata_per_page() {
-				if ( current_page <= metadata_pages ) {
+				if ( ! done ) {
 					jQuery.ajax({
 						url: wp.ajax.settings.url,
 						type: 'POST',
@@ -262,13 +258,15 @@ jQuery(document).ready( function() {
 						data: {
 							action: 'um_same_page_update',
 							cb_func: 'um_update_metadata_per_page',
-							page: current_page,
+							last_id: last_id,
+							per_page: metadata_per_page,
 							nonce: um_admin_scripts.nonce
 						},
 						success: function( response ) {
 							if ( typeof response.data != 'undefined' ) {
-								um_add_same_page_log( field_key, response.data.message );
-								current_page++;
+								um_add_same_page_log( field_key, wp.i18n.__( 'Upgraded metadata up to ', 'ultimate-member' ) + response.data.last_id );
+								last_id = response.data.last_id;
+								done = response.data.done;
 								update_metadata_per_page();
 							} else {
 								um_same_page_wrong_ajax( field_key );
