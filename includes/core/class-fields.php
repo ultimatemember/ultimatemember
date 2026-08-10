@@ -4482,9 +4482,39 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= $this->field_label( $data['label'], $key, $data );
 						}
 
-						$res = $_field_value;
+						$res          = $_field_value;
+						$is_list      = false;
+						$show_as_list = UM()->options()->get( 'profile_fields_show_as_list' );
+						$list_items   = array();
 						if ( ! empty( $res ) ) {
-							$res = stripslashes( $res );
+							if ( is_array( $res ) ) {
+								$list_items = array_map( 'stripslashes', $res );
+								$res        = implode( ', ', $list_items );
+							} else {
+								$res = stripslashes( $res );
+							}
+						}
+
+						if ( ! empty( $res ) && ! empty( $show_as_list ) && in_array( $type, array( 'multiselect', 'checkbox' ), true ) ) {
+							if ( empty( $list_items ) ) {
+								$list_items = explode( ', ', $res );
+							}
+
+							$list = '<ul class="um-field-list">';
+							foreach ( $list_items as $item ) {
+								$list .= '<li>' . esc_html( trim( $item ) ) . '</li>';
+							}
+							$list     .= '</ul>';
+							$res      = wp_kses(
+								$list,
+								array(
+									'ul' => array(
+										'class' => array(),
+									),
+									'li' => array(),
+								)
+							);
+							$is_list  = true;
 						}
 
 						$bio_key = UM()->profile()->get_show_bio_key( $this->global_args );
@@ -4521,9 +4551,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 										)
 									);
 								}
-							} elseif ( ! empty( $data['html'] ) ) {
+							} elseif ( ! $is_list && ! empty( $data['html'] ) ) {
 								$res = wp_kses( make_clickable( $res ), 'user_description' );
-							} else {
+							} elseif ( ! $is_list ) {
 								$res = wp_kses(
 									make_clickable( $res ),
 									array(
@@ -4535,7 +4565,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								);
 							}
 
-							$res = nl2br( $res );
+							if ( ! $is_list ) {
+								$res = nl2br( $res );
+							}
 						}
 
 						$data['is_view_field'] = true;
