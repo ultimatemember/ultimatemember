@@ -366,7 +366,7 @@ jQuery(document).ready(function() {
 							// Image-type form field
 							if ( response.file_preview ) {
 								let $wrapper = jQuery('[data-key="' + fieldID + '"]');
-								$wrapper.find('.um-uploader-file-preview').html( response.file_preview );
+								$wrapper.find('.um-uploader-file .um-uploader-file-preview').html( response.file_preview );
 								$wrapper.find('.um-uploader-dropzone').umHide();
 								$wrapper.find('.um-uploader-filelist').umShow();
 								$wrapper.find('.um-uploader').addClass('um-upload-completed');
