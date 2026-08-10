@@ -42,6 +42,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->old_extensions_notice();
 			$this->install_core_page_notice();
 			$this->exif_extension_notice();
+			$this->outdated_templates_notice();
 			$this->show_update_messages();
 			$this->check_wrong_install_folder();
 			$this->need_upgrade();
@@ -502,6 +503,35 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					)
 				);
 			}
+		}
+
+		/**
+		 * Checking if there are outdated overridden templates in the active theme
+		 */
+		public function outdated_templates_notice() {
+			if ( ! UM()->common()->theme()->is_outdated_template_exist() ) {
+				return;
+			}
+
+			$override_url = admin_url( 'admin.php?page=um_options&tab=advanced&section=override_templates' );
+
+			$allowed_html = array(
+				'a'      => array(
+					'href' => array(),
+				),
+				'strong' => array(),
+			);
+
+			$this->add_notice(
+				'outdated_templates',
+				array(
+					'class'       => 'notice-warning',
+					// translators: %s: Override templates settings link.
+					'message'     => '<p>' . wp_kses( sprintf( __( 'Your custom Ultimate Member templates are out of date and may break functionality. Please <a href="%s">update your overridden templates</a>.', 'ultimate-member' ), $override_url ), $allowed_html ) . '</p>',
+					'dismissible' => true,
+				),
+				10
+			);
 		}
 
 		/**
