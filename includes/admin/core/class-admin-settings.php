@@ -185,30 +185,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				wp_send_json_success( array( 'count' => $count ) );
 			} elseif ( 'um_update_metadata_per_page' === $cb_func ) {
 
-				if ( empty( $_POST['page'] ) ) {
-					wp_send_json_error( __( 'Wrong data', 'ultimate-member' ) );
-				}
-
 				$per_page           = 500;
+				$last_id            = empty( $_POST['last_id'] ) ? 0 : absint( $_POST['last_id'] );
 				$wp_usermeta_option = get_option( 'um_usermeta_fields', array() );
 
 				global $wpdb;
-				$metadata = $wpdb->get_results(
-					$wpdb->prepare(
-						"SELECT *
-						FROM {$wpdb->usermeta}
-						WHERE meta_key IN ('" . implode( "','", $wp_usermeta_option ) . "')
-						LIMIT %d, %d",
-						( absint( $_POST['page'] ) - 1 ) * $per_page,
-						$per_page
-					),
-					ARRAY_A
-				);
-
-				$values = array();
-				foreach ( $metadata as $metarow ) {
-					$values[] = $wpdb->prepare( '(%d, %s, %s)', $metarow['user_id'], $metarow['meta_key'], $metarow['meta_value'] );
-				}
 
 				// maybe create table.
 				$table_name = $wpdb->prefix . 'um_metadata';
@@ -220,6 +201,30 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					UM()->setup()->create_db();
 				}
 
+				// start of a full rebuild, clear any old rows to avoid duplicates.
+				if ( 0 === $last_id ) {
+					$wpdb->query( "TRUNCATE TABLE {$table_name}" );
+				}
+
+				$metadata = $wpdb->get_results(
+					$wpdb->prepare(
+						"SELECT umeta_id, user_id, meta_key, meta_value
+						FROM {$wpdb->usermeta}
+						WHERE meta_key IN ('" . implode( "','", $wp_usermeta_option ) . "')
+						AND umeta_id > %d
+						ORDER BY umeta_id ASC
+						LIMIT %d",
+						$last_id,
+						$per_page
+					),
+					ARRAY_A
+				);
+
+				$values = array();
+				foreach ( $metadata as $metarow ) {
+					$values[] = $wpdb->prepare( '(%d, %s, %s)', $metarow['user_id'], $metarow['meta_key'], $metarow['meta_value'] );
+				}
+
 				if ( ! empty( $values ) ) {
 					$wpdb->query(
 						"INSERT INTO
@@ -228,10 +233,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					);
 				}
 
-				$from = ( absint( $_POST['page'] ) * $per_page ) - $per_page + 1;
-				$to   = absint( $_POST['page'] ) * $per_page;
-				// translators: %1$s is a metadata from name; %2$s is a metadata to.
-				wp_send_json_success( array( 'message' => sprintf( __( 'Metadata from %1$s to %2$s was upgraded successfully...', 'ultimate-member' ), $from, $to ) ) );
+				if ( ! empty( $metadata ) ) {
+					$last_row = end( $metadata );
+					$last_id  = (int) $last_row['umeta_id'];
+				}
+
+				wp_send_json_success(
+					array(
+						'last_id' => $last_id,
+						'done'    => empty( $metadata ),
+					)
+				);
 			} else {
 				do_action( 'um_same_page_update_ajax_action', $cb_func );
 			}
