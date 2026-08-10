@@ -73,6 +73,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		public $disable_tooltips = false;
 
 		/**
+		 * @var array
+		 */
+		public $direct_db_value_cache = array();
+
+		/**
 		 * Fields constructor.
 		 */
 		public function __construct() {
@@ -1096,7 +1101,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return boolean
 		 */
 		public function is_selected( $key, $value, $data ) {
-			global $wpdb;
 
 			/**
 			 * UM hook
@@ -1260,7 +1264,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 
 					// show default on edit screen if there isn't meta row in usermeta table
-					$direct_db_value = $wpdb->get_var( $wpdb->prepare( "SELECT ISNULL( meta_value ) FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = %s", um_user( 'ID' ), $key ) );
+					$direct_db_value = $this->get_direct_db_value( $key );
 					if ( ! isset( $direct_db_value ) && isset( $data['default'] ) ) {
 						if ( ! is_array(  $data['default'] ) && strstr( $data['default'], ', ' ) ) {
 							$data['default'] = explode( ', ', $data['default'] );
@@ -1282,6 +1286,31 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		}
 
 		/**
+		 * Get direct usermeta value, cached per user and key.
+		 *
+		 * @param string $key Usermeta key.
+		 *
+		 * @return mixed
+		 */
+		private function get_direct_db_value( $key ) {
+			$user_id = um_user( 'ID' );
+
+			if ( ! isset( $this->direct_db_value_cache[ $user_id ] ) ) {
+				$this->direct_db_value_cache[ $user_id ] = array();
+			}
+
+			if ( array_key_exists( $key, $this->direct_db_value_cache[ $user_id ] ) ) {
+				return $this->direct_db_value_cache[ $user_id ][ $key ];
+			}
+
+			global $wpdb;
+
+			$this->direct_db_value_cache[ $user_id ][ $key ] = $wpdb->get_var( $wpdb->prepare( "SELECT ISNULL( meta_value ) FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = %s", $user_id, $key ) );
+
+			return $this->direct_db_value_cache[ $user_id ][ $key ];
+		}
+
+		/**
 		 * Checks if a radio button is selected
 		 *
 		 * @param  string $key
@@ -1291,7 +1320,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return boolean
 		 */
 		function is_radio_checked( $key, $value, $data ) {
-			global $wpdb;
 
 			if ( isset( UM()->form()->post_form[ $key ] ) ) {
 				if ( is_array( UM()->form()->post_form[ $key ] ) && in_array( $value, UM()->form()->post_form[ $key ] ) ) {
@@ -1336,7 +1364,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					} else {
 
 						// show default on edit screen if there isn't meta row in usermeta table
-						$direct_db_value = $wpdb->get_var( $wpdb->prepare( "SELECT ISNULL( meta_value ) FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = %s", um_user( 'ID' ), $key ) );
+						$direct_db_value = $this->get_direct_db_value( $key );
 						if ( ! isset( $direct_db_value ) && isset( $data['default'] ) && $data['default'] == $value ) {
 							return true;
 						}
