@@ -167,7 +167,7 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.12.2 2026-07-xx =
+= 2.12.2 2026-08-xx =
 
 **Enhancements**
 
@@ -178,6 +178,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: `WP_Filesystem()` initialization optimization. Init `WP_Filesystem()` only once when it's necessary.
 * Fixed: Redirect on non-main queries (breaks Spectra and block themes). Added conditional check for the main query (based on @faisalahammad suggestions).
 * Fixed: Registration form infinite loop - gdpr-register.php calls `the_content` recursively causing PHP fatal error. Excluded predefined UM pages and pages with [ultimatemember] shortcode from the list, render empty content for such pages if they are already selected to avoid PHP error (based on @faisalahammad suggestions).
+* Fixed: Security issue when an unauthenticated visitor can read the content of comments awaiting moderation. (Reported by Alessandro Greco (Aleff) and Giovambattista Ianni, University of Calabria (UNICAL)).
 
 = 2.12.1 2026-07-06 =
 
