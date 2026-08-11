@@ -1096,6 +1096,15 @@
               margin: 0
               padding: 0
               row-gap: $spacing-sm
+              &.#{$prefix}field-type_rating
+                .#{$prefix}raty
+                  +flex( row, flex-start, center, nowrap )
+                  gap: $spacing-xxs
+                  i
+                    font-size: $spacing-3xl
+                    line-height: 1
+                    margin: 0
+                    padding: 0
               &.#{$prefix}field-type_image,
               &.#{$prefix}field-type_file
                 align-items: flex-start
