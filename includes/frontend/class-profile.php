@@ -164,6 +164,7 @@ class Profile {
 		 * 10 - `profile_navbar_classes()` from Messaging extension class.
 		 *
 		 * @param {array} $classes User Profile navigation bar classes.
+		 * @param {int}   $user_id User Profile ID.
 		 *
 		 * @since 2.0
 		 * @since 3.0.0 $classes type is array.
@@ -177,7 +178,7 @@ class Profile {
 		 * }
 		 * add_filter( 'um_profile_navbar_classes', 'my_um_profile_navbar_classes' );
 		 */
-		$classes = apply_filters( 'um_profile_navbar_classes', $classes );
+		$classes = apply_filters( 'um_profile_navbar_classes', $classes, $t_args['user_profile_id'] );
 
 		$t_args['content']         = $content;
 		$t_args['wrapper_classes'] = $classes;
