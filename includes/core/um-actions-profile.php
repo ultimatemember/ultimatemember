@@ -891,6 +891,11 @@ function um_social_links_icons( $args ) {
 		return;
 	}
 
+	// Restrict displaying content in User Profile.
+	if ( ! UM()->common()->users()->can_view_user_profile( um_user( 'ID' ) ) ) {
+		return;
+	}
+
 	if ( ! empty( $args['show_social_links'] ) ) {
 		echo '<div class="um-profile-connect um-member-connect">';
 		UM()->fields()->show_social_urls();
@@ -1112,118 +1117,124 @@ function um_profile_header( $args ) {
 				do_action( 'um_after_profile_header_name', $args, um_user( 'ID' ) );
 				?>
 			</div>
+			<?php
+			if ( UM()->common()->users()->can_view_user_profile( um_user( 'ID' ) ) ) {
+				if ( ! empty( $args['metafields'] ) ) { ?>
+					<div class="um-meta">
+						<?php echo UM()->profile()->show_meta( $args['metafields'], $args ); ?>
+					</div>
+					<?php
+				}
 
-			<?php if ( ! empty( $args['metafields'] ) ) { ?>
-				<div class="um-meta">
-					<?php echo UM()->profile()->show_meta( $args['metafields'], $args ); ?>
+				$show_bio       = false;
+				$bio_html       = false;
+				$global_setting = UM()->options()->get( 'profile_show_html_bio' );
+				if ( ! empty( $args['use_custom_settings'] ) ) {
+					if ( ! empty( $args['show_bio'] ) ) {
+						$show_bio = true;
+						$bio_html = ! empty( $global_setting );
+					}
+				} else {
+					$global_show_bio = UM()->options()->get( 'profile_show_bio' );
+					if ( ! empty( $global_show_bio ) ) {
+						$show_bio = true;
+						$bio_html = ! empty( $global_setting );
+					}
+				}
+
+				if ( $show_bio ) {
+					$description_key   = UM()->profile()->get_show_bio_key( $args );
+					$description_value = UM()->fields()->field_value( $description_key );
+
+					if ( ! empty( $description_value ) && true === UM()->fields()->viewing ) {
+						?>
+						<div class="um-meta-text">
+							<?php
+							if ( $bio_html ) {
+								echo nl2br( wp_kses( make_clickable( $description_value ), 'user_description' ) );
+							} else {
+								echo nl2br(
+									wp_kses(
+										make_clickable( $description_value ),
+										array(
+											'a' => array(
+												'href' => array(),
+												'rel'  => array(),
+											),
+										)
+									)
+								);
+							}
+							?>
+						</div>
+						<?php
+					} elseif ( true === UM()->fields()->editing ) {
+						if ( empty( $args['custom_fields'][ $description_key ]['html'] ) && ! $bio_html ) {
+							// Strip all HTML tags in the user_description.
+							$description_value = wp_strip_all_tags( $description_value );
+						}
+
+						$limit = UM()->options()->get( 'profile_bio_maxchars' );
+						if ( ! empty( $args['custom_fields'][ $description_key ]['max_chars'] ) ) {
+							$limit = $args['custom_fields'][ $description_key ]['max_chars'];
+						}
+						?>
+
+						<div class="um-meta-text">
+							<textarea id="um-meta-bio" data-html="<?php echo esc_attr( $bio_html ); ?>"
+									  data-character-limit="<?php echo esc_attr( $limit ); ?>"
+									  placeholder="<?php esc_attr_e( 'Tell us a bit about yourself...', 'ultimate-member' ); ?>"
+									  name="<?php echo esc_attr( $description_key ); ?>" <?php echo wp_kses( UM()->fields()->aria_valid_attributes( UM()->fields()->is_error( $description_key ), 'um-meta-bio' ), UM()->get_allowed_html( 'templates' ) ); ?>><?php echo esc_textarea( $description_value ); ?></textarea>
+							<span class="um-meta-bio-character um-right">
+								<span class="um-bio-limit"><?php echo esc_html( $limit ); ?></span>
+							</span>
+							<?php
+							if ( UM()->fields()->is_error( $description_key ) ) {
+								echo wp_kses( UM()->fields()->field_error( UM()->fields()->show_error( $description_key ), 'um-meta-bio', true ), UM()->get_allowed_html( 'templates' ) );
+							}
+							?>
+						</div>
+						<?php
+					}
+				}
+				?>
+
+				<div class="um-profile-status <?php echo esc_attr( UM()->common()->users()->get_status( um_user( 'ID' ) ) ); ?>">
+					<span>
+						<?php
+						// translators: %s: profile status.
+						echo esc_html( sprintf( __( 'This user account status is %s', 'ultimate-member' ), UM()->common()->users()->get_status( um_user( 'ID' ), 'formatted' ) ) );
+						?>
+					</span>
 				</div>
+
+				<?php
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_after_header_meta
+				 * @description Insert after header meta some content
+				 * @input_vars
+				 * [{"var":"$user_id","type":"int","desc":"User ID"},
+				 * {"var":"$args","type":"array","desc":"Form Arguments"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_action( 'um_after_header_meta', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_after_header_meta', 'my_after_header_meta', 10, 2 );
+				 * function my_after_header_meta( $user_id, $args ) {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
+				do_action( 'um_after_header_meta', um_user( 'ID' ), $args );
+			} else {
+				?>
+				<span class="um-supporting-text"><?php echo esc_html( UM()->common()->users()->get_restricted_privacy_notice( um_user( 'ID' ) ) ); ?></span>
 				<?php
 			}
-
-			$show_bio       = false;
-			$bio_html       = false;
-			$global_setting = UM()->options()->get( 'profile_show_html_bio' );
-			if ( ! empty( $args['use_custom_settings'] ) ) {
-				if ( ! empty( $args['show_bio'] ) ) {
-					$show_bio = true;
-					$bio_html = ! empty( $global_setting );
-				}
-			} else {
-				$global_show_bio = UM()->options()->get( 'profile_show_bio' );
-				if ( ! empty( $global_show_bio ) ) {
-					$show_bio = true;
-					$bio_html = ! empty( $global_setting );
-				}
-			}
-
-			if ( $show_bio ) {
-				$description_key   = UM()->profile()->get_show_bio_key( $args );
-				$description_value = UM()->fields()->field_value( $description_key );
-
-				if ( ! empty( $description_value ) && true === UM()->fields()->viewing ) {
-					?>
-					<div class="um-meta-text">
-						<?php
-						if ( $bio_html ) {
-							echo nl2br( wp_kses( make_clickable( $description_value ), 'user_description' ) );
-						} else {
-							echo nl2br(
-								wp_kses(
-									make_clickable( $description_value ),
-									array(
-										'a' => array(
-											'href' => array(),
-											'rel'  => array(),
-										),
-									)
-								)
-							);
-						}
-						?>
-					</div>
-					<?php
-				} elseif ( true === UM()->fields()->editing ) {
-					if ( empty( $args['custom_fields'][ $description_key ]['html'] ) && ! $bio_html ) {
-						// Strip all HTML tags in the user_description.
-						$description_value = wp_strip_all_tags( $description_value );
-					}
-
-					$limit = UM()->options()->get( 'profile_bio_maxchars' );
-					if ( ! empty( $args['custom_fields'][ $description_key ]['max_chars'] ) ) {
-						$limit = $args['custom_fields'][ $description_key ]['max_chars'];
-					}
-					?>
-
-					<div class="um-meta-text">
-						<textarea id="um-meta-bio" data-html="<?php echo esc_attr( $bio_html ); ?>"
-								  data-character-limit="<?php echo esc_attr( $limit ); ?>"
-								  placeholder="<?php esc_attr_e( 'Tell us a bit about yourself...', 'ultimate-member' ); ?>"
-								  name="<?php echo esc_attr( $description_key ); ?>" <?php echo wp_kses( UM()->fields()->aria_valid_attributes( UM()->fields()->is_error( $description_key ), 'um-meta-bio' ), UM()->get_allowed_html( 'templates' ) ); ?>><?php echo esc_textarea( $description_value ); ?></textarea>
-						<span class="um-meta-bio-character um-right">
-							<span class="um-bio-limit"><?php echo esc_html( $limit ); ?></span>
-						</span>
-						<?php
-						if ( UM()->fields()->is_error( $description_key ) ) {
-							echo wp_kses( UM()->fields()->field_error( UM()->fields()->show_error( $description_key ), 'um-meta-bio', true ), UM()->get_allowed_html( 'templates' ) );
-						}
-						?>
-					</div>
-					<?php
-				}
-			}
-			?>
-
-			<div class="um-profile-status <?php echo esc_attr( UM()->common()->users()->get_status( um_user( 'ID' ) ) ); ?>">
-				<span>
-					<?php
-					// translators: %s: profile status.
-					echo esc_html( sprintf( __( 'This user account status is %s', 'ultimate-member' ), UM()->common()->users()->get_status( um_user( 'ID' ), 'formatted' ) ) );
-					?>
-				</span>
-			</div>
-
-			<?php
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_after_header_meta
-			 * @description Insert after header meta some content
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"},
-			 * {"var":"$args","type":"array","desc":"Form Arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_header_meta', 'function_name', 10, 2 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_header_meta', 'my_after_header_meta', 10, 2 );
-			 * function my_after_header_meta( $user_id, $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_after_header_meta', um_user( 'ID' ), $args );
 			?>
 		</div>
 		<div class="um-clear"></div>

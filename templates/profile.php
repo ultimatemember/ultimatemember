@@ -24,35 +24,36 @@ $description_key = UM()->profile()->get_show_bio_key( $args );
 		do_action( 'um_profile_before_header', $args );
 
 		if ( um_is_on_edit_profile() ) {
-		?>
+			?>
 		<form method="post" action="" data-description_key="<?php echo esc_attr( $description_key ); ?>">
 			<?php
-			}
-			/**
-			 * Fires for displaying User Profile cover area.
-			 *
-			 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
-			 * 9 - `um_profile_header_cover_area()` displays User Profile cover photo.
-			 *
-			 * @param {array} $profile_args User Profile data.
-			 *
-			 * @since 1.3.x
-			 * @hook  um_profile_header_cover_area
-			 *
-			 * @example <caption>Display some content before or after User Profile cover.</caption>
-			 * function my_um_profile_header_cover_area( $args ) {
-			 *     // your code here
-			 *     echo $content;
-			 * }
-			 * add_action( 'um_profile_header_cover_area', 'my_um_profile_header_cover_area' );
-			 */
-			do_action( 'um_profile_header_cover_area', $args );
-			/** This action is documented in ultimate-member/templates/v3/profile.php */
-			do_action( 'um_profile_header', $args );
+		}
+		/**
+		 * Fires for displaying User Profile cover area.
+		 *
+		 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+		 * 9 - `um_profile_header_cover_area()` displays User Profile cover photo.
+		 *
+		 * @param {array} $profile_args User Profile data.
+		 *
+		 * @since 1.3.x
+		 * @hook  um_profile_header_cover_area
+		 *
+		 * @example <caption>Display some content before or after User Profile cover.</caption>
+		 * function my_um_profile_header_cover_area( $args ) {
+		 *     // your code here
+		 *     echo $content;
+		 * }
+		 * add_action( 'um_profile_header_cover_area', 'my_um_profile_header_cover_area' );
+		 */
+		do_action( 'um_profile_header_cover_area', $args );
+		/** This action is documented in ultimate-member/templates/v3/profile.php */
+		do_action( 'um_profile_header', $args );
+
+		if ( UM()->common()->users()->can_view_user_profile( um_user( 'ID' ) ) ) {
 			/** This action is documented in ultimate-member/templates/v3/profile.php */
 			$classes = apply_filters( 'um_profile_navbar_classes', '' );
 			?>
-
 			<div class="um-profile-navbar <?php echo esc_attr( $classes ); ?>">
 				<?php
 				/** This action is documented in ultimate-member/templates/v3/profile.php */
@@ -66,52 +67,52 @@ $description_key = UM()->profile()->get_show_bio_key( $args );
 			do_action( 'um_profile_menu', $args );
 
 			if ( um_is_on_edit_profile() || UM()->user()->preview ) {
-			$nav    = 'main';
-			$subnav = UM()->profile()->active_subnav();
-			$subnav = ! empty( $subnav ) ? $subnav : 'default';
-			?>
-			<div class="um-profile-body <?php echo esc_attr( $nav . ' ' . $nav . '-' . $subnav ); ?>">
-				<?php
-				/** This action is documented in ultimate-member/templates/v3/profile.php */
-				do_action( "um_profile_content_$nav", $args );
-				/** This action is documented in ultimate-member/templates/v3/profile.php */
-				do_action( "um_profile_content_{$nav}_$subnav", $args );
+				$nav    = 'main';
+				$subnav = UM()->profile()->active_subnav();
+				$subnav = ! empty( $subnav ) ? $subnav : 'default';
 				?>
-				<div class="clear"></div>
-			</div>
+				<div class="um-profile-body <?php echo esc_attr( $nav . ' ' . $nav . '-' . $subnav ); ?>">
+					<?php
+					/** This action is documented in ultimate-member/templates/v3/profile.php */
+					do_action( "um_profile_content_$nav", $args );
+					/** This action is documented in ultimate-member/templates/v3/profile.php */
+					do_action( "um_profile_content_{$nav}_$subnav", $args );
+					?>
+					<div class="clear"></div>
+				</div>
 
-			<?php if ( ! UM()->user()->preview ) { ?>
-
+				<?php
+				if ( ! UM()->user()->preview ) {
+					?>
 		</form>
+					<?php
+				}
+			} else {
+				$menu_enabled = UM()->options()->get( 'profile_menu' );
+				$profile_tabs = UM()->profile()->tabs_active();
 
-	<?php
-	}
-	} else {
-		$menu_enabled = UM()->options()->get( 'profile_menu' );
-		$profile_tabs = UM()->profile()->tabs_active();
+				$nav    = UM()->profile()->active_tab();
+				$subnav = UM()->profile()->active_subnav();
+				$subnav = ! empty( $subnav ) ? $subnav : 'default';
 
-		$nav    = UM()->profile()->active_tab();
-		$subnav = UM()->profile()->active_subnav();
-		$subnav = ! empty( $subnav ) ? $subnav : 'default';
-
-		if ( $menu_enabled || ! empty( $profile_tabs[ $nav ]['hidden'] ) ) {
-			?>
-			<div class="um-profile-body <?php echo esc_attr( $nav . ' ' . $nav . '-' . $subnav ); ?>">
-
-				<?php
-				// Custom hook to display tabbed content
-				/** This action is documented in ultimate-member/templates/v3/profile.php */
-				do_action( "um_profile_content_$nav", $args );
-				/** This action is documented in ultimate-member/templates/v3/profile.php */
-				do_action( "um_profile_content_{$nav}_$subnav", $args );
-				?>
-				<div class="clear"></div>
-			</div>
-			<?php
+				if ( $menu_enabled || ! empty( $profile_tabs[ $nav ]['hidden'] ) ) {
+					?>
+					<div class="um-profile-body <?php echo esc_attr( $nav . ' ' . $nav . '-' . $subnav ); ?>">
+						<?php
+						// Custom hook to display tabbed content
+						/** This action is documented in ultimate-member/templates/v3/profile.php */
+						do_action( "um_profile_content_$nav", $args );
+						/** This action is documented in ultimate-member/templates/v3/profile.php */
+						do_action( "um_profile_content_{$nav}_$subnav", $args );
+						?>
+						<div class="clear"></div>
+					</div>
+					<?php
+				}
+			}
 		}
-	}
-	/** This action is documented in ultimate-member/templates/v3/profile.php */
-	do_action( 'um_profile_footer', $args );
-	?>
+		/** This action is documented in ultimate-member/templates/v3/profile.php */
+		do_action( 'um_profile_footer', $args );
+		?>
 	</div>
 </div>
