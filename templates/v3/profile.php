@@ -113,101 +113,104 @@ if ( ! defined( 'ABSPATH' ) ) {
 		 */
 		do_action( 'um_profile_menu', $args );
 
-		$tabs = UM()->profile()->tabs_active();
-		$nav  = UM()->profile()->active_tab();
+		// Restrict displaying content in User Profile menu for private profiles.
+		if ( UM()->common()->users()->can_view_user_profile( um_profile_id() ) ) {
+			$tabs = UM()->profile()->tabs_active();
+			$nav  = UM()->profile()->active_tab();
 
-		ob_start();
+			ob_start();
 
-		if ( array_key_exists( $nav, $tabs ) ) {
-			/**
-			 * Fires for adding content in User Profile nav menu content tab.
-			 * $nav profile menu tab key.
-			 *
-			 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
-			 * 10 - `um_profile_content_main()` displays `About` menu tab's content (v2).
-			 * 10 - `UM()->frontend()->profile()->about()` displays `About` menu tab's content (v3).
-			 * 10 - `um_profile_content_followers()` displays `Followers` menu tab's content.
-			 * 10 - `um_profile_content_following()` displays `Following` menu tab's content.
-			 * 10 - `um_profile_content_groups_list()` displays `User Groups List` menu tab's content.
-			 * 10 - `profile_tab_content()` displays `My Jobs` menu tab's content.
-			 * 10 - `profile_tab_dashboard_content()` displays `My Jobs Dashboard` menu tab's content.
-			 * 10 - `content_messages()` displays `Messages` menu tab's content.
-			 * 10 - `um_profile_content_private_content()` displays `Private Content` menu tab's content.
-			 * 10 - `um_profile_content_{$tab['tabid']}` displays custom Profile Tabs content.
-			 * 10 - `um_profile_content_reviews()` displays `Reviews` menu tab's content.
-			 * 10 - `show_wall()` displays `Activity` menu tab's content.
-			 *
-			 * @param {array} $args User Profile data.
-			 *
-			 * @since 1.3.x
-			 * @hook  um_profile_content_{$nav}
-			 *
-			 * @example <caption>Display some content in User Profile `main` nav content tab.</caption>
-			 * function my_profile_content_main( $args ) {
-			 *     // your code here
-			 *     echo $content;
-			 * }
-			 * add_action( 'um_profile_content_main', 'my_profile_content_main' );
-			 */
-			do_action( "um_profile_content_{$nav}", $args );
-
-			$content_wrapper_classes[] = 'um-profile-' . $nav;
-
-			$subnav = null;
-			if ( array_key_exists( 'subnav', $tabs[ $nav ] ) ) {
-				$default_subnav = array_key_exists( 'subnav_default', $tabs[ $nav ] ) ? $tabs[ $nav ]['subnav_default'] : array_keys( $tabs[ $nav ]['subnav'] )[0];
-				$subnav         = UM()->profile()->active_subnav() ? UM()->profile()->active_subnav() : $default_subnav;
-			}
-			if ( $subnav && array_key_exists( $subnav, $tabs[ $nav ]['subnav'] ) ) {
+			if ( array_key_exists( $nav, $tabs ) ) {
 				/**
-				 * Fires for adding content in User Profile nav > subnav menu content tab.
+				 * Fires for adding content in User Profile nav menu content tab.
 				 * $nav profile menu tab key.
-				 * $subnav profile sub-menu tab key.
 				 *
 				 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
-				 * 10 - `um_bbpress_user_topics()` displays `Topics` submenu of bbPress tab's content.
-				 * 10 - `um_bbpress_user_replies()` displays `Replies` submenu of bbPress tab's content.
-				 * 10 - `um_bbpress_user_favorites()` displays `Favorites` submenu of bbPress tab's content.
-				 * 10 - `um_bbpress_user_subscriptions()` displays `Subscriptions` submenu of bbPress tab's content.
-				 * 10 - `profile_content_forums_topics()` displays `Topics` submenu of ForumWP tab's content.
-				 * 10 - `profile_content_forums_replies()` displays `Replies` submenu of ForumWP tab's content.
-				 * 10 - `profile_content_subscriptions()` displays `Subscriptions` submenu of ForumWP tab's content.
-				 * 10 - `profile_content_bookmarks()` displays `Bookmarks` submenu of ForumWP tab's content.
-				 * 10 - `profile_content_likes()` displays `Likes` submenu of ForumWP tab's content.
-				 * 10 - `um_profile_content_friends_myfriends()` displays `My Friends` submenu of Friends tab's content.
-				 * 10 - `um_profile_content_friends_friendreqs()` displays `Friends Requests` submenu of Friends tab's content.
-				 * 10 - `um_profile_content_friends_sentreqs()` displays `Send Friends Requests` submenu of Friends tab's content.
-				 * 10 - `um_profile_content_badges_my_badges()` displays `My badges` submenu of myCRED tab's content.
-				 * 10 - `um_profile_content_badges_all_badges()` displays `All badges` submenu of myCRED tab's content.
-				 * 10 - `get_bookmarks_content()` displays `All bookmarks with folders` submenu of User Bookmarks tab's content.
-				 * 10 - `get_bookmarks_content_all()` displays `All bookmarks` submenu of User Bookmarks tab's content.
-				 * 10 - `get_bookmarks_content_users()` displays `All bookmarked users` submenu of User Bookmarks tab's content.
-				 * 10 - `user_notes_profile_tab()` displays `View Notes` submenu of User Notes tab's content.
-				 * 10 - `get_add_note_form()` displays `Add Note` submenu of User Notes tab's content.
-				 * 10 - `get_gallery_content()` displays `Albums` submenu of User Photos tab's content.
-				 * 10 - `get_gallery_photos_content()` displays `Photos` submenu of User Photos tab's content.
-				 * 10 - `um_profile_content_purchases()` displays `Purchases` submenu of Woocommerce tab's content.
-				 * 10 - `um_profile_content_product_reviews()` displays `Product Reviews` submenu of Woocommerce tab's content.
+				 * 10 - `um_profile_content_main()` displays `About` menu tab's content (v2).
+				 * 10 - `UM()->frontend()->profile()->about()` displays `About` menu tab's content (v3).
+				 * 10 - `um_profile_content_followers()` displays `Followers` menu tab's content.
+				 * 10 - `um_profile_content_following()` displays `Following` menu tab's content.
+				 * 10 - `um_profile_content_groups_list()` displays `User Groups List` menu tab's content.
+				 * 10 - `profile_tab_content()` displays `My Jobs` menu tab's content.
+				 * 10 - `profile_tab_dashboard_content()` displays `My Jobs Dashboard` menu tab's content.
+				 * 10 - `content_messages()` displays `Messages` menu tab's content.
+				 * 10 - `um_profile_content_private_content()` displays `Private Content` menu tab's content.
+				 * 10 - `um_profile_content_{$tab['tabid']}` displays custom Profile Tabs content.
+				 * 10 - `um_profile_content_reviews()` displays `Reviews` menu tab's content.
+				 * 10 - `show_wall()` displays `Activity` menu tab's content.
 				 *
 				 * @param {array} $args User Profile data.
 				 *
 				 * @since 1.3.x
-				 * @hook  um_profile_content_{$nav}_{$subnav}
+				 * @hook  um_profile_content_{$nav}
 				 *
-				 * @example <caption>Display some content in User Profile `main` nav and `step2` subnav content tab.</caption>
-				 * function my_profile_content_main_step2( $args ) {
+				 * @example <caption>Display some content in User Profile `main` nav content tab.</caption>
+				 * function my_profile_content_main( $args ) {
 				 *     // your code here
 				 *     echo $content;
 				 * }
-				 * add_action( 'um_profile_content_main_step2', 'my_profile_content_main_step2' );
+				 * add_action( 'um_profile_content_main', 'my_profile_content_main' );
 				 */
-				do_action( "um_profile_content_{$nav}_{$subnav}", $args );
+				do_action( "um_profile_content_{$nav}", $args );
 
-				$content_wrapper_classes[] = 'um-profile-' . $nav . '-' . $subnav;
+				$content_wrapper_classes[] = 'um-profile-' . $nav;
+
+				$subnav = null;
+				if ( array_key_exists( 'subnav', $tabs[ $nav ] ) ) {
+					$default_subnav = array_key_exists( 'subnav_default', $tabs[ $nav ] ) ? $tabs[ $nav ]['subnav_default'] : array_keys( $tabs[ $nav ]['subnav'] )[0];
+					$subnav         = UM()->profile()->active_subnav() ? UM()->profile()->active_subnav() : $default_subnav;
+				}
+				if ( $subnav && array_key_exists( $subnav, $tabs[ $nav ]['subnav'] ) ) {
+					/**
+					 * Fires for adding content in User Profile nav > subnav menu content tab.
+					 * $nav profile menu tab key.
+					 * $subnav profile sub-menu tab key.
+					 *
+					 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+					 * 10 - `um_bbpress_user_topics()` displays `Topics` submenu of bbPress tab's content.
+					 * 10 - `um_bbpress_user_replies()` displays `Replies` submenu of bbPress tab's content.
+					 * 10 - `um_bbpress_user_favorites()` displays `Favorites` submenu of bbPress tab's content.
+					 * 10 - `um_bbpress_user_subscriptions()` displays `Subscriptions` submenu of bbPress tab's content.
+					 * 10 - `profile_content_forums_topics()` displays `Topics` submenu of ForumWP tab's content.
+					 * 10 - `profile_content_forums_replies()` displays `Replies` submenu of ForumWP tab's content.
+					 * 10 - `profile_content_subscriptions()` displays `Subscriptions` submenu of ForumWP tab's content.
+					 * 10 - `profile_content_bookmarks()` displays `Bookmarks` submenu of ForumWP tab's content.
+					 * 10 - `profile_content_likes()` displays `Likes` submenu of ForumWP tab's content.
+					 * 10 - `um_profile_content_friends_myfriends()` displays `My Friends` submenu of Friends tab's content.
+					 * 10 - `um_profile_content_friends_friendreqs()` displays `Friends Requests` submenu of Friends tab's content.
+					 * 10 - `um_profile_content_friends_sentreqs()` displays `Send Friends Requests` submenu of Friends tab's content.
+					 * 10 - `um_profile_content_badges_my_badges()` displays `My badges` submenu of myCRED tab's content.
+					 * 10 - `um_profile_content_badges_all_badges()` displays `All badges` submenu of myCRED tab's content.
+					 * 10 - `get_bookmarks_content()` displays `All bookmarks with folders` submenu of User Bookmarks tab's content.
+					 * 10 - `get_bookmarks_content_all()` displays `All bookmarks` submenu of User Bookmarks tab's content.
+					 * 10 - `get_bookmarks_content_users()` displays `All bookmarked users` submenu of User Bookmarks tab's content.
+					 * 10 - `user_notes_profile_tab()` displays `View Notes` submenu of User Notes tab's content.
+					 * 10 - `get_add_note_form()` displays `Add Note` submenu of User Notes tab's content.
+					 * 10 - `get_gallery_content()` displays `Albums` submenu of User Photos tab's content.
+					 * 10 - `get_gallery_photos_content()` displays `Photos` submenu of User Photos tab's content.
+					 * 10 - `um_profile_content_purchases()` displays `Purchases` submenu of Woocommerce tab's content.
+					 * 10 - `um_profile_content_product_reviews()` displays `Product Reviews` submenu of Woocommerce tab's content.
+					 *
+					 * @param {array} $args User Profile data.
+					 *
+					 * @since 1.3.x
+					 * @hook  um_profile_content_{$nav}_{$subnav}
+					 *
+					 * @example <caption>Display some content in User Profile `main` nav and `step2` subnav content tab.</caption>
+					 * function my_profile_content_main_step2( $args ) {
+					 *     // your code here
+					 *     echo $content;
+					 * }
+					 * add_action( 'um_profile_content_main_step2', 'my_profile_content_main_step2' );
+					 */
+					do_action( "um_profile_content_{$nav}_{$subnav}", $args );
+
+					$content_wrapper_classes[] = 'um-profile-' . $nav . '-' . $subnav;
+				}
 			}
-		}
 
-		$content = ob_get_clean();
+			$content = ob_get_clean();
+		}
 	}
 	if ( ! empty( $content ) ) {
 		/**

@@ -83,10 +83,10 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 	if ( ! empty( $profile_args['cover_enabled'] ) && UM()->options()->get( 'enable_user_cover' ) ) {
 		$has_cover         = UM()->common()->users()->has_photo( $user_profile_id, 'cover_photo' );
 		$default_cover_url = UM()->options()->get_default_cover_url();
-		?>
-		<div class="um-cover-wrapper">
-			<?php
-			if ( $has_cover || ! empty( $default_cover_url ) ) {
+		if ( $has_cover || ! empty( $default_cover_url ) ) {
+			?>
+			<div class="um-cover-wrapper">
+				<?php
 				$cover_args = array(
 					'cache' => false,
 				);
@@ -137,10 +137,10 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 				do_action( 'um_cover_area_content', $profile_args, $user_profile_id );
 
 				echo wp_kses( UM()->frontend()::layouts()::cover_photo( $user_profile_id, $cover_args ), UM()->get_allowed_html( 'templates' ) );
-			}
-			?>
-		</div>
-		<?php
+				?>
+			</div>
+			<?php
+		}
 	}
 	?>
 	<div class="um-profile-header-core">
@@ -332,129 +332,135 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 				<?php
 			}
 
-			/**
-			 * Fires for displaying content before supporting rows in header wrapper on User Profile.
-			 *
-			 * @param {array} $args    User Profile data.
-			 * @param {int}   $user_id User Profile ID.
-			 *
-			 * @since 3.0.0
-			 * @hook  um_before_header_meta
-			 *
-			 * @example <caption>Display some content before supporting rows in User Profile header wrapper.</caption>
-			 * function my_um_before_header_meta( $args, $user_id ) {
-			 *     // your code here
-			 *     echo $content;
-			 * }
-			 * add_action( 'um_before_header_meta', 'my_um_before_header_meta', 10, 2 );
-			 */
-			do_action( 'um_before_header_meta', $profile_args, $user_profile_id );
-			?>
-			<div class="um-profile-header-supporting-rows">
-				<?php
-				if ( true !== UM()->fields()->editing ) {
-					if ( 'approved' !== $account_status ) {
-						$status_badge = array(
-							'class' => array( 'um-member-status' ),
-							'color' => 'error',
-						);
-						if ( 'awaiting_admin_review' === $account_status ) {
-							$status_badge['color'] = 'warning';
-						}
-						// translators: %s: profile status.
-						$badge_text = sprintf( __( 'This user account status is %s', 'ultimate-member' ), um_user( 'account_status_name' ) );
-						?>
-						<div class="um-profile-header-account-status-row">
-							<?php echo wp_kses( UM()->frontend()::layouts()::badge( $badge_text, $status_badge ), UM()->get_allowed_html( 'templates' ) ); ?>
-						</div>
-						<?php
-					}
-
-					if ( ! empty( $social_links ) ) {
-						?>
-						<div class="um-profile-header-social-row">
-							<?php echo wp_kses( $social_links, UM()->get_allowed_html( 'templates' ) ); ?>
-						</div>
-						<?php
-					}
-
-					/**
-					 * Fires for displaying content in supporting header row on User Profile.
-					 *
-					 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
-					 * 10 - `add_um_user_bookmarks_button_profile_nocover()` displays User Bookmarks button.
-					 * 50 - `um_social_links_icons()` displays social URLs.
-					 * 60 - `um_friends_add_button_nocover()` displays Friends buttons.
-					 * 70 - `um_mycred_show_user_badges_profile_header()` displays myCRED badges.
-					 *
-					 * @param {array} $args    User Profile data. Since 2.11.0.
-					 * @param {int}   $user_id User Profile ID. Since 2.11.0.
-					 *
-					 * @since 1.3.x
-					 * @since 2.11.0 Added $profile_args, $user_id attributes
-					 * @hook  um_after_profile_header_name
-					 *
-					 * @example <caption>Display some content in supporting header row on User Profile.</caption>
-					 * function my_um_after_profile_header_name( $args, $user_id ) {
-					 *     // your code here
-					 *     echo $content;
-					 * }
-					 * add_action( 'um_after_profile_header_name', 'my_um_after_profile_header_name', 10, 2 );
-					 */
-					do_action( 'um_after_profile_header_name', $profile_args, $user_profile_id );
-
-					if ( ! empty( $profile_args['metafields'] ) ) {
-						?>
-						<div class="um-profile-header-supporting-row">
-							<?php echo wp_kses( UM()->profile()->show_meta( $profile_args['metafields'], $profile_args ), UM()->get_allowed_html( 'templates' ) ); ?>
-						</div>
-						<?php
-					}
-
-					if ( $show_bio ) {
-						?>
-						<div class="um-profile-header-supporting-row">
-							<?php
-							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- early escaped variable because need different escape based on options.
-							echo $user_bio;
-							?>
-						</div>
-						<?php
-					}
-				} else {
-					?>
-					<span class="um-supporting-text">
-						<?php
-						if ( um_is_myprofile() ) {
-							esc_html_e( 'Update your photo and personal details.', 'ultimate-member' );
-						} else {
-							esc_html_e( 'Update user\'s photo and personal details.', 'ultimate-member' );
-						}
-						?>
-					</span>
-					<?php
-				}
+			if ( UM()->common()->users()->can_view_user_profile( $user_profile_id ) ) {
+				/**
+				 * Fires for displaying content before supporting rows in header wrapper on User Profile.
+				 *
+				 * @param {array} $args    User Profile data.
+				 * @param {int}   $user_id User Profile ID.
+				 *
+				 * @since 3.0.0
+				 * @hook  um_before_header_meta
+				 *
+				 * @example <caption>Display some content before supporting rows in User Profile header wrapper.</caption>
+				 * function my_um_before_header_meta( $args, $user_id ) {
+				 *     // your code here
+				 *     echo $content;
+				 * }
+				 * add_action( 'um_before_header_meta', 'my_um_before_header_meta', 10, 2 );
+				 */
+				do_action( 'um_before_header_meta', $profile_args, $user_profile_id );
 				?>
-			</div>
-			<?php
-			/**
-			 * Fires for displaying content at the end of supporting row in header wrapper on User Profile.
-			 *
-			 * @param {array} $args    User Profile data.
-			 * @param {int}   $user_id User Profile ID.
-			 *
-			 * @since 1.3.x
-			 * @since 3.0.0 Changed the arguments position. $user_id was the 1st, and it's the 2nd now.
-			 * @hook  um_after_header_meta
-			 *
-			 * @example <caption>Display some content at the end of supporting row in User Profile header wrapper after standard content.</caption>
-			 * function my_um_after_header_meta( $args, $user_id ) {
-			 *     // your code here
-			 *     echo $content;
-			 * }
-			 * add_action( 'um_after_header_meta', 'my_um_after_header_meta', 10, 2 );
-			 */
-			do_action( 'um_after_header_meta', $profile_args, $user_profile_id );
+				<div class="um-profile-header-supporting-rows">
+					<?php
+					if ( true !== UM()->fields()->editing ) {
+						if ( 'approved' !== $account_status ) {
+							$status_badge = array(
+								'class' => array( 'um-member-status' ),
+								'color' => 'error',
+							);
+							if ( 'awaiting_admin_review' === $account_status ) {
+								$status_badge['color'] = 'warning';
+							}
+							// translators: %s: profile status.
+							$badge_text = sprintf( __( 'This user account status is %s', 'ultimate-member' ), um_user( 'account_status_name' ) );
+							?>
+							<div class="um-profile-header-account-status-row">
+								<?php echo wp_kses( UM()->frontend()::layouts()::badge( $badge_text, $status_badge ), UM()->get_allowed_html( 'templates' ) ); ?>
+							</div>
+							<?php
+						}
+
+						if ( ! empty( $social_links ) ) {
+							?>
+							<div class="um-profile-header-social-row">
+								<?php echo wp_kses( $social_links, UM()->get_allowed_html( 'templates' ) ); ?>
+							</div>
+							<?php
+						}
+
+						/**
+						 * Fires for displaying content in supporting header row on User Profile.
+						 *
+						 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+						 * 10 - `add_um_user_bookmarks_button_profile_nocover()` displays User Bookmarks button.
+						 * 50 - `um_social_links_icons()` displays social URLs.
+						 * 60 - `um_friends_add_button_nocover()` displays Friends buttons.
+						 * 70 - `um_mycred_show_user_badges_profile_header()` displays myCRED badges.
+						 *
+						 * @param {array} $args    User Profile data. Since 2.11.0.
+						 * @param {int}   $user_id User Profile ID. Since 2.11.0.
+						 *
+						 * @since 1.3.x
+						 * @since 2.11.0 Added $profile_args, $user_id attributes
+						 * @hook  um_after_profile_header_name
+						 *
+						 * @example <caption>Display some content in supporting header row on User Profile.</caption>
+						 * function my_um_after_profile_header_name( $args, $user_id ) {
+						 *     // your code here
+						 *     echo $content;
+						 * }
+						 * add_action( 'um_after_profile_header_name', 'my_um_after_profile_header_name', 10, 2 );
+						 */
+						do_action( 'um_after_profile_header_name', $profile_args, $user_profile_id );
+
+						if ( ! empty( $profile_args['metafields'] ) ) {
+							?>
+							<div class="um-profile-header-supporting-row">
+								<?php echo wp_kses( UM()->profile()->show_meta( $profile_args['metafields'], $profile_args ), UM()->get_allowed_html( 'templates' ) ); ?>
+							</div>
+							<?php
+						}
+
+						if ( $show_bio ) {
+							?>
+							<div class="um-profile-header-supporting-row">
+								<?php
+								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- early escaped variable because need different escape based on options.
+								echo $user_bio;
+								?>
+							</div>
+							<?php
+						}
+					} else {
+						?>
+						<span class="um-supporting-text">
+							<?php
+							if ( um_is_myprofile() ) {
+								esc_html_e( 'Update your photo and personal details.', 'ultimate-member' );
+							} else {
+								esc_html_e( 'Update user\'s photo and personal details.', 'ultimate-member' );
+							}
+							?>
+						</span>
+						<?php
+					}
+					?>
+				</div>
+				<?php
+				/**
+				 * Fires for displaying content at the end of supporting row in header wrapper on User Profile.
+				 *
+				 * @param {array} $args    User Profile data.
+				 * @param {int}   $user_id User Profile ID.
+				 *
+				 * @since 1.3.x
+				 * @since 3.0.0 Changed the arguments position. $user_id was the 1st, and it's the 2nd now.
+				 * @hook  um_after_header_meta
+				 *
+				 * @example <caption>Display some content at the end of supporting row in User Profile header wrapper after standard content.</caption>
+				 * function my_um_after_header_meta( $args, $user_id ) {
+				 *     // your code here
+				 *     echo $content;
+				 * }
+				 * add_action( 'um_after_header_meta', 'my_um_after_header_meta', 10, 2 );
+				 */
+				do_action( 'um_after_header_meta', $profile_args, $user_profile_id );
+			} else {
+				?>
+				<span class="um-supporting-text"><?php echo esc_html( UM()->common()->users()->get_restricted_privacy_notice( $user_profile_id ) ); ?></span>
+				<?php
+			}
 			?>
 		</div>
 	</div>

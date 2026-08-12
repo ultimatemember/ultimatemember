@@ -31,16 +31,12 @@ class Profile {
 	 *
 	 */
 	public function load_posts() {
-		// phpcs:disable WordPress.Security.NonceVerification
-		if ( ! isset( $_POST['author'] ) ) {
+		if ( empty( $_POST['author'] ) ) {
 			wp_send_json_error( __( 'Invalid user ID', 'ultimate-member' ) );
 		}
 		$author = absint( $_POST['author'] );
-		// phpcs:enable WordPress.Security.NonceVerification
 
-		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'um_user_profile_posts' . $author ) ) {
-			wp_send_json_error( __( 'Wrong nonce', 'ultimate-member' ) );
-		}
+		check_ajax_referer( 'um_user_profile_posts' . $author, 'nonce' );
 
 		if ( ! UM()->common()->users()->can_view_user_profile( $author ) ) {
 			wp_send_json_error( __( 'You cannot view this user.', 'ultimate-member' ) );
@@ -99,16 +95,12 @@ class Profile {
 	 * Dynamic load of comments
 	 */
 	public function load_comments() {
-		// phpcs:disable WordPress.Security.NonceVerification
-		if ( ! isset( $_POST['author'] ) ) {
+		if ( empty( $_POST['author'] ) ) {
 			wp_send_json_error( __( 'Invalid user ID', 'ultimate-member' ) );
 		}
 		$author = absint( $_POST['author'] );
-		// phpcs:enable WordPress.Security.NonceVerification
 
-		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'um_user_profile_comments' . $author ) ) {
-			wp_send_json_error( __( 'Wrong nonce', 'ultimate-member' ) );
-		}
+		check_ajax_referer( 'um_user_profile_comments' . $author, 'nonce' );
 
 		if ( ! UM()->common()->users()->can_view_user_profile( $author ) ) {
 			wp_send_json_error( __( 'You cannot view this user.', 'ultimate-member' ) );

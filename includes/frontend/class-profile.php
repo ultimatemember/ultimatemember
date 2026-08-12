@@ -101,11 +101,24 @@ class Profile {
 	}
 
 	public function navbar( $args ) {
+		$user_profile_id = um_profile_id();
+
+		// Restrict displaying content in User Profile navigation bar for private profiles with 'Only me' privacy setting.
+		if ( ! UM()->common()->users()->can_view_user_profile( $user_profile_id ) ) {
+			$is_private = UM()->common()->users()->is_user_profile_private( $user_profile_id );
+			if ( $is_private ) {
+				$privacy = UM()->common()->users()->get_privacy_setting( $user_profile_id );
+				if ( 'Only me' === $privacy || __( 'Only me', 'ultimate-member' ) === $privacy ) {
+					return;
+				}
+			}
+		}
+
 		$t_args = $args;
 
 		$t_args['profile_args']    = $args;
 		$t_args['current_user_id'] = get_current_user_id();
-		$t_args['user_profile_id'] = um_profile_id();
+		$t_args['user_profile_id'] = $user_profile_id;
 
 		$index = 0;
 		ob_start();
@@ -174,6 +187,13 @@ class Profile {
 
 	public function menu( $args ) {
 		if ( ! UM()->options()->get( 'profile_menu' ) ) {
+			return;
+		}
+
+		$user_profile_id = um_profile_id();
+
+		// Restrict displaying content in User Profile menu for private profiles.
+		if ( ! UM()->common()->users()->can_view_user_profile( $user_profile_id ) ) {
 			return;
 		}
 
@@ -249,7 +269,7 @@ class Profile {
 		$t_args = $args;
 
 		$t_args['current_user_id'] = get_current_user_id();
-		$t_args['user_profile_id'] = um_profile_id();
+		$t_args['user_profile_id'] = $user_profile_id;
 
 		foreach ( $tabs as $id => &$tab ) {
 			$nav_link = UM()->permalinks()->get_current_url( UM()->is_permalinks );

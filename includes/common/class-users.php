@@ -1396,8 +1396,8 @@ class Users {
 						sort( $all_sizes );
 						$size = UM()->get_closest_value( $all_sizes, $args['size'] );
 
-						$ratio  = str_replace( ':1', '', UM()->options()->get( 'profile_cover_ratio' ) );
-						$height = round( $size / $ratio );
+						$ratio     = str_replace( ':1', '', UM()->options()->get( 'profile_cover_ratio' ) );
+						$height    = round( $size / $ratio );
 						$files_map = array(
 							"cover_photo-{$size}{$ext}",
 							"cover_photo-{$size}x{$height}{$ext}",
@@ -1467,6 +1467,9 @@ class Users {
 			$current_user = get_current_user_id();
 		}
 
+		$user_id      = absint( $user_id );
+		$current_user = absint( $current_user );
+
 		$user_id = absint( $user_id );
 		if ( ! self::user_exists( $user_id ) ) {
 			return false;
@@ -1506,8 +1509,8 @@ class Users {
 		}
 
 		// Check if the current visit is from the guest.
-		if ( ! is_user_logged_in() && ! $this->is_user_profile_private( $user_id ) && $this->has_status( $user_id, 'approved' ) ) {
-			return true; // TODO Make the guests visibility and avoid using `is_user_profile_private` and `has_status` here.
+		if ( ! is_user_logged_in() && $this->has_status( $user_id, 'approved' ) ) {
+			return true; // TODO Make the visibility for guests and check what user roles can be visible for the guests.
 		}
 
 		$can_view_user = true;
@@ -1538,16 +1541,15 @@ class Users {
 	}
 
 	/**
-	 * Check if user profile is private based on privacy settings.
-	 * We don't handle 'account_tab_privacy' option in this function. Privacy cannot be related to the account tab visibility.
+	 * Retrieve the privacy setting for a user's profile.
 	 *
-	 * @param int $user_id
+	 * @param int $user_id The ID of the user whose privacy setting is to be retrieved.
 	 *
-	 * @return bool
-	 *
-	 * @since 3.0.0
+	 * @return string|false The privacy setting of the user's profile, or false if the user cannot access private profile functionality.
 	 */
-	public function is_user_profile_private( $user_id ) {
+	public function get_privacy_setting( $user_id ) {
+		$user_id = absint( $user_id );
+
 		$temp_id = um_user( 'ID' );
 		um_fetch_user( $user_id );
 
@@ -1566,7 +1568,28 @@ class Users {
 			$privacy = 'Everyone';
 		}
 
-		$private = 'Everyone' !== $privacy && __( 'Everyone', 'ultimate-member' ) !== $privacy; // backward compatibility when using textdomain.
+		return $privacy;
+	}
+
+	/**
+	 * Check if user profile is private based on privacy settings.
+	 * We don't handle 'account_tab_privacy' option in this function. Privacy cannot be related to the account tab visibility.
+	 *
+	 * @param int $user_id
+	 *
+	 * @return bool
+	 *
+	 * @since 3.0.0
+	 */
+	public function is_user_profile_private( $user_id ) {
+		$user_id = absint( $user_id );
+
+		$privacy = $this->get_privacy_setting( $user_id );
+		if ( false === $privacy ) {
+			$private = false;
+		} else {
+			$private = 'Everyone' !== $privacy && __( 'Everyone', 'ultimate-member' ) !== $privacy; // backward compatibility when using textdomain.
+		}
 
 		/**
 		 * Filters the marker for User Profile named as private.
@@ -1591,6 +1614,54 @@ class Users {
 	}
 
 	/**
+	 * Retrieves the restricted privacy notice for a user's profile based on their privacy settings.
+	 *
+	 * @param int $user_id The ID of the user whose profile privacy is being checked.
+	 *
+	 * @return string|null Returns the restricted privacy notice text if the profile is private, or `null` if the profile is not private.
+	 */
+	public function get_restricted_privacy_notice( $user_id ) {
+		$user_id    = absint( $user_id );
+		$is_private = $this->is_user_profile_private( $user_id );
+		if ( ! $is_private ) {
+			return null;
+		}
+
+		if ( $this->can_view_private_user_profile( $user_id ) ) {
+			return null;
+		}
+
+		$notice  = null;
+		$privacy = $this->get_privacy_setting( $user_id );
+		if ( ! is_user_logged_in() ) {
+			$notice = sprintf( __( 'This profile is private. You must be logged in and have permission to view this profile.', 'ultimate-member' ) );
+		} elseif ( 'Only me' === $privacy || __( 'Only me', 'ultimate-member' ) === $privacy ) {
+			$notice = sprintf( __( 'This profile is private. You do not have permission to view this profile.', 'ultimate-member' ) );
+		}
+
+		/**
+		 * Filters the notice shown when a user profile is restricted by its privacy settings.
+		 *
+		 * @param {string|null} $notice  Restricted privacy notice text. `null` when the profile isn't private.
+		 * @param {int}         $user_id User ID whose profile privacy is being checked.
+		 * @param {string}      $privacy Profile Privacy value.
+		 *
+		 * @return {string|null} Restricted privacy notice text, or `null` to show no notice.
+		 *
+		 * @since 3.0.0
+		 * @hook um_get_restricted_privacy_notice
+		 *
+		 * @example <caption>Customize the restricted privacy notice text.</caption>
+		 * function my_um_get_restricted_privacy_notice( $notice, $user_id, $privacy ) {
+		 *     $notice = __( 'Sorry, this profile is private.', 'ultimate-member' );
+		 *     return $notice;
+		 * }
+		 * add_filter( 'um_get_restricted_privacy_notice', 'my_um_get_restricted_privacy_notice', 10, 3 );
+		 */
+		return apply_filters( 'um_get_restricted_privacy_notice', $notice, $user_id, $privacy );
+	}
+
+	/**
 	 * Check if the current user can view a private user profile
 	 *
 	 * @param int      $user_id      The ID of the user profile to check
@@ -1605,18 +1676,20 @@ class Users {
 			$current_user = get_current_user_id();
 		}
 
-		$user_id = absint( $user_id );
+		$user_id      = absint( $user_id );
+		$current_user = absint( $current_user );
 
 		$temp_id = um_user( 'ID' );
 		um_fetch_user( $current_user );
 
 		$can_access_private_profile = um_user( 'can_access_private_profile' );
-		if ( ! empty( $can_access_private_profile ) ) {
-			return true;
-		}
 
 		if ( $temp_id ) {
 			um_fetch_user( $temp_id );
+		}
+
+		if ( ! empty( $can_access_private_profile ) ) {
+			return true;
 		}
 
 		/**
@@ -1656,7 +1729,9 @@ class Users {
 			$current_user = get_current_user_id();
 		}
 
-		$user_id = absint( $user_id );
+		$current_user = absint( $current_user );
+		$user_id      = absint( $user_id );
+
 		if ( ! self::user_exists( $user_id ) ) {
 			return false;
 		}
