@@ -50,19 +50,19 @@ $description_key = UM()->profile()->get_show_bio_key( $args );
 		/** This action is documented in ultimate-member/templates/v3/profile.php */
 		do_action( 'um_profile_header', $args );
 
-		if ( UM()->common()->users()->can_view_user_profile( um_user( 'ID' ) ) ) {
-			/** This action is documented in ultimate-member/templates/v3/profile.php */
-			$classes = apply_filters( 'um_profile_navbar_classes', '', um_user( 'ID' ) );
-			?>
-			<div class="um-profile-navbar <?php echo esc_attr( $classes ); ?>">
-				<?php
-				/** This action is documented in ultimate-member/templates/v3/profile.php */
-				do_action( 'um_profile_navbar', $args );
-				?>
-				<div class="um-clear"></div>
-			</div>
-
+		/** This action is documented in ultimate-member/templates/v3/profile.php */
+		$classes = apply_filters( 'um_profile_navbar_classes', '', um_user( 'ID' ) );
+		?>
+		<div class="um-profile-navbar <?php echo esc_attr( $classes ); ?>">
 			<?php
+			/** This action is documented in ultimate-member/templates/v3/profile.php */
+			do_action( 'um_profile_navbar', $args );
+			?>
+			<div class="um-clear"></div>
+		</div>
+
+		<?php
+		if ( UM()->common()->users()->can_view_user_profile( um_user( 'ID' ) ) ) {
 			/** This action is documented in ultimate-member/templates/v3/profile.php */
 			do_action( 'um_profile_menu', $args );
 
