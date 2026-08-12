@@ -42,7 +42,7 @@ class Profile {
 			wp_send_json_error( __( 'Wrong nonce', 'ultimate-member' ) );
 		}
 
-		if ( ! UM()->common()->users()->can_view_user( $author ) ) {
+		if ( ! UM()->common()->users()->can_view_user_profile( $author ) ) {
 			wp_send_json_error( __( 'You cannot view this user.', 'ultimate-member' ) );
 		}
 
@@ -110,7 +110,7 @@ class Profile {
 			wp_send_json_error( __( 'Wrong nonce', 'ultimate-member' ) );
 		}
 
-		if ( ! UM()->common()->users()->can_view_user( $author ) ) {
+		if ( ! UM()->common()->users()->can_view_user_profile( $author ) ) {
 			wp_send_json_error( __( 'You cannot view this user.', 'ultimate-member' ) );
 		}
 

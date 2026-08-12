@@ -1548,6 +1548,19 @@ class Users {
 	 * @since 3.0.0
 	 */
 	public function is_user_profile_private( $user_id ) {
+		$temp_id = um_user( 'ID' );
+		um_fetch_user( $user_id );
+
+		$can_access_private_profile = um_user( 'can_make_private_profile' );
+
+		if ( $temp_id ) {
+			um_fetch_user( $temp_id );
+		}
+
+		if ( empty( $can_access_private_profile ) ) {
+			return false;
+		}
+
 		$privacy = get_user_meta( $user_id, 'profile_privacy', true );
 		if ( empty( $privacy ) ) {
 			$privacy = 'Everyone';
