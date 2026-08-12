@@ -1652,13 +1652,13 @@ class Users {
 		 * @hook um_get_restricted_privacy_notice
 		 *
 		 * @example <caption>Customize the restricted privacy notice text.</caption>
-		 * function my_um_get_restricted_privacy_notice( $notice, $user_id, $privacy ) {
+		 * function my_um_get_restricted_privacy_notice( $notice, $privacy, $user_id ) {
 		 *     $notice = __( 'Sorry, this profile is private.', 'ultimate-member' );
 		 *     return $notice;
 		 * }
 		 * add_filter( 'um_get_restricted_privacy_notice', 'my_um_get_restricted_privacy_notice', 10, 3 );
 		 */
-		return apply_filters( 'um_get_restricted_privacy_notice', $notice, $user_id, $privacy );
+		return apply_filters( 'um_get_restricted_privacy_notice', $notice, $privacy, $user_id );
 	}
 
 	/**
@@ -1679,13 +1679,21 @@ class Users {
 		$user_id      = absint( $user_id );
 		$current_user = absint( $current_user );
 
-		$temp_id = um_user( 'ID' );
-		um_fetch_user( $current_user );
+		if ( $user_id === $current_user ) {
+			return true;
+		}
 
-		$can_access_private_profile = um_user( 'can_access_private_profile' );
+		if ( ! is_user_logged_in() ) {
+			$can_access_private_profile = false;
+		} else {
+			$temp_id = um_user( 'ID' );
+			um_fetch_user( $current_user );
 
-		if ( $temp_id ) {
-			um_fetch_user( $temp_id );
+			$can_access_private_profile = um_user( 'can_access_private_profile' );
+
+			if ( $temp_id ) {
+				um_fetch_user( $temp_id );
+			}
 		}
 
 		if ( ! empty( $can_access_private_profile ) ) {
