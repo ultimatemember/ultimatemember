@@ -203,6 +203,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Filter hook 'um_allowed_file_types' use filter hook 'um_allowed_default_file_types' instead.
 * Filter hook 'um_cover_area_content_dropdown_items' because there is used standard image uploader field on the User Profile form.
 * Filter hook 'um_mobile_cover_photo' use filter hook 'um_cover_photo_size' instead with checking `wp_is_mobile()` inside the callback.
+* Filter hook 'um_can_view_profile' use filter hook 'um_can_view_user_profile' instead.
+* Filter hook 'um_is_private_filter_hook' use filter hook 'um_can_view_private_user_profile' instead.
 * Deleted permanently function `um_user_uploads_dir()` deprecated since 2.0.26
 * Deleted permanently function `um_user_uploads_uri()` deprecated since 2.0.26
 * Deleted permanently function `um_user_submitted_registration` deprecated since 2.1.3
@@ -231,6 +233,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Deprecated function `um_is_temp_upload()` use function 'UM()->files()->is_temp_upload()' instead in old UI.
 * Deprecated function `um_is_temp_image()` because it is unused.
 * Deprecated function `um_get_domain_protocol()` because it is unused helper.
+* Deprecated function `um_can_view_profile()` use function `UM()->common()->users()->can_view_user_profile()` instead.
 * Deprecated function `UM()->password()->setcookie()`. Use function `UM()::setcookie()` instead.
 
 = 2.12.1 2026-07-06 =

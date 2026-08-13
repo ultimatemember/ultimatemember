@@ -396,9 +396,29 @@ class Directory extends Directory_Config {
 
 		$dropdown_actions = UM()->frontend()->users()->get_dropdown_items( $user_id, 'directory' );
 
-		$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id );
+		$can_edit         = UM()->roles()->um_current_user_can( 'edit', $user_id );
+		$can_view_profile = UM()->common()->users()->can_view_user_profile( $user_id );
 
 		$this->init_image_sizing( $directory_data );
+
+		if ( ! $can_view_profile ) {
+			$data_array = array(
+				'id'                  => $user_id,
+				'card_anchor'         => esc_html( $this->get_user_hash( $user_id ) ),
+				'role'                => 'undefined', // make the role hidden here.
+				'account_status'      => 'undefined', // make the status hidden here.
+				'account_status_name' => esc_html__( 'Undefined', 'ultimate-member' ), // make the status hidden here.
+				'cover_photo'         => UM()->frontend()::layouts()::cover_photo( $user_id, array( 'size' => $this->cover_size ) ),
+				'display_name'        => esc_html( um_user( 'display_name' ) ),
+				'profile_url'         => esc_url( um_user_profile_url( $user_id ) ),
+				'can_edit'            => (bool) $can_edit,
+				'edit_profile_url'    => $can_edit ? esc_url( um_edit_profile_url( $user_id ) ) : '',
+				'display_name_html'   => wp_kses( um_user( 'display_name', 'html' ), UM()->get_allowed_html( 'templates' ) ),
+				'dropdown_actions'    => $dropdown_actions,
+			);
+
+			return apply_filters( 'um_ajax_get_members_data', $data_array, $user_id, $directory_data );
+		}
 
 		// Replace hook 'um_members_just_after_name'
 		ob_start();

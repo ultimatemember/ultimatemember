@@ -392,3 +392,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return {string} Profile URL.
  */
+
+/**
+ * Filters the marker for user capabilities to view other profile
+ *
+ * @param {bool} $can_view Can view profile marker.
+ * @param {int}  $user_id  User ID requested from profile page.
+ *
+ * @return {bool} Can view profile marker.
+ *
+ * @since 2.6.10
+ * @deprecated 3.0.0 Use 'um_can_view_user_profile' instead.
+ * @hook um_can_view_profile
+ */

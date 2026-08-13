@@ -2164,36 +2164,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		}
 
 		/**
-		 * This method checks if give user profile is private.
-		 *
-		 * @usage <?php UM()->user()->is_private_profile( $user_id ); ?>
-		 *
-		 * @param int $user_id A user ID must be passed to check if the user profile is private
-		 *
-		 * @return bool
-		 *
-		 * @example This example display a specific user's name If his profile is public
-
-		<?php
-
-		um_fetch_user( 60 );
-		$is_private = UM()->user()->is_private_profile( 60 );
-		if ( ! $is_private ) {
-		echo 'User is public and his name is ' . um_user('display_name');
-		}
-
-		?>
-		 * @todo Please don't use since new UI. We have function for that instead `UM()->common()->users()->is_user_profile_private()`.
-		 */
-		public function is_private_profile( $user_id ) {
-			$privacy = get_user_meta( $user_id, 'profile_privacy', true );
-			if ( $privacy == __( 'Only me', 'ultimate-member' ) || $privacy == 'Only me' ) {
-				return true;
-			}
-			return $this->is_private_case( $user_id, $privacy );
-		}
-
-		/**
 		 * This method can be used to determine If a certain user is approved or not.
 		 *
 		 * @usage <?php UM()->user()->is_approved( $user_id ); ?>
@@ -2220,50 +2190,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			if ( $status == 'approved' || $status == '' ) {
 				return true;
 			}
-			return false;
-		}
-
-		/**
-		 * Is private
-		 *
-		 * @param $user_id
-		 * @param $case
-		 *
-		 * @todo Please don't use since new UI. We have function for that instead `UM()->common()->users()->can_view_private_user_profile()`.
-		 *
-		 * @return bool
-		 */
-		public function is_private_case( $user_id, $case ) {
-			$privacy = get_user_meta( $user_id, 'profile_privacy', true );
-
-			if ( $privacy == $case ) {
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_is_private_filter_hook
-				 * @description Change user privacy
-				 * @input_vars
-				 * [{"var":"$is_private","type":"bool","desc":"Is user private"},
-				 * {"var":"$privacy","type":"bool","desc":"Profile Privacy"},
-				 * {"var":"$user_id","type":"int","desc":"User ID"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_is_private_filter_hook', 'function_name', 10, 3 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_is_private_filter_hook', 'my_is_private_filter', 10, 3 );
-				 * function my_is_private_filter( $is_private ) {
-				 *     // your code here
-				 *     return $is_private;
-				 * }
-				 * ?>
-				 */
-				$bool = apply_filters( 'um_is_private_filter_hook', false, $privacy, $user_id );
-				return $bool;
-			}
-
 			return false;
 		}
 
@@ -2749,6 +2675,46 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		public function remove_cache_all_users() {
 			_deprecated_function( __METHOD__, '2.11.4', 'UM()->common()->users()->remove_cache_all_users()' );
 			UM()->common()->users()->remove_cache_all_users();
+		}
+
+		/**
+		 * Is private
+		 *
+		 * @param $user_id
+		 * @param $case
+		 *
+		 * @deprecated 3.0
+		 * @return bool
+		 */
+		public function is_private_case( $user_id, $case ) {
+			_deprecated_function( __METHOD__, '3.0', 'UM()->common()->users()->can_view_private_user_profile()' );
+
+			$privacy = get_user_meta( $user_id, 'profile_privacy', true );
+
+			if ( $privacy == $case ) {
+				return apply_filters( 'um_is_private_filter_hook', false, $privacy, $user_id );
+			}
+
+			return false;
+		}
+
+		/**
+		 * This method checks if give user profile is private.
+		 *
+		 * @param int $user_id A user ID must be passed to check if the user profile is private
+		 *
+		 * @return bool
+		 *
+		 * @deprecated 3.0
+		 */
+		public function is_private_profile( $user_id ) {
+			_deprecated_function( __METHOD__, '3.0', 'UM()->common()->users()->is_user_profile_private()' );
+
+			$privacy = get_user_meta( $user_id, 'profile_privacy', true );
+			if ( $privacy == __( 'Only me', 'ultimate-member' ) || $privacy == 'Only me' ) {
+				return true;
+			}
+			return $this->is_private_case( $user_id, $privacy );
 		}
 	}
 }

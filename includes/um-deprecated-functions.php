@@ -600,3 +600,56 @@ function um_get_default_cover_uri() {
 
 	return UM()->options()->get_default_cover_url();
 }
+
+/**
+ * Checks if user can view profile
+ *
+ * @param int $user_id
+ *
+ * @deprecated 3.0
+ *
+ * @return bool
+ */
+function um_can_view_profile( $user_id ) {
+	_deprecated_function( __FUNCTION__, '3.0.0', 'UM()->common()->users()->can_view_user_profile()' );
+
+	$can_view = true;
+	$user_id  = absint( $user_id );
+	if ( ! is_user_logged_in() ) {
+		$can_view = ! UM()->user()->is_private_profile( $user_id );
+	} else {
+		$temp_id = um_user( 'ID' );
+		um_fetch_user( get_current_user_id() );
+
+		if ( get_current_user_id() !== $user_id ) {
+			if ( ! um_user( 'can_view_all' ) ) {
+				um_fetch_user( $temp_id );
+				$can_view = false;
+			} elseif ( ! um_user( 'can_access_private_profile' ) && UM()->user()->is_private_profile( $user_id ) ) {
+				um_fetch_user( $temp_id );
+				$can_view = false;
+			} elseif ( um_user( 'can_view_roles' ) ) {
+				$can_view_roles = um_user( 'can_view_roles' );
+
+				if ( ! is_array( $can_view_roles ) ) {
+					$can_view_roles = array();
+				}
+
+				$all_roles = UM()->roles()->get_all_user_roles( $user_id );
+				if ( empty( $all_roles ) ) {
+					um_fetch_user( $temp_id );
+					$can_view = false;
+				} else {
+					if ( count( $can_view_roles ) && count( array_intersect( $all_roles, $can_view_roles ) ) <= 0 ) {
+						um_fetch_user( $temp_id );
+						$can_view = false;
+					}
+				}
+			}
+		}
+
+		um_fetch_user( $temp_id );
+	}
+
+	return apply_filters( 'um_can_view_profile', $can_view, $user_id );
+}
