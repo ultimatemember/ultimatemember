@@ -1736,6 +1736,21 @@ class Directory extends \um\common\Directory {
 			wp_send_json_success( $this->empty_response( $directory_data ) );
 		}
 
+		if ( ! is_user_logged_in() ) {
+			$hidden_roles_for_guest = UM()->options()->get( 'hidden_roles_for_guest' );
+			$hidden_roles_for_guest = ! empty( $hidden_roles_for_guest ) && is_string( $hidden_roles_for_guest ) ? array( $hidden_roles_for_guest ) : $hidden_roles_for_guest;
+
+			if ( ! empty( $hidden_roles_for_guest ) ) {
+				if ( ! empty( $this->query_args['role__in'] ) ) {
+					// Remove user roles that are invisible for the guests.
+					$this->query_args['role__in'] = array_diff( $this->query_args['role__in'], $hidden_roles_for_guest );
+				} else {
+					// Remove user roles that are invisible for the guests.
+					$this->query_args['role__not_in'] = ! empty( $this->query_args['role__not_in'] ) ? array_merge( $this->query_args['role__not_in'], $hidden_roles_for_guest ) : $hidden_roles_for_guest;
+				}
+			}
+		}
+
 		$maybe_exclude_private_users = true;
 		if ( is_user_logged_in() ) {
 			$temp_id = um_user( 'ID' );

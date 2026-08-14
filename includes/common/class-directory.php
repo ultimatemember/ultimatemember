@@ -559,6 +559,15 @@ class Directory extends Directory_Config {
 				$pre_query_results = array_reverse( get_editable_roles() );
 			} else {
 				$pre_query_results = UM()->roles()->get_roles();
+
+				if ( ! is_user_logged_in() ) {
+					$hidden_roles_for_guest = UM()->options()->get( 'hidden_roles_for_guest' );
+					$hidden_roles_for_guest = ! empty( $hidden_roles_for_guest ) && is_string( $hidden_roles_for_guest ) ? array( $hidden_roles_for_guest ) : $hidden_roles_for_guest;
+
+					if ( ! empty( $hidden_roles_for_guest ) ) {
+						$pre_query_results = array_diff( $pre_query_results, $hidden_roles_for_guest );
+					}
+				}
 			}
 		} elseif ( 'last_login' === $filter ) {
 			$join_clause  = '';
