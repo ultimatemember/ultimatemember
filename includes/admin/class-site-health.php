@@ -1012,6 +1012,14 @@ class Site_Health {
 			'value' => $restricted_taxonomy_list,
 		);
 
+		$hidden_roles_for_guest = UM()->options()->get( 'hidden_roles_for_guest' );
+		$hidden_roles_for_guest = ! empty( $hidden_roles_for_guest ) && is_string( $hidden_roles_for_guest ) ? array( $hidden_roles_for_guest ) : $hidden_roles_for_guest;
+
+		$restrict_settings['hidden_roles_for_guest'] = array(
+			'label' => __( 'Hide roles for guest', 'ultimate-member' ),
+			'value' => ! empty( $hidden_roles_for_guest ) ? implode( ', ', $hidden_roles_for_guest ) : $labels['empty'],
+		);
+
 		// Access other settings
 		$blocked_emails = str_replace( '<br />', ', ', nl2br( UM()->options()->get( 'blocked_emails' ) ) );
 		$blocked_words  = str_replace( '<br />', ', ', nl2br( UM()->options()->get( 'blocked_words' ) ) );

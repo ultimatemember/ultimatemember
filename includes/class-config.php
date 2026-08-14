@@ -1099,6 +1099,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'restricted_access_message'             => '',
 				'restricted_blocks'                     => false,
 				'enable_blocks'                         => false,
+				'hidden_roles_for_guest'                => array(),
 				'restricted_block_message'              => '',
 				'enable_reset_password_limit'           => true,
 				'reset_password_limit_number'           => 3,

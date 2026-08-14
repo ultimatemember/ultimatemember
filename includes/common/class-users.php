@@ -1503,14 +1503,30 @@ class Users {
 			return $can_view_user;
 		}
 
+		// Check if the current visit is from the guest.
+		if ( ! is_user_logged_in() ) {
+			if ( ! $this->has_status( $user_id, 'approved' ) ) {
+				return false;
+			}
+
+			$hidden_roles_for_guest = UM()->options()->get( 'hidden_roles_for_guest' );
+			$hidden_roles_for_guest = ! empty( $hidden_roles_for_guest ) && is_string( $hidden_roles_for_guest ) ? array( $hidden_roles_for_guest ) : $hidden_roles_for_guest;
+
+			// Check what user roles can be visible for the guests.
+			if ( ! empty( $hidden_roles_for_guest ) && is_array( $hidden_roles_for_guest ) ) {
+				foreach ( $hidden_roles_for_guest as $role ) {
+					if ( user_can( $user_id, $role ) ) {
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
 		// Check the user account status
 		if ( ! $this->can_current_user_edit_user( $user_id ) && ! $this->has_status( $user_id, 'approved' ) ) {
 			return false;
-		}
-
-		// Check if the current visit is from the guest.
-		if ( ! is_user_logged_in() && $this->has_status( $user_id, 'approved' ) ) {
-			return true; // TODO Make the visibility for guests and check what user roles can be visible for the guests.
 		}
 
 		$can_view_user = true;

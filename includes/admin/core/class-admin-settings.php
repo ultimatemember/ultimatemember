@@ -710,6 +710,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'value'       => $restricted_access_taxonomy_metabox_value,
 						'default'     => UM()->options()->get_default( 'restricted_access_taxonomy_metabox' ),
 					),
+					array(
+						'id'          => 'hidden_roles_for_guest',
+						'type'        => 'select',
+						'multi'       => true,
+						'label'       => __( 'Hide roles for guest', 'ultimate-member' ),
+						'description' => __( 'Select roles for which you plan to hide for the guest session. Leave empty for displaying all user roles for the guests.', 'ultimate-member' ),
+						'default'     => UM()->options()->get_default( 'hidden_roles_for_guest' ),
+						'options'     => UM()->roles()->get_roles(),
+					),
 				)
 			);
 
@@ -721,6 +730,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					),
 					'restricted_access_taxonomy_metabox' => array(
 						'sanitize' => 'key',
+					),
+					'hidden_roles_for_guest'             => array(
+						'sanitize' => array( UM()->admin(), 'sanitize_existed_role' ),
 					),
 				)
 			);
