@@ -33,6 +33,11 @@ class Directory extends \um\common\Directory {
 	public $is_search = false;
 
 	/**
+	 * @var bool Filtering marker
+	 */
+	public $is_filters = false;
+
+	/**
 	 * Directory constructor.
 	 */
 	public function __construct() {
@@ -811,7 +816,7 @@ class Directory extends \um\common\Directory {
 		// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 		$offset = ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) ? (int) $_POST['gmt_offset'] : 0;
 
-		$this->is_search = true;
+		$this->is_filters = true;
 		foreach ( $filter_query as $field => $value ) {
 			$field = sanitize_text_field( $field );
 			$attrs = UM()->fields()->get_field( $field );
@@ -1565,13 +1570,21 @@ class Directory extends \um\common\Directory {
 			}
 
 			if ( ! empty( $custom_fields ) ) {
-				$search_columns[] = 'um_search.meta_value';
-
+				$search_columns[]        = 'um_search.meta_value';
 				$user_query->query_from .= " INNER JOIN {$wpdb->usermeta} AS um_search ON ( {$wpdb->users}.ID = um_search.user_id AND um_search.meta_key IN('" . implode( "','", $custom_fields ) . "'))";
 			}
 
 			if ( ! empty( $search_columns ) ) {
 				$search_where = $user_query->get_search_sql( $search, $search_columns, 'both' );
+
+				if ( ! empty( $this->private_users_ids ) && ! empty( $custom_fields ) ) {
+					$search_where_custom = $user_query->get_search_sql( $search, array( 'um_search.meta_value' ), 'both' );
+					$search_where_custom = substr( str_replace( ' AND (', '', $search_where_custom ), 0, -1 );
+
+					// Exclude the private users from the search by the custom fields meta values. Searching in the metavalues are only for the available users.
+					$search_where = str_replace( $search_where_custom, '(' . $search_where_custom . " AND um_search.user_id NOT IN('" . implode( "','", $this->private_users_ids ) . "'))", $search_where );
+				}
+
 				$search_where = apply_filters( 'um_general_search_custom_search_where', $search_where, $user_query, $search );
 
 				$user_query->query_where .= $search_where;
@@ -1714,13 +1727,41 @@ class Directory extends \um\common\Directory {
 		 */
 		$this->query_args = apply_filters( 'um_prepare_user_query_args', $this->query_args, $directory_data );
 
-		//unset empty meta_query attribute
+		// Unset empty meta_query attribute
 		if ( isset( $this->query_args['meta_query']['relation'] ) && count( $this->query_args['meta_query'] ) === 1 ) {
 			unset( $this->query_args['meta_query'] );
 		}
 
 		if ( isset( $this->query_args['role__in'] ) && empty( $this->query_args['role__in'] ) ) {
 			wp_send_json_success( $this->empty_response( $directory_data ) );
+		}
+
+		$maybe_exclude_private_users = true;
+		if ( is_user_logged_in() ) {
+			$temp_id = um_user( 'ID' );
+			um_fetch_user( get_current_user_id() );
+
+			$can_access_private_profile = um_user( 'can_access_private_profile' );
+
+			if ( $temp_id ) {
+				um_fetch_user( $temp_id );
+			}
+
+			if ( $can_access_private_profile || $this->can_edit_users() ) {
+				$maybe_exclude_private_users = false;
+			}
+		}
+
+		if ( $maybe_exclude_private_users ) {
+			$private_users_ids = $this->prepare_private_users( $this );
+			if ( ! empty( $private_users_ids ) && $this->is_filters ) {
+				// Filters are related to the usermeta fields everytime, so exclude the private users from the is_filters query.
+				if ( ! empty( $this->query_args['exclude'] ) ) {
+					$this->query_args['exclude'] = array_merge( $this->query_args['exclude'], $private_users_ids );
+				} else {
+					$this->query_args['exclude'] = $private_users_ids;
+				}
+			}
 		}
 
 		/**

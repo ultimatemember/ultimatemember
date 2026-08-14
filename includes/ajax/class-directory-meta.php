@@ -614,13 +614,89 @@ class Directory_Meta extends Directory {
 			// $roles_clauses is pre-prepared.
 			$this->where_clauses[] = '( ' . implode( ' OR ', $roles_clauses ) . ' )';
 		} elseif ( ! $this->roles_in_query && is_multisite() ) {
-				// select users who have capabilities for current blog
-				$this->joins[]         = $wpdb->prepare( "LEFT JOIN {$wpdb->prefix}um_metadata umm_roles ON ( umm_roles.user_id = u.ID AND umm_roles.um_key = %s )", $wpdb->get_blog_prefix( $blog_id ) . 'capabilities' );
-				$this->where_clauses[] = 'umm_roles.um_value IS NOT NULL';
+			// select users who have capabilities for current blog
+			$this->joins[]         = $wpdb->prepare( "LEFT JOIN {$wpdb->prefix}um_metadata umm_roles ON ( umm_roles.user_id = u.ID AND umm_roles.um_key = %s )", $wpdb->get_blog_prefix( $blog_id ) . 'capabilities' );
+			$this->where_clauses[] = 'umm_roles.um_value IS NOT NULL';
 		} elseif ( $this->roles_in_query ) {
 			wp_send_json_success( $this->empty_response( $directory_data ) );
 		}
 
+		// Filters
+		$filter_query = array();
+		if ( ! empty( $directory_data['search_fields'] ) ) {
+			$search_filters = maybe_unserialize( $directory_data['search_fields'] );
+			if ( ! empty( $search_filters ) && is_array( $search_filters ) ) {
+				// phpcs:ignore WordPress.Security.NonceVerification -- verified via `UM()->check_ajax_nonce();`.
+				$filter_query = array_intersect_key( $_POST, array_flip( $search_filters ) );
+			}
+		}
+
+		// added for user tags extension integration on individual tag page
+		$ignore_empty_filters = apply_filters( 'um_member_directory_ignore_empty_filters', false );
+
+		if ( ! empty( $filter_query ) || $ignore_empty_filters ) {
+			$this->is_filters = true;
+
+			$i = 1;
+			foreach ( $filter_query as $field => $value ) {
+
+				$field = sanitize_text_field( $field );
+				if ( is_array( $value ) ) {
+					$value = array_map( 'sanitize_text_field', $value );
+				} else {
+					$value = sanitize_text_field( $value );
+				}
+
+				$attrs = UM()->fields()->get_field( $field );
+				// skip private invisible fields
+				if ( ! um_can_view_field( $attrs ) ) {
+					continue;
+				}
+
+				$this->handle_filter_query( $directory_data, $field, $value, $i );
+
+				++$i;
+			}
+		}
+
+		//unable default filter in case if we select other filters in frontend filters
+		$default_filters = array();
+		if ( ! empty( $directory_data['search_filters'] ) ) {
+			$default_filters = maybe_unserialize( $directory_data['search_filters'] );
+		}
+
+		if ( ! empty( $default_filters ) ) {
+			$i = 1;
+			foreach ( $default_filters as $field => $value ) {
+
+				$this->handle_filter_query( $directory_data, $field, $value, $i, true );
+
+				++$i;
+			}
+		}
+
+		$maybe_exclude_private_users = true;
+		if ( is_user_logged_in() ) {
+			$temp_id = um_user( 'ID' );
+			um_fetch_user( get_current_user_id() );
+
+			$can_access_private_profile = um_user( 'can_access_private_profile' );
+
+			if ( $temp_id ) {
+				um_fetch_user( $temp_id );
+			}
+
+			if ( $can_access_private_profile || $this->can_edit_users() ) {
+				$maybe_exclude_private_users = false;
+			}
+		}
+
+		$private_users_ids = array();
+		if ( $maybe_exclude_private_users ) {
+			$private_users_ids = $this->prepare_private_users( $this );
+		}
+
+		// General search.
 		if ( ! empty( $_POST['search'] ) ) {
 			$search_line = $this->prepare_search( $_POST['search'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- make this inside the function.
 			if ( ! empty( $search_line ) ) {
@@ -664,64 +740,16 @@ class Directory_Meta extends Directory {
 					$custom_fields_sql = " AND umm_search.um_key IN ('" . implode( "','", $include_fields ) . "') ";
 				}
 
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $core_search and $additional_search are pre-prepared.
-				$this->where_clauses[] = $wpdb->prepare( "( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s{$core_search}{$additional_search}){$custom_fields_sql}", $search_line, $search_like_string, '%' . $wpdb->esc_like( maybe_serialize( (string) $search_line ) ) . '%' );
+				$custom_fields_value_sql = ' umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s ';
+				if ( ! empty( $private_users_ids ) ) {
+					// Exclude the private users from the search by the custom fields meta values. Searching in the metavalues are only for the available users.
+					$custom_fields_value_sql = ' ( ( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s ) AND umm_search.user_id NOT IN( "' . implode( '","', $private_users_ids ) . '" ) ) ';
+				}
+
+				// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $core_search and $additional_search are pre-prepared.
+				$this->where_clauses[] = $wpdb->prepare( "({$custom_fields_value_sql}{$core_search}{$additional_search}){$custom_fields_sql}", $search_line, $search_like_string, '%' . $wpdb->esc_like( maybe_serialize( (string) $search_line ) ) . '%' );
 
 				$this->is_search = true;
-			}
-		}
-
-		// Filters
-		$filter_query = array();
-		if ( ! empty( $directory_data['search_fields'] ) ) {
-			$search_filters = maybe_unserialize( $directory_data['search_fields'] );
-			if ( ! empty( $search_filters ) && is_array( $search_filters ) ) {
-				// phpcs:ignore WordPress.Security.NonceVerification -- verified via `UM()->check_ajax_nonce();`.
-				$filter_query = array_intersect_key( $_POST, array_flip( $search_filters ) );
-			}
-		}
-
-		// added for user tags extension integration on individual tag page
-		$ignore_empty_filters = apply_filters( 'um_member_directory_ignore_empty_filters', false );
-
-		if ( ! empty( $filter_query ) || $ignore_empty_filters ) {
-			$this->is_search = true;
-
-			$i = 1;
-			foreach ( $filter_query as $field => $value ) {
-
-				$field = sanitize_text_field( $field );
-				if ( is_array( $value ) ) {
-					$value = array_map( 'sanitize_text_field', $value );
-				} else {
-					$value = sanitize_text_field( $value );
-				}
-
-				$attrs = UM()->fields()->get_field( $field );
-				// skip private invisible fields
-				if ( ! um_can_view_field( $attrs ) ) {
-					continue;
-				}
-
-				$this->handle_filter_query( $directory_data, $field, $value, $i );
-
-				++$i;
-			}
-		}
-
-		//unable default filter in case if we select other filters in frontend filters
-		$default_filters = array();
-		if ( ! empty( $directory_data['search_filters'] ) ) {
-			$default_filters = maybe_unserialize( $directory_data['search_filters'] );
-		}
-
-		if ( ! empty( $default_filters ) ) {
-			$i = 1;
-			foreach ( $default_filters as $field => $value ) {
-
-				$this->handle_filter_query( $directory_data, $field, $value, $i, true );
-
-				++$i;
 			}
 		}
 
@@ -926,6 +954,11 @@ class Directory_Meta extends Directory {
 		}
 
 		do_action( 'um_pre_users_query', $this, $directory_data, $sortby );
+
+		if ( ! empty( $private_users_ids ) && $this->is_filters ) {
+			// Filters are related to the usermeta fields everytime, so exclude the private users from the is_filters query.
+			$this->where_clauses[] = "u.ID NOT IN ( '" . implode( "','", $private_users_ids ) . "' )";
+		}
 
 		$sql_select = esc_sql( $this->select );
 		$sql_having = esc_sql( $this->having );

@@ -35,6 +35,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		public $is_search = false;
 
 		/**
+		 * @var bool Filtering marker
+		 */
+		public $is_filters = false;
+
+		/**
 		 * Member_Directory constructor.
 		 */
 		public function __construct() {
@@ -1311,7 +1316,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				return;
 			}
 
-			$this->is_search = true;
+			$this->is_filters = true;
 			foreach ( $filter_query as $field => $value ) {
 				$field = sanitize_text_field( $field );
 				if ( is_array( $value ) ) {
@@ -2325,13 +2330,21 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				}
 
 				if ( ! empty( $custom_fields ) ) {
-					$search_columns[] = 'um_search.meta_value';
-
+					$search_columns[]        = 'um_search.meta_value';
 					$user_query->query_from .= " INNER JOIN {$wpdb->usermeta} AS um_search ON ( {$wpdb->users}.ID = um_search.user_id AND um_search.meta_key IN('" . implode( "','", $custom_fields ) . "'))";
 				}
 
 				if ( ! empty( $search_columns ) ) {
 					$search_where = $user_query->get_search_sql( $search, $search_columns, 'both' );
+
+					if ( ! empty( $this->private_users_ids ) && ! empty( $custom_fields ) ) {
+						$search_where_custom = $user_query->get_search_sql( $search, array( 'um_search.meta_value' ), 'both' );
+						$search_where_custom = substr( str_replace( ' AND (', '', $search_where_custom ), 0, -1 );
+
+						// Exclude the private users from the search by the custom fields meta values. Searching in the metavalues are only for the available users.
+						$search_where = str_replace( $search_where_custom, '(' . $search_where_custom . " AND um_search.user_id NOT IN('" . implode( "','", $this->private_users_ids ) . "'))", $search_where );
+					}
+
 					$search_where = apply_filters( 'um_general_search_custom_search_where', $search_where, $user_query, $search );
 
 					$user_query->query_where .= $search_where;
@@ -2457,14 +2470,44 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 
 			if ( isset( $this->query_args['role__in'] ) && empty( $this->query_args['role__in'] ) ) {
-				$member_directory_response = apply_filters( 'um_ajax_get_members_response', array(
-					'pagination'    => $this->calculate_pagination( $directory_data, 0 ),
-					'users'         => array(),
-					'is_search'     => $this->is_search,
-				), $directory_data );
+				$member_directory_response = array(
+					'pagination' => $this->calculate_pagination( $directory_data, 0 ),
+					'users'      => array(),
+					'is_search'  => $this->is_search || $this->is_filters,
+				);
+				$member_directory_response = apply_filters( 'um_ajax_get_members_response', $member_directory_response, $directory_data );
 
 				wp_send_json_success( $member_directory_response );
 			}
+
+			$maybe_exclude_private_users = true;
+			if ( is_user_logged_in() ) {
+				$temp_id = um_user( 'ID' );
+				um_fetch_user( get_current_user_id() );
+
+				$can_access_private_profile = um_user( 'can_access_private_profile' );
+
+				if ( $temp_id ) {
+					um_fetch_user( $temp_id );
+				}
+
+				if ( $can_access_private_profile || $this->can_edit_users() ) {
+					$maybe_exclude_private_users = false;
+				}
+			}
+
+			if ( $maybe_exclude_private_users ) {
+				$private_users_ids = $this->prepare_private_users( $this );
+				if ( ! empty( $private_users_ids ) && $this->is_filters ) {
+					// Filters are related to the usermeta fields everytime, so exclude the private users from the is_filters query.
+					if ( ! empty( $this->query_args['exclude'] ) ) {
+						$this->query_args['exclude'] = array_merge( $this->query_args['exclude'], $private_users_ids );
+					} else {
+						$this->query_args['exclude'] = $private_users_ids;
+					}
+				}
+			}
+
 			/**
 			 * Fires just before the users query for getting users in member directory.
 			 *
@@ -2542,11 +2585,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			um_reset_user();
 			// end of user card
 
-			$member_directory_response = apply_filters( 'um_ajax_get_members_response', array(
+			$member_directory_response = array(
 				'pagination'    => $pagination_data,
 				'users'         => $users,
-				'is_search'     => $this->is_search,
-			), $directory_data );
+				'is_search'     => $this->is_search || $this->is_filters,
+			);
+			$member_directory_response = apply_filters( 'um_ajax_get_members_response', $member_directory_response, $directory_data );
 
 			wp_send_json_success( $member_directory_response );
 		}

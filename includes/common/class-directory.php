@@ -14,6 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Directory extends Directory_Config {
 
+	public $private_users_ids = array();
+
 	/**
 	 * Directory constructor.
 	 */
@@ -693,6 +695,74 @@ class Directory extends Directory_Config {
 		}
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		return $pre_query_results;
+	}
+
+	/**
+	 * Prepares a list of private users based on roles and privacy settings.
+	 * Filters users who have the capability to make their profiles private and excludes certain users based on criteria.
+	 *
+	 * @param object $class_instance The instance of the class that contains query arguments and roles for filtering.
+	 *
+	 * @return array An array of user IDs representing private users.
+	 */
+	public function prepare_private_users( $class_instance ) {
+		$role_in   = array();
+		$all_roles = array_keys( UM()->roles()->get_roles() );
+		foreach ( $all_roles as $role ) {
+			$role_data = UM()->roles()->role_data( $role );
+			if ( ! empty( $role_data['can_make_private_profile'] ) ) {
+				$role_in[] = $role;
+			}
+		}
+
+		// Probably we don't need to check for `profile_privacy` because private profiles are not visible on the member directory due to predefined or filtered roles.
+		if ( ! empty( $role_in ) && ! empty( $class_instance->query_args['role__in'] ) ) {
+			// WP_Users_Query case where the `role_in` query argument is used.
+			$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
+
+			$role_in = array_intersect( $role_in, $this->query_args['role__in'] );
+		} elseif ( ! empty( $role_in ) && ! empty( $class_instance->roles ) ) {
+			// UM custom usermeta DB case where the `roles` instance property is used.
+			$role_in = array_intersect( $role_in, $class_instance->roles );
+		}
+
+		$privacy_users = array();
+		if ( ! empty( $role_in ) ) {
+			$privacy_users = get_users(
+				array(
+					'number'     => -1,
+					'role__in'   => $role_in, // search only users having role with `can_make_private_profile` capability.
+					'meta_query' => array(
+						'relation' => 'AND',
+						array(
+							'key'     => 'profile_privacy',
+							'value'   => 'Everyone', // exclude public user profiles.
+							'compare' => '!=',
+						),
+						array(
+							'key'     => 'profile_privacy',
+							'value'   => __( 'Everyone', 'ultimate-member' ),
+							'compare' => '!=',
+						),
+					),
+					'exclude'    => is_user_logged_in() ? array( get_current_user_id() ) : array(), // if current user is logged in and private, exclude them from the query because info is visible.
+					'fields'     => 'ids',
+				)
+			);
+		}
+
+		if ( ! empty( $privacy_users ) && is_user_logged_in() ) {
+			foreach ( $privacy_users as $k => $privacy_user_id ) {
+				$can_view = UM()->common()->users()->can_view_private_user_profile( $privacy_user_id );
+				if ( $can_view ) {
+					unset( $privacy_users[ $k ] );
+				}
+			}
+		}
+
+		$this->private_users_ids = $privacy_users;
+
+		return $privacy_users;
 	}
 
 	/**
