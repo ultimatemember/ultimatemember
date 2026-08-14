@@ -83,12 +83,37 @@ class Fields {
 			$arr_options['items'] = $ajax_source_func( $parent_options, sanitize_text_field( $_POST['parent_option_name'] ) );
 
 			if ( true !== $disable_filters_pre_query ) {
+				// Checking for users privacy and visibility on the member directory.
+				$hide_in_members   = '%s:15:"hide_in_members";b:0;%';
+				$account_status    = '%s:14:"account_status";s:8:"approved";%';
+				$private_users_ids = UM()->member_directory()->prepare_private_users();
+
+				$join_clause  = '';
+				$where_clause = '';
+				if ( UM()->options()->get( 'account_hide_in_directory' ) && ! UM()->member_directory()->can_edit_users() ) {
+					$join_clause  .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
+					$where_clause .= " AND um2.meta_value LIKE '%" . $hide_in_members . "'"; // don't remove % here because $wpdb->prepare is used below and it think that %s is the placeholder.
+				}
+
+				if ( ! UM()->member_directory()->can_edit_users() ) {
+					if ( empty( $join_clause ) ) {
+						$join_clause .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
+					}
+					$where_clause .= " AND um2.meta_value LIKE '%" . $account_status . "'"; // don't remove % here because $wpdb->prepare is used below and it think that %s is the placeholder.
+				}
+
+				if ( ! is_null( $private_users_ids ) ) {
+					$where_clause .= " AND um.user_id NOT IN (' " . implode( "','", $private_users_ids ) . " ')";
+				}
+
 				$values_array = $wpdb->get_col(
 					$wpdb->prepare(
-						"SELECT DISTINCT meta_value
-						FROM $wpdb->usermeta
-						WHERE meta_key = %s AND
-							  meta_value != ''",
+						"SELECT DISTINCT um.meta_value
+						FROM $wpdb->usermeta um
+						{$join_clause}
+						WHERE um.meta_key = %s AND
+							  um.meta_value != ''
+							  {$where_clause}",
 						$child_name
 					)
 				);

@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Directory extends Directory_Config {
 
-	public $private_users_ids = array();
+	public $private_users_ids = null;
 
 	/**
 	 * Directory constructor.
@@ -550,8 +550,9 @@ class Directory extends Directory_Config {
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_clause and $where_clause is code generated variables ok.
 		global $wpdb;
 
-		$hide_in_members = '%s:15:"hide_in_members";b:0;%';
-		$account_status  = '%s:14:"account_status";s:8:"approved";%';
+		$hide_in_members   = '%s:15:"hide_in_members";b:0;%';
+		$account_status    = '%s:14:"account_status";s:8:"approved";%';
+		$private_users_ids = $this->prepare_private_users( $directory_data );
 
 		if ( 'role' === $filter ) {
 			if ( $admin ) {
@@ -572,6 +573,10 @@ class Directory extends Directory_Config {
 					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
 				}
 				$where_clause .= " AND um2.meta_value LIKE '" . $account_status . "'";
+			}
+
+			if ( ! is_null( $private_users_ids ) ) {
+				$where_clause .= " AND um.user_id NOT IN (' " . implode( "','", $private_users_ids ) . " ')";
 			}
 
 			$pre_query_results = $wpdb->get_row(
@@ -600,6 +605,10 @@ class Directory extends Directory_Config {
 				$where_clause .= " AND um.meta_value LIKE '" . $account_status . "'";
 			}
 
+			if ( ! is_null( $private_users_ids ) ) {
+				$where_clause .= " AND u.ID NOT IN (' " . implode( "','", $private_users_ids ) . " ')";
+			}
+
 			$pre_query_results = $wpdb->get_col(
 				"SELECT DISTINCT user_registered
 				FROM {$wpdb->users} u
@@ -620,6 +629,10 @@ class Directory extends Directory_Config {
 					$join_clause .= "LEFT JOIN {$wpdb->usermeta} um2 ON um2.user_id = um.user_id AND um2.meta_key = 'um_member_directory_data'";
 				}
 				$where_clause .= " AND um2.meta_value LIKE '%" . $account_status . "'"; // don't remove % here because $wpdb->prepare is used below and it think that %s is the placeholder.
+			}
+
+			if ( ! is_null( $private_users_ids ) ) {
+				$where_clause .= " AND um.user_id NOT IN (' " . implode( "','", $private_users_ids ) . " ')";
 			}
 
 			$pre_query_results = $wpdb->get_row(
@@ -651,6 +664,10 @@ class Directory extends Directory_Config {
 				$where_clause .= " AND um2.meta_value LIKE '%" . $account_status . "'"; // don't remove % here because $wpdb->prepare is used below and it think that %s is the placeholder.
 			}
 
+			if ( ! is_null( $private_users_ids ) ) {
+				$where_clause .= " AND um.user_id NOT IN (' " . implode( "','", $private_users_ids ) . " ')";
+			}
+
 			$pre_query_results = $wpdb->get_row(
 				$wpdb->prepare(
 					"SELECT MIN( CONVERT( um.meta_value, DECIMAL ) ) as min_meta,
@@ -680,6 +697,10 @@ class Directory extends Directory_Config {
 				$where_clause .= " AND um2.meta_value LIKE '%" . $account_status . "'"; // don't remove % here because $wpdb->prepare is used below and it think that %s is the placeholder.
 			}
 
+			if ( ! is_null( $private_users_ids ) ) {
+				$where_clause .= " AND um.user_id NOT IN (' " . implode( "','", $private_users_ids ) . " ')";
+			}
+
 			$pre_query_results = $wpdb->get_col(
 				$wpdb->prepare(
 					"SELECT DISTINCT um.meta_value
@@ -701,11 +722,15 @@ class Directory extends Directory_Config {
 	 * Prepares a list of private users based on roles and privacy settings.
 	 * Filters users who have the capability to make their profiles private and excludes certain users based on criteria.
 	 *
-	 * @param object $class_instance The instance of the class that contains query arguments and roles for filtering.
+	 * @param object|null $class_instance The instance of the class that contains query arguments and roles for filtering.
 	 *
 	 * @return array An array of user IDs representing private users.
 	 */
-	public function prepare_private_users( $class_instance ) {
+	public function prepare_private_users( $class_instance = null ) {
+		if ( ! is_null( $this->private_users_ids ) ) {
+			return $this->private_users_ids;
+		}
+
 		$role_in   = array();
 		$all_roles = array_keys( UM()->roles()->get_roles() );
 		foreach ( $all_roles as $role ) {
@@ -715,15 +740,17 @@ class Directory extends Directory_Config {
 			}
 		}
 
-		// Probably we don't need to check for `profile_privacy` because private profiles are not visible on the member directory due to predefined or filtered roles.
-		if ( ! empty( $role_in ) && ! empty( $class_instance->query_args['role__in'] ) ) {
-			// WP_Users_Query case where the `role_in` query argument is used.
-			$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
+		if ( ! is_null( $class_instance ) ) {
+			// Probably we don't need to check for `profile_privacy` because private profiles are not visible on the member directory due to predefined or filtered roles.
+			if ( ! empty( $role_in ) && ! empty( $class_instance->query_args['role__in'] ) ) {
+				// WP_Users_Query case where the `role_in` query argument is used.
+				$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
 
-			$role_in = array_intersect( $role_in, $this->query_args['role__in'] );
-		} elseif ( ! empty( $role_in ) && ! empty( $class_instance->roles ) ) {
-			// UM custom usermeta DB case where the `roles` instance property is used.
-			$role_in = array_intersect( $role_in, $class_instance->roles );
+				$role_in = array_intersect( $role_in, $this->query_args['role__in'] );
+			} elseif ( ! empty( $role_in ) && ! empty( $class_instance->roles ) ) {
+				// UM custom usermeta DB case where the `roles` instance property is used.
+				$role_in = array_intersect( $role_in, $class_instance->roles );
+			}
 		}
 
 		$privacy_users = array();
@@ -829,261 +856,6 @@ class Directory extends Directory_Config {
 		}
 
 		return $placeholders;
-	}
-
-	/**
-	 * Handle members can view restrictions.
-	 */
-	protected function restriction_options() {
-//		$this->hide_not_approved();
-		$this->hide_by_role();
-
-		do_action( 'um_member_directory_restrictions_handle_extend' );
-	}
-
-	/**
-	 *
-	 */
-//	private function hide_not_approved() {
-//		if ( UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
-//			return;
-//		}
-//
-//		if ( is_multisite() ) {
-//			global $wpdb;
-//
-//			$this->query_args['meta_query'] = array_merge(
-//				$this->query_args['meta_query'],
-//				array(
-//					'relation' => 'OR',
-//					array(
-//						'key'     => $wpdb->get_blog_prefix() . 'um_member_directory_data',
-//						'value'   => 's:14:"account_status";s:8:"approved";',
-//						'compare' => 'LIKE',
-//					),
-//					array( // fallback when `um_member_directory_data` was network-wide.
-//						'key'     => 'um_member_directory_data',
-//						'value'   => 's:14:"account_status";s:8:"approved";',
-//						'compare' => 'LIKE',
-//					),
-//				)
-//			);
-//		} else {
-//			$this->query_args['meta_query'] = array_merge(
-//				$this->query_args['meta_query'],
-//				array(
-//					array(
-//						'key'     => 'um_member_directory_data',
-//						'value'   => 's:14:"account_status";s:8:"approved";',
-//						'compare' => 'LIKE',
-//					),
-//				)
-//			);
-//		}
-//	}
-
-	/**
-	 *
-	 */
-	private function hide_by_role() {
-		if ( ! is_user_logged_in() ) {
-			return;
-		}
-
-		$roles = um_user( 'can_view_roles' );
-		$roles = maybe_unserialize( $roles );
-
-		if ( empty( $roles ) && UM()->roles()->um_user_can( 'can_view_all' ) ) {
-			return;
-		}
-
-		if ( ! empty( $this->query_args['role__in'] ) ) {
-			$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
-			$this->query_args['role__in'] = array_intersect( $this->query_args['role__in'], $roles );
-		} else {
-			$this->query_args['role__in'] = $roles;
-		}
-	}
-
-	/**
-	 * Handle "General Options" metabox settings
-	 *
-	 * @param array $directory_data
-	 */
-	private function general_options( $directory_data ) {
-		$this->show_selected_roles( $directory_data );
-		$this->show_only_with_avatar( $directory_data );
-		$this->show_only_with_cover( $directory_data );
-		$this->show_only_these_users( $directory_data );
-		$this->exclude_these_users( $directory_data );
-
-		do_action( 'um_member_directory_general_options_handle_extend', $directory_data );
-	}
-
-	/**
-	 * Handle "User Roles to Display" option
-	 *
-	 * @param array $directory_data
-	 */
-	private function show_selected_roles( $directory_data ) {
-		// add roles to appear in directory
-		if ( empty( $directory_data['roles'] ) ) {
-			return;
-		}
-
-		// Since WP4.4 use 'role__in' argument
-		if ( ! empty( $this->query_args['role__in'] ) ) {
-			$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
-			$this->query_args['role__in'] = array_intersect( $this->query_args['role__in'], maybe_unserialize( $directory_data['roles'] ) );
-		} else {
-			$this->query_args['role__in'] = maybe_unserialize( $directory_data['roles'] );
-		}
-	}
-
-	/**
-	 * Handle "Only show members who have uploaded a profile photo" option
-	 *
-	 * @param array $directory_data
-	 */
-	private function show_only_with_avatar( $directory_data ) {
-		if ( empty( $directory_data['has_profile_photo'] ) ) {
-			return;
-		}
-
-		if ( is_multisite() ) {
-			global $wpdb;
-			$this->query_args['meta_query'] = array_merge(
-				$this->query_args['meta_query'],
-				array(
-					'relation' => 'OR',
-					array(
-						'key'     => $wpdb->get_blog_prefix() . 'um_member_directory_data',
-						'value'   => 's:13:"profile_photo";b:1;',
-						'compare' => 'LIKE',
-					),
-					array( // fallback when `um_member_directory_data` was network-wide.
-						'key'     => 'um_member_directory_data',
-						'value'   => 's:13:"profile_photo";b:1;',
-						'compare' => 'LIKE',
-					),
-				)
-			);
-		} else {
-			$this->query_args['meta_query'] = array_merge(
-				$this->query_args['meta_query'],
-				array(
-					array(
-						'key'     => 'um_member_directory_data',
-						'value'   => 's:13:"profile_photo";b:1;',
-						'compare' => 'LIKE',
-					),
-				)
-			);
-		}
-	}
-
-	/**
-	 * Handle "Only show members who have uploaded a cover photo" option
-	 *
-	 * @param array $directory_data
-	 */
-	private function show_only_with_cover( $directory_data ) {
-		if ( empty( $directory_data['has_cover_photo'] ) ) {
-			return;
-		}
-
-		if ( is_multisite() ) {
-			global $wpdb;
-			$this->query_args['meta_query'] = array_merge(
-				$this->query_args['meta_query'],
-				array(
-					'relation' => 'OR',
-					array(
-						'key'     => $wpdb->get_blog_prefix() . 'um_member_directory_data',
-						'value'   => 's:11:"cover_photo";b:1;',
-						'compare' => 'LIKE',
-					),
-					array( // fallback when `um_member_directory_data` was network-wide.
-						'key'     => 'um_member_directory_data',
-						'value'   => 's:11:"cover_photo";b:1;',
-						'compare' => 'LIKE',
-					),
-				)
-			);
-		} else {
-			$this->query_args['meta_query'] = array_merge(
-				$this->query_args['meta_query'],
-				array(
-					array(
-						'key'     => 'um_member_directory_data',
-						'value'   => 's:11:"cover_photo";b:1;',
-						'compare' => 'LIKE',
-					),
-				)
-			);
-		}
-	}
-
-	/**
-	 * Handle "Only show specific users (Enter one username per line)" option
-	 *
-	 * @param array $directory_data
-	 */
-	private function show_only_these_users( $directory_data ) {
-		if ( empty( $directory_data['show_these_users'] ) ) {
-			return;
-		}
-
-		$show_these_users = maybe_unserialize( $directory_data['show_these_users'] );
-		if ( is_array( $show_these_users ) && ! empty( $show_these_users ) ) {
-			$users_array = array();
-			foreach ( $show_these_users as $username ) {
-				$exists_id = username_exists( $username );
-				if ( false !== $exists_id ) {
-					$users_array[] = $exists_id;
-				}
-			}
-
-			if ( ! empty( $users_array ) ) {
-				if ( ! empty( $this->query_args['include'] ) ) {
-					$this->query_args['include'] = is_array( $this->query_args['include'] ) ? $this->query_args['include'] : array( $this->query_args['include'] );
-					$this->query_args['include'] = array_intersect( $this->query_args['include'], $users_array );
-				} else {
-					$this->query_args['include'] = $users_array;
-				}
-			}
-		}
-	}
-
-	/**
-	 * Handle "Exclude specific users (Enter one username per line)" option
-	 *
-	 * @param array $directory_data
-	 */
-	private function exclude_these_users( $directory_data ) {
-		if ( empty( $directory_data['exclude_these_users'] ) ) {
-			return;
-		}
-
-		$exclude_these_users = maybe_unserialize( $directory_data['exclude_these_users'] );
-		if ( is_array( $exclude_these_users ) && ! empty( $exclude_these_users ) ) {
-			$users_array = array();
-			foreach ( $exclude_these_users as $username ) {
-				$exists_id = username_exists( $username );
-				if ( false !== $exists_id ) {
-					$users_array[] = $exists_id;
-				}
-			}
-
-			if ( ! empty( $users_array ) ) {
-				if ( ! empty( $this->query_args['exclude'] ) ) {
-					$this->query_args['exclude'] = is_array( $this->query_args['exclude'] ) ? $this->query_args['exclude'] : array( $this->query_args['exclude'] );
-					$this->query_args['exclude'] = array_intersect( $this->query_args['exclude'], $users_array );
-				} else {
-					$this->query_args['exclude'] = $users_array;
-				}
-			}
-		}
 	}
 
 	/**
