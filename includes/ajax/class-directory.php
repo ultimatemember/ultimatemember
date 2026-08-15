@@ -1741,13 +1741,8 @@ class Directory extends \um\common\Directory {
 			$hidden_roles_for_guest = ! empty( $hidden_roles_for_guest ) && is_string( $hidden_roles_for_guest ) ? array( $hidden_roles_for_guest ) : $hidden_roles_for_guest;
 
 			if ( ! empty( $hidden_roles_for_guest ) ) {
-				if ( ! empty( $this->query_args['role__in'] ) ) {
-					// Remove user roles that are invisible for the guests.
-					$this->query_args['role__in'] = array_diff( $this->query_args['role__in'], $hidden_roles_for_guest );
-				} else {
-					// Remove user roles that are invisible for the guests.
-					$this->query_args['role__not_in'] = ! empty( $this->query_args['role__not_in'] ) ? array_merge( $this->query_args['role__not_in'], $hidden_roles_for_guest ) : $hidden_roles_for_guest;
-				}
+				// Remove user roles that are invisible for the guests.
+				$this->query_args['role__not_in'] = ! empty( $this->query_args['role__not_in'] ) ? array_merge( $this->query_args['role__not_in'], $hidden_roles_for_guest ) : $hidden_roles_for_guest;
 			}
 		}
 

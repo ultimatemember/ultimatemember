@@ -598,18 +598,15 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				$this->roles_in_query = true;
 			}
 
+			// Check for hidden roles for guest.
+			$hidden_roles_for_guest = array();
+			if ( ! is_user_logged_in() ) {
+				$hidden_roles_for_guest = UM()->options()->get( 'hidden_roles_for_guest' );
+				$hidden_roles_for_guest = ! empty( $hidden_roles_for_guest ) && is_string( $hidden_roles_for_guest ) ? array( $hidden_roles_for_guest ) : $hidden_roles_for_guest;
+			}
+
 			if ( ! empty( $this->roles ) ) {
 				$this->joins[] = $wpdb->prepare( "LEFT JOIN {$wpdb->prefix}um_metadata umm_roles ON ( umm_roles.user_id = u.ID AND umm_roles.um_key = %s )", $wpdb->get_blog_prefix( $blog_id ) . 'capabilities' );
-
-				if ( ! is_user_logged_in() ) {
-					$hidden_roles_for_guest = UM()->options()->get( 'hidden_roles_for_guest' );
-					$hidden_roles_for_guest = ! empty( $hidden_roles_for_guest ) && is_string( $hidden_roles_for_guest ) ? array( $hidden_roles_for_guest ) : $hidden_roles_for_guest;
-
-					if ( ! empty( $hidden_roles_for_guest ) ) {
-						// Remove user roles that are invisible for the guests.
-						$this->roles = array_diff( $this->roles, $hidden_roles_for_guest );
-					}
-				}
 
 				$roles_clauses = array();
 				foreach ( $this->roles as $role ) {
@@ -620,32 +617,33 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				if ( $roles_clauses ) {
 					$this->where_clauses[] = '( ' . implode( ' OR ', $roles_clauses ) . ' )';
 				}
-			} elseif ( ! $this->roles_in_query ) {
-				if ( is_multisite() ) {
-					// select users who have capabilities for current blog
-					$this->joins[]         = $wpdb->prepare( "LEFT JOIN {$wpdb->prefix}um_metadata umm_roles ON ( umm_roles.user_id = u.ID AND umm_roles.um_key = %s )", $wpdb->get_blog_prefix( $blog_id ) . 'capabilities' );
-					$this->where_clauses[] = 'umm_roles.um_value IS NOT NULL';
-				}
 
-				if ( ! is_user_logged_in() ) {
-					$hidden_roles_for_guest = UM()->options()->get( 'hidden_roles_for_guest' );
-					$hidden_roles_for_guest = ! empty( $hidden_roles_for_guest ) && is_string( $hidden_roles_for_guest ) ? array( $hidden_roles_for_guest ) : $hidden_roles_for_guest;
-
-					if ( ! empty( $hidden_roles_for_guest ) ) {
-						if ( ! is_multisite() ) {
-							$this->joins[] = $wpdb->prepare( "LEFT JOIN {$wpdb->prefix}um_metadata umm_roles ON ( umm_roles.user_id = u.ID AND umm_roles.um_key = %s )", $wpdb->get_blog_prefix( $blog_id ) . 'capabilities' );
-						}
-
-						$roles_clauses = array();
-						foreach ( $hidden_roles_for_guest as $role ) {
-							$roles_clauses[] = $wpdb->prepare( 'umm_roles.um_value NOT LIKE %s', '%"' . $wpdb->esc_like( $role ) . '"%' );
-						}
-
-						// $roles_clauses is pre-prepared.
-						if ( $roles_clauses ) {
-							$this->where_clauses[] = '( ' . implode( ' AND ', $roles_clauses ) . ' )';
-						}
+				// Check for hidden roles for guest.
+				$not_roles_clauses = array();
+				if ( ! empty( $hidden_roles_for_guest ) ) {
+					foreach ( $hidden_roles_for_guest as $role ) {
+						$not_roles_clauses[] = $wpdb->prepare( 'umm_roles.um_value NOT LIKE %s', '%"' . $wpdb->esc_like( $role ) . '"%' );
 					}
+				}
+				// $not_roles_clauses is pre-prepared.
+				if ( $not_roles_clauses ) {
+					$this->where_clauses[] = '( ' . implode( ' AND ', $not_roles_clauses ) . ' )';
+				}
+			} elseif ( ! $this->roles_in_query && is_multisite() ) {
+				// select users who have capabilities for current blog
+				$this->joins[]         = $wpdb->prepare( "LEFT JOIN {$wpdb->prefix}um_metadata umm_roles ON ( umm_roles.user_id = u.ID AND umm_roles.um_key = %s )", $wpdb->get_blog_prefix( $blog_id ) . 'capabilities' );
+				$this->where_clauses[] = 'umm_roles.um_value IS NOT NULL';
+
+				// Check for hidden roles for guest.
+				$not_roles_clauses = array();
+				if ( ! empty( $hidden_roles_for_guest ) ) {
+					foreach ( $hidden_roles_for_guest as $role ) {
+						$not_roles_clauses[] = $wpdb->prepare( 'umm_roles.um_value NOT LIKE %s', '%"' . $wpdb->esc_like( $role ) . '"%' );
+					}
+				}
+				// $not_roles_clauses is pre-prepared.
+				if ( $not_roles_clauses ) {
+					$this->where_clauses[] = '( ' . implode( ' AND ', $not_roles_clauses ) . ' )';
 				}
 			} else {
 				$member_directory_response = array(
