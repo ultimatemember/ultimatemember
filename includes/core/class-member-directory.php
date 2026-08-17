@@ -858,15 +858,20 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					global $wpdb;
 
 					if ( $attrs['metakey'] != 'role_select' ) {
-						$values_array = $wpdb->get_col(
-							$wpdb->prepare(
-								"SELECT DISTINCT meta_value
-								FROM $wpdb->usermeta
-								WHERE meta_key = %s AND
-									  meta_value != ''",
-								$attrs['metakey']
-							)
-						);
+						$directory_roles = get_post_meta( absint( $directory_data['form_id'] ), '_um_roles', true );
+						if ( ! empty( $directory_roles ) && is_array( $directory_roles ) ) {
+							$values_array = $this->get_filter_values_in_roles( $attrs['metakey'], $directory_roles );
+						} else {
+							$values_array = $wpdb->get_col(
+								$wpdb->prepare(
+									"SELECT DISTINCT meta_value
+									FROM $wpdb->usermeta
+									WHERE meta_key = %s AND
+										  meta_value != ''",
+									$attrs['metakey']
+								)
+							);
+						}
 					} else {
 						$users_roles = count_users();
 						$values_array = ( ! empty( $users_roles['avail_roles'] ) && is_array( $users_roles['avail_roles'] ) ) ? array_keys( array_filter( $users_roles['avail_roles'] ) ) : array();
@@ -1128,6 +1133,35 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$filter = ob_get_clean();
 			return $filter;
+		}
+
+
+		/**
+		 * Get distinct meta values of a filter collected from users with the roles displayed in the member directory only
+		 *
+		 * @param string $metakey Filter field metakey.
+		 * @param array  $roles   Roles displayed in the member directory.
+		 *
+		 * @return array
+		 */
+		public function get_filter_values_in_roles( $metakey, $roles ) {
+			global $wpdb;
+
+			$capabilities_meta_key = $wpdb->get_blog_prefix() . 'capabilities';
+
+			$roles_clauses = array();
+			foreach ( $roles as $role ) {
+				$roles_clauses[] = $wpdb->prepare( 'usercaps.meta_value LIKE %s', '%"' . $wpdb->esc_like( $role ) . '"%' );
+			}
+
+			return $wpdb->get_col(
+				'SELECT DISTINCT umeta.meta_value
+				FROM ' . $wpdb->usermeta . ' AS umeta
+				INNER JOIN ' . $wpdb->usermeta . ' AS usercaps ON usercaps.user_id = umeta.user_id
+					AND ' . $wpdb->prepare( 'usercaps.meta_key = %s', $capabilities_meta_key ) . '
+					AND ( ' . implode( ' OR ', $roles_clauses ) . ' )
+				WHERE ' . $wpdb->prepare( 'umeta.meta_key = %s AND umeta.meta_value != \'\'', $metakey )
+			);
 		}
 
 
