@@ -952,8 +952,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'public'   => 1,
 					'editable' => true,
 					'options'  => array(
-						__( 'Male', 'ultimate-member' ),
-						__( 'Female', 'ultimate-member' ),
+						__( 'Male', 'ultimate-member' )   => __( 'Male', 'ultimate-member' ),
+						__( 'Female', 'ultimate-member' ) => __( 'Female', 'ultimate-member' ),
 					),
 				),
 
