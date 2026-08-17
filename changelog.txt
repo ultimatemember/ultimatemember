@@ -1,5 +1,11 @@
 ﻿== Changelog ==
 
+= 2.12.2 August 17, 2026 =
+
+* Bugfixes:
+
+  - Fixed: Added an upgrade routine to update the stored country names in forms and user profiles after the "Türkiye" and "North Macedonia" renames.
+
 = 2.12.1 July 06, 2026 =
 
 * Enhancements:
