@@ -156,8 +156,10 @@ function um_submit_form_errors_hook( $submitted_data, $form_data ) {
 		 *
 		 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
 		 * 10 - `um_submit_form_errors_hook_login()` Native login validation handlers.
+		 * 20 - `um_submit_form_errors_hook_login_custom_fields()` Custom fields required validation.
 		 *
 		 * @since 1.3.x
+		 * @since 2.12.2 Custom fields required validation added.
 		 * @hook um_submit_form_errors_hook_login
 		 *
 		 * @param {array} $submitted_data $_POST Submission array.
