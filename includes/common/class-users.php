@@ -1049,4 +1049,357 @@ class Users {
 		// Flush user cache after updating last_login timestamp.
 		UM()->user()->remove_cache( $user_id );
 	}
+
+	/**
+	 * Check if the current user can view a specific user.
+	 *
+	 * @param int      $user_id      The user ID to check if you can view
+	 * @param int|null $current_user The ID of the current user. Default is null.
+	 *
+	 * @return bool True if the user can be viewed, false otherwise
+	 *
+	 * @since 3.0.0
+	 */
+	public function can_view_user( $user_id, $current_user = null ) {
+		if ( is_null( $current_user ) ) {
+			$current_user = get_current_user_id();
+		}
+
+		$user_id      = absint( $user_id );
+		$current_user = absint( $current_user );
+
+		$user_id = absint( $user_id );
+		if ( ! self::user_exists( $user_id ) ) {
+			return false;
+		}
+
+		if ( $user_id === $current_user ) {
+			return true;
+		}
+
+		/**
+		 * Filters the marker for user capabilities to view other users on the website
+		 *
+		 * @param {null|bool} $can_view     Can view user marker.
+		 * @param {int}       $user_id      User ID requested to check capabilities for.
+		 * @param {int}       $current_user Current user.
+		 *
+		 * @return {null|bool} Can view user marker. By default, it's null for using UM native logic.
+		 *
+		 * @since 3.0.0
+		 * @hook um_can_view_user
+		 *
+		 * @example <caption>Set that only user with ID=5 can be viewed on Profile page.</caption>
+		 * function my_um_can_view_user( $can_view_user, $user_id, $current_user ) {
+		 *     $can_view_user = 5 === $user_id;
+		 *     return $can_view_user;
+		 * }
+		 * add_filter( 'um_can_view_user', 'my_um_can_view_user', 10, 3 );
+		 */
+		$can_view_user = apply_filters( 'um_can_view_user', null, $user_id, $current_user );
+		if ( ! is_null( $can_view_user ) ) {
+			return $can_view_user;
+		}
+
+		// Check if the current visit is from the guest.
+		if ( ! is_user_logged_in() ) {
+			if ( ! $this->has_status( $user_id, 'approved' ) ) {
+				return false;
+			}
+
+			$hidden_roles_for_guest = UM()->options()->get( 'hidden_roles_for_guest' );
+			$hidden_roles_for_guest = ! empty( $hidden_roles_for_guest ) && is_string( $hidden_roles_for_guest ) ? array( $hidden_roles_for_guest ) : $hidden_roles_for_guest;
+
+			// Check what user roles can be visible for the guests.
+			if ( ! empty( $hidden_roles_for_guest ) && is_array( $hidden_roles_for_guest ) ) {
+				foreach ( $hidden_roles_for_guest as $role ) {
+					if ( user_can( $user_id, $role ) ) {
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
+		// Check the user account status
+		if ( ! $this->can_current_user_edit_user( $user_id ) && ! $this->has_status( $user_id, 'approved' ) ) {
+			return false;
+		}
+
+		$can_view_user = true;
+
+		$temp_id = um_user( 'ID' );
+		um_fetch_user( $current_user );
+
+		$can_view_all = um_user( 'can_view_all' );
+		if ( empty( $can_view_all ) ) {
+			$can_view_user = false;
+		} else {
+			$can_view_roles = um_user( 'can_view_roles' );
+			if ( ! is_array( $can_view_roles ) ) {
+				$can_view_roles = array();
+			}
+
+			$all_roles = UM()->roles()->get_all_user_roles( $user_id );
+			if ( empty( $all_roles ) || ( count( $can_view_roles ) && count( array_intersect( $all_roles, $can_view_roles ) ) <= 0 ) ) {
+				$can_view_user = false;
+			}
+		}
+
+		if ( $temp_id ) {
+			um_fetch_user( $temp_id );
+		}
+
+		return $can_view_user;
+	}
+
+	/**
+	 * Retrieve the privacy setting for a user's profile.
+	 *
+	 * @param int $user_id The ID of the user whose privacy setting is to be retrieved.
+	 *
+	 * @return string|false The privacy setting of the user's profile, or false if the user cannot access private profile functionality.
+	 */
+	public function get_privacy_setting( $user_id ) {
+		$user_id = absint( $user_id );
+
+		$temp_id = um_user( 'ID' );
+		um_fetch_user( $user_id );
+
+		$can_access_private_profile = um_user( 'can_make_private_profile' );
+
+		if ( $temp_id ) {
+			um_fetch_user( $temp_id );
+		}
+
+		if ( empty( $can_access_private_profile ) ) {
+			return false;
+		}
+
+		$privacy = get_user_meta( $user_id, 'profile_privacy', true );
+		if ( empty( $privacy ) ) {
+			$privacy = 'Everyone';
+		}
+
+		return $privacy;
+	}
+
+	/**
+	 * Check if user profile is private based on privacy settings.
+	 * We don't handle 'account_tab_privacy' option in this function. Privacy cannot be related to the account tab visibility.
+	 *
+	 * @param int $user_id
+	 *
+	 * @return bool
+	 *
+	 * @since 3.0.0
+	 */
+	public function is_user_profile_private( $user_id ) {
+		$user_id = absint( $user_id );
+
+		$privacy = $this->get_privacy_setting( $user_id );
+		if ( false === $privacy ) {
+			$private = false;
+		} else {
+			$private = 'Everyone' !== $privacy && __( 'Everyone', 'ultimate-member' ) !== $privacy; // backward compatibility when using textdomain.
+		}
+
+		/**
+		 * Filters the marker for User Profile named as private.
+		 *
+		 * @param {bool}   $private Profile is private.
+		 * @param {int}    $user_id User ID requested to check privacy for.
+		 * @param {string} $privacy Profile Privacy value.
+		 *
+		 * @return {bool} Profile is private or not. By default, all user profiles that privacy isn't equal to 'Everyone' are defined as private.
+		 *
+		 * @since 3.0.0
+		 * @hook um_user_profile_is_private
+		 *
+		 * @example <caption>Set that only users with 'Only me' === $privacy can be marked as private on Profile page.</caption>
+		 * function my_um_user_profile_is_private( $private, $user_id, $privacy ) {
+		 *     $private = 'Only me' === $privacy;
+		 *     return $private;
+		 * }
+		 * add_filter( 'um_user_profile_is_private', 'my_um_user_profile_is_private', 10, 3 );
+		 */
+		return apply_filters( 'um_user_profile_is_private', $private, $user_id, $privacy );
+	}
+
+	/**
+	 * Retrieves the restricted privacy notice for a user's profile based on their privacy settings.
+	 *
+	 * @param int $user_id The ID of the user whose profile privacy is being checked.
+	 *
+	 * @return string|null Returns the restricted privacy notice text if the profile is private, or `null` if the profile is not private.
+	 */
+	public function get_restricted_privacy_notice( $user_id ) {
+		$user_id    = absint( $user_id );
+		$is_private = $this->is_user_profile_private( $user_id );
+		if ( ! $is_private ) {
+			return null;
+		}
+
+		if ( $this->can_view_private_user_profile( $user_id ) ) {
+			return null;
+		}
+
+		$notice  = null;
+		$privacy = $this->get_privacy_setting( $user_id );
+		if ( ! is_user_logged_in() ) {
+			$notice = sprintf( __( 'This profile is private. You must be logged in and have permission to view this profile.', 'ultimate-member' ) );
+		} elseif ( 'Only me' === $privacy || __( 'Only me', 'ultimate-member' ) === $privacy ) {
+			$notice = sprintf( __( 'This profile is private. You do not have permission to view this profile.', 'ultimate-member' ) );
+		}
+
+		/**
+		 * Filters the notice shown when a user profile is restricted by its privacy settings.
+		 *
+		 * @param {string|null} $notice  Restricted privacy notice text. `null` when the profile isn't private.
+		 * @param {int}         $user_id User ID whose profile privacy is being checked.
+		 * @param {string}      $privacy Profile Privacy value.
+		 *
+		 * @return {string|null} Restricted privacy notice text, or `null` to show no notice.
+		 *
+		 * @since 3.0.0
+		 * @hook um_get_restricted_privacy_notice
+		 *
+		 * @example <caption>Customize the restricted privacy notice text.</caption>
+		 * function my_um_get_restricted_privacy_notice( $notice, $privacy, $user_id ) {
+		 *     $notice = __( 'Sorry, this profile is private.', 'ultimate-member' );
+		 *     return $notice;
+		 * }
+		 * add_filter( 'um_get_restricted_privacy_notice', 'my_um_get_restricted_privacy_notice', 10, 3 );
+		 */
+		return apply_filters( 'um_get_restricted_privacy_notice', $notice, $privacy, $user_id );
+	}
+
+	/**
+	 * Check if the current user can view a private user profile
+	 *
+	 * @param int      $user_id      The ID of the user profile to check
+	 * @param int|null $current_user Optional current user ID, defaults to current logged-in user
+	 *
+	 * @return bool Whether the current user can view the private user profile
+	 *
+	 * @since 3.0.0
+	 */
+	public function can_view_private_user_profile( $user_id, $current_user = null ) {
+		if ( is_null( $current_user ) ) {
+			$current_user = get_current_user_id();
+		}
+
+		$user_id      = absint( $user_id );
+		$current_user = absint( $current_user );
+
+		if ( $user_id === $current_user ) {
+			return true;
+		}
+
+		if ( ! is_user_logged_in() ) {
+			$can_access_private_profile = false;
+		} else {
+			$temp_id = um_user( 'ID' );
+			um_fetch_user( $current_user );
+
+			$can_access_private_profile = um_user( 'can_access_private_profile' );
+
+			if ( $temp_id ) {
+				um_fetch_user( $temp_id );
+			}
+		}
+
+		if ( ! empty( $can_access_private_profile ) ) {
+			return true;
+		}
+
+		/**
+		 * Filters whether a current user can view the private profile of another user. Controls the visibility of a private user profile.
+		 *
+		 * @param {bool}  $can_view_private_user_profile Default value is `false`. If `true`, it means the current user can view the other user's private profile.
+		 * @param {int}   $user_id                       ID of the user whose private profile is being accessed.
+		 * @param {int}   $current_user                  ID of the current user accessing the private profile.
+		 *
+		 * @return {bool} Whether the current user can view the private profile of the specified user.
+		 *
+		 * @since 3.0.0
+		 * @hook um_can_view_private_user_profile
+		 *
+		 * @example <caption>User with ID=5 can see the private profiles.</caption>
+		 * function my_um_can_view_private_user_profile( $can_view_private_user_profile, $user_id, $current_user ) {
+		 *     $can_view_private_user_profile = 5 === $current_user;
+		 *     return $can_view_private_user_profile;
+		 * }
+		 * add_filter( 'um_can_view_private_user_profile', 'my_um_can_view_private_user_profile', 10, 3 );
+		 */
+		return apply_filters( 'um_can_view_private_user_profile', false, $user_id, $current_user );
+	}
+
+	/**
+	 * Determine if the current user can view a specific user's profile.
+	 *
+	 * @param int $user_id User ID of the profile being viewed.
+	 * @param int|null $current_user ID of the current user viewing the profile.
+	 *
+	 * @return bool Whether the current user can view the user's profile.
+	 *
+	 * @since 3.0.0
+	 */
+	public function can_view_user_profile( $user_id, $current_user = null ) {
+		if ( is_null( $current_user ) ) {
+			$current_user = get_current_user_id();
+		}
+
+		$current_user = absint( $current_user );
+		$user_id      = absint( $user_id );
+
+		if ( ! self::user_exists( $user_id ) ) {
+			return false;
+		}
+
+		if ( $user_id === $current_user ) {
+			return true;
+		}
+
+		$can_view_user = $this->can_view_user( $user_id, $current_user );
+		if ( empty( $can_view_user ) ) {
+			return false;
+		}
+
+		/**
+		 * Filters the marker for user capabilities to view other user profiles on the website
+		 *
+		 * @param {null|bool} $can_view_user Can view user profile marker.
+		 * @param {int}       $user_id       User ID requested to check capabilities for.
+		 * @param {int}       $current_user  Current user.
+		 *
+		 * @return {null|bool} Can view user profile marker. By default, it's null for using UM native logic.
+		 *
+		 * @since 3.0.0
+		 * @hook um_can_view_user_profile
+		 *
+		 * @example <caption>Set that only user with ID=5 can be viewed on Profile page.</caption>
+		 * function my_um_can_view_user_profile( $can_view_user, $user_id, $current_user ) {
+		 *     $can_view_user = 5 === $user_id;
+		 *     return $can_view_user;
+		 * }
+		 * add_filter( 'um_can_view_user_profile', 'my_um_can_view_user_profile', 10, 3 );
+		 */
+		$can_view_user_profile = apply_filters( 'um_can_view_user_profile', null, $user_id, $current_user );
+		if ( ! is_null( $can_view_user_profile ) ) {
+			return $can_view_user_profile;
+		}
+
+		$can_view_user_profile = true;
+		if ( $this->is_user_profile_private( $user_id ) ) {
+			if ( ! is_user_logged_in() ) {
+				$can_view_user_profile = false;
+			} else {
+				$can_view_user_profile = $this->can_view_private_user_profile( $user_id, $current_user );
+			}
+		}
+
+		return $can_view_user_profile;
+	}
 }
