@@ -106,7 +106,7 @@ $description_key = UM()->profile()->get_show_bio_key( $args );
 		 * }
 		 * add_filter( 'um_profile_navbar_classes', 'my_um_profile_navbar_classes' );
 		 */
-		$classes = apply_filters( 'um_profile_navbar_classes', '' );
+		$classes = apply_filters( 'um_profile_navbar_classes', '', um_user( 'ID' ) );
 		?>
 
 		<div class="um-profile-navbar <?php echo esc_attr( $classes ); ?>">
