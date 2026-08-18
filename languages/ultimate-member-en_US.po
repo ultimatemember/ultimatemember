@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-18T10:15:58+00:00\n"
+"POT-Creation-Date: 2026-08-18T18:48:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -2343,7 +2343,9 @@ msgstr ""
 #: includes/core/class-form.php:158
 #: includes/core/class-form.php:165
 #: includes/core/class-form.php:247
-#: includes/core/class-form.php:637
+#: includes/core/class-form.php:624
+#: includes/core/class-form.php:632
+#: includes/core/class-form.php:647
 #: includes/core/class-password.php:497
 #: includes/core/um-actions-profile.php:557
 msgid "This is not possible for security reasons."
@@ -4718,7 +4720,7 @@ msgid "Appearance"
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:1647
-#: includes/core/class-form.php:1037
+#: includes/core/class-form.php:1051
 msgid "Profile"
 msgstr ""
 
@@ -6982,7 +6984,7 @@ msgstr ""
 #: includes/class-config.php:260
 #: includes/class-config.php:951
 #: includes/class-config.php:1012
-#: includes/core/class-form.php:1034
+#: includes/core/class-form.php:1048
 msgid "Login"
 msgstr ""
 
@@ -6991,7 +6993,7 @@ msgstr ""
 #: includes/class-config.php:264
 #: includes/class-config.php:954
 #: includes/class-config.php:1016
-#: includes/core/class-form.php:1040
+#: includes/core/class-form.php:1054
 msgid "Register"
 msgstr ""
 
