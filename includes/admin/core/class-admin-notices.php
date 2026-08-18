@@ -184,7 +184,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			do_action( 'um_admin_after_main_notices' );
 		}
 
-
 		/**
 		 * Display single admin notice
 		 *
@@ -193,7 +192,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 *
 		 * @return void|string
 		 */
-		function display_notice( $key, $echo = true ) {
+		public function display_notice( $key, $echo = true ) {
 			$admin_notices = $this->get_admin_notices();
 
 			if ( empty( $admin_notices[ $key ] ) ) {
@@ -202,16 +201,30 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$notice_data = $admin_notices[ $key ];
 
-			$class = ! empty( $notice_data['class'] ) ? $notice_data['class'] : 'updated';
+			if ( empty( $notice_data['message'] ) ) {
+				return;
+			}
 
-			$dismissible = ! empty( $admin_notices[ $key ]['dismissible'] );
+			$notice_classes = array(
+				'um-admin-notice',
+				'notice',
+			);
 
-			ob_start(); ?>
+			if ( ! empty( $notice_data['class'] ) ) {
+				$notice_classes[] = $notice_data['class'];
+			} else {
+				$notice_classes[] = 'updated';
+			}
 
-			<div class="<?php echo esc_attr( $class ); ?> um-admin-notice notice <?php echo $dismissible ? 'is-dismissible' : ''; ?>" data-key="<?php echo esc_attr( $key ); ?>">
-				<?php echo ! empty( $notice_data['message'] ) ? $notice_data['message'] : ''; ?>
+			if ( ! empty( $admin_notices[ $key ]['dismissible'] ) ) {
+				$notice_classes[] = 'is-dismissible';
+			}
+
+			ob_start();
+			?>
+			<div class="<?php echo esc_attr( implode( ' ', $notice_classes ) ); ?>" data-key="<?php echo esc_attr( $key ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_admin_notice_dismiss' . $key ) ); ?>">
+				<?php echo $notice_data['message']; ?>
 			</div>
-
 			<?php
 			$notice = ob_get_clean();
 			if ( $echo ) {
@@ -220,7 +233,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 			return $notice;
 		}
-
 
 		/**
 		 * Checking if the "Membership - Anyone can register" WordPress general setting is active
@@ -1080,14 +1092,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			);
 		}
 
+		/**
+		 * Dismisses an admin notice based on a provided key.
+		 *
+		 * This method processes an AJAX request to dismiss a specific admin notice. It validates the key,
+		 * verifies the nonce for security, and marks the notice as dismissed.
+		 *
+		 * @return void
+		 */
 		public function dismiss_notice() {
-			UM()->admin()->check_ajax_nonce();
-
 			if ( empty( $_POST['key'] ) ) {
 				wp_send_json_error( __( 'Wrong Data', 'ultimate-member' ) );
 			}
 
-			$this->dismiss( sanitize_key( $_POST['key'] ) );
+			$key = sanitize_key( $_POST['key'] );
+
+			check_ajax_referer( 'um_admin_notice_dismiss' . $key );
+
+			$this->dismiss( $key );
 
 			wp_send_json_success();
 		}
@@ -1108,20 +1130,29 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			update_option( 'um_hidden_admin_notices', $hidden_notices );
 		}
 
-		function force_dismiss_notice() {
-			if ( ! empty( $_REQUEST['um_dismiss_notice'] ) && ! empty( $_REQUEST['um_admin_nonce'] ) ) {
-				if ( wp_verify_nonce( $_REQUEST['um_admin_nonce'], 'um-admin-nonce' ) ) {
-					$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
-					if ( ! is_array( $hidden_notices ) ) {
-						$hidden_notices = array();
-					}
+		/**
+		 * Forces the dismissal of a specific admin notice by saving it to the hidden notices list.
+		 *
+		 * This method handles the request to dismiss an admin notice. It validates the incoming data,
+		 * updates the list of hidden notices in the database, and ensures the dismissed notice will
+		 * not be shown again.
+		 *
+		 * @return void
+		 */
+		public function force_dismiss_notice() {
+			if ( ! empty( $_REQUEST['um_dismiss_notice'] ) ) {
+				$key = sanitize_key( $_REQUEST['um_dismiss_notice'] );
 
-					$hidden_notices[] = sanitize_key( $_REQUEST['um_dismiss_notice'] );
+				check_admin_referer( 'um_admin_notice_dismiss' . $key );
 
-					update_option( 'um_hidden_admin_notices', $hidden_notices );
-				} else {
-					wp_die( __( 'Security Check', 'ultimate-member' ) );
+				$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
+				if ( ! is_array( $hidden_notices ) ) {
+					$hidden_notices = array();
 				}
+
+				$hidden_notices[] = sanitize_key( $_REQUEST['um_dismiss_notice'] );
+
+				update_option( 'um_hidden_admin_notices', $hidden_notices );
 			}
 		}
 	}

@@ -492,35 +492,39 @@ final class Enqueue extends \um\common\Enqueue {
 	 * Load global assets.
 	 *
 	 * @since 2.0.18
+	 * @since 2.12.2 Added hook for load global scripts.
 	 */
-	public function load_global_scripts() {
+	public function load_global_scripts( $hook ) {
+		/**
+		 * Filters ignoring UM global scripts register and enqueue.
+		 *
+		 * @since 2.12.2
+		 * @hook um_ignore_global_scripts
+		 *
+		 * @param {bool}   $ignore Bool variable to ignore UM global scripts.
+		 * @param {string} $hook   Data to localize.
+		 *
+		 * @return {bool} Ignore UM global scripts or not.
+		 *
+		 * @example <caption>Ignore UM global scripts on screen `um_page_um_settings`.</caption>
+		 * function um_custom_ignore_global_scripts( $ignore, $hook ) {
+		 *     if ( $hook === 'um_page_um_settings' ) {
+		 *         $ignore = true;
+		 *     }
+		 *     return $ignore;
+		 * }
+		 * add_filter( 'um_ignore_global_scripts', 'um_custom_ignore_global_scripts', 10, 2 );
+		 */
+		$ignore_global_scripts = apply_filters( 'um_ignore_global_scripts', false, $hook );
+		if ( $ignore_global_scripts ) {
+			return;
+		}
+
 		$suffix  = self::get_suffix();
 		$js_url  = self::get_url( 'js' );
 		$css_url = self::get_url( 'css' );
 
 		wp_register_script( 'um_admin_global', $js_url . 'admin/global' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
-		$localize_data = array(
-			'nonce' => wp_create_nonce( 'um-admin-nonce' ),
-		);
-		/**
-		 * Filters data array for localize wp-admin global scripts.
-		 *
-		 * @since 2.0.0
-		 * @hook um_admin_enqueue_localize_data
-		 *
-		 * @param {array} $variables Data to localize.
-		 *
-		 * @return {array} Data to localize.
-		 *
-		 * @example <caption>Add `my_custom_variable` to wp-admin global scripts to be callable via `um_admin_scripts.my_custom_variable` in JS.</caption>
-		 * function um_custom_admin_enqueue_localize_data( $variables ) {
-		 *     $variables['{my_custom_variable}'] = '{my_custom_variable_value}';
-		 *     return $variables;
-		 * }
-		 * add_filter( 'um_admin_enqueue_localize_data', 'um_custom_admin_enqueue_localize_data' );
-		 */
-		$localize_data = apply_filters( 'um_admin_enqueue_localize_data', $localize_data );
-		wp_localize_script( 'um_admin_global', 'um_admin_scripts', $localize_data );
 		wp_enqueue_script( 'um_admin_global' );
 
 		wp_register_style( 'um_admin_global', $css_url . 'admin/global' . $suffix . '.css', array(), UM_VERSION );
@@ -565,10 +569,34 @@ final class Enqueue extends \um\common\Enqueue {
 		$js_url  = self::get_url( 'js' );
 		$css_url = self::get_url( 'css' );
 
-		$this->load_global_scripts();
+		$this->load_global_scripts( $hook );
 
 		if ( UM()->admin()->screen()->is_own_screen() ) {
 			wp_register_script( 'um_admin_common', $js_url . 'admin/common' . $suffix . '.js', array( 'wp-color-picker', 'jquery-ui-tooltip', 'um_common' ), UM_VERSION, true );
+			$localize_data = array(
+				'nonce' => wp_create_nonce( 'um-admin-nonce' ),
+			);
+			/**
+			 * Filters a data array for localize wp-admin global scripts.
+			 *
+			 * @since 2.0.0
+			 * @since 2.12.2 `um_admin_scripts` is localized data only for common admin scripts.
+			 *
+			 * @hook um_admin_enqueue_localize_data
+			 *
+			 * @param {array} $variables Data to localize.
+			 *
+			 * @return {array} Data to localize.
+			 *
+			 * @example <caption>Add `my_custom_variable` to wp-admin global scripts to be callable via `um_admin_scripts.my_custom_variable` in JS.</caption>
+			 * function um_custom_admin_enqueue_localize_data( $variables ) {
+			 *     $variables['{my_custom_variable}'] = '{my_custom_variable_value}';
+			 *     return $variables;
+			 * }
+			 * add_filter( 'um_admin_enqueue_localize_data', 'um_custom_admin_enqueue_localize_data' );
+			 */
+			$localize_data = apply_filters( 'um_admin_enqueue_localize_data', $localize_data );
+			wp_localize_script( 'um_admin_common', 'um_admin_scripts', $localize_data );
 			wp_enqueue_script( 'um_admin_common' );
 
 			wp_register_style( 'um_admin_common', $css_url . 'admin/common' . $suffix . '.css', array( 'um_common', 'um_ui', 'dashicons' ), UM_VERSION );
