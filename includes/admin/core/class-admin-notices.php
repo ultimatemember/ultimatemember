@@ -977,7 +977,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 *  - a save couldn't write wp-config.php (manual instructions),
 		 *  - legacy keys still sit in the DB and should be migrated by re-saving.
 		 *
-		 * @since 2.12.1
+		 * @since 2.13.0
 		 */
 		public function api_key_notices() {
 			$api_key_fields = UM()->admin_settings()->get_api_key_field_ids();
@@ -997,7 +997,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			);
 
 			// 1) Library missing — the feature can't function; keys would fail to save.
-			$wp_config = new WP_Config();
+			$wp_config = UM()->admin()->wp_config();
 			if ( ! $wp_config->is_available() ) {
 				$this->add_notice(
 					'um_api_key_lib_missing',

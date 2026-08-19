@@ -48,20 +48,21 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 * (admin) and persisted to the `um_api_key_option_ids` option so it is also available on the
 		 * frontend, where the settings structure is not built. Extensions can add ids via the filter.
 		 *
-		 * @since 2.12.1
+		 * @since 2.13.0
 		 *
 		 * @return array List of option ids.
 		 */
 		public function get_constant_backed_ids() {
 			if ( null === $this->constant_backed_ids ) {
 				$stored = get_option( 'um_api_key_option_ids', array() );
+
 				$this->constant_backed_ids = is_array( $stored ) ? $stored : array();
 			}
 
 			/**
 			 * Filters the list of option ids whose value is stored as a wp-config.php constant.
 			 *
-			 * @since 2.12.1
+			 * @since 2.13.0
 			 * @hook um_api_key_option_ids
 			 *
 			 * @param {array} $ids Option ids.
@@ -74,14 +75,15 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		/**
 		 * Persist the list of constant-backed option ids and refresh the in-memory cache.
 		 *
-		 * @since 2.12.1
+		 * @since 2.13.0
 		 *
 		 * @param array $ids Option ids of the `api_key` fields.
 		 */
 		public function set_constant_backed_ids( $ids ) {
 			$ids = is_array( $ids ) ? array_values( array_unique( $ids ) ) : array();
 
-			if ( get_option( 'um_api_key_option_ids', array() ) !== $ids ) {
+			$old_value = get_option( 'um_api_key_option_ids', array() );
+			if ( $old_value !== $ids ) {
 				update_option( 'um_api_key_option_ids', $ids );
 			}
 
@@ -91,7 +93,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		/**
 		 * Whether an option's value is stored as a wp-config.php constant (i.e. it is an `api_key` field).
 		 *
-		 * @since 2.12.1
+		 * @since 2.13.0
 		 *
 		 * @param string $option_id
 		 *
@@ -113,7 +115,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 * The mapping is convention based: the uppercased option id prefixed with `UM_OPTION_`
 		 * (e.g. `stripe_test_secret_key` → `UM_OPTION_STRIPE_TEST_SECRET_KEY`).
 		 *
-		 * @since 2.12.1
+		 * @since 2.13.0
 		 *
 		 * @param string $option_id
 		 *
@@ -129,7 +131,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 			/**
 			 * Filters the wp-config.php constant name that backs a UM option.
 			 *
-			 * @since 2.12.1
+			 * @since 2.13.0
 			 * @hook um_option_constant_name
 			 *
 			 * @param {string} $constant  Constant name (or empty to disable constant backing).
@@ -151,6 +153,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 			// A defined wp-config.php constant (e.g. for `api_key` secret fields) always wins over the DB.
 			$constant = $this->get_constant_name( $option_id );
 			if ( $constant && defined( $constant ) ) {
+				/** This filter is documented in includes/core/class-options.php */
 				return apply_filters( "um_get_option_filter__{$option_id}", constant( $constant ) );
 			}
 

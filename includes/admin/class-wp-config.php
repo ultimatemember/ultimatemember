@@ -1,11 +1,11 @@
 <?php
-namespace um\admin\core;
+namespace um\admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'um\admin\core\WP_Config' ) ) {
+if ( ! class_exists( 'um\admin\WP_Config' ) ) {
 
 	/**
 	 * Class WP_Config
@@ -14,8 +14,8 @@ if ( ! class_exists( 'um\admin\core\WP_Config' ) ) {
 	 * add/update/remove PHP constants in wp-config.php. Backs the `api_key` settings field type,
 	 * whose secret values are stored as constants instead of in the `um_options` DB array.
 	 *
-	 * @package um\admin\core
-	 * @since 2.12.1
+	 * @package um\admin
+	 * @since 2.13.0
 	 */
 	class WP_Config {
 
@@ -147,7 +147,7 @@ if ( ! class_exists( 'um\admin\core\WP_Config' ) ) {
 		 * yet and the field renders empty until the next request. Forcing invalidation makes the new
 		 * constant available on the very next request.
 		 *
-		 * @since 2.12.1
+		 * @since 2.13.0
 		 */
 		protected function flush_config_opcache() {
 			if ( function_exists( 'opcache_invalidate' ) ) {

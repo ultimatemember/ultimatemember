@@ -2629,7 +2629,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 * walk the structure tree ([tab]['sections'][section](['form_sections'][key])['fields'][]).
 		 * The tab/section is captured so the migration notice can deep-link to the right settings page.
 		 *
-		 * @since 2.12.1
+		 * @since 2.13.0
 		 *
 		 * @return array<string, array{tab:string, section:string}> Keyed by field id.
 		 */
@@ -2670,7 +2670,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		/**
 		 * Push `api_key` fields from a fields list into the result set.
 		 *
-		 * @since 2.12.1
+		 * @since 2.13.0
 		 *
 		 * @param array  $fields      List of field arrays.
 		 * @param string $tab_key     Tab slug.
@@ -2698,7 +2698,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 *
 		 * Hooked on `um_change_settings_before_save` (priority 8, before sanitize/DB write).
 		 *
-		 * @since 2.12.1
+		 * @since 2.13.0
 		 *
 		 * @param array $settings Settings about to be saved.
 		 *
@@ -2714,7 +2714,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				return $settings;
 			}
 
-			$wp_config = new WP_Config();
+			$wp_config = UM()->admin()->wp_config();
 			$failures  = array();
 
 			foreach ( $api_key_fields as $id => $location ) {
