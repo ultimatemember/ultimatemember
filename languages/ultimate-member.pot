@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-06T15:46:26+00:00\n"
+"POT-Creation-Date: 2026-08-19T12:47:47+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -132,7 +132,6 @@ msgid "Settings"
 msgstr ""
 
 #: includes/admin/class-admin.php:1943
-#: includes/admin/core/class-admin-notices.php:1217
 #: includes/admin/core/class-admin-settings.php:2766
 #: includes/ajax/class-secure.php:34
 msgid "Security Check"
@@ -3747,134 +3746,134 @@ msgid "Select the member roles that can see this link"
 msgstr ""
 
 #. translators: %s: Setting link.
-#: includes/admin/core/class-admin-notices.php:248
+#: includes/admin/core/class-admin-notices.php:260
 #, php-format
 msgid "The <strong>\"Membership - Anyone can register\"</strong> option on the general settings <a href=\"%s\">page</a> is enabled. This means users can register via the standard WordPress wp-login.php page. If you do not want users to be able to register via this page and only register via the Ultimate Member registration form, you should deactivate this option. You can dismiss this notice if you wish to keep the wp-login.php registration page open."
 msgstr ""
 
 #. translators: %1$d: Background update for users is complete; %2$d: Total users for background update.
-#: includes/admin/core/class-admin-notices.php:287
+#: includes/admin/core/class-admin-notices.php:299
 #, php-format
 msgid "Background process is running: Setting user statuses %1$d/%2$d."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:303
+#: includes/admin/core/class-admin-notices.php:315
 msgid "<strong>All Access Pass</strong> – Get access to all Ultimate Member extensions at a significant discount with our All Access Pass."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:307
+#: includes/admin/core/class-admin-notices.php:319
 msgid "View Pricing"
 msgstr ""
 
 #. translators: %1$s is a plugin name; %2$s is a plugin version; %3$s is a plugin name; %4$s is a doc link.
-#: includes/admin/core/class-admin-notices.php:404
+#: includes/admin/core/class-admin-notices.php:416
 #, php-format
 msgid "<strong>%1$s %2$s</strong> requires 2.0 extensions. You have pre 2.0 extensions installed on your site. <br /> Please update %3$s extensions to latest versions. For more info see this <a href=\"%4$s\" target=\"_blank\">doc</a>."
 msgstr ""
 
 #. translators: %s: Plugin name.
-#: includes/admin/core/class-admin-notices.php:435
+#: includes/admin/core/class-admin-notices.php:447
 #, php-format
 msgid "%s needs to create several pages (User Profiles, Account, Registration, Login, Password Reset, Logout, Member Directory) to function correctly."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:440
+#: includes/admin/core/class-admin-notices.php:452
 msgid "Create Pages"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:442
+#: includes/admin/core/class-admin-notices.php:454
 msgid "No thanks"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:469
+#: includes/admin/core/class-admin-notices.php:481
 msgid "Ultimate Member Setup Error: User page can not be a child page."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:483
+#: includes/admin/core/class-admin-notices.php:495
 msgid "Ultimate Member Setup Error: Account page can not be a child page."
 msgstr ""
 
 #. translators: %s: query args.
-#: includes/admin/core/class-admin-notices.php:502
+#: includes/admin/core/class-admin-notices.php:514
 msgid "Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:520
+#: includes/admin/core/class-admin-notices.php:532
 msgid "Your temp uploads directory is now clean."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:523
+#: includes/admin/core/class-admin-notices.php:535
 msgid "Your user cache is now removed."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:526
+#: includes/admin/core/class-admin-notices.php:538
 msgid "Your user statuses cache is now removed."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:529
+#: includes/admin/core/class-admin-notices.php:541
 msgid "You have the latest updates."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:532
+#: includes/admin/core/class-admin-notices.php:544
 msgid "Try again later. You can run this action once daily."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:535
+#: includes/admin/core/class-admin-notices.php:547
 msgid "The form has been duplicated successfully."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:538
+#: includes/admin/core/class-admin-notices.php:550
 msgid "Settings have been saved successfully."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:541
+#: includes/admin/core/class-admin-notices.php:553
 msgid "Users have been updated."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:544
+#: includes/admin/core/class-admin-notices.php:556
 msgid "All users sessions have been successfully destroyed."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:547
+#: includes/admin/core/class-admin-notices.php:559
 msgid "Account has been successfully restored."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:552
+#: includes/admin/core/class-admin-notices.php:564
 #, php-format
 msgid "<strong>%s</strong> user has been approved."
 msgid_plural "<strong>%s</strong> users have been approved."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/core/class-admin-notices.php:557
+#: includes/admin/core/class-admin-notices.php:569
 #, php-format
 msgid "<strong>%s</strong> user has been reactivated."
 msgid_plural "<strong>%s</strong> users have been reactivated."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/core/class-admin-notices.php:562
+#: includes/admin/core/class-admin-notices.php:574
 #, php-format
 msgid "<strong>%s</strong> user has been rejected."
 msgid_plural "<strong>%s</strong> users have been rejected."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/core/class-admin-notices.php:567
+#: includes/admin/core/class-admin-notices.php:579
 #, php-format
 msgid "<strong>%s</strong> user has been deactivated."
 msgid_plural "<strong>%s</strong> users have been deactivated."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/core/class-admin-notices.php:572
+#: includes/admin/core/class-admin-notices.php:584
 #, php-format
 msgid "<strong>%s</strong> user has been set as pending admin review."
 msgid_plural "<strong>%s</strong> users have been set as pending admin review."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/core/class-admin-notices.php:577
+#: includes/admin/core/class-admin-notices.php:589
 #, php-format
 msgid "Activation email for <strong>%s</strong> user has been sent."
 msgid_plural "Activation emails for <strong>%s</strong> users have been sent."
@@ -3882,135 +3881,135 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: Plugin name.
-#: includes/admin/core/class-admin-notices.php:646
+#: includes/admin/core/class-admin-notices.php:658
 #, php-format
 msgid "You have installed <strong>%s</strong> with wrong folder name. Correct folder name is <strong>\"ultimate-member\"</strong>."
 msgstr ""
 
 #. translators: %1$s is an inactive license number; %2$s is a plugin name.
-#: includes/admin/core/class-admin-notices.php:681
+#: includes/admin/core/class-admin-notices.php:693
 #, php-format
 msgid "There are %1$s inactive %2$s license keys for this site. This site is not authorized to get plugin updates. You can activate this site on <a href=\"https://ultimatemember.com/\">www.ultimatemember.com</a>."
 msgstr ""
 
 #. translators: %1$s is an invalid license; %2$s is a plugin name; %3$s is a license link.
-#: includes/admin/core/class-admin-notices.php:701
+#: includes/admin/core/class-admin-notices.php:713
 #, php-format
 msgid "You have %1$s invalid or expired license keys for %2$s. Please go to the <a href=\"%3$s\">Licenses page</a> to correct this issue."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:718
+#: includes/admin/core/class-admin-notices.php:730
 msgid "version needs to be updated to work correctly."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:720
+#: includes/admin/core/class-admin-notices.php:732
 msgid "It is necessary to update the structure of the database and options that are associated with current version"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:722
+#: includes/admin/core/class-admin-notices.php:734
 msgid "Please run the upgrade process on this "
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:722
+#: includes/admin/core/class-admin-notices.php:734
 msgid "page"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:726
+#: includes/admin/core/class-admin-notices.php:738
 msgid "Visit Upgrade Page"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:747
+#: includes/admin/core/class-admin-notices.php:759
 msgid "Settings successfully upgraded"
 msgstr ""
 
 #. translators: %1$s is a plugin name title; %2$s is a plugin version.
-#: includes/admin/core/class-admin-notices.php:757
+#: includes/admin/core/class-admin-notices.php:769
 #, php-format
 msgid "<strong>%1$s %2$s</strong> Successfully Upgraded"
 msgstr ""
 
 #. translators: %s: plugin name.
-#: includes/admin/core/class-admin-notices.php:787
+#: includes/admin/core/class-admin-notices.php:799
 #, php-format
 msgid "Hey there! It's been one month since you installed %s. How have you found the plugin so far?"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:791
+#: includes/admin/core/class-admin-notices.php:803
 msgid "I love it!"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:792
+#: includes/admin/core/class-admin-notices.php:804
 msgid "It's good but could be better"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:793
+#: includes/admin/core/class-admin-notices.php:805
 msgid "I don't like the plugin"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:802
+#: includes/admin/core/class-admin-notices.php:814
 msgid "Leave Review"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:811
-#: includes/admin/core/class-admin-notices.php:820
+#: includes/admin/core/class-admin-notices.php:823
+#: includes/admin/core/class-admin-notices.php:832
 msgid "Provide Feedback"
 msgstr ""
 
 #. translators: %1$s is a plugin name; %2$s is a #.
-#: includes/admin/core/class-admin-notices.php:850
+#: includes/admin/core/class-admin-notices.php:862
 #, php-format
 msgid "<strong>%1$s</strong> future plans! Detailed future list is <a href=\"%2$s\" target=\"_blank\">here</a>"
 msgstr ""
 
 #. translators: %s child-theme article link.
-#: includes/admin/core/class-admin-notices.php:882
+#: includes/admin/core/class-admin-notices.php:894
 #, php-format
 msgid "We recommend using a <a href=\"%s\">child-theme</a> for Ultimate Member customization. Unlike official theme repositories, child themes don't have dependencies that could lead to your custom files being overwritten during a theme upgrade.<br />Without a child theme, your customization files may be deleted after every theme update."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:905
+#: includes/admin/core/class-admin-notices.php:917
 msgid "Your Register forms are now locked. You can unlock them in Ultimate Member > Settings > Advanced > Security > Lock All Register Forms."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:924
+#: includes/admin/core/class-admin-notices.php:936
 msgid "Mandatory password changes has been enabled. You can disable them in Ultimate Member > Settings > Advanced > Security > Display Login form notice to reset passwords."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:943
+#: includes/admin/core/class-admin-notices.php:955
 msgid "Ban for administrative capabilities is enabled. You can disable them in Ultimate Member > Settings > Advanced > Security > Enable ban for administrative capabilities."
 msgstr ""
 
 #. translators: %1$s - Plugin name, %2$s - Plugin version.
-#: includes/admin/core/class-admin-notices.php:995
+#: includes/admin/core/class-admin-notices.php:1007
 #, php-format
 msgid "<strong>%1$s %2$s</strong> The file needed to securely store API keys in wp-config.php is missing. API keys cannot be saved until the plugin is reinstalled."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:1014
+#: includes/admin/core/class-admin-notices.php:1026
 msgid "<strong>Ultimate Member:</strong> the API key(s) could not be written to <code>wp-config.php</code> (the file is not writable). Your keys were <strong>not</strong> saved. Please add the following line(s) to your <code>wp-config.php</code> above the <code>/* That's all, stop editing! */</code> comment, replacing the placeholder with your key:"
 msgstr ""
 
 #. translators: %s - Settings page URL.
-#: includes/admin/core/class-admin-notices.php:1046
+#: includes/admin/core/class-admin-notices.php:1058
 #, php-format
 msgid "<strong>Ultimate Member:</strong> some of your API keys are still stored in the database. For improved security they should be moved into <code>wp-config.php</code>. Please open the <a href=\"%s\">settings</a> and re-save them to complete the move."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:1068
+#: includes/admin/core/class-admin-notices.php:1080
 msgid "The role selected in WordPress native \"Settings > New User Default Role\" setting has Administrative capabilities."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:1094
+#: includes/admin/core/class-admin-notices.php:1106
 msgid "The role selected in \"Ultimate Member > Settings > Appearance > Registration Form > Registration Default Role\" setting has Administrative capabilities."
 msgstr ""
 
 #. translators: %s are link(s) to the forms.
-#: includes/admin/core/class-admin-notices.php:1162
+#: includes/admin/core/class-admin-notices.php:1174
 #, php-format
 msgid "Register forms have Administrative roles, we recommend that you assign a non-admin roles to secure the forms. %s"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:1181
+#: includes/admin/core/class-admin-notices.php:1199
 msgid "Wrong Data"
 msgstr ""
 
@@ -4085,6 +4084,7 @@ msgid "%s page"
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:347
+#: includes/admin/templates/form/register_gdpr.php:48
 msgid "Choose a page..."
 msgstr ""
 
@@ -4736,7 +4736,7 @@ msgid "Appearance"
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:1650
-#: includes/core/class-form.php:1037
+#: includes/core/class-form.php:1051
 msgid "Profile"
 msgstr ""
 
