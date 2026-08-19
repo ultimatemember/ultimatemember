@@ -27,7 +27,7 @@ if ( ! class_exists( 'um\admin\core\WP_Config' ) ) {
 		 *
 		 * @var string
 		 */
-		protected $lib_path = UM_PATH . 'includes/lib/wp-config-transformer/WPConfigTransformer.php';
+		protected $lib_path = UM_PATH . 'includes/lib/wp-config-transformer/src/WPConfigTransformer.php';
 
 		/**
 		 * Whether the WPConfigTransformer library is loadable.
@@ -35,7 +35,7 @@ if ( ! class_exists( 'um\admin\core\WP_Config' ) ) {
 		 * @return bool
 		 */
 		public function is_available() {
-			if ( ! class_exists( '\WPConfigTransformer' ) && file_exists( $this->lib_path ) ) {
+			if ( ! class_exists( '\WPConfigTransformer' ) && file_exists( wp_normalize_path( $this->lib_path ) )  ) {
 				require_once $this->lib_path;
 			}
 
@@ -51,14 +51,14 @@ if ( ! class_exists( 'um\admin\core\WP_Config' ) ) {
 		public function get_config_path() {
 			$path = ABSPATH . 'wp-config.php';
 
-			if ( ! file_exists( $path )
-				&& file_exists( dirname( ABSPATH ) . '/wp-config.php' )
-				&& ! file_exists( dirname( ABSPATH ) . '/wp-settings.php' )
+			if ( ! file_exists( wp_normalize_path( $path ) )
+				&& file_exists( wp_normalize_path( dirname( ABSPATH ) . '/wp-config.php' ) )
+				&& ! file_exists( wp_normalize_path( dirname( ABSPATH ) . '/wp-settings.php' ) )
 			) {
 				$path = dirname( ABSPATH ) . '/wp-config.php';
 			}
 
-			return $path;
+			return wp_normalize_path( $path );
 		}
 
 		/**
@@ -68,7 +68,7 @@ if ( ! class_exists( 'um\admin\core\WP_Config' ) ) {
 		 */
 		public function is_writable() {
 			$path = $this->get_config_path();
-			return $this->is_available() && file_exists( $path ) && is_writable( $path );
+			return $this->is_available() && file_exists( $path ) && wp_is_writable( $path );
 		}
 
 		/**
@@ -92,7 +92,15 @@ if ( ! class_exists( 'um\admin\core\WP_Config' ) ) {
 				// update() returns false when the value is already identical (save() short-circuits an
 				// unchanged file) — with add => true that means the constant is present and correct, which
 				// is still success. Only a genuine write problem throws (caught below).
-				$written = $transformer->update( 'constant', $name, (string) $value, array( 'raw' => false, 'add' => true ) );
+				$written = $transformer->update(
+					'constant',
+					$name,
+					(string) $value,
+					array(
+						'raw' => false,
+						'add' => true,
+					)
+				);
 				$ok      = $written || $transformer->exists( 'constant', $name );
 				if ( $ok ) {
 					$this->flush_config_opcache();
@@ -120,7 +128,7 @@ if ( ! class_exists( 'um\admin\core\WP_Config' ) ) {
 				if ( ! $transformer->exists( 'constant', $name ) ) {
 					return true;
 				}
-				$removed = (bool) $transformer->remove( 'constant', $name );
+				$removed = $transformer->remove( 'constant', $name );
 				if ( $removed ) {
 					$this->flush_config_opcache();
 				}
