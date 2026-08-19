@@ -25,7 +25,7 @@ class Users {
 	/**
 	 * Integrates the "Blacklist Words" setting with the native WordPress functionality.
 	 *
-	 * @since 2.12.2
+	 * @since 2.13.0
 	 *
 	 * @param array $usernames Array of disallowed usernames.
 	 * @return array
@@ -1058,7 +1058,7 @@ class Users {
 	 *
 	 * @return bool True if the user can be viewed, false otherwise
 	 *
-	 * @since 3.0.0
+	 * @since 2.13.0
 	 */
 	public function can_view_user( $user_id, $current_user = null ) {
 		if ( is_null( $current_user ) ) {
@@ -1086,7 +1086,7 @@ class Users {
 		 *
 		 * @return {null|bool} Can view user marker. By default, it's null for using UM native logic.
 		 *
-		 * @since 3.0.0
+		 * @since 2.13.0
 		 * @hook um_can_view_user
 		 *
 		 * @example <caption>Set that only user with ID=5 can be viewed on Profile page.</caption>
@@ -1193,7 +1193,7 @@ class Users {
 	 *
 	 * @return bool
 	 *
-	 * @since 3.0.0
+	 * @since 2.13.0
 	 */
 	public function is_user_profile_private( $user_id ) {
 		$user_id = absint( $user_id );
@@ -1214,7 +1214,7 @@ class Users {
 		 *
 		 * @return {bool} Profile is private or not. By default, all user profiles that privacy isn't equal to 'Everyone' are defined as private.
 		 *
-		 * @since 3.0.0
+		 * @since 2.13.0
 		 * @hook um_user_profile_is_private
 		 *
 		 * @example <caption>Set that only users with 'Only me' === $privacy can be marked as private on Profile page.</caption>
@@ -1262,7 +1262,7 @@ class Users {
 		 *
 		 * @return {string|null} Restricted privacy notice text, or `null` to show no notice.
 		 *
-		 * @since 3.0.0
+		 * @since 2.13.0
 		 * @hook um_get_restricted_privacy_notice
 		 *
 		 * @example <caption>Customize the restricted privacy notice text.</caption>
@@ -1283,7 +1283,7 @@ class Users {
 	 *
 	 * @return bool Whether the current user can view the private user profile
 	 *
-	 * @since 3.0.0
+	 * @since 2.13.0
 	 */
 	public function can_view_private_user_profile( $user_id, $current_user = null ) {
 		if ( is_null( $current_user ) ) {
@@ -1323,7 +1323,7 @@ class Users {
 		 *
 		 * @return {bool} Whether the current user can view the private profile of the specified user.
 		 *
-		 * @since 3.0.0
+		 * @since 2.13.0
 		 * @hook um_can_view_private_user_profile
 		 *
 		 * @example <caption>User with ID=5 can see the private profiles.</caption>
@@ -1344,7 +1344,7 @@ class Users {
 	 *
 	 * @return bool Whether the current user can view the user's profile.
 	 *
-	 * @since 3.0.0
+	 * @since 2.13.0
 	 */
 	public function can_view_user_profile( $user_id, $current_user = null ) {
 		if ( is_null( $current_user ) ) {
@@ -1376,7 +1376,7 @@ class Users {
 		 *
 		 * @return {null|bool} Can view user profile marker. By default, it's null for using UM native logic.
 		 *
-		 * @since 3.0.0
+		 * @since 2.13.0
 		 * @hook um_can_view_user_profile
 		 *
 		 * @example <caption>Set that only user with ID=5 can be viewed on Profile page.</caption>

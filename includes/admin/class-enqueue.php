@@ -492,13 +492,13 @@ final class Enqueue extends \um\common\Enqueue {
 	 * Load global assets.
 	 *
 	 * @since 2.0.18
-	 * @since 2.12.2 Added hook for load global scripts.
+	 * @since 2.13.0 Added hook for load global scripts.
 	 */
 	public function load_global_scripts( $hook ) {
 		/**
 		 * Filters ignoring UM global scripts register and enqueue.
 		 *
-		 * @since 2.12.2
+		 * @since 2.13.0
 		 * @hook um_ignore_global_scripts
 		 *
 		 * @param {bool}   $ignore Bool variable to ignore UM global scripts.
@@ -580,7 +580,7 @@ final class Enqueue extends \um\common\Enqueue {
 			 * Filters a data array for localize wp-admin global scripts.
 			 *
 			 * @since 2.0.0
-			 * @since 2.12.2 `um_admin_scripts` is localized data only for common admin scripts.
+			 * @since 2.13.0 `um_admin_scripts` is localized data only for common admin scripts.
 			 *
 			 * @hook um_admin_enqueue_localize_data
 			 *

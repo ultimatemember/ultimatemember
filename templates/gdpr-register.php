@@ -7,7 +7,7 @@
  * Page: "Register"
  * Call: function display_option()
  *
- * @version 2.10.0
+ * @version 2.13.0
  *
  * @var object $um_content_query
  * @var array  $args
