@@ -1155,7 +1155,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$value = (int) $value;
 				}
 
-				if ( strstr( $key, 'role_' ) || 'role' === $key ) {
+				if ( 'role_radio' === $key || 'role_select' === $key || 'role' === $key ) {
 					$role_keys = get_option( 'um_roles', array() );
 					if ( ! empty( $role_keys ) ) {
 						$field_value = UM()->roles()->get_editable_priority_user_role( um_user( 'ID' ) );
@@ -1306,7 +1306,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$um_user_value = um_user( $key );
 
-						if ( strstr( $key, 'role_' ) || $key == 'role' ) {
+						if ( 'role_radio' === $key || 'role_select' === $key || 'role' === $key ) {
 							$um_user_value = strtolower( UM()->roles()->get_editable_priority_user_role( um_user( 'ID' ) ) );
 
 							$role_keys = get_option( 'um_roles', array() );
