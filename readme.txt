@@ -5,8 +5,8 @@ Contributors: ultimatemember, champsupertramp, nsinelnikov
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
-Tested up to: 7.0
-Stable tag: 2.12.1
+Tested up to: 7.1
+Stable tag: 2.13.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -167,11 +167,38 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.13.0 2026-08-24 =
+
+**Enhancements**
+
+* Added: Using `illegal_user_logins` filter to sanitize the `user_login` field value during registration or upgrade.
+
+**Bugfixes**
+
+* Fixed: `WP_Filesystem()` initialization optimization. Init `WP_Filesystem()` only once when it's necessary.
+* Fixed: Redirect on non-main queries (breaks Spectra and block themes). Added conditional check for the main query (based on @faisalahammad suggestions).
+* Fixed: Registration form infinite loop - gdpr-register.php calls `the_content` recursively causing PHP fatal error. Excluded predefined UM pages and pages with [ultimatemember] shortcode from the list, render empty content for such pages if they are already selected to avoid PHP error (based on @faisalahammad suggestions).
+* Fixed: Security issue when an unauthenticated visitor can read the content of comments awaiting moderation. (Reported by Alessandro Greco (Aleff) and Giovambattista Ianni, University of Calabria (UNICAL)).
+* Fixed: Security issue related to an unauthenticated privilege escalation through the profile form role field. (Reported by Jakub Herman).
+* Fixed: Security issue, CVE ID: CVE-2026-18547. Used 'user_input' allowed a tag list to sanitize HTML-enabled textarea fields. Deprecated Pickadate.JS and Pickatime.JS libraries for User Forms fields.
+
+**Templates Requiring Update**
+
+* gdpr-register.php
+* profile.php
+
+**Deprecated**
+
+* Deprecated: Pickadate.JS and Pickatime.JS libraries for User Forms fields. Used HTML native `<input type="date" />` and `<input type="time" />` instead.
+
+**Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
+
 = 2.12.1 2026-07-06 =
 
 **Enhancements**
 
 * Added: Ability to handle local website URLs resources (image, audio, video from Media Library, 3rd-party local URLs embed to iframe) in the oEmbed-type field value.
+* Added: The API key field type for the settings fields.
 
 **Bugfixes**
 
@@ -204,6 +231,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.13.0 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.12.1 =
 This version fixes a security related bug. Upgrade immediately.
