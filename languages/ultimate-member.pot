@@ -9950,8 +9950,8 @@ msgstr ""
 #: includes/core/class-form.php:120
 #: includes/core/class-member-directory-meta.php:599
 #: includes/core/class-member-directory.php:2982
-#: includes/core/class-user-posts.php:109
-#: includes/core/class-user-posts.php:161
+#: includes/core/class-user-posts.php:125
+#: includes/core/class-user-posts.php:180
 msgid "Too many requests"
 msgstr ""
 
@@ -10412,6 +10412,11 @@ msgstr ""
 #: includes/core/class-uploader.php:1123
 #, php-format
 msgid "Unable to crop image file: %s"
+msgstr ""
+
+#: includes/core/class-user-posts.php:132
+#: includes/core/class-user-posts.php:187
+msgid "You do not have permission to view this profile"
 msgstr ""
 
 #: includes/core/class-user.php:1120

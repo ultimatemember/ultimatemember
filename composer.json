@@ -10,7 +10,8 @@
     "allow-plugins": {
       "symfony/flex": true,
       "dealerdirect/phpcodesniffer-composer-installer": true,
-      "composer/installers": true
+      "composer/installers": true,
+      "oomphinc/composer-installers-extender": true
     }
   },
   "require": {
@@ -24,7 +25,9 @@
     "ext-iconv": "*",
     "ext-tidy": "*",
     "composer/installers": "^2.3",
-    "woocommerce/action-scheduler": "3.9.*"
+    "oomphinc/composer-installers-extender": "^2.0",
+    "woocommerce/action-scheduler": "3.9.*",
+    "wp-cli/wp-config-transformer": "^1.4"
   },
   "require-dev": {
     "wp-cli/wp-cli": "*",
@@ -41,8 +44,9 @@
     ]
   },
   "extra": {
+    "installer-types": ["library"],
     "installer-paths": {
-      "includes/lib/{$name}/": ["woocommerce/action-scheduler"]
+      "includes/lib/{$name}/": ["woocommerce/action-scheduler", "wp-cli/wp-config-transformer"]
     }
   }
 }
