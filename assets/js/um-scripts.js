@@ -171,11 +171,13 @@ jQuery(document).ready(function() {
 			isModal = true;
 		}
 
-		let parent, mode, src, args;
+		let parent, mode, src, args, guestToken, nonce;
 
 		if ( ! isModal ) {
 			parent = jQuery(this).parents('.um-field');
 			mode   = parent.data('mode');
+			guestToken = parent.data('guest_token');
+			nonce = parent.data('remove_nonce');
 			src    = parent.find('.um-single-image-preview img').attr('src');
 
 			let filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
@@ -185,7 +187,8 @@ jQuery(document).ready(function() {
 					mode: mode,
 					filename: filename,
 					src: src,
-					nonce: um_scripts.nonce
+					guest_token: guestToken,
+					_wpnonce: nonce
 				},
 				success: function() {
 					parent.find('.um-single-image-preview img').replaceWith('<img src="" alt="" />');
@@ -201,13 +204,16 @@ jQuery(document).ready(function() {
 		} else {
 			parent = jQuery(this).parents('.um-modal-body');
 			mode   = parent.find('.um-single-image-upload').data('set_mode');
+			guestToken = parent.find('.um-single-image-upload').data('guest_token');
+			nonce = parent.find('.um-single-image-upload').data('remove_nonce');
 			src    = parent.find('.um-single-image-preview img').attr('src');
 
 			args = {
 				data: {
 					src: src,
 					mode: mode,
-					nonce: um_scripts.nonce
+					guest_token: guestToken,
+					_wpnonce: nonce
 				},
 				success: function() {
 					wp.hooks.doAction( 'um_after_removing_preview' );
@@ -233,12 +239,14 @@ jQuery(document).ready(function() {
 			isModal = true;
 		}
 
-		let parent, mode, src, args;
+		let parent, mode, src, args, guestToken, nonce;
 
 		if ( ! isModal ) {
 			parent = jQuery(this).parents('.um-field');
 			src    = parent.find('.um-single-fileinfo a').attr('href');
 			mode   = parent.data('mode');
+			guestToken = parent.data('guest_token');
+			nonce = parent.data('remove_nonce');
 
 			let filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
 
@@ -247,7 +255,8 @@ jQuery(document).ready(function() {
 					mode: mode,
 					filename: filename,
 					src: src,
-					nonce: um_scripts.nonce
+					guest_token: guestToken,
+					_wpnonce: nonce
 				},
 				success: function() {
 					parent.find('.um-single-file-preview').hide();
@@ -263,12 +272,15 @@ jQuery(document).ready(function() {
 			parent = jQuery(this).parents('.um-modal-body');
 			src    = parent.find('.um-single-fileinfo a').attr('href');
 			mode   = parent.find('.um-single-file-upload').data('set_mode');
+			guestToken = parent.find('.um-single-file-upload').data('guest_token');
+			nonce = parent.find('.um-single-file-upload').data('remove_nonce');
 
 			args = {
 				data: {
 					src: src,
 					mode: mode,
-					nonce: um_scripts.nonce
+					guest_token: guestToken,
+					_wpnonce: nonce
 				},
 				success: function() {
 					parent.find('.um-single-file-preview').hide();

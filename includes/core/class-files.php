@@ -2,6 +2,7 @@
 namespace um\core;
 
 use Exception;
+use Random\RandomException;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -108,11 +109,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			return add_query_arg( array( 't' => time() ), $url );
 		}
 
-
 		/**
 		 * @return bool
 		 */
-		function download_routing() {
+		public function download_routing() {
 			if ( 'download' !== get_query_var( 'um_action' ) ) {
 				return false;
 			}
@@ -169,7 +169,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			return false;
 		}
-
 
 		/**
 		 * @param $user_id
@@ -262,31 +261,38 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 		/**
 		 * Remove file by AJAX
+		 *
+		 * @return void
+		 * @throws RandomException
 		 */
 		public function ajax_remove_file() {
-			UM()->check_ajax_nonce();
+			if ( empty( $_POST['mode'] ) ) {
+				wp_send_json_error( __( 'Wrong mode', 'ultimate-member' ) );
+			}
+			$mode = sanitize_key( $_POST['mode'] );
+
+			check_ajax_referer( 'um_remove_file' . $mode );
 
 			if ( UM()->is_rate_limited( 'remove_file' ) ) {
 				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
 			}
 
+			if ( ! is_user_logged_in() ) {
+				if ( empty( $_POST['guest_token'] ) || ! UM()->common()->guest()->verify_guest_token( sanitize_text_field( $_POST['guest_token'] ) ) ) {
+					wp_send_json_error( __( 'Invalid guest session token.', 'ultimate-member' ) );
+				}
+			}
+
 			if ( empty( $_POST['src'] ) ) {
 				wp_send_json_error( __( 'Wrong path', 'ultimate-member' ) );
 			}
-
-			if ( empty( $_POST['mode'] ) ) {
-				wp_send_json_error( __( 'Wrong mode', 'ultimate-member' ) );
-			}
-
 			$src = esc_url_raw( $_POST['src'] );
 			if ( strstr( $src, '?' ) ) {
 				$splitted = explode( '?', $src );
-				$src = $splitted[0];
+				$src      = $splitted[0];
 			}
 
-			$mode = sanitize_key( $_POST['mode'] );
-
-			if ( $mode == 'register' || empty( $_POST['user_id'] ) ) {
+			if ( 'register' === $mode || empty( $_POST['user_id'] ) ) {
 				$is_temp = um_is_temp_upload( $src );
 				if ( ! $is_temp ) {
 					wp_send_json_success();
