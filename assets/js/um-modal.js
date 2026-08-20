@@ -14,64 +14,6 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
-	// jQuery(document).on('click', '.um-modal .um-single-file-preview a.cancel', function(e){
-	// 	e.preventDefault();
-	//
-	// 	var parent = jQuery(this).parents('.um-modal-body');
-	// 	var src = jQuery(this).parents('.um-modal-body').find('.um-single-fileinfo a').attr('href');
-	// 	var mode = parent.find('.um-single-file-upload').data('set_mode');
-	//
-	// 	jQuery.ajax({
-	// 		url: wp.ajax.settings.url,
-	// 		type: 'post',
-	// 		data: {
-	// 			action: 'um_remove_file',
-	// 			src: src,
-	// 			mode: mode,
-	// 			nonce: um_scripts.nonce
-	// 		},
-	// 		success: function() {
-	// 			parent.find('.um-single-file-preview').hide();
-	// 			parent.find('.ajax-upload-dragdrop').show();
-	// 			parent.find('.um-modal-btn.um-finish-upload').addClass('disabled');
-	// 			um_modal_responsive();
-	// 		}
-	// 	});
-	//
-	// 	return false;
-	// });
-
-	// jQuery(document).on('click', '.um-modal .um-single-image-preview a.cancel', function(e){
-	// 	e.preventDefault();
-	//
-	// 	var parent = jQuery(this).parents('.um-modal-body');
-	// 	var src = jQuery(this).parents('.um-modal-body').find('.um-single-image-preview img').attr('src');
-	// 	var mode = parent.find('.um-single-image-upload').data('set_mode');
-	//
-	// 	jQuery.ajax({
-	// 		url: wp.ajax.settings.url,
-	// 		type: 'post',
-	// 		data: {
-	// 			action: 'um_remove_file',
-	// 			src: src,
-	// 			mode: mode,
-	// 			nonce: um_scripts.nonce
-	// 		},
-	// 		success: function() {
-	// 			wp.hooks.doAction( 'um_after_removing_preview' );
-	//
-	// 			parent.find('.um-single-image-preview img').attr( 'src', '' );
-	// 			parent.find('.um-single-image-preview').hide();
-	// 			parent.find('.ajax-upload-dragdrop').show();
-	// 			parent.find('.um-modal-btn.um-finish-upload').addClass( 'disabled' );
-	//
-	// 			um_modal_responsive();
-	// 		}
-	// 	});
-	//
-	// 	return false;
-	// });
-
 	jQuery(document).on('click', '.um-finish-upload.file:not(.disabled)', function(){
 
 		var key = jQuery(this).attr('data-key');

@@ -43,6 +43,10 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			if ( empty( UM()->classes['um\common\actions\users'] ) ) {
 				UM()->classes['um\common\actions\users'] = new actions\Users();
 			}
+
+			if ( empty( UM()->classes['um\common\actions\guests'] ) ) {
+				UM()->classes['um\common\actions\guests'] = new actions\Guests();
+			}
 			// Other classes init here as soon as possible.
 		}
 
@@ -80,6 +84,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\filesystem'] = new Filesystem();
 			}
 			return UM()->classes['um\common\filesystem'];
+		}
+
+		/**
+		 * @since 2.13.0
+		 *
+		 * @return Guest
+		 */
+		public function guest() {
+			if ( empty( UM()->classes['um\common\guest'] ) ) {
+				UM()->classes['um\common\guest'] = new Guest();
+			}
+			return UM()->classes['um\common\guest'];
 		}
 
 		/**
