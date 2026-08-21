@@ -560,6 +560,13 @@ class Directory extends Directory_Config {
 			} else {
 				$pre_query_results = UM()->roles()->get_roles();
 
+				if ( ! empty( $directory_data['roles'] ) ) {
+					$directory_roles = maybe_unserialize( $directory_data['roles'] );
+					if ( ! empty( $directory_roles ) && is_array( $directory_roles ) ) {
+						$pre_query_results = $directory_roles;
+					}
+				}
+
 				if ( ! is_user_logged_in() ) {
 					$hidden_roles_for_guest = UM()->options()->get( 'hidden_roles_for_guest' );
 					$hidden_roles_for_guest = ! empty( $hidden_roles_for_guest ) && is_string( $hidden_roles_for_guest ) ? array( $hidden_roles_for_guest ) : $hidden_roles_for_guest;
@@ -584,8 +591,23 @@ class Directory extends Directory_Config {
 				$where_clause .= " AND um2.meta_value LIKE '" . $account_status . "'";
 			}
 
-			if ( ! is_null( $private_users_ids ) ) {
+			if ( ! empty( $private_users_ids ) ) {
 				$where_clause .= " AND um.user_id NOT IN (' " . implode( "','", $private_users_ids ) . " ')";
+			}
+
+			if ( ! empty( $directory_data['roles'] ) ) {
+				$directory_roles = maybe_unserialize( $directory_data['roles'] );
+				if ( ! empty( $directory_roles ) && is_array( $directory_roles ) ) {
+					$roles_clauses = array();
+					foreach ( $directory_roles as $role ) {
+						$roles_clauses[] = $wpdb->prepare( 'umm_roles.meta_value LIKE %s', '%"' . $wpdb->esc_like( $role ) . '"%' );
+					}
+
+					if ( ! empty( $roles_clauses ) ) {
+						$join_clause  .= $wpdb->prepare( "LEFT JOIN {$wpdb->usermeta} umm_roles ON ( umm_roles.user_id = um.user_id AND umm_roles.meta_key = %s )", $wpdb->get_blog_prefix( get_current_blog_id() ) . 'capabilities' );
+						$where_clause .= ' AND (' . implode( ' OR ', $roles_clauses ) . ') ';
+					}
+				}
 			}
 
 			$pre_query_results = $wpdb->get_row(
@@ -614,8 +636,23 @@ class Directory extends Directory_Config {
 				$where_clause .= " AND um.meta_value LIKE '" . $account_status . "'";
 			}
 
-			if ( ! is_null( $private_users_ids ) ) {
+			if ( ! empty( $private_users_ids ) ) {
 				$where_clause .= " AND u.ID NOT IN (' " . implode( "','", $private_users_ids ) . " ')";
+			}
+
+			if ( ! empty( $directory_data['roles'] ) ) {
+				$directory_roles = maybe_unserialize( $directory_data['roles'] );
+				if ( ! empty( $directory_roles ) && is_array( $directory_roles ) ) {
+					$roles_clauses = array();
+					foreach ( $directory_roles as $role ) {
+						$roles_clauses[] = $wpdb->prepare( 'umm_roles.meta_value LIKE %s', '%"' . $wpdb->esc_like( $role ) . '"%' );
+					}
+
+					if ( ! empty( $roles_clauses ) ) {
+						$join_clause  .= $wpdb->prepare( "LEFT JOIN {$wpdb->usermeta} umm_roles ON ( umm_roles.user_id = u.ID AND umm_roles.meta_key = %s )", $wpdb->get_blog_prefix( get_current_blog_id() ) . 'capabilities' );
+						$where_clause .= ' AND (' . implode( ' OR ', $roles_clauses ) . ') ';
+					}
+				}
 			}
 
 			$pre_query_results = $wpdb->get_col(
@@ -640,8 +677,23 @@ class Directory extends Directory_Config {
 				$where_clause .= " AND um2.meta_value LIKE '%" . $account_status . "'"; // don't remove % here because $wpdb->prepare is used below and it think that %s is the placeholder.
 			}
 
-			if ( ! is_null( $private_users_ids ) ) {
+			if ( ! empty( $private_users_ids ) ) {
 				$where_clause .= " AND um.user_id NOT IN (' " . implode( "','", $private_users_ids ) . " ')";
+			}
+
+			if ( ! empty( $directory_data['roles'] ) ) {
+				$directory_roles = maybe_unserialize( $directory_data['roles'] );
+				if ( ! empty( $directory_roles ) && is_array( $directory_roles ) ) {
+					$roles_clauses = array();
+					foreach ( $directory_roles as $role ) {
+						$roles_clauses[] = $wpdb->prepare( 'umm_roles.meta_value LIKE %s', '%"' . $wpdb->esc_like( $role ) . '"%' );
+					}
+
+					if ( ! empty( $roles_clauses ) ) {
+						$join_clause  .= $wpdb->prepare( "LEFT JOIN {$wpdb->usermeta} umm_roles ON ( umm_roles.user_id = um.user_id AND umm_roles.meta_key = %s )", $wpdb->get_blog_prefix( get_current_blog_id() ) . 'capabilities' );
+						$where_clause .= ' AND (' . implode( ' OR ', $roles_clauses ) . ') ';
+					}
+				}
 			}
 
 			$pre_query_results = $wpdb->get_row(
@@ -673,8 +725,23 @@ class Directory extends Directory_Config {
 				$where_clause .= " AND um2.meta_value LIKE '%" . $account_status . "'"; // don't remove % here because $wpdb->prepare is used below and it think that %s is the placeholder.
 			}
 
-			if ( ! is_null( $private_users_ids ) ) {
+			if ( ! empty( $private_users_ids ) ) {
 				$where_clause .= " AND um.user_id NOT IN (' " . implode( "','", $private_users_ids ) . " ')";
+			}
+
+			if ( ! empty( $directory_data['roles'] ) ) {
+				$directory_roles = maybe_unserialize( $directory_data['roles'] );
+				if ( ! empty( $directory_roles ) && is_array( $directory_roles ) ) {
+					$roles_clauses = array();
+					foreach ( $directory_roles as $role ) {
+						$roles_clauses[] = $wpdb->prepare( 'umm_roles.meta_value LIKE %s', '%"' . $wpdb->esc_like( $role ) . '"%' );
+					}
+
+					if ( ! empty( $roles_clauses ) ) {
+						$join_clause  .= $wpdb->prepare( "LEFT JOIN {$wpdb->usermeta} umm_roles ON ( umm_roles.user_id = um.user_id AND umm_roles.meta_key = %s )", $wpdb->get_blog_prefix( get_current_blog_id() ) . 'capabilities' );
+						$where_clause .= ' AND (' . implode( ' OR ', $roles_clauses ) . ') ';
+					}
+				}
 			}
 
 			$pre_query_results = $wpdb->get_row(
@@ -706,8 +773,23 @@ class Directory extends Directory_Config {
 				$where_clause .= " AND um2.meta_value LIKE '%" . $account_status . "'"; // don't remove % here because $wpdb->prepare is used below and it think that %s is the placeholder.
 			}
 
-			if ( ! is_null( $private_users_ids ) ) {
+			if ( ! empty( $private_users_ids ) ) {
 				$where_clause .= " AND um.user_id NOT IN (' " . implode( "','", $private_users_ids ) . " ')";
+			}
+
+			if ( ! empty( $directory_data['roles'] ) ) {
+				$directory_roles = maybe_unserialize( $directory_data['roles'] );
+				if ( ! empty( $directory_roles ) && is_array( $directory_roles ) ) {
+					$roles_clauses = array();
+					foreach ( $directory_roles as $role ) {
+						$roles_clauses[] = $wpdb->prepare( 'umm_roles.meta_value LIKE %s', '%"' . $wpdb->esc_like( $role ) . '"%' );
+					}
+
+					if ( ! empty( $roles_clauses ) ) {
+						$join_clause  .= $wpdb->prepare( "LEFT JOIN {$wpdb->usermeta} umm_roles ON ( umm_roles.user_id = um.user_id AND umm_roles.meta_key = %s )", $wpdb->get_blog_prefix( get_current_blog_id() ) . 'capabilities' );
+						$where_clause .= ' AND (' . implode( ' OR ', $roles_clauses ) . ') ';
+					}
+				}
 			}
 
 			$pre_query_results = $wpdb->get_col(
