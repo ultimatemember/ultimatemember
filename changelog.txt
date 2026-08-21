@@ -243,8 +243,8 @@
 
 * Enhancements:
 
-  - Added: `UM()->common()-filesystem()::maybe_init_wp_filesystem();` method.
-  - Added: `UM()->common()-filesystem()::remove_dir();` method.
+  - Added: `UM()->common()->filesystem()::maybe_init_wp_filesystem();` method.
+  - Added: `UM()->common()->filesystem()::remove_dir();` method.
 
 * Bugfixes:
 
