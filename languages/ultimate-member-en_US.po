@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-21T11:19:49+00:00\n"
+"POT-Creation-Date: 2026-08-25T10:18:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -132,7 +132,7 @@ msgid "Settings"
 msgstr ""
 
 #: includes/admin/class-admin.php:1943
-#: includes/admin/core/class-admin-settings.php:2766
+#: includes/admin/core/class-admin-settings.php:2774
 #: includes/ajax/class-secure.php:34
 msgid "Security Check"
 msgstr ""
@@ -1943,22 +1943,22 @@ msgid "Default sort users by"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2658
-#: includes/admin/core/class-admin-forms.php:1866
-#: includes/admin/core/class-admin-forms.php:1895
+#: includes/admin/core/class-admin-forms.php:1873
+#: includes/admin/core/class-admin-forms.php:1902
 #: includes/admin/templates/directory/sorting.php:22
 #: assets/js/admin/forms.js:357
 msgid "Meta key"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2662
-#: includes/admin/core/class-admin-forms.php:1867
+#: includes/admin/core/class-admin-forms.php:1874
 #: includes/admin/templates/directory/sorting.php:30
 #: assets/js/admin/forms.js:358
 msgid "Data type"
 msgstr ""
 
 #: includes/admin/class-site-health.php:2666
-#: includes/admin/core/class-admin-forms.php:1870
+#: includes/admin/core/class-admin-forms.php:1877
 #: includes/admin/templates/directory/sorting.php:39
 #: assets/js/admin/forms.js:361
 msgid "Order"
@@ -2392,8 +2392,12 @@ msgstr ""
 msgid "Show key"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:637
-#: includes/admin/core/class-admin-forms.php:646
+#: includes/admin/core/class-admin-forms.php:519
+msgid "Your wp-config.php file is not writable, so this key will be stored in the database instead of as a constant. It will work, but storing it in wp-config.php is more secure — after saving you will be shown the line to add by hand."
+msgstr ""
+
+#: includes/admin/core/class-admin-forms.php:644
+#: includes/admin/core/class-admin-forms.php:653
 #: includes/admin/core/class-admin-metabox.php:1601
 #: includes/admin/core/class-admin-metabox.php:1602
 #: includes/admin/core/class-admin-metabox.php:1611
@@ -2401,32 +2405,32 @@ msgstr ""
 msgid "Select Icon"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:649
+#: includes/admin/core/class-admin-forms.php:656
 #: includes/admin/core/class-admin-metabox.php:1615
 msgid "The selected icon is using an outdated version. Please select the icon above to use latest version."
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:728
+#: includes/admin/core/class-admin-forms.php:735
 msgid "Select Users"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1108
+#: includes/admin/core/class-admin-forms.php:1115
 #: includes/admin/core/class-admin-upgrade.php:274
 msgid "Run"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1244
+#: includes/admin/core/class-admin-forms.php:1251
 msgid "Create Default"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1322
-#: includes/admin/core/class-admin-forms.php:1341
-#: includes/admin/core/class-admin-forms.php:1479
-#: includes/admin/core/class-admin-forms.php:1488
-#: includes/admin/core/class-admin-forms.php:1735
-#: includes/admin/core/class-admin-forms.php:1749
-#: includes/admin/core/class-admin-forms.php:1865
-#: includes/admin/core/class-admin-forms.php:1894
+#: includes/admin/core/class-admin-forms.php:1329
+#: includes/admin/core/class-admin-forms.php:1348
+#: includes/admin/core/class-admin-forms.php:1486
+#: includes/admin/core/class-admin-forms.php:1495
+#: includes/admin/core/class-admin-forms.php:1742
+#: includes/admin/core/class-admin-forms.php:1756
+#: includes/admin/core/class-admin-forms.php:1872
+#: includes/admin/core/class-admin-forms.php:1901
 #: assets/js/admin/forms.js:355
 #: assets/js/admin/forms.js:429
 #: assets/js/admin/forms.js:718
@@ -2434,33 +2438,33 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1535
+#: includes/admin/core/class-admin-forms.php:1542
 msgid "Select media"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1565
+#: includes/admin/core/class-admin-forms.php:1572
 #: assets/js/admin/forms.js:799
 msgid "Select"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1566
+#: includes/admin/core/class-admin-forms.php:1573
 msgid "Clear"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1871
+#: includes/admin/core/class-admin-forms.php:1878
 #: includes/admin/templates/directory/sorting.php:43
 #: assets/js/admin/forms.js:362
 msgid "ASC"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1872
+#: includes/admin/core/class-admin-forms.php:1879
 #: includes/admin/templates/directory/sorting.php:44
 #: assets/js/admin/forms.js:363
 msgid "DESC"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1874
-#: includes/admin/core/class-admin-forms.php:1896
+#: includes/admin/core/class-admin-forms.php:1881
+#: includes/admin/core/class-admin-forms.php:1903
 #: includes/admin/core/class-admin-metabox.php:2377
 #: assets/js/admin/forms.js:365
 msgid "Label"
@@ -3982,34 +3986,38 @@ msgstr ""
 #. translators: %1$s - Plugin name, %2$s - Plugin version.
 #: includes/admin/core/class-admin-notices.php:1007
 #, php-format
-msgid "<strong>%1$s %2$s</strong> The file needed to securely store API keys in wp-config.php is missing. API keys cannot be saved until the plugin is reinstalled."
+msgid "<strong>%1$s %2$s</strong> The file needed to securely store API keys in wp-config.php is missing, so API keys are being stored in the database instead. They keep working, but for improved security please reinstall the plugin and re-save your keys."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:1026
-msgid "<strong>Ultimate Member:</strong> the API key(s) could not be written to <code>wp-config.php</code> (the file is not writable). Your keys were <strong>not</strong> saved. Please add the following line(s) to your <code>wp-config.php</code> above the <code>/* That's all, stop editing! */</code> comment, replacing the placeholder with your key:"
+#: includes/admin/core/class-admin-notices.php:1031
+msgid "<strong>Ultimate Member:</strong> the API key(s) could not be written to <code>wp-config.php</code> (the file is not writable), so they were saved in the database instead. Your keys work, but for improved security please add the following line(s) to your <code>wp-config.php</code> above the <code>/* That's all, stop editing! */</code> comment, replacing the placeholder with your key:"
+msgstr ""
+
+#: includes/admin/core/class-admin-notices.php:1035
+msgid "One or more of these constants is already defined in <code>wp-config.php</code> with an older value. A defined constant takes precedence over the database, so the key you just saved will not be used until you update that constant by hand."
 msgstr ""
 
 #. translators: %s - Settings page URL.
-#: includes/admin/core/class-admin-notices.php:1058
+#: includes/admin/core/class-admin-notices.php:1077
 #, php-format
 msgid "<strong>Ultimate Member:</strong> some of your API keys are still stored in the database. For improved security they should be moved into <code>wp-config.php</code>. Please open the <a href=\"%s\">settings</a> and re-save them to complete the move."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:1080
+#: includes/admin/core/class-admin-notices.php:1099
 msgid "The role selected in WordPress native \"Settings > New User Default Role\" setting has Administrative capabilities."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:1106
+#: includes/admin/core/class-admin-notices.php:1125
 msgid "The role selected in \"Ultimate Member > Settings > Appearance > Registration Form > Registration Default Role\" setting has Administrative capabilities."
 msgstr ""
 
 #. translators: %s are link(s) to the forms.
-#: includes/admin/core/class-admin-notices.php:1174
+#: includes/admin/core/class-admin-notices.php:1193
 #, php-format
 msgid "Register forms have Administrative roles, we recommend that you assign a non-admin roles to secure the forms. %s"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:1199
+#: includes/admin/core/class-admin-notices.php:1218
 msgid "Wrong Data"
 msgstr ""
 
@@ -5226,142 +5234,142 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3269
+#: includes/admin/core/class-admin-settings.php:3277
 msgid "Back"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3281
+#: includes/admin/core/class-admin-settings.php:3289
 msgid "Enable/Disable"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3282
+#: includes/admin/core/class-admin-settings.php:3290
 msgid "Enable this email notification"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3287
+#: includes/admin/core/class-admin-settings.php:3295
 msgid "Subject"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3293
+#: includes/admin/core/class-admin-settings.php:3301
 msgid "Email Content"
 msgstr ""
 
 #. translators: %1$s is an error code; %2$s is an error message.
-#: includes/admin/core/class-admin-settings.php:3361
+#: includes/admin/core/class-admin-settings.php:3369
 #, php-format
 msgid "code: %1$s, message: %2$s;"
 msgstr ""
 
 #. translators: %1$s is an error data; %2$s is a support link.
 #. translators: %1$s is an error; %2$s is a support link.
-#: includes/admin/core/class-admin-settings.php:3367
-#: includes/admin/core/class-admin-settings.php:3441
-#: includes/admin/core/class-admin-settings.php:3450
+#: includes/admin/core/class-admin-settings.php:3375
+#: includes/admin/core/class-admin-settings.php:3449
+#: includes/admin/core/class-admin-settings.php:3458
 #, php-format
 msgid "There was an error with this license key: %1$s. Please <a href=\"%2$s\">contact our support team</a>."
 msgstr ""
 
 #. translators: %1$s is an expiry date; %2$s is a renewal link.
 #. translators: %1$s is a expiry date; %2$s is a renew link.
-#: includes/admin/core/class-admin-settings.php:3378
-#: includes/admin/core/class-admin-settings.php:3473
+#: includes/admin/core/class-admin-settings.php:3386
+#: includes/admin/core/class-admin-settings.php:3481
 #, php-format
 msgid "Your license key expired on %1$s. Please <a href=\"%2$s\" target=\"_blank\">renew your license key</a>."
 msgstr ""
 
 #. translators: %s: support link name.
-#: includes/admin/core/class-admin-settings.php:3389
-#: includes/admin/core/class-admin-settings.php:3484
+#: includes/admin/core/class-admin-settings.php:3397
+#: includes/admin/core/class-admin-settings.php:3492
 #, php-format
 msgid "Your license key has been disabled. Please <a href=\"%s\" target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
 #. translators: %s: account page.
-#: includes/admin/core/class-admin-settings.php:3399
-#: includes/admin/core/class-admin-settings.php:3494
+#: includes/admin/core/class-admin-settings.php:3407
+#: includes/admin/core/class-admin-settings.php:3502
 #, php-format
 msgid "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account page</a> and verify it."
 msgstr ""
 
 #. translators: %1$s is a item name title; %2$s is a account page.
-#: includes/admin/core/class-admin-settings.php:3410
-#: includes/admin/core/class-admin-settings.php:3505
+#: includes/admin/core/class-admin-settings.php:3418
+#: includes/admin/core/class-admin-settings.php:3513
 #, php-format
 msgid "Your %1$s is not active for this URL. Please <a href=\"%2$s\" target=\"_blank\">visit your account page</a> to manage your license key URLs."
 msgstr ""
 
 #. translators: %s: item name.
-#: includes/admin/core/class-admin-settings.php:3420
-#: includes/admin/core/class-admin-settings.php:3515
+#: includes/admin/core/class-admin-settings.php:3428
+#: includes/admin/core/class-admin-settings.php:3523
 #, php-format
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
 #. translators: %s: account link.
-#: includes/admin/core/class-admin-settings.php:3427
-#: includes/admin/core/class-admin-settings.php:3522
+#: includes/admin/core/class-admin-settings.php:3435
+#: includes/admin/core/class-admin-settings.php:3530
 #, php-format
 msgid "Your license key has reached its activation limit. <a href=\"%s\">View possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3433
-#: includes/admin/core/class-admin-settings.php:3528
+#: includes/admin/core/class-admin-settings.php:3441
+#: includes/admin/core/class-admin-settings.php:3536
 msgid "The key you entered belongs to a bundle, please use the product specific license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3439
-#: includes/admin/core/class-admin-settings.php:3448
-#: includes/admin/core/class-admin-settings.php:3459
+#: includes/admin/core/class-admin-settings.php:3447
+#: includes/admin/core/class-admin-settings.php:3456
+#: includes/admin/core/class-admin-settings.php:3467
 msgid "unknown_error"
 msgstr ""
 
 #. translators: %1$s is an error; %2$s is a error data; %3$s is a support link.
-#: includes/admin/core/class-admin-settings.php:3462
+#: includes/admin/core/class-admin-settings.php:3470
 #, php-format
 msgid "There was an error with this license key: %1$s%2$s. Please <a href=\"%3$s\">contact our support team</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3541
+#: includes/admin/core/class-admin-settings.php:3549
 msgid "License key never expires."
 msgstr ""
 
 #. translators: %1$s is an expiry date; %2$s is a renewal link.
-#: includes/admin/core/class-admin-settings.php:3549
+#: includes/admin/core/class-admin-settings.php:3557
 #, php-format
 msgid "Your license key expires soon! It expires on %1$s. <a href=\"%2$s\" target=\"_blank\">Renew your license key</a>."
 msgstr ""
 
 #. translators: %s: expiry date.
-#: includes/admin/core/class-admin-settings.php:3560
+#: includes/admin/core/class-admin-settings.php:3568
 #, php-format
 msgid "Your license key expires on %s."
 msgstr ""
 
 #. translators: %s: item name.
-#: includes/admin/core/class-admin-settings.php:3576
+#: includes/admin/core/class-admin-settings.php:3584
 #, php-format
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3602
-#: includes/admin/core/class-admin-settings.php:3611
+#: includes/admin/core/class-admin-settings.php:3610
+#: includes/admin/core/class-admin-settings.php:3619
 msgid "Clear License"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3606
+#: includes/admin/core/class-admin-settings.php:3614
 msgid "Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3610
+#: includes/admin/core/class-admin-settings.php:3618
 msgid "Re-Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3659
+#: includes/admin/core/class-admin-settings.php:3667
 msgid "Re-check templates"
 msgstr ""
 
 #. translators: %s: Last checking templates time.
-#: includes/admin/core/class-admin-settings.php:3663
+#: includes/admin/core/class-admin-settings.php:3671
 #, php-format
 msgid "Last update: %s. You could re-check changes manually."
 msgstr ""
