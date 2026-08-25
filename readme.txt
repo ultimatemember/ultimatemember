@@ -171,7 +171,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Enhancements**
 
-* Added: Fallback for `wp-cli/wp-config-transformer` library if wp-config.php file isn't writable.
+* Added: Fallback for `wp-cli/wp-config-transformer` library if the wp-config.php file isn't writable.
+* Optimized: Slow SQL query for batch empty account status check.
 
 = 2.13.0 2026-08-24 =
 
