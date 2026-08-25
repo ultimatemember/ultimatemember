@@ -512,6 +512,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$html .= '<button type="button" class="button um-api-key-toggle" aria-label="' . $show_label . '" title="' . $show_label . '"><span class="dashicons dashicons-visibility"></span></button>';
 			$html .= '</span>';
 
+			// Warn up front when the secret can't be written to wp-config.php, so the site owner knows
+			// where it will end up before submitting it. Saving still works — the value falls back to
+			// `um_options` ({@see \um\admin\core\Admin_Settings::save_api_key_constants()}).
+			if ( ! UM()->admin()->wp_config()->is_writable() ) {
+				$html .= '<p class="description um-api-key-config-warning">' . esc_html__( 'Your wp-config.php file is not writable, so this key will be stored in the database instead of as a constant. It will work, but storing it in wp-config.php is more secure — after saving you will be shown the line to add by hand.', 'ultimate-member' ) . '</p>';
+			}
+
 			return $html;
 		}
 
