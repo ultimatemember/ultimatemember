@@ -358,27 +358,23 @@ function um_field_apply_action($dom, condition, is_true) {
 	var child_dom = jQuery('div.um-field[data-key="' + condition.owner + '"]');
 
 	if ( condition.action === 'show' && is_true /*&& child_dom.is(':hidden')*/ ) {
-		if( child_dom.is(':hidden') ){
-			um_field_restore_default_value(child_dom);
-		}
 		child_dom.show();
 		_show_in_ie( child_dom );
 	}
 
 	if ( condition.action === 'show' && ! is_true /*&& child_dom.is(':visible')*/ ) {
 		child_dom.hide();
+		um_field_restore_default_value(child_dom);
 		_hide_in_ie( child_dom );
 	}
 
 	if ( condition.action === 'hide' && is_true /*&& child_dom.is(':visible')*/ ) {
 		child_dom.hide();
+		um_field_restore_default_value(child_dom);
 		_hide_in_ie( child_dom );
 	}
 
 	if ( condition.action === 'hide' && ! is_true /*&& child_dom.is(':hidden')*/ ) {
-		if( child_dom.is(':hidden') ){
-			um_field_restore_default_value(child_dom);
-		}
 		child_dom.show();
 		_show_in_ie( child_dom );
 
