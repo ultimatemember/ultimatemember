@@ -1326,6 +1326,10 @@ class Directory extends Directory_Config {
 				}
 			}
 
+			if ( empty( $attrs['options'] ) || ! is_array( $attrs['options'] ) ) {
+				$attrs['options'] = array();
+			}
+
 			if ( empty( $option_pairs ) ) {
 				$attrs['options'] = array_intersect( array_map( 'stripslashes', array_map( 'trim', $attrs['options'] ) ), $values_array );
 			} else {
