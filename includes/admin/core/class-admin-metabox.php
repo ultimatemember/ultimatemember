@@ -2472,8 +2472,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_editable':
-					// Field cannot be edited during registration; control is meaningless on Register forms.
-					if ( array_key_exists( 'mode', $form_data ) && 'register' === $form_data['mode'] ) {
+					// This setting is only used by profile edit logic.
+					if ( empty( $form_data['mode'] ) || 'profile' !== $form_data['mode'] ) {
 						break;
 					}
 
