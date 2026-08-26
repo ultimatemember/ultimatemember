@@ -40,7 +40,10 @@ if ( ! class_exists( 'um\common\actions\Users' ) ) {
 			UM()->maybe_action_scheduler()->schedule_recurring_action(
 				time() + 60,
 				self::INTERVAL,
-				self::SCHEDULE_ACTION
+				self::SCHEDULE_ACTION,
+				array(),
+				'',
+				true // this action must be unique.
 			);
 		}
 
