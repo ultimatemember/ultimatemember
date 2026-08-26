@@ -19,9 +19,9 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		public $forms_exist = array();
 
 		/**
-		 * @var string
+		 * @var array
 		 */
-		public $profile_role = '';
+		public $profile_role = array();
 
 		/**
 		 * @var bool
@@ -881,26 +881,25 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 				if ( ! empty( $args['use_custom_settings'] ) && ! empty( $args['role'] ) ) {
 					// Option "Apply custom settings to this form". Option "Make this profile form role-specific".
-					// Show the first Profile Form with role selected, don't show profile forms below the page with other role-specific setting.
+					$current_user_roles = UM()->roles()->get_all_user_roles( um_profile_id() );
+
+					if ( empty( $current_user_roles ) ) {
+						ob_get_clean();
+						return '';
+					}
+
+					$form_roles = (array) maybe_unserialize( $args['role'] );
+					$form_roles = array_values( array_filter( $form_roles ) );
+					sort( $form_roles );
+
+					if ( ! count( array_intersect( $form_roles, $current_user_roles ) ) ) {
+						ob_get_clean();
+						return '';
+					}
+
 					if ( empty( $this->profile_role ) ) {
-						$current_user_roles = UM()->roles()->get_all_user_roles( um_profile_id() );
-
-						if ( empty( $current_user_roles ) ) {
-							ob_get_clean();
-							return '';
-						}
-						if ( is_array( $args['role'] ) ) {
-							if ( ! count( array_intersect( $args['role'], $current_user_roles ) ) ) {
-								ob_get_clean();
-								return '';
-							}
-						} elseif ( ! in_array( $args['role'], $current_user_roles, true ) ) {
-							ob_get_clean();
-							return '';
-						}
-
-						$this->profile_role = $args['role'];
-					} elseif ( $this->profile_role !== $args['role'] ) {
+						$this->profile_role = $form_roles;
+					} elseif ( $this->profile_role !== $form_roles ) {
 						/**
 						 * Filters the ability to render a role-specific profile form
 						 * after another role-specific profile form has already rendered
@@ -908,8 +907,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 						 *
 						 * Default behavior keeps the original shortcode suppression so
 						 * only the first matching profile form renders. Return `true`
-						 * to opt in to rendering the second form on the page, regardless
-						 * of how the matching of role-specific settings evolved.
+						 * to opt in to rendering another matching form on the page.
 						 *
 						 * The filter only fires when an earlier role-specific profile
 						 * form on the same page has already set `$this-&gt;profile_role`.
@@ -919,16 +917,18 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 						 *
 						 * @param {bool}  $allow Render profile form or not. Default false (suppress).
 						 * @param {array} $args  Shortcode arguments.
+						 * @param {array} $form_roles Role-specific settings for the current form.
+						 * @param {array} $current_user_roles Current profile user roles.
 						 *
 						 * @example <caption>Allow multiple profile forms with role-specific settings on the same page.</caption>
 						 * add_filter( 'um_allow_multi_role_profile', '__return_true' );
 						 */
-						$allow = apply_filters( 'um_allow_multi_role_profile', false, $args );
+						$allow = apply_filters( 'um_allow_multi_role_profile', false, $args, $form_roles, $current_user_roles );
 						if ( ! $allow ) {
 							ob_get_clean();
 							return '';
 						}
-						$this->profile_role = $args['role'];
+						$this->profile_role = $form_roles;
 					}
 				}
 			}
