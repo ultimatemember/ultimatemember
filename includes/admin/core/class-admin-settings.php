@@ -2334,7 +2334,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			// Keep the registry of constant-backed (`api_key`) option ids in sync so the constant
 			// lookup in UM()->options()->get() applies only to those fields — and works on the
 			// frontend, where the settings structure is not built.
-			UM()->options()->set_constant_backed_ids( array_keys( $this->get_api_key_field_ids() ) );
+			// Skipped on admin-ajax.php: extensions load their ajax/frontend classes there instead of
+			// their admin ones, so their `api_key` fields are missing from the structure and rebuilding
+			// the registry would drop their ids (and rewrite the option on every ajax request).
+			if ( ! wp_doing_ajax() ) {
+				UM()->options()->set_constant_backed_ids( array_keys( $this->get_api_key_field_ids() ) );
+			}
 		}
 
 		/**

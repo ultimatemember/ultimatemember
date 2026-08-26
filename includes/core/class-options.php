@@ -83,6 +83,24 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 			$ids = is_array( $ids ) ? array_values( array_unique( $ids ) ) : array();
 
 			$old_value = get_option( 'um_api_key_option_ids', array() );
+			$old_value = is_array( $old_value ) ? $old_value : array();
+
+			// Never drop an id whose secret already lives in wp-config.php. An extension registers its
+			// `api_key` fields only when its admin classes are loaded, so a request that builds a partial
+			// settings structure would otherwise orphan a constant that is in use: the id would stop being
+			// constant-backed and get() would fall back to the DB, where the value no longer exists.
+			foreach ( $old_value as $old_id ) {
+				if ( ! is_string( $old_id ) || '' === $old_id || in_array( $old_id, $ids, true ) ) {
+					continue;
+				}
+
+				/** This filter is documented in includes/core/class-options.php */
+				$constant = apply_filters( 'um_option_constant_name', 'UM_OPTION_' . strtoupper( $old_id ), $old_id );
+				if ( $constant && defined( $constant ) ) {
+					$ids[] = $old_id;
+				}
+			}
+
 			if ( $old_value !== $ids ) {
 				update_option( 'um_api_key_option_ids', $ids );
 			}
