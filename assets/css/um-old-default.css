@@ -126,6 +126,8 @@ div.uimob800 .um-account-side li a.current:hover
 }
 
 .um .um-form input[type=text],
+.um .um-form input[type=date],
+.um .um-form input[type=time],
 .um .um-form input[type=url],
 .um .um-form input[type=search],
 .um .um-form input[type=tel],
@@ -147,6 +149,8 @@ div.uimob800 .um-account-side li a.current:hover
 }
 
 .um .um-form input[type=text]:focus,
+.um .um-form input[type=date]:focus,
+.um .um-form input[type=time]:focus,
 .um .um-form input[type=url]:focus,
 .um .um-form input[type=search]:focus,
 .um .um-form input[type=tel]:focus,
@@ -159,6 +163,8 @@ div.uimob800 .um-account-side li a.current:hover
 }
 
 .um .um-form input[type=text],
+.um .um-form input[type=date],
+.um .um-form input[type=time],
 .um .um-form input[type=url],
 .um .um-form input[type=search],
 .um .um-form input[type=tel],
@@ -172,6 +178,8 @@ div.uimob800 .um-account-side li a.current:hover
 }
 
 .um .um-form input[type=text]:focus,
+.um .um-form input[type=date]:focus,
+.um .um-form input[type=time]:focus,
 .um .um-form input[type=url]:focus,
 .um .um-form input[type=search]:focus,
 .um .um-form input[type=tel]:focus,
@@ -182,6 +190,8 @@ div.uimob800 .um-account-side li a.current:hover
 }
 
 .um .um-form input[type=text],
+.um .um-form input[type=date],
+.um .um-form input[type=time],
 .um .um-form input[type=url],
 .um .um-form input[type=search],
 .um .um-form input[type=tel],
