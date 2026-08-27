@@ -237,8 +237,29 @@ class Enqueue {
 			}
 
 			if ( file_exists( UM_PATH . 'assets/libs/select2/i18n/' . $locale . '.js' ) ) {
-				wp_register_script( 'um_select2_locale', $libs_url . 'select2/i18n/' . $locale . '.js', array( 'jquery', 'select2' ), '4.0.13', true );
-				self::$select2_handle = 'um_select2_locale';
+				$locale_path   = UM_PATH . 'assets/libs/select2/i18n/' . $locale . '.js';
+				$locale_src    = file_get_contents( $locale_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Local file read.
+				$locale_marker = '/* um-select2-locale:' . $locale . ' */';
+				$locale_added  = false;
+
+				$select2_script = null;
+				if ( function_exists( 'wp_scripts' ) && isset( wp_scripts()->registered['select2'] ) ) {
+					$select2_script = wp_scripts()->registered['select2'];
+				}
+
+				if ( $select2_script && ! empty( $select2_script->extra['after'] ) && is_array( $select2_script->extra['after'] ) ) {
+					foreach ( $select2_script->extra['after'] as $inline_script ) {
+						if ( is_string( $inline_script ) && false !== strpos( $inline_script, $locale_marker ) ) {
+							$locale_added = true;
+							break;
+						}
+					}
+				}
+
+				if ( false !== $locale_src && '' !== trim( $locale_src ) && ! $locale_added ) {
+					$inline = $locale_marker . ' if ( window.jQuery && window.jQuery.fn && window.jQuery.fn.select2 && window.jQuery.fn.select2.amd ) { (function(){ ' . $locale_src . ' })(); }';
+					wp_add_inline_script( 'select2', $inline, 'after' );
+				}
 			}
 		}
 		wp_register_style( 'select2', $libs_url . 'select2/select2' . $suffix . '.css', array(), '4.0.13' );
