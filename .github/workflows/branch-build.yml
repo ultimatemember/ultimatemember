@@ -52,6 +52,7 @@ jobs:
         git rm -r docs
         git rm -r tests
         git add includes/lib/action-scheduler/\*
+        git add includes/lib/wp-config-transformer/\*
         git commit -a -m "Composer Installed. Cleared release repo."
     - name: Push changes
       uses: ad-m/github-push-action@master

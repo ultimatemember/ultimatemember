@@ -62,6 +62,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$this->common_secure();
 
+			$this->api_key_notices();
+
 			/**
 			 * UM hook
 			 *
@@ -184,7 +186,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			do_action( 'um_admin_after_main_notices' );
 		}
 
-
 		/**
 		 * Display single admin notice
 		 *
@@ -193,7 +194,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 *
 		 * @return void|string
 		 */
-		function display_notice( $key, $echo = true ) {
+		public function display_notice( $key, $echo = true ) {
 			$admin_notices = $this->get_admin_notices();
 
 			if ( empty( $admin_notices[ $key ] ) ) {
@@ -202,16 +203,30 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$notice_data = $admin_notices[ $key ];
 
-			$class = ! empty( $notice_data['class'] ) ? $notice_data['class'] : 'updated';
+			if ( empty( $notice_data['message'] ) ) {
+				return;
+			}
 
-			$dismissible = ! empty( $admin_notices[ $key ]['dismissible'] );
+			$notice_classes = array(
+				'um-admin-notice',
+				'notice',
+			);
 
-			ob_start(); ?>
+			if ( ! empty( $notice_data['class'] ) ) {
+				$notice_classes[] = $notice_data['class'];
+			} else {
+				$notice_classes[] = 'updated';
+			}
 
-			<div class="<?php echo esc_attr( $class ); ?> um-admin-notice notice <?php echo $dismissible ? 'is-dismissible' : ''; ?>" data-key="<?php echo esc_attr( $key ); ?>">
-				<?php echo ! empty( $notice_data['message'] ) ? $notice_data['message'] : ''; ?>
+			if ( ! empty( $admin_notices[ $key ]['dismissible'] ) ) {
+				$notice_classes[] = 'is-dismissible';
+			}
+
+			ob_start();
+			?>
+			<div class="<?php echo esc_attr( implode( ' ', $notice_classes ) ); ?>" data-key="<?php echo esc_attr( $key ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_admin_notice_dismiss' . $key ) ); ?>">
+				<?php echo $notice_data['message']; ?>
 			</div>
-
 			<?php
 			$notice = ob_get_clean();
 			if ( $echo ) {
@@ -220,7 +235,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 			return $notice;
 		}
-
 
 		/**
 		 * Checking if the "Membership - Anyone can register" WordPress general setting is active
@@ -957,6 +971,98 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->check_registration_forms();
 		}
 
+		/**
+		 * Notices for the `api_key` field type whose secrets are stored as wp-config.php constants:
+		 *  - the bundled WPConfigTransformer library is missing (broken build),
+		 *  - a save couldn't write wp-config.php (manual instructions),
+		 *  - legacy keys still sit in the DB and should be migrated by re-saving.
+		 *
+		 * @since 2.13.0
+		 */
+		public function api_key_notices() {
+			$api_key_fields = UM()->admin_settings()->get_api_key_field_ids();
+			if ( empty( $api_key_fields ) ) {
+				return;
+			}
+
+			$allowed_html = array(
+				'p'      => array(),
+				'strong' => array(),
+				'code'   => array(),
+				'br'     => array(),
+				'a'      => array(
+					'href'   => array(),
+					'target' => array(),
+				),
+			);
+
+			// 1) Library missing — the feature can't function; keys would fail to save.
+			$wp_config = UM()->admin()->wp_config();
+			if ( ! $wp_config->is_available() ) {
+				$this->add_notice(
+					'um_api_key_lib_missing',
+					array(
+						'class'   => 'error',
+						// translators: %1$s - Plugin name, %2$s - Plugin version.
+						'message' => '<p>' . wp_kses( sprintf( __( '<strong>%1$s %2$s</strong> The file needed to securely store API keys in wp-config.php is missing. API keys cannot be saved until the plugin is reinstalled.', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION ), $allowed_html ) . '</p>',
+					),
+					1
+				);
+				return;
+			}
+
+			// 2) Last save couldn't write wp-config.php — show manual instructions.
+			$failures = get_transient( 'um_api_key_write_failures' );
+			if ( ! empty( $failures ) && is_array( $failures ) ) {
+				$defines = '';
+				foreach ( $failures as $constant ) {
+					$defines .= '<code>' . esc_html( sprintf( "define( '%s', 'your-key-here' );", $constant ) ) . '</code><br />';
+				}
+
+				$this->add_notice(
+					'um_api_key_write_failed',
+					array(
+						'class'   => 'error',
+						'message' => '<p>' . wp_kses( __( '<strong>Ultimate Member:</strong> the API key(s) could not be written to <code>wp-config.php</code> (the file is not writable). Your keys were <strong>not</strong> saved. Please add the following line(s) to your <code>wp-config.php</code> above the <code>/* That\'s all, stop editing! */</code> comment, replacing the placeholder with your key:', 'ultimate-member' ), $allowed_html ) . '</p>' .
+							'<p>' . wp_kses( $defines, $allowed_html ) . '</p>',
+					),
+					1
+				);
+
+				delete_transient( 'um_api_key_write_failures' );
+			}
+
+			// 3) Migration — keys still stored in the DB (no constant defined yet).
+			$legacy_link = '';
+			foreach ( $api_key_fields as $id => $location ) {
+				$constant = UM()->options()->get_constant_name( $id );
+				if ( ! defined( $constant ) && '' !== (string) UM()->options()->get( $id ) ) {
+					$args = array( 'page' => 'um_options' );
+					if ( ! empty( $location['tab'] ) ) {
+						$args['tab'] = $location['tab'];
+					}
+					if ( ! empty( $location['section'] ) ) {
+						$args['section'] = $location['section'];
+					}
+					$legacy_link = add_query_arg( $args, admin_url( 'admin.php' ) );
+					break;
+				}
+			}
+
+			if ( ! empty( $legacy_link ) ) {
+				$this->add_notice(
+					'um_api_key_migrate',
+					array(
+						'class'       => 'info',
+						// translators: %s - Settings page URL.
+						'message'     => '<p>' . wp_kses( sprintf( __( '<strong>Ultimate Member:</strong> some of your API keys are still stored in the database. For improved security they should be moved into <code>wp-config.php</code>. Please open the <a href="%s">settings</a> and re-save them to complete the move.', 'ultimate-member' ), esc_url( $legacy_link ) ), $allowed_html ) . '</p>',
+						'dismissible' => true,
+					),
+					1
+				);
+			}
+		}
+
 		private function check_new_user_role() {
 			$arr_banned_caps = UM()->options()->get( 'banned_capabilities' );
 			if ( empty( $arr_banned_caps ) ) {
@@ -1080,14 +1186,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			);
 		}
 
+		/**
+		 * Dismisses an admin notice based on a provided key.
+		 *
+		 * This method processes an AJAX request to dismiss a specific admin notice. It validates the key,
+		 * verifies the nonce for security, and marks the notice as dismissed.
+		 *
+		 * @return void
+		 */
 		public function dismiss_notice() {
-			UM()->admin()->check_ajax_nonce();
-
 			if ( empty( $_POST['key'] ) ) {
 				wp_send_json_error( __( 'Wrong Data', 'ultimate-member' ) );
 			}
 
-			$this->dismiss( sanitize_key( $_POST['key'] ) );
+			$key = sanitize_key( $_POST['key'] );
+
+			check_ajax_referer( 'um_admin_notice_dismiss' . $key );
+
+			$this->dismiss( $key );
 
 			wp_send_json_success();
 		}
@@ -1108,20 +1224,29 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			update_option( 'um_hidden_admin_notices', $hidden_notices );
 		}
 
-		function force_dismiss_notice() {
-			if ( ! empty( $_REQUEST['um_dismiss_notice'] ) && ! empty( $_REQUEST['um_admin_nonce'] ) ) {
-				if ( wp_verify_nonce( $_REQUEST['um_admin_nonce'], 'um-admin-nonce' ) ) {
-					$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
-					if ( ! is_array( $hidden_notices ) ) {
-						$hidden_notices = array();
-					}
+		/**
+		 * Forces the dismissal of a specific admin notice by saving it to the hidden notices list.
+		 *
+		 * This method handles the request to dismiss an admin notice. It validates the incoming data,
+		 * updates the list of hidden notices in the database, and ensures the dismissed notice will
+		 * not be shown again.
+		 *
+		 * @return void
+		 */
+		public function force_dismiss_notice() {
+			if ( ! empty( $_REQUEST['um_dismiss_notice'] ) ) {
+				$key = sanitize_key( $_REQUEST['um_dismiss_notice'] );
 
-					$hidden_notices[] = sanitize_key( $_REQUEST['um_dismiss_notice'] );
+				check_admin_referer( 'um_admin_notice_dismiss' . $key );
 
-					update_option( 'um_hidden_admin_notices', $hidden_notices );
-				} else {
-					wp_die( __( 'Security Check', 'ultimate-member' ) );
+				$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
+				if ( ! is_array( $hidden_notices ) ) {
+					$hidden_notices = array();
 				}
+
+				$hidden_notices[] = sanitize_key( $_REQUEST['um_dismiss_notice'] );
+
+				update_option( 'um_hidden_admin_notices', $hidden_notices );
 			}
 		}
 	}

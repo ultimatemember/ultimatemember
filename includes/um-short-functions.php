@@ -322,7 +322,7 @@ function um_field_conditions_are_met( $data ) {
 		$val = $arr[3];
 		$op  = $arr[2];
 
-		if ( strstr( $arr[1], 'role_' ) ) {
+		if ( 'role_radio' === $arr[1] || 'role_select' === $arr[1] ) {
 			$arr[1] = 'role';
 		}
 

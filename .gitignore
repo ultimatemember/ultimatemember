@@ -221,6 +221,7 @@ package-lock.json
 .idea/
 composer.lock
 includes/lib/action-scheduler/
+includes/lib/wp-config-transformer/
 
 # exclude Composer installation
 composer.phar
