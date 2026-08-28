@@ -95,6 +95,10 @@ add_action( 'um_submit_form_errors_hook_login', 'um_submit_form_errors_hook_logi
  * @param array $form_data
  */
 function um_submit_form_errors_hook_login_custom_fields( $submitted_data, $form_data ) {
+	if ( ! is_array( $form_data ) || ! array_key_exists( 'custom_fields', $form_data ) || empty( $form_data['custom_fields'] ) ) {
+		return;
+	}
+
 	$fields = maybe_unserialize( $form_data['custom_fields'] );
 	if ( empty( $fields ) || ! is_array( $fields ) ) {
 		return;
@@ -104,7 +108,7 @@ function um_submit_form_errors_hook_login_custom_fields( $submitted_data, $form_
 	$exclude_fields = array( 'username', 'user_login', 'user_email', 'user_password', 'role_radio', 'role_select' );
 
 	foreach ( $fields as $key => $array ) {
-		if ( in_array( $key, $exclude_fields, true ) || empty( $array['required'] ) ) {
+		if ( in_array( $key, $exclude_fields, true ) ) {
 			continue;
 		}
 
@@ -133,7 +137,31 @@ function um_submit_form_errors_hook_login_custom_fields( $submitted_data, $form_
 			continue;
 		}
 
-		if ( ! um_can_view_field( $array ) ) {
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_get_custom_field_array
+		 * @description Extend custom field data on submit form error
+		 * @input_vars
+		 * [{"var":"$array","type":"array","desc":"Field data"},
+		 * {"var":"$fields","type":"array","desc":"All fields"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_get_custom_field_array', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_get_custom_field_array', 'my_get_custom_field_array', 10, 2 );
+		 * function my_get_custom_field_array( $array, $fields ) {
+		 *     // your code here
+		 *     return $array;
+		 * }
+		 * ?>
+		 */
+		$array = apply_filters( 'um_get_custom_field_array', $array, $fields );
+
+		if ( empty( $array['required'] ) ) {
 			continue;
 		}
 
@@ -141,7 +169,12 @@ function um_submit_form_errors_hook_login_custom_fields( $submitted_data, $form_
 		if ( isset( $array['type'] ) && in_array( $array['type'], array( 'checkbox', 'radio', 'multiselect' ), true ) ) {
 			$value = isset( $submitted_data[ $key ] ) ? $submitted_data[ $key ] : '';
 			if ( is_array( $value ) ) {
-				$value = array_filter( $value, 'strlen' );
+				$value = array_filter(
+					$value,
+					static function ( $val ) {
+						return ( is_string( $val ) && '' !== $val ) || is_numeric( $val );
+					}
+				);
 			}
 			if ( '' === $value || array() === $value ) {
 				// translators: %s: title.
