@@ -1,4 +1,5 @@
-<?php if ( ! defined( 'ABSPATH' ) ) {
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -8,13 +9,21 @@ $options = array(
 	'' => __( 'Select page', 'ultimate-member' ),
 );
 
-$pages = get_pages();
-foreach ( $pages as $page ) {
-	$options[ $page->ID ] = $page->post_title;
+$all_pages = get_pages();
+foreach ( $all_pages as $page_item ) {
+	if ( um_post_is_predefined_page( $page_item->ID ) ) {
+		continue;
+	}
+
+	if ( is_object( $page_item ) && has_shortcode( $page_item->post_content, 'ultimatemember' ) ) {
+		continue;
+	}
+
+	$options[ $page_item->ID ] = $page_item->post_title;
 }
 
-$register_use_gdpr = ! isset( $post_id ) ? false : get_post_meta( $post_id, '_um_register_use_gdpr', true ); ?>
-
+$register_use_gdpr = ! isset( $post_id ) ? false : get_post_meta( $post_id, '_um_register_use_gdpr', true );
+?>
 <div class="um-admin-metabox">
 	<?php
 	UM()->admin_forms(

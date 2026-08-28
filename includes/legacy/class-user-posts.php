@@ -30,6 +30,10 @@ if ( ! class_exists( 'um\legacy\User_Posts' ) ) {
 		 * Add posts
 		 */
 		public function add_posts() {
+			if ( ! UM()->common()->users()->can_view_user_profile( um_user( 'ID' ) ) ) {
+				return;
+			}
+
 			$args = array(
 				'post_type'        => 'post',
 				'posts_per_page'   => 10,
@@ -67,12 +71,17 @@ if ( ! class_exists( 'um\legacy\User_Posts' ) ) {
 		 * Add comments
 		 */
 		public function add_comments() {
+			if ( ! UM()->common()->users()->can_view_user_profile( um_user( 'ID' ) ) ) {
+				return;
+			}
+
 			$comments = get_comments(
 				array(
 					'number'       => 10,
 					'offset'       => 0,
 					'user_id'      => um_user( 'ID' ),
 					'post_status'  => array( 'publish' ),
+					'status'       => 'approve',
 					'type__not_in' => apply_filters( 'um_excluded_comment_types', array( '' ) ),
 				)
 			);
@@ -81,6 +90,7 @@ if ( ! class_exists( 'um\legacy\User_Posts' ) ) {
 				array(
 					'user_id'      => um_user( 'ID' ),
 					'post_status'  => array( 'publish' ),
+					'status'       => 'approve',
 					'type__not_in' => apply_filters( 'um_excluded_comment_types', array( '' ) ),
 					'count'        => 1,
 				)
@@ -110,6 +120,10 @@ if ( ! class_exists( 'um\legacy\User_Posts' ) ) {
 
 			$author = ! empty( $_POST['author'] ) ? absint( $_POST['author'] ) : get_current_user_id();
 			$page   = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 0;
+
+			if ( ! UM()->common()->users()->can_view_user_profile( $author ) ) {
+				wp_send_json_error( __( 'You do not have permission to view this profile', 'ultimate-member' ) );
+			}
 
 			$args = array(
 				'post_type'        => 'post',
@@ -142,12 +156,17 @@ if ( ! class_exists( 'um\legacy\User_Posts' ) ) {
 			$user_id = ! empty( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : get_current_user_id();
 			$page    = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 0;
 
+			if ( ! UM()->common()->users()->can_view_user_profile( $user_id ) ) {
+				wp_send_json_error( __( 'You do not have permission to view this profile', 'ultimate-member' ) );
+			}
+
 			$comments = get_comments(
 				array(
 					'number'       => 10,
 					'offset'       => ( $page - 1 ) * 10,
 					'user_id'      => $user_id,
 					'post_status'  => array( 'publish' ),
+					'status'       => 'approve',
 					'type__not_in' => apply_filters( 'um_excluded_comment_types', array( '' ) ),
 				)
 			);

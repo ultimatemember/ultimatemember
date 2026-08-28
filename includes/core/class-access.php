@@ -1442,9 +1442,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 			$filtered_posts = array();
 
-			//other filter
+			// Other filters.
 			foreach ( $posts as $post ) {
-				if ( is_user_logged_in() && isset( $post->post_author ) && $post->post_author == get_current_user_id() ) {
+				if ( isset( $post->post_author ) && is_user_logged_in() && absint( $post->post_author ) === get_current_user_id() ) {
 					$filtered_posts[] = $post;
 					continue;
 				}
@@ -1461,7 +1461,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 				if ( ! $this->is_restricted( $post->ID ) ) {
 					$filtered_posts[] = $post;
-					continue;
 				} else {
 					if ( $is_singular ) {
 						if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {
@@ -1509,24 +1508,32 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 								$filtered_post = apply_filters( 'um_access_restricted_post_instance', $filtered_post, $post, $query );
 
 								$filtered_posts[] = $filtered_post;
-								continue;
 							}
 						} elseif ( '1' == $restriction['_um_noaccess_action'] ) {
-							$curr = UM()->permalinks()->get_current_url();
+							if ( is_object( $query ) && is_a( $query, WP_Query::class ) &&
+								( $query->is_main_query() || ! empty( $query->query_vars['um_main_query'] ) ) ) {
+								$curr = UM()->permalinks()->get_current_url();
 
-							if ( ! isset( $restriction['_um_access_redirect'] ) || '0' == $restriction['_um_access_redirect'] ) {
+								if ( ! isset( $restriction['_um_access_redirect'] ) || '0' == $restriction['_um_access_redirect'] ) {
+									um_safe_redirect( esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) ) );
+								} elseif ( '1' == $restriction['_um_access_redirect'] ) {
 
-								exit( wp_redirect( esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) ) ) );
+									if ( ! empty( $restriction['_um_access_redirect_url'] ) ) {
+										$redirect = $restriction['_um_access_redirect_url'];
+									} else {
+										$redirect = esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
+									}
 
-							} elseif ( '1' == $restriction['_um_access_redirect'] ) {
-
-								if ( ! empty( $restriction['_um_access_redirect_url'] ) ) {
-									$redirect = $restriction['_um_access_redirect_url'];
-								} else {
-									$redirect = esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
+									um_safe_redirect( $redirect );
 								}
+							} else {
+								if ( empty( $restriction['_um_access_hide_from_queries'] ) || UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
+									$filtered_post = $this->maybe_replace_title( $post );
+									/** This filter is documented in includes/core/class-access.php */
+									$filtered_post = apply_filters( 'um_access_restricted_post_instance', $filtered_post, $post, $query );
 
-								exit( wp_redirect( $redirect ) );
+									$filtered_posts[] = $filtered_post;
+								}
 							}
 						}
 					} else {
@@ -1536,7 +1543,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							$filtered_post = apply_filters( 'um_access_restricted_post_instance', $filtered_post, $post, $query );
 
 							$filtered_posts[] = $filtered_post;
-							continue;
 						}
 					}
 				}
@@ -1705,7 +1711,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				$tax_name = get_query_var( 'taxonomy' );
 
 				$term_name = get_query_var( 'term' );
-				$term = get_term_by( 'slug', $term_name, $tax_name );
+				$term      = get_term_by( 'slug', $term_name, $tax_name );
 
 				$term_id = ! empty( $term->term_id ) ? $term->term_id : $term_id;
 			}
@@ -1771,7 +1777,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		public function um_access_check_global_settings() {
 			global $post;
 
-			$curr = UM()->permalinks()->get_current_url();
+			$curr                 = UM()->permalinks()->get_current_url();
 			$ms_empty_role_access = is_multisite() && is_user_logged_in() && ! UM()->roles()->get_priority_user_role( um_user( 'ID' ) );
 
 			if ( is_front_page() ) {
@@ -1805,8 +1811,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					 * }
 					 * ?>
 					 */
-					$redirect_homepage = apply_filters( 'um_custom_homepage_redirect_url', $redirect_homepage, um_user( 'ID' ) );
-					$redirect_to = ! empty( $redirect_homepage ) ? $redirect_homepage : um_get_core_page( 'user' );
+					$redirect_homepage      = apply_filters( 'um_custom_homepage_redirect_url', $redirect_homepage, um_user( 'ID' ) );
+					$redirect_to            = ! empty( $redirect_homepage ) ? $redirect_homepage : um_get_core_page( 'user' );
 					$this->redirect_handler = $this->set_referer( esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect_to ) ), 'custom_homepage' );
 
 				} else {
@@ -1859,19 +1865,19 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			if ( $access == 2 && ( ! is_user_logged_in() || $ms_empty_role_access ) ) {
 
 				//build exclude URLs pages
-				$redirects = array();
+				$redirects   = array();
 				$redirects[] = trim( untrailingslashit( UM()->options()->get( 'access_redirect' ) ) );
 
 				$exclude_uris = UM()->options()->get( 'access_exclude_uris' );
 				if ( ! empty( $exclude_uris ) ) {
 					$exclude_uris = array_map( 'trim', $exclude_uris );
-					$redirects = array_merge( $redirects, $exclude_uris );
+					$redirects    = array_merge( $redirects, $exclude_uris );
 				}
 
 				$redirects = array_unique( $redirects );
 
-				$current_url = UM()->permalinks()->get_current_url( UM()->is_permalinks );
-				$current_url = untrailingslashit( $current_url );
+				$current_url       = UM()->permalinks()->get_current_url( UM()->is_permalinks );
+				$current_url       = untrailingslashit( $current_url );
 				$current_url_slash = trailingslashit( $current_url );
 
 				if ( ! ( isset( $post->ID ) && ( in_array( $current_url, $redirects ) || in_array( $current_url_slash, $redirects ) ) ) ) {
@@ -1885,7 +1891,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					$this->redirect_handler = $this->set_referer( esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
 				} else {
 					$this->redirect_handler = false;
-					$this->allow_access = true;
+					$this->allow_access     = true;
 				}
 			}
 		}
@@ -1896,13 +1902,12 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * @return bool
 		 */
 		public function check_access() {
-			if ( $this->allow_access === true ) {
+			if ( true === $this->allow_access ) {
 				return true;
 			}
 
 			if ( $this->redirect_handler ) {
-				wp_redirect( $this->redirect_handler );
-				exit;
+				um_safe_redirect( $this->redirect_handler );
 			}
 
 			return false;

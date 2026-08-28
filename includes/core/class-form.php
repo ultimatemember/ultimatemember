@@ -620,14 +620,25 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				$maybe_set_default_role = true;
 				if ( array_key_exists( 'role', $this->post_form ) ) {
 					if ( 'login' === $this->form_data['mode'] ) {
+						// No need role field on the user login form.
 						unset( $this->post_form['role'] );
 					} else {
+						// Check if the Registration or Profile Form has a role select or role radio custom field.
 						$form_has_role_field = count( array_intersect( $all_cf_metakeys, array( 'role_select', 'role_radio' ) ) ) > 0;
 						if ( ! $form_has_role_field ) {
-							unset( $this->post_form['role'] );
+							if ( ! empty( $this->post_form['role'] ) ) {
+								// High-level escape if hacking. If there aren't the user role fields on the form, it isn't possible to submit the role data.
+								wp_die( esc_html__( 'This is not possible for security reasons.', 'ultimate-member' ) );
+							}
 						} else {
+							// Parse custom fields if the Registration or Profile Form.
 							$custom_field_roles = $this->custom_field_roles( $this->form_data['custom_fields'] );
-							if ( ! empty( $custom_field_roles ) && ! empty( $this->post_form['role'] ) ) {
+							if ( empty( $custom_field_roles ) ) {
+								if ( ! empty( $this->post_form['role'] ) ) {
+									// High-level escape if hacking. If there aren't the user role fields on the form, it isn't possible to submit the role data.
+									wp_die( esc_html__( 'This is not possible for security reasons.', 'ultimate-member' ) );
+								}
+							} elseif ( ! empty( $this->post_form['role'] ) ) {
 								if ( is_array( $this->post_form['role'] ) ) {
 									$role = current( $this->post_form['role'] );
 									$role = sanitize_key( $role );
@@ -638,17 +649,20 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 								global $wp_roles;
 								$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
 
-								if ( ! empty( $role ) &&
-								     ( ! in_array( $role, $custom_field_roles, true ) || in_array( $role, $exclude_roles, true ) ) ) {
-									// High level escape if hacking.
+								if ( ! empty( $role ) && ( ! in_array( $role, $custom_field_roles, true ) || in_array( $role, $exclude_roles, true ) ) ) {
+									// High-level escape if hacking.
 									wp_die( esc_html__( 'This is not possible for security reasons.', 'ultimate-member' ) );
 								}
 
-								$this->post_form['role'] = $role;
-								$maybe_set_default_role  = false;
+								if ( ! empty( $role ) ) {
+									$this->post_form['role'] = $role;
+									$maybe_set_default_role  = false;
 
-								// Force adding `role` metakey if there is a role-type field on the form. It's required to User Profile.
-								$this->usermeta_whitelist[] = 'role';
+									// Force adding `role` metakey if there is a role-type field on the form. It's required to User Profile.
+									$this->usermeta_whitelist[] = 'role';
+								} else {
+									unset( $this->post_form['role'] );
+								}
 							}
 						}
 					}
@@ -862,7 +876,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 									case 'textarea':
 										$description_key = UM()->profile()->get_show_bio_key( $form );
 										if ( ! empty( $field['html'] ) || ( $description_key === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
-											$allowed_html = UM()->get_allowed_html( 'templates' );
+											$allowed_html = UM()->get_allowed_html( 'user_input', true );
 											if ( $description_key === $k ) {
 												$allowed_html = 'user_description';
 											}
@@ -1128,7 +1142,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 * @return bool|array roles
 		 */
 		public function custom_field_roles( $custom_fields ) {
-
 			$fields = maybe_unserialize( $custom_fields );
 			if ( ! is_array( $fields ) ) {
 				return false;
@@ -1148,7 +1161,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 			foreach ( $fields as $field_key => $field_settings ) {
 
-				if ( strstr( $field_key, 'role_' ) && array_key_exists( 'options', $field_settings ) && is_array( $field_settings['options'] ) ) {
+				if ( ( 'role_radio' === $field_key || 'role_select' === $field_key ) && array_key_exists( 'options', $field_settings ) && is_array( $field_settings['options'] ) ) {
 
 					if ( isset( $this->post_form['mode'] ) && 'profile' === $this->post_form['mode'] ) {
 						// It's for a legacy case `array_key_exists( 'editable', $field_settings )`.

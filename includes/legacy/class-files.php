@@ -1328,8 +1328,8 @@ if ( ! class_exists( 'um\legacy\Files' ) ) {
 		 * @return string
 		 */
 		public function format_bytes( $size, $precision = 1 ) {
-			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->filesystem()->format_bytes()' );
-			return UM()->common()->filesystem()::format_bytes( $size, $precision );
+			_deprecated_function( __METHOD__, '2.8.7', '\um\common\Filesystem::format_bytes()' );
+			return \um\common\Filesystem::format_bytes( $size, $precision );
 		}
 	}
 }

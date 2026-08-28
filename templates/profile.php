@@ -6,7 +6,7 @@
  *
  * Page: "Profile"
  *
- * @version 2.10.0
+ * @version 2.13.0
  *
  * @var string $mode
  * @var int    $form_id
@@ -49,7 +49,6 @@ $description_key = UM()->profile()->get_show_bio_key( $args );
 		do_action( 'um_profile_header_cover_area', $args );
 		/** This action is documented in ultimate-member/templates/v3/profile.php */
 		do_action( 'um_profile_header', $args );
-
 		/** This action is documented in ultimate-member/templates/v3/profile.php */
 		$classes = apply_filters( 'um_profile_navbar_classes', '', um_user( 'ID' ) );
 		?>

@@ -5,8 +5,8 @@ Contributors: ultimatemember, champsupertramp, nsinelnikov
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
-Tested up to: 7.0
-Stable tag: 2.12.1
+Tested up to: 7.1
+Stable tag: 2.13.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -236,6 +236,45 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Deprecated function `um_can_view_profile()` use function `UM()->common()->users()->can_view_user_profile()` instead.
 * Deprecated function `UM()->password()->setcookie()`. Use function `UM()::setcookie()` instead.
 
+= 2.13.1 2026-08-xx =
+
+**Enhancements**
+
+* Added: Fallback for `wp-cli/wp-config-transformer` library if the wp-config.php file isn't writable.
+* Optimized: Slow SQL query for batch empty account status check.
+
+= 2.13.0 2026-08-24 =
+
+**Enhancements**
+
+* Added: Using `illegal_user_logins` filter to sanitize the `user_login` field value during registration or upgrade.
+* Added: Using `wp-cli/wp-config-transformer` library to set Ultimate Member > API keys settings constants in wp-config.php instead of storing them in DB.
+* Added: New user-capabilities functions `UM()->common()->users()->can_view_user()`, `UM()->common()->users()->get_privacy_setting()`, `UM()->common()->users()->is_user_profile_private()`, `UM()->common()->users()->get_restricted_privacy_notice()`, `UM()->common()->users()->can_view_private_user_profile()`, `UM()->common()->users()->can_view_user_profile()`. The future replacement for the `um_can_view_profile()` helper with different cases to check.
+* Updated: Version of the WordPress native excluded functions to avoid the using them in the callbacks.
+
+**Bugfixes**
+
+* Fixed: `WP_Filesystem()` initialization optimization. Init `WP_Filesystem()` only once when it's necessary.
+* Fixed: Redirect on non-main queries (breaks Spectra and block themes). Added conditional check for the main query (based on @faisalahammad suggestions).
+* Fixed: Registration form infinite loop - gdpr-register.php calls `the_content` recursively causing PHP fatal error. Excluded predefined UM pages and pages with [ultimatemember] shortcode from the list, render empty content for such pages if they are already selected to avoid PHP error (based on @faisalahammad suggestions).
+* Fixed: Causes site-wide `rest_cookie_invalid_nonce` on all authenticated REST requests. Refactored admin notice handling to enhance security and flexibility. Removed using localized `um_admin_scripts.nonce` globally on wp-admin. It's localized only on UM wp-admin pages. (based on @michaeldavisdcpersonal report and @faisalahammad suggestions).
+* Fixed: Security issue when an unauthenticated visitor can read the content of comments awaiting moderation. (Reported by Alessandro Greco (Aleff) and Giovambattista Ianni, University of Calabria (UNICAL)).
+* Fixed: Security issue related to an unauthenticated privilege escalation through the profile form role field. (Reported by Jakub Herman).
+* Fixed: Security issue, CVE ID: CVE-2026-18547. Used 'user_input' allowed a tag list to sanitize HTML-enabled textarea fields. Deprecated Pickadate.JS and Pickatime.JS libraries for User Forms fields.
+* Fixed: Member Directory type-button styles.
+* Fixed: Added fallback for the date and time fields to show date and time using the WordPress native format.
+
+**Templates Requiring Update**
+
+* gdpr-register.php
+* profile.php
+
+**Deprecated**
+
+* Deprecated: Pickadate.JS and Pickatime.JS libraries for User Forms fields. Used HTML native `<input type="date" />` and `<input type="time" />` instead.
+
+**Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
+
 = 2.12.1 2026-07-06 =
 
 **Enhancements**
@@ -274,6 +313,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.13.0 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.12.1 =
 This version fixes a security related bug. Upgrade immediately.

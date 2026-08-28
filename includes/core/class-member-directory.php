@@ -191,7 +191,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						return '';
 					}
 
-					if ( isset( $attrs['metakey'] ) && strstr( $attrs['metakey'], 'role_' ) ) {
+					if ( isset( $attrs['metakey'] ) && ( 'role_select' === $attrs['metakey'] || 'role_radio' === $attrs['metakey'] ) ) {
 						$shortcode_roles = get_post_meta( $directory_data['form_id'], '_um_roles', true );
 						$um_roles = UM()->roles()->get_roles( false );
 
@@ -297,7 +297,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 								$opt = $v;
 
-								if ( strstr( $filter, 'role_' ) || $filter == 'role' ) {
+								if ( 'role_select' === $filter || 'role_radio' === $filter || 'role' === $filter ) {
 									$opt = $k;
 								}
 

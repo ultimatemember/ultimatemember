@@ -417,11 +417,18 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		}
 
 		/**
-		 * @param string $context
+		 * Retrieves the allowed HTML tags and attributes for a specific context.
 		 *
-		 * @return array
+		 * @param string $context       The context to evaluate. For example, 'wp-admin', 'templates'.
+		 *                              Determines which set of HTML tags and attributes are returned.
+		 * @param bool   $ignore_global Optional. Whether to ignore globally allowed HTML tags and attributes.
+		 *                              Defaults to false.
+		 *
+		 * @return array An associative array of allowed HTML tags and their respective attributes.
+		 *               The array structure maps tag names to arrays of attribute names as keys,
+		 *               with boolean values indicating attribute allowance.
 		 */
-		public function get_allowed_html( $context = '' ) {
+		public function get_allowed_html( $context = '', $ignore_global = false ) {
 			switch ( $context ) {
 				case 'wp-admin':
 					$allowed_html = array(
@@ -598,6 +605,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 						),
 					);
 					break;
+
 				case 'templates':
 					$allowed_html = array(
 						'style'      => array(),
@@ -817,6 +825,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 						),
 					);
 					break;
+
 				case 'admin_notice':
 					$allowed_html = array(
 						'p'      => array(
@@ -832,52 +841,86 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 						),
 					);
 					break;
+
+				case 'user_input':
+					/**
+					 * Restricted HTML allowlist for user-provided content.
+					 *
+					 * This intentionally does not inherit WordPress global/common attributes
+					 * or the full `post`, `user_description` HTML allowlist.
+					 * Only formatting elements and the explicitly required link attributes are allowed.
+					 */
+					$allowed_html = array(
+						'p'          => array(),
+						'br'         => array(),
+						'strong'     => array(),
+						'em'         => array(),
+						'i'          => array(),
+						'b'          => array(),
+						'q'          => array(),
+						'u'          => array(),
+						's'          => array(),
+						'code'       => array(),
+						'blockquote' => array(),
+						'ul'         => array(),
+						'ol'         => array(),
+						'li'         => array(),
+						'a'          => array(
+							'href'  => true,
+							'title' => true,
+							'rel'   => true,
+						),
+					);
+					break;
+
 				default:
 					$allowed_html = array();
 					break;
 			}
 
-			$global_allowed = array(
-				'a'      => array(
-					'href'     => array(),
-					'rel'      => true,
-					'rev'      => true,
-					'name'     => true,
-					'target'   => true,
-					'download' => array(
-						'valueless' => 'y',
+			if ( false === $ignore_global ) {
+				$global_allowed = array(
+					'a'      => array(
+						'href'     => array(),
+						'rel'      => true,
+						'rev'      => true,
+						'name'     => true,
+						'target'   => true,
+						'download' => array(
+							'valueless' => 'y',
+						),
 					),
-				),
-				'em'     => array(),
-				'i'      => array(),
-				'b'      => array(),
-				'u'      => array(),
-				'small'  => array(),
-				'q'      => array(
-					'cite' => true,
-				),
-				's'      => array(),
-				'strike' => array(),
-				'strong' => array(),
-				'br'     => array(),
-				'div'    => array(
-					'align'           => true,
-					'dir'             => true,
-					'lang'            => true,
-					'contenteditable' => true,
-				),
-				'span'   => array(
-					'dir'   => true,
-					'align' => true,
-					'lang'  => true,
-				),
-				'code'   => array(),
-				'hr'     => array(
-					'style' => true,
-				),
-			);
+					'em'     => array(),
+					'i'      => array(),
+					'b'      => array(),
+					'u'      => array(),
+					'small'  => array(),
+					'q'      => array(
+						'cite' => true,
+					),
+					's'      => array(),
+					'strike' => array(),
+					'strong' => array(),
+					'br'     => array(),
+					'div'    => array(
+						'align'           => true,
+						'dir'             => true,
+						'lang'            => true,
+						'contenteditable' => true,
+					),
+					'span'   => array(
+						'dir'   => true,
+						'align' => true,
+						'lang'  => true,
+					),
+					'code'   => array(),
+					'hr'     => array(
+						'style' => true,
+					),
+				);
 
-			$allowed_html = array_merge_recursive( $global_allowed, $allowed_html );
+				$allowed_html = array_merge_recursive( $global_allowed, $allowed_html );
+			}
 
 			/**
 			 * Filters the allowed HTML tags and their attributes in the late escaping before echo.
@@ -905,6 +948,9 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			 * add_filter( 'um_late_escaping_allowed_tags', 'add_extra_kses_allowed_tags', 10, 2 );
 			 */
 			$allowed_html = apply_filters( 'um_late_escaping_allowed_tags', $allowed_html, $context );
+			if ( false !== $ignore_global ) {
+				return $allowed_html;
+			}
 
 			return array_map( '_wp_add_global_attributes', $allowed_html );
 		}

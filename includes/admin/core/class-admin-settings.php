@@ -69,8 +69,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			add_filter( 'um_change_settings_before_save', array( $this, 'set_default_if_empty' ), 9 );
 			add_filter( 'um_change_settings_before_save', array( $this, 'remove_empty_values' ) );
 			add_filter( 'um_change_settings_before_save', array( $this, 'save_email_templates' ), 11 );
-		}
 
+			// Store `api_key` field secrets as wp-config.php constants instead of in the DB.
+			add_filter( 'um_change_settings_before_save', array( $this, 'save_api_key_constants' ), 8, 1 );
+		}
 
 		public function same_page_update_ajax() {
 			UM()->admin()->check_ajax_nonce();
@@ -2595,6 +2597,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			if ( count( $this->settings_structure['advanced']['sections']['apis']['form_sections'] ) < 1 ) {
 				unset( $this->settings_structure['advanced']['sections']['apis'] );
 			}
+
+			// Keep the registry of constant-backed (`api_key`) option ids in sync so the constant
+			// lookup in UM()->options()->get() applies only to those fields — and works on the
+			// frontend, where the settings structure is not built.
+			UM()->options()->set_constant_backed_ids( array_keys( $this->get_api_key_field_ids() ) );
 		}
 
 		/**
@@ -2880,6 +2887,142 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			}
 
 			return '<ul class="subsubsub"><li>' . implode( ' | </li><li>', $subtabs ) . '</li></ul>';
+		}
+
+		/**
+		 * Collect the ids of all `api_key` settings fields, mapped to the tab/section they live in.
+		 *
+		 * The field `type` is only present in the settings structure (not in the settings map), so we
+		 * walk the structure tree ([tab]['sections'][section](['form_sections'][key])['fields'][]).
+		 * The tab/section is captured so the migration notice can deep-link to the right settings page.
+		 *
+		 * @since 2.13.0
+		 *
+		 * @return array<string, array{tab:string, section:string}> Keyed by field id.
+		 */
+		public function get_api_key_field_ids() {
+			$result = array();
+
+			if ( empty( $this->settings_structure ) || ! is_array( $this->settings_structure ) ) {
+				return $result;
+			}
+
+			foreach ( $this->settings_structure as $tab_key => $tab ) {
+				if ( ! empty( $tab['fields'] ) && is_array( $tab['fields'] ) ) {
+					$this->collect_api_key_fields( $tab['fields'], $tab_key, '', $result );
+				}
+
+				if ( empty( $tab['sections'] ) || ! is_array( $tab['sections'] ) ) {
+					continue;
+				}
+
+				foreach ( $tab['sections'] as $section_key => $section ) {
+					if ( ! empty( $section['fields'] ) && is_array( $section['fields'] ) ) {
+						$this->collect_api_key_fields( $section['fields'], $tab_key, $section_key, $result );
+					}
+
+					if ( ! empty( $section['form_sections'] ) && is_array( $section['form_sections'] ) ) {
+						foreach ( $section['form_sections'] as $form_section ) {
+							if ( ! empty( $form_section['fields'] ) && is_array( $form_section['fields'] ) ) {
+								$this->collect_api_key_fields( $form_section['fields'], $tab_key, $section_key, $result );
+							}
+						}
+					}
+				}
+			}
+
+			return $result;
+		}
+
+		/**
+		 * Push `api_key` fields from a fields list into the result set.
+		 *
+		 * @since 2.13.0
+		 *
+		 * @param array  $fields      List of field arrays.
+		 * @param string $tab_key     Tab slug.
+		 * @param string $section_key Section slug.
+		 * @param array  $result      Accumulator, passed by reference.
+		 */
+		private function collect_api_key_fields( $fields, $tab_key, $section_key, &$result ) {
+			foreach ( $fields as $field ) {
+				if ( isset( $field['type'], $field['id'] ) && 'api_key' === $field['type'] ) {
+					$result[ $field['id'] ] = array(
+						'tab'     => $tab_key,
+						'section' => $section_key,
+					);
+				}
+			}
+		}
+
+		/**
+		 * Divert `api_key` field values to wp-config.php constants on settings save.
+		 *
+		 * For every submitted `api_key` field: write (or update) its value as a `UM_OPTION_<ID>`
+		 * constant, or remove that constant when the value is empty; then strip the value from the
+		 * settings array and delete any legacy DB copy so the secret is never persisted to `um_options`.
+		 *
+		 * When wp-config.php can't be written (not writable, or the bundled library is missing) the value
+		 * is stored in `um_options` instead so the key keeps working, and the id is collected into a
+		 * transient consumed by the admin notice, which asks the site owner to move it into wp-config.php.
+		 *
+		 * Hooked on `um_change_settings_before_save` (priority 8, before sanitize/DB write).
+		 *
+		 * @since 2.13.0
+		 *
+		 * @param array $settings Settings about to be saved.
+		 *
+		 * @return array
+		 */
+		public function save_api_key_constants( $settings ) {
+			if ( ! is_array( $settings ) ) {
+				return $settings;
+			}
+
+			$api_key_fields = $this->get_api_key_field_ids();
+			if ( empty( $api_key_fields ) ) {
+				return $settings;
+			}
+
+			$wp_config = UM()->admin()->wp_config();
+			$failures  = array();
+
+			foreach ( $api_key_fields as $id => $location ) {
+				if ( ! array_key_exists( $id, $settings ) ) {
+					continue;
+				}
+
+				// The value is handled here, not by the generic settings save — strip it from the settings
+				// array either way so it can't be written to `um_options` twice.
+				$constant = UM()->options()->get_constant_name( $id );
+				$value    = sanitize_text_field( wp_unslash( $settings[ $id ] ) );
+				unset( $settings[ $id ] );
+
+				if ( '' === $value ) {
+					$wp_config->remove_constant( $constant );
+					UM()->options()->remove( $id );
+					continue;
+				}
+
+				if ( $wp_config->set_constant( $constant, $value ) ) {
+					// Written to wp-config.php — drop any legacy DB copy.
+					UM()->options()->remove( $id );
+				} else {
+					// Couldn't write wp-config.php (not writable, or the library is missing): fall back to
+					// storing the value in `um_options` so the key still works, and surface a notice with
+					// manual instructions to move it into wp-config.php later. `get()` reads the constant
+					// first and the DB second, so the fallback is transparent — and a constant added by
+					// hand afterwards immediately takes precedence over the DB copy.
+					UM()->options()->update( $id, $value );
+					$failures[ $id ] = $constant;
+				}
+			}
+
+			if ( ! empty( $failures ) ) {
+				set_transient( 'um_api_key_write_failures', $failures, HOUR_IN_SECONDS );
+			}
+
+			return $settings;
 		}
 
 		/**

@@ -127,7 +127,7 @@ if ( ! UM()->is_new_ui() ) {
 	 * @return array
 	 */
 	function um_change_profile_cover_photo_label( $fields ) {
-		$max_size = UM()->common()->filesystem()::format_bytes( $fields['cover_photo']['max_size'] );
+		$max_size = \um\common\Filesystem::format_bytes( $fields['cover_photo']['max_size'] );
 		if ( ! empty( $max_size ) ) {
 			list( $file_size, $unit ) = explode( ' ', $max_size );
 
@@ -151,7 +151,7 @@ if ( ! UM()->is_new_ui() ) {
 			return $fields;
 		}
 
-		$max_size = UM()->common()->filesystem()::format_bytes( $fields['profile_photo']['max_size'] );
+		$max_size = \um\common\Filesystem::format_bytes( $fields['profile_photo']['max_size'] );
 		if ( ! empty( $max_size ) ) {
 			list( $file_size, $unit ) = explode( ' ', $max_size );
 

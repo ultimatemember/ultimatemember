@@ -93,85 +93,60 @@ UM.common = {
 	},
 	datetimePicker: {
 		init: function () {
-			jQuery('.um-datepicker:not(.picker__input)').each(function(){
-				elem = jQuery(this);
+			jQuery('.um-datepicker:not(.um-inited)').each(function(){
+				let input = this;
+				jQuery(input).addClass('um-inited');
+				input.addEventListener('change', function () {
+					if ( ! this.value ) {
+						return;
+					}
 
-				if ( typeof elem.attr('data-disabled_weekdays') != 'undefined' && elem.attr('data-disabled_weekdays') != '' ) {
-					var disable = JSON.parse( elem.attr('data-disabled_weekdays') );
-				} else {
-					var disable = false;
-				}
+					this.setCustomValidity('');
 
-				var years_n = null;
-				if ( typeof elem.attr('data-years') != 'undefined' ) {
-					years_n = elem.attr('data-years');
-				}
+					// Range validation for typed values (ISO dates compare safely as strings).
+					if ( this.min && this.value < this.min ) {
+						/* translators: %s: Date range min. */
+						this.setCustomValidity( wp.i18n.sprintf( wp.i18n.__( 'Please pick a date on or after %s.', 'ultimate-member' ), this.min ) );
+						this.value = '';
+						this.reportValidity();
+						return;
+					}
+					if ( this.max && this.value > this.max ) {
+						/* translators: %s: Date range max. */
+						this.setCustomValidity( wp.i18n.sprintf( wp.i18n.__( 'Please pick a date on or before %s.', 'ultimate-member' ), this.max ) );
+						this.value = '';
+						this.reportValidity();
+						return;
+					}
 
-				var minRange = elem.attr('data-date_min');
-				var maxRange = elem.attr('data-date_max');
-
-				var minSplit = [], maxSplit = [];
-				if ( typeof minRange != 'undefined' ) {
-					minSplit = minRange.split(",");
-				}
-				if ( typeof maxRange != 'undefined' ) {
-					maxSplit = maxRange.split(",");
-				}
-
-				var min = minSplit.length ? new Date(minSplit) : null;
-				var max = minSplit.length ? new Date(maxSplit) : null;
-
-				// fix min date for safari
-				if ( min && min.toString() == 'Invalid Date' && minSplit.length == 3 ) {
-					var minDateString = minSplit[1] + '/' + minSplit[2] + '/' + minSplit[0];
-					min = new Date(Date.parse(minDateString));
-				}
-
-				// fix max date for safari
-				if ( max && max.toString() == 'Invalid Date' && maxSplit.length == 3 ) {
-					var maxDateString = maxSplit[1] + '/' + maxSplit[2] + '/' + maxSplit[0];
-					max = new Date(Date.parse(maxDateString));
-				}
-
-				var data = {
-					disable: disable,
-					format: elem.attr( 'data-format' ),
-					formatSubmit: 'yyyy/mm/dd',
-					hiddenName: true,
-					onOpen: function() {
-						elem.blur();
-						if ( elem.parents('body').hasClass('wp-admin') ) {
-							elem.siblings('.picker').find('.picker__button--close').addClass('button')
-						}
-					},
-					onClose: function() { elem.blur(); }
-				};
-
-				if ( years_n !== null ) {
-					data.selectYears = years_n;
-				}
-
-				if ( min !== null ) {
-					data.min = min;
-				}
-
-				if ( max !== null ) {
-					data.max = max;
-				}
-
-				elem.pickadate( data );
+					let disabled = JSON.parse(this.dataset.disabled_weekdays || '[]'); // options used 1=Sun..7=Sat
+					let day = new Date(this.value + 'T00:00:00').getDay(); // this function returns 0=Sun..6=Sat
+					if (disabled.includes( day + 1 )) {
+						this.setCustomValidity(wp.i18n.__( 'This day is not selectable.', 'ultimate-member' ) );
+						this.value = '';
+						this.reportValidity();
+					} else {
+						this.setCustomValidity('');
+					}
+				});
 			});
 
-			jQuery('.um-timepicker:not(.picker__input)').each(function(){
-				elem = jQuery(this);
-
-				elem.pickatime({
-					format: elem.attr('data-format'),
-					interval: parseInt( elem.attr('data-intervals') ),
-					formatSubmit: 'HH:i',
-					hiddenName: true,
-					onOpen: function() { elem.blur(); },
-					onClose: function() { elem.blur(); }
+			jQuery('.um-timepicker:not(.um-inited)').each(function(){
+				let input = this;
+				jQuery(input).addClass('um-inited');
+				input.addEventListener('change', function () {
+					if ( ! this.value ) {
+						return;
+					}
+					let stepSec = parseInt(this.step, 10) || 60;
+					let [h, m] = this.value.split(':').map(Number);
+					let totalSec = (h * 3600) + (m * 60);
+					if (totalSec % stepSec !== 0) {
+						this.setCustomValidity( wp.i18n.__( 'Please pick a time on the allowed interval.', 'ultimate-member' ) );
+						this.reportValidity();
+					} else {
+						this.setCustomValidity('');
+					}
 				});
 			});
 		}

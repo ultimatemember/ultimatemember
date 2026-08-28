@@ -749,7 +749,7 @@ class Filesystem {
 			$suffixes = array( '', 'kb', 'MB', 'GB', 'TB' );
 
 			$computed_size = round( 1024 ** ( $base - floor( $base ) ), $precision );
-			$unit          = $suffixes[ absint( floor( $base ) ) ];
+			$unit          = $suffixes[ abs( (int) floor( $base ) ) ];
 
 			return $computed_size . ' ' . $unit;
 		}
