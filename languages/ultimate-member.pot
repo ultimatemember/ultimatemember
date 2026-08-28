@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-21T11:29:24+00:00\n"
+"POT-Creation-Date: 2026-08-28T18:20:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -2379,7 +2379,7 @@ msgid "Invalid form ID."
 msgstr ""
 
 #: includes/admin/core/class-admin-forms.php:348
-#: includes/core/class-fields.php:748
+#: includes/core/class-fields.php:753
 msgid "Required"
 msgstr ""
 
@@ -3420,10 +3420,10 @@ msgid "The text that appears on the button. e.g. Upload"
 msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:2129
-#: includes/core/class-fields.php:1913
-#: includes/core/class-fields.php:1952
-#: includes/core/class-fields.php:2937
-#: includes/core/class-fields.php:3058
+#: includes/core/class-fields.php:1941
+#: includes/core/class-fields.php:1980
+#: includes/core/class-fields.php:2965
+#: includes/core/class-fields.php:3086
 msgid "Upload"
 msgstr ""
 
@@ -6392,8 +6392,8 @@ msgstr ""
 #: includes/admin/templates/modal/forms/fonticons.php:26
 #: includes/admin/templates/role/publish.php:33
 #: includes/class-config.php:242
-#: includes/core/class-fields.php:3040
-#: includes/core/class-fields.php:3183
+#: includes/core/class-fields.php:3068
+#: includes/core/class-fields.php:3211
 #: includes/core/um-actions-profile.php:925
 #: includes/core/um-actions-profile.php:934
 #: includes/core/um-actions-profile.php:1123
@@ -9848,116 +9848,116 @@ msgid_plural "%s years old"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/core/class-fields.php:1615
+#: includes/core/class-fields.php:1643
 msgid "Custom Field"
 msgstr ""
 
-#: includes/core/class-fields.php:1902
+#: includes/core/class-fields.php:1930
 msgid "Please upload a valid image!"
 msgstr ""
 
-#: includes/core/class-fields.php:1916
+#: includes/core/class-fields.php:1944
 msgid "Sorry this is not a valid image."
 msgstr ""
 
-#: includes/core/class-fields.php:1919
+#: includes/core/class-fields.php:1947
 msgid "This image is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:1922
+#: includes/core/class-fields.php:1950
 msgid "This image is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:1925
+#: includes/core/class-fields.php:1953
 msgid "You can only upload one image"
 msgstr ""
 
-#: includes/core/class-fields.php:1955
+#: includes/core/class-fields.php:1983
 msgid "Sorry this is not a valid file."
 msgstr ""
 
-#: includes/core/class-fields.php:1958
+#: includes/core/class-fields.php:1986
 msgid "This file is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:1961
+#: includes/core/class-fields.php:1989
 msgid "This file is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:1964
+#: includes/core/class-fields.php:1992
 msgid "You can only upload one file"
 msgstr ""
 
-#: includes/core/class-fields.php:2519
+#: includes/core/class-fields.php:2547
 msgid "Current Password"
 msgstr ""
 
-#: includes/core/class-fields.php:2559
+#: includes/core/class-fields.php:2587
 msgid "New Password"
 msgstr ""
 
 #. translators: %s: label.
 #. translators: %s: placeholder.
-#: includes/core/class-fields.php:2610
-#: includes/core/class-fields.php:2628
-#: includes/core/class-fields.php:2631
+#: includes/core/class-fields.php:2638
+#: includes/core/class-fields.php:2656
+#: includes/core/class-fields.php:2659
 #, php-format
 msgid "Confirm %s"
 msgstr ""
 
-#: includes/core/class-fields.php:2950
+#: includes/core/class-fields.php:2978
 msgid "Upload Photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2977
-#: includes/core/class-fields.php:3039
+#: includes/core/class-fields.php:3005
+#: includes/core/class-fields.php:3067
 #: includes/core/um-actions-profile.php:1121
 #: includes/core/um-actions-profile.php:1154
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:3039
-#: includes/core/class-fields.php:3182
+#: includes/core/class-fields.php:3067
+#: includes/core/class-fields.php:3210
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:3039
+#: includes/core/class-fields.php:3067
 msgid "Apply"
 msgstr ""
 
-#: includes/core/class-fields.php:3067
+#: includes/core/class-fields.php:3095
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:3112
+#: includes/core/class-fields.php:3140
 #: includes/core/um-filters-fields.php:369
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:3116
-#: includes/core/class-fields.php:3182
+#: includes/core/class-fields.php:3144
+#: includes/core/class-fields.php:3210
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:3182
+#: includes/core/class-fields.php:3210
 msgid "Save"
 msgstr ""
 
 #. translators: %s: edit user link.
-#: includes/core/class-fields.php:4718
+#: includes/core/class-fields.php:4746
 #, php-format
 msgid "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some information!"
 msgstr ""
 
-#: includes/core/class-fields.php:4720
+#: includes/core/class-fields.php:4748
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
-#: includes/core/class-fields.php:4985
+#: includes/core/class-fields.php:5013
 msgid "Please login as administrator."
 msgstr ""
 
-#: includes/core/class-fields.php:4989
+#: includes/core/class-fields.php:5017
 msgid "Invalid action."
 msgstr ""
 
