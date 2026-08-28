@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-17T21:31:20+00:00\n"
+"POT-Creation-Date: 2026-08-28T16:20:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -10583,7 +10583,7 @@ msgstr ""
 #. translators: %s: title.
 #: includes/core/um-actions-form.php:513
 #: includes/core/um-actions-form.php:515
-#: includes/core/um-actions-login.php:126
+#: includes/core/um-actions-login.php:130
 #, php-format
 msgid "%s - wrong conditions."
 msgstr ""
@@ -10593,7 +10593,7 @@ msgstr ""
 #: includes/core/um-actions-form.php:530
 #: includes/core/um-actions-form.php:535
 #: includes/core/um-actions-form.php:540
-#: includes/core/um-actions-login.php:148
+#: includes/core/um-actions-login.php:181
 #, php-format
 msgid "%s is required."
 msgstr ""
@@ -10603,13 +10603,13 @@ msgid "Please specify account type."
 msgstr ""
 
 #: includes/core/um-actions-form.php:575
-#: includes/core/um-actions-login.php:155
+#: includes/core/um-actions-login.php:188
 msgid "This field is required"
 msgstr ""
 
 #. translators: %s: title.
 #: includes/core/um-actions-form.php:578
-#: includes/core/um-actions-login.php:158
+#: includes/core/um-actions-login.php:191
 #, php-format
 msgid "%s is required"
 msgstr ""
@@ -10812,15 +10812,15 @@ msgstr ""
 msgid "Password is incorrect. Please try again."
 msgstr ""
 
-#: includes/core/um-actions-login.php:280
+#: includes/core/um-actions-login.php:313
 msgid "This action has been prevented for security measures."
 msgstr ""
 
-#: includes/core/um-actions-login.php:517
+#: includes/core/um-actions-login.php:550
 msgid "Keep me signed in"
 msgstr ""
 
-#: includes/core/um-actions-login.php:561
+#: includes/core/um-actions-login.php:594
 msgid "Forgot your password?"
 msgstr ""
 
