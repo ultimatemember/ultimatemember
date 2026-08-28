@@ -314,12 +314,17 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias} ON {$join_alias}.user_id = u.ID";
 
 								$value   = trim( stripslashes( $value ) );
-								$compare = apply_filters( 'um_members_directory_filter_text', '=', $field );
+								$compare = apply_filters( 'um_members_directory_filter_text', $is_default ? '=' : 'LIKE', $field );
 								$compare = esc_sql( $compare );
 								$value   = apply_filters( 'um_members_directory_filter_text_meta_value', $value, $field );
 
+								$where_value = $value;
+								if ( false !== stripos( $compare, 'LIKE' ) ) {
+									$where_value = '%' . $wpdb->esc_like( $value ) . '%';
+								}
+
 								// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias and $compare variables are pre-escaped.
-								$this->where_clauses[] = $wpdb->prepare( "{$join_alias}.um_key = %s AND {$join_alias}.um_value {$compare} %s", $field, $value );
+								$this->where_clauses[] = $wpdb->prepare( "{$join_alias}.um_key = %s AND {$join_alias}.um_value {$compare} %s", $field, $where_value );
 
 								if ( ! $is_default ) {
 									$this->custom_filters_in_query[ $field ] = $value;
