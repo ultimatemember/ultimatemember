@@ -43,7 +43,10 @@ if ( ! class_exists( 'um\common\actions\Guests' ) ) {
 			UM()->maybe_action_scheduler()->schedule_recurring_action(
 				strtotime( 'midnight tonight' ),
 				$flush_interval,
-				self::FLUSH_ACTION
+				self::FLUSH_ACTION,
+				array(),
+				'',
+				true
 			);
 		}
 
