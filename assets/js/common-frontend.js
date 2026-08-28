@@ -99,6 +99,14 @@ UM.frontend = {
 				UM.frontend.cropper.obj = null; // flush our own object
 			}
 		}
+	},
+	dropdown: {
+		init: function() {
+			let $dropdown = jQuery('.um-dropdown');
+			if ( $dropdown.length ) {
+				$dropdown.um_dropdownMenu();
+			}
+		}
 	}
 }
 
@@ -114,6 +122,14 @@ wp.hooks.addAction( 'um_window_resize', 'um_common_frontend', function() {
 	UM.frontend.cropper.destroy();
 });
 
+wp.hooks.addAction( 'um_member_directory_loaded', 'um_common_frontend', function() {
+	UM.frontend.dropdown.init();
+});
+
+wp.hooks.addAction( 'um_member_directory_build_template', 'um_common_frontend', function() {
+	UM.frontend.dropdown.init();
+});
+
 jQuery(document).ready(function ($) {
 	$(document.body).on('click', '.um_action_error_close', function(e) {
 		e.preventDefault();
@@ -122,4 +138,6 @@ jQuery(document).ready(function ($) {
 		url.searchParams.delete('um_action_error');
 		window.history.replaceState({}, '', url);
 	});
+
+	UM.frontend.dropdown.init();
 });

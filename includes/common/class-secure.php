@@ -241,7 +241,7 @@ if ( ! class_exists( 'um\common\Secure' ) ) {
 			um_reset_user();
 			update_user_meta( $user->ID, 'um_user_blocked', 'suspicious_activity' );
 			update_user_meta( $user->ID, 'um_user_blocked__timestamp', current_time( 'mysql', true ) );
-			UM()->user()->remove_cache( $user->ID );
+			UM()->common()->users()->remove_cache( $user->ID );
 		}
 
 		/**

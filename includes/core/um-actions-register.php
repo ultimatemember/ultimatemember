@@ -59,7 +59,11 @@ function um_after_insert_user( $user_id, $args, $form_data = null ) {
 	}
 
 	// Create user uploads directory.
-	UM()->uploader()->get_upload_user_base_dir( $user_id, true );
+	if ( UM()->is_new_ui() ) {
+		$uploads_dir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
+	} else {
+		UM()->uploader()->get_upload_user_base_dir( $user_id, true );
+	}
 
 	/**
 	 * Fires after insert user to DB and there you can set any extra details.
@@ -410,7 +414,7 @@ function um_submit_form_register( $args, $form_data ) {
 			$temp_user_login = $user_login;
 			while ( username_exists( $temp_user_login ) ) {
 				$temp_user_login = $user_login . $count;
-				$count++;
+				++$count;
 			}
 			$user_login = $temp_user_login;
 		}
@@ -574,212 +578,357 @@ function um_submit_form_register( $args, $form_data ) {
 }
 add_action( 'um_submit_form_register', 'um_submit_form_register', 10, 2 );
 
-/**
- * Show the submit button
- *
- * @param $args
- */
-function um_add_submit_button_to_register( $args ) {
-	$primary_btn_word = $args['primary_btn_word'];
+if ( UM()->is_new_ui() ) {
 	/**
-	 * UM hook
+	 * Show the submit button
 	 *
-	 * @type filter
-	 * @title um_register_form_button_one
-	 * @description Change Register Form Primary button
-	 * @input_vars
-	 * [{"var":"$primary_btn_word","type":"string","desc":"Button text"},
-	 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_register_form_button_one', 'function_name', 10, 2 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_register_form_button_one', 'my_register_form_button_one', 10, 2 );
-	 * function my_register_form_button_one( $primary_btn_word, $args ) {
-	 *     // your code here
-	 *     return $primary_btn_word;
-	 * }
-	 * ?>
+	 * @param $args
 	 */
-	$primary_btn_word = apply_filters('um_register_form_button_one', $primary_btn_word, $args );
+	function um_add_submit_button_to_register( $args ) {
+		$primary_btn_word = $args['primary_btn_word'];
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_register_form_button_one
+		 * @description Change Register Form Primary button
+		 * @input_vars
+		 * [{"var":"$primary_btn_word","type":"string","desc":"Button text"},
+		 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_register_form_button_one', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_register_form_button_one', 'my_register_form_button_one', 10, 2 );
+		 * function my_register_form_button_one( $primary_btn_word, $args ) {
+		 *     // your code here
+		 *     return $primary_btn_word;
+		 * }
+		 * ?>
+		 */
+		$primary_btn_word = apply_filters( 'um_register_form_button_one', $primary_btn_word, $args );
 
-	if ( ! isset( $primary_btn_word ) || $primary_btn_word == '' ){
-		$primary_btn_word = UM()->options()->get( 'register_primary_btn_word' );
+		if ( ! isset( $primary_btn_word ) || '' === $primary_btn_word ) {
+			$primary_btn_word = UM()->options()->get( 'register_primary_btn_word' );
+		}
+		?>
+
+		<div class="um-form-submit">
+			<?php
+			echo UM()->frontend()::layouts()::button(
+				$primary_btn_word,
+				array(
+					'type'   => 'submit',
+					'design' => 'primary',
+					'width'  => 'full',
+					'id'     => 'um-submit-btn',
+				)
+			);
+			?>
+			<span class="um-center"><?php echo wp_kses_post( sprintf( __( 'Already have an account? %s', 'ultimate-member' ), '<a href="' . um_get_predefined_page_url( 'login' ) . '" class="um-link">' . __( 'Log in', 'ultimate-member' ) . '</a>' ) ); ?></span>
+		</div>
+		<?php
 	}
-
+	add_action( 'um_after_register_fields', 'um_add_submit_button_to_register', 1000 );
+} else {
 	/**
-	 * Filters the classes applied to the primary button on the registration form.
+	 * Show the submit button
 	 *
-	 * @hook um_register_form_primary_btn_classes
-	 * @since 2.10.5
-	 *
-	 * @param {array} $classes An array of CSS classes applied to the primary button.
-	 * @param {array} $args    An array of arguments or configurations used in the registration form.
-	 *
-	 * @return {array} Button CSS classes.
-	 *
-	 * @example <caption>Extend the classes applied to the primary button on the registration form.</caption>
-	 * function my_custom_classes( $classes, $args ) {
-	 *     // Add a new class to the button
-	 *     $classes[] = 'new-button-class';
-	 *
-	 *     return $classes;
-	 * }
-	 * add_filter( 'um_register_form_primary_btn_classes', 'my_custom_classes', 10, 2 );
+	 * @param $args
 	 */
-	$primary_btn_classes = apply_filters( 'um_register_form_primary_btn_classes', array( 'um-button' ), $args );
+	function um_add_submit_button_to_register( $args ) {
+		$primary_btn_word = $args['primary_btn_word'];
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_register_form_button_one
+		 * @description Change Register Form Primary button
+		 * @input_vars
+		 * [{"var":"$primary_btn_word","type":"string","desc":"Button text"},
+		 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_register_form_button_one', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_register_form_button_one', 'my_register_form_button_one', 10, 2 );
+		 * function my_register_form_button_one( $primary_btn_word, $args ) {
+		 *     // your code here
+		 *     return $primary_btn_word;
+		 * }
+		 * ?>
+		 */
+		$primary_btn_word = apply_filters( 'um_register_form_button_one', $primary_btn_word, $args );
 
-	$secondary_btn_word = $args['secondary_btn_word'];
-	/**
-	 * UM hook
-	 *
-	 * @type filter
-	 * @title um_register_form_button_two
-	 * @description Change Registration Form Secondary button
-	 * @input_vars
-	 * [{"var":"$secondary_btn_word","type":"string","desc":"Button text"},
-	 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_register_form_button_two', 'function_name', 10, 2 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_register_form_button_two', 'my_register_form_button_two', 10, 2 );
-	 * function my_register_form_button_two( $secondary_btn_word, $args ) {
-	 *     // your code here
-	 *     return $secondary_btn_word;
-	 * }
-	 * ?>
-	 */
-	$secondary_btn_word = apply_filters( 'um_register_form_button_two', $secondary_btn_word, $args );
+		if ( ! isset( $primary_btn_word ) || $primary_btn_word == '' ) {
+			$primary_btn_word = UM()->options()->get( 'register_primary_btn_word' );
+		}
 
-	if ( ! isset( $secondary_btn_word ) || $secondary_btn_word == '' ){
-		$secondary_btn_word = UM()->options()->get( 'register_secondary_btn_word' );
+		/**
+		 * Filters the classes applied to the primary button on the registration form.
+		 *
+		 * @hook um_register_form_primary_btn_classes
+		 * @since 2.10.5
+		 *
+		 * @param {array} $classes An array of CSS classes applied to the primary button.
+		 * @param {array} $args    An array of arguments or configurations used in the registration form.
+		 *
+		 * @return {array} Button CSS classes.
+		 *
+		 * @example <caption>Extend the classes applied to the primary button on the registration form.</caption>
+		 * function my_custom_classes( $classes, $args ) {
+		 *     // Add a new class to the button
+		 *     $classes[] = 'new-button-class';
+		 *
+		 *     return $classes;
+		 * }
+		 * add_filter( 'um_register_form_primary_btn_classes', 'my_custom_classes', 10, 2 );
+		 */
+		$primary_btn_classes = apply_filters( 'um_register_form_primary_btn_classes', array( 'um-button' ), $args );
+
+		$secondary_btn_word = $args['secondary_btn_word'];
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_register_form_button_two
+		 * @description Change Registration Form Secondary button
+		 * @input_vars
+		 * [{"var":"$secondary_btn_word","type":"string","desc":"Button text"},
+		 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_register_form_button_two', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_register_form_button_two', 'my_register_form_button_two', 10, 2 );
+		 * function my_register_form_button_two( $secondary_btn_word, $args ) {
+		 *     // your code here
+		 *     return $secondary_btn_word;
+		 * }
+		 * ?>
+		 */
+		$secondary_btn_word = apply_filters( 'um_register_form_button_two', $secondary_btn_word, $args );
+
+		if ( ! isset( $secondary_btn_word ) || $secondary_btn_word == '' ) {
+			$secondary_btn_word = UM()->options()->get( 'register_secondary_btn_word' );
+		}
+
+		$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page( 'login' );
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_register_form_button_two_url
+		 * @description Change Registration Form Secondary button URL
+		 * @input_vars
+		 * [{"var":"$secondary_btn_url","type":"string","desc":"Button URL"},
+		 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_register_form_button_two_url', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_register_form_button_two_url', 'my_register_form_button_two_url', 10, 2 );
+		 * function my_register_form_button_two_url( $secondary_btn_url, $args ) {
+		 *     // your code here
+		 *     return $secondary_btn_url;
+		 * }
+		 * ?>
+		 */
+		$secondary_btn_url = apply_filters( 'um_register_form_button_two_url', $secondary_btn_url, $args );
+		?>
+
+		<div class="um-col-alt">
+
+			<?php if ( ! empty( $args['secondary_btn'] ) ) { ?>
+
+				<div class="um-left um-half">
+					<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ); ?>" class="<?php echo esc_attr( implode( ' ', $primary_btn_classes ) ); ?>" id="um-submit-btn" />
+				</div>
+				<div class="um-right um-half">
+					<a href="<?php echo esc_url( $secondary_btn_url ); ?>" class="um-button um-alt">
+						<?php _e( wp_unslash( $secondary_btn_word ), 'ultimate-member' ); ?>
+					</a>
+				</div>
+
+			<?php } else { ?>
+
+				<div class="um-center">
+					<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ); ?>" class="<?php echo esc_attr( implode( ' ', $primary_btn_classes ) ); ?>" id="um-submit-btn" />
+				</div>
+
+			<?php } ?>
+
+			<div class="um-clear"></div>
+
+		</div>
+
+		<?php
 	}
-
-	$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page('login');
-	/**
-	 * UM hook
-	 *
-	 * @type filter
-	 * @title um_register_form_button_two_url
-	 * @description Change Registration Form Secondary button URL
-	 * @input_vars
-	 * [{"var":"$secondary_btn_url","type":"string","desc":"Button URL"},
-	 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_register_form_button_two_url', 'function_name', 10, 2 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_register_form_button_two_url', 'my_register_form_button_two_url', 10, 2 );
-	 * function my_register_form_button_two_url( $secondary_btn_url, $args ) {
-	 *     // your code here
-	 *     return $secondary_btn_url;
-	 * }
-	 * ?>
-	 */
-	$secondary_btn_url = apply_filters('um_register_form_button_two_url', $secondary_btn_url, $args ); ?>
-
-	<div class="um-col-alt">
-
-		<?php if ( ! empty( $args['secondary_btn'] ) ) { ?>
-
-			<div class="um-left um-half">
-				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="<?php echo esc_attr( implode( ' ', $primary_btn_classes ) ); ?>" id="um-submit-btn" />
-			</div>
-			<div class="um-right um-half">
-				<a href="<?php echo esc_url( $secondary_btn_url ); ?>" class="um-button um-alt">
-					<?php _e( wp_unslash( $secondary_btn_word ),'ultimate-member' ); ?>
-				</a>
-			</div>
-
-		<?php } else { ?>
-
-			<div class="um-center">
-				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="<?php echo esc_attr( implode( ' ', $primary_btn_classes ) ); ?>" id="um-submit-btn" />
-			</div>
-
-		<?php } ?>
-
-		<div class="um-clear"></div>
-
-	</div>
-
-	<?php
+	add_action( 'um_after_register_fields', 'um_add_submit_button_to_register', 1000 );
 }
-add_action( 'um_after_register_fields', 'um_add_submit_button_to_register', 1000 );
-
 
 /**
  * Show Fields
  *
  * @param $args
  */
-function um_add_register_fields( $args ){
+function um_add_register_fields( $args ) {
 	echo UM()->fields()->display( 'register', $args );
 }
 add_action( 'um_main_register_fields', 'um_add_register_fields', 100 );
 
-/**
- * Saving files to register a new user, if there are fields with files.
- *
- * @param $user_id
- * @param $args
- * @param $form_data
- */
-function um_registration_save_files( $user_id, $args, $form_data ) {
-	if ( empty( $args['submitted'] ) ) {
-		// It's only frontend case.
-		return;
+
+if ( UM()->is_new_ui() ) {
+	/**
+	 * Saving files to register a new user, if there are fields with files.
+	 *
+	 * @param $user_id
+	 * @param $args
+	 * @param $form_data
+	 */
+	function um_registration_save_files( $user_id, $args, $form_data ) {
+		global $wp_filesystem;
+
+		if ( empty( $args['submitted'] ) ) {
+			// It's only frontend case.
+			return;
+		}
+
+		UM()->common()->filesystem()::maybe_init_wp_filesystem();
+
+		$user_basedir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
+
+		$fields = maybe_unserialize( $form_data['custom_fields'] );
+		if ( ! empty( $fields ) && is_array( $fields ) ) {
+			$user_meta_submitted     = get_user_meta( $user_id, 'submitted', true );
+			$user_meta_submitted_old = $user_meta_submitted; // Is used to compare.
+
+			if ( ! function_exists( 'wp_get_image_editor' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/media.php';
+			}
+
+			foreach ( $fields as $key => $array ) {
+				if ( ! array_key_exists( 'type', $array ) || ! in_array( $array['type'], array( 'image', 'file' ), true ) ) {
+					continue;
+				}
+
+				if ( ! empty( $args['submitted'][ $key ]['temp_hash'] ) ) {
+					$filepath = UM()->common()->filesystem()->get_file_by_hash( $args['submitted'][ $key ]['temp_hash'] );
+					if ( ! empty( $filepath ) ) {
+						if ( 'profile_photo' === $key ) {
+							$file_type = wp_check_filetype( $filepath );
+							$filename  = 'profile_photo.' . $file_type['ext'];
+						} elseif ( 'cover_photo' === $key ) {
+							$file_type = wp_check_filetype( $filepath );
+							$filename  = 'cover_photo.' . $file_type['ext'];
+						} else {
+							$filename = sanitize_file_name( $args['submitted'][ $key ]['filename'] );
+							if ( file_exists( $user_basedir . DIRECTORY_SEPARATOR . $filename ) ) {
+								$filename = wp_unique_filename( $user_basedir . DIRECTORY_SEPARATOR, $filename );
+							}
+						}
+
+						$new_filepath  = $user_basedir . DIRECTORY_SEPARATOR . $filename;
+						$moving_result = $wp_filesystem->move( $filepath, $new_filepath );
+						if ( $moving_result ) {
+							if ( 'profile_photo' === $key ) {
+								$image = wp_get_image_editor( $new_filepath ); // Return an implementation that extends WP_Image_Editor
+								if ( ! is_wp_error( $image ) ) {
+									// Creates new file's thumbnails.
+									$sizes_array = array();
+									$all_sizes   = UM()->config()->get( 'avatar_thumbnail_sizes' );
+									foreach ( $all_sizes as $size ) {
+										$sizes_array[] = array( 'width' => $size );
+									}
+									$image->multi_resize( $sizes_array );
+								}
+							} elseif ( 'cover_photo' === $key ) {
+								$image = wp_get_image_editor( $new_filepath ); // Return an implementation that extends WP_Image_Editor
+								if ( ! is_wp_error( $image ) ) {
+									// Creates new file's thumbnails.
+									$sizes_array = array();
+									$all_sizes   = UM()->options()->get( 'cover_thumb_sizes' );
+									foreach ( $all_sizes as $size ) {
+										$sizes_array[] = array( 'width' => $size );
+									}
+									$image->multi_resize( $sizes_array );
+								}
+							}
+
+							$user_meta_submitted[ $key ] = $filename;
+
+							update_user_meta( $user_id, $key, $filename );
+
+							if ( 'file' === $array['type'] ) {
+								$file_type = wp_check_filetype( $new_filepath );
+								$size      = filesize( $new_filepath );
+
+								$file_metadata = array(
+									'ext'         => $file_type['ext'],
+									'type'        => $file_type['type'],
+									'size'        => $size,
+									'size_format' => size_format( $size ),
+								);
+								$file_metadata = apply_filters( 'um_file_metadata', $file_metadata, $new_filepath, $key, $args['submitted'] );
+								update_user_meta( $user_id, $key . '_metadata', $file_metadata );
+							}
+						}
+					}
+				}
+			}
+
+			if ( $user_meta_submitted_old !== $user_meta_submitted ) {
+				update_user_meta( $user_id, 'submitted', $user_meta_submitted );
+			}
+		}
 	}
+} else {
+	/**
+	 * Saving files to register a new user, if there are fields with files.
+	 *
+	 * @param $user_id
+	 * @param $args
+	 * @param $form_data
+	 */
+	function um_registration_save_files( $user_id, $args, $form_data ) {
+		if ( empty( $args['submitted'] ) ) {
+			// It's only frontend case.
+			return;
+		}
 
-	$files = array();
+		$files = array();
 
-	$fields = maybe_unserialize( $form_data['custom_fields'] );
-	if ( ! empty( $fields ) && is_array( $fields ) ) {
-		foreach ( $fields as $key => $array ) {
-			if ( isset( $args['submitted'][ $key ] ) ) {
-				if ( isset( $array['type'] ) && in_array( $array['type'], array( 'image', 'file' ), true ) &&
-					( um_is_temp_file( $args['submitted'][ $key ] ) || 'empty_file' === $args['submitted'][ $key ] )
-				) {
+		$fields = maybe_unserialize( $form_data['custom_fields'] );
+		if ( ! empty( $fields ) && is_array( $fields ) ) {
+			foreach ( $fields as $key => $array ) {
+				if ( ! array_key_exists( 'type', $array ) || ! in_array( $array['type'], array( 'image', 'file' ), true ) ) {
+					continue;
+				}
+
+				if ( isset( $args['submitted'][ $key ] ) && um_is_temp_file( $args['submitted'][ $key ] ) ) {
 					$files[ $key ] = $args['submitted'][ $key ];
 				}
 			}
 		}
-	}
 
-	/**
-	 * Filters files submitted by the UM registration or profile form.
-	 *
-	 * @param {array} $files   Submitted files.
-	 * @param {int}   $user_id User ID.
-	 *
-	 * @return {array} Submitted files.
-	 *
-	 * @since 1.3.x
-	 * @hook um_user_pre_updating_files_array
-	 *
-	 * @example <caption>Extends submitted files.</caption>
-	 * function my_user_pre_updating_files( $files, $user_id ) {
-	 *     $files[] = 'some file';
-	 *     return $files;
-	 * }
-	 * add_filter( 'um_user_pre_updating_files_array', 'my_user_pre_updating_files', 10, 2 );
-	 */
-	$files = apply_filters( 'um_user_pre_updating_files_array', $files, $user_id );
-	if ( ! empty( $files ) && is_array( $files ) ) {
-		UM()->uploader()->replace_upload_dir = true;
-		UM()->uploader()->move_temporary_files( $user_id, $files );
-		UM()->uploader()->replace_upload_dir = false;
+		/** This action is documented in ultimate-member/includes/core/um-actions-register.php */
+		$files = apply_filters( 'um_user_pre_updating_files_array', $files, $user_id );
+		if ( ! empty( $files ) && is_array( $files ) ) {
+			UM()->uploader()->replace_upload_dir = true;
+			UM()->uploader()->move_temporary_files( $user_id, $files );
+			UM()->uploader()->replace_upload_dir = false;
+		}
 	}
 }
 add_action( 'um_registration_set_extra_data', 'um_registration_save_files', 10, 3 );
-
 
 /**
  * Update user Full Name

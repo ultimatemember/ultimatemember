@@ -120,7 +120,7 @@ function um_upgrade_usermeta_part230() {
 					$usermeta['meta_value'] = str_replace( array( 'https://', 'http://' ), '', $usermeta['meta_value'] );
 					update_user_meta( $usermeta['user_id'], $usermeta['meta_key'], $usermeta['meta_value'] );
 
-					delete_option( "um_cache_userdata_{$usermeta['user_id']}" );
+					UM()->common()->users()->remove_cache( $usermeta['user_id'] );
 				}
 			}
 		}

@@ -251,7 +251,7 @@ function um_responsive(){
 		}
 
 		// set iframe height and width.
-		const $iframes = jQuery(this).find('.um-field-value iframe[height][width]');
+		const $iframes = jQuery(this).find('.um-field-value iframe[height][width], .um-profile-body iframe[height][width]');
 		$iframes.each(function (i, item) {
 			let itemAttrHeight = parseInt(item.getAttribute('height'));
 			let itemAttrWidth  = parseInt(item.getAttribute('width'));

@@ -14,6 +14,20 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 	class Member_Directory_Meta extends Member_Directory {
 
 		/**
+		 * Fields used for sorting from wp_users table.
+		 *
+		 * @var string[]
+		 */
+		public $core_users_fields = array(
+			'user_login',
+			'user_url',
+			'display_name',
+			'user_email',
+			'user_nicename',
+			'user_registered',
+		);
+
+		/**
 		 * @var array
 		 */
 		public $joins = array();
@@ -57,157 +71,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 		 * @var string
 		 */
 		public $sql_order = '';
-
-		/**
-		 * Member_Directory_Meta constructor.
-		 */
-		public function __construct() {
-			parent::__construct();
-
-			add_action( 'updated_user_meta', array( &$this, 'on_update_usermeta' ), 10, 4 );
-			add_action( 'added_user_meta', array( &$this, 'on_update_usermeta' ), 10, 4 );
-			add_action( 'deleted_user_meta', array( &$this, 'on_delete_usermeta' ), 10, 4 );
-
-			add_action( 'um_add_new_field', array( &$this, 'on_new_field_added' ), 10, 2 );
-			add_action( 'um_delete_custom_field', array( &$this, 'on_delete_custom_field' ), 10, 2 );
-		}
-
-		/**
-		 * Delete custom field and metakey from UM usermeta table
-		 *
-		 * @param $metakey
-		 * @param $args
-		 */
-		public function on_delete_custom_field( $metakey, $args ) {
-			$metakeys = get_option( 'um_usermeta_fields', array() );
-
-			if ( in_array( $metakey, $metakeys, true ) ) {
-				unset( $metakeys[ array_search( $metakey, $metakeys, true ) ] );
-
-				global $wpdb;
-
-				$wpdb->delete(
-					"{$wpdb->prefix}um_metadata",
-					array(
-						'um_key' => $metakey,
-					),
-					array(
-						'%s',
-					)
-				);
-
-				update_option( 'um_usermeta_fields', array_values( $metakeys ) );
-			}
-
-			do_action( 'um_metadata_on_delete_custom_field', $metakeys, $metakey, $args );
-		}
-
-		/**
-		 * Add metakey to usermeta fields
-		 *
-		 * @param $metakey
-		 * @param $args
-		 */
-		public function on_new_field_added( $metakey, $args ) {
-			$metakeys = get_option( 'um_usermeta_fields', array() );
-
-			if ( ! in_array( $metakey, $metakeys, true ) ) {
-				$metakeys[] = $metakey;
-				update_option( 'um_usermeta_fields', array_values( $metakeys ) );
-			}
-
-			do_action( 'um_metadata_on_new_field_added', $metakeys, $metakey, $args );
-		}
-
-		/**
-		 * When you delete usermeta - remove row from um_metadata
-		 *
-		 * @param int|array $meta_ids
-		 * @param int $object_id
-		 * @param string $meta_key
-		 * @param mixed $_meta_value
-		 */
-		public function on_delete_usermeta( $meta_ids, $object_id, $meta_key, $_meta_value ) {
-			$metakeys = get_option( 'um_usermeta_fields', array() );
-			if ( ! in_array( $meta_key, $metakeys, true ) ) {
-				return;
-			}
-
-			global $wpdb;
-
-			$wpdb->delete(
-				"{$wpdb->prefix}um_metadata",
-				array(
-					'user_id' => $object_id,
-					'um_key'  => $meta_key,
-				),
-				array(
-					'%d',
-					'%s',
-				)
-			);
-		}
-
-		/**
-		 * When you add/update usermeta - add/update row from um_metadata
-		 *
-		 * @param int $meta_id
-		 * @param int $object_id
-		 * @param string $meta_key
-		 * @param mixed $_meta_value
-		 */
-		public function on_update_usermeta( $meta_id, $object_id, $meta_key, $_meta_value ) {
-			$metakeys = get_option( 'um_usermeta_fields', array() );
-			if ( ! in_array( $meta_key, $metakeys, true ) ) {
-				return;
-			}
-
-			global $wpdb;
-
-			$result = $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT umeta_id
-					FROM {$wpdb->prefix}um_metadata
-					WHERE user_id = %d AND
-						  um_key = %s
-					LIMIT 1",
-					$object_id,
-					$meta_key
-				)
-			);
-
-			if ( empty( $result ) ) {
-				$wpdb->insert(
-					"{$wpdb->prefix}um_metadata",
-					array(
-						'user_id'  => $object_id,
-						'um_key'   => $meta_key,
-						'um_value' => maybe_serialize( $_meta_value ),
-					),
-					array(
-						'%d',
-						'%s',
-						'%s',
-					)
-				);
-			} else {
-				$wpdb->update(
-					"{$wpdb->prefix}um_metadata",
-					array(
-						'um_value' => maybe_serialize( $_meta_value ),
-					),
-					array(
-						'umeta_id' => $result,
-					),
-					array(
-						'%s',
-					),
-					array(
-						'%d',
-					)
-				);
-			}
-		}
 
 		/**
 		 * @param $directory_data
@@ -450,6 +313,16 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				case 'role':
 					$value = array_map( 'strtolower', $value );
 
+					if ( ! is_user_logged_in() ) {
+						$hidden_roles_for_guest = UM()->options()->get( 'hidden_roles_for_guest' );
+						$hidden_roles_for_guest = ! empty( $hidden_roles_for_guest ) && is_string( $hidden_roles_for_guest ) ? array( $hidden_roles_for_guest ) : $hidden_roles_for_guest;
+
+						if ( ! empty( $hidden_roles_for_guest ) && ! empty( $value ) ) {
+							// Remove user roles that are invisible for the guests.
+							$value = array_diff( $value, $hidden_roles_for_guest );
+						}
+					}
+
 					if ( empty( $this->roles ) && ! is_multisite() ) {
 						$this->joins[] = $wpdb->prepare( "LEFT JOIN {$wpdb->prefix}um_metadata umm_roles ON ( umm_roles.user_id = u.ID AND umm_roles.um_key = %s )", $wpdb->get_blog_prefix( $blog_id ) . 'capabilities' );
 						$this->roles   = $value;
@@ -667,7 +540,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			}
 
 			$cover_photo_where = '';
-			if ( $directory_data['has_cover_photo'] == 1 ) {
+			if ( ! empty( $directory_data['has_cover_photo'] ) ) {
 				$cover_photo_where = " AND umm_general.um_value LIKE '%s:11:\"cover_photo\";b:1;%'";
 			}
 
@@ -678,8 +551,14 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					$this->general_meta_joined = true;
 				}
 				// $profile_photo_where and $cover_photo_where are static in code.
-				$this->where_clauses[] = "( umm_general.um_key = 'um_member_directory_data' AND
-				umm_general.um_value LIKE '%s:14:\"account_status\";s:8:\"approved\";%' AND umm_general.um_value LIKE '%s:15:\"hide_in_members\";b:0;%'{$profile_photo_where}{$cover_photo_where} )";
+				if ( is_multisite() ) {
+					// fallback when `um_member_directory_data` was network-wide.
+					$this->where_clauses[] = "( ( umm_general.um_key = '{$wpdb->get_blog_prefix()}um_member_directory_data' OR umm_general.um_key = 'um_member_directory_data' ) AND
+					umm_general.um_value LIKE '%s:14:\"account_status\";s:8:\"approved\";%' AND umm_general.um_value LIKE '%s:15:\"hide_in_members\";b:0;%'{$profile_photo_where}{$cover_photo_where} )";
+				} else {
+					$this->where_clauses[] = "( umm_general.um_key = 'um_member_directory_data' AND
+					umm_general.um_value LIKE '%s:14:\"account_status\";s:8:\"approved\";%' AND umm_general.um_value LIKE '%s:15:\"hide_in_members\";b:0;%'{$profile_photo_where}{$cover_photo_where} )";
+				}
 			} else {
 				if ( ! empty( $cover_photo_where ) || ! empty( $profile_photo_where ) ) {
 					if ( ! $this->general_meta_joined ) {
@@ -688,7 +567,12 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 						$this->general_meta_joined = true;
 					}
 					// $profile_photo_where and $cover_photo_where are static in code.
-					$this->where_clauses[] = "( umm_general.um_key = 'um_member_directory_data'{$profile_photo_where}{$cover_photo_where} )";
+					if ( is_multisite() ) {
+						// fallback when `um_member_directory_data` was network-wide.
+						$this->where_clauses[] = "( ( umm_general.um_key = '{$wpdb->get_blog_prefix()}um_member_directory_data' OR umm_general.um_key = 'um_member_directory_data' ){$profile_photo_where}{$cover_photo_where} )";
+					} else {
+						$this->where_clauses[] = "( umm_general.um_key = 'um_member_directory_data'{$profile_photo_where}{$cover_photo_where} )";
+					}
 				}
 			}
 
@@ -714,6 +598,13 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				$this->roles_in_query = true;
 			}
 
+			// Check for hidden roles for guest.
+			$hidden_roles_for_guest = array();
+			if ( ! is_user_logged_in() ) {
+				$hidden_roles_for_guest = UM()->options()->get( 'hidden_roles_for_guest' );
+				$hidden_roles_for_guest = ! empty( $hidden_roles_for_guest ) && is_string( $hidden_roles_for_guest ) ? array( $hidden_roles_for_guest ) : $hidden_roles_for_guest;
+			}
+
 			if ( ! empty( $this->roles ) ) {
 				$this->joins[] = $wpdb->prepare( "LEFT JOIN {$wpdb->prefix}um_metadata umm_roles ON ( umm_roles.user_id = u.ID AND umm_roles.um_key = %s )", $wpdb->get_blog_prefix( $blog_id ) . 'capabilities' );
 
@@ -723,24 +614,126 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				}
 
 				// $roles_clauses is pre-prepared.
-				$this->where_clauses[] = '( ' . implode( ' OR ', $roles_clauses ) . ' )';
-			} else {
-				if ( ! $this->roles_in_query && is_multisite() ) {
-					// select users who have capabilities for current blog
-					$this->joins[]         = $wpdb->prepare( "LEFT JOIN {$wpdb->prefix}um_metadata umm_roles ON ( umm_roles.user_id = u.ID AND umm_roles.um_key = %s )", $wpdb->get_blog_prefix( $blog_id ) . 'capabilities' );
-					$this->where_clauses[] = 'umm_roles.um_value IS NOT NULL';
-				} elseif ( $this->roles_in_query ) {
-					$member_directory_response = array(
-						'pagination' => $this->calculate_pagination( $directory_data, 0 ),
-						'users'      => array(),
-						'is_search'  => $this->is_search,
-					);
-					$member_directory_response = apply_filters( 'um_ajax_get_members_response', $member_directory_response, $directory_data );
+				if ( $roles_clauses ) {
+					$this->where_clauses[] = '( ' . implode( ' OR ', $roles_clauses ) . ' )';
+				}
 
-					wp_send_json_success( $member_directory_response );
+				// Check for hidden roles for guest.
+				$not_roles_clauses = array();
+				if ( ! empty( $hidden_roles_for_guest ) ) {
+					foreach ( $hidden_roles_for_guest as $role ) {
+						$not_roles_clauses[] = $wpdb->prepare( 'umm_roles.um_value NOT LIKE %s', '%"' . $wpdb->esc_like( $role ) . '"%' );
+					}
+				}
+				// $not_roles_clauses is pre-prepared.
+				if ( $not_roles_clauses ) {
+					$this->where_clauses[] = '( ' . implode( ' AND ', $not_roles_clauses ) . ' )';
+				}
+			} elseif ( ! $this->roles_in_query && is_multisite() ) {
+				// select users who have capabilities for current blog
+				$this->joins[]         = $wpdb->prepare( "LEFT JOIN {$wpdb->prefix}um_metadata umm_roles ON ( umm_roles.user_id = u.ID AND umm_roles.um_key = %s )", $wpdb->get_blog_prefix( $blog_id ) . 'capabilities' );
+				$this->where_clauses[] = 'umm_roles.um_value IS NOT NULL';
+
+				// Check for hidden roles for guest.
+				$not_roles_clauses = array();
+				if ( ! empty( $hidden_roles_for_guest ) ) {
+					foreach ( $hidden_roles_for_guest as $role ) {
+						$not_roles_clauses[] = $wpdb->prepare( 'umm_roles.um_value NOT LIKE %s', '%"' . $wpdb->esc_like( $role ) . '"%' );
+					}
+				}
+				// $not_roles_clauses is pre-prepared.
+				if ( $not_roles_clauses ) {
+					$this->where_clauses[] = '( ' . implode( ' AND ', $not_roles_clauses ) . ' )';
+				}
+			} else {
+				$member_directory_response = array(
+					'pagination' => $this->calculate_pagination( $directory_data, 0 ),
+					'users'      => array(),
+					'is_search'  => $this->is_search || $this->is_filters,
+				);
+				$member_directory_response = apply_filters( 'um_ajax_get_members_response', $member_directory_response, $directory_data );
+
+				wp_send_json_success( $member_directory_response );
+			}
+
+			// Filters
+			$filter_query = array();
+			if ( ! empty( $directory_data['search_fields'] ) ) {
+				$search_filters = maybe_unserialize( $directory_data['search_fields'] );
+				if ( ! empty( $search_filters ) && is_array( $search_filters ) ) {
+					// phpcs:ignore WordPress.Security.NonceVerification -- verified via `UM()->check_ajax_nonce();`.
+					$filter_query = array_intersect_key( $_POST, array_flip( $search_filters ) );
 				}
 			}
 
+			// added for user tags extension integration on individual tag page
+			$ignore_empty_filters = apply_filters( 'um_member_directory_ignore_empty_filters', false );
+
+			if ( ! empty( $filter_query ) || $ignore_empty_filters ) {
+				$this->is_filters = true;
+
+				$i = 1;
+				foreach ( $filter_query as $field => $value ) {
+
+					$field = sanitize_text_field( $field );
+					if ( is_array( $value ) ) {
+						$value = array_map( 'sanitize_text_field', $value );
+					} else {
+						$value = sanitize_text_field( $value );
+					}
+
+					$attrs = UM()->fields()->get_field( $field );
+					// skip private invisible fields
+					if ( ! um_can_view_field( $attrs ) ) {
+						continue;
+					}
+
+					$this->handle_filter_query( $directory_data, $field, $value, $i );
+
+					$i++;
+				}
+			}
+
+			//unable default filter in case if we select other filters in frontend filters
+			//if ( empty( $this->custom_filters_in_query ) ) {
+			$default_filters = array();
+			if ( ! empty( $directory_data['search_filters'] ) ) {
+				$default_filters = maybe_unserialize( $directory_data['search_filters'] );
+			}
+
+			if ( ! empty( $default_filters ) ) {
+				$i = 1;
+				foreach ( $default_filters as $field => $value ) {
+
+					$this->handle_filter_query( $directory_data, $field, $value, $i, true );
+
+					$i++;
+				}
+			}
+			//}
+
+			$maybe_exclude_private_users = true;
+			if ( is_user_logged_in() ) {
+				$temp_id = um_user( 'ID' );
+				um_fetch_user( get_current_user_id() );
+
+				$can_access_private_profile = um_user( 'can_access_private_profile' );
+
+				if ( $temp_id ) {
+					um_fetch_user( $temp_id );
+				}
+
+				if ( $can_access_private_profile || $this->can_edit_users() ) {
+					$maybe_exclude_private_users = false;
+				}
+			}
+
+			$private_users_ids = array();
+			if ( $maybe_exclude_private_users ) {
+				$private_users_ids = $this->prepare_private_users( $this );
+			}
+
+			// General search.
 			// phpcs:disable WordPress.Security.NonceVerification -- verified via `UM()->check_ajax_nonce();`.
 			if ( ! empty( $_POST['search'] ) ) {
 				$search_line = $this->prepare_search( $_POST['search'] );
@@ -786,68 +779,18 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 						$custom_fields_sql = " AND umm_search.um_key IN ('" . implode( "','", $include_fields ) . "') ";
 					}
 
-					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $core_search and $additional_search are pre-prepared.
-					$this->where_clauses[] = $wpdb->prepare( "( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s{$core_search}{$additional_search}){$custom_fields_sql}", $search_line, $search_like_string, '%' . $wpdb->esc_like( maybe_serialize( (string) $search_line ) ) . '%' );
+					$custom_fields_value_sql = ' umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s ';
+					if ( ! empty( $private_users_ids ) ) {
+						// Exclude the private users from the search by the custom fields meta values. Searching in the metavalues are only for the available users.
+						$custom_fields_value_sql = ' ( ( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s ) AND umm_search.user_id NOT IN( "' . implode( '","', $private_users_ids ) . '" ) ) ';
+					}
+
+					// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $core_search and $additional_search are pre-prepared.
+					$this->where_clauses[] = $wpdb->prepare( "({$custom_fields_value_sql}{$core_search}{$additional_search}){$custom_fields_sql}", $search_line, $search_like_string, '%' . $wpdb->esc_like( maybe_serialize( (string) $search_line ) ) . '%' );
 
 					$this->is_search = true;
 				}
 			}
-
-			// Filters
-			$filter_query = array();
-			if ( ! empty( $directory_data['search_fields'] ) ) {
-				$search_filters = maybe_unserialize( $directory_data['search_fields'] );
-				if ( ! empty( $search_filters ) && is_array( $search_filters ) ) {
-					// phpcs:ignore WordPress.Security.NonceVerification -- verified via `UM()->check_ajax_nonce();`.
-					$filter_query = array_intersect_key( $_POST, array_flip( $search_filters ) );
-				}
-			}
-
-			// added for user tags extension integration on individual tag page
-			$ignore_empty_filters = apply_filters( 'um_member_directory_ignore_empty_filters', false );
-
-			if ( ! empty( $filter_query ) || $ignore_empty_filters ) {
-				$this->is_search = true;
-
-				$i = 1;
-				foreach ( $filter_query as $field => $value ) {
-
-					$field = sanitize_text_field( $field );
-					if ( is_array( $value ) ) {
-						$value = array_map( 'sanitize_text_field', $value );
-					} else {
-						$value = sanitize_text_field( $value );
-					}
-
-					$attrs = UM()->fields()->get_field( $field );
-					// skip private invisible fields
-					if ( ! um_can_view_field( $attrs ) ) {
-						continue;
-					}
-
-					$this->handle_filter_query( $directory_data, $field, $value, $i );
-
-					$i++;
-				}
-			}
-
-			//unable default filter in case if we select other filters in frontend filters
-			//if ( empty( $this->custom_filters_in_query ) ) {
-			$default_filters = array();
-			if ( ! empty( $directory_data['search_filters'] ) ) {
-				$default_filters = maybe_unserialize( $directory_data['search_filters'] );
-			}
-
-			if ( ! empty( $default_filters ) ) {
-				$i = 1;
-				foreach ( $default_filters as $field => $value ) {
-
-					$this->handle_filter_query( $directory_data, $field, $value, $i, true );
-
-					$i++;
-				}
-			}
-			//}
 
 			$order = 'ASC';
 			// phpcs:ignore WordPress.Security.NonceVerification -- verified via `UM()->check_ajax_nonce();`.
@@ -1054,6 +997,11 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			do_action( 'um_pre_users_query', $this, $directory_data, $sortby );
 
+			if ( ! empty( $private_users_ids ) && $this->is_filters ) {
+				// Filters are related to the usermeta fields everytime, so exclude the private users from the is_filters query.
+				$this->where_clauses[] = "u.ID NOT IN ( '" . implode( "','", $private_users_ids ) . "' )";
+			}
+
 			$sql_select = esc_sql( $this->select );
 			$sql_having = esc_sql( $this->having );
 			$sql_join   = implode( ' ', $this->joins );
@@ -1111,18 +1059,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			$pagination_data = $this->calculate_pagination( $directory_data, $total_users );
 
-			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
-			// Ensure we have valid sizes array and handle case when only one size is defined
-			if ( ! is_array( $sizes ) || empty( $sizes ) ) {
-				$sizes = array( 300 ); // fallback to default
-			}
-
-			// For mobile, use second size if available, otherwise use first size
-			$available_mobile = isset( $sizes[1] ) ? $sizes[1] : $sizes[0];
-			$this->cover_size = wp_is_mobile() ? $available_mobile : end( $sizes );
-
-			$avatar_size       = UM()->options()->get( 'profile_photosize' );
-			$this->avatar_size = str_replace( 'px', '', $avatar_size );
+			$this->init_image_sizing( $directory_data );
 
 			$users = array();
 			foreach ( $user_ids as $user_id ) {
@@ -1135,7 +1072,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			$member_directory_response = array(
 				'pagination' => $pagination_data,
 				'users'      => $users,
-				'is_search'  => $this->is_search,
+				'is_search'  => $this->is_search || $this->is_filters,
 			);
 			$member_directory_response = apply_filters( 'um_ajax_get_members_response', $member_directory_response, $directory_data );
 

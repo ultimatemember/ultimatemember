@@ -30,9 +30,11 @@ class Extensions_Updater {
 		$this->updater_data = wp_parse_args(
 			$args,
 			array(
-				'slug'    => '',
-				'version' => '0.0.0',
-				'path'    => '',
+				'slug'     => '',
+				'version'  => '0.0.0',
+				'path'     => '',
+				'delay'    => self::EXTRA_TIME,
+				'per_page' => self::PAGINATION,
 			)
 		);
 
@@ -94,13 +96,13 @@ class Extensions_Updater {
 
 		// Initialize start package action.
 		$action_id = UM()->maybe_action_scheduler()->schedule_single_action(
-			time() + self::EXTRA_TIME,
+			time() + $this->updater_data['delay'],
 			'um_' . $this->updater_data['slug'] . '_package_start',
 			array(
 				'version'  => $package_version,
 				'path'     => $file_path,
-				'delay'    => self::EXTRA_TIME,
-				'per_page' => self::PAGINATION,
+				'delay'    => $this->updater_data['delay'],
+				'per_page' => $this->updater_data['per_page'],
 			)
 		);
 

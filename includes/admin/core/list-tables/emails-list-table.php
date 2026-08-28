@@ -325,7 +325,7 @@ $columns = apply_filters( 'um_email_templates_columns', array(
 
 $ListTable->set_columns( $columns );
 
-$emails = UM()->config()->email_notifications;
+$emails = UM()->config()->get( 'email_notifications' );
 
 $ListTable->prepare_items();
 $ListTable->items = array_slice( $emails, ( $paged - 1 ) * $per_page, $per_page );

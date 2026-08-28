@@ -14,8 +14,8 @@ $role = $object['data'];
 				array(
 					'id'      => '_um_can_view_all',
 					'type'    => 'checkbox',
-					'label'   => __( 'Can view other member profiles?', 'ultimate-member' ),
-					'tooltip' => __( 'Can this role view all member profiles?', 'ultimate-member' ),
+					'label'   => __( 'Can view other users', 'ultimate-member' ),
+					'tooltip' => __( 'Can this role view all users?', 'ultimate-member' ),
 					'value'   => ! empty( $role['_um_can_view_all'] ) ? $role['_um_can_view_all'] : 0,
 				),
 				array(

@@ -14,6 +14,7 @@
   font-family: "raty";
   font-style: normal;
   font-weight: normal;
+  font-size: 24px;
   speak: none;
   display: inline-block;
   text-decoration: inherit;
@@ -21,7 +22,7 @@
   text-align: center;
   font-variant: normal;
   text-transform: none;
-  line-height: 1em;
+  line-height: 1;
    -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   margin-right: 0.2em;

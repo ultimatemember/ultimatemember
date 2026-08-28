@@ -24,20 +24,20 @@ if ( ! defined( 'UM_PLUGIN' ) ) {
 //for delete Email options only for Core email notifications
 remove_all_filters( 'um_email_notifications' );
 //for delete only Core Theme Link pages
-remove_all_filters( 'um_core_pages' );
+remove_all_filters( 'um_predefined_pages' );
 
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-functions.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-init.php';
 
 $delete_options = UM()->options()->get( 'uninstall_on_delete' );
 if ( ! empty( $delete_options ) ) {
-
+	// @todo check multisite uninstall
 	//remove uploads
-	$upl_folder = UM()->files()->upload_basedir;
-	UM()->files()->remove_dir( $upl_folder );
+	$upl_folder = UM()->common()->filesystem()->get_basedir();
+	UM()->common()->filesystem()::remove_dir( $upl_folder );
 
 	//remove core settings
-	$settings_defaults = UM()->config()->settings_defaults;
+	$settings_defaults = UM()->config()->get( 'settings_defaults' );
 	foreach ( $settings_defaults as $k => $v ) {
 		UM()->options()->remove( $k );
 	}
@@ -129,11 +129,12 @@ if ( ! empty( $delete_options ) ) {
 	delete_transient( 'um_count_users_pending_dot' );
 	delete_transient( 'um_count_users_unassigned' ); // legacy but still need to delete while uninstall.
 
-	//remove all users cache
-	UM()->user()->remove_cache_all_users();
+	// Remove all users cache
+	UM()->common()->users()->remove_cache_all_users();
 
 	global $wpdb;
 
+	// profile_photo, cover_photo have blog_id prefix.
 	$wpdb->query(
 		"DELETE
 		FROM {$wpdb->usermeta}
@@ -143,18 +144,20 @@ if ( ! empty( $delete_options ) ) {
 			  meta_key = 'submitted' OR
 			  meta_key = 'account_status' OR
 			  meta_key = 'password_rst_attempts' OR
-			  meta_key = 'profile_photo' OR
+			  meta_key LIKE '%profile_photo' OR
+			  meta_key LIKE '%cover_photo' OR
 			  meta_key = '_enable_new_follow' OR
 			  meta_key = '_enable_new_friend' OR
 			  meta_key = '_mylists' OR
 			  meta_key = '_enable_new_pm' OR
 			  meta_key = '_hidden_conversations' OR
 			  meta_key = '_pm_blocked' OR
-			  meta_key = '_notifications_prefs' OR
+			  meta_key LIKE '_notifications_prefs%' OR
 			  meta_key = '_profile_progress' OR
 			  meta_key = '_completed' OR
 			  meta_key = '_cannot_add_review' OR
 			  meta_key = 'synced_profile_photo' OR
+			  meta_key = 'synced_cover_photo' OR
 			  meta_key = 'full_name' OR
 			  meta_key = '_reviews' OR
 			  meta_key = '_reviews_compound' OR
@@ -242,10 +245,10 @@ if ( ! empty( $delete_options ) ) {
 		WHERE tax.taxonomy = 'um_user_tag'"
 	);
 
-	//mailchimp
-	$mailchimp_log = UM()->files()->upload_basedir . 'mailchimp.log';
+	// Mailchimp
+	$mailchimp_log = UM()->common()->filesystem()->get_basedir() . DIRECTORY_SEPARATOR . 'mailchimp.log';
 	if ( file_exists( $mailchimp_log ) ) {
-		unlink( $mailchimp_log );
+		wp_delete_file( $mailchimp_log );
 	}
 
 	$um_options = $wpdb->get_results(

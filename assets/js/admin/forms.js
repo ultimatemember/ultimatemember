@@ -879,10 +879,10 @@ jQuery(document).ready( function() {
 				return;
 
 			if ( check_condition( jQuery(this) ) ) {
-				jQuery(this).show();
+				jQuery(this).removeClass('um-display-none');
 				um_admin_init_users_select();
 			} else {
-				jQuery(this).hide();
+				jQuery(this).addClass('um-display-none');
 			}
 		});
 	}
