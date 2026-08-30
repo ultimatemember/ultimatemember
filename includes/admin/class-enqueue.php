@@ -569,7 +569,24 @@ final class Enqueue extends \um\common\Enqueue {
 		$js_url  = self::get_url( 'js' );
 		$css_url = self::get_url( 'css' );
 
-		$this->load_global_scripts( $hook );
+		// Load global admin assets only on UM-owned screens.
+		// Loading them on unrelated screens interferes with wp-auth-check and heartbeat nonce refresh.
+		$enqueue_global = UM()->admin()->screen()->is_own_screen();
+		/**
+		 * Filters whether the global UM admin script and styles are enqueued.
+		 *
+		 * @since 2.13.0
+		 * @hook um_enqueue_global_admin_scripts
+		 *
+		 * @param {bool}   $enqueue_global Whether to enqueue global admin assets.
+		 * @param {string} $hook           Current wp-admin screen hook.
+		 *
+		 * @return {bool} True to enqueue, false to skip.
+		 */
+		$enqueue_global = apply_filters( 'um_enqueue_global_admin_scripts', $enqueue_global, $hook );
+		if ( $enqueue_global ) {
+			$this->load_global_scripts( $hook );
+		}
 
 		if ( UM()->admin()->screen()->is_own_screen() ) {
 			wp_register_script( 'um_admin_common', $js_url . 'admin/common' . $suffix . '.js', array( 'wp-color-picker', 'jquery-ui-tooltip', 'um_common' ), UM_VERSION, true );
