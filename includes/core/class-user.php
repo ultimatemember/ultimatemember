@@ -992,8 +992,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					}
 
 					// Role may have changed so re-read the fresh roles.
-					$userdata  = get_userdata( $user_id );
-					$new_roles = $userdata->roles;
+					$updated_userdata = get_userdata( $user_id );
+					if ( ! empty( $updated_userdata ) ) {
+						$new_roles = $updated_userdata->roles;
+					}
 				}
 			}
 
