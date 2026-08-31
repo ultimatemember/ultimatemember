@@ -984,9 +984,17 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			if ( is_admin() ) {
 				if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
-					$new_roles = array_merge( $new_roles, array( sanitize_key( $_POST['um-role'] ) ) );
-					if ( ! user_can( $user_id, sanitize_key( $_POST['um-role'] ) ) ) {
-						UM()->roles()->set_role( $user_id, sanitize_key( $_POST['um-role'] ) );
+					$role = sanitize_key( $_POST['um-role'] );
+
+					// Only apply a role the admin can manage and that is not already set.
+					if ( in_array( $role, UM()->roles()->get_editable_user_roles(), true ) && ! in_array( $role, $userdata->roles, true ) ) {
+						UM()->roles()->set_role( $user_id, $role );
+					}
+
+					// Role may have changed so re-read the fresh roles.
+					$updated_userdata = get_userdata( $user_id );
+					if ( ! empty( $updated_userdata ) ) {
+						$new_roles = $updated_userdata->roles;
 					}
 				}
 			}
