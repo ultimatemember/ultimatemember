@@ -733,6 +733,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'um_profile_object_cache_stop'          => false,
 				'member_directory_own_table'            => false,
 				'profile_show_bio'                      => false,
+				'profile_fields_show_as_list'           => false,
 				'profile_show_html_bio'                 => false,
 				'profile_bio_maxchars'                  => 180,
 				'profile_noindex'                       => 0,

@@ -933,6 +933,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'profile_show_bio'                     => array(
 						'sanitize' => 'bool',
 					),
+					'profile_fields_show_as_list'          => array(
+						'sanitize' => 'bool',
+					),
 					'profile_show_html_bio'                => array(
 						'sanitize' => 'bool',
 					),
@@ -1798,6 +1801,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'checkbox_label' => __( 'Show user description in profile header', 'ultimate-member' ),
 												'default' => um_get_metadefault( 'profile_show_bio' ),
 												'description' => __( 'Switch on/off the user description on profile header.', 'ultimate-member' ),
+											),
+											array(
+												'id'      => 'profile_fields_show_as_list',
+												'type'    => 'checkbox',
+												'label'   => __( 'Multi-select and checkbox fields', 'ultimate-member' ),
+												'checkbox_label' => __( 'Display values as a bulleted list on profiles', 'ultimate-member' ),
+												'default' => UM()->options()->get_default( 'profile_fields_show_as_list' ),
+												'description' => __( 'Switch on to display multi-select and checkbox field values as a bulleted list instead of comma-separated text.', 'ultimate-member' ),
 											),
 											array(
 												'id'      => 'profile_bio_maxchars',

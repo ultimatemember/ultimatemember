@@ -4299,6 +4299,65 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 
 		/**
+		 * Gets the unordered list markup for a multi-value field on the profile view mode.
+		 *
+		 * The list is built from the stored array value, so an option title with a comma inside stays in one list item.
+		 *
+		 * @since 2.13.1
+		 *
+		 * @param string $key  Field metakey.
+		 * @param array  $data Field data.
+		 * @param string $type Field type.
+		 *
+		 * @return string List markup or an empty string when there is nothing to display.
+		 */
+		private function get_values_list( $key, $data, $type ) {
+			$values = um_user( $key );
+			if ( ! is_array( $values ) ) {
+				return '';
+			}
+
+			// Validate the options and get the option titles the same way as the comma-separated value does.
+			$values = um_profile_field_filter_xss_validation( $values, $data, $type );
+			if ( ! is_array( $values ) ) {
+				return '';
+			}
+
+			$items = '';
+			foreach ( $values as $value ) {
+				if ( is_array( $value ) || is_object( $value ) ) {
+					continue;
+				}
+
+				if ( 'multiselect' === $type && ! empty( $data['custom_dropdown_options_source'] ) ) {
+					// Get the option title from the callback source, the same way as `um_option_match_callback_view_field()` does.
+					$option_title = $this->get_option_value_from_callback( array( $value ), $data, $type );
+					if ( is_string( $option_title ) ) {
+						$value = $option_title;
+					}
+				}
+
+				$value = trim( stripslashes( (string) $value ) );
+				if ( '' === $value ) {
+					continue;
+				}
+
+				if ( 'multiselect' === $type ) {
+					// Translate the option title the same way as `um_profile_field__select_translate()` does.
+					$value = __( $value, 'ultimate-member' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
+				}
+
+				$items .= '<li>' . esc_html( $value ) . '</li>';
+			}
+
+			if ( '' === $items ) {
+				return '';
+			}
+
+			return '<ul class="um-field-list">' . $items . '</ul>';
+		}
+
+		/**
 		 * Gets a field in `view mode`. Works in the User Profile form > View mode only.
 		 *
 		 * @param string $key
@@ -4395,9 +4454,20 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= $this->field_label( $data['label'], $key, $data );
 						}
 
-						$res = $_field_value;
+						$res     = $_field_value;
+						$is_list = false;
 						if ( ! empty( $res ) ) {
-							$res = stripslashes( $res );
+							if ( in_array( $type, array( 'multiselect', 'checkbox' ), true ) && UM()->options()->get( 'profile_fields_show_as_list' ) ) {
+								$list_html = $this->get_values_list( $key, $data, $type );
+								if ( '' !== $list_html ) {
+									$res     = $list_html;
+									$is_list = true;
+								}
+							}
+
+							if ( ! $is_list ) {
+								$res = stripslashes( $res );
+							}
 						}
 
 						$bio_key = UM()->profile()->get_show_bio_key( $this->global_args );
