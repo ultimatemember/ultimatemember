@@ -1354,6 +1354,22 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 
 		/**
+		 * Get tabindex attribute for field markup.
+		 *
+		 * @param array $data Field data.
+		 *
+		 * @return string
+		 */
+		private function get_tabindex_attr( $data ) {
+			if ( ! isset( $data['tabindex'] ) || ! is_numeric( $data['tabindex'] ) ) {
+				return '';
+			}
+
+			return ' tabindex="' . esc_attr( (int) $data['tabindex'] ) . '" ';
+		}
+
+
+		/**
 		 * Get field icon
 		 *
 		 * @param  string $key
@@ -3495,10 +3511,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$field_value = '';
 
-					$tabindex_attr = '';
-					if ( isset( $data['tabindex'] ) && is_numeric( $data['tabindex'] ) ) {
-						$tabindex_attr = ' tabindex="' . esc_attr( absint( $data['tabindex'] ) ) . '" ';
-					}
+					$tabindex_attr = $this->get_tabindex_attr( $data );
 
 					$output .= '<select data-default="' . esc_attr( $default ) . '" ' . $disabled . ' ' . $select_original_option_value . ' ' . $disabled_by_parent_option . '  name="' . esc_attr( $form_key ) . '" id="' . esc_attr( $field_id ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . esc_attr( $this->get_class( $key, $data, $class ) ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $atts_ajax . $tabindex_attr . ' ' . $this->aria_valid_attributes( $this->is_error( $form_key ), $form_key ) . '>';
 					$output .= '<option value=""></option>';
@@ -3582,10 +3595,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
 					}
 
-					$tabindex_attr = '';
-					if ( isset( $data['tabindex'] ) && is_numeric( $data['tabindex'] ) ) {
-						$tabindex_attr = ' tabindex="' . esc_attr( absint( $data['tabindex'] ) ) . '" ';
-					}
+					$tabindex_attr = $this->get_tabindex_attr( $data );
 
 					$output .= '<select  ' . $disabled . ' multiple="multiple" name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-maxsize="' . esc_attr( $max_selections ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $tabindex_attr . ' ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>';
 
