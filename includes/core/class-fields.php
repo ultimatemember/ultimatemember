@@ -73,11 +73,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		public $disable_tooltips = false;
 
 		/**
-		 * @var array
-		 */
-		public $direct_db_value_cache = array();
-
-		/**
 		 * Fields constructor.
 		 */
 		public function __construct() {
@@ -1101,6 +1096,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return boolean
 		 */
 		public function is_selected( $key, $value, $data ) {
+			global $wpdb;
 
 			/**
 			 * UM hook
@@ -1264,7 +1260,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 
 					// show default on edit screen if there isn't meta row in usermeta table
-					$direct_db_value = $this->get_direct_db_value( $key );
+					$direct_db_value = $wpdb->get_var( $wpdb->prepare( "SELECT ISNULL( meta_value ) FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = %s", um_user( 'ID' ), $key ) );
 					if ( ! isset( $direct_db_value ) && isset( $data['default'] ) ) {
 						if ( ! is_array(  $data['default'] ) && strstr( $data['default'], ', ' ) ) {
 							$data['default'] = explode( ', ', $data['default'] );
@@ -1286,31 +1282,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		}
 
 		/**
-		 * Get direct usermeta value, cached per user and key.
-		 *
-		 * @param string $key Usermeta key.
-		 *
-		 * @return mixed
-		 */
-		private function get_direct_db_value( $key ) {
-			$user_id = um_user( 'ID' );
-
-			if ( ! isset( $this->direct_db_value_cache[ $user_id ] ) ) {
-				$this->direct_db_value_cache[ $user_id ] = array();
-			}
-
-			if ( array_key_exists( $key, $this->direct_db_value_cache[ $user_id ] ) ) {
-				return $this->direct_db_value_cache[ $user_id ][ $key ];
-			}
-
-			global $wpdb;
-
-			$this->direct_db_value_cache[ $user_id ][ $key ] = $wpdb->get_var( $wpdb->prepare( "SELECT ISNULL( meta_value ) FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = %s", $user_id, $key ) );
-
-			return $this->direct_db_value_cache[ $user_id ][ $key ];
-		}
-
-		/**
 		 * Checks if a radio button is selected
 		 *
 		 * @param  string $key
@@ -1320,6 +1291,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return boolean
 		 */
 		function is_radio_checked( $key, $value, $data ) {
+			global $wpdb;
 
 			if ( isset( UM()->form()->post_form[ $key ] ) ) {
 				if ( is_array( UM()->form()->post_form[ $key ] ) && in_array( $value, UM()->form()->post_form[ $key ] ) ) {
@@ -1364,7 +1336,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					} else {
 
 						// show default on edit screen if there isn't meta row in usermeta table
-						$direct_db_value = $this->get_direct_db_value( $key );
+						$direct_db_value = $wpdb->get_var( $wpdb->prepare( "SELECT ISNULL( meta_value ) FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = %s", um_user( 'ID' ), $key ) );
 						if ( ! isset( $direct_db_value ) && isset( $data['default'] ) && $data['default'] == $value ) {
 							return true;
 						}
@@ -4327,6 +4299,65 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 
 		/**
+		 * Gets the unordered list markup for a multi-value field on the profile view mode.
+		 *
+		 * The list is built from the stored array value, so an option title with a comma inside stays in one list item.
+		 *
+		 * @since 2.13.1
+		 *
+		 * @param string $key  Field metakey.
+		 * @param array  $data Field data.
+		 * @param string $type Field type.
+		 *
+		 * @return string List markup or an empty string when there is nothing to display.
+		 */
+		private function get_values_list( $key, $data, $type ) {
+			$values = um_user( $key );
+			if ( ! is_array( $values ) ) {
+				return '';
+			}
+
+			// Validate the options and get the option titles the same way as the comma-separated value does.
+			$values = um_profile_field_filter_xss_validation( $values, $data, $type );
+			if ( ! is_array( $values ) ) {
+				return '';
+			}
+
+			$items = '';
+			foreach ( $values as $value ) {
+				if ( is_array( $value ) || is_object( $value ) ) {
+					continue;
+				}
+
+				if ( 'multiselect' === $type && ! empty( $data['custom_dropdown_options_source'] ) ) {
+					// Get the option title from the callback source, the same way as `um_option_match_callback_view_field()` does.
+					$option_title = $this->get_option_value_from_callback( array( $value ), $data, $type );
+					if ( is_string( $option_title ) ) {
+						$value = $option_title;
+					}
+				}
+
+				$value = trim( stripslashes( (string) $value ) );
+				if ( '' === $value ) {
+					continue;
+				}
+
+				if ( 'multiselect' === $type ) {
+					// Translate the option title the same way as `um_profile_field__select_translate()` does.
+					$value = __( $value, 'ultimate-member' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
+				}
+
+				$items .= '<li>' . esc_html( $value ) . '</li>';
+			}
+
+			if ( '' === $items ) {
+				return '';
+			}
+
+			return '<ul class="um-field-list">' . $items . '</ul>';
+		}
+
+		/**
 		 * Gets a field in `view mode`. Works in the User Profile form > View mode only.
 		 *
 		 * @param string $key
@@ -4423,39 +4454,20 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= $this->field_label( $data['label'], $key, $data );
 						}
 
-						$res          = $_field_value;
-						$is_list      = false;
-						$show_as_list = UM()->options()->get( 'profile_fields_show_as_list' );
-						$list_items   = array();
+						$res     = $_field_value;
+						$is_list = false;
 						if ( ! empty( $res ) ) {
-							if ( is_array( $res ) ) {
-								$list_items = array_map( 'stripslashes', $res );
-								$res        = implode( ', ', $list_items );
-							} else {
+							if ( in_array( $type, array( 'multiselect', 'checkbox' ), true ) && UM()->options()->get( 'profile_fields_show_as_list' ) ) {
+								$list_html = $this->get_values_list( $key, $data, $type );
+								if ( '' !== $list_html ) {
+									$res     = $list_html;
+									$is_list = true;
+								}
+							}
+
+							if ( ! $is_list ) {
 								$res = stripslashes( $res );
 							}
-						}
-
-						if ( ! empty( $res ) && ! empty( $show_as_list ) && in_array( $type, array( 'multiselect', 'checkbox' ), true ) ) {
-							if ( empty( $list_items ) ) {
-								$list_items = explode( ', ', $res );
-							}
-
-							$list = '<ul class="um-field-list">';
-							foreach ( $list_items as $item ) {
-								$list .= '<li>' . esc_html( trim( $item ) ) . '</li>';
-							}
-							$list     .= '</ul>';
-							$res      = wp_kses(
-								$list,
-								array(
-									'ul' => array(
-										'class' => array(),
-									),
-									'li' => array(),
-								)
-							);
-							$is_list  = true;
 						}
 
 						$bio_key = UM()->profile()->get_show_bio_key( $this->global_args );
@@ -4492,9 +4504,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 										)
 									);
 								}
-							} elseif ( ! $is_list && ! empty( $data['html'] ) ) {
+							} elseif ( ! empty( $data['html'] ) ) {
 								$res = wp_kses( make_clickable( $res ), 'user_description' );
-							} elseif ( ! $is_list ) {
+							} else {
 								$res = wp_kses(
 									make_clickable( $res ),
 									array(
@@ -4506,9 +4518,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								);
 							}
 
-							if ( ! $is_list ) {
-								$res = nl2br( $res );
-							}
+							$res = nl2br( $res );
 						}
 
 						$data['is_view_field'] = true;

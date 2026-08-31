@@ -933,7 +933,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'profile_show_bio'                     => array(
 						'sanitize' => 'bool',
 					),
-					'profile_fields_show_as_list'           => array(
+					'profile_fields_show_as_list'          => array(
 						'sanitize' => 'bool',
 					),
 					'profile_show_html_bio'                => array(
