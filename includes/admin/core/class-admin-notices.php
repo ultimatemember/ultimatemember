@@ -509,29 +509,84 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 * Checking if there are outdated overridden templates in the active theme
 		 */
 		public function outdated_templates_notice() {
-			if ( ! UM()->common()->theme()->is_outdated_template_exist() ) {
+			// create_list() runs on every admin_init, including admin-ajax.php requests from non-admins.
+			// render_notices() shows this notice to the users with the 'manage_options' capability only, so skip
+			// the template scan and the dismissals cleanup below for everybody else.
+			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
+
+			$outdated = array();
+			foreach ( UM()->common()->theme()->build_templates_data() as $template ) {
+				if ( isset( $template['status_code'] ) && 0 === (int) $template['status_code'] ) {
+					$outdated[] = $template;
+				}
+			}
+
+			if ( empty( $outdated ) ) {
+				return;
+			}
+
+			// Make the dismissal context-aware. The key changes when the outdated templates or their core versions
+			// change, so the notice comes back after a plugin update instead of staying hidden forever.
+			$fingerprint = '';
+			foreach ( $outdated as $template ) {
+				$fingerprint .= $template['theme_file'] . '|' . $template['core_version'] . '|' . $template['theme_version'] . ';';
+			}
+
+			// md5() returns lowercase hex, so the key survives sanitize_key() in the dismiss handlers.
+			$key = 'outdated_templates_' . md5( $fingerprint );
+
+			$this->cleanup_outdated_templates_dismissals( $key );
 
 			$override_url = admin_url( 'admin.php?page=um_options&tab=advanced&section=override_templates' );
 
 			$allowed_html = array(
-				'a'      => array(
+				'a' => array(
 					'href' => array(),
 				),
-				'strong' => array(),
 			);
 
 			$this->add_notice(
-				'outdated_templates',
+				$key,
 				array(
 					'class'       => 'notice-warning',
 					// translators: %s: Override templates settings link.
-					'message'     => '<p>' . wp_kses( sprintf( __( 'Your custom Ultimate Member templates are out of date and may break functionality. Please <a href="%s">update your overridden templates</a>.', 'ultimate-member' ), $override_url ), $allowed_html ) . '</p>',
+					'message'     => '<p>' . wp_kses( sprintf( __( 'Your custom Ultimate Member templates are out of date and may affect functionality. Please <a href="%s">update your overridden templates</a>.', 'ultimate-member' ), esc_url( $override_url ) ), $allowed_html ) . '</p>',
 					'dismissible' => true,
 				),
 				10
 			);
+		}
+
+		/**
+		 * Removes the outdated templates dismissals that do not match the current set of outdated templates.
+		 *
+		 * Only one outdated templates notice key can be displayed at a time, so keeping the other ones would grow
+		 * the option with every plugin update. Dropping a key that becomes valid again later only makes the notice
+		 * show once more, which is the safe side.
+		 *
+		 * @param string $current_key Notice key that is valid for the current set of outdated templates.
+		 *
+		 * @return void
+		 */
+		private function cleanup_outdated_templates_dismissals( $current_key ) {
+			$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
+			if ( ! is_array( $hidden_notices ) || empty( $hidden_notices ) ) {
+				return;
+			}
+
+			$actual_notices = array();
+			foreach ( $hidden_notices as $hidden_key ) {
+				if ( is_string( $hidden_key ) && 0 === strpos( $hidden_key, 'outdated_templates' ) && $hidden_key !== $current_key ) {
+					continue;
+				}
+				$actual_notices[] = $hidden_key;
+			}
+
+			if ( count( $actual_notices ) !== count( $hidden_notices ) ) {
+				update_option( 'um_hidden_admin_notices', array_values( $actual_notices ) );
+			}
 		}
 
 		/**
