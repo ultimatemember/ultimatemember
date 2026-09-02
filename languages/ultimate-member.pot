@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-21T11:29:24+00:00\n"
+"POT-Creation-Date: 2026-09-02T22:31:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -9930,7 +9930,7 @@ msgid "Upload File"
 msgstr ""
 
 #: includes/core/class-fields.php:3112
-#: includes/core/um-filters-fields.php:369
+#: includes/core/um-filters-fields.php:370
 msgid "This file has been removed."
 msgstr ""
 
@@ -10233,8 +10233,8 @@ msgid "Random"
 msgstr ""
 
 #: includes/core/class-member-directory.php:614
-#: includes/core/um-filters-fields.php:1002
-#: includes/core/um-filters-fields.php:1019
+#: includes/core/um-filters-fields.php:1003
+#: includes/core/um-filters-fields.php:1020
 msgid "Age"
 msgstr ""
 
@@ -10498,8 +10498,8 @@ msgid "You must provide your last name"
 msgstr ""
 
 #: includes/core/um-actions-account.php:161
-#: includes/core/um-actions-form.php:926
-#: includes/core/um-actions-form.php:940
+#: includes/core/um-actions-form.php:928
+#: includes/core/um-actions-form.php:942
 msgid "You must provide your email"
 msgstr ""
 
@@ -10708,7 +10708,7 @@ msgstr ""
 
 #. translators: %s: max chars.
 #: includes/core/um-actions-form.php:746
-#: includes/core/um-actions-form.php:1072
+#: includes/core/um-actions-form.php:1074
 #, php-format
 msgid "Your user description must contain less than %s characters"
 msgstr ""
@@ -10723,99 +10723,99 @@ msgstr ""
 
 #. translators: %s: label.
 #: includes/core/um-actions-form.php:797
-#: includes/core/um-actions-form.php:818
-#: includes/core/um-actions-form.php:825
-#: includes/core/um-actions-form.php:832
-#: includes/core/um-actions-form.php:839
-#: includes/core/um-actions-form.php:853
+#: includes/core/um-actions-form.php:820
+#: includes/core/um-actions-form.php:827
+#: includes/core/um-actions-form.php:834
+#: includes/core/um-actions-form.php:841
+#: includes/core/um-actions-form.php:855
 #, php-format
 msgid "Please enter a valid %s username or profile URL"
 msgstr ""
 
 #. translators: %s: label.
-#: includes/core/um-actions-form.php:804
-#: includes/core/um-actions-form.php:811
+#: includes/core/um-actions-form.php:805
+#: includes/core/um-actions-form.php:813
 #, php-format
 msgid "Please enter a valid %s URL"
 msgstr ""
 
 #. translators: %s: label.
-#: includes/core/um-actions-form.php:846
-#: includes/core/um-actions-form.php:866
-#: includes/core/um-actions-form.php:873
-#: includes/core/um-actions-form.php:880
+#: includes/core/um-actions-form.php:848
+#: includes/core/um-actions-form.php:868
+#: includes/core/um-actions-form.php:875
+#: includes/core/um-actions-form.php:882
 #, php-format
 msgid "Please enter a valid %s profile URL"
 msgstr ""
 
-#: includes/core/um-actions-form.php:859
+#: includes/core/um-actions-form.php:861
 msgid "Please enter a valid Discord ID"
 msgstr ""
 
-#: includes/core/um-actions-form.php:886
+#: includes/core/um-actions-form.php:888
 msgid "Please enter a valid URL"
 msgstr ""
 
-#: includes/core/um-actions-form.php:892
+#: includes/core/um-actions-form.php:894
 msgid "You must provide a username"
 msgstr ""
 
-#: includes/core/um-actions-form.php:894
-#: includes/core/um-actions-form.php:906
+#: includes/core/um-actions-form.php:896
+#: includes/core/um-actions-form.php:908
 msgid "The username you entered is incorrect"
 msgstr ""
 
-#: includes/core/um-actions-form.php:896
+#: includes/core/um-actions-form.php:898
 msgid "Username cannot be an email"
 msgstr ""
 
-#: includes/core/um-actions-form.php:898
-#: includes/core/um-actions-form.php:910
+#: includes/core/um-actions-form.php:900
+#: includes/core/um-actions-form.php:912
 msgid "Your username contains invalid characters"
 msgstr ""
 
-#: includes/core/um-actions-form.php:904
+#: includes/core/um-actions-form.php:906
 msgid "You must provide a username or email"
 msgstr ""
 
-#: includes/core/um-actions-form.php:908
-#: includes/core/um-actions-form.php:928
+#: includes/core/um-actions-form.php:910
 #: includes/core/um-actions-form.php:930
 #: includes/core/um-actions-form.php:932
-#: includes/core/um-actions-form.php:942
-#: includes/core/um-actions-form.php:959
+#: includes/core/um-actions-form.php:934
+#: includes/core/um-actions-form.php:944
+#: includes/core/um-actions-form.php:961
 msgid "The email you entered is incorrect"
 msgstr ""
 
-#: includes/core/um-actions-form.php:934
+#: includes/core/um-actions-form.php:936
 msgid "Your email contains invalid characters"
 msgstr ""
 
-#: includes/core/um-actions-form.php:944
+#: includes/core/um-actions-form.php:946
 msgid "The secondary email cannot be the same as primary"
 msgstr ""
 
-#: includes/core/um-actions-form.php:969
+#: includes/core/um-actions-form.php:971
 msgid "This is not a valid email"
 msgstr ""
 
-#: includes/core/um-actions-form.php:990
+#: includes/core/um-actions-form.php:992
 msgid "You must provide a unique value"
 msgstr ""
 
-#: includes/core/um-actions-form.php:998
+#: includes/core/um-actions-form.php:1000
 msgid "You must provide alphabetic letters"
 msgstr ""
 
-#: includes/core/um-actions-form.php:1006
+#: includes/core/um-actions-form.php:1008
 msgid "You must provide alphabetic letters or numbers"
 msgstr ""
 
-#: includes/core/um-actions-form.php:1014
+#: includes/core/um-actions-form.php:1016
 msgid "You must provide lowercase letters."
 msgstr ""
 
-#: includes/core/um-actions-form.php:1022
+#: includes/core/um-actions-form.php:1024
 msgid "You must provide English letters."
 msgstr ""
 
@@ -10974,22 +10974,22 @@ msgstr ""
 msgid "Invalid SoundCloud track ID"
 msgstr ""
 
-#: includes/core/um-filters-fields.php:126
+#: includes/core/um-filters-fields.php:127
 msgid "Invalid Spotify URL"
 msgstr ""
 
 #. translators: %s: date.
-#: includes/core/um-filters-fields.php:244
+#: includes/core/um-filters-fields.php:245
 #, php-format
 msgid "Joined %s"
 msgstr ""
 
-#: includes/core/um-filters-fields.php:403
+#: includes/core/um-filters-fields.php:404
 msgid "Untitled photo"
 msgstr ""
 
 #. translators: %s: link.
-#: includes/core/um-filters-fields.php:522
+#: includes/core/um-filters-fields.php:523
 #, php-format
 msgid "This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: '%s'"
 msgstr ""
