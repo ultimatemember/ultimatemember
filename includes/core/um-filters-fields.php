@@ -290,21 +290,23 @@ add_filter( 'um_profile_field_filter_hook__textarea', 'um_profile_field_filter_h
 /**
  * Time field
  *
- * @param $value
- * @param $data
+ * @param string $value Field value.
+ * @param array  $data  Field data.
  *
- * @return mixed|string
+ * @return string
  */
 function um_profile_field_filter_hook__time( $value, $data ) {
 	if ( ! $value ) {
 		return '';
 	}
-	$value = UM()->datetime()->format( $value, $data['format'] );
 
-	$value = str_replace( 'am', 'a.m.', $value );
-	$value = str_replace( 'pm', 'p.m.', $value );
+	if ( ! empty( $data['format'] ) ) {
+		$format = $data['format']; // Using legacy setting from the field.
+	} else {
+		$format = get_option( 'time_format', 'g:i a' ); // WordPress native time format.
+	}
 
-	return $value;
+	return wp_date( $format, strtotime( $value ) );
 }
 add_filter( 'um_profile_field_filter_hook__time', 'um_profile_field_filter_hook__time', 99, 2 );
 
@@ -324,9 +326,13 @@ function um_profile_field_filter_hook__date( $value, $data ) {
 	if ( ! empty( $data['pretty_format'] ) ) {
 		$value = UM()->datetime()->get_age( $value );
 	} else {
-		$format = empty( $data['format_custom'] ) ? $data['format'] : $data['format_custom'];
+		if ( ! empty( $data['format'] ) ) {
+			$format = empty( $data['format_custom'] ) ? $data['format'] : $data['format_custom'];
+		} else {
+			$format = get_option( 'date_format', 'F j, Y' ); // WordPress native date format.
+		}
 		// Don't handle static dates via timezone because can be -1 day for minus UTC timezones (e.g. America).
-		$value = wp_date( $format, strtotime( $value ), new \DateTimeZone( 'UTC' ) );
+		$value = wp_date( $format, strtotime( $value ), new DateTimeZone( 'UTC' ) );
 	}
 
 	return $value;
