@@ -41,6 +41,47 @@ function um_country_name_replace_value2122( $value, $replacements, &$changed ) {
 }
 
 
+function um_country_field_replace_names2122( &$field, $replacements ) {
+	$changed = false;
+
+	$choice_types    = array( 'select', 'multiselect', 'radio', 'checkbox' );
+	$is_choice_field = ! empty( $field['type'] ) && in_array( $field['type'], $choice_types, true );
+
+	// Only the config keys that can hold a selectable country value are walked here, so
+	// labels, placeholders and other display text are never rewritten. options/default are
+	// only meaningful as selectable values on choice-type fields.
+	if ( $is_choice_field ) {
+		if ( array_key_exists( 'options', $field ) ) {
+			$field['options'] = um_country_name_replace_value2122( $field['options'], $replacements, $changed );
+		}
+
+		if ( array_key_exists( 'default', $field ) ) {
+			$field['default'] = um_country_name_replace_value2122( $field['default'], $replacements, $changed );
+		}
+	}
+
+	$conditional_value_keys = array( 'conditional_value', 'conditional_value1', 'conditional_value2', 'conditional_value3', 'conditional_value4' );
+	foreach ( $conditional_value_keys as $conditional_value_key ) {
+		if ( array_key_exists( $conditional_value_key, $field ) ) {
+			$field[ $conditional_value_key ] = um_country_name_replace_value2122( $field[ $conditional_value_key ], $replacements, $changed );
+		}
+	}
+
+	// Conditional logic can be set on any field that references the country field's answer
+	// (e.g. a text field shown only when country = Turkey), so this is intentionally not
+	// limited to choice-type fields the way options/default are above.
+	if ( ! empty( $field['conditions'] ) && is_array( $field['conditions'] ) ) {
+		foreach ( $field['conditions'] as $condition_key => $condition ) {
+			if ( is_array( $condition ) && array_key_exists( 3, $condition ) ) {
+				$field['conditions'][ $condition_key ][3] = um_country_name_replace_value2122( $condition[3], $replacements, $changed );
+			}
+		}
+	}
+
+	return $changed;
+}
+
+
 function um_country_fields_replace_names2122( &$fields, $replacements ) {
 	$metakeys = array();
 
@@ -53,11 +94,12 @@ function um_country_fields_replace_names2122( &$fields, $replacements ) {
 			continue;
 		}
 
-		// The whole field is walked to also update the values referenced by conditional logic.
-		$changed = false;
-		$field   = um_country_name_replace_value2122( $field, $replacements, $changed );
+		$changed = um_country_field_replace_names2122( $field, $replacements );
 
-		if ( $changed ) {
+		// A field can resolve its options dynamically via a callback (custom_dropdown_options_source)
+		// instead of storing a static snapshot, so its usermeta can still hold stale country names
+		// even when nothing in the stored config matched above.
+		if ( $changed || ! empty( $field['custom_dropdown_options_source'] ) ) {
 			$metakeys[] = $field['metakey'];
 		}
 	}
