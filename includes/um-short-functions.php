@@ -1987,6 +1987,7 @@ function um_youtube_id_from_url( $url ) {
 		  | /v/        # or /v/
 		  | /watch\?v= # or /watch\?v=
 		  | /shorts/   # or /shorts/ for short videos
+		  | /live/     # or /live/ for live videos
 		  )            # End path alternatives.
 		)              # End host alternatives.
 		([\w-]{10,12}) # Allow 10-12 for 11 char youtube id.
@@ -2002,6 +2003,32 @@ function um_youtube_id_from_url( $url ) {
 	}
 
 	return false;
+}
+
+/**
+ * Get YouTube video ID from URL after validating the oEmbed provider host.
+ *
+ * @param mixed $url
+ *
+ * @return bool|string
+ */
+function um_youtube_video_id_from_url( $url ) {
+	if ( ! is_string( $url ) || '' === $url ) {
+		return false;
+	}
+
+	$provider = _wp_oembed_get_object()->get_provider( $url, array( 'discover' => false ) );
+	if ( ! is_string( $provider ) ) {
+		return false;
+	}
+
+	$provider_host = wp_parse_url( $provider, PHP_URL_HOST );
+	$provider_host = is_string( $provider_host ) ? strtolower( preg_replace( '/^www\./', '', $provider_host ) ) : false;
+	if ( 'youtube.com' !== $provider_host ) {
+		return false;
+	}
+
+	return um_youtube_id_from_url( $url );
 }
 
 /**

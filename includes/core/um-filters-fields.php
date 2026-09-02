@@ -92,7 +92,8 @@ function um_profile_field_filter_hook__youtube_video( $value, $data ) {
 	if ( empty( $value ) ) {
 		return '';
 	}
-	$value = ( strstr( $value, 'http' ) || strstr( $value, '://' ) ) ? um_youtube_id_from_url( $value ) : $value;
+	$is_url = is_string( $value ) && ( false !== strpos( $value, 'http' ) || false !== strpos( $value, '://' ) || false !== strpos( $value, 'youtube.com' ) || false !== strpos( $value, 'youtu.be/' ) );
+	$value  = $is_url ? um_youtube_video_id_from_url( $value ) : $value;
 	if ( false !== $value ) {
 		$value = 'https://www.youtube.com/embed/' . $value;
 		$value = '<div class="um-youtube">'

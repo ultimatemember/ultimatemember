@@ -801,10 +801,7 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 
 			case 'youtube_video':
 				if ( '' !== $submitted_data[ $key ] ) {
-					// Underscore-prefixed accessor is the canonical WP oEmbed handle; no public equivalent exists.
-					$wp_oembed = _wp_oembed_get_object();
-					$provider  = is_string( $submitted_data[ $key ] ) ? $wp_oembed->get_provider( $submitted_data[ $key ], array( 'discover' => false ) ) : false;
-					if ( ! $provider || false === strpos( $provider, 'youtube.com' ) ) {
+					if ( false === um_youtube_video_id_from_url( $submitted_data[ $key ] ) ) {
 						// translators: %s: label.
 						UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s URL', 'ultimate-member' ), $array['label'] ) );
 					}
