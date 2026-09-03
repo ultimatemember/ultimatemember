@@ -350,33 +350,30 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			$file       = UM_PATH . "templates/{$tpl}.php";
 			$theme_file = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
-			if ( file_exists( $theme_file ) ) {
-				$file = $theme_file;
-			} elseif ( file_exists( get_stylesheet_directory() . "/ultimate-member/{$tpl}.php" ) ) {
-				// Legacy flat-path override (kept for backward compatibility).
-				$file = get_stylesheet_directory() . "/ultimate-member/{$tpl}.php";
-			}
+				if ( file_exists( $theme_file ) ) {
+					$file = $theme_file;
+				} elseif ( file_exists( get_template_directory() . "/ultimate-member/templates/{$tpl}.php" ) ) {
+					$file = get_template_directory() . "/ultimate-member/templates/{$tpl}.php";
+				} elseif ( file_exists( get_stylesheet_directory() . "/ultimate-member/{$tpl}.php" ) ) {
+					// Legacy flat-path override (kept for backward compatibility).
+					$file = get_stylesheet_directory() . "/ultimate-member/{$tpl}.php";
+				} elseif ( file_exists( get_template_directory() . "/ultimate-member/{$tpl}.php" ) ) {
+					$file = get_template_directory() . "/ultimate-member/{$tpl}.php";
+				}
 
 			if ( file_exists( $file ) ) {
-				// Avoid Directory Traversal vulnerability by the checking the realpath.
-				// Templates can be situated only in the get_stylesheet_directory() or plugindir templates.
-				$real_file = wp_normalize_path( (string) realpath( $file ) );
-				if ( '' === $real_file ) {
-					return;
-				}
-				$allowed_prefixes = array(
-					wp_normalize_path( UM_PATH . 'templates' . DIRECTORY_SEPARATOR ),
-					wp_normalize_path( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR ),
-					wp_normalize_path( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR ), // legacy flat-path override
-				);
-				$is_allowed       = false;
-				foreach ( $allowed_prefixes as $prefix ) {
-					if ( 0 === strpos( $real_file, $prefix ) ) {
-						$is_allowed = true;
-						break;
-					}
-				}
-				if ( $is_allowed ) {
+				// Avoid Directory Traversal vulnerability by checking the realpath.
+				if ( ! UM()->is_allowed_template_path( $file ) ) {
+					_doing_it_wrong(
+						__FUNCTION__,
+						sprintf(
+							/* translators: %s: filter name. */
+							__( '<code>%s</code> is not in an allowed template directory. Add trusted custom directories via the <code>um_allowed_template_directories</code> filter.', 'ultimate-member' ),
+							__( 'load_template', 'ultimate-member' )
+						),
+						'2.13.1'
+					);
+				} else {
 					include $file;
 				}
 			}
