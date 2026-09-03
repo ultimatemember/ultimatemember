@@ -270,7 +270,22 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			 * ?>
 			 */
 			do_action( 'um_before_template_part', $template_name, $path, $located, $t_args );
-			include $located;
+
+				// Allow-list guard before include. The `um_get_template` filter above can
+				// rewrite $located to an arbitrary file; reject anything outside allowed directories.
+				if ( ! UM()->is_allowed_template_path( $located ) ) {
+					_doing_it_wrong(
+						__FUNCTION__,
+						sprintf(
+							/* translators: %s: filter name. */
+							__( '<code>%s</code> is not in an allowed template directory. Add trusted custom directories via the <code>um_allowed_template_directories</code> filter.', 'ultimate-member' ),
+							__( 'um_get_template', 'ultimate-member' )
+						),
+						'2.13.1'
+					);
+				} else {
+					include $located;
+				}
 
 			/**
 			 * UM hook
@@ -307,6 +322,65 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 
 		/**
+		 * Return the directories allowed for template includes.
+		 *
+		 * @return array
+		 */
+		public function get_allowed_template_directories() {
+			$directories = array(
+				UM_PATH . 'templates' . DIRECTORY_SEPARATOR,
+				get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR,
+				get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR,
+				get_template_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR,
+				get_template_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR,
+			);
+
+			/**
+			 * Filter the directories allowed for template includes.
+			 *
+			 * @since 2.13.1
+			 *
+			 * @param array $directories Allowed template directories.
+			 */
+			$directories = apply_filters( 'um_allowed_template_directories', $directories );
+
+			$directories = array_map(
+				static function ( $directory ) {
+					return trailingslashit( wp_normalize_path( $directory ) );
+				},
+				array_filter(
+					(array) $directories,
+					static function ( $directory ) {
+						return is_string( $directory ) && '' !== trim( $directory );
+					}
+				)
+			);
+
+			return array_unique( $directories );
+		}
+
+		/**
+		 * Check whether a template path is inside an allowed template directory.
+		 *
+		 * @param string $file Template path.
+		 * @return bool True when the file can be included, otherwise false.
+		 */
+		public function is_allowed_template_path( $file ) {
+			$real_file = wp_normalize_path( (string) realpath( $file ) );
+			if ( '' === $real_file ) {
+				return false;
+			}
+
+			foreach ( $this->get_allowed_template_directories() as $directory ) {
+				if ( 0 === strpos( $real_file, $directory ) ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/**
 		 * Locate a template and return the path for inclusion.
 		 *
 		 * @access public
@@ -315,10 +389,20 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * @return string
 		 */
 		function locate_template( $template_name, $path = '' ) {
-			// check if there is template at theme folder
-			$template = locate_template( array(
-				trailingslashit( 'ultimate-member' . DIRECTORY_SEPARATOR . $path ) . $template_name
-			) );
+			// Canonical theme path is `ultimate-member/templates/<file>` (with `templates/`
+			// subdir matching the on-disk plugin layout). The flat `ultimate-member/<file>`
+			// and the path-scoped `ultimate-member/<path>/<file>` layouts are preserved as
+			// backward-compatible fallbacks.
+			$candidates = array();
+			if ( ! $path ) {
+				$candidates[] = trailingslashit( 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' ) . $template_name;
+				$candidates[] = trailingslashit( 'ultimate-member' . DIRECTORY_SEPARATOR ) . $template_name;
+			} else {
+				$candidates[] = trailingslashit( 'ultimate-member' . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . 'templates' ) . $template_name;
+				$candidates[] = trailingslashit( 'ultimate-member' . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR ) . $template_name;
+			}
+
+			$template = locate_template( $candidates );
 
 			if ( ! $template ) {
 				if ( $path ) {
