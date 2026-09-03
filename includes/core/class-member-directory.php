@@ -2619,8 +2619,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'total_users'   => $total_users,
 			);
 
-			$header        = ! empty( $directory_data['header'] ) ? $directory_data['header'] : __( '{total_users} Members', 'ultimate-member' );
-			$header_single = ! empty( $directory_data['header_single'] ) ? $directory_data['header_single'] : __( '{total_users} Member', 'ultimate-member' );
+			$header        = array_key_exists( 'header', $directory_data ) ? $directory_data['header'] : __( '{total_users} Members', 'ultimate-member' );
+			$header_single = array_key_exists( 'header_single', $directory_data ) ? $directory_data['header_single'] : __( '{total_users} Member', 'ultimate-member' );
 			$header        = apply_filters( 'um_member_directory_default_header', $header, $directory_data, $pagination_data );
 			$header_single = apply_filters( 'um_member_directory_default_header_single', $header_single, $directory_data, $pagination_data );
 
@@ -2970,8 +2970,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					'total_users'   => 0,
 				);
 
-				$header        = ! empty( $directory_data['header'] ) ? $directory_data['header'] : __( '{total_users} Members', 'ultimate-member' );
-				$header_single = ! empty( $directory_data['header_single'] ) ? $directory_data['header_single'] : __( '{total_users} Member', 'ultimate-member' );
+				$header        = array_key_exists( 'header', $directory_data ) ? $directory_data['header'] : __( '{total_users} Members', 'ultimate-member' );
+				$header_single = array_key_exists( 'header_single', $directory_data ) ? $directory_data['header_single'] : __( '{total_users} Member', 'ultimate-member' );
 				$header        = apply_filters( 'um_member_directory_default_header', $header, $directory_data, $pagination_data );
 				$header_single = apply_filters( 'um_member_directory_default_header_single', $header_single, $directory_data, $pagination_data );
 
