@@ -3778,11 +3778,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				return $settings;
 			}
 
-			$wp_default_protocols = wp_allowed_protocols();
-			$protocols            = array_merge( $wp_default_protocols, array( 'data' ) );
+			$protocols = wp_allowed_protocols();
 
 			$template = $settings['um_email_template'];
-			$content  = wp_kses( stripslashes( $settings[ $template ] ), 'post', $protocols );
+			$content  = $this->sanitize_email_template( stripslashes( $settings[ $template ] ), $protocols );
 
 			$theme_template_path = UM()->mail()->get_template_file( 'theme', $template );
 			if ( ! file_exists( $theme_template_path ) ) {
@@ -3801,6 +3800,71 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			}
 
 			return $settings;
+		}
+
+		/**
+		 * Sanitize email template content before it is written to the template file.
+		 *
+		 * WordPress kses passes every style="" value through safecss_filter_attr(),
+		 * which only allows url() schemes from wp_allowed_protocols(). That list is
+		 * cached before wp_loaded and never contains the data scheme, so background
+		 * images set with data: URLs are dropped on save. WordPress core should stay
+		 * authoritative for which CSS properties and URL schemes are allowed, so this
+		 * method only swaps safe raster image data URIs for inert tokens before the
+		 * normal wp_kses() pass and restores the tokens that survive it.
+		 *
+		 * @param string $content   Raw template HTML.
+		 * @param array  $protocols Allowed URL protocols.
+		 *
+		 * @return string Sanitized template HTML.
+		 */
+		private function sanitize_email_template( $content, $protocols ) {
+			$placeholders     = array();
+			$placeholder_base = 'https://um-data-image-' . wp_generate_password( 12, false, false ) . '.invalid/';
+
+			// Swap only the data URI text inside url() values in style attributes
+			// for inert https tokens. Keep url() and the rest of each style value
+			// untouched so WordPress core still runs its normal CSS checks.
+			$content = preg_replace_callback(
+				'/((?:^|\s)style\s*=\s*)([\'\"])(.*?)(\2)(?=\s|>)/is',
+				function ( $style_match ) use ( &$placeholders, $placeholder_base ) {
+					$style = preg_replace_callback(
+						'/url\(\s*(?:([\'\"])(data:image\/(?:png|jpe?g|gif|webp);base64,[A-Za-z0-9+\/]+={0,2})\1|(data:image\/(?:png|jpe?g|gif|webp);base64,[A-Za-z0-9+\/]+={0,2}))\s*\)/i',
+						function ( $url_match ) use ( &$placeholders, $placeholder_base ) {
+							$key                  = $placeholder_base . count( $placeholders ) . '/';
+							$placeholders[ $key ] = ( '' !== $url_match[1] ) ? $url_match[1] . $url_match[2] . $url_match[1] : $url_match[3];
+
+							return 'url(' . $key . ')';
+						},
+						$style_match[3]
+					);
+
+					return $style_match[1] . $style_match[2] . $style . $style_match[4];
+				},
+				$content
+			);
+
+			$content = wp_kses( $content, 'post', $protocols );
+
+			// Restore only tokens that survived the kses pass inside a style
+			// attribute, so placeholder text in href or other attributes is never
+			// substituted. Each restored value is escaped for the attribute context.
+			$content = preg_replace_callback(
+				'/(\sstyle\s*=\s*(["\']))(.*?)(\2)(?=\s|>)/is',
+				function ( $m ) use ( $placeholders ) {
+					$value = $m[3];
+					foreach ( $placeholders as $token => $original ) {
+						if ( false !== strpos( $value, $token ) ) {
+							$value = str_replace( $token, esc_attr( $original ), $value );
+						}
+					}
+
+					return $m[1] . $value . $m[4];
+				},
+				$content
+			);
+
+			return $content;
 		}
 	}
 }
