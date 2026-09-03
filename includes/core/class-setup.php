@@ -127,7 +127,15 @@ KEY meta_value_indx (um_value(191))
 
 						$form_id = wp_insert_post( $form );
 
+						// Skip these two so the value stays live-translatable via `__()` at render time
+						// (see `um_member_directory_default_header[_single]` in class-member-directory.php)
+						// instead of being permanently baked into postmeta in the activating admin's locale.
+						$skip_live_translated_meta = array( '_um_directory_header', '_um_directory_header_single' );
+
 						foreach ( UM()->config()->core_directory_meta[ $id ] as $meta_key => $meta_value ) {
+							if ( in_array( $meta_key, $skip_live_translated_meta, true ) ) {
+								continue;
+							}
 							update_post_meta( $form_id, $meta_key, $meta_value );
 						}
 
