@@ -19,7 +19,8 @@ function um_country_name_replace_value2122( $value, $replacements, &$changed ) {
 			$item = um_country_name_replace_value2122( $item, $replacements, $changed );
 
 			// Select option values can be stored as array keys when the options pair mode is enabled.
-			// Rename the key only when the new name is not used yet, so no value is silently replaced.
+			// If both names already exist, keep both keys and values to avoid data loss; the existing
+			// replacement key remains authoritative while the stale key is left for manual cleanup.
 			if ( is_string( $key ) && isset( $replacements[ $key ] )
 				&& ! array_key_exists( $replacements[ $key ], $value )
 				&& ! array_key_exists( $replacements[ $key ], $new_value ) ) {
@@ -96,10 +97,12 @@ function um_country_fields_replace_names2122( &$fields, $replacements ) {
 
 		$changed = um_country_field_replace_names2122( $field, $replacements );
 
-		// A field can resolve its options dynamically via a callback (custom_dropdown_options_source)
-		// instead of storing a static snapshot, so its usermeta can still hold stale country names
-		// even when nothing in the stored config matched above.
-		if ( $changed || ! empty( $field['custom_dropdown_options_source'] ) ) {
+		// custom_dropdown_options_source is a generic callback setting that can power any dynamic
+		// select/multiselect, so it does not identify country fields. Callback-driven fields also
+		// skip the strict option-match validation (um_profile_field_filter_xss_validation), so their
+		// saved values are not blanked after the official renames and do not need rewriting here.
+		// Only fields that matched an old name in their stored config are queued for usermeta.
+		if ( $changed ) {
 			$metakeys[] = $field['metakey'];
 		}
 	}
