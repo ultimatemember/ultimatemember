@@ -112,31 +112,6 @@ function um_submit_form_errors_hook_login_custom_fields( $submitted_data, $form_
 			continue;
 		}
 
-		// Skip fields hidden by conditional logic.
-		if ( ! empty( $array['conditions'] ) ) {
-			try {
-				$skip_field = false;
-				foreach ( $array['conditions'] as $condition ) {
-					if ( um_check_conditions_on_submit( $condition, $fields, $submitted_data, true ) ) {
-						$skip_field = true;
-						break;
-					}
-				}
-				if ( $skip_field ) {
-					continue;
-				}
-			} catch ( Exception $e ) {
-				// translators: %s: title.
-				UM()->form()->add_error( $key, sprintf( __( '%s - wrong conditions.', 'ultimate-member' ), $array['title'] ) );
-				continue;
-			}
-		}
-
-		// Skip the fields which are not rendered on the login form.
-		if ( isset( $array['visibility'] ) && 'view' === $array['visibility'] ) {
-			continue;
-		}
-
 		/**
 		 * UM hook
 		 *
@@ -160,6 +135,31 @@ function um_submit_form_errors_hook_login_custom_fields( $submitted_data, $form_
 		 * ?>
 		 */
 		$array = apply_filters( 'um_get_custom_field_array', $array, $fields );
+
+		// Skip fields which are not rendered on the login form or cannot be viewed by the visitor.
+		if ( ( isset( $array['visibility'] ) && 'view' === $array['visibility'] ) || ! um_can_view_field( $array ) ) {
+			continue;
+		}
+
+		// Skip fields hidden by conditional logic.
+		if ( ! empty( $array['conditions'] ) ) {
+			try {
+				$skip_field = false;
+				foreach ( $array['conditions'] as $condition ) {
+					if ( um_check_conditions_on_submit( $condition, $fields, $submitted_data, true ) ) {
+						$skip_field = true;
+						break;
+					}
+				}
+				if ( $skip_field ) {
+					continue;
+				}
+			} catch ( Exception $e ) {
+				// translators: %s: title.
+				UM()->form()->add_error( $key, sprintf( __( '%s - wrong conditions.', 'ultimate-member' ), $array['title'] ) );
+				continue;
+			}
+		}
 
 		if ( empty( $array['required'] ) ) {
 			continue;
