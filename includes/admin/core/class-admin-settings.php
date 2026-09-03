@@ -2694,7 +2694,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 * For every submitted `api_key` field: write (or update) its value as a `UM_OPTION_<ID>`
 		 * constant, or remove that constant when the value is empty; then strip the value from the
 		 * settings array and delete any legacy DB copy so the secret is never persisted to `um_options`.
-		 * Write failures are collected into a transient consumed by the admin notice.
+		 *
+		 * When wp-config.php can't be written (not writable, or the bundled library is missing) the value
+		 * is stored in `um_options` instead so the key keeps working, and the id is collected into a
+		 * transient consumed by the admin notice, which asks the site owner to move it into wp-config.php.
 		 *
 		 * Hooked on `um_change_settings_before_save` (priority 8, before sanitize/DB write).
 		 *
@@ -2722,7 +2725,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					continue;
 				}
 
-				// Never persist the secret to the DB — strip it from the settings array either way.
+				// The value is handled here, not by the generic settings save — strip it from the settings
+				// array either way so it can't be written to `um_options` twice.
 				$constant = UM()->options()->get_constant_name( $id );
 				$value    = sanitize_text_field( wp_unslash( $settings[ $id ] ) );
 				unset( $settings[ $id ] );
@@ -2737,8 +2741,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					// Written to wp-config.php — drop any legacy DB copy.
 					UM()->options()->remove( $id );
 				} else {
-					// Couldn't write wp-config.php: keep the legacy DB value (site keeps working) and
-					// surface a notice with manual instructions.
+					// Couldn't write wp-config.php (not writable, or the library is missing): fall back to
+					// storing the value in `um_options` so the key still works, and surface a notice with
+					// manual instructions to move it into wp-config.php later. `get()` reads the constant
+					// first and the DB second, so the fallback is transparent — and a constant added by
+					// hand afterwards immediately takes precedence over the DB copy.
+					UM()->options()->update( $id, $value );
 					$failures[ $id ] = $constant;
 				}
 			}
