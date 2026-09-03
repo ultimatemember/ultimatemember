@@ -592,7 +592,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$actual_notices = array();
 			foreach ( $hidden_notices as $hidden_key ) {
-				if ( is_string( $hidden_key ) && 0 === strpos( $hidden_key, 'outdated_templates' ) && $hidden_key !== $current_key ) {
+				if ( is_string( $hidden_key ) && 0 === strpos( $hidden_key, 'outdated_templates_' ) && $hidden_key !== $current_key ) {
 					continue;
 				}
 				$actual_notices[] = $hidden_key;
