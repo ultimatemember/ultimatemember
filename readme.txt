@@ -199,6 +199,12 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
 
+= 2.12.2 2026-08-17 =
+
+**Bugfixes**
+
+* Fixed: Added an upgrade routine to update the stored country names in forms and user profiles after the "Türkiye" and "North Macedonia" renames.
+
 = 2.12.1 2026-07-06 =
 
 **Enhancements**
