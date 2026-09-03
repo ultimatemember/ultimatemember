@@ -88,6 +88,115 @@ add_action( 'um_submit_form_errors_hook_login', 'um_submit_form_errors_hook_logi
 
 
 /**
+ * Error processing hook for login form custom fields.
+ *
+ * @since 2.12.2
+ * @param array $submitted_data
+ * @param array $form_data
+ */
+function um_submit_form_errors_hook_login_custom_fields( $submitted_data, $form_data ) {
+	if ( ! is_array( $form_data ) || ! array_key_exists( 'custom_fields', $form_data ) || empty( $form_data['custom_fields'] ) ) {
+		return;
+	}
+
+	$fields = maybe_unserialize( $form_data['custom_fields'] );
+	if ( empty( $fields ) || ! is_array( $fields ) ) {
+		return;
+	}
+
+	// The core login fields are validated in the um_submit_form_errors_hook_login() function.
+	$exclude_fields = array( 'username', 'user_login', 'user_email', 'user_password', 'role_radio', 'role_select' );
+
+	foreach ( $fields as $key => $array ) {
+		if ( in_array( $key, $exclude_fields, true ) ) {
+			continue;
+		}
+
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_get_custom_field_array
+		 * @description Extend custom field data on submit form error
+		 * @input_vars
+		 * [{"var":"$array","type":"array","desc":"Field data"},
+		 * {"var":"$fields","type":"array","desc":"All fields"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_get_custom_field_array', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_get_custom_field_array', 'my_get_custom_field_array', 10, 2 );
+		 * function my_get_custom_field_array( $array, $fields ) {
+		 *     // your code here
+		 *     return $array;
+		 * }
+		 * ?>
+		 */
+		$array = apply_filters( 'um_get_custom_field_array', $array, $fields );
+
+		// Skip fields which are not rendered on the login form or cannot be viewed by the visitor.
+		if ( ( isset( $array['visibility'] ) && 'view' === $array['visibility'] ) || ! um_can_view_field( $array ) ) {
+			continue;
+		}
+
+		// Skip fields hidden by conditional logic.
+		if ( ! empty( $array['conditions'] ) ) {
+			try {
+				$skip_field = false;
+				foreach ( $array['conditions'] as $condition ) {
+					if ( um_check_conditions_on_submit( $condition, $fields, $submitted_data, true ) ) {
+						$skip_field = true;
+						break;
+					}
+				}
+				if ( $skip_field ) {
+					continue;
+				}
+			} catch ( Exception $e ) {
+				// translators: %s: title.
+				UM()->form()->add_error( $key, sprintf( __( '%s - wrong conditions.', 'ultimate-member' ), $array['title'] ) );
+				continue;
+			}
+		}
+
+		if ( empty( $array['required'] ) ) {
+			continue;
+		}
+
+		// The checkbox, radio and multiselect fields are absent from the submitted data or contain empty values when left empty.
+		if ( isset( $array['type'] ) && in_array( $array['type'], array( 'checkbox', 'radio', 'multiselect' ), true ) ) {
+			$value = isset( $submitted_data[ $key ] ) ? $submitted_data[ $key ] : '';
+			if ( is_array( $value ) ) {
+				$value = array_filter(
+					$value,
+					static function ( $val ) {
+						return ( is_string( $val ) && '' !== $val ) || is_numeric( $val );
+					}
+				);
+			}
+			if ( '' === $value || array() === $value ) {
+				// translators: %s: title.
+				UM()->form()->add_error( $key, sprintf( __( '%s is required.', 'ultimate-member' ), $array['title'] ) );
+			}
+			continue;
+		}
+
+		if ( ! isset( $submitted_data[ $key ] ) || '' === $submitted_data[ $key ] ) {
+			if ( empty( $array['label'] ) ) {
+				UM()->form()->add_error( $key, __( 'This field is required', 'ultimate-member' ) );
+			} else {
+				// translators: %s: title.
+				UM()->form()->add_error( $key, sprintf( __( '%s is required', 'ultimate-member' ), $array['label'] ) );
+			}
+		}
+	}
+}
+add_action( 'um_submit_form_errors_hook_login', 'um_submit_form_errors_hook_login_custom_fields', 20, 2 );
+
+
+/**
  * Display the login errors from other plugins
  *
  * @param $args
