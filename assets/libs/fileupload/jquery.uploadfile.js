@@ -442,7 +442,7 @@
                             var sData = serializeData(dynData);
                             if (sData) {
                                 for (var j = 0; j < sData.length; j++) {
-                                    if (sData[j]) {
+                                    if (sData[j] && sData[j][0] && sData[j][1]) {
                                         if (s.fileData != undefined) options.formData.append(sData[j][0], sData[j][1]);
                                         else options.data[sData[j][0]] = sData[j][1];
                                     }
