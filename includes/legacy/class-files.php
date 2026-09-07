@@ -136,16 +136,14 @@ if ( ! class_exists( 'um\legacy\Files' ) ) {
 		 * @return string
 		 */
 		public function get_download_link( $form_id, $field_key, $user_id ) {
-			$field_key = urlencode( $field_key );
+			$field_key = rawurlencode( $field_key );
+			$url       = get_home_url( get_current_blog_id() );
+			$nonce     = wp_create_nonce( $user_id . $form_id . $field_key . 'um-download-nonce' );
 
 			if ( UM()->is_permalinks ) {
-				$url   = get_home_url( get_current_blog_id() );
-				$nonce = wp_create_nonce( $user_id . $form_id . 'um-download-nonce' );
-				$url   = $url . "/um-download/{$form_id}/{$field_key}/{$user_id}/{$nonce}";
+				$url .= "/um-download/{$form_id}/{$field_key}/{$user_id}/{$nonce}";
 			} else {
-				$url   = get_home_url( get_current_blog_id() );
-				$nonce = wp_create_nonce( $user_id . $form_id . 'um-download-nonce' );
-				$url   = add_query_arg(
+				$url = add_query_arg(
 					array(
 						'um_action' => 'download',
 						'um_form'   => $form_id,
@@ -193,7 +191,7 @@ if ( ! class_exists( 'um\legacy\Files' ) ) {
 			}
 			$query_verify = get_query_var( 'um_verify' );
 			if ( empty( $query_verify ) ||
-				! wp_verify_nonce( $query_verify, $user_id . $form_id . 'um-download-nonce' ) ) {
+				! wp_verify_nonce( $query_verify, $user_id . $form_id . $field_key . 'um-download-nonce' ) ) {
 				return;
 			}
 

@@ -2581,34 +2581,30 @@ if ( ! class_exists( 'um\common\Fields' ) ) {
 				return '';
 			}
 
-			if ( UM()->options()->get( 'files_secure_links' ) ) {
-				$filetype    = wp_check_filetype( $file_path );
-				$filetime    = filemtime( $file_path );
-				$field_value = $filetime . '.' . $filetype['ext'];
+			$filetype    = wp_check_filetype( $file_path );
+			$filetime    = filemtime( $file_path );
+			$field_value = $filetime . '.' . $filetype['ext'];
 
-				$field_key = rawurlencode( $field_key );
-				$nonce     = wp_create_nonce( $user_id . $form_id . 'um-download-nonce' );
+			$field_key = rawurlencode( $field_key );
+			$nonce     = wp_create_nonce( $user_id . $form_id . $field_key . 'um-download-nonce' );
 
-				$url = get_home_url( get_current_blog_id() );
-				if ( UM()->is_permalinks ) {
-					$url .= "/um-download/{$form_id}/{$field_key}/{$user_id}/{$nonce}/{$field_value}";
-				} else {
-					$url = add_query_arg(
-						array(
-							'um_action'   => 'download',
-							'um_form'     => $form_id,
-							'um_field'    => $field_key,
-							'um_user'     => $user_id,
-							'um_nonce'    => $nonce,
-							'um_filename' => $field_value,
-						),
-						$url
-					);
-				}
-				return UM()->common()->filesystem()::add_timestamp( $url );
+			$url = get_home_url( get_current_blog_id() );
+			if ( UM()->is_permalinks ) {
+				$url .= "/um-download/{$form_id}/{$field_key}/{$user_id}/{$nonce}/{$field_value}";
+			} else {
+				$url = add_query_arg(
+					array(
+						'um_action'   => 'download',
+						'um_form'     => $form_id,
+						'um_field'    => $field_key,
+						'um_user'     => $user_id,
+						'um_nonce'    => $nonce,
+						'um_filename' => $field_value,
+					),
+					$url
+				);
 			}
-
-			return UM()->common()->filesystem()->get_user_uploads_url( $user_id ) . '/' . $field_value;
+			return UM()->common()->filesystem()::add_timestamp( $url );
 		}
 	}
 }

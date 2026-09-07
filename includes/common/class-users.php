@@ -47,7 +47,16 @@ class Users {
 		$blocked_words = (string) UM()->options()->get( 'blocked_words' );
 		if ( $blocked_words ) {
 			$um_usernames = array_map( 'trim', explode( "\n", strtolower( $blocked_words ) ) );
-			$usernames    = array_unique( array_merge( $usernames, $um_usernames ) );
+
+			if ( is_user_logged_in() ) {
+				// Exclude the current user's login from the list of blocked usernames. Because it blocks the current user edit profile.
+				$current_userdata = get_userdata( get_current_user_id() );
+				$current_login    = $current_userdata->user_login;
+
+				$um_usernames = array_diff( $um_usernames, array( $current_login ) );
+			}
+
+			$usernames = array_unique( array_merge( $usernames, $um_usernames ) );
 		}
 		return $usernames;
 	}

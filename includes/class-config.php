@@ -1155,7 +1155,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'giphy_api_key'                         => '',
 				// NEW UI default settings.
 				'primary_color'                         => '#7f56d9',
-				'files_secure_links'                    => true,
 				'profile_photo_enabled'                 => true,
 				'enable_user_cover'                     => true,
 				'profile_cover_enabled'                 => true,
