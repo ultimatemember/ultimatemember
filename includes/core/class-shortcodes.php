@@ -350,16 +350,16 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			$file       = UM_PATH . "templates/{$tpl}.php";
 			$theme_file = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
-				if ( file_exists( $theme_file ) ) {
-					$file = $theme_file;
-				} elseif ( file_exists( get_template_directory() . "/ultimate-member/templates/{$tpl}.php" ) ) {
-					$file = get_template_directory() . "/ultimate-member/templates/{$tpl}.php";
-				} elseif ( file_exists( get_stylesheet_directory() . "/ultimate-member/{$tpl}.php" ) ) {
-					// Legacy flat-path override (kept for backward compatibility).
-					$file = get_stylesheet_directory() . "/ultimate-member/{$tpl}.php";
-				} elseif ( file_exists( get_template_directory() . "/ultimate-member/{$tpl}.php" ) ) {
-					$file = get_template_directory() . "/ultimate-member/{$tpl}.php";
-				}
+			if ( file_exists( $theme_file ) ) {
+				$file = $theme_file;
+			} elseif ( file_exists( get_template_directory() . "/ultimate-member/templates/{$tpl}.php" ) ) {
+				$file = get_template_directory() . "/ultimate-member/templates/{$tpl}.php";
+			} elseif ( file_exists( get_stylesheet_directory() . "/ultimate-member/{$tpl}.php" ) ) {
+				// Legacy flat-path override (kept for backward compatibility).
+				$file = get_stylesheet_directory() . "/ultimate-member/{$tpl}.php";
+			} elseif ( file_exists( get_template_directory() . "/ultimate-member/{$tpl}.php" ) ) {
+				$file = get_template_directory() . "/ultimate-member/{$tpl}.php";
+			}
 
 			if ( file_exists( $file ) ) {
 				// Avoid Directory Traversal vulnerability by checking the realpath.

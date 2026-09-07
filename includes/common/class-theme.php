@@ -129,9 +129,13 @@ class Theme {
 						$theme_file = $located['theme'];
 					} elseif ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
 						$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $file;
+					} elseif ( file_exists( get_template_directory() . '/ultimate-member/templates/' . $file ) ) {
+						$theme_file = get_template_directory() . '/ultimate-member/templates/' . $file;
 					} elseif ( file_exists( get_stylesheet_directory() . '/ultimate-member/' . $file ) ) {
 						// Legacy flat-path override support for users who organized overrides before 2.x.
 						$theme_file = get_stylesheet_directory() . '/ultimate-member/' . $file;
+					} elseif ( file_exists( get_template_directory() . '/ultimate-member/' . $file ) ) {
+						$theme_file = get_template_directory() . '/ultimate-member/' . $file;
 					}
 
 					if ( ! empty( $theme_file ) ) {

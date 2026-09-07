@@ -271,21 +271,21 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			 */
 			do_action( 'um_before_template_part', $template_name, $path, $located, $t_args );
 
-				// Allow-list guard before include. The `um_get_template` filter above can
-				// rewrite $located to an arbitrary file; reject anything outside allowed directories.
-				if ( ! UM()->is_allowed_template_path( $located ) ) {
-					_doing_it_wrong(
-						__FUNCTION__,
-						sprintf(
-							/* translators: %s: filter name. */
-							__( '<code>%s</code> is not in an allowed template directory. Add trusted custom directories via the <code>um_allowed_template_directories</code> filter.', 'ultimate-member' ),
-							__( 'um_get_template', 'ultimate-member' )
-						),
-						'2.13.1'
-					);
-				} else {
-					include $located;
-				}
+			// Allow-list guard before include. The `um_get_template` filter above can
+			// rewrite $located to an arbitrary file; reject anything outside allowed directories.
+			if ( ! UM()->is_allowed_template_path( $located, $path ) ) {
+				_doing_it_wrong(
+					__FUNCTION__,
+					sprintf(
+						/* translators: %s: filter name. */
+						__( '<code>%s</code> is not in an allowed template directory. Add trusted custom directories via the <code>um_allowed_template_directories</code> filter.', 'ultimate-member' ),
+						__( 'um_get_template', 'ultimate-member' )
+					),
+					'2.13.1'
+				);
+			} else {
+				include $located;
+			}
 
 			/**
 			 * UM hook
@@ -324,9 +324,16 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		/**
 		 * Return the directories allowed for template includes.
 		 *
+		 * When `$path` is non-empty (derived from a `$basename` argument to
+		 * `get_template()`), the matching extension directory
+		 * `WP_PLUGIN_DIR/<path>/templates/` is also allowed so that templates
+		 * shipped by Ultimate Member add-ons keep working without registering
+		 * through the `um_allowed_template_directories` filter.
+		 *
+		 * @param string $path Optional extension slug, e.g. 'ultimate-member-pro'.
 		 * @return array
 		 */
-		public function get_allowed_template_directories() {
+		public function get_allowed_template_directories( $path = '' ) {
 			$directories = array(
 				UM_PATH . 'templates' . DIRECTORY_SEPARATOR,
 				get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR,
@@ -334,6 +341,10 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 				get_template_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR,
 				get_template_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR,
 			);
+
+			if ( '' !== $path ) {
+				$directories[] = wp_normalize_path( WP_PLUGIN_DIR ) . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR;
+			}
 
 			/**
 			 * Filter the directories allowed for template includes.
@@ -363,15 +374,16 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * Check whether a template path is inside an allowed template directory.
 		 *
 		 * @param string $file Template path.
+		 * @param string $path Optional extension slug from a `$basename` argument.
 		 * @return bool True when the file can be included, otherwise false.
 		 */
-		public function is_allowed_template_path( $file ) {
+		public function is_allowed_template_path( $file, $path = '' ) {
 			$real_file = wp_normalize_path( (string) realpath( $file ) );
 			if ( '' === $real_file ) {
 				return false;
 			}
 
-			foreach ( $this->get_allowed_template_directories() as $directory ) {
+			foreach ( $this->get_allowed_template_directories( $path ) as $directory ) {
 				if ( 0 === strpos( $real_file, $directory ) ) {
 					return true;
 				}
