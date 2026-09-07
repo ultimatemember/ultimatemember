@@ -968,6 +968,42 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 
 		/**
+		 * Delete stale photo thumbnails
+		 *
+		 * When a smaller photo replaces a larger one, multi_resize() cannot regenerate
+		 * thumbnails bigger than the new source image. The leftover files from the
+		 * previous upload are removed here so they do not keep being served.
+		 *
+		 * The glob pattern matches only the `{key}-*` thumbnails, so the canonical
+		 * `profile_photo.*` / `cover_photo.*` files are preserved.
+		 *
+		 * @param string $key     Image key. Only 'profile_photo' and 'cover_photo' are processed.
+		 * @param int    $user_id User ID.
+		 *
+		 * @since 2.13.1
+		 */
+		private function delete_stale_thumbnails( $key, $user_id ) {
+			if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) ) {
+				return;
+			}
+
+			$dir = UM()->files()->upload_basedir . $user_id . DIRECTORY_SEPARATOR;
+			if ( ! is_dir( $dir ) ) {
+				return;
+			}
+
+			$stale = glob( $dir . $key . '-*' );
+			if ( is_array( $stale ) ) {
+				foreach ( $stale as $old ) {
+					if ( is_file( $old ) ) {
+						wp_delete_file( $old );
+					}
+				}
+			}
+		}
+
+
+		/**
 		 * Profile photo image process
 		 *
 		 * @param  array  $response
@@ -1023,17 +1059,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				// Remove stale thumbnails left from a previous upload so a smaller
 				// replacement photo does not leave larger sizes on disk and served.
-				$dir = UM()->files()->upload_basedir . $user_id . DIRECTORY_SEPARATOR;
-				if ( is_dir( $dir ) ) {
-					$stale = glob( $dir . $key . '-*' );
-					if ( is_array( $stale ) ) {
-						foreach ( $stale as $old ) {
-							if ( is_file( $old ) ) {
-								wp_delete_file( $old );
-							}
-						}
-					}
-				}
+				$this->delete_stale_thumbnails( $key, $user_id );
 
 				$image->multi_resize( $sizes_array );
 
@@ -1113,17 +1139,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				// Remove stale thumbnails left from a previous upload so a smaller
 				// replacement photo does not leave larger sizes on disk and served.
-				$dir = UM()->files()->upload_basedir . $user_id . DIRECTORY_SEPARATOR;
-				if ( is_dir( $dir ) ) {
-					$stale = glob( $dir . $key . '-*' );
-					if ( is_array( $stale ) ) {
-						foreach ( $stale as $old ) {
-							if ( is_file( $old ) ) {
-								wp_delete_file( $old );
-							}
-						}
-					}
-				}
+				$this->delete_stale_thumbnails( $key, $user_id );
 
 				$resize = $image->multi_resize( $sizes_array );
 
