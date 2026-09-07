@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-28T16:54:35+00:00\n"
+"POT-Creation-Date: 2026-09-07T15:14:44+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -10396,10 +10396,10 @@ msgid "This file type is not recognized."
 msgstr ""
 
 #. translators: %s is the file src.
-#: includes/core/class-uploader.php:1014
-#: includes/core/class-uploader.php:1055
-#: includes/core/class-uploader.php:1103
-#: includes/core/class-uploader.php:1151
+#: includes/core/class-uploader.php:1050
+#: includes/core/class-uploader.php:1081
+#: includes/core/class-uploader.php:1129
+#: includes/core/class-uploader.php:1167
 #, php-format
 msgid "Unable to crop image file: %s"
 msgstr ""
