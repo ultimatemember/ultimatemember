@@ -46,7 +46,6 @@ class Filesystem {
 	 * Filesystem constructor.
 	 */
 	public function __construct() {
-		$this->init_paths();
 	}
 
 	/**
@@ -57,6 +56,19 @@ class Filesystem {
 	public function init_paths() {
 		$this->temp_upload_dir = $this->get_upload_dir( 'ultimatemember/temp' );
 		$this->temp_upload_url = $this->get_upload_url( 'ultimatemember/temp' );
+	}
+
+	/**
+	 * Init uploading URL and directory on demand.
+	 *
+	 * @since 2.12.3
+	 *
+	 * @return void
+	 */
+	private function maybe_init_paths() {
+		if ( empty( $this->temp_upload_dir ) || empty( $this->temp_upload_url ) ) {
+			$this->init_paths();
+		}
 	}
 
 	/**
@@ -166,6 +178,7 @@ class Filesystem {
 	public function clear_temp_dir() {
 		global $wp_filesystem;
 
+		$this->maybe_init_paths();
 		self::maybe_init_wp_filesystem();
 
 		if ( ! $wp_filesystem->is_dir( $this->temp_upload_dir ) ) {
@@ -291,7 +304,7 @@ class Filesystem {
 			$suffixes = array( '', 'kb', 'MB', 'GB', 'TB' );
 
 			$computed_size = round( 1024 ** ( $base - floor( $base ) ), $precision );
-			$unit          = $suffixes[ absint( floor( $base ) ) ];
+			$unit          = $suffixes[ abs( (int) floor( $base ) ) ];
 
 			return $computed_size . ' ' . $unit;
 		}
