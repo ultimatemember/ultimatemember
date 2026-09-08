@@ -1471,7 +1471,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 * @return array
 		 */
 		public function add_replace_placeholder( $replace_placeholders ) {
-			$replace_placeholders[] = um_dynamic_login_page_redirect();
+			$replace_placeholders[] = esc_url( um_dynamic_login_page_redirect() );
 			return $replace_placeholders;
 		}
 	}

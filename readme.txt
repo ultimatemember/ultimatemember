@@ -167,12 +167,16 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.13.1 2026-08-xx =
+= 2.13.1 2026-09-10 =
 
 **Enhancements**
 
 * Added: Fallback for `wp-cli/wp-config-transformer` library if the wp-config.php file isn't writable.
 * Optimized: Slow SQL query for batch empty account status check.
+
+**Bugfixes**
+
+* Fixed: Security issue related to an unauthenticated visitor can store JavaScript that runs in an administrator's session, through their own profile name. (Reported by Karthik Ramakrishnan and WPScan team). Fixed `um_convert_tags()` function and applied the escapers throughout the placeholder replacement.
 
 = 2.13.0 2026-08-24 =
 
@@ -244,6 +248,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.13.1 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.13.0 =
 This version fixes a security related bug. Upgrade immediately.
