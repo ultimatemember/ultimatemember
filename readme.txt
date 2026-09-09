@@ -167,6 +167,25 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.13.1 2026-09-10 =
+
+**Enhancements**
+
+* Added: Fallback for `wp-cli/wp-config-transformer` library if the wp-config.php file isn't writable.
+* Added: Filter hook `um_members_directory_filter_text` 3rd parameter `$is_default` to check if it's admin filtering or frontend query.
+* Optimized: Slow SQL query for batch empty account status check.
+* Optimized: Redundant SQL calls when editing Profile page with callback dropdowns. Cached usermeta existence checks per user and key during a single load (Reported by @MissVeronica, author @faisalahammad).
+
+**Bugfixes**
+
+* Fixed: Security issue related to an unauthenticated visitor can store JavaScript that runs in an administrator's session, through their own profile name. (Reported by Karthik Ramakrishnan and WPScan team). Fixed `um_convert_tags()` function and applied the escapers throughout the placeholder replacement.
+* Fixed: Usign LIKE compare for the text-type filters with custom usermeta table (Reported by @MissVeronica, author @faisalahammad).
+* Fixed: "Can user edit this field?" field setting displaying only for the User Profile form fields.
+
+**Deprecated**
+
+* Deprecated: Filter hook `um_members_directory_filter_text_meta_value` is fully deprecated, replacement isn't required for the text-type filter field.
+
 = 2.13.0 2026-08-24 =
 
 **Enhancements**
@@ -237,6 +256,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.13.1 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.13.0 =
 This version fixes a security related bug. Upgrade immediately.
