@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-21T11:19:49+00:00\n"
+"POT-Creation-Date: 2026-09-09T12:24:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -11337,22 +11337,22 @@ msgid "Hide key"
 msgstr ""
 
 #. translators: %s: Date range min.
-#: assets/js/common.js:64
+#: assets/js/common.js:70
 #, js-format
 msgid "Please pick a date on or after %s."
 msgstr ""
 
 #. translators: %s: Date range max.
-#: assets/js/common.js:71
+#: assets/js/common.js:77
 #, js-format
 msgid "Please pick a date on or before %s."
 msgstr ""
 
-#: assets/js/common.js:80
+#: assets/js/common.js:86
 msgid "This day is not selectable."
 msgstr ""
 
-#: assets/js/common.js:100
+#: assets/js/common.js:106
 msgid "Please pick a time on the allowed interval."
 msgstr ""
 
