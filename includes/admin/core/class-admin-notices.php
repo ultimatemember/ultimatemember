@@ -42,6 +42,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->old_extensions_notice();
 			$this->install_core_page_notice();
 			$this->exif_extension_notice();
+			$this->outdated_templates_notice();
 			$this->show_update_messages();
 			$this->check_wrong_install_folder();
 			$this->need_upgrade();
@@ -516,6 +517,56 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					)
 				);
 			}
+		}
+
+		/**
+		 * Checking if there are outdated overridden templates in the active theme
+		 */
+		public function outdated_templates_notice() {
+			// create_list() runs on every admin_init, including admin-ajax.php requests from non-admins.
+			// render_notices() shows this notice to the users with the 'manage_options' capability only, so skip
+			// the template scan below for everybody else.
+			if ( ! current_user_can( 'manage_options' ) ) {
+				return;
+			}
+
+			$has_outdated = false;
+			foreach ( UM()->common()->theme()->build_templates_data() as $template ) {
+				if ( isset( $template['status_code'] ) && 0 === (int) $template['status_code'] ) {
+					$has_outdated = true;
+					break;
+				}
+			}
+
+			if ( ! $has_outdated ) {
+				return;
+			}
+
+			// The first iteration of this notice was dismissible with the same key. A dismissal left by that
+			// version would hide this non-dismissible notice, so drop it while outdated templates exist.
+			$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
+			if ( is_array( $hidden_notices ) && in_array( 'outdated_templates', $hidden_notices, true ) ) {
+				update_option( 'um_hidden_admin_notices', array_values( array_diff( $hidden_notices, array( 'outdated_templates' ) ) ) );
+			}
+
+			$override_url = admin_url( 'admin.php?page=um_options&tab=advanced&section=override_templates' );
+
+			$allowed_html = array(
+				'a' => array(
+					'href' => array(),
+				),
+			);
+
+			$this->add_notice(
+				'outdated_templates',
+				array(
+					'class'       => 'notice-warning',
+					// translators: %s: Override templates settings link.
+					'message'     => '<p>' . wp_kses( sprintf( __( 'Your custom Ultimate Member templates are out of date and may affect functionality. Please <a href="%s">update your overridden templates</a>.', 'ultimate-member' ), esc_url( $override_url ) ), $allowed_html ) . '</p>',
+					'dismissible' => false,
+				),
+				10
+			);
 		}
 
 		/**
