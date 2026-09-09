@@ -1004,27 +1004,42 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					array(
 						'class'   => 'error',
 						// translators: %1$s - Plugin name, %2$s - Plugin version.
-						'message' => '<p>' . wp_kses( sprintf( __( '<strong>%1$s %2$s</strong> The file needed to securely store API keys in wp-config.php is missing. API keys cannot be saved until the plugin is reinstalled.', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION ), $allowed_html ) . '</p>',
+						'message' => '<p>' . wp_kses( sprintf( __( '<strong>%1$s %2$s</strong> The file needed to securely store API keys in wp-config.php is missing, so API keys are being stored in the database instead. They keep working, but for improved security please reinstall the plugin and re-save your keys.', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION ), $allowed_html ) . '</p>',
 					),
 					1
 				);
 				return;
 			}
 
-			// 2) Last save couldn't write wp-config.php — show manual instructions.
-			$failures = get_transient( 'um_api_key_write_failures' );
+			// 2) Last save couldn't write wp-config.php — the key was stored in the DB instead, so show
+			// manual instructions for moving it into wp-config.php.
+			$failures  = get_transient( 'um_api_key_write_failures' );
+			$fallbacks = array();
 			if ( ! empty( $failures ) && is_array( $failures ) ) {
-				$defines = '';
+				$fallbacks = array_keys( $failures );
+				$defines   = '';
+				$shadowed  = false;
 				foreach ( $failures as $constant ) {
 					$defines .= '<code>' . esc_html( sprintf( "define( '%s', 'your-key-here' );", $constant ) ) . '</code><br />';
+					// An already defined constant still wins over the DB copy in UM()->options()->get(), so
+					// the value that was just saved is not the one in use until wp-config.php is edited.
+					if ( defined( $constant ) ) {
+						$shadowed = true;
+					}
+				}
+
+				$message = '<p>' . wp_kses( __( '<strong>Ultimate Member:</strong> the API key(s) could not be written to <code>wp-config.php</code> (the file is not writable), so they were saved in the database instead. Your keys work, but for improved security please add the following line(s) to your <code>wp-config.php</code> above the <code>/* That\'s all, stop editing! */</code> comment, replacing the placeholder with your key:', 'ultimate-member' ), $allowed_html ) . '</p>' .
+					'<p>' . wp_kses( $defines, $allowed_html ) . '</p>';
+
+				if ( $shadowed ) {
+					$message .= '<p>' . wp_kses( __( 'One or more of these constants is already defined in <code>wp-config.php</code> with an older value. A defined constant takes precedence over the database, so the key you just saved will not be used until you update that constant by hand.', 'ultimate-member' ), $allowed_html ) . '</p>';
 				}
 
 				$this->add_notice(
 					'um_api_key_write_failed',
 					array(
-						'class'   => 'error',
-						'message' => '<p>' . wp_kses( __( '<strong>Ultimate Member:</strong> the API key(s) could not be written to <code>wp-config.php</code> (the file is not writable). Your keys were <strong>not</strong> saved. Please add the following line(s) to your <code>wp-config.php</code> above the <code>/* That\'s all, stop editing! */</code> comment, replacing the placeholder with your key:', 'ultimate-member' ), $allowed_html ) . '</p>' .
-							'<p>' . wp_kses( $defines, $allowed_html ) . '</p>',
+						'class'   => $shadowed ? 'error' : 'warning',
+						'message' => $message,
 					),
 					1
 				);
@@ -1032,9 +1047,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				delete_transient( 'um_api_key_write_failures' );
 			}
 
-			// 3) Migration — keys still stored in the DB (no constant defined yet).
+			// 3) Migration — keys still stored in the DB (no constant defined yet). Skip the ids covered by
+			// notice 2 above, which already carries the same instructions for this very save.
 			$legacy_link = '';
 			foreach ( $api_key_fields as $id => $location ) {
+				if ( in_array( $id, $fallbacks, true ) ) {
+					continue;
+				}
 				$constant = UM()->options()->get_constant_name( $id );
 				if ( ! defined( $constant ) && '' !== (string) UM()->options()->get( $id ) ) {
 					$args = array( 'page' => 'um_options' );
