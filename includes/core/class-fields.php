@@ -73,6 +73,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		public $disable_tooltips = false;
 
 		/**
+		 * @var array
+		 */
+		private $has_db_value_cache = array();
+
+		/**
 		 * Fields constructor.
 		 */
 		public function __construct() {
@@ -1096,8 +1101,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return boolean
 		 */
 		public function is_selected( $key, $value, $data ) {
-			global $wpdb;
-
 			/**
 			 * UM hook
 			 *
@@ -1155,7 +1158,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$value = (int) $value;
 				}
 
-				if ( strstr( $key, 'role_' ) || 'role' === $key ) {
+				if ( 'role_radio' === $key || 'role_select' === $key || 'role' === $key ) {
 					$role_keys = get_option( 'um_roles', array() );
 					if ( ! empty( $role_keys ) ) {
 						$field_value = UM()->roles()->get_editable_priority_user_role( um_user( 'ID' ) );
@@ -1260,8 +1263,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 
 					// show default on edit screen if there isn't meta row in usermeta table
-					$direct_db_value = $wpdb->get_var( $wpdb->prepare( "SELECT ISNULL( meta_value ) FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = %s", um_user( 'ID' ), $key ) );
-					if ( ! isset( $direct_db_value ) && isset( $data['default'] ) ) {
+					$has_db_value = $this->has_db_value( $key );
+					if ( ! isset( $has_db_value ) && isset( $data['default'] ) ) {
 						if ( ! is_array(  $data['default'] ) && strstr( $data['default'], ', ' ) ) {
 							$data['default'] = explode( ', ', $data['default'] );
 						}
@@ -1275,7 +1278,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 					}
 				}
-
 			}
 
 			return false;
@@ -1290,23 +1292,21 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return boolean
 		 */
-		function is_radio_checked( $key, $value, $data ) {
-			global $wpdb;
-
+		public function is_radio_checked( $key, $value, $data ) {
 			if ( isset( UM()->form()->post_form[ $key ] ) ) {
 				if ( is_array( UM()->form()->post_form[ $key ] ) && in_array( $value, UM()->form()->post_form[ $key ] ) ) {
 					return true;
-				} elseif ( $value == UM()->form()->post_form[ $key ] ) {
+				}
+				if ( $value == UM()->form()->post_form[ $key ] ) {
 					return true;
 				}
 			} else {
-
 				if ( true === $this->editing && 'custom' !== $this->set_mode ) {
 					if ( um_user( $key ) ) {
 
 						$um_user_value = um_user( $key );
 
-						if ( strstr( $key, 'role_' ) || $key == 'role' ) {
+						if ( 'role_radio' === $key || 'role_select' === $key || 'role' === $key ) {
 							$um_user_value = strtolower( UM()->roles()->get_editable_priority_user_role( um_user( 'ID' ) ) );
 
 							$role_keys = get_option( 'um_roles', array() );
@@ -1334,13 +1334,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							}
 						}
 					} else {
-
 						// show default on edit screen if there isn't meta row in usermeta table
-						$direct_db_value = $wpdb->get_var( $wpdb->prepare( "SELECT ISNULL( meta_value ) FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = %s", um_user( 'ID' ), $key ) );
+						$direct_db_value = $this->has_db_value( $key );
 						if ( ! isset( $direct_db_value ) && isset( $data['default'] ) && $data['default'] == $value ) {
 							return true;
 						}
-
 					}
 				} else {
 					if ( isset( $data['default'] ) && $data['default'] == $value ) {
@@ -1352,6 +1350,39 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return false;
 		}
 
+		/**
+		 * Check direct usermeta existence, cached per user and key during 1 loading.
+		 *
+		 * @param string $key Usermeta key.
+		 *
+		 * @return mixed
+		 */
+		private function has_db_value( $key ) {
+			$user_id = um_user( 'ID' );
+
+			if ( ! isset( $this->has_db_value_cache[ $user_id ] ) ) {
+				$this->has_db_value_cache[ $user_id ] = array();
+			}
+
+			if ( array_key_exists( $key, $this->has_db_value_cache[ $user_id ] ) ) {
+				return $this->has_db_value_cache[ $user_id ][ $key ];
+			}
+
+			global $wpdb;
+
+			$this->has_db_value_cache[ $user_id ][ $key ] = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT ISNULL( meta_value )
+					FROM {$wpdb->usermeta}
+					WHERE user_id = %d AND
+						  meta_key = %s",
+					$user_id,
+					$key
+				)
+			);
+
+			return $this->has_db_value_cache[ $user_id ][ $key ];
+		}
 
 		/**
 		 * Get field icon
@@ -1725,185 +1756,106 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				case 'soundcloud_track':
 				case 'spotify':
 					$array['disabled'] = '';
-					$array['input'] = 'text';
+					$array['input']    = 'text';
 					break;
 
 				case 'text':
-
 					$array['disabled'] = '';
 					if ( 'user_login' === $key && 'account' === $this->set_mode ) {
 						$array['disabled'] = ' disabled="disabled" ';
 					}
 
 					$array['input'] = 'text';
-
 					break;
 
 				case 'tel':
-
 					$array['input'] = 'tel';
-
 					break;
 
 				case 'password':
-
 					$array['input'] = 'password';
-
 					break;
 
 				case 'number':
-
 					$array['disabled'] = '';
-
 					break;
 
 				case 'url':
-
 					$array['input'] = 'text';
-
 					break;
 
 				case 'oembed':
-
 					$array['input'] = 'url';
-
 					break;
 
 				case 'date':
-
-					$array['input'] = 'text';
-
-					if ( ! isset( $array['format'] ) ) {
-						$array['format'] = 'j M Y';
-					}
-
-					switch ( $array['format'] ) {
-						case 'j M Y':
-							$js_format = 'd mmm yyyy';
-							break;
-						case 'j F Y':
-							$js_format = 'd mmmm yyyy';
-							break;
-						case 'M j Y':
-							$js_format = 'mmm d yyyy';
-							break;
-						case 'F j Y':
-							$js_format = 'mmmm d yyyy';
-							break;
-					}
-
-					$array['js_format'] = $js_format;
-
+					$array['input']    = 'date';
+					$array['date_min'] = '';
+					$array['date_max'] = '';
 					if ( ! isset( $array['range'] ) ) {
 						$array['range'] = 'years';
 					}
-					if ( ! isset( $array['years'] ) ) {
-						$array['years'] = 100;
+
+					// When date range is strictly defined
+					if ( 'date_range' === $array['range'] ) {
+						if ( ! empty( $array['range_start'] ) && ! empty( $array['range_end'] ) && strtotime( $array['range_start'] ) < strtotime( $array['range_end'] ) ) {
+							$array['date_min'] = gmdate( 'Y-m-d', strtotime( $array['range_start'] ) );
+							$array['date_max'] = gmdate( 'Y-m-d', strtotime( $array['range_end'] ) );
+						}
+					} else {
+						if ( ! isset( $array['years'] ) ) {
+							$array['years'] = 100;
+						}
+						if ( ! isset( $array['years_x'] ) ) {
+							$array['years_x'] = 'past';
+						}
+
+						if ( 'past' === $array['years_x'] ) {
+							$array['date_min'] = gmdate( 'Y-m-d', strtotime( '-' . $array['years'] . ' years' ) );
+							$array['date_max'] = gmdate( 'Y-m-d' );
+						} elseif ( 'future' === $array['years_x'] ) {
+							$array['date_min'] = gmdate( 'Y-m-d' );
+							$array['date_max'] = gmdate( 'Y-m-d', strtotime( '+' . $array['years'] . ' years' ) );
+						} else {
+							$array['date_min'] = gmdate( 'Y-m-d', strtotime( '-' . absint( $array['years'] / 2 ) . ' years' ) );
+							$array['date_max'] = gmdate( 'Y-m-d', strtotime( '+' . absint( $array['years'] / 2 ) . ' years' ) );
+						}
 					}
-					if ( ! isset( $array['years_x'] ) ) {
-						$array['years_x'] = 'past';
-					}
+
 					if ( ! isset( $array['disabled_weekdays'] ) ) {
 						$array['disabled_weekdays'] = '';
 					}
-
 					if ( ! empty( $array['disabled_weekdays'] ) ) {
 						$array['disabled_weekdays'] = '[' . implode( ',', $array['disabled_weekdays'] ) . ']';
 					}
-
-					// When date range is strictly defined
-					if ( $array['range'] == 'date_range' ) {
-
-						$array['date_min'] = str_replace( '/', ',', $array['range_start'] );
-						$array['date_max'] = str_replace( '/', ',', $array['range_end'] );
-
-					} else {
-
-						if ( $array['years_x'] == 'past' ) {
-
-							$date = new \DateTime( date( 'Y-n-d' ) );
-							$past = $date->modify( '-' . $array['years'] . ' years' );
-							$past = $date->format( 'Y,n,d' );
-
-							$array['date_min'] = $past;
-							$array['date_max'] = date( 'Y,n,d' );
-
-						} elseif ( $array['years_x'] == 'future' ) {
-
-							$date = new \DateTime( date( 'Y-n-d' ) );
-							$future = $date->modify( '+' . $array['years'] . ' years' );
-							$future = $date->format( 'Y,n,d' );
-
-							$array['date_min'] = date( 'Y,n,d' );
-							$array['date_max'] = $future;
-
-						} else {
-
-							$date = new \DateTime( date( 'Y-n-d' ) );
-							$date_f = new \DateTime( date( 'Y-n-d' ) );
-							$past = $date->modify( '-' . ( $array['years'] / 2 ) . ' years' );
-							$past = $date->format( 'Y,n,d' );
-							$future = $date_f->modify( '+' . ( $array['years'] / 2 ) . ' years' );
-							$future = $date_f->format( 'Y,n,d' );
-
-							$array['date_min'] = $past;
-							$array['date_max'] = $future;
-						}
-					}
 					break;
+
 				case 'time':
-					$array['input'] = 'text';
-
-					if ( ! isset( $array['format'] ) ) {
-						$array['format'] = 'g:i a';
-					}
-
-					switch ( $array['format'] ) {
-						case 'g:i a':
-							$js_format = 'h:i a';
-							break;
-						case 'g:i A':
-							$js_format = 'h:i A';
-							break;
-						case 'H:i':
-							$js_format = 'HH:i';
-							break;
-					}
-
-					$array['js_format'] = $js_format;
-
+					$array['input'] = 'time';
 					if ( ! isset( $array['intervals'] ) ) {
 						$array['intervals'] = 60;
 					}
-
 					break;
 
 				case 'textarea':
-
 					if ( ! isset( $array['height'] ) ) {
 						$array['height'] = '100px';
 					}
-
 					break;
 
 				case 'rating':
-
 					if ( ! isset( $array['number'] ) ) {
 						$array['number'] = 5;
 					}
-
 					break;
 
 				case 'spacing':
-
 					if ( ! isset( $array['spacing'] ) ) {
 						$array['spacing'] = '20px';
 					}
-
 					break;
 
 				case 'divider':
-
 					if ( isset( $array['width'] ) ) {
 						$array['borderwidth'] = $array['width'];
 					} else {
@@ -1925,11 +1877,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( ! isset( $array['divider_text'] ) ) {
 						$array['divider_text'] = '';
 					}
-
 					break;
 
 				case 'image':
-
 					if ( ! isset( $array['crop'] ) ) {
 						$array['crop'] = 0;
 					}
@@ -2014,11 +1964,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( ! isset( $array['icon'] ) ) {
 						$array['icon'] = '';
 					}
-
 					break;
 
 				case 'file':
-
 					if ( ! isset( $array['modal_size'] ) ) {
 						$array['modal_size'] = 'normal';
 					}
@@ -2055,23 +2003,18 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( ! isset( $array['icon'] ) ) {
 						$array['icon'] = '';
 					}
-
 					break;
 
 				case 'select':
-
 					break;
 
 				case 'multiselect':
-
 					break;
 
 				case 'group':
-
 					if ( ! isset( $array['max_entries'] ) ) {
 						$array['max_entries'] = 0;
 					}
-
 					break;
 
 			}
@@ -2781,7 +2724,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
 					}
 
-					// Normalise date format.
+					// Normalize date format.
 					$value = $this->field_value( $key, $default, $data );
 					if ( $value ) {
 						// numeric (either unix or YYYYMMDD). ACF uses Ymd format of date inside the meta tables.
@@ -2790,8 +2733,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						} else {
 							$unixtimestamp = strtotime( $value );
 						}
-						// Ultimate Member date field stores the date in metatable in the format Y/m/d. Convert to it before echo.
-						$value = date( 'Y/m/d', $unixtimestamp );
+						// Ultimate Member date field stores the date in metatable in the format Y/m/d. Convert to ISO format it before echo in the <input type="date">.
+						$value = gmdate( 'Y-m-d', $unixtimestamp );
 					}
 
 					$field_name = $key . $form_suffix;
@@ -2801,7 +2744,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$disabled_weekdays = '[' . implode( ',', $data['disabled_weekdays'] ) . ']';
 					}
 
-					$output .= '<input ' . $disabled . '  class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" data-range="' . esc_attr( $data['range'] ) . '" data-years="' . esc_attr( $data['years'] ) . '" data-years_x="' . esc_attr( $data['years_x'] ) . '" data-disabled_weekdays="' . esc_attr( $disabled_weekdays ) . '" data-date_min="' . esc_attr( $data['date_min'] ) . '" data-date_max="' . esc_attr( $data['date_max'] ) . '" data-format="' . esc_attr( $data['js_format'] ) . '" data-value="' . esc_attr( $value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
+					$output .= '<input ' . $disabled . '  class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" data-disabled_weekdays="' . esc_attr( $disabled_weekdays ) . '" min="' . esc_attr( $data['date_min'] ) . '" max="' . esc_attr( $data['date_max'] ) . '" data-value="' . esc_attr( $value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
 
 						</div>';
 
@@ -2813,6 +2756,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '</div>';
 					break;
+
 				/* Time */
 				case 'time':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
@@ -2830,7 +2774,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$field_name  = $key . $form_suffix;
 					$field_value = $this->field_value( $key, $default, $data );
 
-					$output .= '<input  ' . $disabled . '  class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '"  data-format="' . esc_attr( $data['js_format'] ) . '" data-intervals="' . esc_attr( $data['intervals'] ) . '" data-value="' . esc_attr( $field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
+					$output .= '<input  ' . $disabled . '  class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $data['input'] ) . '" step="' . esc_attr( max( 60, (int) $data['intervals'] * 60 ) ) . '" min="00:00" max="23:59" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" data-value="' . esc_attr( $field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
 
 						</div>';
 

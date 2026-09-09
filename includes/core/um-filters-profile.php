@@ -1,5 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Fix for plugin "The SEO Framework", dynamic profile page title
@@ -11,7 +13,6 @@
  * @return mixed|string
  */
 function um_dynamic_user_profile_pagetitle( $title, $sep = '' ) {
-
 	if ( um_is_core_page( 'user' ) && um_get_requested_user() ) {
 
 		$user_id = um_get_requested_user();
@@ -21,15 +22,15 @@ function um_dynamic_user_profile_pagetitle( $title, $sep = '' ) {
 		}
 
 		$profile_title = UM()->options()->get( 'profile_title' );
+		$profile_title = stripslashes( $profile_title ); // todo remove this line as soon as settings will be wp_unslash()-ed during the store to DB.
 
 		um_fetch_user( um_get_requested_user() );
 
 		$profile_title = um_convert_tags( $profile_title );
 
-		$title = stripslashes( $profile_title );
+		$title = esc_html( $profile_title );
 
 		um_reset_user();
-
 	}
 
 	return $title;
@@ -37,7 +38,6 @@ function um_dynamic_user_profile_pagetitle( $title, $sep = '' ) {
 add_filter( 'the_seo_framework_pro_add_title', 'um_dynamic_user_profile_pagetitle', 100000, 2 );
 add_filter( 'wp_title', 'um_dynamic_user_profile_pagetitle', 100000, 2 );
 add_filter( 'pre_get_document_title', 'um_dynamic_user_profile_pagetitle', 100000, 2 );
-
 
 /**
  * Try and modify the page title in page
@@ -69,7 +69,6 @@ function um_dynamic_user_profile_title( $title, $id = '' ) {
 	return ( strlen( $title ) !== mb_strlen( $title ) ) ? $title : mb_convert_encoding( $title, 'UTF-8' );
 }
 add_filter( 'the_title', 'um_dynamic_user_profile_title', 100000, 2 );
-
 
 /**
  * Fix SEO canonical for the profile page
@@ -118,7 +117,6 @@ function um_get_canonical_url( $canonical_url, $post ) {
 }
 add_filter( 'get_canonical_url', 'um_get_canonical_url', 20, 2 );
 
-
 /**
  * Add cover photo label of file size limit
  *
@@ -127,7 +125,7 @@ add_filter( 'get_canonical_url', 'um_get_canonical_url', 20, 2 );
  * @return array
  */
 function um_change_profile_cover_photo_label( $fields ) {
-	$max_size = UM()->common()->filesystem()::format_bytes( $fields['cover_photo']['max_size'] );
+	$max_size = \um\common\Filesystem::format_bytes( $fields['cover_photo']['max_size'] );
 	if ( ! empty( $max_size ) ) {
 		list( $file_size, $unit ) = explode( ' ', $max_size );
 
@@ -137,8 +135,7 @@ function um_change_profile_cover_photo_label( $fields ) {
 	}
 	return $fields;
 }
-add_filter( 'um_predefined_fields_hook', 'um_change_profile_cover_photo_label', 10, 1 );
-
+add_filter( 'um_predefined_fields_hook', 'um_change_profile_cover_photo_label' );
 
 /**
  * Add profile photo label of file size limit
@@ -148,7 +145,7 @@ add_filter( 'um_predefined_fields_hook', 'um_change_profile_cover_photo_label', 
  * @return array
  */
 function um_change_profile_photo_label( $fields ) {
-	$max_size = UM()->common()->filesystem()::format_bytes( $fields['profile_photo']['max_size'] );
+	$max_size = \um\common\Filesystem::format_bytes( $fields['profile_photo']['max_size'] );
 	if ( ! empty( $max_size ) ) {
 		list( $file_size, $unit ) = explode( ' ', $max_size );
 
@@ -158,4 +155,4 @@ function um_change_profile_photo_label( $fields ) {
 	}
 	return $fields;
 }
-add_filter( 'um_predefined_fields_hook', 'um_change_profile_photo_label', 10, 1 );
+add_filter( 'um_predefined_fields_hook', 'um_change_profile_photo_label' );

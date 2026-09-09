@@ -890,7 +890,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						return '';
 					}
 
-					if ( isset( $attrs['metakey'] ) && strstr( $attrs['metakey'], 'role_' ) ) {
+					if ( isset( $attrs['metakey'] ) && ( 'role_select' === $attrs['metakey'] || 'role_radio' === $attrs['metakey'] ) ) {
 						$shortcode_roles = get_post_meta( $directory_data['form_id'], '_um_roles', true );
 						$um_roles = UM()->roles()->get_roles( false );
 
@@ -996,7 +996,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 								$opt = $v;
 
-								if ( strstr( $filter, 'role_' ) || $filter == 'role' ) {
+								if ( 'role_select' === $filter || 'role_radio' === $filter || 'role' === $filter ) {
 									$opt = $k;
 								}
 
@@ -1999,15 +1999,18 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									$field_query = apply_filters( "um_query_args_{$field}_{$filter_type}__filter", false, $field, $value, $filter_type );
 
 									break;
-								case 'text':
 
+								case 'text':
 									$value = stripslashes( $value );
+
+									/** This filter is documented in includes/core/class-member-directory.php */
+									$compare     = apply_filters( 'um_members_directory_filter_text', 'LIKE', $field, false );
 									$field_query = array(
 										'relation' => 'OR',
 										array(
-											'key'       => $field,
-											'value'     => trim( $value ),
-											'compare'   => apply_filters( 'um_members_directory_filter_text', 'LIKE', $field )
+											'key'     => $field,
+											'value'   => trim( $value ),
+											'compare' => $compare,
 										),
 									);
 
@@ -2323,10 +2326,34 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									break;
 
 								case 'text':
+									/**
+									 * Filters compare operator for member directory filters.
+									 *
+									 * @param {string} $compare    Compare operator. It's LIKE by default on the frontend and `=` for the wp-admin default filters.
+									 * @param {string} $field      Filter field key.
+									 * @param {bool}   $is_default Predefined pages. Since 2.13.1.
+									 *
+									 * @return {string} Compare operator.
+									 *
+									 * @since 2.1.17
+									 * @since 2.13.1 Added $is_default attribute.
+									 * @hook um_members_directory_filter_text
+									 *
+									 * @example <caption>Change compare operator for member directory `custom-key` filter.</caption>
+									 * function custom_um_members_directory_filter_text( $compare, $field, $is_default ) {
+									 *     // your code here
+									 *     if ( 'custom-key' === $field ) {
+									 *         $compare = 'IN';
+									 *     }
+									 *     return $compare;
+									 * }
+									 * add_filter( 'um_members_directory_filter_text', 'custom_um_members_directory_filter_text', 10, 3 );
+									 */
+									$compare     = apply_filters( 'um_members_directory_filter_text', '=', $field, true );
 									$field_query = array(
 										'key'     => $field,
 										'value'   => $value,
-										'compare' => apply_filters( 'um_members_directory_filter_text', '=', $field ),
+										'compare' => $compare,
 									);
 									break;
 

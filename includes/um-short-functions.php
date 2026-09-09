@@ -101,14 +101,12 @@ function um_clean_user_basename( $value ) {
 	return $value;
 }
 
-
 /**
  * Getting replace placeholders array
  *
  * @return array
  */
 function um_replace_placeholders() {
-
 	$search = array(
 		'{display_name}',
 		'{first_name}',
@@ -119,67 +117,58 @@ function um_replace_placeholders() {
 		'{site_name}',
 		'{user_account_link}',
 	);
-
 	/**
-	 * UM hook
+	 * Filters Ultimate Member placeholders used in `um_convert_tags()` function.
 	 *
-	 * @type filter
-	 * @title um_template_tags_patterns_hook
-	 * @description Extend UM placeholders
-	 * @input_vars
-	 * [{"var":"$placeholders","type":"array","desc":"UM Placeholders"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_filter( 'um_template_tags_patterns_hook', 'function_name', 10, 1 );
-	 * @example
-	 * <?php
-	 * add_filter( 'um_template_tags_patterns_hook', 'my_template_tags_patterns', 10, 1 );
-	 * function my_template_tags_patterns( $placeholders ) {
-	 *     // your code here
-	 *     $placeholders[] = '{my_custom_placeholder}';
-	 *     return $placeholders;
+	 * @param {array} $search Placeholders.
+	 *
+	 * @return {array} Placeholders.
+	 *
+	 * @since 1.3.x
+	 * @hook um_template_tags_patterns_hook
+	 *
+	 * @example <caption>Add placeholder tag to replace it with the same numeric key in the $replace variable.</caption>
+	 * function custom_um_template_tags_patterns_hook( $search ) {
+	 *     $search[] = '{custom_name}';
+	 *     return $search;
 	 * }
-	 * ?>
+	 * add_filter( 'um_template_tags_patterns_hook', 'custom_um_template_tags_patterns_hook' );
 	 */
 	$search = apply_filters( 'um_template_tags_patterns_hook', $search );
 
 	$replace = array(
-		um_user( 'display_name' ),
-		um_user( 'first_name' ),
-		um_user( 'last_name' ),
-		um_user( 'gender' ),
-		um_user( 'user_login' ),
-		um_user( 'user_email' ),
-		UM()->options()->get( 'site_name' ),
-		um_get_core_page( 'account' ),
+		esc_html( um_user( 'display_name' ) ),
+		esc_html( um_user( 'first_name' ) ),
+		esc_html( um_user( 'last_name' ) ),
+		esc_html( um_user( 'gender' ) ),
+		esc_html( um_user( 'user_login' ) ),
+		esc_html( um_user( 'user_email' ) ),
+		esc_html( UM()->options()->get( 'site_name' ) ),
+		esc_url( um_get_core_page( 'account' ) ),
 	);
-
 	/**
-	 * UM hook
+	 * Filters Ultimate Member replace placeholders used in `um_convert_tags()` function.
 	 *
-	 * @type filter
-	 * @title um_template_tags_replaces_hook
-	 * @description Extend UM replace placeholders
-	 * @input_vars
-	 * [{"var":"$replace_placeholders","type":"array","desc":"UM Replace Placeholders"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_filter( 'um_template_tags_replaces_hook', 'function_name', 10, 1 );
-	 * @example
-	 * <?php
-	 * add_filter( 'um_template_tags_replaces_hook', 'my_template_tags_replaces', 10, 1 );
-	 * function my_template_tags_replaces( $replace_placeholders ) {
-	 *     // your code here
-	 *     $replace_placeholders[] = 'my_replace_value';
-	 *     return $replace_placeholders;
+	 * Note: Please escape your replacers on this level, otherwise they will be not escaped in the `um_convert_tags()` function, because every replacer can have own escaping.
+	 *
+	 * @param {array} $replace Replacers.
+	 *
+	 * @return {array} Replacers.
+	 *
+	 * @since 1.3.x
+	 * @hook um_template_tags_replaces_hook
+	 *
+	 * @example <caption>Add replace value for placeholder tag with the same numeric key in the $search variable.</caption>
+	 * function custom_um_template_tags_replaces_hook( $replace ) {
+	 *     $replace[] = esc_html( 'something custom' );
+	 *     return $replace;
 	 * }
-	 * ?>
+	 * add_filter( 'um_template_tags_replaces_hook', 'custom_um_template_tags_replaces_hook' );
 	 */
 	$replace = apply_filters( 'um_template_tags_replaces_hook', $replace );
 
 	return array_combine( $search, $replace );
 }
-
 
 /**
  * Convert template tags
@@ -191,17 +180,21 @@ function um_replace_placeholders() {
  * @return mixed|string
  */
 function um_convert_tags( $content, $args = array(), $with_kses = true ) {
-	$placeholders = um_replace_placeholders();
-
-	$content = str_replace( array_keys( $placeholders ), array_values( $placeholders ), $content );
 	if ( $with_kses ) {
+		// Stored template might actually contain: Hi &#123;display_name&#125; instead of Hi {display_name} after WYSIWYG/TinyMCE editor.
+		// So we need to decode HTML entities before we replace placeholders.
+		// We ignore this decoding only in the case when the $content goes from the page content or shortcode.
 		$content = wp_kses_decode_entities( $content );
 	}
 
-	if ( isset( $args['tags'] ) && isset( $args['tags_replace'] ) ) {
-		$content = str_replace( $args['tags'], $args['tags_replace'], $content );
+	$placeholders = um_replace_placeholders();
+	$content      = str_replace( array_keys( $placeholders ), array_values( $placeholders ), $content ); // Important: escapers are already applied in the `um_replace_placeholders()`. Don't need more.
+
+	if ( isset( $args['tags'], $args['tags_replace'] ) ) {
+		$content = str_replace( $args['tags'], $args['tags_replace'], $content );  // Important: escapers have to be already applied in the `tags_replace` argument. Don't need more.
 	}
 
+	// Parsing content for {usermeta:{meta_key}} placeholders.
 	$regex = '~\{(usermeta:[^}]*)\}~';
 	preg_match_all( $regex, $content, $matches );
 
@@ -239,7 +232,27 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 			if ( is_array( $value ) ) {
 				$value = implode( ', ', $value );
 			}
-			$content = str_replace( '{' . $match . '}', apply_filters( 'um_convert_tags', $value, $key ), $content );
+			/**
+			 * Filters pre-escaped by default {usermeta:{meta_key}} placeholder value and provides an ability to change the value using another escaper.
+			 *
+			 * @param {string} $value     Usermeta escaped by default value. Using esc_html() escaper by default.
+			 * @param {string} $key       Usermeta key.
+			 * @param {string} $raw_value Usermeta raw value.
+			 *
+			 * @return {string} Usermeta value.
+			 *
+			 * @since 2.1.3
+			 * @hook um_convert_tags
+			 *
+			 * @example <caption>Change escape function for usermeta `custom_key` during `um_convert_tags()` placeholders replace.</caption>
+			 * function custom_um_convert_tags( $value, $key, $raw_value ) {
+			 *     $value = 'custom_key' === $key ? wp_kses_post( $raw_value ) : $value;
+			 *     return $value;
+			 * }
+			 * add_filter( 'um_convert_tags', 'custom_um_convert_tags' );
+			 */
+			$value   = apply_filters( 'um_convert_tags', esc_html( $value ), $key, $value ); // Using esc_html() here to prevent XSS attacks. If you need to use any secure HTML here, please use `wp_kses` with the proper context.
+			$content = str_replace( '{' . $match . '}', $value, $content );
 		}
 	}
 	return $content;
@@ -322,7 +335,7 @@ function um_field_conditions_are_met( $data ) {
 		$val = $arr[3];
 		$op  = $arr[2];
 
-		if ( strstr( $arr[1], 'role_' ) ) {
+		if ( 'role_radio' === $arr[1] || 'role_select' === $arr[1] ) {
 			$arr[1] = 'role';
 		}
 

@@ -458,6 +458,8 @@ p.um-notice.warning a {
 }
 
 .um-form input[type="text"],
+.um-form input[type="date"],
+.um-form input[type="time"],
 .um-form input[type="search"],
 .um-form input[type="url"],
 .um-form input[type="tel"],
@@ -495,6 +497,8 @@ p.um-notice.warning a {
 }
 
 .um-form input[type="text"]:focus,
+.um-form input[type="date"]:focus,
+.um-form input[type="time"]:focus,
 .um-form input[type="url"]:focus,
 .um-form input[type="search"]:focus,
 .um-form input[type="tel"]:focus,
@@ -506,11 +510,15 @@ p.um-notice.warning a {
 }
 
 .um-form input[type="text"].um-iconed,
+.um-form input[type="date"].um-iconed,
+.um-form input[type="time"].um-iconed,
 .um-form input[type="url"].um-iconed,
 .um-form input[type="tel"].um-iconed,
 .um-form input[type="password"].um-iconed { padding-left: 44px !important }
 
 .um-form input[type="text"].um-error,
+.um-form input[type="date"].um-error,
+.um-form input[type="time"].um-error,
 .um-form input[type="url"].um-error,
 .um-form input[type="tel"].um-error,
 .um-form input[type="password"].um-error { border-color: #C74A4A !important }
@@ -673,6 +681,8 @@ p.um-notice.warning a {
 .um input[type="submit"]:disabled,
 .um input[type="url"]:disabled,
 .um input[type="text"]:disabled,
+.um input[type="date"]:disabled,
+.um input[type="time"]:disabled,
 .um input[type="number"]:disabled {
 	opacity: 0.6 !important;
 	cursor: no-drop !important;

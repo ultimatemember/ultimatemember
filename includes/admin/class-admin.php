@@ -2142,6 +2142,18 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 		/**
+		 * @since 2.13.0
+		 *
+		 * @return WP_Config
+		 */
+		public function wp_config() {
+			if ( empty( UM()->classes['um\admin\wp_config'] ) ) {
+				UM()->classes['um\admin\wp_config'] = new WP_Config();
+			}
+			return UM()->classes['um\admin\wp_config'];
+		}
+
+		/**
 		 * @since 2.10.6
 		 *
 		 * @param bool|array $data
