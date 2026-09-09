@@ -881,7 +881,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 				if ( ! empty( $args['use_custom_settings'] ) && ! empty( $args['role'] ) ) {
 					// Option "Apply custom settings to this form". Option "Make this profile form role-specific".
-					// Show the first Profile Form with role selected, don't show profile forms below the page with other role-specific setting.
+					// Show the first Profile Form with the role selected, don't show profile forms below the page with other role-specific settings.
 					if ( empty( $this->profile_role ) ) {
 						$current_user_roles = UM()->roles()->get_all_user_roles( um_profile_id() );
 

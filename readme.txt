@@ -180,6 +180,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Fixed: Security issue related to an unauthenticated visitor can store JavaScript that runs in an administrator's session, through their own profile name. (Reported by Karthik Ramakrishnan and WPScan team). Fixed `um_convert_tags()` function and applied the escapers throughout the placeholder replacement.
 * Fixed: Usign LIKE compare for the text-type filters with custom usermeta table (Reported by @MissVeronica, author @faisalahammad).
+* Fixed: "Can user edit this field?" field setting displaying only for the User Profile form fields.
 
 **Deprecated**
 
