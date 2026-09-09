@@ -58,17 +58,23 @@ UM.common = {
 
 					this.setCustomValidity('');
 
+					// Skip validation while Chromium is still filling the year.
+					let year = parseInt( this.value.substring( 0, 4 ), 10 );
+					if ( year < 1000 ) {
+						return;
+					}
+
 					// Range validation for typed values (ISO dates compare safely as strings).
-					if ( this.min && this.value < this.min ) {
+					if ( this.dataset.date_min && this.value < this.dataset.date_min ) {
 						/* translators: %s: Date range min. */
-						this.setCustomValidity( wp.i18n.sprintf( wp.i18n.__( 'Please pick a date on or after %s.', 'ultimate-member' ), this.min ) );
+						this.setCustomValidity( wp.i18n.sprintf( wp.i18n.__( 'Please pick a date on or after %s.', 'ultimate-member' ), this.dataset.date_min ) );
 						this.value = '';
 						this.reportValidity();
 						return;
 					}
-					if ( this.max && this.value > this.max ) {
+					if ( this.dataset.date_max && this.value > this.dataset.date_max ) {
 						/* translators: %s: Date range max. */
-						this.setCustomValidity( wp.i18n.sprintf( wp.i18n.__( 'Please pick a date on or before %s.', 'ultimate-member' ), this.max ) );
+						this.setCustomValidity( wp.i18n.sprintf( wp.i18n.__( 'Please pick a date on or before %s.', 'ultimate-member' ), this.dataset.date_max ) );
 						this.value = '';
 						this.reportValidity();
 						return;
