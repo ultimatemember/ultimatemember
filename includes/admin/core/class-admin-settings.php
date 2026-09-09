@@ -2736,7 +2736,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				// The value is handled here, not by the generic settings save — strip it from the settings
 				// array either way so it can't be written to `um_options` twice.
 				$constant = UM()->options()->get_constant_name( $id );
-				$value    = sanitize_text_field( wp_unslash( $settings[ $id ] ) );
+				if ( ! $constant ) {
+					continue;
+				}
+
+				$value = sanitize_text_field( wp_unslash( $settings[ $id ] ) );
 				unset( $settings[ $id ] );
 
 				if ( '' === $value ) {

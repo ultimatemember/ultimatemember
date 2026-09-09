@@ -94,8 +94,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 					continue;
 				}
 
-				/** This filter is documented in includes/core/class-options.php */
-				$constant = apply_filters( 'um_option_constant_name', 'UM_OPTION_' . strtoupper( $old_id ), $old_id );
+				$constant = $this->get_constant_name( $old_id );
 				if ( $constant && defined( $constant ) ) {
 					$ids[] = $old_id;
 				}
@@ -130,20 +129,35 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 *
 		 * Only `api_key` settings fields are constant-backed (see {@see is_constant_backed()}); for any
 		 * other option this returns an empty string so the constant lookup in {@see get()} is skipped.
-		 * The mapping is convention based: the uppercased option id prefixed with `UM_OPTION_`
-		 * (e.g. `stripe_test_secret_key` → `UM_OPTION_STRIPE_TEST_SECRET_KEY`).
 		 *
-		 * @since 2.13.0
+		 * @since 2.13.1 Replaced the `get_constant_name()` function
 		 *
 		 * @param string $option_id
 		 *
 		 * @return string Constant name, or empty string when the option is not constant-backed.
 		 */
-		public function get_constant_name( $option_id ) {
+		public function get_backed_constant_name( $option_id ) {
 			if ( ! $this->is_constant_backed( $option_id ) ) {
 				return '';
 			}
 
+			return $this->get_constant_name( $option_id );
+		}
+
+		/**
+		 * Get the wp-config.php constant name that backs a given option.
+		 *
+		 * The mapping is convention-based: the uppercased option id prefixed with `UM_OPTION_`
+		 * (e.g. `stripe_test_secret_key` → `UM_OPTION_STRIPE_TEST_SECRET_KEY`).
+		 *
+		 * @since 2.13.0
+		 * @since 2.13.1 Just return the constant name.
+		 *
+		 * @param string $option_id Option id
+		 *
+		 * @return string Constant name.
+		 */
+		public function get_constant_name( $option_id ) {
 			$constant = 'UM_OPTION_' . strtoupper( $option_id );
 
 			/**
@@ -169,7 +183,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 */
 		public function get( $option_id ) {
 			// A defined wp-config.php constant (e.g. for `api_key` secret fields) always wins over the DB.
-			$constant = $this->get_constant_name( $option_id );
+			$constant = $this->get_backed_constant_name( $option_id );
 			if ( $constant && defined( $constant ) ) {
 				/** This filter is documented in includes/core/class-options.php */
 				return apply_filters( "um_get_option_filter__{$option_id}", constant( $constant ) );

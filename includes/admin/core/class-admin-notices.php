@@ -1054,7 +1054,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				if ( in_array( $id, $fallbacks, true ) ) {
 					continue;
 				}
+
 				$constant = UM()->options()->get_constant_name( $id );
+				if ( ! $constant ) {
+					continue;
+				}
+
 				if ( ! defined( $constant ) && '' !== (string) UM()->options()->get( $id ) ) {
 					$args = array( 'page' => 'um_options' );
 					if ( ! empty( $location['tab'] ) ) {
