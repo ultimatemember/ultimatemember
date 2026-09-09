@@ -40,7 +40,10 @@ if ( ! class_exists( 'um\common\actions\Users' ) ) {
 			UM()->maybe_action_scheduler()->schedule_recurring_action(
 				time() + 60,
 				self::INTERVAL,
-				self::SCHEDULE_ACTION
+				self::SCHEDULE_ACTION,
+				array(),
+				'',
+				true // this action must be unique.
 			);
 		}
 
@@ -72,41 +75,23 @@ if ( ! class_exists( 'um\common\actions\Users' ) ) {
 		 * @param int $pages The total number of pages to process.
 		 */
 		public function batch_check( $page, $total, $pages ) {
-			$users = new WP_User_Query(
-				array(
-					'number'     => self::BATCH_SIZE,
-					'fields'     => 'ids',
-					'meta_query' => array(
-						'relation' => 'AND',
-						array(
-							'relation' => 'OR',
-							array(
-								'key'     => '_um_registration_in_progress',
-								'compare' => 'NOT EXISTS',
-							),
-							array(
-								'key'     => '_um_registration_in_progress',
-								'value'   => '1',
-								'compare' => '!=',
-							),
-						),
-						array(
-							'relation' => 'OR',
-							array(
-								'key'     => 'account_status',
-								'compare' => 'NOT EXISTS',
-							),
-							array(
-								'key'     => 'account_status',
-								'value'   => '',
-								'compare' => '=',
-							),
-						),
-					),
+			global $wpdb;
+
+			$results = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$wpdb->prepare(
+					"SELECT DISTINCT u.ID
+					FROM %i AS u
+					LEFT JOIN %i AS um1 ON ( u.ID=um1.user_id AND um1.meta_key='account_status' )
+					LEFT JOIN %i AS um2 ON ( u.ID=um2.user_id AND um2.meta_key='_um_registration_in_progress' )
+					WHERE ( um1.meta_value IS NULL OR um1.meta_value = '' )
+						AND ( um2.meta_value IS NULL OR um2.meta_value != '1' )
+					LIMIT %d",
+					$wpdb->users,
+					$wpdb->usermeta,
+					$wpdb->usermeta,
+					self::BATCH_SIZE
 				)
 			);
-
-			$results = $users->get_results();
 
 			if ( ! empty( $results ) ) {
 				$um_empty_status_users = get_option( '_um_log_empty_status_users', array( 0, 0 ) );

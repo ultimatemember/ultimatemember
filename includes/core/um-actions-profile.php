@@ -697,7 +697,9 @@ function um_profile_dynamic_meta_desc() {
 		}
 
 		$title       = trim( um_user( 'display_name' ) );
-		$description = um_convert_tags( UM()->options()->get( 'profile_desc' ) );
+		$description = UM()->options()->get( 'profile_desc' );
+		$description = stripslashes( $description ); // todo remove this line as soon as settings will be wp_unslash()-ed during the store to DB.
+		$description = um_convert_tags( $description );
 		$url         = um_user_profile_url( $user_id );
 
 		/**
@@ -787,7 +789,7 @@ function um_profile_dynamic_meta_desc() {
 				'@type'         => 'Person',
 				'name'          => esc_attr( $title ),
 				'alternateName' => um_user( 'user_login' ),
-				'description'   => esc_attr( stripslashes( $description ) ),
+				'description'   => esc_attr( $description ),
 				'image'         => esc_url( $image ),
 				'sameAs'        => array(
 					$url,

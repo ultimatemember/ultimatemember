@@ -16,6 +16,7 @@
 	<exclude-pattern>documentor/*</exclude-pattern>
 	<exclude-pattern>\.idea/*</exclude-pattern>
 	<exclude-pattern>includes/blocks/*</exclude-pattern>
+	<exclude-pattern>includes/lib/*</exclude-pattern>
 	<exclude-pattern>blocks-src/*</exclude-pattern>
 
 	<rule ref="WordPress-Extra"/>

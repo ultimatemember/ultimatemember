@@ -124,7 +124,7 @@ if ( ! class_exists( 'um\common\Secure' ) ) {
 									'{banned_profile_links}',
 								),
 								'tags_replace' => array(
-									$banned_profile_links,
+									wp_kses_post( $banned_profile_links ),
 								),
 							),
 						)
