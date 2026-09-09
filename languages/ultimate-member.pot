@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-09T07:35:52+00:00\n"
+"POT-Creation-Date: 2026-09-09T08:06:34+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -132,7 +132,7 @@ msgid "Settings"
 msgstr ""
 
 #: includes/admin/class-admin.php:1943
-#: includes/admin/core/class-admin-settings.php:2782
+#: includes/admin/core/class-admin-settings.php:2786
 #: includes/ajax/class-secure.php:34
 msgid "Security Check"
 msgstr ""
@@ -3998,26 +3998,26 @@ msgid "One or more of these constants is already defined in <code>wp-config.php<
 msgstr ""
 
 #. translators: %s - Settings page URL.
-#: includes/admin/core/class-admin-notices.php:1077
+#: includes/admin/core/class-admin-notices.php:1082
 #, php-format
 msgid "<strong>Ultimate Member:</strong> some of your API keys are still stored in the database. For improved security they should be moved into <code>wp-config.php</code>. Please open the <a href=\"%s\">settings</a> and re-save them to complete the move."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:1099
+#: includes/admin/core/class-admin-notices.php:1104
 msgid "The role selected in WordPress native \"Settings > New User Default Role\" setting has Administrative capabilities."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:1125
+#: includes/admin/core/class-admin-notices.php:1130
 msgid "The role selected in \"Ultimate Member > Settings > Appearance > Registration Form > Registration Default Role\" setting has Administrative capabilities."
 msgstr ""
 
 #. translators: %s are link(s) to the forms.
-#: includes/admin/core/class-admin-notices.php:1193
+#: includes/admin/core/class-admin-notices.php:1198
 #, php-format
 msgid "Register forms have Administrative roles, we recommend that you assign a non-admin roles to secure the forms. %s"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:1218
+#: includes/admin/core/class-admin-notices.php:1223
 msgid "Wrong Data"
 msgstr ""
 
@@ -5234,142 +5234,142 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3285
+#: includes/admin/core/class-admin-settings.php:3289
 msgid "Back"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3297
+#: includes/admin/core/class-admin-settings.php:3301
 msgid "Enable/Disable"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3298
+#: includes/admin/core/class-admin-settings.php:3302
 msgid "Enable this email notification"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3303
+#: includes/admin/core/class-admin-settings.php:3307
 msgid "Subject"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3309
+#: includes/admin/core/class-admin-settings.php:3313
 msgid "Email Content"
 msgstr ""
 
 #. translators: %1$s is an error code; %2$s is an error message.
-#: includes/admin/core/class-admin-settings.php:3377
+#: includes/admin/core/class-admin-settings.php:3381
 #, php-format
 msgid "code: %1$s, message: %2$s;"
 msgstr ""
 
 #. translators: %1$s is an error data; %2$s is a support link.
 #. translators: %1$s is an error; %2$s is a support link.
-#: includes/admin/core/class-admin-settings.php:3383
-#: includes/admin/core/class-admin-settings.php:3457
-#: includes/admin/core/class-admin-settings.php:3466
+#: includes/admin/core/class-admin-settings.php:3387
+#: includes/admin/core/class-admin-settings.php:3461
+#: includes/admin/core/class-admin-settings.php:3470
 #, php-format
 msgid "There was an error with this license key: %1$s. Please <a href=\"%2$s\">contact our support team</a>."
 msgstr ""
 
 #. translators: %1$s is an expiry date; %2$s is a renewal link.
 #. translators: %1$s is a expiry date; %2$s is a renew link.
-#: includes/admin/core/class-admin-settings.php:3394
-#: includes/admin/core/class-admin-settings.php:3489
+#: includes/admin/core/class-admin-settings.php:3398
+#: includes/admin/core/class-admin-settings.php:3493
 #, php-format
 msgid "Your license key expired on %1$s. Please <a href=\"%2$s\" target=\"_blank\">renew your license key</a>."
 msgstr ""
 
 #. translators: %s: support link name.
-#: includes/admin/core/class-admin-settings.php:3405
-#: includes/admin/core/class-admin-settings.php:3500
+#: includes/admin/core/class-admin-settings.php:3409
+#: includes/admin/core/class-admin-settings.php:3504
 #, php-format
 msgid "Your license key has been disabled. Please <a href=\"%s\" target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
 #. translators: %s: account page.
-#: includes/admin/core/class-admin-settings.php:3415
-#: includes/admin/core/class-admin-settings.php:3510
+#: includes/admin/core/class-admin-settings.php:3419
+#: includes/admin/core/class-admin-settings.php:3514
 #, php-format
 msgid "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account page</a> and verify it."
 msgstr ""
 
 #. translators: %1$s is a item name title; %2$s is a account page.
-#: includes/admin/core/class-admin-settings.php:3426
-#: includes/admin/core/class-admin-settings.php:3521
+#: includes/admin/core/class-admin-settings.php:3430
+#: includes/admin/core/class-admin-settings.php:3525
 #, php-format
 msgid "Your %1$s is not active for this URL. Please <a href=\"%2$s\" target=\"_blank\">visit your account page</a> to manage your license key URLs."
 msgstr ""
 
 #. translators: %s: item name.
-#: includes/admin/core/class-admin-settings.php:3436
-#: includes/admin/core/class-admin-settings.php:3531
+#: includes/admin/core/class-admin-settings.php:3440
+#: includes/admin/core/class-admin-settings.php:3535
 #, php-format
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
 #. translators: %s: account link.
-#: includes/admin/core/class-admin-settings.php:3443
-#: includes/admin/core/class-admin-settings.php:3538
+#: includes/admin/core/class-admin-settings.php:3447
+#: includes/admin/core/class-admin-settings.php:3542
 #, php-format
 msgid "Your license key has reached its activation limit. <a href=\"%s\">View possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3449
-#: includes/admin/core/class-admin-settings.php:3544
+#: includes/admin/core/class-admin-settings.php:3453
+#: includes/admin/core/class-admin-settings.php:3548
 msgid "The key you entered belongs to a bundle, please use the product specific license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3455
-#: includes/admin/core/class-admin-settings.php:3464
-#: includes/admin/core/class-admin-settings.php:3475
+#: includes/admin/core/class-admin-settings.php:3459
+#: includes/admin/core/class-admin-settings.php:3468
+#: includes/admin/core/class-admin-settings.php:3479
 msgid "unknown_error"
 msgstr ""
 
 #. translators: %1$s is an error; %2$s is a error data; %3$s is a support link.
-#: includes/admin/core/class-admin-settings.php:3478
+#: includes/admin/core/class-admin-settings.php:3482
 #, php-format
 msgid "There was an error with this license key: %1$s%2$s. Please <a href=\"%3$s\">contact our support team</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3557
+#: includes/admin/core/class-admin-settings.php:3561
 msgid "License key never expires."
 msgstr ""
 
 #. translators: %1$s is an expiry date; %2$s is a renewal link.
-#: includes/admin/core/class-admin-settings.php:3565
+#: includes/admin/core/class-admin-settings.php:3569
 #, php-format
 msgid "Your license key expires soon! It expires on %1$s. <a href=\"%2$s\" target=\"_blank\">Renew your license key</a>."
 msgstr ""
 
 #. translators: %s: expiry date.
-#: includes/admin/core/class-admin-settings.php:3576
+#: includes/admin/core/class-admin-settings.php:3580
 #, php-format
 msgid "Your license key expires on %s."
 msgstr ""
 
 #. translators: %s: item name.
-#: includes/admin/core/class-admin-settings.php:3592
+#: includes/admin/core/class-admin-settings.php:3596
 #, php-format
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3618
-#: includes/admin/core/class-admin-settings.php:3627
+#: includes/admin/core/class-admin-settings.php:3622
+#: includes/admin/core/class-admin-settings.php:3631
 msgid "Clear License"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3622
+#: includes/admin/core/class-admin-settings.php:3626
 msgid "Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3626
+#: includes/admin/core/class-admin-settings.php:3630
 msgid "Re-Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:3675
+#: includes/admin/core/class-admin-settings.php:3679
 msgid "Re-check templates"
 msgstr ""
 
 #. translators: %s: Last checking templates time.
-#: includes/admin/core/class-admin-settings.php:3679
+#: includes/admin/core/class-admin-settings.php:3683
 #, php-format
 msgid "Last update: %s. You could re-check changes manually."
 msgstr ""
