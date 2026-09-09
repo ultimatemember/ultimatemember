@@ -279,7 +279,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 					sprintf(
 						/* translators: %s: filter name. */
 						__( '<code>%s</code> is not in an allowed template directory. Add trusted custom directories via the <code>um_allowed_template_directories</code> filter.', 'ultimate-member' ),
-						__( 'um_get_template', 'ultimate-member' )
+						'um_get_template'
 					),
 					'2.13.1'
 				);
@@ -342,7 +342,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 				get_template_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR,
 			);
 
-			if ( '' !== $path ) {
+			if ( '' !== $path && false === strpos( (string) $path, '..' ) && false === strpos( (string) $path, "\0" ) ) {
 				$directories[] = wp_normalize_path( WP_PLUGIN_DIR ) . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR;
 			}
 

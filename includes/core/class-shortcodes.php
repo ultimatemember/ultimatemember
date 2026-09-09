@@ -367,9 +367,9 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					_doing_it_wrong(
 						__FUNCTION__,
 						sprintf(
-							/* translators: %s: filter name. */
+							/* translators: %s: function name. */
 							__( '<code>%s</code> is not in an allowed template directory. Add trusted custom directories via the <code>um_allowed_template_directories</code> filter.', 'ultimate-member' ),
-							__( 'load_template', 'ultimate-member' )
+							'load_template'
 						),
 						'2.13.1'
 					);
