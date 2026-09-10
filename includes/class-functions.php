@@ -903,7 +903,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			 * Note: Please use the `wp_kses()` allowed tags structure.
 			 *
 			 * @since 2.5.4
-			 * @since 2.13.0 Added the `$ignore_global` parameter.
+			 * @since 2.14.0 Added the `$ignore_global` parameter.
 			 * @hook um_late_escaping_allowed_tags
 			 *
 			 * @param {array}  $allowed_html  Allowed HTML tags with attributes.
@@ -937,7 +937,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * @param bool|null $secure   Optional. Specifies whether or not the cookie should only be transmitted over a secure HTTPS connection. TRUE indicates that the cookie will only be set if a secure connection exists. Default is `is_ssl()` function value.
 		 * @param bool      $httponly Optional. If set to TRUE the cookie will be accessible only through the HTTP protocol (the cookie will not be accessible by scripting languages). This setting can help to reduce identity theft through XSS attacks. Default is true.
 		 *
-		 * @since 2.13.0
+		 * @since 2.14.0
 		 */
 		public static function setcookie( $name, $value = '', $expire = 0, $path = '', $secure = null, $httponly = true ) {
 			if ( empty( $value ) ) {

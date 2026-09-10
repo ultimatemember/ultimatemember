@@ -25,6 +25,9 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 			add_filter( 'query_vars', array( &$this, 'query_vars' ) );
 			add_filter( 'rewrite_rules_array', array( &$this, 'add_rewrite_rules' ) );
 
+			add_action( 'template_redirect', array( &$this, 'temp_files_routing' ), 1 );
+			add_action( 'template_redirect', array( &$this, 'download_routing' ), 1 );
+
 			add_action( 'template_redirect', array( &$this, 'redirect_author_page' ), 9999 );
 			add_action( 'template_redirect', array( &$this, 'locate_user_profile' ), 9999 );
 		}
@@ -63,7 +66,9 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 			$public_query_vars[] = 'um_action';
 			$public_query_vars[] = 'um_field';
 			$public_query_vars[] = 'um_form';
-			$public_query_vars[] = 'um_verify';
+			$public_query_vars[] = 'um_filename';
+			$public_query_vars[] = 'um_verify'; // todo remove where it's used and change to `um_nonce` when all extensions are ready with old UI in the new UI branch.
+			$public_query_vars[] = 'um_nonce';
 
 			return $public_query_vars;
 		}
@@ -78,8 +83,15 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 		public function add_rewrite_rules( $rules ) {
 			$newrules = array();
 
-			// NGINX-config `rewrite ^/um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ /index.php?um_action=download&um_form=$1&um_field=$2&um_user=$3&um_verify=$4 last;`
-			$newrules['um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$'] = 'index.php?um_action=download&um_form=$matches[1]&um_field=$matches[2]&um_user=$matches[3]&um_verify=$matches[4]';
+			$image_mimes   = UM()->common()->filesystem()::image_mimes();
+			$files_mimes   = UM()->common()->filesystem()::file_mimes();
+			$allowed_mimes = implode( '|', array_merge( $image_mimes, $files_mimes ) );
+
+			// NGINX-config `rewrite ^/um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/\d{1,10}\.(jpg|jpeg|jpe|gif|png|bmp|tif|tiff|ico|heic|heif|webp|avif|aac|flac|m4a|m4b|mka|mp3|ogg|oga|ram|wav|wma|3g2|3gp|3gpp|asf|avi|divx|flv|m4v|mkv|mov|mp4|mpeg|mpg|ogv|qt|wmv|doc|docx|docm|dotm|odt|pages|pdf|xps|oxps|rtf|wp|wpd|psd|xcf|numbers|ods|xls|xlsx|xlsm|xlsb|key|ppt|pptx|pptm|pps|ppsx|ppsm|sldx|sldm|odp|asc|csv|tsv|txt|gz|rar|tar|zip|7z|css|htm|html|js)$ /index.php?um_action=download&um_form=$1&um_field=$2&um_user=$3&um_verify=$4 last;`
+			$newrules['um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/\d{1,10}\.(' . $allowed_mimes . ')$'] = 'index.php?um_action=download&um_form=$matches[1]&um_field=$matches[2]&um_user=$matches[3]&um_verify=$matches[4]';
+
+			// NGINX-config `rewrite ^/um-temp/([^/]+)/([^/]+)/\w{1,32}\.(jpg|jpeg|jpe|gif|png|bmp|tif|tiff|ico|heic|heif|webp|avif|aac|flac|m4a|m4b|mka|mp3|ogg|oga|ram|wav|wma|3g2|3gp|3gpp|asf|avi|divx|flv|m4v|mkv|mov|mp4|mpeg|mpg|ogv|qt|wmv|doc|docx|docm|dotm|odt|pages|pdf|xps|oxps|rtf|wp|wpd|psd|xcf|numbers|ods|xls|xlsx|xlsm|xlsb|key|ppt|pptx|pptm|pps|ppsx|ppsm|sldx|sldm|odp|asc|csv|tsv|txt|gz|rar|tar|zip|7z|css|htm|html|js)$ /index.php?um_action=temp-download&um_user=$1&um_verify=$2 last;`
+			$newrules['um-temp/([^/]+)/([^/]+)/\w{1,32}\.(' . $allowed_mimes . ')$'] = 'index.php?um_action=temp-download&um_user=$matches[1]&um_verify=$matches[2]';
 
 			if ( isset( UM()->config()->permalinks['user'] ) ) {
 
@@ -135,6 +147,244 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 			}
 
 			return $newrules + $rules;
+		}
+
+		/**
+		 * Handle a secure link of the temp file.
+		 * @return void
+		 * @throws RandomException
+		 */
+		public function temp_files_routing() {
+			global $wp_filesystem, $wp_query;
+
+			if ( 'temp-download' !== get_query_var( 'um_action' ) ) {
+				return;
+			}
+
+			$filename = get_query_var( 'um_filename' );
+			if ( empty( $filename ) ) {
+				$url = UM()->permalinks()->get_current_url();
+				if ( UM()->common()->filesystem()::is_timestamp_addable() ) {
+					$url = remove_query_arg( 'timestamp', $url );
+				}
+				$filename = wp_basename( $url );
+			}
+
+			if ( is_user_logged_in() ) {
+				$user_id = get_current_user_id();
+			} else {
+				$user_id = UM()->common()->guest()->get_guest_token();
+			}
+
+			$queried_user = get_query_var( 'um_user' );
+			if ( empty( $queried_user ) || (string) $queried_user !== (string) $user_id ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			$query_verify = get_query_var( 'um_nonce' );
+
+			if ( empty( $query_verify ) || ! wp_verify_nonce( $query_verify, $user_id . $filename . 'um-temp-download-nonce' ) ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			$file_path = UM()->common()->filesystem()->get_file_by_hash( $filename );
+			if ( false === $file_path ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			if ( ! is_user_logged_in() ) {
+				// Check for excessive downloads (e.g., max 5 downloads per 5 minutes)
+				$break_due_downloads_limit = UM()->common()->guest()::check_excessive_downloads();
+				if ( $break_due_downloads_limit ) {
+					return;
+				}
+
+				UM()->common()->guest()::set_download_attempts();
+			}
+
+			UM()->common()->filesystem()::maybe_init_wp_filesystem();
+
+			$pathinfo     = pathinfo( $file_path );
+			$size         = filesize( $file_path );
+			$originalname = $pathinfo['basename'];
+			$type         = $pathinfo['extension'];
+
+			header( 'Content-Description: File Transfer' );
+			header( 'Content-Type: ' . $type );
+			header( 'Content-Disposition: inline; filename="' . esc_attr( $originalname ) . '"' );
+			header( 'Content-Transfer-Encoding: binary' );
+			header( 'Expires: 0' );
+			header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+			header( 'Pragma: public' );
+			header( 'Content-Length: ' . $size );
+
+			$levels = ob_get_level();
+			for ( $i = 0; $i < $levels; $i++ ) {
+				@ob_end_clean();
+			}
+
+			$content = $wp_filesystem->get_contents( $file_path );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- temp file content.
+			echo $content;
+			exit;
+		}
+
+		/**
+		 * Download uploaded by the user files routing handler.
+		 *
+		 * @return void
+		 */
+		public function download_routing() {
+			global $wp_query;
+
+			if ( 'download' !== get_query_var( 'um_action' ) ) {
+				return;
+			}
+
+			$form_id = get_query_var( 'um_form' );
+			if ( empty( $form_id ) ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			$field_key = get_query_var( 'um_field' );
+			if ( empty( $field_key ) ) {
+				$wp_query->set_404();
+				return;
+			}
+			$field_key = urldecode( $field_key );
+
+			$user_id = get_query_var( 'um_user' );
+			if ( empty( $user_id ) ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			$query_verify = get_query_var( 'um_verify' );
+			if ( empty( $query_verify ) || ! wp_verify_nonce( $query_verify, $user_id . $form_id . $field_key . 'um-download-nonce' ) ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			if ( ! UM()->common()->users()->can_view_user_profile( $user_id ) ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			$field_data = get_post_meta( $form_id, '_um_custom_fields', true );
+			if ( empty( $field_data[ $field_key ] ) ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			if ( ! um_can_view_field( $field_data[ $field_key ] ) ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			um_fetch_user( $user_id );
+			$field_value = UM()->fields()->field_value( $field_key );
+			if ( empty( $field_value ) ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			$download_type = $field_data[ $field_key ]['type'];
+			if ( 'file' === $download_type ) {
+				$this->file_download( $user_id, $field_key, $field_value );
+			} else {
+				$this->image_download( $user_id, $field_key, $field_value );
+			}
+		}
+
+		/**
+		 * @param $user_id
+		 * @param $field_key
+		 * @param $field_value
+		 */
+		private function image_download( $user_id, $field_key, $field_value ) {
+			global $wp_filesystem;
+
+			UM()->common()->filesystem()::maybe_init_wp_filesystem();
+
+			$file_path = UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $field_value;
+
+			// Validate traversal file
+			if ( validate_file( $file_path ) === 1 ) {
+				return;
+			}
+
+			$file_info = get_user_meta( $user_id, $field_key . '_metadata', true );
+
+			$pathinfo     = pathinfo( $file_path );
+			$size         = filesize( $file_path );
+			$originalname = ! empty( $file_info['original_name'] ) ? $file_info['original_name'] : $pathinfo['basename'];
+			$type         = ! empty( $file_info['type'] ) ? $file_info['type'] : $pathinfo['extension'];
+
+			header( 'Content-Description: File Transfer' );
+			header( 'Content-Type: ' . $type );
+			header( 'Content-Disposition: inline; filename="' . $originalname . '"' );
+			header( 'Content-Transfer-Encoding: binary' );
+			header( 'Expires: 0' );
+			header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
+			header( 'Pragma: public' );
+			header( 'Content-Length: ' . $size );
+
+			$levels = ob_get_level();
+			for ( $i = 0; $i < $levels; $i++ ) {
+				@ob_end_clean();
+			}
+
+			$content = $wp_filesystem->get_contents( $file_path );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- temp file content.
+			echo $content;
+			exit;
+		}
+
+		/**
+		 * @param $user_id
+		 * @param $field_key
+		 * @param $field_value
+		 */
+		private function file_download( $user_id, $field_key, $field_value ) {
+			global $wp_filesystem;
+
+			UM()->common()->filesystem()::maybe_init_wp_filesystem();
+
+			$file_path = UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $field_value;
+			// Validate traversal file
+			if ( validate_file( $file_path ) === 1 ) {
+				return;
+			}
+
+			$file_info = get_user_meta( $user_id, $field_key . '_metadata', true );
+
+			$pathinfo     = pathinfo( $file_path );
+			$size         = filesize( $file_path );
+			$originalname = ! empty( $file_info['original_name'] ) ? $file_info['original_name'] : $pathinfo['basename'];
+			$type         = ! empty( $file_info['type'] ) ? $file_info['type'] : $pathinfo['extension'];
+
+			header( 'Content-Description: File Transfer' );
+			header( 'Content-Type: ' . $type );
+			header( 'Content-Disposition: attachment; filename="' . $originalname . '"' );
+			header( 'Content-Transfer-Encoding: binary' );
+			header( 'Expires: 0' );
+			header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
+			header( 'Pragma: public' );
+			header( 'Content-Length: ' . $size );
+
+			$levels = ob_get_level();
+			for ( $i = 0; $i < $levels; $i++ ) {
+				@ob_end_clean();
+			}
+
+			$content = $wp_filesystem->get_contents( $file_path );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- temp file content.
+			echo $content;
+			exit;
 		}
 
 		/**
