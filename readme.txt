@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.13.0
+Stable tag: 2.13.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -173,6 +173,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Added: Fallback for `wp-cli/wp-config-transformer` library if the wp-config.php file isn't writable.
 * Added: Filter hook `um_members_directory_filter_text` 3rd parameter `$is_default` to check if it's admin filtering or frontend query.
+* Added: 'Administrative capabilities ban' option enabled by default after the first installation.
 * Optimized: Slow SQL query for batch empty account status check.
 * Optimized: Redundant SQL calls when editing Profile page with callback dropdowns. Cached usermeta existence checks per user and key during a single load (Reported by @MissVeronica, author @faisalahammad).
 
