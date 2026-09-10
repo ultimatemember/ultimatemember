@@ -1,5 +1,27 @@
 ﻿== Changelog ==
 
+= 2.13.1 September 10, 2026 =
+
+* Enhancements:
+
+  - Added: Fallback for `wp-cli/wp-config-transformer` library if the wp-config.php file isn't writable.
+  - Added: Filter hook `um_members_directory_filter_text` 3rd parameter `$is_default` to check if it's admin filtering or frontend query.
+  - Added: 'Administrative capabilities ban' option enabled by default after the first installation.
+  - Optimized: Slow SQL query for batch empty account status check.
+  - Optimized: Set the recurring action for account status check as unique.
+  - Optimized: Redundant SQL calls when editing Profile page with callback dropdowns. Cached usermeta existence checks per user and key during a single load (Reported by @MissVeronica, author @faisalahammad).
+
+* Bugfixes:
+
+  - Fixed: Security issue related to an unauthenticated visitor can store JavaScript that runs in an administrator's session, through their own profile name. (Reported by Karthik Ramakrishnan and WPScan team). Fixed `um_convert_tags()` function and applied the escapers throughout the placeholder replacement.
+  - Fixed: Usign LIKE compare for the text-type filters with custom usermeta table (Reported by @MissVeronica, author @faisalahammad).
+  - Fixed: "Can user edit this field?" field setting displaying only for the User Profile form fields.
+  - Fixed: Getting the pages list in the wp-admin UM > Settings > General > Pages section.
+
+* Deprecated:
+
+  - Deprecated: Filter hook `um_members_directory_filter_text_meta_value` is fully deprecated, replacement isn't required for the text-type filter field.
+
 = 2.13.0 August 24, 2026 =
 
 * Enhancements:
