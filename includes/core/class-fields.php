@@ -966,7 +966,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 * ?>
 				 */
 				$value = apply_filters( "um_edit_{$key}_field_value", $value, $key );
-				$value = maybe_unserialize( $value );
+				$value = um_maybe_unserialize( $value );
 
 			} elseif ( $default ) {
 
@@ -2983,12 +2983,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					if ( ! empty( $field_value ) && 'empty_file' !== $field_value ) {
 						if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) ) {
-//							if ( isset( $this->set_mode ) && 'register' === $this->set_mode ) {
-//								$image_info = get_transient( "um_{$field_value}" );
-//							} else {
-//								$image_info = um_user( $data['metakey'] . '_metadata' );
-//							}
-
 							if ( ( isset( $this->set_mode ) && 'register' === $this->set_mode ) || file_exists( UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $field_value ) ) {
 								$img_value = UM()->uploader()->get_core_temp_url() . '/' . $this->field_value( $key, $default, $data );
 							} else {
