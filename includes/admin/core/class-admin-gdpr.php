@@ -183,11 +183,10 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 
 			$filtered = array();
 			foreach ( $metadata as $data ) {
-				if ( in_array( $data['meta_key'], array_keys( $this->meta_associations ) ) ) {
+				if ( array_key_exists( $data['meta_key'], $this->meta_associations ) ) {
 					$filtered[] = array(
-						'key'  => $data['meta_key'],
+						'key'   => $data['meta_key'],
 						'name'  => $this->meta_associations[ $data['meta_key'] ],
-						//'value' => maybe_unserialize( $data['meta_value'] ),
 						'value' => $data['meta_value'],
 					);
 				}
