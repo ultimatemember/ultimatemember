@@ -30,7 +30,9 @@ class Secure {
 	 * Scan affected users
 	 */
 	public function ajax_scanner() {
-		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'um-admin-nonce' ) || ! current_user_can( 'manage_options' ) ) {
+		check_ajax_referer( 'um_secure_scan_content' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_attr__( 'Security Check', 'ultimate-member' ) );
 		}
 

@@ -5009,15 +5009,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * Admin Builder silent AJAX handler for actions with fields.
 		 */
 		public function do_ajax_action() {
-			UM()->admin()->check_ajax_nonce();
-
-			// phpcs:disable WordPress.Security.NonceVerification
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-				wp_send_json_error( __( 'Please login as administrator.', 'ultimate-member' ) );
-			}
-
 			if ( ! isset( $_POST['act_id'] ) ) {
 				wp_send_json_error( __( 'Invalid action.', 'ultimate-member' ) );
+			}
+			$act_id = sanitize_key( $_POST['act_id'] );
+
+			check_ajax_referer( 'um_do_ajax_action_' . $act_id );
+
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( __( 'Please login as administrator.', 'ultimate-member' ) );
 			}
 
 			$in_row   = isset( $_POST['in_row'] ) ? absint( $_POST['in_row'] ) : 0;
@@ -5028,7 +5028,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				'in_group'   => isset( $_POST['in_group'] ) ? absint( $_POST['in_group'] ) : '',
 			);
 
-			switch ( sanitize_key( $_POST['act_id'] ) ) {
+			switch ( $act_id ) {
 				case 'um_admin_duplicate_field':
 					// arg1 is a field metakey(id)
 					// arg2 is a form ID.
@@ -5054,7 +5054,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$this->add_field_from_list( sanitize_text_field( $_POST['arg1'] ), absint( $_POST['arg2'] ), $position );
 					break;
 			}
-			// phpcs:enable WordPress.Security.NonceVerification
+
 			wp_send_json_success();
 		}
 
