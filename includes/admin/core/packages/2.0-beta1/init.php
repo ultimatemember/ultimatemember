@@ -18,7 +18,7 @@
 			dataType: 'json',
 			data: {
 				action: 'um_styles20beta1',
-				nonce: um_admin_scripts.nonce
+				_wpnonce: um_inside_package_nonce
 			},
 			success: function( response ) {
 				if ( typeof response.data != 'undefined' ) {
@@ -45,7 +45,7 @@
 				dataType: 'json',
 				data: {
 					action: 'um_user_roles20beta1',
-					nonce: um_admin_scripts.nonce
+					_wpnonce: um_inside_package_nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {
@@ -84,7 +84,7 @@
 					data: {
 						action: 'um_get_users_per_role20beta1',
 						key_in_meta: role.key_in_meta,
-						nonce: um_admin_scripts.nonce
+						_wpnonce: um_inside_package_nonce
 					},
 					success: function( response ) {
 						if ( typeof response.data.count != 'undefined' ) {
@@ -124,7 +124,7 @@
 						role_key: role_key,
 						key_in_meta: key_in_meta,
 						page: current_page,
-						nonce: um_admin_scripts.nonce
+						_wpnonce: um_inside_package_nonce
 					},
 					success: function( response ) {
 						if ( typeof response.data != 'undefined' ) {
@@ -158,7 +158,7 @@
 				dataType: 'json',
 				data: {
 					action: 'um_content_restriction20beta1',
-					nonce: um_admin_scripts.nonce
+					_wpnonce: um_inside_package_nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {
@@ -186,7 +186,7 @@
 				dataType: 'json',
 				data: {
 					action: 'um_settings20beta1',
-					nonce: um_admin_scripts.nonce
+					_wpnonce: um_inside_package_nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {
@@ -214,7 +214,7 @@
 				dataType: 'json',
 				data: {
 					action: 'um_menus20beta1',
-					nonce: um_admin_scripts.nonce
+					_wpnonce: um_inside_package_nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {
@@ -242,7 +242,7 @@
 				dataType: 'json',
 				data: {
 					action: 'um_mc_lists20beta1',
-					nonce: um_admin_scripts.nonce
+					_wpnonce: um_inside_package_nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {
@@ -270,7 +270,7 @@
 				dataType: 'json',
 				data: {
 					action: 'um_social_login20beta1',
-					nonce: um_admin_scripts.nonce
+					_wpnonce: um_inside_package_nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {
@@ -298,7 +298,7 @@
 				dataType: 'json',
 				data: {
 					action: 'um_cpt20beta1',
-					nonce: um_admin_scripts.nonce
+					_wpnonce: um_inside_package_nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {
@@ -327,7 +327,7 @@
 				dataType: 'json',
 				data: {
 					action: 'um_get_forums20beta1',
-					nonce: um_admin_scripts.nonce
+					_wpnonce: um_inside_package_nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {
@@ -358,7 +358,7 @@
 					data: {
 						action: 'um_update_forum_per_page20beta1',
 						page: current_page,
-						nonce: um_admin_scripts.nonce
+						_wpnonce: um_inside_package_nonce
 					},
 					success: function( response ) {
 						if ( typeof response.data != 'undefined' ) {
@@ -395,7 +395,7 @@
 				dataType: 'json',
 				data: {
 					action: 'um_get_products20beta1',
-					nonce: um_admin_scripts.nonce
+					_wpnonce: um_inside_package_nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {
@@ -425,7 +425,7 @@
 					data: {
 						action: 'um_update_products_per_page20beta1',
 						page: current_page,
-						nonce: um_admin_scripts.nonce
+						_wpnonce: um_inside_package_nonce
 					},
 					success: function( response ) {
 						if ( typeof response.data != 'undefined' ) {
@@ -458,7 +458,7 @@
 				dataType: 'json',
 				data: {
 					action: 'um_email_templates20beta1',
-					nonce: um_admin_scripts.nonce
+					_wpnonce: um_inside_package_nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {

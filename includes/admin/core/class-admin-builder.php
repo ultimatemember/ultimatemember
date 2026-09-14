@@ -312,20 +312,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			<?php
 		}
 
-
 		/**
 		 * Update the builder area
 		 */
-		function update_builder() {
-			UM()->admin()->check_ajax_nonce();
+		public function update_builder() {
+			if ( empty( $_POST['form_id'] ) ) {
+				wp_send_json_error( __( 'Please provide form ID', 'ultimate-member' ) );
+			}
+			$form_id = absint( $_POST['form_id'] );
 
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+			check_ajax_referer( 'um_form_builder_update' . $form_id );
+
+			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
 			}
 
 			ob_start();
 
-			$this->form_id = absint( $_POST['form_id'] );
+			$this->form_id = $form_id;
 
 			$this->show_builder();
 
@@ -423,7 +427,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					<!-- Master Row Actions -->
 					<div class="um-admin-drag-row-icons">
 						<a href="javascript:void(0);" class="um-admin-drag-rowsub-add um-tip-n" title="<?php esc_attr_e( 'Add Row', 'ultimate-member' ); ?>" data-row_action="add_subrow"><i class="um-icon-plus"></i></a>
-						<a href="javascript:void(0);" class="um-admin-drag-row-edit um-tip-n" title="<?php esc_attr_e( 'Edit Row', 'ultimate-member' ); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo esc_attr( $this->form_id ); ?>" data-arg3="_um_row_1"><i class="um-faicon-pencil"></i></a>
+						<a href="javascript:void(0);" class="um-admin-drag-row-edit um-tip-n" title="<?php esc_attr_e( 'Edit Row', 'ultimate-member' ); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo esc_attr( $this->form_id ); ?>" data-arg3="_um_row_1" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_dynamic_content_um_admin_edit_field_popup' ) ); ?>"><i class="um-faicon-pencil"></i></a>
 						<span class="um-admin-drag-row-start"><i class="um-icon-arrow-move"></i></span>
 					</div>
 					<div class="clear"></div>
@@ -477,7 +481,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						<!-- Master Row Actions -->
 						<div class="um-admin-drag-row-icons">
 							<a href="javascript:void(0);" class="um-admin-drag-rowsub-add um-tip-n" title="<?php esc_attr_e( 'Add Row', 'ultimate-member' ); ?>" data-row_action="add_subrow"><i class="um-icon-plus"></i></a>
-							<a href="javascript:void(0);" class="um-admin-drag-row-edit um-tip-n" title="<?php esc_attr_e( 'Edit Row', 'ultimate-member' ); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo esc_attr( $this->form_id ); ?>" data-arg3="<?php echo esc_attr( $row_id ); ?>"><i class="um-faicon-pencil"></i></a>
+							<a href="javascript:void(0);" class="um-admin-drag-row-edit um-tip-n" title="<?php esc_attr_e( 'Edit Row', 'ultimate-member' ); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo esc_attr( $this->form_id ); ?>" data-arg3="<?php echo esc_attr( $row_id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_dynamic_content_um_admin_edit_field_popup' ) ); ?>"><i class="um-faicon-pencil"></i></a>
 							<span class="um-admin-drag-row-start"><i class="um-icon-arrow-move"></i></span>
 							<?php if ( '_um_row_1' !== $row_id ) { ?>
 								<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Delete Row', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-row"><i class="um-faicon-trash-o"></i></a>
@@ -556,12 +560,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 														<div class="um-admin-drag-fld-banned um-field-type-<?php echo esc_attr( $field_type ); ?>"><?php esc_html_e( 'This is not permitted for security reasons. For your safety, please remove it.', 'ultimate-member' ); ?></div>
 													<?php } ?>
 													<div class="um-admin-drag-fld-icons um-field-type-<?php echo esc_attr( $field_type ); ?>">
-														<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Edit', 'ultimate-member' ); ?>" data-modal="UM_edit_field" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="<?php echo esc_attr( $field_type ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>" data-arg3="<?php echo esc_attr( $key ); ?>"><i class="um-faicon-pencil"></i></a>
-														<a href="javascript:void(0);" class="um-tip-n um_admin_duplicate_field" title="<?php esc_attr_e( 'Duplicate', 'ultimate-member' ); ?>" data-silent_action="um_admin_duplicate_field" data-arg1="<?php echo esc_attr( $key ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>"><i class="um-faicon-files-o"></i></a>
+														<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Edit', 'ultimate-member' ); ?>" data-modal="UM_edit_field" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="<?php echo esc_attr( $field_type ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>" data-arg3="<?php echo esc_attr( $key ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_dynamic_content_um_admin_edit_field_popup' ) ); ?>"><i class="um-faicon-pencil"></i></a>
+														<a href="javascript:void(0);" class="um-tip-n um_admin_duplicate_field" title="<?php esc_attr_e( 'Duplicate', 'ultimate-member' ); ?>" data-silent_action="um_admin_duplicate_field" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_do_ajax_action_um_admin_duplicate_field' ) ); ?>" data-arg1="<?php echo esc_attr( $key ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>"><i class="um-faicon-files-o"></i></a>
 														<?php if ( 'group' === $field_type ) { ?>
-															<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Delete Group', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-fld.um-field-type-group" data-silent_action="um_admin_remove_field" data-arg1="<?php echo esc_attr( $key ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>"><i class="um-faicon-trash-o"></i></a>
+															<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Delete Group', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-fld.um-field-type-group" data-silent_action="um_admin_remove_field" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_do_ajax_action_um_admin_remove_field' ) ); ?>" data-arg1="<?php echo esc_attr( $key ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>"><i class="um-faicon-trash-o"></i></a>
 														<?php } else { ?>
-															<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Delete', 'ultimate-member' ); ?>" data-silent_action="um_admin_remove_field" data-arg1="<?php echo esc_attr( $key ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>"><i class="um-faicon-trash-o"></i></a>
+															<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Delete', 'ultimate-member' ); ?>" data-silent_action="um_admin_remove_field" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_do_ajax_action_um_admin_remove_field' ) ); ?>" data-arg1="<?php echo esc_attr( $key ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>"><i class="um-faicon-trash-o"></i></a>
 														<?php } ?>
 													</div>
 													<div class="clear"></div>
@@ -591,22 +595,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 * AJAX handler for save the custom field in Form Builder.
 		 */
 		public function update_field() {
-			UM()->admin()->check_ajax_nonce();
+			check_ajax_referer( 'um_update_field' );
 
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
 			}
 
 			$output['error'] = null;
 
-			// phpcs:disable WordPress.Security.NonceVerification -- Already verified by `UM()->admin()->check_ajax_nonce()`
 			$array = array(
 				'field_type' => sanitize_key( $_POST['_type'] ),
 				'form_id'    => absint( $_POST['post_id'] ),
 				'args'       => UM()->builtin()->get_core_field_attrs( sanitize_key( $_POST['_type'] ) ),
 				'post'       => UM()->admin()->sanitize_builder_field_meta( $_POST ),
 			);
-			// phpcs:enable WordPress.Security.NonceVerification -- Already verified by `UM()->admin()->check_ajax_nonce()`
 
 			/**
 			 * Filters the field data before save in Form Builder.
@@ -725,19 +727,36 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 * AJAX handler for dynamic content inside the modal window.
 		 */
 		public function dynamic_modal_content() {
-			UM()->admin()->check_ajax_nonce();
-
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
-			}
-
-			// phpcs:disable WordPress.Security.NonceVerification -- already verified here
 			if ( empty( $_POST['act_id'] ) ) {
 				wp_send_json_error( __( 'Wrong dynamic-content attribute.', 'ultimate-member' ) );
 			}
+			$act_id = sanitize_key( $_POST['act_id'] );
+
+			check_ajax_referer( 'um_dynamic_content_' . $act_id );
+
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
+			}
+			/**
+			 * Fires before rendering dynamic content inside the modal window.
+			 *
+			 * @hook um_before_render_dynamic_modal_content
+			 *
+			 * @param {string} $act_id Dynamic content action.
+			 *
+			 * @since 2.13.1
+			 *
+			 * @example <caption>Doing some code before rendering dynamic modal content with $act_id === 'email_confirmation'.</caption>
+			 * function um_before_render_dynamic_modal_content( $act_id ) {
+			 *     if ( 'email_confirmation' === $act_id ) {
+			 *         // your code here
+			 *     }
+			 * }
+			 * add_action( 'um_before_render_dynamic_modal_content', 'um_before_render_dynamic_modal_content' );
+			 */
+			do_action( 'um_before_render_dynamic_modal_content', $act_id );
 
 			$metabox = UM()->metabox();
-			$act_id  = sanitize_key( $_POST['act_id'] );
 
 			$arg1 = null;
 			if ( isset( $_POST['arg1'] ) ) {
@@ -852,7 +871,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 									continue;
 								}
 								?>
-								<a href="javascript:void(0);" class="button" data-modal="UM_add_field" data-modal-size="normal" data-dynamic-content="um_admin_new_field_popup" data-arg1="<?php echo esc_attr( $field_type ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>"><?php echo esc_html( $field_data['name'] ); ?></a>
+								<a href="javascript:void(0);" class="button" data-modal="UM_add_field" data-modal-size="normal" data-dynamic-content="um_admin_new_field_popup" data-arg1="<?php echo esc_attr( $field_type ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_dynamic_content_um_admin_new_field_popup' ) ); ?>"><?php echo esc_html( $field_data['name'] ); ?></a>
 								<?php
 							}
 						}
@@ -873,7 +892,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 									continue;
 								}
 								?>
-								<a href="javascript:void(0);" class="button" <?php disabled( in_array( $field_key, $form_fields, true ) ); ?> data-silent_action="um_admin_add_field_from_predefined" data-arg1="<?php echo esc_attr( $field_key ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>" title="<?php echo esc_attr( $field_data['title'] ); ?>"><?php echo esc_html( um_trim_string( $field_data['title'] ) ); ?></a>
+								<a href="javascript:void(0);" class="button" <?php disabled( in_array( $field_key, $form_fields, true ) ); ?> data-silent_action="um_admin_add_field_from_predefined" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_do_ajax_action_um_admin_add_field_from_predefined' ) ); ?>" data-arg1="<?php echo esc_attr( $field_key ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>" title="<?php echo esc_attr( $field_data['title'] ); ?>"><?php echo esc_html( um_trim_string( $field_data['title'] ) ); ?></a>
 								<?php
 							}
 						} else {
@@ -893,7 +912,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 								}
 								?>
 								<?php // translators: %s is a field metakey. ?>
-								<a href="javascript:void(0);" class="button with-icon" <?php disabled( in_array( $field_key, $form_fields, true ) ) ?> data-silent_action="um_admin_add_field_from_list" data-arg1="<?php echo esc_attr( $field_key ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>" title="<?php echo esc_attr( sprintf( __( 'Meta Key - %s', 'ultimate-member' ), $field_key ) ); ?>">
+								<a href="javascript:void(0);" class="button with-icon" <?php disabled( in_array( $field_key, $form_fields, true ) ); ?> data-silent_action="um_admin_add_field_from_list" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_do_ajax_action_um_admin_add_field_from_list' ) ); ?>" data-remove-nonce="<?php echo esc_attr( wp_create_nonce( 'um_do_ajax_action_um_admin_remove_field_global' ) ); ?>" data-arg1="<?php echo esc_attr( $field_key ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>" title="<?php echo esc_attr( sprintf( __( 'Meta Key - %s', 'ultimate-member' ), $field_key ) ); ?>">
 									<?php echo esc_html( um_trim_string( stripslashes( $array['title'] ) ) ); ?> (<?php echo esc_html( ucfirst( $array['type'] ) ); ?>)
 									<span class="remove dashicons dashicons-dismiss"></span>
 								</a>
@@ -1167,14 +1186,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			return $skip;
 		}
 
-
 		/**
 		 *  Retrieves dropdown/multi-select options from a callback function
 		 */
-		function populate_dropdown_options() {
-			UM()->admin()->check_ajax_nonce();
+		public function populate_dropdown_options() {
+			check_ajax_referer( 'um_custom_dropdown_options_source' );
 
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
 			}
 
@@ -1186,8 +1204,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			$um_callback_func = wp_unslash( $um_callback_func );
 
 			if ( empty( $um_callback_func ) ) {
-				$arr_options['status'] = 'empty';
-				$arr_options['function_name'] = $um_callback_func;
+				$arr_options['status']          = 'empty';
+				$arr_options['function_name']   = $um_callback_func;
 				$arr_options['function_exists'] = function_exists( $um_callback_func );
 			}
 
@@ -1202,6 +1220,5 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 			wp_send_json( $arr_options );
 		}
-
 	}
 }

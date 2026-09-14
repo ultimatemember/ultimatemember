@@ -19,7 +19,7 @@ if ( ! class_exists( 'um\admin\Admin_Functions' ) ) {
 		 * @param bool $action
 		 */
 		public function check_ajax_nonce( $action = false ) {
-			$nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( $_REQUEST['nonce'] ) : '';
+			$nonce  = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( $_REQUEST['nonce'] ) : '';
 			$action = empty( $action ) ? 'um-admin-nonce' : $action;
 
 			if ( ! wp_verify_nonce( $nonce, $action ) ) {

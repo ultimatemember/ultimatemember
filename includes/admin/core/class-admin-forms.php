@@ -641,7 +641,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			// @todo new version
 			if ( empty( $first_activation_date ) || $first_activation_date >= 1716336000 || empty( $value ) || array_key_exists( $value, $um_icons_list ) ) {
-				$html .= '<select ' . $name_attr . ' ' . $id_attr . ' class="um-icon-select-field" data-placeholder="' . esc_attr__( 'Select Icon', 'ultimate-member' ) . '" ><option value="">' . esc_html__( 'Select Icon', 'ultimate-member' ) . '</option>';
+				$html .= '<select ' . $name_attr . ' ' . $id_attr . ' class="um-icon-select-field" data-nonce="' . esc_attr( wp_create_nonce( 'um_get_icons' ) ) . '" data-placeholder="' . esc_attr__( 'Select Icon', 'ultimate-member' ) . '" ><option value="">' . esc_html__( 'Select Icon', 'ultimate-member' ) . '</option>';
 				if ( ! empty( $value ) && array_key_exists( $value, $um_icons_list ) ) {
 					$html .= '<option ' . $value_attr . ' selected>' . esc_html( $um_icons_list[ $value ]['label'] ) . '</option>';
 				}
@@ -650,7 +650,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				// Required modal scripts for proper functioning
 				UM()->admin()->enqueue()->load_modal();
 
-				$html .= '<select name="um_ui_icon_new" id="um_ui_icon_new" class="um-icon-select-field" data-placeholder="' . esc_attr__( 'Select Icon', 'ultimate-member' ) . '" ><option value="">' . esc_html__( 'Select Icon', 'ultimate-member' ) . '</option>';
+				$html .= '<select name="um_ui_icon_new" id="um_ui_icon_new" class="um-icon-select-field" data-nonce="' . esc_attr( wp_create_nonce( 'um_get_icons' ) ) . '" data-placeholder="' . esc_attr__( 'Select Icon', 'ultimate-member' ) . '" ><option value="">' . esc_html__( 'Select Icon', 'ultimate-member' ) . '</option>';
 				$html .= '</select>';
 
 				$html .= '<span class="um_admin_fonticon_wrapper"><span>' . esc_html__( 'The selected icon is using an outdated version. Please select the icon above to use latest version.', 'ultimate-member' ) . '</span>
@@ -696,7 +696,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$data = array_merge( $data, $field_data['data'] );
 			}
 
-			$data_attr = '';
+			$data_attr = ' data-nonce="' . esc_attr( wp_create_nonce( 'um_get_users_dropdown_list' ) ) . '"';
 			foreach ( $data as $key => $value ) {
 				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
@@ -1112,7 +1112,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$html = "<input type=\"hidden\" $id_attr_hidden $name_attr value=\"0\" " . disabled( ! empty( $field_data['disabled'] ), true, false ) . " />{$field_html}";
 
 			if ( ! empty( $field_data['upgrade_cb'] ) ) {
-				$html .= '<div class="um-same-page-update-wrapper um-same-page-update-' . esc_attr( $field_data['upgrade_cb'] ) . '"><div class="um-same-page-update-description">' . $field_data['upgrade_description'] . '</div><input type="button" data-upgrade_cb="' . $field_data['upgrade_cb'] . '" class="button button-primary um-admin-form-same-page-update" value="' . esc_attr__( 'Run', 'ultimate-member' ) . '"/>
+				$html .= '<div class="um-same-page-update-wrapper um-same-page-update-' . esc_attr( $field_data['upgrade_cb'] ) . '"><div class="um-same-page-update-description">' . $field_data['upgrade_description'] . '</div><input type="button" data-upgrade_cb="' . esc_attr( $field_data['upgrade_cb'] ) . '" class="button button-primary um-admin-form-same-page-update" data-nonce="' . esc_attr( wp_create_nonce( 'um_same_page_update' . $field_data['upgrade_cb'] ) ) . '" value="' . esc_attr__( 'Run', 'ultimate-member' ) . '"/>
 					<div class="upgrade_log"></div></div>';
 			}
 
@@ -1210,7 +1210,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$data['placeholder'] = $field_data['placeholder'];
 			}
 
-			$data_attr = '';
+			$data_attr = ' data-nonce="' . esc_attr( wp_create_nonce( 'um_page_select' . $id ) ) . '"';
 			foreach ( $data as $key => $value ) {
 				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
@@ -1649,7 +1649,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				'field_id' => $field_data['id']
 			);
 
-			$data_attr = '';
+			$data_attr = ' data-nonce="' . esc_attr( wp_create_nonce( 'um-ajax-button-' . $field_data['id'] ) ) . '"';
 			foreach ( $data as $key => $value ) {
 				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
@@ -1700,7 +1700,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				'member_directory'  => $post->ID
 			);
 
-			$data_attr = '';
+			$data_attr = ' data-nonce="' . esc_attr( wp_create_nonce( 'um_md_default_filters_settings' ) ) . '"';
 			foreach ( $data as $key => $value ) {
 				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}

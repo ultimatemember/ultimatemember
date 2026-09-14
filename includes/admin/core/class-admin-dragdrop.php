@@ -34,18 +34,17 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 		 * Update order of fields.
 		 */
 		public function update_order() {
-			UM()->admin()->check_ajax_nonce();
-			// phpcs:disable WordPress.Security.NonceVerification -- already verified here
-
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
-			}
-
 			if ( empty( $_POST['form_id'] ) ) {
 				wp_send_json_error( __( 'Invalid form ID.', 'ultimate-member' ) );
 			}
-
 			$form_id = absint( $_POST['form_id'] );
+
+			check_ajax_referer( 'um_update_order_' . get_the_ID() );
+
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
+			}
+
 			if ( empty( $form_id ) ) {
 				wp_send_json_error( __( 'Invalid form ID.', 'ultimate-member' ) );
 			}
@@ -159,7 +158,6 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 			update_option( 'um_form_rowdata_' . $form_id, $this->row_data );
 
 			UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
-			// phpcs:enable WordPress.Security.NonceVerification -- already verified here
 		}
 
 		/**
@@ -179,7 +177,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 
 				<div class="um-admin-drag-row-icons">
 					<a href="javascript:void(0);" class="um-admin-drag-rowsub-add um-tip-n" title="<?php esc_attr_e( 'Add Row', 'ultimate-member' ); ?>" data-row_action="add_subrow"><i class="um-icon-plus"></i></a>
-					<a href="javascript:void(0);" class="um-admin-drag-row-edit um-tip-n" title="<?php esc_attr_e( 'Edit Row', 'ultimate-member' ); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo esc_attr( get_the_ID() ); ?>"><i class="um-faicon-pencil"></i></a>
+					<a href="javascript:void(0);" class="um-admin-drag-row-edit um-tip-n" title="<?php esc_attr_e( 'Edit Row', 'ultimate-member' ); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo esc_attr( get_the_ID() ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_dynamic_content_um_admin_edit_field_popup' ) ); ?>"><i class="um-faicon-pencil"></i></a>
 					<span class="um-admin-drag-row-start"><i class="um-icon-arrow-move"></i></span>
 					<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Delete Row', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-row"><i class="um-faicon-trash-o"></i></a>
 				</div>
@@ -234,21 +232,18 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 
 			</div>
 
-
 			<form action="" method="post" class="um_update_order">
 
 				<input type="hidden" name="form_id" id="form_id" value="<?php echo esc_attr( get_the_ID() ); ?>" />
 				<input type="hidden" name="action" value="um_update_order" />
-				<input type="hidden" name="nonce" value="<?php echo esc_attr( wp_create_nonce( 'um-admin-nonce' ) ); ?>" />
+				<input type="hidden" name="nonce" value="<?php echo esc_attr( wp_create_nonce( 'um_update_order_' . get_the_ID() ) ); ?>" />
 
 				<div class="um_update_order_fields">
 
 				</div>
 
 			</form>
-
 			<?php
-
 		}
 	}
 }

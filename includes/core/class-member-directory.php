@@ -3249,16 +3249,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			<?php
 		}
 
-
 		/**
 		 * AJAX handler - Get options for the member directory "Admin filtering"
 		 * @version 2.1.12
 		 */
-		function default_filter_settings() {
-			UM()->admin()->check_ajax_nonce();
+		public function default_filter_settings() {
+			check_ajax_referer( 'um_md_default_filters_settings' );
 
 			// we can't use function "sanitize_key" because it changes uppercase to lowercase
-			$filter_key = sanitize_text_field( $_REQUEST['key'] );
+			$filter_key   = sanitize_text_field( $_REQUEST['key'] );
 			$directory_id = absint( $_REQUEST['directory_id'] );
 
 			$html = $this->show_filter( $filter_key, array( 'form_id' => $directory_id ), false, true );
