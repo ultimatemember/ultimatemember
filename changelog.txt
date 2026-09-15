@@ -1,5 +1,15 @@
 ﻿== Changelog ==
 
+= 2.14.0 September 15, 2026 =
+
+* Enhancements:
+
+  - Added: WP-Stateless compatibility. Files and photos uploaded through Ultimate Member forms are now offloaded to Google Cloud Storage, and removed from the bucket when they are deleted in Ultimate Member.
+
+* Bugfixes:
+
+  - Fixed: Uploaded files and photos were missing in Google Cloud Storage when WP-Stateless was active in stateless mode. The files reached the bucket URL but the file was never actually uploaded.
+
 = 2.13.1 September 15, 2026 =
 
 * Enhancements:

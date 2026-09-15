@@ -167,6 +167,16 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.14.0 2026-09-15 =
+
+**Enhancements**
+
+* Added: WP-Stateless compatibility. Files and photos uploaded through Ultimate Member forms are now offloaded to Google Cloud Storage, and removed from the bucket when they are deleted in Ultimate Member.
+
+**Bugfixes**
+
+* Fixed: Uploaded files and photos were missing in Google Cloud Storage when WP-Stateless was active in stateless mode. The files reached the bucket URL but the file was never actually uploaded.
+
 = 2.13.1 2026-09-15 =
 
 **Enhancements**

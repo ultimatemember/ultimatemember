@@ -506,6 +506,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->user();
 			$this->profile();
 			$this->builtin();
+			$this->wp_stateless();
 			$this->files();
 			$this->form()->hooks();
 			$this->permalinks();
@@ -640,6 +641,19 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->classes['external_integrations'] = new um\core\External_Integrations();
 			}
 			return $this->classes['external_integrations'];
+		}
+
+
+		/**
+		 * @since 2.14.0
+		 *
+		 * @return um\core\WP_Stateless_Integration()
+		 */
+		function wp_stateless() {
+			if ( empty( $this->classes['wp_stateless'] ) ) {
+				$this->classes['wp_stateless'] = new um\core\WP_Stateless_Integration();
+			}
+			return $this->classes['wp_stateless'];
 		}
 
 
