@@ -379,22 +379,65 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			return $this->get_um_user_role( $user_id );
 		}
 
-
 		/**
-		 * @param $user_id
+		 * Get the list of the user roles.
+		 *
+		 * @since 2.0
+		 * @since 2.13.1 Added priority order option
+		 *
+		 * @param int  $user_id        User ID.
+		 * @param bool $priority_order Use ordering the user roles based on their UM priority settings. Since 2.13.1. `false` by default.
 		 *
 		 * @return array|bool
 		 */
-		function get_all_user_roles( $user_id ) {
+		public function get_all_user_roles( $user_id, $priority_order = false ) {
+			$user = get_userdata( $user_id );
+			if ( empty( $user->roles ) ) {
+				return false;
+			}
+
+			if ( false === $priority_order ) {
+				return array_values( $user->roles );
+			}
+
 			$user = get_userdata( $user_id );
 
 			if ( empty( $user->roles ) ) {
 				return false;
 			}
 
-			return array_values( $user->roles );
-		}
+			// User has roles so look for a UM Role one
+			$um_roles_keys = get_option( 'um_roles', array() );
+			if ( ! empty( $um_roles_keys ) ) {
+				$um_roles_keys = array_map(
+					function ( $item ) {
+						return 'um_' . $item;
+					},
+					$um_roles_keys
+				);
+			}
 
+			$orders = array();
+			foreach ( array_values( $user->roles ) as $userrole ) {
+				if ( ! empty( $um_roles_keys ) && in_array( $userrole, $um_roles_keys, true ) ) {
+					$userrole_metakey = substr( $userrole, 3 );
+				} else {
+					$userrole_metakey = $userrole;
+				}
+
+				$rolemeta = get_option( "um_role_{$userrole_metakey}_meta", false );
+
+				if ( ! $rolemeta ) {
+					$orders[ $userrole ] = 0;
+					continue;
+				}
+
+				$orders[ $userrole ] = ! empty( $rolemeta['_um_priority'] ) ? $rolemeta['_um_priority'] : 0;
+			}
+
+			arsort( $orders );
+			return array_keys( $orders );
+		}
 
 		/**
 		 * @param $user_id

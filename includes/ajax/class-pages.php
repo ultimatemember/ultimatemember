@@ -108,20 +108,20 @@ class Pages {
 				}
 				$exclude_ids[] = $p_id;
 			}
-		}
 
-		$um_pages = get_posts(
-			array(
-				'post_type'      => 'page',
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'fields'         => 'ids',
-				's'              => '[ultimatemember',
-			)
-		);
+			$um_pages = get_posts(
+				array(
+					'post_type'      => 'page',
+					'post_status'    => 'publish',
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+					's'              => '[ultimatemember',
+				)
+			);
 
-		if ( ! empty( $um_pages ) ) {
-			$exclude_ids = array_merge( $exclude_ids, $um_pages );
+			if ( ! empty( $um_pages ) ) {
+				$exclude_ids = array_merge( $exclude_ids, $um_pages );
+			}
 		}
 
 		if ( ! empty( $exclude_ids ) ) {

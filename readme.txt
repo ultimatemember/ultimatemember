@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.13.0
+Stable tag: 2.13.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -177,6 +177,29 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Fixed: Uploaded files and photos were missing in Google Cloud Storage when WP-Stateless was active in stateless mode. The files reached the bucket URL but the file was never actually uploaded.
 
+= 2.13.1 2026-09-15 =
+
+**Enhancements**
+
+* Added: Fallback for `wp-cli/wp-config-transformer` library if the wp-config.php file isn't writable.
+* Added: Filter hook `um_members_directory_filter_text` 3rd parameter `$is_default` to check if it's admin filtering or frontend query.
+* Added: 'Administrative capabilities ban' option enabled by default after the first installation.
+* Optimized: Slow SQL query for batch empty account status check.
+* Optimized: Redundant SQL calls when editing the Profile page with callback dropdowns. Cached usermeta existence checks per user and key during a single load (Reported by @MissVeronica, author @faisalahammad).
+
+**Bugfixes**
+
+* Fixed: Security issue related to an unauthenticated visitor can store JavaScript that runs in an administrator's session, through their own profile name. (Reported by Karthik Ramakrishnan and WPScan team). Fixed `um_convert_tags()` function and applied the escapers throughout the placeholder replacement.
+* Fixed: Using LIKE compare for the text-type filters with custom usermeta table (Reported by @MissVeronica, author @faisalahammad).
+* Fixed: "Can user edit this field?" field setting displaying only for the User Profile form fields.
+* Fixed: Getting the pages list in the wp-admin UM > Settings > General > Pages section.
+* Fixed: Displaying the field-type time on the User Profile page.
+* Fixed: Using `illegal_user_logins` for the current admin user with the username specified in the illegal user logins list.
+
+**Deprecated**
+
+* Deprecated: Filter hook `um_members_directory_filter_text_meta_value` is fully deprecated, replacement isn't required for the text-type filter field.
+
 = 2.13.0 2026-08-24 =
 
 **Enhancements**
@@ -247,6 +270,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.13.1 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.13.0 =
 This version fixes a security related bug. Upgrade immediately.

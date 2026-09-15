@@ -34,7 +34,16 @@ class Users {
 		$blocked_words = (string) UM()->options()->get( 'blocked_words' );
 		if ( $blocked_words ) {
 			$um_usernames = array_map( 'trim', explode( "\n", strtolower( $blocked_words ) ) );
-			$usernames    = array_unique( array_merge( $usernames, $um_usernames ) );
+
+			if ( is_user_logged_in() ) {
+				// Exclude the current user's login from the list of blocked usernames. Because it blocks the current user edit profile.
+				$current_userdata = get_userdata( get_current_user_id() );
+				$current_login    = $current_userdata->user_login;
+
+				$um_usernames = array_diff( $um_usernames, array( $current_login ) );
+			}
+
+			$usernames = array_unique( array_merge( $usernames, $um_usernames ) );
 		}
 		return $usernames;
 	}
@@ -419,7 +428,7 @@ class Users {
 							'{account_activation_link}',
 						),
 						'tags_replace'  => array(
-							UM()->permalinks()->activate_url( $user_id ),
+							esc_url( UM()->permalinks()->activate_url( $user_id ) ),
 						),
 					),
 				)
@@ -788,8 +797,8 @@ class Users {
 					'{password}',
 				);
 				$tags_replace = array(
-					$reset_pw_link,
-					__( 'Your set password', 'ultimate-member' ),
+					esc_url( $reset_pw_link ),
+					esc_html__( 'Your set password', 'ultimate-member' ),
 				);
 
 				if ( 'welcome_email' === $email_slug ) {
@@ -798,10 +807,10 @@ class Users {
 
 					$set_password_required = get_user_meta( $user_id, 'um_set_password_required', true );
 					if ( empty( $set_password_required ) || $this->has_status( $user_id, 'pending' ) ) {
-						$tags_replace[] = um_get_core_page( 'login' );
+						$tags_replace[] = esc_url( um_get_core_page( 'login' ) );
 						$tags_replace[] = esc_html__( 'Login to our site', 'ultimate-member' );
 					} else {
-						$tags_replace[] = $reset_pw_link;
+						$tags_replace[] = esc_url( $reset_pw_link );
 						$tags_replace[] = esc_html__( 'Set your password', 'ultimate-member' );
 					}
 				}
@@ -906,16 +915,16 @@ class Users {
 			$reset_pw_link = UM()->password()->reset_url( $user_id );
 
 			$tags_replace = array(
-				$reset_pw_link,
-				__( 'Your set password', 'ultimate-member' ),
+				esc_url( $reset_pw_link ),
+				esc_html__( 'Your set password', 'ultimate-member' ),
 			);
 
 			$set_password_required = get_user_meta( $user_id, 'um_set_password_required', true );
 			if ( empty( $set_password_required ) || $this->has_status( $user_id, 'pending' ) ) {
-				$tags_replace[] = um_get_core_page( 'login' );
+				$tags_replace[] = esc_url( um_get_core_page( 'login' ) );
 				$tags_replace[] = esc_html__( 'Login to our site', 'ultimate-member' );
 			} else {
-				$tags_replace[] = $reset_pw_link;
+				$tags_replace[] = esc_url( $reset_pw_link );
 				$tags_replace[] = esc_html__( 'Set your password', 'ultimate-member' );
 			}
 

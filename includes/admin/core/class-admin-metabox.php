@@ -2472,6 +2472,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_editable':
+					// This setting is only used by profile edit logic.
+					if ( empty( $form_data['mode'] ) || 'profile' !== $form_data['mode'] ) {
+						break;
+					}
+
 					// Make a new field editable by default.
 					if ( false === $this->in_edit ) {
 						$this->edit_mode_value = true;
