@@ -2333,8 +2333,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			// Keep the registry of constant-backed (`api_key`) option ids in sync so the constant
 			// lookup in UM()->options()->get() applies only to those fields — and works on the
-			// frontend, where the settings structure is not built.
-			UM()->options()->set_constant_backed_ids( array_keys( $this->get_api_key_field_ids() ) );
+			// frontend, where the settings structure is not built. Only the sync is admin-only: the
+			// lookup reads the persisted `um_api_key_option_ids` option, so constants keep resolving
+			// in every request context.
+			// Rebuilt only on a regular admin page load, where every extension has loaded its admin
+			// classes and registered its `api_key` fields. Ajax, cron and REST requests load the
+			// ajax/frontend classes instead, so the structure is partial there and rebuilding the
+			// registry would drop the missing ids (and rewrite the option on every request).
+			if ( ! wp_doing_ajax() && ! wp_doing_cron() && ! ( function_exists( 'wp_is_serving_rest_request' ) ? wp_is_serving_rest_request() : defined( 'REST_REQUEST' ) ) ) {
+				UM()->options()->set_constant_backed_ids( array_keys( $this->get_api_key_field_ids() ) );
+			}
 		}
 
 		/**
@@ -2694,7 +2702,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 * For every submitted `api_key` field: write (or update) its value as a `UM_OPTION_<ID>`
 		 * constant, or remove that constant when the value is empty; then strip the value from the
 		 * settings array and delete any legacy DB copy so the secret is never persisted to `um_options`.
-		 * Write failures are collected into a transient consumed by the admin notice.
+		 *
+		 * When wp-config.php can't be written (not writable, or the bundled library is missing) the value
+		 * is stored in `um_options` instead so the key keeps working, and the id is collected into a
+		 * transient consumed by the admin notice, which asks the site owner to move it into wp-config.php.
 		 *
 		 * Hooked on `um_change_settings_before_save` (priority 8, before sanitize/DB write).
 		 *
@@ -2722,9 +2733,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					continue;
 				}
 
-				// Never persist the secret to the DB — strip it from the settings array either way.
+				// The value is handled here, not by the generic settings save — strip it from the settings
+				// array either way so it can't be written to `um_options` twice.
 				$constant = UM()->options()->get_constant_name( $id );
-				$value    = sanitize_text_field( wp_unslash( $settings[ $id ] ) );
+				if ( ! $constant ) {
+					continue;
+				}
+
+				$value = sanitize_text_field( wp_unslash( $settings[ $id ] ) );
 				unset( $settings[ $id ] );
 
 				if ( '' === $value ) {
@@ -2737,8 +2753,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					// Written to wp-config.php — drop any legacy DB copy.
 					UM()->options()->remove( $id );
 				} else {
-					// Couldn't write wp-config.php: keep the legacy DB value (site keeps working) and
-					// surface a notice with manual instructions.
+					// Couldn't write wp-config.php (not writable, or the library is missing): fall back to
+					// storing the value in `um_options` so the key still works, and surface a notice with
+					// manual instructions to move it into wp-config.php later. `get()` reads the constant
+					// first and the DB second, so the fallback is transparent — and a constant added by
+					// hand afterwards immediately takes precedence over the DB copy.
+					UM()->options()->update( $id, $value );
 					$failures[ $id ] = $constant;
 				}
 			}

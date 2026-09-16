@@ -419,7 +419,7 @@ class Users {
 							'{account_activation_link}',
 						),
 						'tags_replace'  => array(
-							UM()->permalinks()->activate_url( $user_id ),
+							esc_url( UM()->permalinks()->activate_url( $user_id ) ),
 						),
 					),
 				)
@@ -788,8 +788,8 @@ class Users {
 					'{password}',
 				);
 				$tags_replace = array(
-					$reset_pw_link,
-					__( 'Your set password', 'ultimate-member' ),
+					esc_url( $reset_pw_link ),
+					esc_html__( 'Your set password', 'ultimate-member' ),
 				);
 
 				if ( 'welcome_email' === $email_slug ) {
@@ -798,10 +798,10 @@ class Users {
 
 					$set_password_required = get_user_meta( $user_id, 'um_set_password_required', true );
 					if ( empty( $set_password_required ) || $this->has_status( $user_id, 'pending' ) ) {
-						$tags_replace[] = um_get_core_page( 'login' );
+						$tags_replace[] = esc_url( um_get_core_page( 'login' ) );
 						$tags_replace[] = esc_html__( 'Login to our site', 'ultimate-member' );
 					} else {
-						$tags_replace[] = $reset_pw_link;
+						$tags_replace[] = esc_url( $reset_pw_link );
 						$tags_replace[] = esc_html__( 'Set your password', 'ultimate-member' );
 					}
 				}
@@ -906,16 +906,16 @@ class Users {
 			$reset_pw_link = UM()->password()->reset_url( $user_id );
 
 			$tags_replace = array(
-				$reset_pw_link,
-				__( 'Your set password', 'ultimate-member' ),
+				esc_url( $reset_pw_link ),
+				esc_html__( 'Your set password', 'ultimate-member' ),
 			);
 
 			$set_password_required = get_user_meta( $user_id, 'um_set_password_required', true );
 			if ( empty( $set_password_required ) || $this->has_status( $user_id, 'pending' ) ) {
-				$tags_replace[] = um_get_core_page( 'login' );
+				$tags_replace[] = esc_url( um_get_core_page( 'login' ) );
 				$tags_replace[] = esc_html__( 'Login to our site', 'ultimate-member' );
 			} else {
-				$tags_replace[] = $reset_pw_link;
+				$tags_replace[] = esc_url( $reset_pw_link );
 				$tags_replace[] = esc_html__( 'Set your password', 'ultimate-member' );
 			}
 

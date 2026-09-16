@@ -249,6 +249,10 @@ th.column-email.column-primary {
   cursor: default;
 }
 
+p.description.um-api-key-config-warning {
+  color: #996800;
+}
+
 .wp-core-ui .button.um-api-key-toggle {
   flex: 0 0 auto;
   display: inline-flex;

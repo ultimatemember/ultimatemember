@@ -1491,7 +1491,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 							'{password_reset_link}',
 						),
 						'tags_replace'  => array(
-							UM()->password()->reset_url( $user_id ),
+							esc_url( UM()->password()->reset_url( $user_id ) ),
 						),
 					),
 				)

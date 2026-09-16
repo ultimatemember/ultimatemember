@@ -626,10 +626,10 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @return array
 		 */
 		public function add_replace_placeholder( $replace_placeholders ) {
-			$replace_placeholders[] = um_user_profile_url();
-			$replace_placeholders[] = get_bloginfo( 'url' );
-			$replace_placeholders[] = um_admin_email();
-			$replace_placeholders[] = um_get_core_page( 'login' );
+			$replace_placeholders[] = esc_url( um_user_profile_url() );
+			$replace_placeholders[] = esc_url( get_bloginfo( 'url' ) );
+			$replace_placeholders[] = esc_html( um_admin_email() );
+			$replace_placeholders[] = esc_url( um_get_core_page( 'login' ) );
 			$replace_placeholders[] = esc_html__( 'Your set password', 'ultimate-member' );
 			return $replace_placeholders;
 		}

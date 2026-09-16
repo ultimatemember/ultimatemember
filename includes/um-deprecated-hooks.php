@@ -294,3 +294,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @depecated 2.11.5
  * @hook um_api_output_format
  */
+
+/**
+ * Filters the Member Directory filter value during using the UM custom usermeta table.
+ *
+ * @param {string} $value Filter value.
+ *
+ * @return {string} Filter value.
+ *
+ * @since 2.1.17
+ * @depecated 2.13.1
+ * @hook um_members_directory_filter_text_meta_value
+ */
