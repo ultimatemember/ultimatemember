@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.13.1
+Stable tag: 2.14.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -167,6 +167,12 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.14.0 2026-09-28 =
+
+**Bugfixes**
+
+* Fixed: Security issue related to an unauthenticated PHP Object Injection vulnerability. (Reported by Ananda Dhakal (Patchstack)). Added `um_maybe_unserialize()` function.
+
 = 2.13.1 2026-09-15 =
 
 **Enhancements**
@@ -222,44 +228,12 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
 
-= 2.12.1 2026-07-06 =
-
-**Enhancements**
-
-* Added: Ability to handle local website URLs resources (image, audio, video from Media Library, 3rd-party local URLs embed to iframe) in the oEmbed-type field value.
-* Added: The API key field type for the settings fields.
-
-**Bugfixes**
-
-* Fixed: Security issue, CVE ID: CVE-2026-4248. Extern blacklist filter for convert_tag replace placeholders function. (Additional keys were researched by Hrro. This info added for the Wordfence team if they need this information).
-* Fixed: Security issue when accidentally `manage_options` level user role can be listed in the User Role dropdown on the registration/edit profile forms. (Researched by Haitam Lazaar).
-* Fixed: Set <iframe> size proportions during responsive handlers.
-* Fixed: mousewheel action during member directory loading and overlay is displayed.
-* Fixed: WP_Styles notice due to not loaded `um_modal` styles.
-* Fixed: oEmbed-type field styles.
-
-**Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
-
-= 2.12.0 2026-06-12 =
-
-**Bugfixes**
-
-* Fixed: Security issue, CVE ID: CVE-2026-7761.
-  ** Restricted `get_directory_by_hash()` function to only match posts with post_type='um_directory' and publish post status.
-  ** Used `0 === strpos()` instead of `strstr()` for getting proper post_data.
-  ** Added condition for getting only allowed fields in tagline_fields and reveal_fields to `build_user_card_data()`.
-* Fixed: Security issue, CVE ID: CVE-2026-8489.
-  ** Used WordPress native `wp_kses()` escaper for displaying user_description field. Used WordPress native `make_clickable()` function to make raw links clickable.
-* Fixed: Security issue, CVE ID: CVE-2026-xxxx. Make the role and status visible for the user who can edit these users in the request. Reported by [Ben Tamam](bentamam.github.io).
-* Fixed: Remove UM option function when the option value equals "0".
-
-**Deprecated**
-
-* Temporary deprecated: UM REST API. Legacy feature that has to be refactored. Will be refactored and re-released soon.
-
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.14.0 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.13.1 =
 This version fixes a security related bug. Upgrade immediately.

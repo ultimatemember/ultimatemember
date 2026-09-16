@@ -2385,7 +2385,7 @@ function um_get_default_cover_uri() {
  * This method checks if the given data is serialized and unserializes it
  * while disallowing deserialization of objects to prevent potential security risks.
  *
- * @since 2.13.1
+ * @since 2.14.0
  *
  * @param string $data The data that may be serialized.
  *

@@ -1,5 +1,12 @@
 ﻿== Changelog ==
 
+= 2.14.0 September 28, 2026 =
+
+* Bugfixes:
+
+  - Fixed: Security issue related to an unauthenticated PHP Object Injection vulnerability. (Reported by Ananda Dhakal (Patchstack)). Added `um_maybe_unserialize()` function.
+
+
 = 2.13.1 September 15, 2026 =
 
 * Enhancements:
