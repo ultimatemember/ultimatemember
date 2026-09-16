@@ -16,9 +16,12 @@ if ( ! class_exists( 'um\admin\Admin_Functions' ) ) {
 		/**
 		 * Check wp-admin nonce
 		 *
-		 * @param bool $action
+		 * @depecated 2.14.0
+		 *
+		 * @param bool|string $action
 		 */
 		public function check_ajax_nonce( $action = false ) {
+			// _deprecated_function( __METHOD__, '2.14.0' ); todo uncomment as soon as all extensions are ready for 3.0 in the old UI.
 			$nonce  = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( $_REQUEST['nonce'] ) : '';
 			$action = empty( $action ) ? 'um-admin-nonce' : $action;
 

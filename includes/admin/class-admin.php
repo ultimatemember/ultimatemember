@@ -559,7 +559,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'absint',
 					),
 					'_in_group'                       => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'empty_absint', // TODO permanently delete or set as `empty_absint`.
 					),
 					'_visibility'                     => array(
 						'sanitize' => 'key',

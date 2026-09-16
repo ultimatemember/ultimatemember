@@ -39,7 +39,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 			}
 			$form_id = absint( $_POST['form_id'] );
 
-			check_ajax_referer( 'um_update_order_' . get_the_ID() );
+			check_ajax_referer( 'um_update_order_' . $form_id );
 
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
@@ -236,7 +236,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 
 				<input type="hidden" name="form_id" id="form_id" value="<?php echo esc_attr( get_the_ID() ); ?>" />
 				<input type="hidden" name="action" value="um_update_order" />
-				<input type="hidden" name="nonce" value="<?php echo esc_attr( wp_create_nonce( 'um_update_order_' . get_the_ID() ) ); ?>" />
+				<input type="hidden" name="_wpnonce" value="<?php echo esc_attr( wp_create_nonce( 'um_update_order_' . get_the_ID() ) ); ?>" />
 
 				<div class="um_update_order_fields">
 

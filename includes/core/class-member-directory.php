@@ -919,6 +919,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 							$custom_dropdown .= ' data-member-directory="yes"';
 							$custom_dropdown .= ' data-um-parent="' . esc_attr( $attrs['parent_dropdown_relationship'] ) . '"';
+							$custom_dropdown .= ' data-parent-nonce="' . esc_attr( wp_create_nonce( 'um-select-options' . $attrs['parent_dropdown_relationship'] ) ) . '"';
 
 							if ( isset( $_GET[ 'filter_' . $attrs['parent_dropdown_relationship'] . '_' . $unique_hash ] ) ) {
 								$_POST['parent_option_name'] = $attrs['parent_dropdown_relationship'];
@@ -3003,7 +3004,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * Main Query function for getting members via AJAX
 		 */
 		public function ajax_get_members() {
-			UM()->check_ajax_nonce();
+			if ( empty( $_POST['directory_id'] ) ) {
+				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
+			}
+			$unique_hash = sanitize_text_field( $_POST['directory_id'] );
+
+			check_ajax_referer( 'um-directory-' . $unique_hash );
 
 			if ( UM()->is_rate_limited( 'member_directory' ) ) {
 				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
@@ -3011,12 +3017,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			global $wpdb;
 
-			if ( empty( $_POST['directory_id'] ) ) {
-				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
-			}
-
-			$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
-
+			$directory_id = $this->get_directory_by_hash( $unique_hash );
 			if ( empty( $directory_id ) ) {
 				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
 			}

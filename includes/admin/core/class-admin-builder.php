@@ -744,7 +744,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			 *
 			 * @param {string} $act_id Dynamic content action.
 			 *
-			 * @since 2.13.1
+			 * @since 2.14.0
 			 *
 			 * @example <caption>Doing some code before rendering dynamic modal content with $act_id === 'email_confirmation'.</caption>
 			 * function um_before_render_dynamic_modal_content( $act_id ) {
@@ -793,9 +793,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				$in_column = absint( $_POST['in_column'] );
 			}
 
-			$in_group = null;
-			if ( isset( $_POST['in_group'] ) ) {
-				$in_group = absint( $_POST['in_group'] );
+			$in_group = '';
+			if ( ! empty( $_POST['in_group'] ) ) {
+				$in_group = absint( $_POST['in_group'] ); // TODO maybe permanently delete this data.
 			}
 			// phpcs:enable WordPress.Security.NonceVerification -- already verified here
 
