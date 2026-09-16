@@ -26,17 +26,17 @@ if ( ! is_user_logged_in() ) {
 		<form method="post" action="">
 			<?php
 			/** This action is documented in includes/core/um-actions-profile.php */
-			do_action( 'um_before_form', $args );
+			do_action( 'um_before_form', $args, $form_id );
 			/** This action is documented in includes/core/um-actions-profile.php */
-			do_action( "um_before_{$mode}_fields", $args );
+			do_action( "um_before_{$mode}_fields", $args, $form_id );
 			/** This action is documented in includes/core/um-actions-profile.php */
-			do_action( "um_main_{$mode}_fields", $args );
+			do_action( "um_main_{$mode}_fields", $args, $form_id );
 			/** This action is documented in includes/core/um-actions-profile.php */
-			do_action( 'um_after_form_fields', $args );
+			do_action( 'um_after_form_fields', $args, $form_id );
 			/** This action is documented in includes/core/um-actions-profile.php */
-			do_action( "um_after_{$mode}_fields", $args );
+			do_action( "um_after_{$mode}_fields", $args, $form_id );
 			/** This action is documented in includes/core/um-actions-profile.php */
-			do_action( 'um_after_form', $args );
+			do_action( 'um_after_form', $args, $form_id );
 			?>
 		</form>
 	</div>

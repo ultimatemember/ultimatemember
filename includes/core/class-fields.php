@@ -877,7 +877,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 
 				if ( 'profile' === $this->set_mode ) {
-					if ( ! isset( UM()->form()->post_form['profile_nonce'] ) || false === wp_verify_nonce( UM()->form()->post_form['profile_nonce'], 'um-profile-nonce' . UM()->user()->target_id ) ) {
+					if ( ! isset( UM()->form()->post_form['profile_nonce'], UM()->fields()->set_id ) || false === wp_verify_nonce( UM()->form()->post_form['profile_nonce'], 'um-profile-nonce' . UM()->fields()->set_id . UM()->user()->target_id ) ) {
 						return '';
 					}
 				}
@@ -4177,12 +4177,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			UM()->form()->form_suffix = '-' . $this->global_args['form_id'];
 
 			$this->set_mode = $mode;
+			$this->set_id   = absint( $this->global_args['form_id'] );
 
 			if ( 'profile' === $mode ) {
-				UM()->form()->nonce = wp_create_nonce( 'um-profile-nonce' . UM()->user()->target_id );
+				UM()->form()->nonce = wp_create_nonce( 'um-profile-nonce' . $this->set_id . UM()->user()->target_id );
 			}
-
-			$this->set_id = absint( $this->global_args['form_id'] );
 
 			$this->field_icons = ( isset( $this->global_args['icons'] ) ) ? $this->global_args['icons'] : 'label';
 

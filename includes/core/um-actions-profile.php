@@ -7,8 +7,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * It renders the content of main profile tab.
  *
  * @param array $args
+ * @param int   $form_id
  */
-function um_profile_content_main( $args ) {
+function um_profile_content_main( $args, $form_id ) {
 	if ( ! array_key_exists( 'mode', $args ) ) {
 		return;
 	}
@@ -44,128 +45,140 @@ function um_profile_content_main( $args ) {
 		 * Fires before UM Form content.
 		 *
 		 * @since 1.3.x
+		 * @since 2.14.0 Added $form_id
 		 * @hook  um_before_form
 		 *
 		 * @param {array} $args UM Form shortcode arguments.
+		 * @param {int}   $form_id UM Form ID. Since 2.14.0
 		 *
 		 * @example <caption>Make any custom action before UM form.</caption>
-		 * function my_before_form( $args ) {
+		 * function my_before_form( $args, $form_id ) {
 		 *     // your code here
 		 * }
-		 * add_action( 'um_before_form', 'my_before_form' );
+		 * add_action( 'um_before_form', 'my_before_form', 10, 2 );
 		 */
-		do_action( 'um_before_form', $args );
+		do_action( 'um_before_form', $args, $form_id );
 		/**
 		 * Fires before UM Form fields.
 		 *
 		 * Note: $mode can be equals to 'login', 'profile', 'register'.
 		 *
 		 * @since 1.3.x
+		 * @since 2.14.0 Added $form_id
 		 * @hook  um_before_{$mode}_fields
 		 *
-		 * @param {array} $args UM Form shortcode arguments.
+		 * @param {array} $args    UM Form shortcode arguments.
+		 * @param {int}   $form_id UM Form ID. Since 2.14.0
 		 *
 		 * @example <caption>Make any custom action before UM Profile form fields.</caption>
-		 * function my_before_profile_fields( $args ) {
+		 * function my_before_profile_fields( $args, $form_id ) {
 		 *     // your code here
 		 * }
-		 * add_action( 'um_before_profile_fields', 'my_before_profile_fields' );
+		 * add_action( 'um_before_profile_fields', 'my_before_profile_fields', 10, 2 );
 		 * @example <caption>Make any custom action before UM Login form fields.</caption>
-		 * function my_before_login_fields( $args ) {
+		 * function my_before_login_fields( $args, $form_id ) {
 		 *     // your code here
 		 * }
-		 * add_action( 'um_before_login_fields', 'my_before_login_fields' );
+		 * add_action( 'um_before_login_fields', 'my_before_login_fields', 10, 2 );
 		 * @example <caption>Make any custom action before UM Register form fields.</caption>
-		 * function my_before_register_fields( $args ) {
+		 * function my_before_register_fields( $args, $form_id ) {
 		 *     // your code here
 		 * }
-		 * add_action( 'um_before_register_fields', 'my_before_register_fields' );
+		 * add_action( 'um_before_register_fields', 'my_before_register_fields', 10, 2 );
 		 */
-		do_action( "um_before_{$mode}_fields", $args );
+		do_action( "um_before_{$mode}_fields", $args, $form_id );
 		/**
 		 * Fires for rendering UM Form fields.
 		 *
 		 * Note: $mode can be equals to 'login', 'profile', 'register'.
 		 *
+		 * @param {array} $args UM Form shortcode arguments.
+		 * @param {int}   $form_id UM Form ID. Since 2.14.0
+		 *
 		 * @since 1.3.x
+		 * @since 2.14.0 Added $form_id
 		 * @hook  um_main_{$mode}_fields
 		 *
-		 * @param {array} $args UM Form shortcode arguments.
-		 *
 		 * @example <caption>Make any custom action when profile form fields are rendered.</caption>
-		 * function my_main_profile_fields( $args ) {
+		 * function my_main_profile_fields( $args, $form_id ) {
 		 *     // your code here
 		 * }
-		 * add_action( 'um_main_profile_fields', 'my_main_profile_fields' );
+		 * add_action( 'um_main_profile_fields', 'my_main_profile_fields', 10, 2 );
 		 * @example <caption>Make any custom action when login form fields are rendered.</caption>
-		 * function my_main_login_fields( $args ) {
+		 * function my_main_login_fields( $args, $form_id ) {
 		 *     // your code here
 		 * }
-		 * add_action( 'um_main_login_fields', 'my_main_login_fields' );
+		 * add_action( 'um_main_login_fields', 'my_main_login_fields', 10, 2 );
 		 * @example <caption>Make any custom action when register form fields are rendered.</caption>
-		 * function my_main_register_fields( $args ) {
+		 * function my_main_register_fields( $args, $form_id ) {
 		 *     // your code here
 		 * }
-		 * add_action( 'um_main_register_fields', 'my_main_register_fields' );
+		 * add_action( 'um_main_register_fields', 'my_main_register_fields', 10, 2 );
 		 */
-		do_action( "um_main_{$mode}_fields", $args );
+		do_action( "um_main_{$mode}_fields", $args, $form_id );
 		/**
 		 * Fires after UM Form fields.
 		 *
+		 * @param {array} $args UM Form shortcode arguments.
+		 * @param {int}   $form_id UM Form ID. Since 2.14.0
+		 *
 		 * @since 1.3.x
+		 * @since 2.14.0 Added $form_id.
 		 * @hook  um_after_form_fields
 		 *
-		 * @param {array} $args UM Form shortcode arguments.
-		 *
 		 * @example <caption>Make any custom action after UM Form fields.</caption>
-		 * function my_after_form_fields( $args ) {
+		 * function my_after_form_fields( $args, $form_id ) {
 		 *     // your code here
 		 * }
-		 * add_action( 'um_after_form_fields', 'my_after_form_fields' );
+		 * add_action( 'um_after_form_fields', 'my_after_form_fields', 10, 2 );
 		 */
-		do_action( 'um_after_form_fields', $args );
+		do_action( 'um_after_form_fields', $args, $form_id );
 		/**
 		 * Fires after UM Form fields.
 		 *
 		 * Note: $mode can be equals to 'login', 'profile', 'register'.
 		 *
 		 * @since 1.3.x
+		 * @since 2.14.0 Added $form_id.
 		 * @hook  um_after_{$mode}_fields
 		 *
-		 * @param {array} $args UM Form shortcode arguments.
+		 * @param {array} $args    UM Form shortcode arguments.
+		 * @param {int}   $form_id Form ID. Since 2.14.0
 		 *
 		 * @example <caption>Make any custom action after profile form fields.</caption>
-		 * function my_after_profile_fields( $args ) {
+		 * function my_after_profile_fields( $args, $form_id ) {
 		 *     // your code here
 		 * }
-		 * add_action( 'um_after_profile_fields', 'my_after_profile_fields' );
+		 * add_action( 'um_after_profile_fields', 'my_after_profile_fields', 10, 2 );
 		 * @example <caption>Make any custom action after login form fields.</caption>
-		 * function my_after_login_fields( $args ) {
+		 * function my_after_login_fields( $args, $form_id ) {
 		 *     // your code here
 		 * }
-		 * add_action( 'um_after_login_fields', 'my_after_login_fields' );
+		 * add_action( 'um_after_login_fields', 'my_after_login_fields', 10, 2 );
 		 * @example <caption>Make any custom action after register form fields.</caption>
-		 * function my_after_register_fields( $args ) {
+		 * function my_after_register_fields( $args, $form_id ) {
 		 *     // your code here
 		 * }
-		 * add_action( 'um_after_register_fields', 'my_after_register_fields' );
+		 * add_action( 'um_after_register_fields', 'my_after_register_fields', 10, 2 );
 		 */
-		do_action( "um_after_{$mode}_fields", $args );
+		do_action( "um_after_{$mode}_fields", $args, $form_id );
 		/**
 		 * Fires after UM Form content.
 		 *
 		 * @since 1.3.x
+		 * @since 2.14.0 Added $form_id.
 		 * @hook  um_after_form
 		 *
 		 * @param {array} $args UM Form shortcode arguments.
+		 * @param {int}   $form_id Form ID. Since 2.14.0
 		 *
 		 * @example <caption>Make any custom action after UM Form content.</caption>
-		 * function my_after_form( $args ) {
+		 * function my_after_form( $args, $form_id ) {
 		 *     // your code here
 		 * }
-		 * add_action( 'um_after_form', 'my_after_form' );
+		 * add_action( 'um_after_form', 'my_after_form', 10, 2 );
 		 */
-		do_action( 'um_after_form', $args );
+		do_action( 'um_after_form', $args, $form_id );
 
 	} else {
 		?>
@@ -178,7 +191,7 @@ function um_profile_content_main( $args ) {
 		<?php
 	}
 }
-add_action( 'um_profile_content_main', 'um_profile_content_main' );
+add_action( 'um_profile_content_main', 'um_profile_content_main', 10, 2 );
 
 /**
  * Update user's profile (frontend).
@@ -549,15 +562,17 @@ add_action( 'um_user_edit_profile', 'um_user_edit_profile', 10, 2 );
  * Validate nonce when profile form submit.
  *
  * @param array $submitted_data
+ * @param array $form_data
  */
-function um_profile_validate_nonce( $submitted_data ) {
+function um_profile_validate_nonce( $submitted_data, $form_data ) {
 	$user_id = isset( $submitted_data['user_id'] ) ? $submitted_data['user_id'] : '';
 	$nonce   = isset( $submitted_data['profile_nonce'] ) ? $submitted_data['profile_nonce'] : '';
-	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'um-profile-nonce' . $user_id ) ) {
+
+	if ( empty( $nonce ) || empty( $form_data['form_id'] ) || ! wp_verify_nonce( $nonce, 'um-profile-nonce' . $form_data['form_id'] . $user_id ) ) {
 		wp_die( esc_html__( 'This is not possible for security reasons.', 'ultimate-member' ) );
 	}
 }
-add_action( 'um_submit_form_errors_hook__profile', 'um_profile_validate_nonce', 1 );
+add_action( 'um_submit_form_errors_hook__profile', 'um_profile_validate_nonce', 1, 2 );
 
 // @todo maybe remove that because double validate
 add_filter( 'um_user_pre_updating_files_array', array( UM()->validation(), 'validate_files' ) );
