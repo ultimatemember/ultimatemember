@@ -167,7 +167,7 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.13.1 2026-09-16 =
+= 2.13.1 2026-09-15 =
 
 **Enhancements**
 
@@ -175,14 +175,16 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Added: Filter hook `um_members_directory_filter_text` 3rd parameter `$is_default` to check if it's admin filtering or frontend query.
 * Added: 'Administrative capabilities ban' option enabled by default after the first installation.
 * Optimized: Slow SQL query for batch empty account status check.
-* Optimized: Redundant SQL calls when editing Profile page with callback dropdowns. Cached usermeta existence checks per user and key during a single load (Reported by @MissVeronica, author @faisalahammad).
+* Optimized: Redundant SQL calls when editing the Profile page with callback dropdowns. Cached usermeta existence checks per user and key during a single load (Reported by @MissVeronica, author @faisalahammad).
 
 **Bugfixes**
 
 * Fixed: Security issue related to an unauthenticated visitor can store JavaScript that runs in an administrator's session, through their own profile name. (Reported by Karthik Ramakrishnan and WPScan team). Fixed `um_convert_tags()` function and applied the escapers throughout the placeholder replacement.
-* Fixed: Usign LIKE compare for the text-type filters with custom usermeta table (Reported by @MissVeronica, author @faisalahammad).
+* Fixed: Using LIKE compare for the text-type filters with custom usermeta table (Reported by @MissVeronica, author @faisalahammad).
 * Fixed: "Can user edit this field?" field setting displaying only for the User Profile form fields.
 * Fixed: Getting the pages list in the wp-admin UM > Settings > General > Pages section.
+* Fixed: Displaying the field-type time on the User Profile page.
+* Fixed: Using `illegal_user_logins` for the current admin user with the username specified in the illegal user logins list.
 
 **Deprecated**
 
