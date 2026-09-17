@@ -2379,6 +2379,25 @@ function um_get_default_cover_uri() {
 	return '';
 }
 
+/**
+ * Unserializes data if it is serialized, with security precautions.
+ *
+ * This method checks if the given data is serialized and unserializes it
+ * while disallowing deserialization of objects to prevent potential security risks.
+ *
+ * @since 2.14.0
+ *
+ * @param string $data The data that may be serialized.
+ *
+ * @return mixed The unserialized data if it was serialized, or the original data if not.
+ */
+function um_maybe_unserialize( $data ) {
+	// Security important: Don't use maybe_unserialize() as it allows classes.
+	if ( is_serialized( $data ) ) {
+		$data = unserialize( $data, array( 'allowed_classes' => false ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize, PHPCompatibility.FunctionUse.NewFunctionParameters.unserialize_optionsFound -- ignore classes phpcs ok.
+	}
+	return $data;
+}
 
 /**
  * @param $data
@@ -2390,7 +2409,7 @@ function um_user( $data, $attrs = null ) {
 	switch ( $data ) {
 		default:
 			$value = um_profile( $data );
-			$value = maybe_unserialize( $value );
+			$value = um_maybe_unserialize( $value );
 
 			if ( in_array( $data, array( 'role', 'gender' ), true ) ) {
 				if ( is_array( $value ) ) {
@@ -2400,10 +2419,13 @@ function um_user( $data, $attrs = null ) {
 			}
 			return $value;
 
+		case 'ID':
+			return absint( um_profile( $data ) ); // everytime returns the int type ID.
+
 		case 'user_email':
 			$user_email_in_meta = get_user_meta( um_user( 'ID' ), 'user_email', true );
 			if ( $user_email_in_meta ) {
-				delete_user_meta( um_user( 'ID' ), 'user_email' );
+				delete_user_meta( um_user( 'ID' ), 'user_email' ); // TODO move to the DB update
 			}
 
 			return um_profile( $data );
@@ -2411,7 +2433,7 @@ function um_user( $data, $attrs = null ) {
 		case 'user_login':
 			$user_login_in_meta = get_user_meta( um_user( 'ID' ), 'user_login', true );
 			if ( $user_login_in_meta ) {
-				delete_user_meta( um_user( 'ID' ), 'user_login' );
+				delete_user_meta( um_user( 'ID' ), 'user_login' ); // TODO move to the DB update
 			}
 
 			return um_profile( $data );
@@ -2458,26 +2480,19 @@ function um_user( $data, $attrs = null ) {
 
 			return $full_name;
 
-			break;
-
 		case 'first_and_last_name_initial':
-
 			$f_and_l_initial = '';
 
 			if ( um_user( 'first_name' ) && um_user( 'last_name' ) ) {
-				$initial = um_user( 'last_name' );
+				$initial         = um_user( 'last_name' );
 				$f_and_l_initial = um_user( 'first_name' ) . ' ' . $initial[0];
 			} else {
 				$f_and_l_initial = um_profile( $data );
 			}
 
-			$name = UM()->validation()->safe_name_in_url( $f_and_l_initial );
-			return $name;
-
-			break;
+			return UM()->validation()->safe_name_in_url( $f_and_l_initial );
 
 		case 'display_name':
-
 			$op = UM()->options()->get( 'display_name' );
 
 			$name = '';
@@ -2539,19 +2554,16 @@ function um_user( $data, $attrs = null ) {
 				}
 			}
 
-
-			if ( $op == 'field' && UM()->options()->get( 'display_name_field' ) != '' ) {
+			if ( 'field' === $op && '' !== UM()->options()->get( 'display_name_field' ) ) {
+				$name   = '';
 				$fields = array_filter( preg_split( '/[,\s]+/', UM()->options()->get( 'display_name_field' ) ) );
-				$name = '';
-
 				foreach ( $fields as $field ) {
 					if ( um_profile( $field ) ) {
-
-						$field_value = maybe_unserialize( um_profile( $field ) );
+						$field_value = um_maybe_unserialize( um_profile( $field ) );
 						$field_value = is_array( $field_value ) ? implode( ',', $field_value ) : $field_value;
 
 						$name .= $field_value . ' ';
-					} elseif ( um_user( $field ) && $field != 'display_name' && $field != 'full_name' ) {
+					} elseif ( 'display_name' !== $field && 'full_name' !== $field && um_user( $field ) ) {
 						$name .= um_user( $field ) . ' ';
 					}
 				}
@@ -2581,23 +2593,16 @@ function um_user( $data, $attrs = null ) {
 			 */
 			return apply_filters( 'um_user_display_name_filter', $name, um_user( 'ID' ), ( $attrs == 'html' ) ? 1 : 0 );
 
-			break;
-
 		case 'role_select':
 		case 'role_radio':
-
 			return UM()->roles()->get_role_name( UM()->roles()->get_editable_priority_user_role( um_user( 'ID' ) ) );
-			break;
 
 		case 'submitted':
 			$array = um_profile( $data );
 			if ( empty( $array ) ) {
 				return '';
 			}
-			$array = maybe_unserialize( $array );
-
-			return $array;
-			break;
+			return um_maybe_unserialize( $array );
 
 		case 'password_reset_link':
 			// Avoid using and make it directly with `UM()->password()->reset_url( $user_id )`
@@ -2619,10 +2624,8 @@ function um_user( $data, $attrs = null ) {
 				esc_attr( $data['default'] ),
 				'if ( ! this.getAttribute(\'data-load-error\') ){ this.setAttribute(\'data-load-error\', \'1\');this.setAttribute(\'src\', this.getAttribute(\'data-default\'));}'
 			);
-			break;
 
 		case 'cover_photo':
-
 			$is_default = false;
 
 			if ( um_profile( 'cover_photo' ) ) {
@@ -2630,7 +2633,7 @@ function um_user( $data, $attrs = null ) {
 			} elseif ( um_profile( 'synced_cover_photo' ) ) {
 				$cover_uri = um_profile( 'synced_cover_photo' );
 			} else {
-				$cover_uri = um_get_default_cover_uri();
+				$cover_uri  = um_get_default_cover_uri();
 				$is_default = true;
 			}
 
@@ -2662,24 +2665,13 @@ function um_user( $data, $attrs = null ) {
 
 			$cover_html = $cover_uri ? '<img src="' . esc_attr( $cover_uri ) . '" alt="' . esc_attr( $alt ) . '" loading="lazy" />' : '';
 
-			$cover_html = apply_filters( 'um_user_cover_photo_html__filter', $cover_html, $cover_uri, $alt, $is_default, $attrs );
-			return $cover_html;
-
-			break;
+			return apply_filters( 'um_user_cover_photo_html__filter', $cover_html, $cover_uri, $alt, $is_default, $attrs );
 
 		case 'user_url':
-
-			$value = um_profile( $data );
-
-			return $value;
-
-			break;
-
+			return um_profile( $data );
 
 	}
-
 }
-
 
 /**
  * Get server protocol

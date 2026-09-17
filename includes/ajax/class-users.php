@@ -12,12 +12,18 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Users {
 
+	/**
+	 *
+	 */
 	public function __construct() {
 		add_action( 'wp_ajax_um_get_users', array( $this, 'get_users' ) );
 	}
 
+	/**
+	 * @return void
+	 */
 	public function get_users() {
-		UM()->admin()->check_ajax_nonce();
+		check_ajax_referer( 'um_get_users_dropdown_list' );
 
 		$search_request = ! empty( $_REQUEST['search'] ) ? sanitize_text_field( $_REQUEST['search'] ) : '';
 		$page           = ! empty( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;

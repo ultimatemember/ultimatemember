@@ -729,7 +729,7 @@ function um_after_account_privacy( $args ) {
 
 			<?php } ?>
 
-			<a class="um-request-button um-export-data-button" data-action="um-export-data" href="javascript:void(0);">
+			<a href="javascript:void(0);" class="um-request-button um-export-data-button" data-action="um-export-data" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um-request-um-export-data' ) ); ?>">
 				<?php esc_html_e( 'Request data', 'ultimate-member' ); ?>
 			</a>
 		<?php } ?>
@@ -819,7 +819,7 @@ function um_after_account_privacy( $args ) {
 
 			<?php } ?>
 
-			<a class="um-request-button um-erase-data-button" data-action="um-erase-data" href="javascript:void(0);">
+			<a href="javascript:void(0);" class="um-request-button um-erase-data-button" data-action="um-erase-data" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um-request-um-erase-data' ) ); ?>">
 				<?php esc_html_e( 'Request data erase', 'ultimate-member' ); ?>
 			</a>
 		<?php } ?>
@@ -831,17 +831,17 @@ function um_after_account_privacy( $args ) {
 
 
 function um_request_user_data() {
-	UM()->check_ajax_nonce();
-
 	if ( ! isset( $_POST['request_action'] ) ) {
 		wp_send_json_error( __( 'Wrong request.', 'ultimate-member' ) );
 	}
-
-	$user_id        = get_current_user_id();
-	$password       = ! empty( $_POST['password'] ) ? sanitize_text_field( $_POST['password'] ) : '';
-	$user           = get_userdata( $user_id );
-	$hash           = $user->data->user_pass;
 	$request_action = sanitize_key( $_POST['request_action'] );
+
+	check_ajax_referer( 'um-request-' . $request_action );
+
+	$user_id  = get_current_user_id();
+	$password = ! empty( $_POST['password'] ) ? sanitize_text_field( $_POST['password'] ) : '';
+	$user     = get_userdata( $user_id );
+	$hash     = $user->data->user_pass;
 
 	if ( 'um-export-data' === $request_action ) {
 		if ( UM()->account()->current_password_is_required( 'privacy_download_data' ) ) {

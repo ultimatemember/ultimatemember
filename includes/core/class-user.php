@@ -1274,7 +1274,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					$this->data = $this->toArray( $this->data );
 
 					foreach ( $this->data as $k => $v ) {
-						if ( $k == 'roles' ) {
+						if ( 'roles' === $k ) {
 							$this->profile['wp_roles'] = implode( ',', $v );
 						} elseif ( is_array( $v ) ) {
 							foreach ( $v as $k2 => $v2 ) {
