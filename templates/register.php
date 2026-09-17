@@ -6,7 +6,7 @@
  *
  * Page: "Register"
  *
- * @version 2.7.0
+ * @version 2.14.0
  *
  * @var string $mode
  * @var int    $form_id
