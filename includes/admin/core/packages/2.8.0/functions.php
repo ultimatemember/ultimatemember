@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function um_upgrade_usermeta_count280() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_2.8.0' );
 
 	um_maybe_unset_time_limit();
 
@@ -24,7 +24,7 @@ function um_upgrade_usermeta_count280() {
 
 
 function um_upgrade_metadata_per_user280() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_2.8.0' );
 
 	um_maybe_unset_time_limit();
 
@@ -108,7 +108,7 @@ function um_upgrade_metadata_per_user280() {
 }
 
 function um_upgrade_update_options280() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_2.8.0' );
 
 	um_maybe_unset_time_limit();
 

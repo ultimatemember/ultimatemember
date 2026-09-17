@@ -34,7 +34,7 @@ function um_admin_init_users_select() {
 						action: 'um_get_users', // AJAX action for admin-ajax.php
 						search: params.term, // search query
 						page: params.page || 1, // infinite scroll pagination
-						nonce: um_admin_scripts.nonce
+						_wpnonce: jQuery(this).data('nonce')
 					};
 
 					jQuery.each( jQuery(this)[0].attributes, function() {
@@ -111,7 +111,7 @@ function um_admin_init_pages_select() {
 					action: 'um_get_pages_list', // AJAX action for admin-ajax.php
 					page: params.page || 1, // infinite scroll pagination
 					field_id: fieldID, // select ID
-					nonce: um_admin_scripts.nonce
+					_wpnonce: jQuery(this).data('nonce')
 				};
 			},
 			processResults: function( data, params ) {
@@ -187,7 +187,9 @@ jQuery(document).ready( function() {
 
 
 	jQuery( document.body ).on( 'click', '.um-admin-form-same-page-update', function() {
-		var field_key = jQuery(this).data('upgrade_cb');
+		let $obj = jQuery(this);
+		var field_key = $obj.data('upgrade_cb');
+		let nonce = $obj.data('nonce');
 		jQuery(this).prop( 'disabled', true );
 
 		um_add_same_page_log( field_key, wp.i18n.__( 'Upgrade Process Started...', 'ultimate-member' ) );
@@ -204,7 +206,8 @@ jQuery(document).ready( function() {
 				data: {
 					action: 'um_same_page_update',
 					cb_func: 'um_usermeta_fields',
-					nonce: um_admin_scripts.nonce
+					field_key: field_key,
+					_wpnonce: nonce
 				},
 				success: function( response ) {
 					get_metadata();
@@ -230,7 +233,8 @@ jQuery(document).ready( function() {
 					data: {
 						action: 'um_same_page_update',
 						cb_func: 'um_get_metadata',
-						nonce: um_admin_scripts.nonce
+						field_key: field_key,
+						_wpnonce: nonce
 					},
 					success: function( response ) {
 						if ( typeof response.data.count != 'undefined' ) {
@@ -263,7 +267,8 @@ jQuery(document).ready( function() {
 							action: 'um_same_page_update',
 							cb_func: 'um_update_metadata_per_page',
 							page: current_page,
-							nonce: um_admin_scripts.nonce
+							field_key: field_key,
+							_wpnonce: nonce
 						},
 						success: function( response ) {
 							if ( typeof response.data != 'undefined' ) {
@@ -283,7 +288,7 @@ jQuery(document).ready( function() {
 				}
 			}
 		} else {
-			wp.hooks.doAction( 'um_same_page_upgrade', field_key );
+			wp.hooks.doAction( 'um_same_page_upgrade', field_key, $obj );
 		}
 	});
 
@@ -558,7 +563,7 @@ jQuery(document).ready( function() {
 			data: {
 				key: filter_key,
 				directory_id: directory_id,
-				nonce: um_admin_scripts.nonce
+				_wpnonce: obj.data('nonce')
 			},
 			success: function( data ) {
 				var field_wrapper = obj.parents( '.um-md-default-filters-option-line' ).find('.um-field-wrapper2');

@@ -8,16 +8,16 @@ if ( empty( UM()->builder()->form_id ) ) {
 }
 ?>
 
-<div class="um-admin-builder" data-form_id="<?php echo esc_attr( UM()->builder()->form_id ); ?>">
+<div class="um-admin-builder" data-form_id="<?php echo esc_attr( UM()->builder()->form_id ); ?>" data-update-nonce="<?php echo esc_attr( wp_create_nonce( 'um_form_builder_update' . UM()->builder()->form_id ) ); ?>">
 
 	<div class="um-admin-drag-ctrls-demo um-admin-drag-ctrls">
 		<a href="#" class="active" data-modal="UM_preview_form" data-modal-size="larger"
-			data-dynamic-content="um_admin_preview_form" data-arg1="<?php echo esc_attr( get_the_ID() ); ?>" data-arg2="">
+			data-dynamic-content="um_admin_preview_form" data-arg1="<?php echo esc_attr( get_the_ID() ); ?>" data-arg2="" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_dynamic_content_um_admin_preview_form' ) ); ?>">
 			<?php esc_html_e( 'Live Preview Screen', 'ultimate-member' ); ?>
 		</a>
 
 		<a href="#" class="active" data-modal="UM_preview_form" data-modal-size="smaller"
-			data-dynamic-content="um_admin_preview_form" data-arg1="<?php echo esc_attr( get_the_ID() ); ?>" data-arg2="">
+			data-dynamic-content="um_admin_preview_form" data-arg1="<?php echo esc_attr( get_the_ID() ); ?>" data-arg2="" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_dynamic_content_um_admin_preview_form' ) ); ?>">
 			<?php esc_html_e( 'Live Preview Mobile', 'ultimate-member' ); ?>
 		</a>
 	</div>
@@ -26,7 +26,7 @@ if ( empty( UM()->builder()->form_id ) ) {
 
 	<div class="um-admin-drag">
 
-		<div class="um-admin-drag-ajax" data-form_id="<?php echo esc_attr( UM()->builder()->form_id ); ?>">
+		<div class="um-admin-drag-ajax" data-form_id="<?php echo esc_attr( UM()->builder()->form_id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_dynamic_content_um_admin_show_fields' ) ); ?>">
 			<?php UM()->builder()->show_builder(); ?>
 		</div>
 

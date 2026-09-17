@@ -77,7 +77,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 
 		public function same_page_update_ajax() {
-			UM()->admin()->check_ajax_nonce();
+			if ( empty( $_POST['field_key'] ) ) {
+				wp_send_json_error( __( 'Wrong field', 'ultimate-member' ) );
+			}
+
+			check_ajax_referer( 'um_same_page_update' . sanitize_key( $_POST['field_key'] ) );
 
 			if ( empty( $_POST['cb_func'] ) ) {
 				wp_send_json_error( __( 'Wrong callback', 'ultimate-member' ) );

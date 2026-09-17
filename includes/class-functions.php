@@ -32,21 +32,6 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			return function_exists( 'wp_doing_ajax' ) ? wp_doing_ajax() : defined( 'DOING_AJAX' );
 		}
 
-
-		/**
-		 * Check frontend nonce
-		 *
-		 * @param bool $action
-		 */
-		function check_ajax_nonce( $action = false ) {
-			$nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( $_REQUEST['nonce'] ) : '';
-			$action = empty( $action ) ? 'um-frontend-nonce' : $action;
-
-			if ( ! wp_verify_nonce( $nonce, $action ) ) {
-				wp_send_json_error( esc_js( __( 'Wrong Nonce', 'ultimate-member' ) ) );
-			}
-		}
-
 		/**
 		 * Check if the user rate limit has been reached based on the provided context
 		 *
@@ -923,6 +908,24 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			 * add_filter( 'um_late_escaping_allowed_tags', 'add_extra_kses_allowed_tags', 10, 2 );
 			 */
 			return apply_filters( 'um_late_escaping_allowed_tags', $allowed_html, $context );
+		}
+
+		/**
+		 * Check frontend nonce
+		 *
+		 * @depecated 2.14.0
+		 *
+		 * @param bool|string $action
+		 */
+		public function check_ajax_nonce( $action = false ) {
+			// _deprecated_function( __METHOD__, '2.14.0' ); todo uncomment as soon as all extensions are ready for 3.0 in the old UI.
+
+			$nonce  = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( $_REQUEST['nonce'] ) : '';
+			$action = empty( $action ) ? 'um-frontend-nonce' : $action;
+
+			if ( ! wp_verify_nonce( $nonce, $action ) ) {
+				wp_send_json_error( esc_js( __( 'Wrong Nonce', 'ultimate-member' ) ) );
+			}
 		}
 	}
 }

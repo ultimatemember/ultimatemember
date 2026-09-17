@@ -306,3 +306,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @depecated 2.13.1
  * @hook um_members_directory_filter_text_meta_value
  */
+
+/**
+ * Fires on AJAX muted action.
+ *
+ * @since 1.3.x
+ * @depecated 2.14.0
+ * @hook  um_run_ajax_function__{$hook}
+ *
+ * @param {array} $request Request.
+ */

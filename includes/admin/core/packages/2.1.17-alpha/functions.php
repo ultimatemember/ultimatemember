@@ -1,5 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * @param $tab
@@ -22,11 +24,11 @@ function um_upgrade_get_slug2117( $tab ) {
 
 
 function um_upgrade_profile_tabs2117() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_2.1.17-alpha' );
 
 	um_maybe_unset_time_limit();
 
-	$labels = [
+	$labels = array(
 		'name'              => _x( 'Profile Tabs', 'Post Type General Name', 'ultimate-member' ),
 		'singular_name'     => _x( 'Profile tab', 'Post Type Singular Name', 'ultimate-member' ),
 		'menu_name'         => __( 'Profile Tabs', 'ultimate-member' ),
@@ -44,37 +46,39 @@ function um_upgrade_profile_tabs2117() {
 		'view_items'        => __( 'View Items', 'ultimate-member' ),
 		'search_items'      => __( 'Search Item', 'ultimate-member' ),
 		'not_found'         => __( 'Not found', 'ultimate-member' ),
-	];
+	);
 
-	$args = [
-		'label'                 => __( 'Profile Tabs', 'ultimate-member' ),
-		'description'           => __( '', 'ultimate-member' ),
-		'labels'                => $labels,
-		'supports'              => ['title', 'editor' ],
-		'hierarchical'          => false,
-		'public'                => false,
-		'show_ui'               => true,
-		'show_in_menu'          => false,
-		'menu_position'         => 5,
-		'show_in_admin_bar'     => false,
-		'show_in_nav_menus'     => false,
-		'can_export'            => true,
-		'has_archive'           => false,
-		'exclude_from_search'   => true,
-		'publicly_queryable'    => true,
-		'capability_type'       => 'page',
-	];
+	$args = array(
+		'label'               => __( 'Profile Tabs', 'ultimate-member' ),
+		'description'         => __( '', 'ultimate-member' ),
+		'labels'              => $labels,
+		'supports'            => array( 'title', 'editor' ),
+		'hierarchical'        => false,
+		'public'              => false,
+		'show_ui'             => true,
+		'show_in_menu'        => false,
+		'menu_position'       => 5,
+		'show_in_admin_bar'   => false,
+		'show_in_nav_menus'   => false,
+		'can_export'          => true,
+		'has_archive'         => false,
+		'exclude_from_search' => true,
+		'publicly_queryable'  => true,
+		'capability_type'     => 'page',
+	);
 
 	register_post_type( 'um_profile_tabs', $args );
 
-	$profile_tabs = get_posts( [
-		'post_type'         => 'um_profile_tabs',
-		'orderby'           => 'menu_order',
-		'posts_per_page'    => -1,
-	] );
+	$profile_tabs = get_posts(
+		array(
+			'post_type'      => 'um_profile_tabs',
+			'orderby'        => 'menu_order',
+			'posts_per_page' => -1,
+		)
+	);
 
 	if ( ! empty( $profile_tabs ) ) {
-		$tabs_slugs = [];
+		$tabs_slugs = array();
 
 		foreach ( $profile_tabs as $tab ) {
 			$slug = um_upgrade_get_slug2117( $tab );
@@ -88,7 +92,7 @@ function um_upgrade_profile_tabs2117() {
 				// otherwise use autoincrement and slug generator
 				$auto_increment = UM()->options()->get( 'custom_profiletab_increment' );
 				$auto_increment = ! empty( $auto_increment ) ? $auto_increment : 1;
-				$tab_slug = "custom_profiletab_{$auto_increment}";
+				$tab_slug       = "custom_profiletab_{$auto_increment}";
 			}
 
 			if ( UM()->external_integrations()->is_wpml_active() ) {

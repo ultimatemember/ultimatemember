@@ -181,19 +181,21 @@ $description_key = UM()->profile()->get_show_bio_key( $args );
 				 * 10 - `um_profile_content_reviews()` displays `Reviews` menu tab's content.
 				 * 10 - `show_wall()` displays `Activity` menu tab's content.
 				 *
-				 * @param {array} $args User Profile data.
+				 * @param {array} $args    User Profile data.
+				 * @param {int}   $form_id Form ID. Since 2.14.0.
 				 *
 				 * @since 1.3.x
+				 * @since 2.14.0 Added $form_id.
 				 * @hook  um_profile_content_{$nav}
 				 *
 				 * @example <caption>Display some content in User Profile `main` nav content tab.</caption>
-				 * function my_profile_content_main( $args ) {
+				 * function my_profile_content_main( $args, $form_id ) {
 				 *     // your code here
 				 *     echo $content;
 				 * }
-				 * add_action( 'um_profile_content_main', 'my_profile_content_main' );
+				 * add_action( 'um_profile_content_main', 'my_profile_content_main', 10, 2 );
 				 */
-				do_action( "um_profile_content_$nav", $args );
+				do_action( "um_profile_content_$nav", $args, $form_id );
 				/**
 				 * Fires for adding content in User Profile nav > subnav menu content tab.
 				 * $nav profile menu tab key.
@@ -225,18 +227,20 @@ $description_key = UM()->profile()->get_show_bio_key( $args );
 				 * 10 - `um_profile_content_product_reviews()` displays `Product Reviews` submenu of Woocommerce tab's content.
 				 *
 				 * @param {array} $args User Profile data.
+				 * @param {int}   $form_id Form ID. Since 2.14.0.
 				 *
 				 * @since 1.3.x
+				 * @since 2.14.0 Added $form_id.
 				 * @hook  um_profile_content_{$nav}_{$subnav}
 				 *
 				 * @example <caption>Display some content in User Profile `main` nav and `step2` subnav content tab.</caption>
-				 * function my_profile_content_main_step2( $args ) {
+				 * function my_profile_content_main_step2( $args, $form_id ) {
 				 *     // your code here
 				 *     echo $content;
 				 * }
-				 * add_action( 'um_profile_content_main_step2', 'my_profile_content_main_step2' );
+				 * add_action( 'um_profile_content_main_step2', 'my_profile_content_main_step2', 10, 2 );
 				 */
-				do_action( "um_profile_content_{$nav}_$subnav", $args );
+				do_action( "um_profile_content_{$nav}_$subnav", $args, $form_id );
 				?>
 				<div class="clear"></div>
 			</div>
@@ -262,9 +266,9 @@ $description_key = UM()->profile()->get_show_bio_key( $args );
 					<?php
 					// Custom hook to display tabbed content
 					/** This action is documented in ultimate-member/templates/profile.php */
-					do_action( "um_profile_content_$nav", $args );
+					do_action( "um_profile_content_$nav", $args, $form_id );
 					/** This action is documented in ultimate-member/templates/profile.php */
-					do_action( "um_profile_content_{$nav}_$subnav", $args );
+					do_action( "um_profile_content_{$nav}_$subnav", $args, $form_id );
 					?>
 					<div class="clear"></div>
 				</div>

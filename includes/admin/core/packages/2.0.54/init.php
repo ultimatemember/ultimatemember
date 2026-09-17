@@ -12,7 +12,7 @@
 			dataType: 'json',
 			data: {
 				action: 'um_roles2054',
-				nonce: um_admin_scripts.nonce
+				_wpnonce: um_inside_package_nonce
 			},
 			success: function( response ) {
 				if ( typeof response.data != 'undefined' ) {
