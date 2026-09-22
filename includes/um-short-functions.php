@@ -1423,7 +1423,7 @@ function um_get_metadefault( $id ) {
  */
 function um_submitting_account_page() {
 	// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
-	return ( ! empty( $_POST['_um_account'] ) && is_user_logged_in() );
+	return um_is_predefined_page( 'account' ) && ! empty( $_POST['_um_account'] ) && is_user_logged_in();
 }
 
 /**
