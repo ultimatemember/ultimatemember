@@ -53,6 +53,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$this->extensions_page();
 
+			$this->template_version();
+
 			$this->child_theme_required();
 
 			// Removed for now to avoid the bad reviews.
@@ -873,6 +875,33 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					'message' => $message,
 				),
 				2
+			);
+		}
+
+		/**
+		 * Notify administrators about outdated custom templates.
+		 */
+		public function template_version() {
+			if ( ! current_user_can( 'manage_options' ) || ! UM()->common()->theme()->is_outdated_template_exist() ) {
+				return;
+			}
+
+			$link = admin_url( 'admin.php?page=um_options&tab=advanced&section=override_templates' );
+			$this->add_notice(
+				'um_override_templates_notice',
+				array(
+					'class'       => 'error',
+					'message'     => '<p>' . wp_kses(
+						sprintf(
+							// translators: %s override templates page link.
+							__( 'Your templates are out of date. Please visit <a href="%s">override templates status page</a> and update templates.', 'ultimate-member' ),
+							esc_url( $link )
+						),
+						UM()->get_allowed_html( 'admin_notice' )
+					) . '</p>',
+					'dismissible' => false,
+				),
+				10
 			);
 		}
 

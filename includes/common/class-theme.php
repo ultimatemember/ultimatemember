@@ -142,9 +142,9 @@ class Theme {
 					$theme_file = false;
 					if ( ! empty( $located ) ) {
 						$theme_file = $located['theme'];
-					} elseif ( in_array( $file, $exceptions, true ) && file_exists( get_stylesheet_directory() . '/ultimate-member/' . $file ) ) {
+					} elseif ( 'um' === $key && in_array( $file, $exceptions, true ) && file_exists( get_stylesheet_directory() . '/ultimate-member/' . $file ) ) {
 						$theme_file = get_stylesheet_directory() . '/ultimate-member/' . $file;
-					} elseif ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
+					} elseif ( 'um' === $key && file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
 						$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $file;
 					}
 
