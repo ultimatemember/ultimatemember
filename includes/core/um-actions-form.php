@@ -847,6 +847,13 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 				}
 				break;
 
+			case 'threads_url':
+				if ( ! UM()->validation()->is_url( $submitted_data[ $key ], 'threads.com' ) ) {
+					// translators: %s: label.
+					UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
+				}
+				break;
+
 			case 'linkedin_url':
 				if ( ! UM()->validation()->is_url( $submitted_data[ $key ], 'linkedin.com' ) ) {
 					// translators: %s: label.

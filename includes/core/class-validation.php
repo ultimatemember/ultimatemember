@@ -353,27 +353,34 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		 * Is url
 		 *
 		 * @param $url
-		 * @param bool $social
+		 * @param string|false $social Allowed social host (also accepts its www variant).
 		 *
 		 * @return bool
 		 */
-		function is_url( $url, $social = false ) {
+		public function is_url( $url, $social = false ) {
 			if ( ! $url ) {
 				return true;
 			}
 
 			if ( $social ) {
-
-				if ( strstr( $url, $social ) && '' != str_replace( $social, '', $url ) ) {
-					return true;
+				// Preserve support for social links entered without a protocol.
+				if ( ! preg_match( '~^[a-z][a-z0-9+.-]*:~i', $url ) ) {
+					$url = 'https://' . $url;
+				}
+				if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+					return false;
 				}
 
-			} else {
+				$parts  = wp_parse_url( $url );
+				$social = strtolower( $social );
+				return isset( $parts['scheme'], $parts['host'] )
+					&& in_array( strtolower( $parts['scheme'] ), array( 'http', 'https' ), true )
+					&& in_array( strtolower( $parts['host'] ), array( $social, 'www.' . $social ), true )
+					&& ! isset( $parts['user'] )
+					&& ! isset( $parts['pass'] );
 
-				if ( strstr( $url, 'http://' ) || strstr( $url, 'https://' ) ) {
-					return true;
-				}
-
+			} elseif ( false !== strpos( $url, 'http://' ) || false !== strpos( $url, 'https://' ) ) {
+				return true;
 			}
 
 			return false;
