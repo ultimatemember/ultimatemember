@@ -22,6 +22,7 @@ class Upload_Security {
 		add_action( 'init', array( $this, 'maybe_schedule' ), 20 );
 		add_action( self::EVENT, array( $this, 'run' ) );
 		add_action( 'admin_post_um_check_upload_security', array( $this, 'recheck' ) );
+		add_action( 'admin_post_um_set_htaccess_rule', array( $this, 'set_htaccess_rule' ) );
 	}
 
 	/** Register one daily action after Action Scheduler has initialized. */
@@ -65,6 +66,15 @@ class Upload_Security {
 		return wp_nonce_url( admin_url( 'admin-post.php?action=um_check_upload_security' ), self::EVENT );
 	}
 
+	/** @return string Administrator-only manual set htaccess rule. */
+	public function set_htaccess_url() {
+		global $is_apache;
+		if ( ! $is_apache ) {
+			return '';
+		}
+		return wp_nonce_url( admin_url( 'admin-post.php?action=um_set_htaccess_rule' ), 'set_htaccess_rule' );
+	}
+
 	/** Run a bounded manual check, including when WP-Cron is disabled. */
 	public function recheck() {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -72,6 +82,38 @@ class Upload_Security {
 		}
 		check_admin_referer( self::EVENT );
 		$this->run();
+		wp_safe_redirect( admin_url( 'site-health.php' ) );
+		exit;
+	}
+
+	/** Run a bounded manual check, including when WP-Cron is disabled. */
+	public function set_htaccess_rule() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You are not allowed to run this check.', 'ultimate-member' ), '', array( 'response' => 403 ) );
+		}
+
+		global $is_apache;
+		if ( ! $is_apache ) {
+			wp_die( esc_html__( 'No need .htaccess for non-Apache servers.', 'ultimate-member' ), '', array( 'response' => 403 ) );
+		}
+
+		check_admin_referer( 'set_htaccess_rule' );
+
+		$result = $this->get_result();
+		if ( false !== $result['htaccess_rule'] ) {
+			wp_die( esc_html__( '.htaccess already has necessary rule.', 'ultimate-member' ), '', array( 'response' => 403 ) );
+		}
+
+		$upload_dir = UM()->uploader()->get_upload_base_dir();
+		if ( ! wp_is_writable( $upload_dir ) ) {
+			wp_die( esc_html__( 'Upload directory is not writable.', 'ultimate-member' ), '', array( 'response' => 403 ) );
+		}
+
+		$htp = fopen( wp_normalize_path( $upload_dir . '.htaccess' ), 'w' );
+		fputs( $htp, 'deny from all' ); // $file being the .htpasswd file
+
+		$this->run(); // recheck direct access to the files after writing .htaccess
+
 		wp_safe_redirect( admin_url( 'site-health.php' ) );
 		exit;
 	}

@@ -153,7 +153,13 @@ class Site_Health {
 	public function upload_security_test() {
 		global $is_apache;
 
-		$checker  = UM()->common()->upload_security();
+		$checker   = UM()->common()->upload_security();
+		$actions   = array();
+		$actions[] = '<a href="' . esc_url( $checker->recheck_url() ) . '">' . esc_html__( 'Check upload protection again', 'ultimate-member' ) . '</a>';
+		if ( $is_apache ) {
+			$actions[] = '<a href="' . esc_url( $checker->set_htaccess_url() ) . '">' . esc_html__( 'Set `deny from all` .htaccess rule for Ultimate Member uploads', 'ultimate-member' ) . '</a>';
+		}
+
 		$check    = $checker->get_result();
 		$result   = array(
 			'label'       => __( 'Ultimate Member upload protection could not be verified', 'ultimate-member' ),
@@ -163,7 +169,7 @@ class Site_Health {
 				'color' => self::BADGE_COLOR,
 			),
 			'description' => '',
-			'actions'     => '<p><a href="' . esc_url( $checker->recheck_url() ) . '">' . esc_html__( 'Check upload protection again', 'ultimate-member' ) . '</a></p>',
+			'actions'     => '<p>' . implode( '<br />', $actions ) . '</p>',
 			'test'        => 'um_upload_security',
 		);
 		$messages = array(
