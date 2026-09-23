@@ -1,6 +1,10 @@
 <?php
 namespace um\common;
 
+use DirectoryIterator;
+use Throwable;
+use WP_Error;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -46,16 +50,14 @@ class Upload_Security {
 
 	/** @return array Cached evidence shared by notices and Site Health. */
 	public function get_result() {
-		return wp_parse_args(
-			get_option( self::OPTION, array() ),
-			array(
-				'state'         => 'pending',
-				'checked_at'    => 0,
-				'reason'        => '',
-				'probes'        => array(),
-				'htaccess_rule' => false,
-			)
+		$default = array(
+			'state'         => 'pending',
+			'checked_at'    => 0,
+			'reason'        => '',
+			'probes'        => array(),
+			'htaccess_rule' => false,
 		);
+		return wp_parse_args( get_option( self::OPTION, array() ), $default );
 	}
 
 	/** @return string Administrator-only manual retry URL. */
@@ -129,8 +131,9 @@ class Upload_Security {
 	/**
 	 * An HTTP error alone must never establish successful protection.
 	 *
-	 * @param array|\WP_Error $response HTTP response.
+	 * @param array|WP_Error $response HTTP response.
 	 * @param string          $marker   Expected synthetic content.
+	 *
 	 * @return array
 	 */
 	public static function classify_response( $response, $marker ) {
@@ -163,15 +166,21 @@ class Upload_Security {
 		);
 	}
 
-	/** @return array Latest check. A lock prevents overlapping manual and cron probes. */
+	/**
+	 * Run the upload access check, unless a recent run holds the lock.
+	 *
+	 * A short-lived lock prevents overlapping manual and cron probes.
+	 *
+	 * @return array Latest check result (fresh, or the cached result when locked).
+	 */
 	public function run() {
-		$lock = (int) get_option( self::LOCK );
-		if ( $lock && $lock < time() - 120 ) {
-			delete_option( self::LOCK );
+		$transient = get_transient( self::LOCK );
+		if ( false !== $transient ) {
+			return $this->get_result(); // Returns cached result if transient exists.
 		}
-		if ( ! add_option( self::LOCK, time(), '', false ) ) {
-			return $this->get_result();
-		}
+
+		set_transient( self::LOCK, 1, 2 * MINUTE_IN_SECONDS );
+
 		$result = array(
 			'state'         => 'unknown',
 			'checked_at'    => time(),
@@ -183,14 +192,18 @@ class Upload_Security {
 			$base = UM()->uploader()->get_upload_base_dir();
 			$url  = UM()->uploader()->get_upload_base_url();
 			if ( is_dir( $base ) ) {
-				$htaccess = trailingslashit( $base ) . '.htaccess';
-				if ( is_readable( $htaccess ) ) {
-					$rules                   = file_get_contents( $htaccess, false, null, 0, 65536 );
-					$result['htaccess_rule'] = (bool) preg_match( '/^\s*(?:deny\s+from\s+all|require\s+all\s+denied)\s*(?:#.*)?$/mi', $rules );
+				global $is_apache;
+				// .htaccess is only honored by Apache (and LiteSpeed, which WordPress also reports as Apache); skip the read on nginx/IIS.
+				if ( $is_apache ) {
+					$htaccess = trailingslashit( $base ) . '.htaccess';
+					if ( is_readable( $htaccess ) ) {
+						$rules                   = file_get_contents( $htaccess, false, null, 0, 65536 );
+						$result['htaccess_rule'] = (bool) preg_match( '/^\s*(?:deny\s+from\s+all|require\s+all\s+denied)\s*(?:#.*)?$/mi', $rules );
+					}
 				}
 				$directories = array( '' );
 				// Sample one real user directory, where rules can differ from the root.
-				foreach ( new \DirectoryIterator( $base ) as $entry ) {
+				foreach ( new DirectoryIterator( $base ) as $entry ) {
 					if ( $entry->isDir() && ! $entry->isLink() && ctype_digit( $entry->getFilename() ) ) {
 						$directories[] = $entry->getFilename();
 						break;
@@ -226,14 +239,13 @@ class Upload_Security {
 					$result['reason'] = 'control_failed';
 				}
 			}
-		} catch ( \Throwable $error ) {
+		} catch ( Throwable $error ) {
 			if ( 'exposed' !== $result['state'] ) {
 				$result['state']  = 'unknown';
 				$result['reason'] = 'check_failed';
 			}
 		} finally {
 			update_option( self::OPTION, $result, false );
-			delete_option( self::LOCK );
 		}
 		return $result;
 	}

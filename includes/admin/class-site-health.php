@@ -151,6 +151,8 @@ class Site_Health {
 	 * @return array
 	 */
 	public function upload_security_test() {
+		global $is_apache;
+
 		$checker  = UM()->common()->upload_security();
 		$check    = $checker->get_result();
 		$result   = array(
@@ -198,11 +200,13 @@ class Site_Health {
 					wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $check['checked_at'] )
 				)
 			) . '</p>';
-			$result['description'] .= '<p>' . esc_html(
-				$check['htaccess_rule']
-				? __( 'An Apache deny directive was found in the upload root .htaccess file. Its presence alone does not prove that the server applies it.', 'ultimate-member' )
-				: __( 'No recognized Apache deny directive was found in the upload root .htaccess file. Access may still be restricted in the server configuration; nginx does not use this file.', 'ultimate-member' )
-			) . '</p>';
+			if ( $is_apache ) {
+				$result['description'] .= '<p>' . esc_html(
+					$check['htaccess_rule']
+						? __( 'An Apache deny directive was found in the upload root .htaccess file. Its presence alone does not prove that the server applies it.', 'ultimate-member' )
+						: __( 'No recognized Apache deny directive was found in the upload root .htaccess file. But access may still be restricted in the server configuration.', 'ultimate-member' )
+				) . '</p>';
+			}
 			if ( $check['checked_at'] < time() - DAY_IN_SECONDS ) {
 				$result['description'] .= '<p>' . esc_html__( 'This result is more than a day old. Run the check again to confirm the current configuration.', 'ultimate-member' ) . '</p>';
 				if ( 'good' === $result['status'] ) {
