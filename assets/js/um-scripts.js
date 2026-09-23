@@ -171,13 +171,13 @@ jQuery(document).ready(function() {
 			isModal = true;
 		}
 
-		let parent, mode, src, args, guestToken, nonce;
+		let nonce = jQuery(this).data('nonce');
+		let parent, mode, src, args, guestToken;
 
 		if ( ! isModal ) {
 			parent = jQuery(this).parents('.um-field');
 			mode   = parent.data('mode');
 			guestToken = parent.data('guest_token');
-			nonce = parent.data('remove_nonce');
 			src    = parent.find('.um-single-image-preview img').attr('src');
 
 			let filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
@@ -206,7 +206,6 @@ jQuery(document).ready(function() {
 			parent = jQuery(this).parents('.um-modal-body');
 			mode   = parent.find('.um-single-image-upload').data('set_mode');
 			guestToken = parent.find('.um-single-image-upload').data('guest_token');
-			nonce = parent.find('.um-single-image-upload').data('remove_nonce');
 			src    = parent.find('.um-single-image-preview img').attr('src');
 
 			args = {
@@ -241,14 +240,14 @@ jQuery(document).ready(function() {
 			isModal = true;
 		}
 
-		let parent, mode, src, args, guestToken, nonce;
+		let nonce = jQuery(this).data('nonce');
+		let parent, mode, src, args, guestToken;
 
 		if ( ! isModal ) {
 			parent = jQuery(this).parents('.um-field');
 			src    = parent.find('.um-single-fileinfo a').attr('href');
 			mode   = parent.data('mode');
 			guestToken = parent.data('guest_token');
-			nonce = parent.data('remove_nonce');
 
 			let filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
 
@@ -276,7 +275,6 @@ jQuery(document).ready(function() {
 			src    = parent.find('.um-single-fileinfo a').attr('href');
 			mode   = parent.find('.um-single-file-upload').data('set_mode');
 			guestToken = parent.find('.um-single-file-upload').data('guest_token');
-			nonce = parent.find('.um-single-file-upload').data('remove_nonce');
 
 			args = {
 				data: {

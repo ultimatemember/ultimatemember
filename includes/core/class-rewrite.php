@@ -288,6 +288,7 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 			um_fetch_user( $user_id );
 			$field_value = UM()->fields()->field_value( $field_key );
 			if ( empty( $field_value ) ) {
+				um_reset_user();
 				$wp_query->set_404();
 				return;
 			}
@@ -306,7 +307,7 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 		 * @param $field_value
 		 */
 		private function image_download( $user_id, $field_key, $field_value ) {
-			global $wp_filesystem;
+			global $wp_filesystem, $wp_query;
 
 			UM()->common()->filesystem()::maybe_init_wp_filesystem();
 
@@ -314,6 +315,8 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 
 			// Validate traversal file
 			if ( validate_file( $file_path ) === 1 ) {
+				um_reset_user();
+				$wp_query->set_404();
 				return;
 			}
 
@@ -350,13 +353,15 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 		 * @param $field_value
 		 */
 		private function file_download( $user_id, $field_key, $field_value ) {
-			global $wp_filesystem;
+			global $wp_filesystem, $wp_query;
 
 			UM()->common()->filesystem()::maybe_init_wp_filesystem();
 
 			$file_path = UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $field_value;
 			// Validate traversal file
 			if ( validate_file( $file_path ) === 1 ) {
+				um_reset_user();
+				$wp_query->set_404();
 				return;
 			}
 
