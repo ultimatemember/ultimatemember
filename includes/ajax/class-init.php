@@ -20,10 +20,23 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		 * @used-by \UM::includes()
 		 */
 		public function includes() {
+			$this->files();
 			$this->forms();
 			$this->pages();
 			$this->secure();
 			$this->users();
+		}
+
+		/**
+		 * @since 2.14.0
+		 *
+		 * @return Files
+		 */
+		public function files() {
+			if ( empty( UM()->classes['um\ajax\files'] ) ) {
+				UM()->classes['um\ajax\files'] = new Files();
+			}
+			return UM()->classes['um\ajax\files'];
 		}
 
 		/**
@@ -72,6 +85,23 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 				UM()->classes['um\ajax\users'] = new Users();
 			}
 			return UM()->classes['um\ajax\users'];
+		}
+
+		/**
+		 * @since 2.14.0
+		 *
+		 * @param string $html
+		 *
+		 * @return string
+		 */
+		public function esc_html_spaces( $html ) {
+			$html = preg_replace(
+				array( '/^\s+/im', '/\\r\\n/im', '/\\n/im', '/\\t+/im' ),
+				array( '', ' ', ' ', ' ' ),
+				$html
+			);
+
+			return $html;
 		}
 	}
 }
