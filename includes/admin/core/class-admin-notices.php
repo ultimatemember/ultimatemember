@@ -54,6 +54,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->extensions_page();
 
 			$this->template_version();
+			$this->upload_security();
 
 			$this->child_theme_required();
 
@@ -902,6 +903,28 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					'dismissible' => false,
 				),
 				10
+			);
+		}
+
+		/** Notify administrators using the same cached evidence as Site Health. */
+		public function upload_security() {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				return;
+			}
+			$check = UM()->common()->upload_security()->get_result();
+			if ( ! in_array( $check['state'], array( 'exposed', 'unknown' ), true ) ) {
+				return;
+			}
+			$message = 'exposed' === $check['state']
+				? __( 'Ultimate Member: direct access to upload test files is open. Private files may be accessible without download permission checks.', 'ultimate-member' )
+				: __( 'Ultimate Member could not verify upload protection. Review the check details in Site Health.', 'ultimate-member' );
+			$this->add_notice(
+				'um_upload_security',
+				array(
+					'class'       => 'exposed' === $check['state'] ? 'error' : 'notice-warning',
+					'message'     => '<p>' . esc_html( $message ) . ' <a href="' . esc_url( admin_url( 'site-health.php' ) ) . '">' . esc_html__( 'Review upload protection', 'ultimate-member' ) . '</a></p>',
+					'dismissible' => false,
+				)
 			);
 		}
 
