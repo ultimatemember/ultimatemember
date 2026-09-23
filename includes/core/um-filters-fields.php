@@ -304,8 +304,8 @@ function um_profile_field_filter_hook__time( $value, $data ) {
 	} else {
 		$format = get_option( 'time_format', 'g:i a' ); // WordPress native time format.
 	}
-
-	return wp_date( $format, strtotime( $value ) );
+	// Don't handle static times via timezone. Store them as selected on the frontend form and show them the same as stored in DB.
+	return wp_date( $format, strtotime( $value ), new DateTimeZone( 'UTC' ) );
 }
 add_filter( 'um_profile_field_filter_hook__time', 'um_profile_field_filter_hook__time', 99, 2 );
 

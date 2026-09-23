@@ -244,7 +244,7 @@ function um_ajax_get_members( directory, args ) {
 		sorting:        sorting,
 		gmt_offset:     gmt_hours,
 		post_refferer:  directory.data('base-post'),
-		nonce:          um_scripts.nonce
+		_wpnonce:       directory.data('nonce')
 	};
 
 	if ( directory.find('.um-search-filter').length ) {

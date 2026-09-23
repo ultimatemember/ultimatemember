@@ -152,7 +152,12 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 			$mode = sanitize_key( $_POST['mode'] );
 
-			check_ajax_referer( 'um_remove_file' . $mode );
+			if ( empty( $_POST['key'] ) ) {
+				wp_send_json_error( __( 'Wrong field key', 'ultimate-member' ) );
+			}
+			$key = sanitize_text_field( $_POST['key'] );
+
+			check_ajax_referer( 'um-remove-file' . $key . '-' . $mode );
 
 			if ( UM()->is_rate_limited( 'remove_file' ) ) {
 				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
@@ -167,6 +172,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			if ( empty( $_POST['src'] ) ) {
 				wp_send_json_error( __( 'Wrong path', 'ultimate-member' ) );
 			}
+
 			$src = esc_url_raw( $_POST['src'] );
 			if ( strstr( $src, '?' ) ) {
 				$splitted = explode( '?', $src );
@@ -204,14 +210,19 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * Resize image AJAX handler
 		 */
 		public function ajax_resize_image() {
-			UM()->check_ajax_nonce();
+			if ( ! isset( $_REQUEST['key'], $_REQUEST['set_mode'] ) ) {
+				wp_send_json_error( esc_js( __( 'Invalid parameters', 'ultimate-member' ) ) );
+			}
+			$key  = sanitize_text_field( $_REQUEST['key'] );
+			$mode = isset( $_POST['set_mode'] ) ? sanitize_text_field( $_POST['set_mode'] ) : null;
+
+			check_ajax_referer( 'um-resize-image' . $mode . $key );
 
 			if ( UM()->is_rate_limited( 'resize_image' ) ) {
 				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
 			}
 
-			// phpcs:disable WordPress.Security.NonceVerification -- verified by the `check_ajax_nonce()`
-			if ( ! isset( $_REQUEST['src'], $_REQUEST['coord'], $_REQUEST['key'] ) ) {
+			if ( ! isset( $_REQUEST['src'], $_REQUEST['coord'] ) ) {
 				wp_send_json_error( esc_js( __( 'Invalid parameters', 'ultimate-member' ) ) );
 			}
 
@@ -230,7 +241,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 
 			$form_id = isset( $_POST['set_id'] ) ? absint( $_POST['set_id'] ) : null;
-			$mode    = isset( $_POST['set_mode'] ) ? sanitize_text_field( $_POST['set_mode'] ) : null;
 
 			UM()->fields()->set_id   = $form_id;
 			UM()->fields()->set_mode = $mode;
@@ -283,8 +293,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				}
 			}
 
-			$key = sanitize_text_field( $_REQUEST['key'] );
-
 			if ( ! array_key_exists( 'custom_fields', $post_data ) || empty( $post_data['custom_fields'] ) ) {
 				wp_send_json_error( esc_js( __( 'Invalid form fields', 'ultimate-member' ) ) );
 			}
@@ -333,7 +341,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			UM()->uploader()->replace_upload_dir = false;
 
 			delete_option( "um_cache_userdata_{$user_id}" );
-			// phpcs:enable WordPress.Security.NonceVerification -- verified by the `check_ajax_nonce()`
+
 			wp_send_json_success( $output );
 		}
 

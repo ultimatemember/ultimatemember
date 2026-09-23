@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			dataType: 'json',
 			data: {
 				action: 'um_usermeta_count280',
-				nonce: um_admin_scripts.nonce
+				_wpnonce: um_inside_package_nonce
 			},
 			success: function( response ) {
 				if ( typeof response.data.count != 'undefined' ) {
@@ -48,7 +48,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					data: {
 						action: 'um_metadata_per_user280',
 						page: current_page,
-						nonce: um_admin_scripts.nonce
+						_wpnonce: um_inside_package_nonce
 					},
 					success: function( response ) {
 						if ( typeof response.data != 'undefined' ) {
@@ -82,7 +82,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				dataType: 'json',
 				data: {
 					action: 'um_update_options280',
-					nonce: um_admin_scripts.nonce
+					_wpnonce: um_inside_package_nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {

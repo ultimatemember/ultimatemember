@@ -15,7 +15,7 @@
 			dataType: 'json',
 			data: {
 				action: 'um_skypeid_fields230',
-				nonce: um_admin_scripts.nonce
+				_wpnonce: um_inside_package_nonce
 			},
 			success: function( response ) {
 				if ( typeof response.data.message != 'undefined' ) {
@@ -47,7 +47,7 @@
 				dataType: 'json',
 				data: {
 					action: 'um_usermeta_count230',
-					nonce: um_admin_scripts.nonce
+					_wpnonce: um_inside_package_nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data.count != 'undefined' ) {
@@ -79,7 +79,7 @@
 					data: {
 						action: 'um_usermeta_part230',
 						page: current_page,
-						nonce: um_admin_scripts.nonce
+						_wpnonce: um_inside_package_nonce
 					},
 					success: function( response ) {
 						if ( typeof response.data != 'undefined' ) {
@@ -113,7 +113,7 @@
 				dataType: 'json',
 				data: {
 					action: 'um_reset_password230',
-					nonce: um_admin_scripts.nonce
+					_wpnonce: um_inside_package_nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data.message != 'undefined' ) {

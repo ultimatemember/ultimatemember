@@ -17,15 +17,20 @@ if ( ! class_exists( 'um\core\Register' ) ) {
 		 * Register constructor.
 		 */
 		public function __construct() {
-			add_action( 'um_after_register_fields', array( $this, 'add_nonce' ) );
+			add_action( 'um_after_register_fields', array( $this, 'add_nonce' ), 10, 2 );
 			add_action( 'um_submit_form_register', array( $this, 'verify_nonce' ), 1, 2 );
 		}
 
 		/**
-		 * Add registration form notice
+		 * Adds a nonce field to ensure the security of the registration form.
+		 *
+		 * @param array $args    Arguments passed to the function, unused in this implementation.
+		 * @param int   $form_id The ID of the form for which the nonce field is generated.
+		 *
+		 * @return void
 		 */
-		public function add_nonce() {
-			wp_nonce_field( 'um_register_form' );
+		public function add_nonce( $args, $form_id ) {
+			wp_nonce_field( 'um_register_form' . $form_id );
 		}
 
 		/**
@@ -54,7 +59,7 @@ if ( ! class_exists( 'um\core\Register' ) ) {
 				return;
 			}
 
-			if ( empty( $args['_wpnonce'] ) || ! wp_verify_nonce( $args['_wpnonce'], 'um_register_form' ) ) {
+			if ( empty( $args['_wpnonce'] ) || empty( $form_data['form_id'] ) || ! wp_verify_nonce( $args['_wpnonce'], 'um_register_form' . $form_data['form_id'] ) ) {
 				/**
 				 * Filters URL for redirect if register form nonce isn't verified.
 				 *
@@ -73,7 +78,6 @@ if ( ! class_exists( 'um\core\Register' ) ) {
 				 */
 				$url = apply_filters( 'um_register_invalid_nonce_redirect_url', add_query_arg( array( 'err' => 'invalid_nonce' ) ) );
 				um_safe_redirect( $url );
-				exit;
 			}
 		}
 	}

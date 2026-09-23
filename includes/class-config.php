@@ -739,7 +739,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'activation_link_expiry_time'           => '',
 				'lock_register_forms'                   => false,
 				'display_login_form_notice'             => false,
-				'secure_ban_admins_accounts'            => false,
+				'secure_ban_admins_accounts'            => true,
 				'ajax_nopriv_rate_limit'                => true,
 				'banned_capabilities'                   => array( 'manage_options', 'promote_users', 'level_10' ),
 				'secure_notify_admins_banned_accounts'  => false,

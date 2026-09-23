@@ -362,6 +362,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					'_um_roles_can_search'         => array(
 						'sanitize' => array( $this, 'sanitize_restriction_existed_role' ),
 					),
+					'_um_search_exclude_fields'    => array(
+						'sanitize' => array( $this, 'sanitize_member_directory_field' ),
+					),
+					'_um_search_include_fields'    => array(
+						'sanitize' => array( $this, 'sanitize_member_directory_field' ),
+					),
 					'_um_filters'                  => array(
 						'sanitize' => 'bool',
 					),
@@ -559,7 +565,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'absint',
 					),
 					'_in_group'                       => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'empty_absint', // TODO permanently delete or set as `empty_absint`.
 					),
 					'_visibility'                     => array(
 						'sanitize' => 'key',
@@ -921,6 +927,29 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 */
 		public function sanitize_user_field( $value ) {
 			$user_fields = array_keys( UM()->builtin()->all_user_fields() );
+
+			if ( '' !== $value ) {
+				$value = array_filter(
+					$value,
+					function( $v, $k ) use ( $user_fields ) {
+						return in_array( sanitize_text_field( $v ), $user_fields, true );
+					},
+					ARRAY_FILTER_USE_BOTH
+				);
+
+				$value = array_map( 'sanitize_text_field', $value );
+			}
+
+			return $value;
+		}
+
+		/**
+		 * @param array|string $value
+		 *
+		 * @return array|string
+		 */
+		public function sanitize_member_directory_field( $value ) {
+			$user_fields = array_keys( UM()->member_directory()->searching_fields );
 
 			if ( '' !== $value ) {
 				$value = array_filter(
