@@ -895,14 +895,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					'message'     => '<p>' . wp_kses(
 						sprintf(
 							// translators: %s override templates page link.
-							__( 'Your templates are out of date. Please visit <a href="%s">override templates status page</a> and update templates.', 'ultimate-member' ),
+							__( 'Ultimate Member: Your templates are out of date. Please visit <a href="%s">override templates status page</a> and update templates.', 'ultimate-member' ),
 							esc_url( $link )
 						),
 						UM()->get_allowed_html( 'admin_notice' )
 					) . '</p>',
 					'dismissible' => false,
-				),
-				10
+				)
 			);
 		}
 
@@ -916,7 +915,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				return;
 			}
 			$message = 'exposed' === $check['state']
-				? __( 'Ultimate Member: direct access to upload test files is open. Private files may be accessible without download permission checks.', 'ultimate-member' )
+				? __( 'Ultimate Member: Direct access to upload test files is open. Private files may be accessible without download permission checks.', 'ultimate-member' )
 				: __( 'Ultimate Member could not verify upload protection. Review the check details in Site Health.', 'ultimate-member' );
 			$this->add_notice(
 				'um_upload_security',
