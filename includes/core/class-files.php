@@ -197,7 +197,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			$pathinfo = pathinfo( $file_path );
 			$size = filesize( $file_path );
 			$originalname = ! empty( $file_info['original_name'] ) ? $file_info['original_name'] : $pathinfo['basename'];
-			$type = ! empty( $file_info['type'] ) ? $file_info['type'] : $pathinfo['extension'];
+			$type = wp_get_image_mime( $file_path );
+			if ( ! $type ) {
+				$type = 'application/octet-stream';
+			}
 
 			header('Content-Description: File Transfer');
 			header('Content-Type: ' . $type );
@@ -243,7 +246,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			$pathinfo = pathinfo( $file_path );
 			$size = filesize( $file_path );
 			$originalname = ! empty( $file_info['original_name'] ) ? $file_info['original_name'] : $pathinfo['basename'];
-			$type = ! empty( $file_info['type'] ) ? $file_info['type'] : $pathinfo['extension'];
+			$filetype = wp_check_filetype( $file_path, wp_get_mime_types() );
+			$type     = $filetype['type'] ? $filetype['type'] : 'application/octet-stream';
 
 			header('Content-Description: File Transfer');
 			header('Content-Type: ' . $type );

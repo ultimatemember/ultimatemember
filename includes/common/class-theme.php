@@ -23,6 +23,7 @@ class Theme {
 	public function flush_transient_templates_data() {
 		// Flush transient with the custom templates list.
 		delete_transient( 'um_custom_templates_list' );
+		delete_transient( 'um_is_outdated_template_exist' );
 	}
 
 	/**
@@ -142,9 +143,9 @@ class Theme {
 					$theme_file = false;
 					if ( ! empty( $located ) ) {
 						$theme_file = $located['theme'];
-					} elseif ( in_array( $file, $exceptions, true ) && file_exists( get_stylesheet_directory() . '/ultimate-member/' . $file ) ) {
+					} elseif ( 'um' === $key && in_array( $file, $exceptions, true ) && file_exists( get_stylesheet_directory() . '/ultimate-member/' . $file ) ) {
 						$theme_file = get_stylesheet_directory() . '/ultimate-member/' . $file;
-					} elseif ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
+					} elseif ( 'um' === $key && file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
 						$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $file;
 					}
 
@@ -168,6 +169,12 @@ class Theme {
 	}
 
 	public function is_outdated_template_exist() {
+		// Get from cache if isn't empty and request isn't force.
+		$transient = get_transient( 'um_is_outdated_template_exist' );
+		if ( false !== $transient ) {
+			return 1 === absint( $transient ); // Returns true if transient equals 1.
+		}
+
 		$outdated_exists = false;
 		$templates       = $this->get_custom_templates_list();
 		foreach ( $templates as $files ) {
@@ -186,6 +193,9 @@ class Theme {
 				break;
 			}
 		}
+
+		// Cache results via transient setting.
+		set_transient( 'um_is_outdated_template_exist', $outdated_exists ? 1 : 0, 5 * MINUTE_IN_SECONDS );
 
 		return $outdated_exists;
 	}

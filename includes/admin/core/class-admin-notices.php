@@ -53,6 +53,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$this->extensions_page();
 
+			$this->template_version();
+			$this->upload_security();
+
 			$this->child_theme_required();
 
 			// Removed for now to avoid the bad reviews.
@@ -873,6 +876,54 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					'message' => $message,
 				),
 				2
+			);
+		}
+
+		/**
+		 * Notify administrators about outdated custom templates.
+		 */
+		public function template_version() {
+			if ( ! current_user_can( 'manage_options' ) || ! UM()->common()->theme()->is_outdated_template_exist() ) {
+				return;
+			}
+
+			$link = admin_url( 'admin.php?page=um_options&tab=advanced&section=override_templates' );
+			$this->add_notice(
+				'um_override_templates_notice',
+				array(
+					'class'       => 'error',
+					'message'     => '<p>' . wp_kses(
+						sprintf(
+							// translators: %s override templates page link.
+							__( 'Ultimate Member: Your templates are out of date. Please visit <a href="%s">override templates status page</a> and update templates.', 'ultimate-member' ),
+							esc_url( $link )
+						),
+						UM()->get_allowed_html( 'admin_notice' )
+					) . '</p>',
+					'dismissible' => false,
+				)
+			);
+		}
+
+		/** Notify administrators using the same cached evidence as Site Health. */
+		public function upload_security() {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				return;
+			}
+			$check = UM()->common()->upload_security()->get_result();
+			if ( ! in_array( $check['state'], array( 'exposed', 'unknown' ), true ) ) {
+				return;
+			}
+			$message = 'exposed' === $check['state']
+				? __( 'Ultimate Member: Direct access to upload test files is open. Private files may be accessible without download permission checks.', 'ultimate-member' )
+				: __( 'Ultimate Member could not verify upload protection. Review the check details in Site Health.', 'ultimate-member' );
+			$this->add_notice(
+				'um_upload_security',
+				array(
+					'class'       => 'exposed' === $check['state'] ? 'error' : 'notice-warning',
+					'message'     => '<p>' . esc_html( $message ) . ' <a href="' . esc_url( admin_url( 'site-health.php' ) ) . '">' . esc_html__( 'Review upload protection', 'ultimate-member' ) . '</a></p>',
+					'dismissible' => false,
+				)
 			);
 		}
 
