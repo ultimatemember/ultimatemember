@@ -35,6 +35,7 @@ class Upload_Security {
 				array(
 					'id'    => 'um_upload_protection_instructions',
 					'type'  => 'info_text',
+					'label' => __( 'Uploads folder access', 'ultimate-member' ),
 					'value' => wp_slash( '<div id="um-upload-protection" style="scroll-margin-top: 48px;">' . $this->setup_instructions() . '</div>' ),
 				),
 			),
@@ -160,7 +161,7 @@ class Upload_Security {
 			wp_die( esc_html__( 'Upload directory is not writable.', 'ultimate-member' ), '', array( 'response' => 403 ) );
 		}
 
-		require_once ABSPATH . 'wp-admin/includes/misc.php';
+		require_once ABSPATH . 'wp-admin/includes/misc.php'; // needs to operate with htaccess via `insert_with_markers()`.
 		if ( ! insert_with_markers( wp_normalize_path( trailingslashit( $upload_dir ) . '.htaccess' ), 'Ultimate Member Upload Protection', array( 'deny from all' ) ) ) {
 			wp_die( esc_html__( 'The upload protection rule could not be saved. Please add it manually using the instructions in Access > Other.', 'ultimate-member' ) );
 		}
