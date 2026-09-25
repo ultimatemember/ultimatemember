@@ -132,21 +132,54 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			foreach ( $social as $k => $arr ) {
-				if ( um_profile( $k ) ) {
-					if ( array_key_exists( 'match', $arr ) ) {
-						$match = is_array( $arr['match'] ) ? $arr['match'][0] : $arr['match'];
-					} else {
-						$match = null;
-					}
-					$arr['url_target'] = isset( $arr['url_target'] ) ? $arr['url_target'] : '_blank';
-					?>
-
-					<a href="<?php echo esc_url( um_filtered_social_link( $k, $match ) ); ?>"
-					style="background: <?php echo esc_attr( $arr['color'] ); ?>;" target="<?php echo esc_attr( $arr['url_target'] ); ?>" class="um-tip-n"
-					title="<?php echo esc_attr( $arr['title'] ); ?>"><i class="<?php echo esc_attr( $arr['icon'] ); ?>"></i></a>
-
-					<?php
+				if ( ! um_profile( $k ) ) {
+					continue;
 				}
+
+				if ( empty( $this->set_id ) ) {
+					$profile_forms = get_posts(
+						array(
+							'post_type'      => 'um_form',
+							'meta_query'     => array(
+								array(
+									'key'   => '_um_mode',
+									'value' => 'profile',
+								),
+							),
+							'posts_per_page' => -1,
+							'fields'         => 'ids',
+						)
+					);
+					foreach ( $profile_forms as $form_id ) {
+						$this->set_id   = $form_id;
+						$this->set_mode = 'profile';
+						$field_data     = UM()->fields()->get_field( $k );
+						if ( ! um_can_view_field( $field_data ) ) {
+							$this->set_id   = null;
+							$this->set_mode = null;
+							continue 2;
+						}
+					}
+				} else {
+					$field_data = UM()->fields()->get_field( $k );
+					if ( ! um_can_view_field( $field_data ) ) {
+						continue;
+					}
+				}
+
+				if ( array_key_exists( 'match', $arr ) ) {
+					$match = is_array( $arr['match'] ) ? $arr['match'][0] : $arr['match'];
+				} else {
+					$match = null;
+				}
+				$arr['url_target'] = isset( $arr['url_target'] ) ? $arr['url_target'] : '_blank';
+				?>
+
+				<a href="<?php echo esc_url( um_filtered_social_link( $k, $match ) ); ?>"
+				style="background: <?php echo esc_attr( $arr['color'] ); ?>;" target="<?php echo esc_attr( $arr['url_target'] ); ?>" class="um-tip-n"
+				title="<?php echo esc_attr( $arr['title'] ); ?>"><i class="<?php echo esc_attr( $arr['icon'] ); ?>"></i></a>
+
+				<?php
 			}
 		}
 

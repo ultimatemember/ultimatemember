@@ -2768,6 +2768,23 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$description_key = UM()->profile()->get_show_bio_key( UM()->fields()->global_args );
 
+			$profile_forms = array();
+			if ( empty( UM()->fields()->set_id ) ) {
+				$profile_forms = get_posts(
+					array(
+						'post_type'      => 'um_form',
+						'meta_query'     => array(
+							array(
+								'key'   => '_um_mode',
+								'value' => 'profile',
+							),
+						),
+						'posts_per_page' => -1,
+						'fields'         => 'ids',
+					)
+				);
+			}
+
 			if ( ! empty( $directory_data['show_tagline'] ) && ! empty( $directory_data['tagline_fields'] ) ) {
 				$directory_data['tagline_fields'] = maybe_unserialize( $directory_data['tagline_fields'] );
 
@@ -2775,6 +2792,24 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					foreach ( $directory_data['tagline_fields'] as $key ) {
 						if ( ! $key || ! array_key_exists( $key, $user_fields ) ) {
 							continue;
+						}
+
+						if ( empty( UM()->fields()->set_id ) ) {
+							foreach ( $profile_forms as $form_id ) {
+								UM()->fields()->set_id   = $form_id;
+								UM()->fields()->set_mode = 'profile';
+								$field_data              = UM()->fields()->get_field( $key );
+								if ( ! um_can_view_field( $field_data ) ) {
+									UM()->fields()->set_id   = null;
+									UM()->fields()->set_mode = null;
+									continue 2;
+								}
+							}
+						} else {
+							$field_data = UM()->fields()->get_field( $key );
+							if ( ! um_can_view_field( $field_data ) ) {
+								continue;
+							}
 						}
 
 						if ( '_um_last_login' === $key ) {
@@ -2807,6 +2842,24 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						foreach ( $directory_data['reveal_fields'] as $key ) {
 							if ( ! $key || ! array_key_exists( $key, $user_fields ) ) {
 								continue;
+							}
+
+							if ( empty( UM()->fields()->set_id ) ) {
+								foreach ( $profile_forms as $form_id ) {
+									UM()->fields()->set_id   = $form_id;
+									UM()->fields()->set_mode = 'profile';
+									$field_data              = UM()->fields()->get_field( $key );
+									if ( ! um_can_view_field( $field_data ) ) {
+										UM()->fields()->set_id   = null;
+										UM()->fields()->set_mode = null;
+										continue 2;
+									}
+								}
+							} else {
+								$field_data = UM()->fields()->get_field( $key );
+								if ( ! um_can_view_field( $field_data ) ) {
+									continue;
+								}
 							}
 
 							if ( '_um_last_login' === $key ) {
