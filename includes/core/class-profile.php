@@ -421,6 +421,11 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			if ( ! empty( $array ) ) {
 				foreach ( $array as $key ) {
 					if ( $key ) {
+						$field_data = UM()->fields()->get_field( $key );
+						if ( ! um_can_view_field( $field_data ) ) {
+							continue;
+						}
+
 						if ( '_um_last_login' === $key ) {
 							$show_last_login = get_user_meta( um_user( 'ID' ), 'um_show_last_login', true );
 							if ( ! empty( $show_last_login ) && 'no' === $show_last_login[0] ) {

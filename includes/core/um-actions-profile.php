@@ -1330,10 +1330,14 @@ function um_profile_header( $args ) {
 			}
 
 			if ( $show_bio ) {
-				$description_key   = UM()->profile()->get_show_bio_key( $args );
+				$description_key = UM()->profile()->get_show_bio_key( $args );
+
+				$field_data = UM()->fields()->get_field( $description_key );
+				$can_view   = um_can_view_field( $field_data );
+
 				$description_value = UM()->fields()->field_value( $description_key );
 
-				if ( ! empty( $description_value ) && true === UM()->fields()->viewing ) {
+				if ( $can_view && ! empty( $description_value ) && true === UM()->fields()->viewing ) {
 					?>
 					<div class="um-meta-text">
 						<?php
