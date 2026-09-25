@@ -63,7 +63,9 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 			$public_query_vars[] = 'um_action';
 			$public_query_vars[] = 'um_field';
 			$public_query_vars[] = 'um_form';
-			$public_query_vars[] = 'um_verify';
+			$public_query_vars[] = 'um_filename';
+			$public_query_vars[] = 'um_verify'; // todo remove where it's used and change to `um_nonce` when all extensions are ready with old UI in the new UI branch.
+			$public_query_vars[] = 'um_nonce';
 
 			return $public_query_vars;
 		}
@@ -78,11 +80,18 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 		public function add_rewrite_rules( $rules ) {
 			$newrules = array();
 
-			// NGINX-config `rewrite ^/um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ /index.php?um_action=download&um_form=$1&um_field=$2&um_user=$3&um_verify=$4 last;`
-			$newrules['um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$'] = 'index.php?um_action=download&um_form=$matches[1]&um_field=$matches[2]&um_user=$matches[3]&um_verify=$matches[4]';
+			$image_mimes   = UM()->common()->filesystem()::image_mimes();
+			$files_mimes   = UM()->common()->filesystem()::file_mimes();
+			$allowed_mimes = implode( '|', array_merge( $image_mimes, $files_mimes ) );
 
+			// NGINX-config `rewrite ^/um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/\d{1,10}\.(jpg|jpeg|jpe|gif|png|bmp|tif|tiff|ico|heic|heif|webp|avif|aac|flac|m4a|m4b|mka|mp3|ogg|oga|ram|wav|wma|3g2|3gp|3gpp|asf|avi|divx|flv|m4v|mkv|mov|mp4|mpeg|mpg|ogv|qt|wmv|doc|docx|docm|dotm|odt|pages|pdf|xps|oxps|rtf|wp|wpd|psd|xcf|numbers|ods|xls|xlsx|xlsm|xlsb|key|ppt|pptx|pptm|pps|ppsx|ppsm|sldx|sldm|odp|asc|csv|tsv|txt|gz|rar|tar|zip|7z|css|htm|html|js)$ /index.php?um_action=download&um_form=$1&um_field=$2&um_user=$3&um_verify=$4 last;`
+			$newrules[ 'um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/\d{1,10}\.(' . $allowed_mimes . ')$' ] = 'index.php?um_action=download&um_form=$matches[1]&um_field=$matches[2]&um_user=$matches[3]&um_verify=$matches[4]';
+
+			// NGINX-config `rewrite ^/um-temp/([^/]+)/([^/]+)/\w{1,32}\.(jpg|jpeg|jpe|gif|png|bmp|tif|tiff|ico|heic|heif|webp|avif|aac|flac|m4a|m4b|mka|mp3|ogg|oga|ram|wav|wma|3g2|3gp|3gpp|asf|avi|divx|flv|m4v|mkv|mov|mp4|mpeg|mpg|ogv|qt|wmv|doc|docx|docm|dotm|odt|pages|pdf|xps|oxps|rtf|wp|wpd|psd|xcf|numbers|ods|xls|xlsx|xlsm|xlsb|key|ppt|pptx|pptm|pps|ppsx|ppsm|sldx|sldm|odp|asc|csv|tsv|txt|gz|rar|tar|zip|7z|css|htm|html|js)$ /index.php?um_action=temp-download&um_user=$1&um_verify=$2 last;`
+			$newrules[ 'um-temp/([^/]+)/([^/]+)/\w{1,32}\.(' . $allowed_mimes . ')$' ] = 'index.php?um_action=temp-download&um_user=$matches[1]&um_verify=$matches[2]';
+
+			// User Profile rewrite rules.
 			if ( isset( UM()->config()->permalinks['user'] ) ) {
-
 				$user_page_id = UM()->config()->permalinks['user'];
 				$user         = get_post( $user_page_id );
 
@@ -108,6 +117,7 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 				}
 			}
 
+			// Account page rewrite rules.
 			if ( isset( UM()->config()->permalinks['account'] ) ) {
 				$account_page_id = UM()->config()->permalinks['account'];
 				$account         = get_post( $account_page_id );
