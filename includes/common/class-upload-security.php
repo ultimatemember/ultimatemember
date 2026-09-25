@@ -23,6 +23,62 @@ class Upload_Security {
 		add_action( self::EVENT, array( $this, 'run' ) );
 		add_action( 'admin_post_um_check_upload_security', array( $this, 'recheck' ) );
 		add_action( 'admin_post_um_set_htaccess_rule', array( $this, 'set_htaccess_rule' ) );
+		add_filter( 'um_settings_structure', array( $this, 'settings_section' ) );
+	}
+
+	/** Add actionable server instructions to Access > Other. */
+	public function settings_section( $settings ) {
+		$settings['access']['sections']['other']['form_sections']['upload_protection'] = array(
+			'title'       => __( 'Upload protection', 'ultimate-member' ),
+			'description' => __( 'Control direct access to files stored by Ultimate Member.', 'ultimate-member' ),
+			'fields'      => array(
+				array(
+					'id'    => 'um_upload_protection_instructions',
+					'type'  => 'info_text',
+					'value' => wp_slash( '<div id="um-upload-protection" style="scroll-margin-top: 48px;">' . $this->setup_instructions() . '</div>' ),
+				),
+			),
+		);
+		return $settings;
+	}
+
+	/** Check the actual target file, or its parent when creating it. */
+	public function can_write_htaccess() {
+		$directory = UM()->uploader()->get_upload_base_dir();
+		$path      = trailingslashit( $directory ) . '.htaccess';
+		return ! is_link( $path ) && ( file_exists( $path ) ? is_file( $path ) && wp_is_writable( $path ) : is_dir( $directory ) && wp_is_writable( $directory ) );
+	}
+
+	/** @return string Escaped instructions; no server configuration is changed here. */
+	public function setup_instructions() {
+		global $is_apache, $is_nginx;
+		$html  = esc_html__( 'Private uploads should be available only through Ultimate Member download links, where access permissions are checked. Blocking direct URLs helps prevent visitors from bypassing those checks.', 'ultimate-member' );
+		$html .= '<br><br><strong>' . esc_html__( 'Before applying protection', 'ultimate-member' ) . '</strong><br><br>' . esc_html__( 'This directory can also contain avatars, cover photos and upload previews. Older uploaders use direct URLs for these images. A directory-wide block will stop them from loading. Confirm that your uploaders and public images use compatible download handlers before applying these rules.', 'ultimate-member' );
+		if ( $is_apache ) {
+			$path  = wp_normalize_path( trailingslashit( UM()->uploader()->get_upload_base_dir() ) . '.htaccess' );
+			$html .= '<h4>' . esc_html__( 'Apache / LiteSpeed', 'ultimate-member' ) . '</h4>';
+			$html .= '<br>' . esc_html__( 'Add the following rule to the .htaccess file at this exact path. Existing rules should be preserved. Your hosting provider must allow .htaccess access restrictions for the rule to take effect.', 'ultimate-member' ) . '<br><br><i>' . esc_html( $path ) . '</i><br><pre><code>deny from all</code></pre>';
+			if ( $this->can_write_htaccess() && current_user_can( 'manage_options' ) ) {
+				$html .= '<br><br><a class="button" href="' . esc_url( $this->set_htaccess_url() ) . '">' . esc_html__( 'Add upload protection to .htaccess', 'ultimate-member' ) . '</a><br>';
+			} else {
+				$html .= '<br>' . esc_html__( 'WordPress cannot update this file automatically with the current permissions. Use your hosting file manager or SFTP to add the rule, or ask your hosting provider to do it. If the file does not exist, create it at the path shown above.', 'ultimate-member' );
+			}
+		}
+		if ( $is_nginx ) {
+			$url   = UM()->uploader()->get_upload_base_url();
+			$path  = wp_parse_url( $url, PHP_URL_PATH );
+			$html .= '<h4>' . esc_html__( 'nginx', 'ultimate-member' ) . '</h4><br>' . esc_html__( 'nginx does not read .htaccess files. Ask your hosting provider to add this restriction inside the server block that serves your upload URL. The configuration file location depends on your hosting setup. If your control panel offers custom nginx directives, use that facility with your provider\'s guidance; placing a file in the WordPress folder alone has no effect.', 'ultimate-member' ) . '<br><br><i>' . esc_html( $url ) . '</i>';
+			if ( is_string( $path ) && '' !== $path && '/' !== $path ) {
+				$path  = str_replace( array( '\\', '"', '$' ), array( '\\\\', '\\"', '\\$' ), trailingslashit( $path ) );
+				$html .= '<pre><code>' . esc_html( 'location ^~ "' . $path . '" {' . "\n    return 403;\n}" ) . '</code></pre>';
+			}
+			$html .= '<br>' . esc_html__( 'This rule blocks direct file URLs; it does not configure download routing. Keep your existing WordPress routing and PHP handler. Have your provider validate the configuration with nginx -t and reload nginx. If uploads are served through a CDN, review its access rules and cached copies too.', 'ultimate-member' );
+		}
+		if ( ! $is_apache && ! $is_nginx ) {
+			$html .= '<br>' . esc_html__( 'The web server type could not be identified as Apache or nginx. Ask your hosting provider how to restrict direct access to the Ultimate Member upload directory while keeping authorized downloads available.', 'ultimate-member' );
+		}
+		$html .= '<br>' . esc_html__( 'After applying protection, run the check again. Also test an authorized download, access by a user without permission, and avatar uploading and display. A successful direct-access check does not verify those workflows.', 'ultimate-member' ) . '<br><br><a href="' . esc_url( $this->recheck_url() ) . '">' . esc_html__( 'Check upload protection again', 'ultimate-member' ) . '</a><br>';
+		return $html;
 	}
 
 	/** Register one daily action after Action Scheduler has initialized. */
@@ -99,18 +155,16 @@ class Upload_Security {
 
 		check_admin_referer( 'set_htaccess_rule' );
 
-		$result = $this->get_result();
-		if ( false !== $result['htaccess_rule'] ) {
-			wp_die( esc_html__( '.htaccess already has necessary rule.', 'ultimate-member' ), '', array( 'response' => 403 ) );
-		}
-
 		$upload_dir = UM()->uploader()->get_upload_base_dir();
-		if ( ! wp_is_writable( $upload_dir ) ) {
+		if ( ! $this->can_write_htaccess() ) {
 			wp_die( esc_html__( 'Upload directory is not writable.', 'ultimate-member' ), '', array( 'response' => 403 ) );
 		}
 
-		$htp = fopen( wp_normalize_path( $upload_dir . '.htaccess' ), 'w' );
-		fputs( $htp, 'deny from all' ); // $file being the .htpasswd file
+		require_once ABSPATH . 'wp-admin/includes/misc.php';
+		if ( ! insert_with_markers( wp_normalize_path( trailingslashit( $upload_dir ) . '.htaccess' ), 'Ultimate Member Upload Protection', array( 'deny from all' ) ) ) {
+			wp_die( esc_html__( 'The upload protection rule could not be saved. Please add it manually using the instructions in Access > Other.', 'ultimate-member' ) );
+		}
+		delete_transient( self::LOCK );
 
 		$this->run(); // recheck direct access to the files after writing .htaccess
 

@@ -151,93 +151,13 @@ class Site_Health {
 	 * @return array
 	 */
 	public function upload_security_test() {
-		global $is_apache, $is_nginx;
-
-		$nginx_config_sample = '';
-		if ( $is_nginx ) {
-			ob_start();
-			?>
-<code>
-# =============================================================================
-# Ultimate Member - NGINX configuration
-# =============================================================================
-#
-# NGINX has no .htaccess. On Apache/LiteSpeed the plugin can write a
-# `deny from all` rule into wp-content/uploads/ultimatemember/.htaccess
-# automatically; on NGINX the equivalent rules must be added to the server
-# configuration by hand and NGINX reloaded:
-#
-#     nginx -t && systemctl reload nginx
-#
-# Add the directives below INSIDE the `server { ... }` block of your site.
-#
-# Why this is safe: Ultimate Member never serves private files directly over
-# HTTP. Authorized downloads are streamed by PHP (readfile()) through the
-# /um-download/ route after a nonce + permission check, which is a local
-# filesystem read - NOT an HTTP request to the uploads directory. Denying
-# direct HTTP access to the directory therefore does not break downloads.
-#
-# -----------------------------------------------------------------------------
-# 1) Deny direct HTTP access to Ultimate Member uploads
-# -----------------------------------------------------------------------------
-#
-# The `^~` prefix is required: it stops NGINX from evaluating regex locations
-# (e.g. a `location ~* \.(jpg|png|pdf|...)$` media-caching block), which would
-# otherwise take precedence and serve the file anyway.
-
-location ^~ /wp-content/uploads/ultimatemember/ {
-deny all;   # alternatively: return 403;
-}
-
-# Multisite: files live under wp-content/uploads/sites/{blog_id}/ultimatemember/
-	location ~ ^/wp-content/uploads/sites/\d+/ultimatemember/ {
-	deny all;   # alternatively: return 403;
-	}
-
-# -----------------------------------------------------------------------------
-# 2) Routing for the /um-download/ pretty link
-# -----------------------------------------------------------------------------
-#
-# On a standard WordPress + NGINX setup the front controller already routes
-# this URL to WordPress, so no extra directive is needed:
-#
-#     location / {
-#         try_files $uri $uri/ /index.php?$args;
-#     }
-#
-# WordPress then resolves the request against its own registered rewrite rule
-# (see includes/core/class-rewrite.php) and sets the um_action/um_form/...
-# query vars. With plain (non-pretty) permalinks the link uses query args
-# (?um_action=download&...) and needs no rewrite at all.
-#
-# Only add the explicit rule below as a fallback if your server does NOT have
-# the `try_files ... /index.php?$args;` line above.
-#
-# Parsed from `// NGINX-config` comments in the plugin source:
-#
-# includes/core/class-rewrite.php:81
-rewrite ^/um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ /index.php?um_action=download&um_form=$1&um_field=$2&um_user=$3&um_verify=$4 last;
-
-# UM:Groups extension - new UI extension
-rewrite ^/um-groups-download/([^/]+)/([^/]+)/([^/]+)/\d{1,10}\.(gif|png|jpeg|jpg|webp)$ /index.php?um_action=um-groups-download&um_post=$1&um_author=$2&um_verify=$3 last;
-# UM:Activity extension
-rewrite ^/um-activity-download/([^/]+)/([^/]+)/([^/]+)/\d{1,10}\.(gif|png|jpeg|jpg)$ /index.php?um_action=um-activity-download&um_post=$1&um_author=$2&um_verify=$3 last;
-# UM:Activity - new UI extension
-rewrite ^/um-activity-download/([^/]+)/([^/]+)/([^/]+)/\d{1,10}\.(gif|png|jpeg|jpg|webp)$ /index.php?um_action=um-activity-download&um_post=$1&um_author=$2&um_verify=$3 last;
-# UM:User Notes extension
-rewrite ^/um-user-notes-download/([^/]+)/([^/]+)/([^/]+)/?$ /index.php?um_action=um-user-notes-download&um_verify=$1&um_note_id=$2 last;
-# UM:User Notes - new UI extension
-rewrite ^/um-user-notes-download/([^/]+)/([^/]+)/([^/]+)/?$ /index.php?um_action=um-user-notes-download&um_note_id=$1&um_nonce=$2 last;
-# =============================================================================
-</code>
-			<?php
-			$nginx_config_sample = ob_get_clean();
-		}
+		global $is_apache;
 
 		$checker   = UM()->common()->upload_security();
 		$actions   = array();
 		$actions[] = '<a href="' . esc_url( $checker->recheck_url() ) . '">' . esc_html__( 'Check upload protection again', 'ultimate-member' ) . '</a>';
-		if ( $is_apache ) {
+		$actions[] = '<a href="' . esc_url( admin_url( 'admin.php?page=um_options&tab=access&section=other#um-upload-protection' ) ) . '">' . esc_html__( 'View upload protection setup instructions', 'ultimate-member' ) . '</a>';
+		if ( $is_apache && $checker->can_write_htaccess() ) {
 			$actions[] = '<a href="' . esc_url( $checker->set_htaccess_url() ) . '">' . esc_html__( 'Set `deny from all` .htaccess rule for Ultimate Member uploads', 'ultimate-member' ) . '</a>';
 		}
 
@@ -272,10 +192,6 @@ rewrite ^/um-user-notes-download/([^/]+)/([^/]+)/([^/]+)/?$ /index.php?um_action
 			$result['badge']['color'] = 'red';
 			$text                     = __( 'An anonymous request retrieved a temporary test file from the Ultimate Member upload directory. Files served this way bypass the Ultimate Member download permission checks. Ask your hosting provider to restrict direct access to private uploads while preserving authorized downloads.', 'ultimate-member' );
 
-			if ( $is_nginx ) {
-				$text .= '<p>' . __( 'If you are using NGINX, you can add the following to your configuration to block direct access to the Ultimate Member upload directory:', 'ultimate-member' ) . '</p>';
-				$text .= esc_html( $nginx_config_sample );
-			}
 		} elseif ( 'blocked' === $check['state'] ) {
 			$result['label']  = __( 'Direct access to the tested Ultimate Member files is blocked', 'ultimate-member' );
 			$result['status'] = 'good';
