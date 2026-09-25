@@ -40,7 +40,7 @@ class Users {
 				$current_userdata = get_userdata( get_current_user_id() );
 				$current_login    = $current_userdata->user_login;
 
-				$um_usernames = array_diff( $um_usernames, array( $current_login ) );
+				$um_usernames = array_diff( $um_usernames, array( $current_login, strtolower( $current_login ) ) );
 			}
 
 			$usernames = array_unique( array_merge( $usernames, $um_usernames ) );
