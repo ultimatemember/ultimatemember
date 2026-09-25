@@ -157,7 +157,6 @@ function um_submit_account_errors_hook( $args ) {
 			}
 
 			if ( isset( $args['user_email'] ) ) {
-
 				if ( strlen( trim( $args['user_email'] ) ) === 0 ) {
 					UM()->form()->add_error( 'user_email', __( 'You must provide your email', 'ultimate-member' ) );
 				}
@@ -167,6 +166,23 @@ function um_submit_account_errors_hook( $args ) {
 				}
 
 				if ( email_exists( $args['user_email'] ) && email_exists( $args['user_email'] ) !== get_current_user_id() ) {
+					UM()->form()->add_error( 'user_email', __( 'Please provide a valid email', 'ultimate-member' ) );
+				}
+
+				// Primary emails must also be unique among other users' secondary emails.
+				$args = array(
+					'fields'     => 'ID',
+					'number'     => 1,
+					'exclude'    => array( get_current_user_id() ),
+					'meta_query' => array(
+						array(
+							'key'   => 'secondary_user_email',
+							'value' => $args['user_email'],
+						),
+					),
+				);
+
+				if ( get_users( $args ) ) {
 					UM()->form()->add_error( 'user_email', __( 'Please provide a valid email', 'ultimate-member' ) );
 				}
 			}
