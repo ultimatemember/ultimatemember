@@ -599,7 +599,12 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 		 * Main Query function for getting members via AJAX
 		 */
 		public function ajax_get_members() {
-			UM()->check_ajax_nonce();
+			if ( empty( $_POST['directory_id'] ) ) {
+				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
+			}
+			$unique_hash = sanitize_text_field( $_POST['directory_id'] );
+
+			check_ajax_referer( 'um-directory-' . $unique_hash );
 
 			if ( UM()->is_rate_limited( 'member_directory' ) ) {
 				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
@@ -608,16 +613,11 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			global $wpdb;
 
 			$blog_id = get_current_blog_id();
-			// phpcs:disable WordPress.Security.NonceVerification -- verified via `UM()->check_ajax_nonce();`.
-			if ( empty( $_POST['directory_id'] ) ) {
-				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
-			}
 
-			$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
+			$directory_id = $this->get_directory_by_hash( $unique_hash );
 			if ( empty( $directory_id ) ) {
 				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
 			}
-			// phpcs:enable WordPress.Security.NonceVerification -- verified via `UM()->check_ajax_nonce();`.
 
 			if ( ! $this->can_view_directory( $directory_id ) ) {
 				wp_send_json_error( __( 'You cannot see this member directory', 'ultimate-member' ) );
@@ -747,10 +747,8 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				}
 			}
 
-			// phpcs:disable WordPress.Security.NonceVerification -- verified via `UM()->check_ajax_nonce();`.
 			if ( ! empty( $_POST['search'] ) ) {
 				$search_line = $this->prepare_search( $_POST['search'] );
-				// phpcs:enable WordPress.Security.NonceVerification -- verified via `UM()->check_ajax_nonce();`.
 				if ( ! empty( $search_line ) ) {
 					$searches = array();
 
@@ -804,7 +802,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			if ( ! empty( $directory_data['search_fields'] ) ) {
 				$search_filters = maybe_unserialize( $directory_data['search_fields'] );
 				if ( ! empty( $search_filters ) && is_array( $search_filters ) ) {
-					// phpcs:ignore WordPress.Security.NonceVerification -- verified via `UM()->check_ajax_nonce();`.
 					$filter_query = array_intersect_key( $_POST, array_flip( $search_filters ) );
 				}
 			}
@@ -855,8 +852,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			}
 			//}
 
-			$order = 'ASC';
-			// phpcs:ignore WordPress.Security.NonceVerification -- verified via `UM()->check_ajax_nonce();`.
+			$order  = 'ASC';
 			$sortby = ! empty( $_POST['sorting'] ) ? sanitize_text_field( $_POST['sorting'] ) : $directory_data['sortby'];
 			$sortby = ( 'other' === $sortby ) ? $directory_data['sortby_custom'] : $sortby;
 
@@ -991,7 +987,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				}
 
 				// Reset seed on load of initial
-				// phpcs:ignore WordPress.Security.NonceVerification -- verified via `UM()->check_ajax_nonce();`.
 				if ( empty( $_REQUEST['directory_id'] ) && isset( $_SESSION['um_member_directory_seed'] ) ) {
 					unset( $_SESSION['um_member_directory_seed'] );
 				}
@@ -1046,7 +1041,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			}
 
 			$query_number = ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $profiles_per_page ) ? $directory_data['max_users'] : $profiles_per_page;
-			$query_paged  = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 1; // phpcs:ignore WordPress.Security.NonceVerification -- verified via `UM()->check_ajax_nonce();`.
+			$query_paged  = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
 
 			$number = $query_number;
 			if ( ! empty( $directory_data['max_users'] ) && $query_paged * $query_number > $directory_data['max_users'] ) {

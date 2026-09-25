@@ -11,18 +11,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 function um_submit_account_errors_hook( $args ) {
 	global $current_user;
 
-	if ( ! isset( $args['_um_account'] ) && ! isset( $args['_um_account_tab'] ) ) {
+	if ( ! um_is_predefined_page( 'account' ) && ! isset( $args['_um_account'] ) && ! isset( $args['_um_account_tab'] ) ) {
 		return;
 	}
 
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
+	$user_id = get_current_user_id();
+
 	$tab = sanitize_key( $args['_um_account_tab'] );
 
-	if ( ! wp_verify_nonce( $args[ 'um_account_nonce_' . $tab ], 'um_update_account_' . $tab ) ) {
+	if ( ! wp_verify_nonce( $args[ 'um_account_nonce_' . $tab ], "um_update_account_$tab-$user_id" ) ) {
 		UM()->form()->add_error( 'um_account_security', __( 'Are you hacking? Please try again!', 'ultimate-member' ) );
 	}
 
 	switch ( $tab ) {
-		case 'delete': {
+		case 'delete':
 			// delete account
 			if ( UM()->account()->current_password_is_required( 'delete' ) ) {
 				if ( strlen( trim( $args['single_user_password'] ) ) === 0 ) {
@@ -35,12 +41,9 @@ function um_submit_account_errors_hook( $args ) {
 			}
 
 			UM()->account()->current_tab = 'delete';
-
 			break;
-		}
 
-		case 'password': {
-
+		case 'password':
 			// change password
 			UM()->account()->current_tab = 'password';
 
@@ -122,12 +125,10 @@ function um_submit_account_errors_hook( $args ) {
 					}
 				}
 			}
-
 			break;
-		}
 
 		case 'account':
-		case 'general': {
+		case 'general':
 			// errors on general tab
 			$account_name_require = UM()->options()->get( 'account_name_require' );
 
@@ -156,7 +157,6 @@ function um_submit_account_errors_hook( $args ) {
 			}
 
 			if ( isset( $args['user_email'] ) ) {
-
 				if ( strlen( trim( $args['user_email'] ) ) === 0 ) {
 					UM()->form()->add_error( 'user_email', __( 'You must provide your email', 'ultimate-member' ) );
 				}
@@ -166,6 +166,23 @@ function um_submit_account_errors_hook( $args ) {
 				}
 
 				if ( email_exists( $args['user_email'] ) && email_exists( $args['user_email'] ) !== get_current_user_id() ) {
+					UM()->form()->add_error( 'user_email', __( 'Please provide a valid email', 'ultimate-member' ) );
+				}
+
+				// Primary emails must also be unique among other users' secondary emails.
+				$args = array(
+					'fields'     => 'ID',
+					'number'     => 1,
+					'exclude'    => array( get_current_user_id() ),
+					'meta_query' => array(
+						array(
+							'key'   => 'secondary_user_email',
+							'value' => $args['user_email'],
+						),
+					),
+				);
+
+				if ( get_users( $args ) ) {
 					UM()->form()->add_error( 'user_email', __( 'Please provide a valid email', 'ultimate-member' ) );
 				}
 			}
@@ -180,9 +197,7 @@ function um_submit_account_errors_hook( $args ) {
 					}
 				}
 			}
-
 			break;
-		}
 
 		default:
 			/**
@@ -221,22 +236,22 @@ function um_submit_account_details( $args ) {
 
 	$current_tab = isset( $args['_um_account_tab'] ) ? sanitize_key( $args['_um_account_tab'] ) : '';
 
-	$user_id = um_user( 'ID' );
+	$user_id = get_current_user_id(); // Account can be submitted only for the current user.
 
 	//change password account's tab
 	if ( 'password' === $current_tab && $args['user_password'] && $args['confirm_user_password'] ) {
 		$changes['user_pass'] = trim( $args['user_password'] );
-		$args['user_id']      = get_current_user_id();
+		$args['user_id']      = $user_id;
 
 		UM()->user()->password_changed();
 
 		add_filter( 'send_password_change_email', '__return_false' );
 
 		//clear all sessions with old passwords
-		$user = WP_Session_Tokens::get_instance( $args['user_id'] );
+		$user = WP_Session_Tokens::get_instance( $user_id );
 		$user->destroy_all();
 
-		wp_set_password( $changes['user_pass'], $args['user_id'] );
+		wp_set_password( $changes['user_pass'], $user_id );
 
 		do_action( 'um_before_signon_after_account_changes', $args );
 
@@ -729,7 +744,7 @@ function um_after_account_privacy( $args ) {
 
 			<?php } ?>
 
-			<a class="um-request-button um-export-data-button" data-action="um-export-data" href="javascript:void(0);">
+			<a href="javascript:void(0);" class="um-request-button um-export-data-button" data-action="um-export-data" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um-request-um-export-data' ) ); ?>">
 				<?php esc_html_e( 'Request data', 'ultimate-member' ); ?>
 			</a>
 		<?php } ?>
@@ -819,7 +834,7 @@ function um_after_account_privacy( $args ) {
 
 			<?php } ?>
 
-			<a class="um-request-button um-erase-data-button" data-action="um-erase-data" href="javascript:void(0);">
+			<a href="javascript:void(0);" class="um-request-button um-erase-data-button" data-action="um-erase-data" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um-request-um-erase-data' ) ); ?>">
 				<?php esc_html_e( 'Request data erase', 'ultimate-member' ); ?>
 			</a>
 		<?php } ?>
@@ -831,17 +846,17 @@ function um_after_account_privacy( $args ) {
 
 
 function um_request_user_data() {
-	UM()->check_ajax_nonce();
-
 	if ( ! isset( $_POST['request_action'] ) ) {
 		wp_send_json_error( __( 'Wrong request.', 'ultimate-member' ) );
 	}
-
-	$user_id        = get_current_user_id();
-	$password       = ! empty( $_POST['password'] ) ? sanitize_text_field( $_POST['password'] ) : '';
-	$user           = get_userdata( $user_id );
-	$hash           = $user->data->user_pass;
 	$request_action = sanitize_key( $_POST['request_action'] );
+
+	check_ajax_referer( 'um-request-' . $request_action );
+
+	$user_id  = get_current_user_id();
+	$password = ! empty( $_POST['password'] ) ? sanitize_text_field( $_POST['password'] ) : '';
+	$user     = get_userdata( $user_id );
+	$hash     = $user->data->user_pass;
 
 	if ( 'um-export-data' === $request_action ) {
 		if ( UM()->account()->current_password_is_required( 'privacy_download_data' ) ) {

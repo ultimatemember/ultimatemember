@@ -919,6 +919,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 							$custom_dropdown .= ' data-member-directory="yes"';
 							$custom_dropdown .= ' data-um-parent="' . esc_attr( $attrs['parent_dropdown_relationship'] ) . '"';
+							$custom_dropdown .= ' data-parent-nonce="' . esc_attr( wp_create_nonce( 'um-select-options' . $attrs['parent_dropdown_relationship'] ) ) . '"';
 
 							if ( isset( $_GET[ 'filter_' . $attrs['parent_dropdown_relationship'] . '_' . $unique_hash ] ) ) {
 								$_POST['parent_option_name'] = $attrs['parent_dropdown_relationship'];
@@ -2767,6 +2768,23 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$description_key = UM()->profile()->get_show_bio_key( UM()->fields()->global_args );
 
+			$profile_forms = array();
+			if ( empty( UM()->fields()->set_id ) ) {
+				$profile_forms = get_posts(
+					array(
+						'post_type'      => 'um_form',
+						'meta_query'     => array(
+							array(
+								'key'   => '_um_mode',
+								'value' => 'profile',
+							),
+						),
+						'posts_per_page' => -1,
+						'fields'         => 'ids',
+					)
+				);
+			}
+
 			if ( ! empty( $directory_data['show_tagline'] ) && ! empty( $directory_data['tagline_fields'] ) ) {
 				$directory_data['tagline_fields'] = maybe_unserialize( $directory_data['tagline_fields'] );
 
@@ -2774,6 +2792,24 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					foreach ( $directory_data['tagline_fields'] as $key ) {
 						if ( ! $key || ! array_key_exists( $key, $user_fields ) ) {
 							continue;
+						}
+
+						if ( empty( UM()->fields()->set_id ) ) {
+							foreach ( $profile_forms as $form_id ) {
+								UM()->fields()->set_id   = $form_id;
+								UM()->fields()->set_mode = 'profile';
+								$field_data              = UM()->fields()->get_field( $key );
+								if ( ! um_can_view_field( $field_data ) ) {
+									UM()->fields()->set_id   = null;
+									UM()->fields()->set_mode = null;
+									continue 2;
+								}
+							}
+						} else {
+							$field_data = UM()->fields()->get_field( $key );
+							if ( ! um_can_view_field( $field_data ) ) {
+								continue;
+							}
 						}
 
 						if ( '_um_last_login' === $key ) {
@@ -2806,6 +2842,24 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						foreach ( $directory_data['reveal_fields'] as $key ) {
 							if ( ! $key || ! array_key_exists( $key, $user_fields ) ) {
 								continue;
+							}
+
+							if ( empty( UM()->fields()->set_id ) ) {
+								foreach ( $profile_forms as $form_id ) {
+									UM()->fields()->set_id   = $form_id;
+									UM()->fields()->set_mode = 'profile';
+									$field_data              = UM()->fields()->get_field( $key );
+									if ( ! um_can_view_field( $field_data ) ) {
+										UM()->fields()->set_id   = null;
+										UM()->fields()->set_mode = null;
+										continue 2;
+									}
+								}
+							} else {
+								$field_data = UM()->fields()->get_field( $key );
+								if ( ! um_can_view_field( $field_data ) ) {
+									continue;
+								}
 							}
 
 							if ( '_um_last_login' === $key ) {
@@ -3003,7 +3057,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * Main Query function for getting members via AJAX
 		 */
 		public function ajax_get_members() {
-			UM()->check_ajax_nonce();
+			if ( empty( $_POST['directory_id'] ) ) {
+				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
+			}
+			$unique_hash = sanitize_text_field( $_POST['directory_id'] );
+
+			check_ajax_referer( 'um-directory-' . $unique_hash );
 
 			if ( UM()->is_rate_limited( 'member_directory' ) ) {
 				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
@@ -3011,12 +3070,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			global $wpdb;
 
-			if ( empty( $_POST['directory_id'] ) ) {
-				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
-			}
-
-			$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
-
+			$directory_id = $this->get_directory_by_hash( $unique_hash );
 			if ( empty( $directory_id ) ) {
 				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
 			}
@@ -3249,16 +3303,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			<?php
 		}
 
-
 		/**
 		 * AJAX handler - Get options for the member directory "Admin filtering"
 		 * @version 2.1.12
 		 */
-		function default_filter_settings() {
-			UM()->admin()->check_ajax_nonce();
+		public function default_filter_settings() {
+			check_ajax_referer( 'um_md_default_filters_settings' );
 
 			// we can't use function "sanitize_key" because it changes uppercase to lowercase
-			$filter_key = sanitize_text_field( $_REQUEST['key'] );
+			$filter_key   = sanitize_text_field( $_REQUEST['key'] );
 			$directory_id = absint( $_REQUEST['directory_id'] );
 
 			$html = $this->show_filter( $filter_key, array( 'form_id' => $directory_id ), false, true );

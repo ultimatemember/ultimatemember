@@ -42,7 +42,7 @@ jQuery(document).ready( function(){
 			});
 
 			var request = {
-				nonce: um_admin_scripts.nonce,
+				_wpnonce: scan_button_elem.data('nonce'),
 				capabilities: checkedCaps,
 				last_scanned_capability: last_capability,
 			};

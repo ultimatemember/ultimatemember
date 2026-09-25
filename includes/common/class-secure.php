@@ -210,7 +210,7 @@ if ( ! class_exists( 'um\common\Secure' ) ) {
 		 */
 		public function revoke_caps( $user ) {
 			$user_agent = '';
-			if ( isset( $_REQUEST['nonce'], $_REQUEST['action'] ) && 'um_secure_scan_affected_users' === $_REQUEST['action'] && wp_verify_nonce( $_REQUEST['nonce'], 'um-admin-nonce' ) && current_user_can( 'manage_options' ) ) {
+			if ( isset( $_REQUEST['action'] ) && 'um_secure_scan_affected_users' === $_REQUEST['action'] && current_user_can( 'manage_options' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce if verified in the parent handler.
 				$user_agent = __( 'Ultimate Member Scanner', 'ultimate-member' );
 			} elseif ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
 				$user_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );

@@ -23,15 +23,20 @@ if ( ! class_exists( 'um\core\Login' ) ) {
 		 * Login constructor.
 		 */
 		public function __construct() {
-			add_action( 'um_after_login_fields', array( $this, 'add_nonce' ) );
+			add_action( 'um_after_login_fields', array( $this, 'add_nonce' ), 10, 2 );
 			add_action( 'um_submit_form_login', array( $this, 'verify_nonce' ), 1, 2 );
 		}
 
 		/**
-		 * Add registration form notice
+		 * Adds a nonce field for a form to ensure request integrity.
+		 *
+		 * @param array $args    An array of arguments for the form.
+		 * @param int   $form_id The unique identifier of the form.
+		 *
+		 * @return void
 		 */
-		public function add_nonce() {
-			wp_nonce_field( 'um_login_form' );
+		public function add_nonce( $args, $form_id ) {
+			wp_nonce_field( 'um_login_form' . $form_id );
 		}
 
 		/**
@@ -60,7 +65,7 @@ if ( ! class_exists( 'um\core\Login' ) ) {
 				return;
 			}
 
-			if ( empty( $args['_wpnonce'] ) || ! wp_verify_nonce( $args['_wpnonce'], 'um_login_form' ) ) {
+			if ( empty( $args['_wpnonce'] ) || empty( $form_data['form_id'] ) || ! wp_verify_nonce( $args['_wpnonce'], 'um_login_form' . $form_data['form_id'] ) ) {
 				/**
 				 * Filters URL for redirect if login form nonce isn't verified.
 				 *
@@ -79,7 +84,6 @@ if ( ! class_exists( 'um\core\Login' ) ) {
 				 */
 				$url = apply_filters( 'um_login_invalid_nonce_redirect_url', add_query_arg( array( 'err' => 'invalid_nonce' ) ) );
 				um_safe_redirect( $url );
-				exit;
 			}
 		}
 	}

@@ -48,8 +48,6 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 
 			add_action( 'um_settings_before_save', array( $this, 'check_secure_changes' ) );
 			add_action( 'um_settings_save', array( $this, 'on_settings_save' ) );
-
-			add_action( 'wp_ajax_um_secure_scan_affected_users', array( $this, 'ajax_scanner' ) );
 		}
 
 		/**
@@ -182,7 +180,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 		 * @return array
 		 */
 		public function add_settings( $settings ) {
-			$nonce       = wp_create_nonce( 'um-secure-expire-session-nonce' );
+			$nonce = wp_create_nonce( 'um-secure-expire-session-nonce' );
 
 			$banned_capabilities       = array();
 			$banned_admin_capabilities = UM()->common()->secure()->get_banned_capabilities_list();
@@ -193,7 +191,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 			$disabled_capabilities      = UM()->options()->get_default( 'banned_capabilities' );
 			$disabled_capabilities_text = '<strong>' . implode( '</strong>, <strong>', $disabled_capabilities ) . '</strong>';
 
-			$scanner_content   = '<button class="button um-secure-scan-content">' . esc_html__( 'Scan Now', 'ultimate-member' ) . '</button>';
+			$scanner_content   = '<button class="button um-secure-scan-content" data-nonce="' . esc_attr( wp_create_nonce( 'um_secure_scan_content' ) ) . '">' . esc_html__( 'Scan Now', 'ultimate-member' ) . '</button>';
 			$scanner_content  .= '<span class="um-secure-scan-results">';
 			$scanner_content  .= esc_html__( 'Last scan:', 'ultimate-member' ) . ' ';
 			$scan_status       = get_option( 'um_secure_scan_status' );

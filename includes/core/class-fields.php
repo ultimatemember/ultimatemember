@@ -132,21 +132,54 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			foreach ( $social as $k => $arr ) {
-				if ( um_profile( $k ) ) {
-					if ( array_key_exists( 'match', $arr ) ) {
-						$match = is_array( $arr['match'] ) ? $arr['match'][0] : $arr['match'];
-					} else {
-						$match = null;
-					}
-					$arr['url_target'] = isset( $arr['url_target'] ) ? $arr['url_target'] : '_blank';
-					?>
-
-					<a href="<?php echo esc_url( um_filtered_social_link( $k, $match ) ); ?>"
-					style="background: <?php echo esc_attr( $arr['color'] ); ?>;" target="<?php echo esc_attr( $arr['url_target'] ); ?>" class="um-tip-n"
-					title="<?php echo esc_attr( $arr['title'] ); ?>"><i class="<?php echo esc_attr( $arr['icon'] ); ?>"></i></a>
-
-					<?php
+				if ( ! um_profile( $k ) ) {
+					continue;
 				}
+
+				if ( empty( $this->set_id ) ) {
+					$profile_forms = get_posts(
+						array(
+							'post_type'      => 'um_form',
+							'meta_query'     => array(
+								array(
+									'key'   => '_um_mode',
+									'value' => 'profile',
+								),
+							),
+							'posts_per_page' => -1,
+							'fields'         => 'ids',
+						)
+					);
+					foreach ( $profile_forms as $form_id ) {
+						$this->set_id   = $form_id;
+						$this->set_mode = 'profile';
+						$field_data     = UM()->fields()->get_field( $k );
+						if ( ! um_can_view_field( $field_data ) ) {
+							$this->set_id   = null;
+							$this->set_mode = null;
+							continue 2;
+						}
+					}
+				} else {
+					$field_data = UM()->fields()->get_field( $k );
+					if ( ! um_can_view_field( $field_data ) ) {
+						continue;
+					}
+				}
+
+				if ( array_key_exists( 'match', $arr ) ) {
+					$match = is_array( $arr['match'] ) ? $arr['match'][0] : $arr['match'];
+				} else {
+					$match = null;
+				}
+				$arr['url_target'] = isset( $arr['url_target'] ) ? $arr['url_target'] : '_blank';
+				?>
+
+				<a href="<?php echo esc_url( um_filtered_social_link( $k, $match ) ); ?>"
+				style="background: <?php echo esc_attr( $arr['color'] ); ?>;" target="<?php echo esc_attr( $arr['url_target'] ); ?>" class="um-tip-n"
+				title="<?php echo esc_attr( $arr['title'] ); ?>"><i class="<?php echo esc_attr( $arr['icon'] ); ?>"></i></a>
+
+				<?php
 			}
 		}
 
@@ -877,7 +910,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 
 				if ( 'profile' === $this->set_mode ) {
-					if ( ! isset( UM()->form()->post_form['profile_nonce'] ) || false === wp_verify_nonce( UM()->form()->post_form['profile_nonce'], 'um-profile-nonce' . UM()->user()->target_id ) ) {
+					if ( ! isset( UM()->form()->post_form['profile_nonce'], UM()->fields()->set_id ) || false === wp_verify_nonce( UM()->form()->post_form['profile_nonce'], 'um-profile-nonce' . UM()->fields()->set_id . UM()->user()->target_id ) ) {
 						return '';
 					}
 				}
@@ -966,7 +999,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 * ?>
 				 */
 				$value = apply_filters( "um_edit_{$key}_field_value", $value, $key );
-				$value = maybe_unserialize( $value );
+				$value = um_maybe_unserialize( $value );
 
 			} elseif ( $default ) {
 
@@ -2206,7 +2239,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$disabled = $data['disabled'];
 			}
 
-			if ( isset( $data['in_group'] ) && '' !== $data['in_group'] && 'group' !== $rule ) {
+			if ( isset( $data['in_group'] ) && ( '' !== $data['in_group'] && 0 !== $data['in_group'] ) && 'group' !== $rule ) { // TODO maybe permanently delete it.
 				return '';
 			}
 
@@ -2965,7 +2998,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					break;
 				/* Single Image Upload */
 				case 'image':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . ' data-mode="' . esc_attr( $this->set_mode ) . '" data-upload-label="' . ( ! empty( $data['button_text'] ) ? esc_attr( $data['button_text'] ) : esc_attr__( 'Upload', 'ultimate-member' ) ) . '">';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . ' data-mode="' . esc_attr( $this->set_mode ) . '" data-resize-nonce="' . esc_attr( wp_create_nonce( 'um-resize-image' . $this->set_mode . $key ) ) . '" data-upload-label="' . ( ! empty( $data['button_text'] ) ? esc_attr( $data['button_text'] ) : esc_attr__( 'Upload', 'ultimate-member' ) ) . '">';
 					if ( in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) ) {
 						$field_value = '';
 					} else {
@@ -2983,12 +3016,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					if ( ! empty( $field_value ) && 'empty_file' !== $field_value ) {
 						if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) ) {
-//							if ( isset( $this->set_mode ) && 'register' === $this->set_mode ) {
-//								$image_info = get_transient( "um_{$field_value}" );
-//							} else {
-//								$image_info = um_user( $data['metakey'] . '_metadata' );
-//							}
-
 							if ( ( isset( $this->set_mode ) && 'register' === $this->set_mode ) || file_exists( UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $field_value ) ) {
 								$img_value = UM()->uploader()->get_core_temp_url() . '/' . $this->field_value( $key, $default, $data );
 							} else {
@@ -3000,7 +3027,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 						$output .= '<div class="um-single-image-preview show ' . esc_attr( $data['crop_class'] ) . '" data-crop="' . esc_attr( $data['crop_data'] ) . '" data-key="' . esc_attr( $key ) . '">';
 						if ( empty( $disabled ) ) {
-							$output .= '<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>';
+							$output .= '<a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file' . $key ) ) . '"><i class="um-icon-close"></i></a>';
 						}
 						$output .= $img;
 						$output .= '</div>';
@@ -3010,7 +3037,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					} else {
 						$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '" data-crop="' . esc_attr( $data['crop_data'] ) . '" data-key="' . esc_attr( $key ) . '">';
 						if ( empty( $disabled ) ) {
-							$output .= '<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>';
+							$output .= '<a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file' . $key ) ) . '"><i class="um-icon-close"></i></a>';
 						}
 						$output .= '<img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div>';
 						if ( empty( $disabled ) ) {
@@ -3063,7 +3090,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 
 						$nonce   = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
-						$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '"  data-crop="' . esc_attr( $data['crop_data'] ) . '" data-ratio="' . esc_attr( $data['ratio'] ) . '" data-min_width="' . esc_attr( $data['min_width'] ) . '" data-min_height="' . esc_attr( $data['min_height'] ) . '" data-coord=""><a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a><img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
+						$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '"  data-crop="' . esc_attr( $data['crop_data'] ) . '" data-ratio="' . esc_attr( $data['ratio'] ) . '" data-min_width="' . esc_attr( $data['min_width'] ) . '" data-min_height="' . esc_attr( $data['min_height'] ) . '" data-coord=""><a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file' . $key ) ) . '"><i class="um-icon-close"></i></a><img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
 						$output .= '<div class="um-single-image-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-nonce="' . esc_attr( $nonce ) . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" ' . $data_icon . ' data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $data['max_size'] ) . '" data-max_size_error="' . esc_attr( $data['max_size_error'] ) . '" data-min_size_error="' . esc_attr( $data['min_size_error'] ) . '" data-extension_error="' . esc_attr( $data['extension_error'] ) . '" data-allowed_types="' . esc_attr( $allowed_types ) . '" data-accept="' . esc_attr( $accept_types ) . '" data-upload_text="' . esc_attr( $data['upload_text'] ) . '" data-max_files_error="' . esc_attr( $data['max_files_error'] ) . '" data-upload_help_text="' . esc_attr( $data['upload_help_text'] ) . '">' . esc_html( $data['button_text'] ) . '</div>';
 						$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">
@@ -3128,7 +3155,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						if ( file_exists( $file_dir ) ) {
 							$output .= '<div class="um-single-file-preview show" data-key="' . esc_attr( $key ) . '">';
 							if ( empty( $disabled ) ) {
-								$output .= '<a href="#" class="cancel"><i class="um-icon-close"></i></a>';
+								$output .= '<a href="#" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file' . $key ) ) . '"><i class="um-icon-close"></i></a>';
 							}
 
 							$fonticon_bg = UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] );
@@ -3192,7 +3219,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$set_mode = '';
 						}
 						$output .= '<div class="um-single-file-preview">
-										<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>
+										<a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file' . $key ) ) . '"><i class="um-icon-close"></i></a>
 										<div class="um-single-fileinfo">
 											<a href="" target="_blank">
 												<span class="icon"><i></i></span>
@@ -3283,7 +3310,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						 * add_filter( 'um_custom_dropdown_options_parent__{$form_key}', 'function_name', 10, 2 );
 						 */
 						$parent_dropdown_relationship = apply_filters( "um_custom_dropdown_options_parent__{$form_key}", $data['parent_dropdown_relationship'], $data );
-						$atts_ajax                   .= ' data-um-parent="' . esc_attr( $parent_dropdown_relationship ) . '" ';
+						$atts_ajax                   .= ' data-um-parent="' . esc_attr( $parent_dropdown_relationship ) . '" data-parent-nonce="' . esc_attr( wp_create_nonce( 'um-select-options' . $parent_dropdown_relationship ) ) . '" ';
 
 						if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) && um_user( $data['parent_dropdown_relationship'] ) ) {
 							if ( ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
@@ -4177,12 +4204,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			UM()->form()->form_suffix = '-' . $this->global_args['form_id'];
 
 			$this->set_mode = $mode;
+			$this->set_id   = absint( $this->global_args['form_id'] );
 
 			if ( 'profile' === $mode ) {
-				UM()->form()->nonce = wp_create_nonce( 'um-profile-nonce' . UM()->user()->target_id );
+				UM()->form()->nonce = wp_create_nonce( 'um-profile-nonce' . $this->set_id . UM()->user()->target_id );
 			}
-
-			$this->set_id = absint( $this->global_args['form_id'] );
 
 			$this->field_icons = ( isset( $this->global_args['icons'] ) ) ? $this->global_args['icons'] : 'label';
 
@@ -4215,6 +4241,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				foreach ( $this->rows as $row_id => $row_array ) {
 
 					$row_fields = $this->get_fields_by_row( $row_id );
+
 					if ( $row_fields ) {
 
 						$output .= $this->new_row_output( $row_id, $row_array );
@@ -4246,6 +4273,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 									$output .= '<div class="um-col-1">';
 									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
+
 									if ( $col1_fields ) {
 										foreach ( $col1_fields as $key => $data ) {
 											if ( ! empty( $args['is_block'] ) ) {
@@ -4366,7 +4394,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 			$type = $data['type'];
 
-			if ( isset( $data['in_group'] ) && '' !== $data['in_group'] && 'group' !== $rule ) {
+			if ( isset( $data['in_group'] ) && ( '' !== $data['in_group'] && 0 !== $data['in_group'] ) && 'group' !== $rule ) {
 				return '';
 			}
 
@@ -5009,15 +5037,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * Admin Builder silent AJAX handler for actions with fields.
 		 */
 		public function do_ajax_action() {
-			UM()->admin()->check_ajax_nonce();
-
-			// phpcs:disable WordPress.Security.NonceVerification
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-				wp_send_json_error( __( 'Please login as administrator.', 'ultimate-member' ) );
-			}
-
 			if ( ! isset( $_POST['act_id'] ) ) {
 				wp_send_json_error( __( 'Invalid action.', 'ultimate-member' ) );
+			}
+			$act_id = sanitize_key( $_POST['act_id'] );
+
+			check_ajax_referer( 'um_do_ajax_action_' . $act_id );
+
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( __( 'Please login as administrator.', 'ultimate-member' ) );
 			}
 
 			$in_row   = isset( $_POST['in_row'] ) ? absint( $_POST['in_row'] ) : 0;
@@ -5025,10 +5053,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				'in_row'     => '_um_row_' . ( $in_row + 1 ),
 				'in_sub_row' => isset( $_POST['in_sub_row'] ) ? absint( $_POST['in_sub_row'] ) : '',
 				'in_column'  => isset( $_POST['in_column'] ) ? absint( $_POST['in_column'] ) : '',
-				'in_group'   => isset( $_POST['in_group'] ) ? absint( $_POST['in_group'] ) : '',
+				'in_group'   => ! empty( $_POST['in_group'] ) ? absint( $_POST['in_group'] ) : '',
 			);
 
-			switch ( sanitize_key( $_POST['act_id'] ) ) {
+			switch ( $act_id ) {
 				case 'um_admin_duplicate_field':
 					// arg1 is a field metakey(id)
 					// arg2 is a form ID.
@@ -5054,7 +5082,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$this->add_field_from_list( sanitize_text_field( $_POST['arg1'] ), absint( $_POST['arg2'] ), $position );
 					break;
 			}
-			// phpcs:enable WordPress.Security.NonceVerification
+
 			wp_send_json_success();
 		}
 

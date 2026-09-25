@@ -119,14 +119,15 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 		 *
 		 */
 		public function load_posts() {
-			UM()->check_ajax_nonce();
+			$author = ! empty( $_POST['author'] ) ? absint( $_POST['author'] ) : get_current_user_id();
+
+			check_ajax_referer( 'um-ajax-paginate-um_load_posts' . $author );
 
 			if ( UM()->is_rate_limited( 'paginate_posts' ) ) {
 				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
 			}
 
-			$author = ! empty( $_POST['author'] ) ? absint( $_POST['author'] ) : get_current_user_id();
-			$page   = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 0;
+			$page = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 0;
 
 			if ( ! um_can_view_profile( $author ) ) {
 				wp_send_json_error( __( 'You do not have permission to view this profile', 'ultimate-member' ) );
@@ -174,14 +175,15 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 		 * Dynamic load of comments
 		 */
 		public function load_comments() {
-			UM()->check_ajax_nonce();
+			$user_id = ! empty( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : get_current_user_id();
+
+			check_ajax_referer( 'um-ajax-paginate-um_load_comments' . $user_id );
 
 			if ( UM()->is_rate_limited( 'paginate_comments' ) ) {
 				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
 			}
 
-			$user_id = ! empty( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : get_current_user_id();
-			$page    = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 0;
+			$page = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 0;
 
 			if ( ! um_can_view_profile( $user_id ) ) {
 				wp_send_json_error( __( 'You do not have permission to view this profile', 'ultimate-member' ) );
