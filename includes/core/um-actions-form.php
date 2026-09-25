@@ -942,11 +942,9 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 					} elseif ( in_array( $mode, array( 'register', 'profile' ), true ) ) {
 						// Primary emails must also be unique among other users' secondary emails.
 						$args = array(
-							'blog_id'     => 0,
-							'fields'      => 'ID',
-							'number'      => 1,
-							'count_total' => false,
-							'meta_query'  => array(
+							'fields'     => 'ID',
+							'number'     => 1,
+							'meta_query' => array(
 								array(
 									'key'   => 'secondary_user_email',
 									'value' => sanitize_email( $submitted_data[ $key ] ),
