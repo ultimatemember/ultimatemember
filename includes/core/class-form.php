@@ -726,8 +726,10 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 */
 		public function beautify( $form ) {
 			if ( isset( $form['form_id'] ) ) {
-				$this->form_suffix = '-' . $form['form_id'];
-				$this->processing  = absint( $form['form_id'] );
+				$form_id = absint( $form['form_id'] );
+
+				$this->form_suffix = '-' . $form_id;
+				$this->processing  = $form_id;
 
 				foreach ( $form as $key => $value ) {
 					if ( strstr( $key, $this->form_suffix ) ) {
@@ -805,6 +807,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		public function sanitize( $form ) {
 			$submission_input = $form;
 			if ( isset( $form['form_id'] ) ) {
+				$form['form_id'] = absint( $form['form_id'] );
+
 				if ( isset( $this->form_data['custom_fields'] ) ) {
 					$custom_fields = maybe_unserialize( $this->form_data['custom_fields'] );
 

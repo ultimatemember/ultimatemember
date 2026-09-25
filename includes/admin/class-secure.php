@@ -191,8 +191,8 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 			$disabled_capabilities      = UM()->options()->get_default( 'banned_capabilities' );
 			$disabled_capabilities_text = '<strong>' . implode( '</strong>, <strong>', $disabled_capabilities ) . '</strong>';
 
-			$scanner_content   = '<button class="button um-secure-scan-content">' . esc_html__( 'Scan Now', 'ultimate-member' ) . '</button>';
-			$scanner_content  .= '<span class="um-secure-scan-results" data-nonce="' . esc_attr( wp_create_nonce( 'um_secure_scan_content' ) ) . '">';
+			$scanner_content   = '<button class="button um-secure-scan-content" data-nonce="' . esc_attr( wp_create_nonce( 'um_secure_scan_content' ) ) . '">' . esc_html__( 'Scan Now', 'ultimate-member' ) . '</button>';
+			$scanner_content  .= '<span class="um-secure-scan-results">';
 			$scanner_content  .= esc_html__( 'Last scan:', 'ultimate-member' ) . ' ';
 			$scan_status       = get_option( 'um_secure_scan_status' );
 			$last_scanned_time = get_option( 'um_secure_last_time_scanned' );

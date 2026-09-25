@@ -94,13 +94,11 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		function get_download_link( $form_id, $field_key, $user_id ) {
 			$field_key = urlencode( $field_key );
 
+			$nonce = wp_create_nonce( "um-download-nonce-$user_id-$form_id" );
+			$url   = get_home_url( get_current_blog_id() );
 			if ( UM()->is_permalinks ) {
-				$url = get_home_url( get_current_blog_id() );
-				$nonce = wp_create_nonce( $user_id . $form_id . 'um-download-nonce' );
 				$url = $url . "/um-download/{$form_id}/{$field_key}/{$user_id}/{$nonce}";
 			} else {
-				$url = get_home_url( get_current_blog_id() );
-				$nonce = wp_create_nonce( $user_id . $form_id . 'um-download-nonce' );
 				$url = add_query_arg( array( 'um_action' => 'download', 'um_form' => $form_id, 'um_field' => $field_key, 'um_user' => $user_id, 'um_verify' => $nonce ), $url );
 			}
 
@@ -141,22 +139,25 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 			$query_verify = get_query_var( 'um_verify' );
 			if ( empty( $query_verify ) ||
-			     ! wp_verify_nonce( $query_verify, $user_id . $form_id . 'um-download-nonce' ) ) {
+			    ! wp_verify_nonce( $query_verify, "um-download-nonce-$user_id-$form_id" ) ) {
 				return false;
 			}
 
 			um_fetch_user( $user_id );
 			$field_data = get_post_meta( $form_id, '_um_custom_fields', true );
 			if ( empty( $field_data[ $field_key ] ) ) {
+				um_reset_user();
 				return false;
 			}
 
 			if ( ! um_can_view_field( $field_data[ $field_key ] ) ) {
+				um_reset_user();
 				return false;
 			}
 
 			$field_value = UM()->fields()->field_value( $field_key );
 			if ( empty( $field_value ) ) {
+				um_reset_user();
 				return false;
 			}
 
@@ -187,6 +188,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			//validate traversal file
 			if ( validate_file( $file_path ) === 1 ) {
+				um_reset_user();
 				return;
 			}
 
@@ -235,6 +237,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			//validate traversal file
 			if ( validate_file( $file_path ) === 1 ) {
+				um_reset_user();
 				return;
 			}
 

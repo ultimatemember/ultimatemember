@@ -173,12 +173,18 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Added: `$form_id` parameter to the action hooks `um_before_form`, `um_before_{$mode}_fields`, `um_main_{$mode}_fields`, `um_after_form_fields`, `um_after_{$mode}_fields` and `um_after_form`.
 * Added: Action hook `um_before_render_dynamic_modal_content` for 3rd-party integration when the admin popup is opened.
+* Added: Threads field support in the UM Forms and Social Icons meta-row.
 
 **Bugfixes**
 
 * Fixed: Security issue related to an unauthenticated PHP Object Injection vulnerability. (Reported by Ananda Dhakal (Patchstack)). Added `um_maybe_unserialize()` function.
 * Fixed: Security issue related to administrator Stored SQL Injection via Directory Search-Field Identifiers. (Reported by Ananda Dhakal (Patchstack)). Added sanitizing for the searching fields in the member directory.
 * Fixed: Security issue related to an unauthenticated Improper Enforcement of Behavioral Workflow vulnerability. (Reported by Ananda Dhakal (Patchstack)). Added unique nonce fields and attributes for requests.
+* Fixed: CVE-2026-96270 security issue. Added sanitizing for the form_id attribute during the Ultimate Member forms submission. (Reported by Wordfence).
+* Fixed: CVE-2026-93428 security issue. Fixed fields privacy when displaying the User Profile fields. (Reported by Wordfence).
+* Fixed: Security issue related to Privilege Escalation. Fixed user account submission and nonce security. Reset the user if it hasn't the ability to download the file. (Reported by Intrudify (Patchstack)).
+* Fixed: `is_url()` validation for the social links fields.
+* Fixed: `unique_email` validation. Parse primary and secondary email fields to make the email unique between them.
 
 **Templates Requiring Update**
 

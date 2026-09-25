@@ -149,6 +149,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 							'style' => array()
 						),
 					);
+					$arr_kses      = array_map( '_wp_add_global_attributes', $arr_kses );
 					$data['value'] = wp_kses( $data['value'], $arr_kses );
 				}
 			}

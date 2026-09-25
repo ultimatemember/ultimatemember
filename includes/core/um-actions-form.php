@@ -847,6 +847,13 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 				}
 				break;
 
+			case 'threads_url':
+				if ( ! UM()->validation()->is_url( $submitted_data[ $key ], 'threads.com' ) ) {
+					// translators: %s: label.
+					UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
+				}
+				break;
+
 			case 'linkedin_url':
 				if ( ! UM()->validation()->is_url( $submitted_data[ $key ], 'linkedin.com' ) ) {
 					// translators: %s: label.
@@ -925,13 +932,33 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 						// Primary email should be required everytime.
 						UM()->form()->add_error( $key, __( 'You must provide your email', 'ultimate-member' ) );
 					} elseif ( 'register' === $mode && $email_exists ) {
-						UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
+						UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) ); // Better to use `This email address is already in use` but cannot due to security enhancements don't show exists emails.
 					} elseif ( 'profile' === $mode && $email_exists && absint( $email_exists ) !== absint( $submitted_data['user_id'] ) ) {
-						UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
+						UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) ); // Better to use `This email address is already in use` but cannot due to security enhancements don't show exists emails.
 					} elseif ( ! is_email( $submitted_data[ $key ] ) ) {
 						UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 					} elseif ( ! UM()->validation()->safe_username( $submitted_data[ $key ] ) ) {
 						UM()->form()->add_error( $key, __( 'Your email contains invalid characters', 'ultimate-member' ) );
+					} elseif ( in_array( $mode, array( 'register', 'profile' ), true ) ) {
+						// Primary emails must also be unique among other users' secondary emails.
+						$args = array(
+							'fields'     => 'ID',
+							'number'     => 1,
+							'meta_query' => array(
+								array(
+									'key'   => 'secondary_user_email',
+									'value' => sanitize_email( $submitted_data[ $key ] ),
+								),
+							),
+						);
+
+						if ( 'profile' === $mode && ! empty( $submitted_data['user_id'] ) ) {
+							$args['exclude'] = array( absint( $submitted_data['user_id'] ) );
+						}
+
+						if ( get_users( $args ) ) {
+							UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) ); // Better to use `This email address is already in use` but cannot due to security enhancements don't show exists emails.
+						}
 					}
 					break;
 				}
@@ -939,9 +966,9 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 				if ( ! empty( $array['required'] ) && empty( $submitted_data[ $key ] ) ) {
 					UM()->form()->add_error( $key, __( 'You must provide your email', 'ultimate-member' ) );
 				} elseif ( ! empty( $submitted_data[ $key ] ) && ( ! is_email( $submitted_data[ $key ] ) || email_exists( $submitted_data[ $key ] ) ) ) {
-					UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
+					UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) ); // Better to separate to `The email you entered is incorrect` and `This email address is already in use` but cannot due to security enhancements don't show exists emails.
 				} elseif ( 'secondary_user_email' === $key && ! empty( $submitted_data[ $key ] ) && ! empty( $submitted_data['user_email'] ) && $submitted_data[ $key ] === $submitted_data['user_email'] ) {
-					UM()->form()->add_error( $key, __( 'The secondary email cannot be the same as primary', 'ultimate-member' ) );
+					UM()->form()->add_error( $key, __( 'The secondary email cannot be the same as primary', 'ultimate-member' ) ); // Check the current user's new email submission to avoid the same primary/secondary email.
 				} elseif ( ! empty( $submitted_data[ $key ] ) ) {
 					// There we have valid and unique user_email. But need to check in usermeta table for other users.
 					$args = array(
@@ -956,8 +983,28 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 					$the_similar_users = get_users( $args );
 					foreach ( $the_similar_users as $user ) {
 						if ( empty( $submitted_data['user_id'] ) || absint( $user->ID ) !== absint( $submitted_data['user_id'] ) ) {
-							UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
+							UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) ); // Better to use `This email address is already in use` but cannot due to security enhancements don't show exists emails.
 							break;
+						}
+					}
+
+					if ( 'secondary_user_email' !== $key ) {
+						// Check also any 3rd-party email unique among other users' secondary emails.
+						$args = array(
+							'blog_id'     => 0,
+							'fields'      => 'ID',
+							'number'      => 1,
+							'count_total' => false,
+							'meta_query'  => array(
+								array(
+									'key'   => 'secondary_user_email',
+									'value' => sanitize_email( $submitted_data[ $key ] ),
+								),
+							),
+						);
+
+						if ( get_users( $args ) ) {
+							UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) ); // Better to use `This email address is already in use` but cannot due to security enhancements don't show exists emails.
 						}
 					}
 				}
