@@ -3019,7 +3019,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							if ( ( isset( $this->set_mode ) && 'register' === $this->set_mode ) || file_exists( UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $field_value ) ) {
 								$img_value = UM()->uploader()->get_core_temp_url() . '/' . $this->field_value( $key, $default, $data );
 							} else {
-								$img_value = UM()->files()->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
+								$img_value = UM()->files()->get_download_link( $this->set_id, $key, um_user( 'ID' ), $this->field_value( $key, $default, $data ) );
 							}
 							$img = '<img class="fusion-lazyload-ignore" src="' . esc_attr( $img_value ) . '" alt="" />';
 						} else {
@@ -3027,7 +3027,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 						$output .= '<div class="um-single-image-preview show ' . esc_attr( $data['crop_class'] ) . '" data-crop="' . esc_attr( $data['crop_data'] ) . '" data-key="' . esc_attr( $key ) . '">';
 						if ( empty( $disabled ) ) {
-							$output .= '<a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file' . $key ) ) . '"><i class="um-icon-close"></i></a>';
+							$output .= '<a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file-' . $key . '-' . $this->set_mode ) ) . '"><i class="um-icon-close"></i></a>';
 						}
 						$output .= $img;
 						$output .= '</div>';
@@ -3037,7 +3037,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					} else {
 						$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '" data-crop="' . esc_attr( $data['crop_data'] ) . '" data-key="' . esc_attr( $key ) . '">';
 						if ( empty( $disabled ) ) {
-							$output .= '<a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file' . $key ) ) . '"><i class="um-icon-close"></i></a>';
+							$output .= '<a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file-' . $key . '-' . $this->set_mode ) ) . '"><i class="um-icon-close"></i></a>';
 						}
 						$output .= '<img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div>';
 						if ( empty( $disabled ) ) {
@@ -3089,8 +3089,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$data_icon = ' data-icon="' . esc_attr( $data['icon'] ) . '"';
 						}
 
-						$nonce   = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
-						$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '"  data-crop="' . esc_attr( $data['crop_data'] ) . '" data-ratio="' . esc_attr( $data['ratio'] ) . '" data-min_width="' . esc_attr( $data['min_width'] ) . '" data-min_height="' . esc_attr( $data['min_height'] ) . '" data-coord=""><a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file' . $key ) ) . '"><i class="um-icon-close"></i></a><img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
+						$nonce   = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp . '-' . $key . '-' . $_um_profile_id . '-' . $set_mode );
+						$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '"  data-crop="' . esc_attr( $data['crop_data'] ) . '" data-ratio="' . esc_attr( $data['ratio'] ) . '" data-min_width="' . esc_attr( $data['min_width'] ) . '" data-min_height="' . esc_attr( $data['min_height'] ) . '" data-coord=""><a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file-' . $key . '-' . $this->set_mode ) ) . '"><i class="um-icon-close"></i></a><img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
 						$output .= '<div class="um-single-image-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-nonce="' . esc_attr( $nonce ) . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" ' . $data_icon . ' data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $data['max_size'] ) . '" data-max_size_error="' . esc_attr( $data['max_size_error'] ) . '" data-min_size_error="' . esc_attr( $data['min_size_error'] ) . '" data-extension_error="' . esc_attr( $data['extension_error'] ) . '" data-allowed_types="' . esc_attr( $allowed_types ) . '" data-accept="' . esc_attr( $accept_types ) . '" data-upload_text="' . esc_attr( $data['upload_text'] ) . '" data-max_files_error="' . esc_attr( $data['max_files_error'] ) . '" data-upload_help_text="' . esc_attr( $data['upload_help_text'] ) . '">' . esc_html( $data['button_text'] ) . '</div>';
 						$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">
@@ -3143,7 +3143,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$file_url = UM()->uploader()->get_core_temp_url() . DIRECTORY_SEPARATOR . $file_field_value;
 							$file_dir = UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $file_field_value;
 						} else {
-							$file_url = UM()->files()->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
+							$file_url = UM()->files()->get_download_link( $this->set_id, $key, um_user( 'ID' ), $file_field_value );
 							$file_dir = UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $file_field_value;
 						}
 
@@ -3155,7 +3155,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						if ( file_exists( $file_dir ) ) {
 							$output .= '<div class="um-single-file-preview show" data-key="' . esc_attr( $key ) . '">';
 							if ( empty( $disabled ) ) {
-								$output .= '<a href="#" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file' . $key ) ) . '"><i class="um-icon-close"></i></a>';
+								$output .= '<a href="#" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file-' . $key . '-' . $this->set_mode ) ) . '"><i class="um-icon-close"></i></a>';
 							}
 
 							$fonticon_bg = UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] );
@@ -3219,7 +3219,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$set_mode = '';
 						}
 						$output .= '<div class="um-single-file-preview">
-										<a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file' . $key ) ) . '"><i class="um-icon-close"></i></a>
+										<a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file-' . $key . '-' . $this->set_mode ) ) . '"><i class="um-icon-close"></i></a>
 										<div class="um-single-fileinfo">
 											<a href="" target="_blank">
 												<span class="icon"><i></i></span>
@@ -3233,7 +3233,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$data_icon = ' data-icon="' . esc_attr( $data['icon'] ) . '"';
 						}
 
-						$nonce   = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
+						$nonce   = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp . '-' . $key . '-' . $_um_profile_id . '-' . $set_mode );
 						$output .= '<div class="um-single-file-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" data-nonce="' . esc_attr( $nonce ) . '" ' . $data_icon . ' data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $data['max_size'] ) . '" data-max_size_error="' . esc_attr( $data['max_size_error'] ) . '" data-min_size_error="' . esc_attr( $data['min_size_error'] ) . '" data-extension_error="' . esc_attr( $data['extension_error'] ) . '" data-allowed_types="' . esc_attr( $allowed_types ) . '" data-accept="' . esc_attr( $accept_types ) . '" data-upload_text="' . esc_attr( $data['upload_text'] ) . '" data-max_files_error="' . esc_attr( $data['max_files_error'] ) . '" data-upload_help_text="' . esc_attr( $data['upload_help_text'] ) . '">' . esc_html( $data['button_text'] ) . '</div>';
 						$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">

@@ -56,6 +56,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		public function __construct() {
 			$this->setup_paths();
 
+			add_action( 'template_redirect', array( &$this, 'temp_files_routing' ), 1 );
 			add_action( 'template_redirect', array( &$this, 'download_routing' ), 1 );
 
 			$this->fonticon = array(
@@ -85,181 +86,314 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		/**
 		 * File download link generate
 		 *
-		 * @param int $form_id
-		 * @param string $field_key
-		 * @param int $user_id
+		 * @since 1.3.x
+		 * @since 2.15.0 Added $field_value attribute.
+		 *
+		 * @param int        $form_id
+		 * @param string     $field_key
+		 * @param int        $user_id
+		 * @param null|mixed $field_value @since 2.15.0
 		 *
 		 * @return string
 		 */
-		function get_download_link( $form_id, $field_key, $user_id ) {
-			$field_key = urlencode( $field_key );
-
-			$nonce = wp_create_nonce( "um-download-nonce-$user_id-$form_id" );
-			$url   = get_home_url( get_current_blog_id() );
-			if ( UM()->is_permalinks ) {
-				$url = $url . "/um-download/{$form_id}/{$field_key}/{$user_id}/{$nonce}";
-			} else {
-				$url = add_query_arg( array( 'um_action' => 'download', 'um_form' => $form_id, 'um_field' => $field_key, 'um_user' => $user_id, 'um_verify' => $nonce ), $url );
-			}
-
-			//add time to query args for sites with the cache
-			return add_query_arg( array( 't' => time() ), $url );
-		}
-
-
-		/**
-		 * @return bool
-		 */
-		function download_routing() {
-			if ( 'download' !== get_query_var( 'um_action' ) ) {
-				return false;
-			}
-
-			$query_form = get_query_var( 'um_form' );
-			if ( empty( $query_form ) ) {
-				return false;
-			}
-
-			$form_id = get_query_var( 'um_form' );
-			$query_field = get_query_var( 'um_field' );
-			if ( empty( $query_field ) ) {
-				return false;
-			}
-			$field_key = urldecode( get_query_var( 'um_field' ) );
-			$query_user = get_query_var( 'um_user' );
-			if ( empty( $query_user ) ) {
-				return false;
-			}
-
-			$user_id = get_query_var( 'um_user' );
-			$user = get_userdata( $user_id );
-
-			if ( empty( $user ) || is_wp_error( $user ) ) {
-				return false;
-			}
-			$query_verify = get_query_var( 'um_verify' );
-			if ( empty( $query_verify ) ||
-			    ! wp_verify_nonce( $query_verify, "um-download-nonce-$user_id-$form_id" ) ) {
-				return false;
-			}
-
-			um_fetch_user( $user_id );
-			$field_data = get_post_meta( $form_id, '_um_custom_fields', true );
-			if ( empty( $field_data[ $field_key ] ) ) {
-				um_reset_user();
-				return false;
-			}
-
-			if ( ! um_can_view_field( $field_data[ $field_key ] ) ) {
-				um_reset_user();
-				return false;
-			}
-
-			$field_value = UM()->fields()->field_value( $field_key );
-			if ( empty( $field_value ) ) {
-				um_reset_user();
-				return false;
-			}
-
-			$download_type = $field_data[ $field_key ]['type'];
-			if ( $download_type === 'file' ) {
-				$this->file_download( $user_id, $field_key, $field_value );
-			} else {
-				$this->image_download( $user_id, $field_key, $field_value );
-			}
-
-			return false;
-		}
-
-
-		/**
-		 * @param $user_id
-		 * @param $field_key
-		 * @param $field_value
-		 */
-		function image_download( $user_id, $field_key, $field_value ) {
-			$file_path = UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . $field_value;
-			if ( ! file_exists( $file_path ) ) {
-				if ( is_multisite() ) {
-					//multisite fix for old customers
-					$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file_path );
+		public function get_download_link( $form_id, $field_key, $user_id, $field_value = null ) {
+			// Don't remove this condition to avoid recursive
+			if ( is_null( $field_value ) ) {
+				$field_value = UM()->fields()->field_value( $field_key );
+				if ( empty( $field_value ) ) {
+					return '';
 				}
 			}
 
-			//validate traversal file
+			$file_path = wp_normalize_path( UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $field_value );
+			// Validate not exists file.
+			if ( ! file_exists( $file_path ) ) {
+				return '';
+			}
+
+			// Validate traversal file.
 			if ( validate_file( $file_path ) === 1 ) {
-				um_reset_user();
+				return '';
+			}
+
+			$filetype    = wp_check_filetype( $file_path );
+			$filetime    = filemtime( $file_path );
+			$field_value = $filetime . '.' . $filetype['ext'];
+
+			$key       = $field_key;
+			$field_key = rawurlencode( $field_key );
+			$nonce     = wp_create_nonce( "um-download-nonce-$user_id-$form_id-$key" );
+
+			$url = get_home_url( get_current_blog_id() );
+			if ( UM()->is_permalinks ) {
+				$url .= "/um-download/{$form_id}/{$field_key}/{$user_id}/{$nonce}/{$field_value}";
+			} else {
+				$url = add_query_arg(
+					array(
+						'um_action'   => 'download',
+						'um_form'     => $form_id,
+						'um_field'    => $field_key,
+						'um_user'     => $user_id,
+						'um_verify'   => $nonce, // todo change to `um_nonce` after all extensions are ready for old UI in their new UI branches
+						'um_filename' => $field_value,
+					),
+					$url
+				);
+			}
+			return UM()->common()->filesystem()::add_timestamp( $url );
+		}
+
+		/**
+		 * Handle a secure link of the temp file.
+		 * @return void
+		 * @throws RandomException
+		 */
+		public function temp_files_routing() {
+			global $wp_filesystem, $wp_query;
+
+			if ( 'temp-download' !== get_query_var( 'um_action' ) ) {
 				return;
 			}
 
-			$file_info = get_user_meta( $user_id, $field_key . "_metadata", true );
+			$filename = get_query_var( 'um_filename' );
+			if ( empty( $filename ) ) {
+				$url = UM()->permalinks()->get_current_url();
+				if ( UM()->common()->filesystem()::is_timestamp_addable() ) {
+					$url = remove_query_arg( 'timestamp', $url );
+				}
+				$filename = wp_basename( $url );
+			}
 
-			$pathinfo = pathinfo( $file_path );
-			$size = filesize( $file_path );
-			$originalname = ! empty( $file_info['original_name'] ) ? $file_info['original_name'] : $pathinfo['basename'];
-			$type = ! empty( $file_info['type'] ) ? $file_info['type'] : $pathinfo['extension'];
+			if ( is_user_logged_in() ) {
+				$user_id = get_current_user_id();
+			} else {
+				$user_id = UM()->common()->guest()->get_guest_token();
+			}
 
-			header('Content-Description: File Transfer');
-			header('Content-Type: ' . $type );
-			header('Content-Disposition: inline; filename="' . $originalname . '"');
-			header('Content-Transfer-Encoding: binary');
-			header('Expires: 0');
-			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-			header('Pragma: public');
-			header('Content-Length: ' . $size);
+			$queried_user = get_query_var( 'um_user' );
+			if ( empty( $queried_user ) || (string) $queried_user !== (string) $user_id ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			$query_verify = get_query_var( 'um_nonce' );
+
+			if ( empty( $query_verify ) || ! wp_verify_nonce( $query_verify, "um-temp-download-nonce-$user_id-$filename" ) ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			$file_path = UM()->common()->filesystem()->get_file_by_hash( $filename );
+			if ( false === $file_path ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			if ( ! is_user_logged_in() ) {
+				// Check for excessive downloads (e.g., max 5 downloads per 5 minutes)
+				$break_due_downloads_limit = UM()->common()->guest()::check_excessive_downloads();
+				if ( $break_due_downloads_limit ) {
+					return;
+				}
+
+				UM()->common()->guest()::set_download_attempts();
+			}
+
+			UM()->common()->filesystem()::maybe_init_wp_filesystem();
+
+			$pathinfo     = pathinfo( $file_path );
+			$size         = filesize( $file_path );
+			$originalname = $pathinfo['basename'];
+			$type         = $pathinfo['extension'];
+
+			header( 'Content-Description: File Transfer' );
+			header( 'Content-Type: ' . $type );
+			header( 'Content-Disposition: inline; filename="' . esc_attr( $originalname ) . '"' );
+			header( 'Content-Transfer-Encoding: binary' );
+			header( 'Expires: 0' );
+			header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+			header( 'Pragma: public' );
+			header( 'Content-Length: ' . $size );
 
 			$levels = ob_get_level();
 			for ( $i = 0; $i < $levels; $i++ ) {
 				@ob_end_clean();
 			}
 
-			readfile( $file_path );
+			$content = $wp_filesystem->get_contents( $file_path );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- temp file content.
+			echo $content;
 			exit;
 		}
 
+		/**
+		 * Download uploaded by the user files routing handler.
+		 *
+		 * @return void
+		 */
+		public function download_routing() {
+			global $wp_query;
+
+			if ( 'download' !== get_query_var( 'um_action' ) ) {
+				return;
+			}
+
+			$form_id = get_query_var( 'um_form' );
+			if ( empty( $form_id ) ) {
+				$wp_query->set_404();
+				return;
+			}
+			$form_id = absint( $form_id );
+
+			$field = get_query_var( 'um_field' );
+			if ( empty( $field ) ) {
+				$wp_query->set_404();
+				return;
+			}
+			$field     = urldecode( $field );
+			$field_key = sanitize_text_field( $field );
+
+			$user_id = get_query_var( 'um_user' );
+			if ( empty( $user_id ) ) {
+				$wp_query->set_404();
+				return;
+			}
+			$user_id = absint( $user_id );
+
+			$query_verify = get_query_var( 'um_verify' );
+			if ( empty( $query_verify ) ||
+				! wp_verify_nonce( $query_verify, "um-download-nonce-$user_id-$form_id-$field" ) ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			if ( ! UM()->common()->users()->can_view_user_profile( $user_id ) ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			$field_data = get_post_meta( $form_id, '_um_custom_fields', true );
+			if ( empty( $field_data[ $field_key ] ) ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			if ( ! um_can_view_field( $field_data[ $field_key ] ) ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			um_fetch_user( $user_id );
+			$field_value = UM()->fields()->field_value( $field_key );
+			if ( empty( $field_value ) ) {
+				um_reset_user();
+				$wp_query->set_404();
+				return;
+			}
+
+			$download_type = $field_data[ $field_key ]['type'];
+			if ( 'file' === $download_type ) {
+				$this->file_download( $user_id, $field_key, $field_value );
+			} elseif ( 'image' === $download_type ) {
+				$this->image_download( $user_id, $field_key, $field_value );
+			}
+
+			um_reset_user();
+			$wp_query->set_404();
+		}
 
 		/**
 		 * @param $user_id
 		 * @param $field_key
 		 * @param $field_value
 		 */
-		function file_download( $user_id, $field_key, $field_value ) {
-			$file_path = UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . $field_value;
-			if ( ! file_exists( $file_path ) ) {
-				if ( is_multisite() ) {
-					//multisite fix for old customers
-					$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file_path );
-				}
-			}
+		private function image_download( $user_id, $field_key, $field_value ) {
+			global $wp_filesystem, $wp_query;
 
-			//validate traversal file
+			UM()->common()->filesystem()::maybe_init_wp_filesystem();
+
+			$file_path = wp_normalize_path( UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $field_value );
+
+			// Validate traversal file
 			if ( validate_file( $file_path ) === 1 ) {
 				um_reset_user();
+				$wp_query->set_404();
 				return;
 			}
 
-			$file_info = get_user_meta( $user_id, $field_key . "_metadata", true );
+			$file_info = get_user_meta( $user_id, $field_key . '_metadata', true );
 
-			$pathinfo = pathinfo( $file_path );
-			$size = filesize( $file_path );
+			$pathinfo     = pathinfo( $file_path );
+			$size         = filesize( $file_path );
 			$originalname = ! empty( $file_info['original_name'] ) ? $file_info['original_name'] : $pathinfo['basename'];
-			$type = ! empty( $file_info['type'] ) ? $file_info['type'] : $pathinfo['extension'];
+			$type         = wp_get_image_mime( $file_path );
+			if ( ! $type ) {
+				$type = 'application/octet-stream';
+			}
 
-			header('Content-Description: File Transfer');
-			header('Content-Type: ' . $type );
-			header('Content-Disposition: attachment; filename="' . $originalname . '"');
-			header('Content-Transfer-Encoding: binary');
-			header('Expires: 0');
-			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-			header('Pragma: public');
-			header('Content-Length: ' . $size);
+			header( 'Content-Description: File Transfer' );
+			header( 'Content-Type: ' . $type );
+			header( 'Content-Disposition: inline; filename="' . $originalname . '"' );
+			header( 'Content-Transfer-Encoding: binary' );
+			header( 'Expires: 0' );
+			header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
+			header( 'Pragma: public' );
+			header( 'Content-Length: ' . $size );
 
 			$levels = ob_get_level();
 			for ( $i = 0; $i < $levels; $i++ ) {
 				@ob_end_clean();
 			}
 
-			readfile( $file_path );
+			$content = $wp_filesystem->get_contents( $file_path );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- temp file content.
+			echo $content;
+			exit;
+		}
+
+		/**
+		 * @param $user_id
+		 * @param $field_key
+		 * @param $field_value
+		 */
+		private function file_download( $user_id, $field_key, $field_value ) {
+			global $wp_filesystem, $wp_query;
+
+			UM()->common()->filesystem()::maybe_init_wp_filesystem();
+
+			$file_path = wp_normalize_path( UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $field_value );
+			// Validate traversal file
+			if ( validate_file( $file_path ) === 1 ) {
+				um_reset_user();
+				$wp_query->set_404();
+				return;
+			}
+
+			$file_info = get_user_meta( $user_id, $field_key . '_metadata', true );
+
+			$pathinfo     = pathinfo( $file_path );
+			$size         = filesize( $file_path );
+			$originalname = ! empty( $file_info['original_name'] ) ? $file_info['original_name'] : $pathinfo['basename'];
+			$filetype     = wp_check_filetype( $file_path, wp_get_mime_types() );
+			$type         = $filetype['type'] ? $filetype['type'] : 'application/octet-stream';
+
+			header( 'Content-Description: File Transfer' );
+			header( 'Content-Type: ' . $type );
+			header( 'Content-Disposition: attachment; filename="' . $originalname . '"' );
+			header( 'Content-Transfer-Encoding: binary' );
+			header( 'Expires: 0' );
+			header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
+			header( 'Pragma: public' );
+			header( 'Content-Length: ' . $size );
+
+			$levels = ob_get_level();
+			for ( $i = 0; $i < $levels; $i++ ) {
+				@ob_end_clean();
+			}
+
+			$content = $wp_filesystem->get_contents( $file_path );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- temp file content.
+			echo $content;
 			exit;
 		}
 
@@ -272,7 +406,12 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 			$key = sanitize_text_field( $_POST['key'] );
 
-			check_ajax_referer( 'um-remove-file' . $key );
+			if ( empty( $_POST['mode'] ) ) {
+				wp_send_json_error( __( 'Wrong mode', 'ultimate-member' ) );
+			}
+			$mode = sanitize_key( $_POST['mode'] );
+
+			check_ajax_referer( "um-remove-file-$key-$mode" );
 
 			if ( UM()->is_rate_limited( 'remove_file' ) ) {
 				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
@@ -282,19 +421,13 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				wp_send_json_error( __( 'Wrong path', 'ultimate-member' ) );
 			}
 
-			if ( empty( $_POST['mode'] ) ) {
-				wp_send_json_error( __( 'Wrong mode', 'ultimate-member' ) );
-			}
-
 			$src = esc_url_raw( $_POST['src'] );
 			if ( strstr( $src, '?' ) ) {
 				$splitted = explode( '?', $src );
-				$src = $splitted[0];
+				$src      = $splitted[0];
 			}
 
-			$mode = sanitize_key( $_POST['mode'] );
-
-			if ( $mode == 'register' || empty( $_POST['user_id'] ) ) {
+			if ( 'register' === $mode || empty( $_POST['user_id'] ) ) {
 				$is_temp = um_is_temp_upload( $src );
 				if ( ! $is_temp ) {
 					wp_send_json_success();
@@ -480,6 +613,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			$id      = sanitize_text_field( $_POST['key'] );
 			$user_id = empty( $_POST['user_id'] ) ? null : absint( $_POST['user_id'] );
+			$mode    = sanitize_key( $_POST['set_mode'] );
 
 			/**
 			 * Filters the custom validation marker for 3rd-party uploader.
@@ -526,7 +660,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				if ( $um_image_upload_nonce ) {
 					$timestamp = absint( $_POST['timestamp'] );
 					$nonce     = sanitize_text_field( $_POST['_wpnonce'] );
-					if ( ! wp_verify_nonce( $nonce, "um_upload_nonce-{$timestamp}" ) && is_user_logged_in() ) {
+					if ( ! wp_verify_nonce( $nonce, 'um_upload_nonce-' . $timestamp . '-' . $id . '-' . $user_id . '-' . $mode ) && is_user_logged_in() ) {
 						// This nonce is not valid.
 						$ret['error'] = esc_html__( 'Invalid nonce', 'ultimate-member' );
 						wp_send_json_error( $ret );
@@ -544,7 +678,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				}
 
 				$form_id = absint( $_POST['set_id'] );
-				$mode    = sanitize_key( $_POST['set_mode'] );
 
 				UM()->fields()->set_id   = $form_id;
 				UM()->fields()->set_mode = $mode;
@@ -675,6 +808,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			$ret['error'] = null;
 			$ret          = array();
 
+			$id      = sanitize_text_field( $_POST['key'] );
+			$mode    = sanitize_key( $_POST['set_mode'] );
+			$user_id = empty( $_POST['user_id'] ) ? null : absint( $_POST['user_id'] );
+
 			/**
 			 * Filters file upload checking nonce.
 			 *
@@ -698,14 +835,13 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				$nonce     = sanitize_text_field( $_POST['_wpnonce'] );
 				$timestamp = absint( $_POST['timestamp'] );
 
-				if ( ! wp_verify_nonce( $nonce, 'um_upload_nonce-' . $timestamp ) && is_user_logged_in() ) {
+				if ( ! wp_verify_nonce( $nonce, 'um_upload_nonce-' . $timestamp . '-' . $id . '-' . $user_id . '-' . $mode ) && is_user_logged_in() ) {
 					// This nonce is not valid.
 					$ret['error'] = esc_html__( 'Invalid nonce', 'ultimate-member' );
 					wp_send_json_error( $ret );
 				}
 			}
 
-			$user_id = empty( $_POST['user_id'] ) ? null : absint( $_POST['user_id'] );
 			if ( $user_id && is_user_logged_in() && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 				$ret['error'] = esc_html__( 'You have no permission to edit this user', 'ultimate-member' );
 				wp_send_json_error( $ret );
@@ -717,7 +853,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 
 			$form_id = absint( $_POST['set_id'] );
-			$mode    = sanitize_key( $_POST['set_mode'] );
 
 			UM()->fields()->set_id   = $form_id;
 			UM()->fields()->set_mode = $mode;
