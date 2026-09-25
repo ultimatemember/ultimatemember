@@ -24,6 +24,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			$this->enqueue();
 			$this->modal();
 			$this->secure();
+			$this->uploader();
 			$this->user_profile();
 			$this->users();
 		}
@@ -77,6 +78,19 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 				UM()->classes['um\frontend\secure'] = new Secure();
 			}
 			return UM()->classes['um\frontend\secure'];
+		}
+
+		/**
+		 * @since 2.14.0
+		 *
+		 * @return Uploader
+		 */
+		public function uploader() {
+			if ( empty( UM()->classes['um\frontend\uploader'] ) ) {
+				UM()->classes['um\frontend\uploader'] = new Uploader();
+			}
+
+			return UM()->classes['um\frontend\uploader'];
 		}
 
 		/**

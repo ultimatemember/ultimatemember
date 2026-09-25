@@ -350,7 +350,7 @@ function um_profile_field_filter_hook__file( $value, $data ) {
 		return '';
 	}
 	$file_type = wp_check_filetype( $value );
-	$uri       = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
+	$uri       = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ), $value );
 
 	$removed = false;
 	if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
@@ -399,7 +399,7 @@ function um_profile_field_filter_hook__image( $value, $data ) {
 	if ( ! $value ) {
 		return '';
 	}
-	$uri = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
+	$uri   = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ), $value );
 	$title = ( isset( $data['title'] ) ) ? $data['title'] : __( 'Untitled photo', 'ultimate-member' );
 
 	$removed = false;
