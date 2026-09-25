@@ -179,6 +179,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Security issue related to an unauthenticated PHP Object Injection vulnerability. (Reported by Ananda Dhakal (Patchstack)). Added `um_maybe_unserialize()` function.
 * Fixed: Security issue related to administrator Stored SQL Injection via Directory Search-Field Identifiers. (Reported by Ananda Dhakal (Patchstack)). Added sanitizing for the searching fields in the member directory.
 * Fixed: Security issue related to an unauthenticated Improper Enforcement of Behavioral Workflow vulnerability. (Reported by Ananda Dhakal (Patchstack)). Added unique nonce fields and attributes for requests.
+* Fixed: CVE-2026-96270 security issue. Added sanitizing for the form_id attribute during the Ultimate Member forms submission. (Reported by Wordfence).
+* Fixed: CVE-2026-93428 security issue. Fixed fields privacy when displaying the User Profile fields. (Reported by Wordfence).
+* Fixed: Security issue related to Privilege Escalation. Fixed user account submission and nonce security. Reset the user if it hasn't the ability to download the file. (Reported by Intrudify (Patchstack)).
 
 **Templates Requiring Update**
 
