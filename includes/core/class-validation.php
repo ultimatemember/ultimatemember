@@ -131,15 +131,24 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		/**
 		 * Get a customizable email validation error without exposing its cause by default.
 		 *
-		 * @param string $reason     Specific, translated error message.
-		 * @param string $code       Stable error identifier.
-		 * @param string $key        Field meta key.
-		 * @param array  $attributes Field attributes.
-		 * @param string $mode       Form mode.
+		 * @param string $real_message Specific, translated error message.
+		 * @param string $code         Stable error identifier.
+		 * @param string $key          Field meta key.
+		 * @param array  $attributes   Field attributes.
+		 * @param string $mode         Form mode.
 		 *
 		 * @return string
 		 */
-		public function email_error_message( $reason, $code, $key, $attributes, $mode ) {
+		public function get_email_error_message( $real_message, $code, $key, $attributes, $mode ) {
+			$secure_message = __( 'The email you entered is incorrect', 'ultimate-member' );
+			$visible_codes  = array(
+				'email_required',
+				'email_invalid',
+				'email_invalid_characters',
+			);
+			if ( in_array( $code, $visible_codes, true ) ) {
+				$secure_message = $real_message; // Real error message is visible for a few error codes.
+			}
 			/**
 			 * Filters the public email validation error message.
 			 *
@@ -149,31 +158,29 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 			 * @since 2.14.0
 			 * @hook  um_email_validation_error_message
 			 *
-			 * @param {string} $message    Generic public error message.
-			 * @param {string} $reason     Specific, translated error message.
-			 * @param {string} $code       Stable error identifier.
-			 * @param {string} $key        Field meta key.
-			 * @param {array}  $attributes Field attributes.
-			 * @param {string} $mode       Form mode.
+			 * @param {string} $secure_message Generic public error message.
+			 * @param {string} $real_message   Specific, translated error message.
+			 * @param {string} $code           Stable error identifier.
+			 * @param {string} $key            Field meta key.
+			 * @param {array}  $attributes     Field attributes.
+			 * @param {string} $mode           Form mode.
 			 *
 			 * @return {string} Public error message.
 			 *
 			 * @example <caption>Change the error message for an email address that is already in use.</caption>
-			 * function my_email_validation_error_message( $message, $reason, $code, $key, $attributes, $mode ) {
+			 * function my_email_validation_error_message( $secure_message, $real_message, $code, $key, $attributes, $mode ) {
 			 *     if ( 'email_exists' === $code ) {
-			 *         return $reason;
+			 *         return $real_message;
 			 *     }
-			 *     return $message;
+			 *     return $secure_message;
 			 * }
 			 * add_filter( 'um_email_validation_error_message', 'my_email_validation_error_message', 10, 6 );
 			 */
-			$message = apply_filters( 'um_email_validation_error_message', __( 'The email you entered is incorrect', 'ultimate-member' ), $reason, $code, $key, $attributes, $mode );
-
-			return $message;
+			return apply_filters( 'um_email_validation_error_message', $secure_message, $real_message, $code, $key, $attributes, $mode );
 		}
 
 		/**
-		 * Removes html from any string
+		 * Removes HTML from any string
 		 *
 		 * @param $string
 		 *

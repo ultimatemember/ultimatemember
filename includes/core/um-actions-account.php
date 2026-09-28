@@ -158,15 +158,18 @@ function um_submit_account_errors_hook( $args ) {
 
 			if ( isset( $args['user_email'] ) ) {
 				if ( strlen( trim( $args['user_email'] ) ) === 0 ) {
-					UM()->form()->add_error( 'user_email', __( 'You must provide your email', 'ultimate-member' ) );
+					$message = UM()->validation()->get_email_error_message( __( 'You must provide your email', 'ultimate-member' ), 'email_required', 'user_email', $args, 'account' );
+					UM()->form()->add_error( 'user_email', $message );
 				}
 
 				if ( ! is_email( $args['user_email'] ) ) {
-					UM()->form()->add_error( 'user_email', __( 'Please provide a valid email', 'ultimate-member' ) );
+					$message = UM()->validation()->get_email_error_message( __( 'Please provide a valid email', 'ultimate-member' ), 'email_invalid', 'user_email', $args, 'account' );
+					UM()->form()->add_error( 'user_email', $message );
 				}
 
 				if ( email_exists( $args['user_email'] ) && email_exists( $args['user_email'] ) !== get_current_user_id() ) {
-					UM()->form()->add_error( 'user_email', __( 'Please provide a valid email', 'ultimate-member' ) );
+					$message = UM()->validation()->get_email_error_message( __( 'This email address is already in use', 'ultimate-member' ), 'email_exists', 'user_email', $args, 'account' );
+					UM()->form()->add_error( 'user_email', $message );
 				}
 
 				// Primary emails must also be unique among other users' secondary emails.
@@ -183,7 +186,8 @@ function um_submit_account_errors_hook( $args ) {
 				);
 
 				if ( get_users( $args ) ) {
-					UM()->form()->add_error( 'user_email', __( 'Please provide a valid email', 'ultimate-member' ) );
+					$message = UM()->validation()->get_email_error_message( __( 'This email address is already used as a secondary email', 'ultimate-member' ), 'email_matches_secondary', 'user_email', $args, 'account' );
+					UM()->form()->add_error( 'user_email', $message );
 				}
 			}
 
