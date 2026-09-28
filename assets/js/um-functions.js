@@ -465,7 +465,7 @@ function initFileUpload_UM( trigger ) {
 
 			} else {
 
-				jQuery.each(  response.data , function(key, value) {
+				jQuery.each( response.data , function(key, value) {
 
 					trigger.parents('.um-modal-body').find('.um-modal-btn.um-finish-upload.disabled').removeClass('disabled');
 					trigger.parents('.um-modal-body').find('.ajax-upload-dragdrop,.upload-statusbar').hide(0);

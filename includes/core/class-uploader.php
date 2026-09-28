@@ -353,7 +353,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			$upload_overrides = array(
 				'test_form'                => false,
 				'mimes'                    => apply_filters( 'um_uploader_allowed_image_mimes', $allowed_image_mimes ),
-				'unique_filename_callback' => array( $this, 'unique_filename' ),
+				//'unique_filename_callback' => array( $this, 'unique_filename' ),
 			);
 
 			$upload_overrides = apply_filters( "um_image_upload_handler_overrides__{$field_key}", $upload_overrides );
@@ -401,8 +401,9 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 					$this->stream_photo( $movefile, $movefile['file'], $movefile['url'], $field_key, $user_id );
 				}
 
-				$path             = $movefile['file'];
-				$movefile['file'] = $movefile['file_info']['basename'] = wp_basename( $movefile['file'] );
+//				$path             = $movefile['file'];
+//				$movefile['file'] = $movefile['file_info']['basename'] = wp_basename( $movefile['file'] );
+				$movefile['file'] = wp_basename( $movefile['file'] );
 
 				$hash            = md5( $movefile['file'] . '_um_uploader_security_salt' );
 				$movefile['url'] = UM()->common()->filesystem()->get_temp_file_url(
@@ -412,16 +413,17 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 					)
 				);
 
+				$movefile['hash']      = $hash;
 				$movefile['temp_hash'] = $hash;
 
-				$file_type = wp_check_filetype( $movefile['file_info']['basename'] );
-
-				$movefile['file_info']['name'] = $movefile['url'];
-				$movefile['file_info']['original_name'] = $uploadedfile['name'];
-				$movefile['file_info']['ext'] = $file_type['ext'];
-				$movefile['file_info']['type'] = $file_type['type'];
-				$movefile['file_info']['size'] = filesize( $path );
-				$movefile['file_info']['size_format'] = size_format( $movefile['file_info']['size'] );
+//				$file_type = wp_check_filetype( $movefile['file_info']['basename'] );
+//
+//				$movefile['file_info']['name'] = $movefile['url'];
+//				$movefile['file_info']['original_name'] = $uploadedfile['name'];
+//				$movefile['file_info']['ext'] = $file_type['ext'];
+//				$movefile['file_info']['type'] = $file_type['type'];
+//				$movefile['file_info']['size'] = filesize( $path );
+//				$movefile['file_info']['size_format'] = size_format( $movefile['file_info']['size'] );
 
 				/**
 				 * UM hook
@@ -507,10 +509,10 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				 */
 				do_action( "um_after_upload_db_meta_{$field_key}", $this->user_id );
 
-				$transient = set_transient( "um_{$movefile['file']}", $movefile['file_info'], 2 * HOUR_IN_SECONDS );
-				if ( empty( $transient ) ) {
-					update_user_meta( $this->user_id, "{$field_key}_metadata_temp", $movefile['file_info'] );
-				}
+//				$transient = set_transient( "um_{$movefile['file']}", $movefile['file_info'], 2 * HOUR_IN_SECONDS );
+//				if ( empty( $transient ) ) {
+//					update_user_meta( $this->user_id, "{$field_key}_metadata_temp", $movefile['file_info'] );
+//				}
 			}
 
 			$response['handle_upload'] = $movefile;
@@ -520,7 +522,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			return $response;
 		}
-
 
 		/**
 		 * Upload Files
@@ -563,7 +564,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			$upload_overrides = array(
 				'test_form'                => false,
 				'mimes'                    => apply_filters( 'um_uploader_allowed_file_mimes', $allowed_file_mimes ),
-				'unique_filename_callback' => array( $this, 'unique_filename' ),
+				//'unique_filename_callback' => array( $this, 'unique_filename' ),
 			);
 
 			$upload_overrides = apply_filters( "um_file_upload_handler_overrides__{$field_key}", $upload_overrides );
@@ -590,13 +591,13 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				$file_type = wp_check_filetype( $movefile['file'] );
 
-				$movefile['file_info']['name'] = $movefile['url'];
+//				$movefile['file_info']['name'] = $movefile['url'];
 				$movefile['file_info']['original_name'] = $uploadedfile['name'];
 				$movefile['file_info']['basename'] = wp_basename( $movefile['file'] );
 				$movefile['file_info']['ext'] = $file_type['ext'];
-				$movefile['file_info']['type'] = $file_type['type'];
-				$movefile['file_info']['size'] = filesize( $movefile['file'] );
-				$movefile['file_info']['size_format'] = size_format( $movefile['file_info']['size'] );
+//				$movefile['file_info']['type'] = $file_type['type'];
+//				$movefile['file_info']['size'] = filesize( $movefile['file'] );
+//				$movefile['file_info']['size_format'] = size_format( $movefile['file_info']['size'] );
 
 				/**
 				 * UM hook
@@ -684,12 +685,12 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				//update_user_meta( $this->user_id, $field_key, wp_basename( $movefile['url'] ) );
 
-				$filename = wp_basename( $movefile['url'] );
-
-				$transient = set_transient( "um_{$filename}", $movefile['file_info'], 2 * HOUR_IN_SECONDS );
-				if ( empty( $transient ) ) {
-					update_user_meta( $this->user_id, "{$field_key}_metadata_temp", $movefile['file_info'] );
-				}
+//				$filename = wp_basename( $movefile['url'] );
+//
+//				$transient = set_transient( "um_{$filename}", $movefile['file_info'], 2 * HOUR_IN_SECONDS );
+//				if ( empty( $transient ) ) {
+//					update_user_meta( $this->user_id, "{$field_key}_metadata_temp", $movefile['file_info'] );
+//				}
 			}
 
 			$response['handle_upload'] = $movefile;

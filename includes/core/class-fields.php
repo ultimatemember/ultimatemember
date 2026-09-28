@@ -3118,7 +3118,20 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$field_name       = $key . $form_suffix;
 					$file_field_value = $this->field_value( $key, $default, $data );
 
-					$output .= '<input type="hidden" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $file_field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+					$name           = $field_name . '[filename]';
+					$hash_name      = $field_name . '[hash]';
+					$temp_hash_name = $field_name . '[temp_hash]';
+
+					$user_id = um_user( 'ID' );
+					$user_id = empty( $user_id ) ? null : absint( $user_id );
+					$form_id = $args['data']['form_id'];
+
+					$hash      = md5( $file_field_value . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
+					$temp_hash = ''; // it's not empty only during uploading the new file.
+
+					$output .= '<input type="hidden" name="' . esc_attr( $name ) . '" id="' . esc_attr( $field_name ) . '" class="um-uploaded-value" value="' . esc_attr( $file_field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+					$output .= '<input type="hidden" name="' . esc_attr( $hash_name ) . '" id="' . esc_attr( $field_name ) . '-hash" class="um-uploaded-value-hash" value="' . esc_attr( $hash ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+					$output .= '<input type="hidden" name="' . esc_attr( $temp_hash_name ) . '" id="' . esc_attr( $field_name ) . '-temp-hash" class="um-uploaded-value-temp-hash" value="' . esc_attr( $temp_hash ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
 					if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
