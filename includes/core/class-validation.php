@@ -129,6 +129,50 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		}
 
 		/**
+		 * Get a customizable email validation error without exposing its cause by default.
+		 *
+		 * @param string $reason     Specific, translated error message.
+		 * @param string $code       Stable error identifier.
+		 * @param string $key        Field meta key.
+		 * @param array  $attributes Field attributes.
+		 * @param string $mode       Form mode.
+		 *
+		 * @return string
+		 */
+		public function email_error_message( $reason, $code, $key, $attributes, $mode ) {
+			/**
+			 * Filters the public email validation error message.
+			 *
+			 * The specific reason is available only to server-side callbacks. Returning it
+			 * may disclose whether an email address belongs to an existing account.
+			 *
+			 * @since 2.14.0
+			 * @hook  um_email_validation_error_message
+			 *
+			 * @param {string} $message    Generic public error message.
+			 * @param {string} $reason     Specific, translated error message.
+			 * @param {string} $code       Stable error identifier.
+			 * @param {string} $key        Field meta key.
+			 * @param {array}  $attributes Field attributes.
+			 * @param {string} $mode       Form mode.
+			 *
+			 * @return {string} Public error message.
+			 *
+			 * @example <caption>Change the error message for an email address that is already in use.</caption>
+			 * function my_email_validation_error_message( $message, $reason, $code, $key, $attributes, $mode ) {
+			 *     if ( 'email_exists' === $code ) {
+			 *         return $reason;
+			 *     }
+			 *     return $message;
+			 * }
+			 * add_filter( 'um_email_validation_error_message', 'my_email_validation_error_message', 10, 6 );
+			 */
+			$message = apply_filters( 'um_email_validation_error_message', __( 'The email you entered is incorrect', 'ultimate-member' ), $reason, $code, $key, $attributes, $mode );
+
+			return $message;
+		}
+
+		/**
 		 * Removes html from any string
 		 *
 		 * @param $string
