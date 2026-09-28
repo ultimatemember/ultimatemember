@@ -141,11 +141,35 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		 */
 		public function get_email_error_message( $real_message, $code, $key, $attributes, $mode ) {
 			$secure_message = __( 'The email you entered is incorrect', 'ultimate-member' );
-			$visible_codes  = array(
+
+			$visible_codes = array(
 				'email_required',
 				'email_invalid',
 				'email_invalid_characters',
 			);
+			/**
+			 * Filters the error codes list for the user email field when we can show the real error message due to security.
+			 *
+			 * @since 2.14.0
+			 * @hook  um_email_validation_real_error_codes
+			 *
+			 * @param {array}  $visible_codes Visible error codes.
+			 * @param {string} $key           Field meta key.
+			 * @param {array}  $attributes    Field attributes.
+			 * @param {string} $mode          Form mode.
+			 *
+			 * @return {array} Visible error codes.
+			 *
+			 * @example <caption>Add `email_exists` error code to whitelist on the User Account.</caption>
+			 * function my_email_validation_real_error_codes( $visible_codes, $key, $attributes, $mode ) {
+			 *     if ( 'account' === $mode ) {
+			 *        $visible_codes[] = 'email_exists';
+			 *     }
+			 *     return $visible_codes;
+			 * }
+			 * add_filter( 'um_email_validation_real_error_codes', 'my_email_validation_real_error_codes', 10, 4 );
+			 */
+			$visible_codes = apply_filters( 'um_email_validation_real_error_codes', $visible_codes, $key, $attributes, $mode );
 			if ( in_array( $code, $visible_codes, true ) ) {
 				$secure_message = $real_message; // Real error message is visible for a few error codes.
 			}
