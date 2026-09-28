@@ -1,8 +1,10 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 function um_upgrade_metadata210beta1() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_2.1.0-beta1' );
 
 	um_maybe_unset_time_limit();
 
@@ -13,7 +15,7 @@ function um_upgrade_metadata210beta1() {
 
 
 function um_upgrade_memberdir210beta1() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_2.1.0-beta1' );
 
 	um_maybe_unset_time_limit();
 

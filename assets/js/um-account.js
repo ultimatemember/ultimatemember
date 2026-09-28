@@ -76,7 +76,9 @@ jQuery(document).ready(function() {
 		e.preventDefault();
 
 		var request_action = jQuery(this).data('action');
+		var nonce = jQuery(this).data('nonce');
 		var password = jQuery('#' + request_action).val();
+
 		jQuery('.um-field-area-response.' + request_action).hide();
 
 		if ( jQuery('#' + request_action).length && password === '' ) {
@@ -85,7 +87,7 @@ jQuery(document).ready(function() {
 			jQuery('.um-field-error.' + request_action).hide();
 			var request = {
 				request_action: request_action,
-				nonce: um_scripts.nonce
+				_wpnonce: nonce
 			};
 
 			if ( jQuery('#' + request_action).length ) {

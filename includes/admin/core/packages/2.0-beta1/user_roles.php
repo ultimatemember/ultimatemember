@@ -72,9 +72,9 @@ if ( ! empty( $um_roles ) ) {
 		if ( ! empty( $all_role_metadata ) ) {
 			foreach ( $all_role_metadata as $metadata ) {
 
-				if ( '_um_can_edit_roles' == $metadata['meta_key'] || '_um_can_delete_roles' == $metadata['meta_key']
-				     || '_um_can_view_roles' == $metadata['meta_key'] || '_um_can_follow_roles' == $metadata['meta_key']
-				     || '_um_can_friend_roles' == $metadata['meta_key'] || '_um_can_review_roles' == $metadata['meta_key'] ) {
+				if ( '_um_can_edit_roles' === $metadata['meta_key'] || '_um_can_delete_roles' === $metadata['meta_key'] ||
+					'_um_can_view_roles' === $metadata['meta_key'] || '_um_can_follow_roles' === $metadata['meta_key'] ||
+					'_um_can_friend_roles' === $metadata['meta_key'] || '_um_can_review_roles' === $metadata['meta_key'] ) {
 					$metadata['meta_value'] = maybe_unserialize( $metadata['meta_value'] );
 				}
 
@@ -82,18 +82,21 @@ if ( ! empty( $um_roles ) ) {
 			}
 		}
 
-		if ( ! in_array( $role_key, $all_wp_roles ) ) {
-			$role_meta = array_merge( $role_metadata, array(
-				'name'              => $um_role->post_title,
-				'wp_capabilities'   => array( 'read' => true ),
-				'_um_is_custom'     => true,
-			) );
+		if ( ! in_array( $role_key, $all_wp_roles, true ) ) {
+			$role_meta = array_merge(
+				$role_metadata,
+				array(
+					'name'            => $um_role->post_title,
+					'wp_capabilities' => array( 'read' => true ),
+					'_um_is_custom'   => true,
+				)
+			);
 		} else {
 			$role_meta = $role_metadata;
 		}
 
 		//$old_key = ! empty( $role_meta['_um_core'] ) ? $role_meta['_um_core'] : $role_key;
-		if ( ! in_array( $role_key, $all_wp_roles ) ) {
+		if ( ! in_array( $role_key, $all_wp_roles, true ) ) {
 			$roles_associations[ $key_in_meta ] = 'um_' . $role_key;
 		} else {
 			$roles_associations[ $key_in_meta ] = $role_key;
@@ -101,8 +104,8 @@ if ( ! empty( $um_roles ) ) {
 
 
 		$response_roles_data[] = array(
-			'role_key'      => $role_key,
-			'key_in_meta'   => $key_in_meta
+			'role_key'    => $role_key,
+			'key_in_meta' => $key_in_meta,
 		);
 
 		if ( ! empty( $role_meta['_um_core'] ) )

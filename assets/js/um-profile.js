@@ -37,6 +37,7 @@ jQuery(document).ready(function() {
 	jQuery(document.body).on('click', '.um-reset-profile-photo', function(e) {
 		let $obj = jQuery(this);
 		let user_id = $obj.data('user_id');
+		let nonce = $obj.data('nonce');
 
 		let $dropdownItem = $obj.parents('ul').find('.um-manual-trigger[data-parent=".um-profile-photo"]');
 		let altText = $dropdownItem.data('alt_text');
@@ -50,7 +51,7 @@ jQuery(document).ready(function() {
 			data: {
 				action:'um_delete_profile_photo',
 				user_id: user_id,
-				nonce: um_scripts.nonce
+				_wpnonce: nonce
 			},
 			success: function() {
 				$obj.removeClass('um-is-visible').hide();
@@ -64,6 +65,7 @@ jQuery(document).ready(function() {
 	jQuery(document.body).on('click', '.um-reset-cover-photo', function(e){
 		let $obj = jQuery(this);
 		let user_id = $obj.data('user_id');
+		let nonce = $obj.data('nonce');
 
 		let $dropdownItem = $obj.parents('ul').find('.um-manual-trigger[data-parent=".um-cover"]');
 		let altText = $dropdownItem.data('alt_text');
@@ -80,7 +82,7 @@ jQuery(document).ready(function() {
 			data: {
 				action: 'um_delete_cover_photo',
 				user_id: user_id,
-				nonce: um_scripts.nonce
+				_wpnonce: nonce
 			},
 			success: function() {
 				$obj.removeClass('um-is-visible').hide();

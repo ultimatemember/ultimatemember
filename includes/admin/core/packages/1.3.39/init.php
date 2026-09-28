@@ -1,4 +1,8 @@
-<?php ?>
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 
 <script type="text/javascript">
 	jQuery( document ).ready( function() {
@@ -10,7 +14,7 @@
 			dataType: 'json',
 			data: {
 				action: 'um_usermetaquery1339',
-				nonce: um_admin_scripts.nonce
+				_wpnonce: um_inside_package_nonce
 			},
 			success: function( response ) {
 				if ( typeof response.data != 'undefined' ) {

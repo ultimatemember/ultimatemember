@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function um_upgrade_usermeta_count280() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_2.8.0' );
 
 	um_maybe_unset_time_limit();
 
@@ -24,7 +24,7 @@ function um_upgrade_usermeta_count280() {
 
 
 function um_upgrade_metadata_per_user280() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_2.8.0' );
 
 	um_maybe_unset_time_limit();
 
@@ -77,7 +77,7 @@ function um_upgrade_metadata_per_user280() {
 				$updated_meta = gmdate( 'Y-m-d H:i:s', $updated_meta );
 			}
 		} elseif ( 'submitted' === $usermeta_row['meta_key'] ) {
-			$unserialized_meta = maybe_unserialize( $usermeta_row['meta_value'] );
+			$unserialized_meta = um_maybe_unserialize( $usermeta_row['meta_value'] );
 			if ( isset( $unserialized_meta['use_gdpr_agreement'] ) && is_numeric( $unserialized_meta['use_gdpr_agreement'] ) ) {
 				update_user_meta( $user_id, 'submitted_backup', $unserialized_meta );
 				$unserialized_meta['use_gdpr_agreement'] = gmdate( 'Y-m-d H:i:s', $unserialized_meta['use_gdpr_agreement'] );
@@ -108,7 +108,7 @@ function um_upgrade_metadata_per_user280() {
 }
 
 function um_upgrade_update_options280() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_2.8.0' );
 
 	um_maybe_unset_time_limit();
 

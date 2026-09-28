@@ -23,7 +23,7 @@ class Forms {
 	 * Get the list of the icons.
 	 */
 	public function get_icons() {
-		UM()->admin()->check_ajax_nonce();
+		check_ajax_referer( 'um_get_icons' );
 
 		$search_request = ! empty( $_REQUEST['search'] ) ? sanitize_text_field( $_REQUEST['search'] ) : '';
 		$page           = ! empty( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
@@ -35,10 +35,10 @@ class Forms {
 		if ( ! empty( $search_request ) ) {
 			$um_icons_list = array_filter(
 				$um_icons_list,
-				function( $item ) use ( $search_request ) {
+				function ( $item ) use ( $search_request ) {
 					$result = array_filter(
 						$item['search'],
-						function( $search_item ) use ( $search_request ) {
+						function ( $search_item ) use ( $search_request ) {
 							return stripos( $search_item, $search_request ) !== false;
 						}
 					);

@@ -95,12 +95,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			if ( isset( $current_screen->id ) && in_array( $current_screen->id, $um_pages ) ) {
 				// Change the footer text
 				if ( ! get_option( 'um_admin_footer_text_rated' ) ) {
-
-					ob_start(); ?>
-						<a href="https://wordpress.org/support/plugin/ultimate-member/reviews/?filter=5" target="_blank" class="um-admin-rating-link" data-rated="<?php esc_attr_e( 'Thanks :)', 'ultimate-member' ) ?>">
+					ob_start();
+					?>
+						<a href="https://wordpress.org/support/plugin/ultimate-member/reviews/?filter=5" target="_blank" class="um-admin-rating-link" data-rated="<?php esc_attr_e( 'Thanks :)', 'ultimate-member' ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_admin_rating_action' ) ); ?>">
 							&#9733;&#9733;&#9733;&#9733;&#9733;
 						</a>
-					<?php $link = ob_get_clean();
+					<?php
+					$link = ob_get_clean();
 
 					ob_start();
 
@@ -110,42 +111,39 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 
 					<script type="text/javascript">
 						jQuery( document.body ).on('click', 'a.um-admin-rating-link', function() {
-							jQuery.ajax({
-								url: wp.ajax.settings.url,
-								type: 'post',
-								data: {
-									action: 'um_rated',
-									nonce: um_admin_scripts.nonce
-								},
-								success: function() {
+							let nonce = jQuery( this ).data( 'nonce' );
+							wp.ajax.send(
+								'um_rated',
+								{
+									data: {
+										_wpnonce: nonce
+									}
 								}
-							});
+							)
 							jQuery(this).parent().text( jQuery( this ).data( 'rated' ) );
 						});
 					</script>
-
-					<?php $footer_text = ob_get_clean();
+					<?php
+					$footer_text = ob_get_clean();
 				}
 			}
 
 			return $footer_text;
 		}
 
-
 		/**
 		 * When user clicks the review link in backend
 		 */
-		function ultimatemember_rated() {
-			UM()->admin()->check_ajax_nonce();
+		public function ultimatemember_rated() {
+			check_ajax_referer( 'um_admin_rating_action' );
 
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
 			}
 
 			update_option( 'um_admin_footer_text_rated', 1 );
 			wp_send_json_success();
 		}
-
 
 		/**
 		 * Manage order of admin menu items
