@@ -38,6 +38,9 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			// Integration for the "Transposh Translation Filter" plugin
 			add_action( 'template_redirect', array( &$this, 'transposh_user_profile' ), 9990 );
 
+			// Integration for the "SportsPress" plugin
+			add_action( 'um_registration_set_extra_data', array( &$this, 'sportspress_player_registration' ), 20, 3 );
+
 			/**
 			 * @todo Customize this form metadata
 			 */
@@ -158,6 +161,129 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			if ( UM()->dependencies()->woocommerce_active_check() ) {
 				add_filter( 'single_template', array( &$this, 'woocommerce_template' ), 9999999, 1 );
 			}
+		}
+
+
+		/**
+		 * Check if SportsPress is active
+		 *
+		 * @return bool
+		 */
+		public function is_sportspress_active() {
+			return UM()->dependencies()->sportspress_active_check();
+		}
+
+
+		/**
+		 * Integration for the "SportsPress" plugin
+		 *
+		 * @description Create a SportsPress player profile for users registered via an Ultimate Member form.
+		 * @see         https://github.com/ultimatemember/ultimatemember/issues/899
+		 *
+		 * SportsPress builds its own player profile from raw $_POST keys on `user_register`,
+		 * but Ultimate Member field names carry a `-{form_id}` suffix there, so it never
+		 * finds the submitted data. Run after usermeta is saved and create the player here.
+		 *
+		 * @param int        $user_id   User ID.
+		 * @param array      $args      Registration data.
+		 * @param null|array $form_data UM form data. Null when the user is created from wp-admin.
+		 */
+		public function sportspress_player_registration( $user_id, $args, $form_data ) {
+			if ( ! $this->is_sportspress_active() ) {
+				return;
+			}
+
+			// Mirror SportsPress own setting for auto-created player profiles.
+			if ( 'yes' !== get_option( 'sportspress_registration_add_player', 'no' ) ) {
+				return;
+			}
+
+			// Skip when there is no valid form submission behind the user, e.g. wp-admin creation.
+			if ( null === $form_data || empty( $args['submitted'] ) || ! is_array( $args['submitted'] ) ) {
+				return;
+			}
+
+			if ( ! post_type_exists( 'sp_player' ) ) {
+				return;
+			}
+
+			if ( $this->get_sportspress_player_by_user( $user_id ) ) {
+				return;
+			}
+
+			$submitted = $args['submitted'];
+
+			$parts = array();
+			if ( ! empty( $submitted['first_name'] ) ) {
+				$parts[] = trim( sanitize_text_field( $submitted['first_name'] ) );
+			}
+			if ( ! empty( $submitted['last_name'] ) ) {
+				$parts[] = trim( sanitize_text_field( $submitted['last_name'] ) );
+			}
+
+			$name = trim( implode( ' ', array_filter( $parts ) ) );
+			if ( '' === $name && ! empty( $args['user_login'] ) ) {
+				$name = trim( sanitize_text_field( $args['user_login'] ) );
+			}
+
+			if ( '' === $name ) {
+				return;
+			}
+
+			$player_id = wp_insert_post(
+				array(
+					'post_type'   => 'sp_player',
+					'post_title'  => $name,
+					'post_author' => (int) $user_id,
+					'post_status' => 'draft',
+				)
+			);
+
+			if ( is_wp_error( $player_id ) || ! $player_id ) {
+				return;
+			}
+
+			$team = ! empty( $submitted['sp_team'] ) ? absint( $submitted['sp_team'] ) : 0;
+			if ( $team && 'sp_team' === get_post_type( $team ) ) {
+				update_post_meta( $player_id, 'sp_team', $team );
+				update_post_meta( $player_id, 'sp_current_team', $team );
+			}
+
+			/**
+			 * Fires after a SportsPress player profile is created for a new Ultimate Member user.
+			 *
+			 * @since 2.15.0
+			 * @hook  um_sportspress_player_created
+			 *
+			 * @param {int}   $player_id Created `sp_player` post ID.
+			 * @param {int}   $user_id   Registered user ID.
+			 * @param {array} $args      Registration data.
+			 */
+			do_action( 'um_sportspress_player_created', $player_id, $user_id, $args );
+		}
+
+
+		/**
+		 * Get the SportsPress player post that belongs to a user
+		 *
+		 * @param int $user_id User ID.
+		 * @return int Player post ID or 0 when the user has no player profile.
+		 */
+		public function get_sportspress_player_by_user( $user_id ) {
+			$players = get_posts(
+				array(
+					'post_type'              => 'sp_player',
+					'author'                 => (int) $user_id,
+					'post_status'            => array( 'publish', 'pending', 'draft', 'private' ),
+					'posts_per_page'         => 1,
+					'fields'                 => 'ids',
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
+				)
+			);
+
+			return empty( $players ) ? 0 : (int) $players[0];
 		}
 
 

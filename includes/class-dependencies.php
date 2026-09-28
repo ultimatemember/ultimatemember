@@ -180,6 +180,23 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 		}
 
 		/**
+		 * Check if SportsPress plugin is active
+		 *
+		 * @return bool
+		 */
+		public static function sportspress_active_check() {
+			if ( ! self::$active_plugins ) {
+				self::init();
+			}
+
+			$sportspress = 'sportspress/sportspress.php';
+
+			return in_array( $sportspress, self::$active_plugins, true )
+				|| array_key_exists( $sportspress, self::$active_plugins )
+				|| class_exists( 'SportsPress' );
+		}
+
+		/**
 		 * Compare UM core and extension versions
 		 *
 		 * @param string $um_required_ver UM core required version.
