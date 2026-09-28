@@ -167,6 +167,12 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.15.0 =
+
+**Enhancements**
+
+* Added: Integration with the SportsPress plugin. A `sp_player` profile post is now created for users registered via the Ultimate Member registration form when the SportsPress `Create player profiles for new users` option is enabled. A team field with the `sp_team` metakey on the registration form is copied to the player post. https://github.com/ultimatemember/ultimatemember/issues/899
+
 = 2.14.0 2026-09-28 =
 
 **Enhancements**
