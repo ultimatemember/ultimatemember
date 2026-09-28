@@ -177,7 +177,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 
 			$query_verify = get_query_var( 'um_nonce' );
-
 			if ( empty( $query_verify ) || ! wp_verify_nonce( $query_verify, "um-temp-download-nonce-$user_id-$filename" ) ) {
 				$wp_query->set_404();
 				return;
@@ -204,7 +203,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			$pathinfo     = pathinfo( $file_path );
 			$size         = filesize( $file_path );
 			$originalname = $pathinfo['basename'];
-			$type         = $pathinfo['extension'];
+			$filetype     = wp_check_filetype( $file_path, wp_get_mime_types() );
+			$type         = $filetype['type'] ? $filetype['type'] : 'application/octet-stream';
 
 			header( 'Content-Description: File Transfer' );
 			header( 'Content-Type: ' . $type );
@@ -944,7 +944,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 						$ret['error'] = $uploaded['error'];
 					} else {
 						$uploaded_file        = $uploaded['handle_upload'];
-						$ret['url']           = $uploaded_file['file_info']['name'];
+						$ret['url']           = $uploaded_file['url'];
+						$ret['temp_hash']     = $uploaded_file['temp_hash'];
 						$ret['icon']          = UM()->files()->get_fonticon_by_ext( $uploaded_file['file_info']['ext'] );
 						$ret['icon_bg']       = UM()->files()->get_fonticon_bg_by_ext( $uploaded_file['file_info']['ext'] );
 						$ret['filename']      = $uploaded_file['file_info']['basename'];

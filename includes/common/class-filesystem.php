@@ -888,7 +888,7 @@ class Filesystem {
 		/**
 		 * Filters the user uploads temp directory.
 		 *
-		 * @param {string} $url     User uploads temp directory.
+		 * @param {string} $dir     User uploads temp directory.
 		 * @param {int}    $user_id User ID.
 		 *
 		 * @since 2.15.0
@@ -901,6 +901,34 @@ class Filesystem {
 		}
 
 		return $user_dir;
+	}
+
+	public function get_user_temp_url( $user_id = null ) {
+		if ( ! $user_id ) {
+			if ( is_user_logged_in() ) {
+				$user_id = get_current_user_id();
+			} else {
+				$user_id = UM()->common()->guest()->get_guest_token();
+				if ( is_null( $user_id ) ) {
+					// Possible hijacking.
+					return '';
+				}
+			}
+		} elseif ( ! UM()->common()->users()::user_exists( $user_id ) ) {
+			return '';
+		}
+
+		$user_url = $this->get_tempurl() . '/' . $user_id;
+		/**
+		 * Filters the user uploads temp URL.
+		 *
+		 * @param {string} $url     User uploads temp directory.
+		 * @param {int}    $user_id User ID.
+		 *
+		 * @since 2.15.0
+		 * @hook  um_user_temp_url
+		 */
+		return apply_filters( 'um_user_temp_url', $user_url, $user_id );
 	}
 
 	/**

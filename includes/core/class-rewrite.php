@@ -88,7 +88,7 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 			$newrules[ 'um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/\d{1,10}\.(' . $allowed_mimes . ')$' ] = 'index.php?um_action=download&um_form=$matches[1]&um_field=$matches[2]&um_user=$matches[3]&um_verify=$matches[4]';
 
 			// NGINX-config `rewrite ^/um-temp/([^/]+)/([^/]+)/\w{1,32}\.(jpg|jpeg|jpe|gif|png|bmp|tif|tiff|ico|heic|heif|webp|avif|aac|flac|m4a|m4b|mka|mp3|ogg|oga|ram|wav|wma|3g2|3gp|3gpp|asf|avi|divx|flv|m4v|mkv|mov|mp4|mpeg|mpg|ogv|qt|wmv|doc|docx|docm|dotm|odt|pages|pdf|xps|oxps|rtf|wp|wpd|psd|xcf|numbers|ods|xls|xlsx|xlsm|xlsb|key|ppt|pptx|pptm|pps|ppsx|ppsm|sldx|sldm|odp|asc|csv|tsv|txt|gz|rar|tar|zip|7z|css|htm|html|js)$ /index.php?um_action=temp-download&um_user=$1&um_verify=$2 last;`
-			$newrules[ 'um-temp/([^/]+)/([^/]+)/\w{1,32}\.(' . $allowed_mimes . ')$' ] = 'index.php?um_action=temp-download&um_user=$matches[1]&um_verify=$matches[2]';
+			$newrules[ 'um-temp/([^/]+)/([^/]+)/\w{1,32}\.(' . $allowed_mimes . ')$' ] = 'index.php?um_action=temp-download&um_user=$matches[1]&um_nonce=$matches[2]';
 
 			// User Profile rewrite rules.
 			if ( isset( UM()->config()->permalinks['user'] ) ) {
