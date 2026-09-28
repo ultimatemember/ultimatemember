@@ -29,7 +29,9 @@ class Pages {
 	 * AJAX callback for getting the pages list
 	 */
 	public function get_pages_list() {
-		check_ajax_referer( 'um-admin-nonce', 'nonce' );
+		$field_id = ! empty( $_GET['field_id'] ) ? sanitize_text_field( $_GET['field_id'] ) : null;
+
+		check_ajax_referer( 'um_page_select' . $field_id );
 
 		// we will pass post IDs and titles to this array
 		$return = array();
@@ -51,8 +53,6 @@ class Pages {
 				$query_args['s'] = sanitize_text_field( $_GET['search'] ); // the search query
 			}
 
-			$field_id = ! empty( $_GET['field_id'] ) ? sanitize_text_field( $_GET['field_id'] ) : null;
-
 			/**
 			 * Filters WP_Query arguments for getting pages visible in the dropdown fields in UM Settings.
 			 *
@@ -73,8 +73,9 @@ class Pages {
 					$search_results->the_post();
 
 					// shorten the title a little
-					$title    = ( mb_strlen( $search_results->post->post_title ) > 50 ) ? mb_substr( $search_results->post->post_title, 0, 49 ) . '...' : $search_results->post->post_title;
-					$title    = sprintf( __( '%s (ID: %s)', 'ultimate-member' ), $title, $search_results->post->ID );
+					$title = ( mb_strlen( $search_results->post->post_title ) > 50 ) ? mb_substr( $search_results->post->post_title, 0, 49 ) . '...' : $search_results->post->post_title;
+					// translators: %1$s - post title, %2$s - post ID
+					$title    = sprintf( __( '%1$s (ID: %2$s)', 'ultimate-member' ), $title, $search_results->post->ID );
 					$return[] = array( $search_results->post->ID, $title ); // array( Post ID, Post Title )
 				}
 			}

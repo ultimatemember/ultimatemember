@@ -15,7 +15,7 @@
 			dataType: 'json',
 			data: {
 				action: 'um_users_count213beta3',
-				nonce: um_admin_scripts.nonce
+				_wpnonce: um_inside_package_nonce
 			},
 			success: function( response ) {
 				if ( typeof response.data.count != 'undefined' ) {
@@ -45,7 +45,7 @@
 					data: {
 						action: 'um_metadata_per_user213beta3',
 						page: current_page,
-						nonce: um_admin_scripts.nonce
+						_wpnonce: um_inside_package_nonce
 					},
 					success: function( response ) {
 						if ( typeof response.data != 'undefined' ) {
@@ -79,7 +79,7 @@
 				dataType: 'json',
 				data: {
 					action: 'um_metatable213beta3',
-					nonce: um_admin_scripts.nonce
+					_wpnonce: um_inside_package_nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {

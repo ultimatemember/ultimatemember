@@ -240,7 +240,7 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 			$submitted = get_user_meta( $user_id, 'submitted', true );
 			if ( ! empty( $submitted ) ) {
 				$actions['view_info'] = '<a href="#" data-modal="UM_preview_registration" data-modal-size="smaller"
-				data-dynamic-content="um_admin_review_registration" data-arg1="' . esc_attr( $user_id ) . '" data-arg2="edit_registration">' . esc_html__( 'Info', 'ultimate-member' ) . '</a>';
+				data-dynamic-content="um_admin_review_registration" data-arg1="' . esc_attr( $user_id ) . '" data-arg2="edit_registration" data-nonce="' . esc_attr( wp_create_nonce( 'um_dynamic_content_um_admin_review_registration' ) ) . '">' . esc_html__( 'Info', 'ultimate-member' ) . '</a>';
 				// For new modal below.
 				// $actions['view_info'] = '<a href="#" class="um-preview-registration" data-user_id="' . esc_attr( $user_id ) . '">' . esc_html__( 'Info', 'ultimate-member' ) . '</a>';
 			}

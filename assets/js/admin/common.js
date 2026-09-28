@@ -58,7 +58,7 @@ UM.admin = {
 								search: params.term, // search query
 								action: 'um_get_icons', // AJAX action for admin-ajax.php
 								page: params.page || 1, // infinite scroll pagination
-								nonce: um_admin_scripts.nonce
+								_wpnonce: $iconSelector.data('nonce')
 							};
 						},
 						processResults: function( response, params ) {

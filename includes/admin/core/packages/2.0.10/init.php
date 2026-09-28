@@ -11,7 +11,7 @@
 			dataType: 'json',
 			data: {
 				action: 'um_styles2010',
-				nonce: um_admin_scripts.nonce
+				_wpnonce: um_inside_package_nonce
 			},
 			success: function( response ) {
 				if ( typeof response.data != 'undefined' ) {
@@ -38,7 +38,7 @@
 				dataType: 'json',
 				data: {
 					action: 'um_cache2010',
-					nonce: um_admin_scripts.nonce
+					_wpnonce: um_inside_package_nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {

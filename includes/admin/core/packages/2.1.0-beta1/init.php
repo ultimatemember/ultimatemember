@@ -12,7 +12,7 @@
 			dataType: 'json',
 			data: {
 				action: 'um_metadata210beta1',
-				nonce: um_admin_scripts.nonce
+				_wpnonce: um_inside_package_nonce
 			},
 			success: function( response ) {
 				if ( typeof response.data != 'undefined' ) {
@@ -39,7 +39,7 @@
 				dataType: 'json',
 				data: {
 					action: 'um_memberdir210beta1',
-					nonce: um_admin_scripts.nonce
+					_wpnonce: um_inside_package_nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {

@@ -58,13 +58,12 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 * Delete profile avatar AJAX handler
 		 */
 		public function ajax_delete_profile_photo() {
-			UM()->check_ajax_nonce();
-
 			if ( ! array_key_exists( 'user_id', $_REQUEST ) ) {
 				wp_send_json_error( __( 'Invalid data', 'ultimate-member' ) );
 			}
-
 			$user_id = absint( $_REQUEST['user_id'] );
+
+			check_ajax_referer( 'um-reset-profile-photo' . $user_id );
 
 			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 				die( esc_html__( 'You can not edit this user', 'ultimate-member' ) );
@@ -73,18 +72,16 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			UM()->files()->delete_core_user_photo( $user_id, 'profile_photo' );
 		}
 
-
 		/**
 		 * Delete cover photo AJAX handler
 		 */
 		public function ajax_delete_cover_photo() {
-			UM()->check_ajax_nonce();
-
 			if ( ! array_key_exists( 'user_id', $_REQUEST ) ) {
 				wp_send_json_error( __( 'Invalid data', 'ultimate-member' ) );
 			}
-
 			$user_id = absint( $_REQUEST['user_id'] );
+
+			check_ajax_referer( 'um-reset-cover-photo' . $user_id );
 
 			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 				die( esc_html__( 'You can not edit this user', 'ultimate-member' ) );
@@ -92,7 +89,6 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 
 			UM()->files()->delete_core_user_photo( $user_id, 'cover_photo' );
 		}
-
 
 		/**
 		 * Pre-defined privacy options
@@ -425,6 +421,11 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			if ( ! empty( $array ) ) {
 				foreach ( $array as $key ) {
 					if ( $key ) {
+						$field_data = UM()->fields()->get_field( $key );
+						if ( ! um_can_view_field( $field_data ) ) {
+							continue;
+						}
+
 						if ( '_um_last_login' === $key ) {
 							$show_last_login = get_user_meta( um_user( 'ID' ), 'um_show_last_login', true );
 							if ( ! empty( $show_last_login ) && 'no' === $show_last_login[0] ) {

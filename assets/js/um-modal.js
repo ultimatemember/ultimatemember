@@ -14,64 +14,6 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
-	// jQuery(document).on('click', '.um-modal .um-single-file-preview a.cancel', function(e){
-	// 	e.preventDefault();
-	//
-	// 	var parent = jQuery(this).parents('.um-modal-body');
-	// 	var src = jQuery(this).parents('.um-modal-body').find('.um-single-fileinfo a').attr('href');
-	// 	var mode = parent.find('.um-single-file-upload').data('set_mode');
-	//
-	// 	jQuery.ajax({
-	// 		url: wp.ajax.settings.url,
-	// 		type: 'post',
-	// 		data: {
-	// 			action: 'um_remove_file',
-	// 			src: src,
-	// 			mode: mode,
-	// 			nonce: um_scripts.nonce
-	// 		},
-	// 		success: function() {
-	// 			parent.find('.um-single-file-preview').hide();
-	// 			parent.find('.ajax-upload-dragdrop').show();
-	// 			parent.find('.um-modal-btn.um-finish-upload').addClass('disabled');
-	// 			um_modal_responsive();
-	// 		}
-	// 	});
-	//
-	// 	return false;
-	// });
-
-	// jQuery(document).on('click', '.um-modal .um-single-image-preview a.cancel', function(e){
-	// 	e.preventDefault();
-	//
-	// 	var parent = jQuery(this).parents('.um-modal-body');
-	// 	var src = jQuery(this).parents('.um-modal-body').find('.um-single-image-preview img').attr('src');
-	// 	var mode = parent.find('.um-single-image-upload').data('set_mode');
-	//
-	// 	jQuery.ajax({
-	// 		url: wp.ajax.settings.url,
-	// 		type: 'post',
-	// 		data: {
-	// 			action: 'um_remove_file',
-	// 			src: src,
-	// 			mode: mode,
-	// 			nonce: um_scripts.nonce
-	// 		},
-	// 		success: function() {
-	// 			wp.hooks.doAction( 'um_after_removing_preview' );
-	//
-	// 			parent.find('.um-single-image-preview img').attr( 'src', '' );
-	// 			parent.find('.um-single-image-preview').hide();
-	// 			parent.find('.ajax-upload-dragdrop').show();
-	// 			parent.find('.um-modal-btn.um-finish-upload').addClass( 'disabled' );
-	//
-	// 			um_modal_responsive();
-	// 		}
-	// 	});
-	//
-	// 	return false;
-	// });
-
 	jQuery(document).on('click', '.um-finish-upload.file:not(.disabled)', function(){
 
 		var key = jQuery(this).attr('data-key');
@@ -106,10 +48,12 @@ jQuery(document).ready(function() {
 		var d;
 		var form_id = 0;
 		var mode = '';
+		var nonce = '';
 		if ( jQuery('div.um-field-image[data-key="' + key + '"]').length === 1 ) {
 			let $formWrapper = jQuery('div.um-field-image[data-key="' + key + '"]').closest('.um-form');
 			form_id = $formWrapper.data('form_id') || $formWrapper.find('input[name="form_id"]').val(); // 'input[name="form_id"]' is a backward compatibility.
 			mode = $formWrapper.data('mode');
+			nonce = jQuery('div.um-field-image[data-key="' + key + '"]').data('resize-nonce');
 		} else {
 			console.warn( wp.i18n.__( 'UM Warning: No field associated with image uploader.', 'ultimate-member' ) );
 			return;
@@ -133,7 +77,7 @@ jQuery(document).ready(function() {
 					key: key,
 					set_id: form_id,
 					set_mode: mode,
-					nonce: um_scripts.nonce
+					_wpnonce: nonce
 				},
 				success: function( response ) {
 

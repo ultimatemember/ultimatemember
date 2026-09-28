@@ -129,7 +129,82 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		}
 
 		/**
-		 * Removes html from any string
+		 * Get a customizable email validation error without exposing its cause by default.
+		 *
+		 * @param string $real_message Specific, translated error message.
+		 * @param string $code         Stable error identifier.
+		 * @param string $key          Field meta key.
+		 * @param array  $attributes   Field attributes.
+		 * @param string $mode         Form mode.
+		 *
+		 * @return string
+		 */
+		public function get_email_error_message( $real_message, $code, $key, $attributes, $mode ) {
+			$secure_message = __( 'The email you entered is incorrect', 'ultimate-member' );
+
+			$visible_codes = array(
+				'email_required',
+				'email_invalid',
+				'email_invalid_characters',
+			);
+			/**
+			 * Filters the error codes list for the user email field when we can show the real error message due to security.
+			 *
+			 * @since 2.14.0
+			 * @hook  um_email_validation_real_error_codes
+			 *
+			 * @param {array}  $visible_codes Visible error codes.
+			 * @param {string} $key           Field meta key.
+			 * @param {array}  $attributes    Field attributes.
+			 * @param {string} $mode          Form mode.
+			 *
+			 * @return {array} Visible error codes.
+			 *
+			 * @example <caption>Add `email_exists` error code to whitelist on the User Account.</caption>
+			 * function my_email_validation_real_error_codes( $visible_codes, $key, $attributes, $mode ) {
+			 *     if ( 'account' === $mode ) {
+			 *        $visible_codes[] = 'email_exists';
+			 *     }
+			 *     return $visible_codes;
+			 * }
+			 * add_filter( 'um_email_validation_real_error_codes', 'my_email_validation_real_error_codes', 10, 4 );
+			 */
+			$visible_codes = apply_filters( 'um_email_validation_real_error_codes', $visible_codes, $key, $attributes, $mode );
+			if ( in_array( $code, $visible_codes, true ) ) {
+				$secure_message = $real_message; // Real error message is visible for a few error codes.
+			}
+			/**
+			 * Filters the public email validation error message.
+			 *
+			 * The specific reason is available only to server-side callbacks. Returning it
+			 * may disclose whether an email address belongs to an existing account.
+			 *
+			 * @since 2.14.0
+			 * @hook  um_email_validation_error_message
+			 *
+			 * @param {string} $secure_message Generic public error message.
+			 * @param {string} $real_message   Specific, translated error message.
+			 * @param {string} $code           Stable error identifier.
+			 * @param {string} $key            Field meta key.
+			 * @param {array}  $attributes     Field attributes.
+			 * @param {string} $mode           Form mode.
+			 *
+			 * @return {string} Public error message.
+			 *
+			 * @example <caption>Change the error message for an email address that is already in use.</caption>
+			 * function my_email_validation_error_message( $secure_message, $real_message, $code, $key, $attributes, $mode ) {
+			 *     if ( 'email_exists' === $code ) {
+			 *         return $real_message;
+			 *     }
+			 *     return $secure_message;
+			 * }
+			 * add_filter( 'um_email_validation_error_message', 'my_email_validation_error_message', 10, 6 );
+			 */
+			return apply_filters( 'um_email_validation_error_message', $secure_message, $real_message, $code, $key, $attributes, $mode );
+		}
+
+		/**
+		 * Removes HTML from any string
 		 *
 		 * @param $string
 		 *
@@ -353,27 +428,34 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		 * Is url
 		 *
 		 * @param $url
-		 * @param bool $social
+		 * @param string|false $social Allowed social host (also accepts its www variant).
 		 *
 		 * @return bool
 		 */
-		function is_url( $url, $social = false ) {
+		public function is_url( $url, $social = false ) {
 			if ( ! $url ) {
 				return true;
 			}
 
 			if ( $social ) {
-
-				if ( strstr( $url, $social ) && '' != str_replace( $social, '', $url ) ) {
-					return true;
+				// Preserve support for social links entered without a protocol.
+				if ( ! preg_match( '~^[a-z][a-z0-9+.-]*:~i', $url ) ) {
+					$url = 'https://' . $url;
+				}
+				if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+					return false;
 				}
 
-			} else {
+				$parts  = wp_parse_url( $url );
+				$social = strtolower( $social );
+				return isset( $parts['scheme'], $parts['host'] )
+					&& in_array( strtolower( $parts['scheme'] ), array( 'http', 'https' ), true )
+					&& in_array( strtolower( $parts['host'] ), array( $social, 'www.' . $social ), true )
+					&& ! isset( $parts['user'] )
+					&& ! isset( $parts['pass'] );
 
-				if ( strstr( $url, 'http://' ) || strstr( $url, 'https://' ) ) {
-					return true;
-				}
-
+			} elseif ( false !== strpos( $url, 'http://' ) || false !== strpos( $url, 'https://' ) ) {
+				return true;
 			}
 
 			return false;

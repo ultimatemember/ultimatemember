@@ -1,6 +1,10 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 function um_upgrade_usermetaquery1339() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_1.3.39' );
 
 	include 'usermeta_query.php';
 

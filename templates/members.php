@@ -6,7 +6,7 @@
  *
  * Page: "Members"
  *
- * @version 2.11.3
+ * @version 2.14.0
  *
  * @var array $args
  */
@@ -239,10 +239,10 @@ $postid = ! empty( $post->ID ) ? $post->ID : '';
 ?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $unique_hash ); ?>"
-	 data-hash="<?php echo esc_attr( $unique_hash ) ?>" data-base-post="<?php echo esc_attr( $postid ) ?>"
-	 data-must-search="<?php echo esc_attr( $must_search ); ?>" data-searched="<?php echo $not_searched ? '0' : '1'; ?>"
-	 data-view_type="<?php echo esc_attr( $current_view ) ?>" data-page="<?php echo esc_attr( $current_page ) ?>"
-	 data-sorting="<?php echo esc_attr( $sort_from_url ) ?>">
+	data-hash="<?php echo esc_attr( $unique_hash ); ?>" data-base-post="<?php echo esc_attr( $postid ); ?>"
+	data-must-search="<?php echo esc_attr( $must_search ); ?>" data-searched="<?php echo $not_searched ? '0' : '1'; ?>"
+	data-view_type="<?php echo esc_attr( $current_view ); ?>" data-page="<?php echo esc_attr( $current_page ); ?>"
+	data-sorting="<?php echo esc_attr( $sort_from_url ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um-directory-' . $unique_hash ) ); ?>">
 	<div class="um-members-overlay"><div class="um-ajax-loading"></div></div>
 
 	<div class="um-member-directory-header um-form">
