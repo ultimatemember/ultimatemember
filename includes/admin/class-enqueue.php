@@ -441,6 +441,9 @@ final class Enqueue extends \um\common\Enqueue {
 		$js_url  = self::get_url( 'js' );
 		$css_url = self::get_url( 'css' );
 
+		// Init WP Media Uploader on the form builder screen. Needed for the custom field icon image.
+		wp_enqueue_media();
+
 		wp_register_script( 'um_admin_builder', $js_url . 'admin/builder' . $suffix . '.js', array( 'um_admin_modal', 'jquery-ui-draggable', 'jquery-ui-sortable', 'editor', 'wp-tinymce', self::$select2_handle, 'um_raty' ), UM_VERSION, true );
 		wp_set_script_translations( 'um_admin_builder', 'ultimate-member' );
 		wp_enqueue_script( 'um_admin_builder' );

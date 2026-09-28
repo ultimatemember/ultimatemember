@@ -105,6 +105,60 @@ UM.admin = {
 				});
 			}
 		}
+	},
+	iconUpload: {
+		frame: null,
+		init: function () {
+			// Delegated handlers because the field modal is loaded via AJAX.
+			jQuery( document ).on( 'click', '.um-icon-url-select', function(e) {
+				e.preventDefault();
+
+				if ( typeof wp === 'undefined' || ! wp.media ) {
+					return;
+				}
+
+				let button = jQuery( this );
+
+				// Rebuild the frame on every click, the modal content is regenerated each time.
+				if ( UM.admin.iconUpload.frame ) {
+					UM.admin.iconUpload.frame.remove();
+				}
+
+				UM.admin.iconUpload.frame = wp.media({
+					title: button.attr( 'data-upload_frame' ) || wp.i18n.__( 'Select custom icon', 'ultimate-member' ),
+					button: {
+						text: wp.i18n.__( 'Select', 'ultimate-member' )
+					},
+					library: {
+						type: 'image'
+					},
+					multiple: false
+				});
+
+				UM.admin.iconUpload.frame.on( 'select', function() {
+					let wrapper = button.parents( '.um-icon-url-field-wrapper' ).first();
+					let attachment = UM.admin.iconUpload.frame.state().get( 'selection' ).first().toJSON();
+
+					wrapper.find( '.um-icon-url-value' ).val( attachment.url ).trigger( 'change' );
+					wrapper.find( '.um-icon-url-preview' ).empty().append(
+						jQuery( '<img>' ).attr( 'src', attachment.url ).attr( 'alt', '' )
+					).show();
+					wrapper.find( '.um-icon-url-clear' ).show();
+				});
+
+				UM.admin.iconUpload.frame.open();
+			});
+
+			jQuery( document ).on( 'click', '.um-icon-url-clear', function(e) {
+				e.preventDefault();
+
+				let wrapper = jQuery( this ).parents( '.um-icon-url-field-wrapper' ).first();
+
+				wrapper.find( '.um-icon-url-value' ).val( '' ).trigger( 'change' );
+				wrapper.find( '.um-icon-url-preview' ).hide().empty();
+				wrapper.find( '.um-icon-url-clear' ).hide();
+			});
+		}
 	}
 }
 
@@ -112,4 +166,5 @@ jQuery(document).ready(function() {
 	UM.admin.tooltip.init();
 	UM.admin.colorPicker.init();
 	UM.admin.iconSelector.init();
+	UM.admin.iconUpload.init();
 });

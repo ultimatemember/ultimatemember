@@ -639,6 +639,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					'_icon'                           => array(
 						'sanitize' => 'text',
 					),
+					'_icon_url'                       => array(
+						'sanitize' => 'url',
+					),
 					'_css_class'                      => array(
 						'sanitize' => 'text',
 					),

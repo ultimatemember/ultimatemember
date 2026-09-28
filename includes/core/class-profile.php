@@ -473,8 +473,10 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 
 						if ( ! UM()->options()->get( 'profile_show_metaicon' ) ) {
 							$icon = '';
+						} elseif ( isset( $data['icon_url'] ) && is_string( $data['icon_url'] ) && '' !== $data['icon_url'] ) {
+							$icon = '<img src="' . esc_url( $data['icon_url'] ) . '" alt="" />';
 						} else {
-							$icon = ! empty( $data['icon'] ) ? '<i class="' . $data['icon'] . '"></i>' : '';
+							$icon = ! empty( $data['icon'] ) ? '<i class="' . esc_attr( $data['icon'] ) . '"></i>' : '';
 						}
 
 						$items[] = apply_filters( 'um_show_meta_item_html', '<span>' . $icon . $value . '</span>', $key );
