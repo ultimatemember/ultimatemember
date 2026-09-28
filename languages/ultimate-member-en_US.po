@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Member 2.14.0\n"
+"Project-Id-Version: Ultimate Member 2.13.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ultimate-member\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-17T11:12:04+00:00\n"
+"POT-Creation-Date: 2026-09-10T10:30:19+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -100,77 +100,77 @@ msgstr ""
 msgid "Wrong Nonce"
 msgstr ""
 
-#: includes/admin/class-admin.php:856
+#: includes/admin/class-admin.php:850
 #: includes/admin/templates/directory/sorting.php:68
 #: includes/core/class-member-directory.php:603
 msgid "Other (Custom Field)"
 msgstr ""
 
-#: includes/admin/class-admin.php:1876
+#: includes/admin/class-admin.php:1847
 #: includes/admin/class-secure.php:96
 #: includes/admin/class-secure.php:133
 msgid "Security check"
 msgstr ""
 
-#: includes/admin/class-admin.php:1880
+#: includes/admin/class-admin.php:1851
 msgid "Wrong ID"
 msgstr ""
 
 #. translators: %s - Form title
-#: includes/admin/class-admin.php:1888
+#: includes/admin/class-admin.php:1859
 #, php-format
 msgid "Duplicate of %s"
 msgstr ""
 
-#: includes/admin/class-admin.php:1948
+#: includes/admin/class-admin.php:1919
 msgid "Docs"
 msgstr ""
 
-#: includes/admin/class-admin.php:1949
+#: includes/admin/class-admin.php:1920
 #: includes/admin/core/class-admin-menu.php:195
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-admin.php:1972
+#: includes/admin/class-admin.php:1943
 #: includes/admin/core/class-admin-settings.php:2786
 #: includes/ajax/class-secure.php:34
 msgid "Security Check"
 msgstr ""
 
-#: includes/admin/class-admin.php:2034
-#: includes/admin/class-admin.php:2037
+#: includes/admin/class-admin.php:2005
+#: includes/admin/class-admin.php:2008
 msgid "Form updated."
 msgstr ""
 
-#: includes/admin/class-admin.php:2035
+#: includes/admin/class-admin.php:2006
 msgid "Custom field updated."
 msgstr ""
 
-#: includes/admin/class-admin.php:2036
+#: includes/admin/class-admin.php:2007
 msgid "Custom field deleted."
 msgstr ""
 
-#: includes/admin/class-admin.php:2038
+#: includes/admin/class-admin.php:2009
 msgid "Form restored to revision."
 msgstr ""
 
-#: includes/admin/class-admin.php:2039
+#: includes/admin/class-admin.php:2010
 msgid "Form created."
 msgstr ""
 
-#: includes/admin/class-admin.php:2040
+#: includes/admin/class-admin.php:2011
 msgid "Form saved."
 msgstr ""
 
-#: includes/admin/class-admin.php:2041
+#: includes/admin/class-admin.php:2012
 msgid "Form submitted."
 msgstr ""
 
-#: includes/admin/class-admin.php:2042
+#: includes/admin/class-admin.php:2013
 msgid "Form scheduled."
 msgstr ""
 
-#: includes/admin/class-admin.php:2043
+#: includes/admin/class-admin.php:2014
 msgid "Form draft updated."
 msgstr ""
 
@@ -2547,7 +2547,7 @@ msgid "Privacy Policy Agreement"
 msgstr ""
 
 #. translators: %s: metadata name.
-#: includes/admin/core/class-admin-gdpr.php:302
+#: includes/admin/core/class-admin-gdpr.php:303
 #, php-format
 msgid "Your %s was unable to be removed at this time."
 msgstr ""
@@ -2638,7 +2638,7 @@ msgstr ""
 #: includes/admin/core/class-admin-navmenu.php:129
 #: includes/admin/core/class-admin-navmenu.php:206
 #: includes/admin/templates/access/restrict_content.php:65
-#: includes/common/class-users.php:1214
+#: includes/common/class-users.php:1205
 #: includes/core/class-builtin.php:783
 #: assets/js/admin/block-restrictions.js:150
 msgid "Everyone"
@@ -3427,7 +3427,7 @@ msgstr ""
 #: includes/core/class-fields.php:1944
 #: includes/core/class-fields.php:1983
 #: includes/core/class-fields.php:2968
-#: includes/core/class-fields.php:3083
+#: includes/core/class-fields.php:3089
 msgid "Upload"
 msgstr ""
 
@@ -6003,7 +6003,7 @@ msgid "Pending Review"
 msgstr ""
 
 #: includes/admin/templates/dashboard/users.php:36
-#: includes/common/class-users.php:132
+#: includes/common/class-users.php:123
 msgid "Approved"
 msgstr ""
 
@@ -6400,8 +6400,8 @@ msgstr ""
 #: includes/admin/templates/modal/forms/fonticons.php:26
 #: includes/admin/templates/role/publish.php:33
 #: includes/class-config.php:242
-#: includes/core/class-fields.php:3065
-#: includes/core/class-fields.php:3208
+#: includes/core/class-fields.php:3071
+#: includes/core/class-fields.php:3214
 #: includes/core/um-actions-profile.php:927
 #: includes/core/um-actions-profile.php:936
 #: includes/core/um-actions-profile.php:1125
@@ -7794,54 +7794,54 @@ msgstr ""
 msgid "Theme version is out of date"
 msgstr ""
 
-#: includes/common/class-users.php:133
+#: includes/common/class-users.php:124
 msgid "Pending administrator review"
 msgstr ""
 
-#: includes/common/class-users.php:134
+#: includes/common/class-users.php:125
 msgid "Waiting email confirmation"
 msgstr ""
 
-#: includes/common/class-users.php:135
+#: includes/common/class-users.php:126
 msgid "Membership inactive"
 msgstr ""
 
-#: includes/common/class-users.php:136
+#: includes/common/class-users.php:127
 msgid "Membership rejected"
 msgstr ""
 
-#: includes/common/class-users.php:225
+#: includes/common/class-users.php:216
 #: includes/core/class-member-directory.php:2748
 msgid "Undefined"
 msgstr ""
 
-#: includes/common/class-users.php:801
-#: includes/common/class-users.php:919
+#: includes/common/class-users.php:792
+#: includes/common/class-users.php:910
 #: includes/core/class-mail.php:633
 msgid "Your set password"
 msgstr ""
 
-#: includes/common/class-users.php:811
-#: includes/common/class-users.php:925
+#: includes/common/class-users.php:802
+#: includes/common/class-users.php:916
 msgid "Login to our site"
 msgstr ""
 
-#: includes/common/class-users.php:814
-#: includes/common/class-users.php:928
+#: includes/common/class-users.php:805
+#: includes/common/class-users.php:919
 msgid "Set your password"
 msgstr ""
 
-#: includes/common/class-users.php:1260
+#: includes/common/class-users.php:1251
 msgid "This profile is private. You must be logged in and have permission to view this profile."
 msgstr ""
 
-#: includes/common/class-users.php:1261
+#: includes/common/class-users.php:1252
 #: includes/core/class-builtin.php:784
 #: includes/core/class-user.php:1713
 msgid "Only me"
 msgstr ""
 
-#: includes/common/class-users.php:1262
+#: includes/common/class-users.php:1253
 msgid "This profile is private. You do not have permission to view this profile."
 msgstr ""
 
@@ -9917,62 +9917,66 @@ msgstr ""
 msgid "Upload Photo"
 msgstr ""
 
-#: includes/core/class-fields.php:3002
-#: includes/core/class-fields.php:3064
+#: includes/core/class-fields.php:3008
+#: includes/core/class-fields.php:3070
 #: includes/core/um-actions-profile.php:1123
 #: includes/core/um-actions-profile.php:1156
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:3064
-#: includes/core/class-fields.php:3207
+#: includes/core/class-fields.php:3070
+#: includes/core/class-fields.php:3213
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:3064
+#: includes/core/class-fields.php:3070
 msgid "Apply"
 msgstr ""
 
-#: includes/core/class-fields.php:3092
+#: includes/core/class-fields.php:3098
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:3137
+#: includes/core/class-fields.php:3143
 #: includes/core/um-filters-fields.php:369
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:3141
-#: includes/core/class-fields.php:3207
+#: includes/core/class-fields.php:3147
+#: includes/core/class-fields.php:3213
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:3207
+#: includes/core/class-fields.php:3213
 msgid "Save"
 msgstr ""
 
 #. translators: %s: edit user link.
-#: includes/core/class-fields.php:4743
+#: includes/core/class-fields.php:4749
 #, php-format
 msgid "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some information!"
 msgstr ""
 
-#: includes/core/class-fields.php:4745
+#: includes/core/class-fields.php:4751
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
-#: includes/core/class-fields.php:5010
+#: includes/core/class-fields.php:5016
 msgid "Please login as administrator."
 msgstr ""
 
-#: includes/core/class-fields.php:5014
+#: includes/core/class-fields.php:5020
 msgid "Invalid action."
 msgstr ""
 
-#: includes/core/class-files.php:270
-#: includes/core/class-files.php:323
-#: includes/core/class-files.php:460
-#: includes/core/class-files.php:662
+#: includes/core/class-files.php:151
+msgid "Wrong mode"
+msgstr ""
+
+#: includes/core/class-files.php:158
+#: includes/core/class-files.php:210
+#: includes/core/class-files.php:347
+#: includes/core/class-files.php:549
 #: includes/core/class-form.php:120
 #: includes/core/class-member-directory-meta.php:605
 #: includes/core/class-member-directory.php:3009
@@ -9981,132 +9985,132 @@ msgstr ""
 msgid "Too many requests"
 msgstr ""
 
-#: includes/core/class-files.php:274
+#: includes/core/class-files.php:163
+msgid "Invalid guest session token."
+msgstr ""
+
+#: includes/core/class-files.php:168
 msgid "Wrong path"
 msgstr ""
 
-#: includes/core/class-files.php:278
-msgid "Wrong mode"
-msgstr ""
-
-#: includes/core/class-files.php:298
-#: includes/core/class-files.php:338
-#: includes/core/class-files.php:527
-#: includes/core/class-files.php:700
-#: includes/core/class-files.php:705
-#: includes/core/class-files.php:716
+#: includes/core/class-files.php:185
+#: includes/core/class-files.php:225
+#: includes/core/class-files.php:414
+#: includes/core/class-files.php:587
+#: includes/core/class-files.php:592
+#: includes/core/class-files.php:603
 msgid "You have no permission to edit this user"
 msgstr ""
 
-#: includes/core/class-files.php:312
+#: includes/core/class-files.php:199
 msgid "You have no permission to delete this file"
 msgstr ""
 
-#: includes/core/class-files.php:328
+#: includes/core/class-files.php:215
 msgid "Invalid parameters"
 msgstr ""
 
-#: includes/core/class-files.php:333
+#: includes/core/class-files.php:220
 msgid "Invalid coordinates"
 msgstr ""
 
-#: includes/core/class-files.php:342
-#: includes/core/class-files.php:532
+#: includes/core/class-files.php:229
+#: includes/core/class-files.php:419
 msgid "Please login to edit this user"
 msgstr ""
 
-#: includes/core/class-files.php:352
-#: includes/core/class-files.php:543
+#: includes/core/class-files.php:239
+#: includes/core/class-files.php:430
 msgid "You have no permission to edit user profile"
 msgstr ""
 
-#: includes/core/class-files.php:356
-#: includes/core/class-files.php:548
-#: includes/core/class-files.php:721
+#: includes/core/class-files.php:243
+#: includes/core/class-files.php:435
+#: includes/core/class-files.php:608
 msgid "User has to be empty on registration"
 msgstr ""
 
-#: includes/core/class-files.php:362
-#: includes/core/class-files.php:555
-#: includes/core/class-files.php:728
+#: includes/core/class-files.php:249
+#: includes/core/class-files.php:442
+#: includes/core/class-files.php:615
 msgid "Invalid form ID"
 msgstr ""
 
-#: includes/core/class-files.php:366
-#: includes/core/class-files.php:560
-#: includes/core/class-files.php:733
+#: includes/core/class-files.php:253
+#: includes/core/class-files.php:447
+#: includes/core/class-files.php:620
 msgid "Invalid form post type"
 msgstr ""
 
-#: includes/core/class-files.php:371
-#: includes/core/class-files.php:566
-#: includes/core/class-files.php:739
+#: includes/core/class-files.php:258
+#: includes/core/class-files.php:453
+#: includes/core/class-files.php:626
 msgid "Invalid form status"
 msgstr ""
 
-#: includes/core/class-files.php:376
-#: includes/core/class-files.php:572
-#: includes/core/class-files.php:745
+#: includes/core/class-files.php:263
+#: includes/core/class-files.php:459
+#: includes/core/class-files.php:632
 msgid "Invalid form type"
 msgstr ""
 
-#: includes/core/class-files.php:385
-#: includes/core/class-files.php:392
-#: includes/core/class-files.php:395
-#: includes/core/class-files.php:582
-#: includes/core/class-files.php:590
-#: includes/core/class-files.php:594
-#: includes/core/class-files.php:755
-#: includes/core/class-files.php:763
-#: includes/core/class-files.php:767
+#: includes/core/class-files.php:272
+#: includes/core/class-files.php:279
+#: includes/core/class-files.php:282
+#: includes/core/class-files.php:469
+#: includes/core/class-files.php:477
+#: includes/core/class-files.php:481
+#: includes/core/class-files.php:642
+#: includes/core/class-files.php:650
+#: includes/core/class-files.php:654
 msgid "You have no permission to edit this user through this form"
 msgstr ""
 
-#: includes/core/class-files.php:402
-#: includes/core/class-files.php:600
-#: includes/core/class-files.php:775
+#: includes/core/class-files.php:289
+#: includes/core/class-files.php:487
+#: includes/core/class-files.php:662
 msgid "Invalid form fields"
 msgstr ""
 
-#: includes/core/class-files.php:408
-#: includes/core/class-files.php:607
-#: includes/core/class-files.php:781
+#: includes/core/class-files.php:295
+#: includes/core/class-files.php:494
+#: includes/core/class-files.php:668
 msgid "Invalid field metakey"
 msgstr ""
 
-#: includes/core/class-files.php:413
+#: includes/core/class-files.php:300
 msgid "This field doesn't support image crop"
 msgstr ""
 
-#: includes/core/class-files.php:421
-#: includes/core/class-files.php:426
-#: includes/core/class-files.php:430
-#: includes/core/class-files.php:617
-#: includes/core/class-files.php:623
-#: includes/core/class-files.php:628
-#: includes/core/class-files.php:786
+#: includes/core/class-files.php:308
+#: includes/core/class-files.php:313
+#: includes/core/class-files.php:317
+#: includes/core/class-files.php:504
+#: includes/core/class-files.php:510
+#: includes/core/class-files.php:515
+#: includes/core/class-files.php:673
 msgid "You have no permission to edit this field"
 msgstr ""
 
-#: includes/core/class-files.php:437
+#: includes/core/class-files.php:324
 msgid "Invalid file ownership"
 msgstr ""
 
-#: includes/core/class-files.php:467
+#: includes/core/class-files.php:354
 msgid "Invalid image key"
 msgstr ""
 
-#: includes/core/class-files.php:521
-#: includes/core/class-files.php:693
+#: includes/core/class-files.php:408
+#: includes/core/class-files.php:580
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/core/class-files.php:649
-#: includes/core/class-files.php:810
+#: includes/core/class-files.php:536
+#: includes/core/class-files.php:697
 msgid "A theme or plugin compatibility issue"
 msgstr ""
 
-#: includes/core/class-files.php:1554
+#: includes/core/class-files.php:1441
 msgid "Original size"
 msgstr ""
 
@@ -11364,7 +11368,7 @@ msgstr ""
 msgid "Please pick a time on the allowed interval."
 msgstr ""
 
-#: assets/js/um-modal.js:114
+#: assets/js/um-modal.js:56
 msgid "UM Warning: No field associated with image uploader."
 msgstr ""
 

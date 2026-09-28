@@ -172,12 +172,12 @@ jQuery(document).ready(function() {
 		}
 
 		let nonce = jQuery(this).data('nonce');
-
-		let parent, mode, src, args;
+		let parent, mode, src, args, guestToken;
 
 		if ( ! isModal ) {
 			parent = jQuery(this).parents('.um-field');
 			mode   = parent.data('mode');
+			guestToken = parent.data('guest_token');
 			src    = parent.find('.um-single-image-preview img').attr('src');
 
 			let filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
@@ -188,6 +188,7 @@ jQuery(document).ready(function() {
 					filename: filename,
 					src: src,
 					key: parent.data('key'),
+					guest_token: guestToken,
 					_wpnonce: nonce
 				},
 				success: function() {
@@ -204,12 +205,14 @@ jQuery(document).ready(function() {
 		} else {
 			parent = jQuery(this).parents('.um-modal-body');
 			mode   = parent.find('.um-single-image-upload').data('set_mode');
+			guestToken = parent.find('.um-single-image-upload').data('guest_token');
 			src    = parent.find('.um-single-image-preview img').attr('src');
 
 			args = {
 				data: {
 					src: src,
 					mode: mode,
+					guest_token: guestToken,
 					key: parent.find('.um-single-image-upload').data('key'),
 					_wpnonce: nonce
 				},
@@ -238,13 +241,13 @@ jQuery(document).ready(function() {
 		}
 
 		let nonce = jQuery(this).data('nonce');
-
-		let parent, mode, src, args;
+		let parent, mode, src, args, guestToken;
 
 		if ( ! isModal ) {
 			parent = jQuery(this).parents('.um-field');
 			src    = parent.find('.um-single-fileinfo a').attr('href');
 			mode   = parent.data('mode');
+			guestToken = parent.data('guest_token');
 
 			let filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
 
@@ -254,6 +257,7 @@ jQuery(document).ready(function() {
 					filename: filename,
 					src: src,
 					key: parent.data('key'),
+					guest_token: guestToken,
 					_wpnonce: nonce
 				},
 				success: function() {
@@ -270,11 +274,13 @@ jQuery(document).ready(function() {
 			parent = jQuery(this).parents('.um-modal-body');
 			src    = parent.find('.um-single-fileinfo a').attr('href');
 			mode   = parent.find('.um-single-file-upload').data('set_mode');
+			guestToken = parent.find('.um-single-file-upload').data('guest_token');
 
 			args = {
 				data: {
 					src: src,
 					mode: mode,
+					guest_token: guestToken,
 					key: parent.find('.um-single-file-upload').data('key'),
 					_wpnonce: nonce
 				},
