@@ -537,6 +537,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 												$in_group    = array_key_exists( 'in_group', $keyarray ) ? $keyarray['in_group'] : '';
 												$in_column   = array_key_exists( 'in_column', $keyarray ) ? $keyarray['in_column'] : 1;
 												$icon        = array_key_exists( 'icon', $keyarray ) ? $keyarray['icon'] : '';
+												$icon_url    = array_key_exists( 'icon_url', $keyarray ) ? $keyarray['icon_url'] : '';
 												$field_name  = __( 'Invalid field type', 'ultimate-member' );
 												if ( array_key_exists( $field_type, UM()->builtin()->core_fields ) && array_key_exists( 'name', UM()->builtin()->core_fields[ $field_type ] ) ) {
 													$field_name = UM()->builtin()->core_fields[ $field_type ]['name'];
@@ -546,6 +547,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 													<div class="um-admin-drag-fld-title um-field-type-<?php echo esc_attr( $field_type ); ?>">
 														<?php if ( 'group' === $field_type ) { ?>
 															<i class="um-icon-plus"></i>
+														<?php } elseif ( is_string( $icon_url ) && '' !== $icon_url ) { ?>
+															<img class="um-admin-drag-fld-icon-img" src="<?php echo esc_url( $icon_url ); ?>" alt="" />
 														<?php } elseif ( ! empty( $icon ) ) { ?>
 															<i class="<?php echo esc_attr( $icon ); ?>"></i>
 														<?php } ?>

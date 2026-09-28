@@ -737,8 +737,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$output  = null;
 			$output .= '<div class="um-field-label">';
 
-			if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'off' !== $this->field_icons && ( 'label' === $this->field_icons || true === $this->viewing ) ) {
-				$output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></div>';
+			if ( $this->has_field_icon( $data ) && isset( $this->field_icons ) && 'off' !== $this->field_icons && ( 'label' === $this->field_icons || true === $this->viewing ) ) {
+				$output .= '<div class="um-field-label-icon">' . $this->get_field_icon_html( $data, $label ) . '</div>';
 			}
 
 			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
@@ -804,7 +804,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$classes .= 'um-timepicker ';
 			}
 
-			if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
+			if ( $this->has_field_icon( $data ) && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
 				$classes .= 'um-iconed ';
 			}
 
@@ -1395,6 +1395,46 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$fields = UM()->builtin()->all_user_fields;
 			if ( isset( $fields[ $key ]['icon'] ) ) {
 				return $fields[ $key ]['icon'];
+			}
+
+			return '';
+		}
+
+		/**
+		 * Check if a field has any icon to show near the field or its label.
+		 *
+		 * @param  array $data
+		 *
+		 * @return bool
+		 *
+		 * @since 2.13.2
+		 */
+		public function has_field_icon( $data ) {
+			if ( isset( $data['icon_url'] ) && is_string( $data['icon_url'] ) && '' !== $data['icon_url'] ) {
+				return true;
+			}
+
+			return ! empty( $data['icon'] );
+		}
+
+		/**
+		 * Get the icon HTML for a field. A custom image icon replaces
+		 * the font icon when the field has an icon URL saved.
+		 *
+		 * @param  array  $data
+		 * @param  string $label Used as alt text for a custom image icon.
+		 *
+		 * @return string
+		 *
+		 * @since 2.13.2
+		 */
+		public function get_field_icon_html( $data, $label = '' ) {
+			if ( isset( $data['icon_url'] ) && is_string( $data['icon_url'] ) && '' !== $data['icon_url'] ) {
+				return '<img src="' . esc_url( $data['icon_url'] ) . '" alt="' . esc_attr( $label ) . '" />';
+			}
+
+			if ( ! empty( $data['icon'] ) ) {
+				return '<i class="' . esc_attr( $data['icon'] ) . '"' . ( '' !== $label ? ' aria-label="' . esc_attr( $label ) . '"' : '' ) . '></i>';
 			}
 
 			return '';
@@ -2405,8 +2445,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-field-area">';
 
-					if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+					if ( $this->has_field_icon( $data ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+						$output .= '<div class="um-field-icon">' . $this->get_field_icon_html( $data ) . '</div>';
 					}
 
 					$field_name  = $key . $form_suffix;
@@ -2439,8 +2479,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-field-area">';
 
-					if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+					if ( $this->has_field_icon( $data ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+						$output .= '<div class="um-field-icon">' . $this->get_field_icon_html( $data ) . '</div>';
 					}
 
 					$field_name  = $key . $form_suffix;
@@ -2472,8 +2512,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-field-area">';
 
-					if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+					if ( $this->has_field_icon( $data ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+						$output .= '<div class="um-field-icon">' . $this->get_field_icon_html( $data ) . '</div>';
 					}
 
 					$number_limit = '';
@@ -2514,8 +2554,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$output .= '<div class="um-field-area">';
 
-						if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-							$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+						if ( $this->has_field_icon( $data ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+							$output .= '<div class="um-field-icon">' . $this->get_field_icon_html( $data ) . '</div>';
 						}
 
 						$field_name  = $key . $form_suffix;
@@ -2552,8 +2592,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							$output .= '<div class="um-field-area">';
 
-							if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-								$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+							if ( $this->has_field_icon( $data ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+								$output .= '<div class="um-field-icon">' . $this->get_field_icon_html( $data ) . '</div>';
 							}
 
 							$field_name  = $key . $form_suffix;
@@ -2597,8 +2637,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$output .= '<div class="um-field-area">';
 
-						if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-							$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+						if ( $this->has_field_icon( $data ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+							$output .= '<div class="um-field-icon">' . $this->get_field_icon_html( $data ) . '</div>';
 						}
 
 						$name = $key . $form_suffix;
@@ -2643,8 +2683,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							$output .= '<div class="um-field-area">';
 
-							if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-								$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+							if ( $this->has_field_icon( $data ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+								$output .= '<div class="um-field-icon">' . $this->get_field_icon_html( $data ) . '</div>';
 							}
 
 							$name = $key . $form_suffix;
@@ -2691,8 +2731,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-field-area">';
 
-					if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+					if ( $this->has_field_icon( $data ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+						$output .= '<div class="um-field-icon">' . $this->get_field_icon_html( $data ) . '</div>';
 					}
 
 					$field_name  = $key . $form_suffix;
@@ -2720,8 +2760,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-field-area">';
 
-					if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+					if ( $this->has_field_icon( $data ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+						$output .= '<div class="um-field-icon">' . $this->get_field_icon_html( $data ) . '</div>';
 					}
 
 					// Normalize date format.
@@ -2767,8 +2807,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-field-area">';
 
-					if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+					if ( $this->has_field_icon( $data ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+						$output .= '<div class="um-field-icon">' . $this->get_field_icon_html( $data ) . '</div>';
 					}
 
 					$field_name  = $key . $form_suffix;
@@ -3243,11 +3283,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					$has_icon = ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons;
+					$has_icon = $this->has_field_icon( $data ) && isset( $this->field_icons ) && 'field' === $this->field_icons;
 
 					$output .= '<div class="um-field-area ' . ( $has_icon ? 'um-field-area-has-icon' : '' ) . ' ">';
 					if ( $has_icon ) {
-						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+						$output .= '<div class="um-field-icon">' . $this->get_field_icon_html( $data ) . '</div>';
 					}
 
 					$options                      = array();
@@ -3514,11 +3554,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					$has_icon = ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons;
+					$has_icon = $this->has_field_icon( $data ) && isset( $this->field_icons ) && 'field' === $this->field_icons;
 
 					$output .= '<div class="um-field-area ' . ( $has_icon ? 'um-field-area-has-icon' : '' ) . ' ">';
 					if ( $has_icon ) {
-						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+						$output .= '<div class="um-field-icon">' . $this->get_field_icon_html( $data ) . '</div>';
 					}
 
 					$output .= '<select  ' . $disabled . ' multiple="multiple" name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-maxsize="' . esc_attr( $max_selections ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>';
@@ -4417,7 +4457,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( ( isset( $_field_value ) && '' !== $_field_value ) || in_array( $type, $fields_without_metakey, true ) ) {
 						$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
-						if ( isset( $data['label'] ) || ! empty( $data['icon'] ) ) {
+						if ( isset( $data['label'] ) || $this->has_field_icon( $data ) ) {
 
 							if ( ! isset( $data['label'] ) ) {
 								$data['label'] = '';
@@ -4545,7 +4585,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				case 'oembed':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
-					if ( isset( $data['label'] ) || ! empty( $data['icon'] ) ) {
+					if ( isset( $data['label'] ) || $this->has_field_icon( $data ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
@@ -4601,7 +4641,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				case 'rating':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
-					if ( isset( $data['label'] ) || ! empty( $data['icon'] ) ) {
+					if ( isset( $data['label'] ) || $this->has_field_icon( $data ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 

@@ -457,6 +457,17 @@ p.um-notice.warning a {
 	z-index: 1;
 }
 
+.um-field-icon img,
+.um-field-label .um-field-label-icon img {
+	display: inline-block;
+	max-width: 22px;
+	max-height: 22px;
+	width: auto;
+	height: auto;
+	vertical-align: middle;
+	border: 0;
+}
+
 .um-form input[type="text"],
 .um-form input[type="date"],
 .um-form input[type="time"],

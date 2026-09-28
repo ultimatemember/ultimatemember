@@ -1593,6 +1593,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					}
 					$wrapper_classes = implode( ' ', $wrapper_classes );
 
+					$icon_url_value = '';
+					if ( $this->in_edit && is_array( $this->edit_array ) && ! empty( $this->edit_array['icon_url'] ) ) {
+						$icon_url_value = $this->edit_array['icon_url'];
+					}
+
 					// @todo new version
 					if ( empty( $first_activation_date ) || $first_activation_date >= 1716336000 || empty( $this->edit_mode_value ) || array_key_exists( $this->edit_mode_value, $um_icons_list ) ) {
 						?>
@@ -1618,8 +1623,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 								<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>
 							</span>
 						</p>
-						<?php
-					}
+					<?php } ?>
+
+					<?php if ( 'row' !== $this->set_field_type ) { ?>
+						<p class="um-icon-url-field-wrapper">
+							<label for="_icon_url"><?php esc_html_e( 'Custom Icon Image', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Upload or select an image to use as the field icon. The custom image replaces the font icon when set. Clear it to use the selected font icon again.', 'ultimate-member' ) ); ?></label>
+							<span class="um-icon-url-preview" style="display:none;"><?php echo '' !== $icon_url_value ? '<img src="' . esc_url( $icon_url_value ) . '" alt="" />' : ''; ?></span>
+							<input type="hidden" name="_icon_url" id="_icon_url" class="um-icon-url-value" value="<?php echo esc_attr( $icon_url_value ); ?>" />
+							<input type="button" class="um-icon-url-select button button-primary" value="<?php esc_attr_e( 'Select Image', 'ultimate-member' ); ?>" data-upload_frame="<?php esc_attr_e( 'Select custom icon', 'ultimate-member' ); ?>" />
+							<input type="button" class="um-icon-url-clear button"<?php echo '' === $icon_url_value ? ' style="display:none;"' : ''; ?> value="<?php esc_attr_e( 'Clear', 'ultimate-member' ); ?>" />
+						</p>
+					<?php } ?>
+					<?php
 					break;
 
 				case '_css_class':

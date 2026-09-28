@@ -678,3 +678,33 @@
   background-color: rgba(255, 255, 255, 0);
   z-index: 100;
 }
+
+.um-admin-modal .um-icon-url-field-wrapper {
+  display: block;
+  margin: 0 0 10px 0;
+}
+.um-admin-modal .um-icon-url-field-wrapper .um-icon-url-preview {
+  display: block;
+  margin: 0 0 8px 0;
+}
+.um-admin-modal .um-icon-url-field-wrapper .um-icon-url-preview img {
+  max-width: 48px;
+  max-height: 48px;
+  width: auto;
+  height: auto;
+  padding: 3px;
+  border: 1px solid #dcdcde;
+  border-radius: 3px;
+  background: #fff;
+}
+.um-admin-modal .um-icon-url-field-wrapper .um-icon-url-clear {
+  margin-left: 5px;
+}
+.um-admin-drag-fld-title .um-admin-drag-fld-icon-img {
+  max-width: 18px;
+  max-height: 18px;
+  width: auto;
+  height: auto;
+  vertical-align: middle;
+  margin: 0 4px 0 0;
+}
