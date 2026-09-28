@@ -1041,6 +1041,24 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'match'      => 'https://instagram.com/',
 				),
 
+				'um_social_threads'    => array(
+					'title'      => __( 'Threads', 'ultimate-member' ),
+					'metakey'    => 'um_social_threads',
+					'type'       => 'url',
+					'label'      => __( 'Threads', 'ultimate-member' ),
+					'required'   => 0,
+					'public'     => 1,
+					'editable'   => true,
+					'url_target' => '_blank',
+					'url_rel'    => 'nofollow',
+					'icon'       => 'fab fa-threads',
+					'validate'   => 'threads_url',
+					'url_text'   => 'Threads',
+					'advanced'   => 'social',
+					'color'      => '#000000',
+					'match'      => 'https://threads.com/',
+				),
+
 				'skype'                => array(
 					'title'      => __( 'Skype ID', 'ultimate-member' ),
 					'metakey'    => 'skype',
@@ -1612,6 +1630,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['english']                  = __('English letters only','ultimate-member');
 			$array['facebook_url']             = __('Facebook URL','ultimate-member');
 			$array['instagram_url']            = __('Instagram URL','ultimate-member');
+			$array['threads_url']              = __( 'Threads URL', 'ultimate-member' );
 			$array['linkedin_url']             = __('LinkedIn URL','ultimate-member');
 			$array['lowercase']                = __('Lowercase only','ultimate-member');
 			$array['numeric']                  = __('Numeric value only','ultimate-member');

@@ -11,7 +11,7 @@
 			dataType: 'json',
 			data: {
 				action: 'um_phone_fields250',
-				nonce: um_admin_scripts.nonce
+				_wpnonce: um_inside_package_nonce
 			},
 			success: function( response ) {
 				if ( typeof response.data.message != 'undefined' ) {

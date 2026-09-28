@@ -1,17 +1,21 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 function um_upgrade_skypeid_fields230() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_2.3.0' );
 
 	um_maybe_unset_time_limit();
 
 	$forms_query = new WP_Query;
-	$forms = $forms_query->query( array(
-		'post_type'         => 'um_form',
-		'posts_per_page'    => -1,
-		'fields'            => 'ids'
-	) );
+	$forms       = $forms_query->query(
+		array(
+			'post_type'      => 'um_form',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		)
+	);
 
 	$fields_for_upgrade = array();
 
@@ -29,6 +33,7 @@ function um_upgrade_skypeid_fields230() {
 				}
 			}
 		}
+		unset( $field );
 
 		if ( $changed ) {
 			update_post_meta( $form_id, '_um_custom_fields', $forms_fields );
@@ -47,6 +52,8 @@ function um_upgrade_skypeid_fields230() {
 			}
 		}
 	}
+	unset( $custom_field );
+
 	if ( $changed ) {
 		update_option( 'um_fields', $custom_fields );
 	}
@@ -63,7 +70,7 @@ function um_upgrade_skypeid_fields230() {
 
 
 function um_upgrade_usermeta_count230() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_2.3.0' );
 
 	um_maybe_unset_time_limit();
 
@@ -81,7 +88,7 @@ function um_upgrade_usermeta_count230() {
 
 
 function um_upgrade_usermeta_part230() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_2.3.0' );
 
 	um_maybe_unset_time_limit();
 
@@ -135,7 +142,7 @@ function um_upgrade_usermeta_part230() {
 
 
 function um_upgrade_reset_password230() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_2.3.0' );
 
 	um_maybe_unset_time_limit();
 

@@ -1598,7 +1598,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 						?>
 						<p class="<?php echo esc_attr( $wrapper_classes ); ?>">
 							<label for="_icon"><?php esc_html_e( 'Icon', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
-							<select name="_icon" id="_icon" class="um-icon-select-field" data-placeholder="<?php esc_attr_e( 'Select Icon', 'ultimate-member' ); ?>" >
+							<select name="_icon" id="_icon" class="um-icon-select-field" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_get_icons' ) ); ?>" data-placeholder="<?php esc_attr_e( 'Select Icon', 'ultimate-member' ); ?>" >
 								<option value=""><?php esc_html_e( 'Select Icon', 'ultimate-member' ); ?></option>
 								<?php if ( ! empty( $this->edit_mode_value ) && array_key_exists( $this->edit_mode_value, $um_icons_list ) ) { ?>
 									<option value="<?php echo esc_attr( $this->edit_mode_value ); ?>" selected><?php echo esc_html( $um_icons_list[ $this->edit_mode_value ]['label'] ); ?></option>
@@ -1608,7 +1608,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					<?php } else { ?>
 						<p class="<?php echo esc_attr( $wrapper_classes ); ?>">
 							<label for="um_ui_icon_new"><?php esc_html_e( 'Icon', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
-							<select name="um_ui_icon_new" id="um_ui_icon_new" class="um-icon-select-field" data-placeholder="<?php esc_attr_e( 'Select Icon', 'ultimate-member' ); ?>" >
+							<select name="um_ui_icon_new" id="um_ui_icon_new" class="um-icon-select-field" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_get_icons' ) ); ?>" data-placeholder="<?php esc_attr_e( 'Select Icon', 'ultimate-member' ); ?>" >
 								<option value=""><?php esc_html_e( 'Select Icon', 'ultimate-member' ); ?></option>
 							</select>
 							<span class="um_admin_fonticon_wrapper">
@@ -2519,7 +2519,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p><label for="_custom_dropdown_options_source"><?php esc_html_e( 'Choices Callback', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Add a callback source to retrieve choices.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_custom_dropdown_options_source" id="_custom_dropdown_options_source" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						<input type="text" name="_custom_dropdown_options_source" id="_custom_dropdown_options_source" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_custom_dropdown_options_source' ) ); ?>" />
 					</p>
 
 					<?php

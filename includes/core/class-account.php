@@ -863,12 +863,13 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				 */
 				do_action( "um_after_account_{$tab_id}", $args );
 
-				if ( ! isset( $tab_data['show_button'] ) || false !== $tab_data['show_button'] ) { ?>
-
+				if ( ! isset( $tab_data['show_button'] ) || false !== $tab_data['show_button'] ) {
+					$user_id = get_current_user_id();
+					?>
 					<div class="um-col-alt um-col-alt-b">
 						<div class="um-left">
 							<?php $submit_title = ! empty( $tab_data['submit_title'] ) ? $tab_data['submit_title'] : $tab_data['title']; ?>
-							<input type="hidden" name="um_account_nonce_<?php echo esc_attr( $tab_id ) ?>" value="<?php echo esc_attr( wp_create_nonce( 'um_update_account_' . $tab_id ) ) ?>" />
+							<input type="hidden" name="um_account_nonce_<?php echo esc_attr( $tab_id ) ?>" value="<?php echo esc_attr( wp_create_nonce( "um_update_account_$tab_id-$user_id" ) ) ?>" />
 							<input type="submit" name="um_account_submit" id="um_account_submit_<?php echo esc_attr( $tab_id ) ?>"  class="um-button" value="<?php echo esc_attr( $submit_title ) ?>" />
 						</div>
 
@@ -890,15 +891,14 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						 * }
 						 * ?>
 						 */
-						do_action( "um_after_account_{$tab_id}_button" ); ?>
-
+						do_action( "um_after_account_{$tab_id}_button" );
+						?>
 						<div class="um-clear"></div>
 					</div>
-
-				<?php }
+					<?php
+				}
 			}
 		}
-
 
 		/**
 		 * Add class based on shortcode

@@ -33,16 +33,19 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 * Ajax pagination for posts
 		 */
 		public function ajax_paginate() {
-			UM()->check_ajax_nonce();
-
-			// phpcs:disable WordPress.Security.NonceVerification
 			if ( ! isset( $_REQUEST['hook'] ) ) {
 				wp_send_json_error( __( 'Invalid hook.', 'ultimate-member' ) );
 			}
 			$hook = sanitize_key( $_REQUEST['hook'] );
 
+			if ( ! isset( $_REQUEST['user_id'] ) ) {
+				wp_send_json_error( __( 'Invalid user ID.', 'ultimate-member' ) );
+			}
+			$user_id = sanitize_key( $_REQUEST['user_id'] );
+
+			check_ajax_referer( 'um-ajax-paginate-' . $hook . $user_id );
+
 			$args = ! empty( $_REQUEST['args'] ) ? $_REQUEST['args'] : array();
-			// phpcs:enable WordPress.Security.NonceVerification
 
 			ob_start();
 

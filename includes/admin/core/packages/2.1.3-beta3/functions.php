@@ -1,8 +1,10 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 function um_upgrade_users_count213beta3() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_2.1.3-beta3' );
 
 	um_maybe_unset_time_limit();
 
@@ -15,10 +17,9 @@ function um_upgrade_users_count213beta3() {
 
 
 function um_upgrade_metadata_per_user213beta3() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_2.1.3-beta3' );
 
 	um_maybe_unset_time_limit();
-
 
 	if ( empty( $_POST['page'] ) ) {
 		wp_send_json_error( __( 'Wrong data', 'ultimate-member' ) );
@@ -62,11 +63,11 @@ function um_upgrade_metadata_per_user213beta3() {
 	foreach ( $metadata as $metadatarow ) {
 		if ( ! isset( $users_map[ $metadatarow['user_id'] ] ) ) {
 			$users_map[ $metadatarow['user_id'] ] = array(
-				'account_status'    => 'approved',
-				'hide_in_members'   => UM()->member_directory()->get_hide_in_members_default(),
-				'profile_photo'     => false,
-				'cover_photo'       => false,
-				'verified'          => false,
+				'account_status'  => 'approved',
+				'hide_in_members' => UM()->member_directory()->get_hide_in_members_default(),
+				'profile_photo'   => false,
+				'cover_photo'     => false,
+				'verified'        => false,
 			);
 		}
 
@@ -74,8 +75,8 @@ function um_upgrade_metadata_per_user213beta3() {
 			case 'account_status':
 				$users_map[ $metadatarow['user_id'] ]['account_status'] = $metadatarow['meta_value'];
 				break;
-			case 'hide_in_members':
 
+			case 'hide_in_members':
 				$hide_in_members = UM()->member_directory()->get_hide_in_members_default();
 				if ( ! empty( $metadatarow['meta_value'] ) ) {
 					if ( $metadatarow['meta_value'] == 'Yes' || $metadatarow['meta_value'] == __( 'Yes', 'ultimate-member' ) ||
@@ -87,28 +88,31 @@ function um_upgrade_metadata_per_user213beta3() {
 				}
 
 				$users_map[ $metadatarow['user_id'] ]['hide_in_members'] = $hide_in_members;
-
 				break;
+
 			case 'synced_gravatar_hashed_id':
 				if ( UM()->options()->get( 'use_gravatars' ) ) {
 					if ( empty( $users_map[ $metadatarow['user_id'] ]['profile_photo'] ) ) {
 						$users_map[ $metadatarow['user_id'] ]['profile_photo'] = ! empty( $metadatarow['meta_value'] );
 					}
 				}
-
 				break;
+
 			case 'synced_profile_photo':
 			case 'profile_photo':
 				if ( empty( $users_map[ $metadatarow['user_id'] ]['profile_photo'] ) ) {
 					$users_map[ $metadatarow['user_id'] ]['profile_photo'] = ! empty( $metadatarow['meta_value'] );
 				}
 				break;
+
 			case 'cover_photo':
 				$users_map[ $metadatarow['user_id'] ]['cover_photo'] = ! empty( $metadatarow['meta_value'] );
 				break;
+
 			case '_um_verified':
-				$users_map[ $metadatarow['user_id'] ]['verified'] = $metadatarow['meta_value'] == 'verified' ? true : false;
+				$users_map[ $metadatarow['user_id'] ]['verified'] = 'verified' === $metadatarow['meta_value'] ? true : false;
 				break;
+
 		}
 	}
 
@@ -127,7 +131,7 @@ function um_upgrade_metadata_per_user213beta3() {
 
 
 function um_upgrade_metatable213beta3() {
-	UM()->admin()->check_ajax_nonce();
+	check_ajax_referer( 'um_run_package_2.1.3-beta3' );
 
 	um_maybe_unset_time_limit();
 

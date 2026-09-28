@@ -76,51 +76,19 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		/**
 		 *
 		 */
-		public function ajax_muted_action() {
-			UM()->check_ajax_nonce();
-
-			// phpcs:disable WordPress.Security.NonceVerification
-			if ( ! isset( $_REQUEST['hook'] ) ) {
-				die( esc_html__( 'Invalid hook', 'ultimate-member' ) );
-			}
-
-			if ( isset( $_REQUEST['user_id'] ) ) {
-				$user_id = absint( $_REQUEST['user_id'] );
-			}
-			if ( ! isset( $user_id ) || ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-				die( esc_html__( 'You can not edit this user.', 'ultimate-member' ) );
-			}
-
-			$hook = sanitize_key( $_REQUEST['hook'] );
-			/**
-			 * Fires on AJAX muted action.
-			 *
-			 * @since 1.3.x
-			 * @hook  um_run_ajax_function__{$hook}
-			 *
-			 * @param {array} $request Request.
-			 *
-			 * @example <caption>Make any custom action on AJAX muted action.</caption>
-			 * function my_run_ajax_function( $request ) {
-			 *     // your code here
-			 * }
-			 * add_action( 'um_run_ajax_function__{$hook}', 'my_run_ajax_function', 10, 1 );
-			 */
-			do_action( "um_run_ajax_function__{$hook}", $_REQUEST );
-			// phpcs:enable WordPress.Security.NonceVerification
-		}
-
-		/**
-		 *
-		 */
 		public function ajax_select_options() {
-			UM()->check_ajax_nonce();
+			if ( ! isset( $_POST['parent_option_name'] ) ) {
+				$arr_options['status']  = 'error';
+				$arr_options['message'] = __( 'Invalid parent option.', 'ultimate-member' );
+
+				wp_send_json( $arr_options );
+			}
+
+			check_ajax_referer( 'um-select-options' . sanitize_text_field( $_POST['parent_option_name'] ) );
 
 			if ( UM()->is_rate_limited( 'select_options' ) ) {
 				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
 			}
-
-			// phpcs:disable WordPress.Security.NonceVerification
 
 			$arr_options           = array();
 			$arr_options['status'] = 'success';
@@ -252,7 +220,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				wp_send_json( $arr_options );
 			}
 		}
-
 
 		/**
 		 * Count the form errors.
@@ -759,8 +726,10 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 */
 		public function beautify( $form ) {
 			if ( isset( $form['form_id'] ) ) {
-				$this->form_suffix = '-' . $form['form_id'];
-				$this->processing  = absint( $form['form_id'] );
+				$form_id = absint( $form['form_id'] );
+
+				$this->form_suffix = '-' . $form_id;
+				$this->processing  = $form_id;
 
 				foreach ( $form as $key => $value ) {
 					if ( strstr( $key, $this->form_suffix ) ) {
@@ -838,6 +807,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		public function sanitize( $form ) {
 			$submission_input = $form;
 			if ( isset( $form['form_id'] ) ) {
+				$form['form_id'] = absint( $form['form_id'] );
+
 				if ( isset( $this->form_data['custom_fields'] ) ) {
 					$custom_fields = maybe_unserialize( $this->form_data['custom_fields'] );
 

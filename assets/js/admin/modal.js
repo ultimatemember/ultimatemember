@@ -64,7 +64,7 @@ UM.admin.modal = {
 			UM.admin.modal.resize();
 		}
 	},
-	contentRequest: function( act_id, arg1, arg2, arg3 ) {
+	contentRequest: function( act_id, arg1, arg2, arg3, nonce ) {
 		let in_row     = '';
 		let in_sub_row = '';
 		let in_column  = '';
@@ -94,7 +94,7 @@ UM.admin.modal = {
 				in_sub_row: in_sub_row,
 				in_column: in_column,
 				in_group: in_group,
-				nonce: um_admin_scripts.nonce,
+				_wpnonce: nonce,
 				form_mode: form_mode
 			},
 			complete: function(){
@@ -150,7 +150,7 @@ jQuery(document).ready(function() {
 
 		if ( jQuery(this).data('dynamic-content') ) {
 			UM.admin.modal.show( modal_id, true, jQuery(this).data('modal-size') );
-			UM.admin.modal.contentRequest( jQuery(this).data('dynamic-content'), jQuery(this).data('arg1'), jQuery(this).data('arg2'), jQuery(this).data('arg3') );
+			UM.admin.modal.contentRequest( jQuery(this).data('dynamic-content'), jQuery(this).data('arg1'), jQuery(this).data('arg2'), jQuery(this).data('arg3'), jQuery(this).data('nonce') );
 		} else {
 			UM.admin.modal.show( modal_id );
 		}

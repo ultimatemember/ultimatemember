@@ -171,6 +171,8 @@ jQuery(document).ready(function() {
 			isModal = true;
 		}
 
+		let nonce = jQuery(this).data('nonce');
+
 		let parent, mode, src, args;
 
 		if ( ! isModal ) {
@@ -185,7 +187,8 @@ jQuery(document).ready(function() {
 					mode: mode,
 					filename: filename,
 					src: src,
-					nonce: um_scripts.nonce
+					key: parent.data('key'),
+					_wpnonce: nonce
 				},
 				success: function() {
 					parent.find('.um-single-image-preview img').replaceWith('<img src="" alt="" />');
@@ -207,7 +210,8 @@ jQuery(document).ready(function() {
 				data: {
 					src: src,
 					mode: mode,
-					nonce: um_scripts.nonce
+					key: parent.find('.um-single-image-upload').data('key'),
+					_wpnonce: nonce
 				},
 				success: function() {
 					wp.hooks.doAction( 'um_after_removing_preview' );
@@ -233,6 +237,8 @@ jQuery(document).ready(function() {
 			isModal = true;
 		}
 
+		let nonce = jQuery(this).data('nonce');
+
 		let parent, mode, src, args;
 
 		if ( ! isModal ) {
@@ -247,7 +253,8 @@ jQuery(document).ready(function() {
 					mode: mode,
 					filename: filename,
 					src: src,
-					nonce: um_scripts.nonce
+					key: parent.data('key'),
+					_wpnonce: nonce
 				},
 				success: function() {
 					parent.find('.um-single-file-preview').hide();
@@ -268,7 +275,8 @@ jQuery(document).ready(function() {
 				data: {
 					src: src,
 					mode: mode,
-					nonce: um_scripts.nonce
+					key: parent.find('.um-single-file-upload').data('key'),
+					_wpnonce: nonce
 				},
 				success: function() {
 					parent.find('.um-single-file-preview').hide();
@@ -341,6 +349,7 @@ jQuery(document).ready(function() {
 		var next_page = obj.data('page')*1 + 1;
 
 		var hook = obj.data('hook');
+		let nonce = obj.data('nonce');
 
 		if ( 'um_load_posts' === hook ) {
 
@@ -351,7 +360,7 @@ jQuery(document).ready(function() {
 					action: 'um_ajax_paginate_posts',
 					author: jQuery(this).data('author'),
 					page:   next_page,
-					nonce: um_scripts.nonce
+					_wpnonce: nonce
 				},
 				complete: function() {
 					parent.removeClass( 'loading' );
@@ -374,7 +383,7 @@ jQuery(document).ready(function() {
 					action: 'um_ajax_paginate_comments',
 					user_id: jQuery(this).data('user_id'),
 					page: next_page,
-					nonce: um_scripts.nonce
+					_wpnonce: nonce
 				},
 				complete: function() {
 					parent.removeClass( 'loading' );
@@ -390,6 +399,7 @@ jQuery(document).ready(function() {
 			});
 		} else {
 			var args = jQuery(this).data('args');
+			var user_id = jQuery(this).data('user_id');
 			var container = jQuery(this).parents('.um.um-profile.um-viewing').find('.um-ajax-items');
 
 			jQuery.ajax({
@@ -398,8 +408,9 @@ jQuery(document).ready(function() {
 				data: {
 					action: 'um_ajax_paginate',
 					hook: hook,
+					user_id: user_id,
 					args: args,
-					nonce: um_scripts.nonce
+					_wpnonce: nonce
 				},
 				complete: function() {
 					parent.removeClass( 'loading' );
@@ -410,34 +421,6 @@ jQuery(document).ready(function() {
 				}
 			});
 		}
-	});
-
-
-	jQuery(document).on('click', '.um-ajax-action', function( e ) {
-		e.preventDefault();
-		var hook = jQuery(this).data('hook');
-		var user_id = jQuery(this).data('user_id');
-		var args = jQuery(this).data('args');
-
-		if ( jQuery(this).data('js-remove') ){
-			jQuery(this).parents('.'+jQuery(this).data('js-remove')).fadeOut('fast');
-		}
-
-		jQuery.ajax({
-			url: wp.ajax.settings.url,
-			type: 'post',
-			data: {
-				action: 'um_muted_action',
-				hook: hook,
-				user_id: user_id,
-				arguments: args,
-				nonce: um_scripts.nonce
-			},
-			success: function(data){
-
-			}
-		});
-		return false;
 	});
 
 	jQuery( document.body ).on('click', '#um-search-button', function(e) {
@@ -517,6 +500,7 @@ jQuery(document).ready(function() {
 
 		var me = jQuery(this);
 		var parent_option = me.data('um-parent');
+		let parent_nonce = me.data('parent-nonce');
 		var um_ajax_source = me.data('um-ajax-source');
 
 		me.attr('data-um-init-field', true );
@@ -557,7 +541,7 @@ jQuery(document).ready(function() {
 						child_name: me.attr('name'),
 						members_directory: me.attr('data-member-directory'),
 						form_id: form_id,
-						nonce: um_scripts.nonce
+						_wpnonce: parent_nonce
 					},
 					success: function( data ) {
 						if ( data.status === 'success' && arr_key !== '' ) {

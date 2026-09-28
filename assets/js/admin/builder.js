@@ -476,7 +476,7 @@ function UM_Rows_Refresh(){
 
 function UM_Add_Icon(){
 
-	var add_icon_html = '<a href="#" class="um-admin-drag-add-field um-tip-n" title="Add Field" data-modal="UM_fields" data-modal-size="normal" data-dynamic-content="um_admin_show_fields" data-arg2="'+jQuery('.um-admin-drag-ajax').data('form_id')+'" data-arg1=""><i class="um-icon-plus"></i></a>';
+	var add_icon_html = '<a href="#" class="um-admin-drag-add-field um-tip-n" title="Add Field" data-modal="UM_fields" data-modal-size="normal" data-dynamic-content="um_admin_show_fields" data-arg2="'+jQuery('.um-admin-drag-ajax').data('form_id')+'" data-arg1="" data-nonce="'+jQuery('.um-admin-drag-ajax').data('nonce')+'"><i class="um-icon-plus"></i></a>';
 
 	jQuery('.um-admin-drag-col').each(function(){
 		if ( jQuery(this).find('.um-admin-drag-add-field').length == 0 ) {
@@ -503,6 +503,7 @@ function um_builder_delete_field_ajax( callback ) {
 		let fieldDelete = UM.admin.builder.fieldsToDelete.shift();
 		let arg1 = jQuery( fieldDelete ).find('[data-silent_action="um_admin_remove_field"]').data('arg1');
 		let arg2 = jQuery( fieldDelete ).find('[data-silent_action="um_admin_remove_field"]').data('arg2');
+		let nonce = jQuery( fieldDelete ).find('[data-silent_action="um_admin_remove_field"]').data('nonce');
 
 		jQuery.ajax({
 			url: wp.ajax.settings.url,
@@ -512,7 +513,7 @@ function um_builder_delete_field_ajax( callback ) {
 				act_id : 'um_admin_remove_field',
 				arg1 : arg1,
 				arg2 : arg2,
-				nonce: um_admin_scripts.nonce
+				_wpnonce: nonce
 			},
 			success: function( data ) {
 				um_builder_delete_field_ajax( callback );
@@ -552,7 +553,7 @@ function um_form_select_tab( tab, set_val ) {
  */
 function um_admin_update_builder() {
 	var form_id = jQuery('.um-admin-builder').data('form_id');
-
+	var nonce = jQuery('.um-admin-builder').data('update-nonce');
 
 	jQuery.ajax({
 		url: wp.ajax.settings.url,
@@ -560,7 +561,7 @@ function um_admin_update_builder() {
 		data: {
 			action:'um_update_builder',
 			form_id: form_id,
-			nonce: um_admin_scripts.nonce
+			_wpnonce: nonce
 		},
 		success: function( data ) {
 			jQuery('.um-admin-drag-ajax').html( data );
@@ -662,6 +663,7 @@ jQuery( document ).ready( function() {
 		var act_id = jQuery(this).data('silent_action');
 		var arg1   = jQuery(this).data('arg1');
 		var arg2   = jQuery(this).data('arg2');
+		var nonce  = jQuery(this).data('nonce');
 
 		var in_row = '';
 		var in_sub_row = '';
@@ -689,7 +691,7 @@ jQuery( document ).ready( function() {
 				in_sub_row: in_sub_row,
 				in_column: in_column,
 				in_group: in_group,
-				nonce: um_admin_scripts.nonce
+				_wpnonce: nonce
 			},
 			success: function( data ) {
 				demon_settings.data('in_row', '').data('in_sub_row', '').data('in_column', '').data('in_group', '');
@@ -710,9 +712,10 @@ jQuery( document ).ready( function() {
 
 		if ( confirm( wp.i18n.__( 'This will permanently delete this custom field from a database and from all forms on your site. Are you sure?', 'ultimate-member' ) ) ) {
 
-			jQuery(this).parents('a').remove();
-
 			var arg1 = jQuery(this).parents('a').data('arg1');
+			var nonce = jQuery(this).parents('a').data('remove-nonce');
+
+			jQuery(this).parents('a').remove();
 
 			jQuery.ajax({
 				url: wp.ajax.settings.url,
@@ -721,8 +724,7 @@ jQuery( document ).ready( function() {
 					action:'um_do_ajax_action',
 					act_id : 'um_admin_remove_field_global',
 					arg1 : arg1,
-					nonce: um_admin_scripts.nonce
-
+					_wpnonce: nonce
 				},
 				success: function(data) {
 					jQuery('#um-admin-form-builder .' + arg1).remove();
@@ -926,6 +928,7 @@ jQuery( document ).ready( function() {
 	 */
 	jQuery(document.body).on('blur',"#_custom_dropdown_options_source", function(){
 		var me = jQuery(this);
+		var nonce = me.data('nonce');
 		var _options = jQuery('textarea[id=_options]');
 
 		if( me.val() != '' ){
@@ -936,7 +939,7 @@ jQuery( document ).ready( function() {
 				data: {
 					action:'um_populate_dropdown_options',
 					um_option_callback: um_option_callback,
-					nonce: um_admin_scripts.nonce
+					_wpnonce: nonce
 				},
 				complete: function(){
 
