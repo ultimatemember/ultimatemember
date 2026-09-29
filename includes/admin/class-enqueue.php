@@ -630,6 +630,9 @@ final class Enqueue extends \um\common\Enqueue {
 		} elseif ( 'ultimate-member_page_um_roles' === $hook ) {
 			wp_register_style( 'um_admin_roles', $css_url . 'admin/roles' . $suffix . '.css', array(), UM_VERSION );
 			wp_enqueue_style( 'um_admin_roles' );
+		} elseif ( 'ultimate-member_page_um_invitation_codes' === $hook ) {
+			wp_register_script( 'um_admin_invitation_codes', $js_url . 'admin/invitation-codes' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
+			wp_enqueue_script( 'um_admin_invitation_codes' );
 		} elseif ( 'ultimate-member_page_um_options' === $hook ) {
 			// phpcs:ignore WordPress.Security.NonceVerification
 			if ( isset( $_GET['tab'], $_GET['section'] ) && 'advanced' === $_GET['tab'] && 'security' === $_GET['section'] ) {

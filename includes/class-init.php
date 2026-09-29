@@ -951,6 +951,19 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['setup'];
 		}
 
+		/**
+		 * @since 2.15.0
+		 *
+		 * @return um\core\Invitation_Codes
+		 */
+		public function invitation_codes() {
+			if ( empty( $this->classes['invitation_codes'] ) ) {
+				$this->classes['invitation_codes'] = new um\core\Invitation_Codes();
+			}
+
+			return $this->classes['invitation_codes'];
+		}
+
 
 		/**
 		 * @since 2.0

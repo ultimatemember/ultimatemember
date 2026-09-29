@@ -822,3 +822,61 @@ function um_form_register_redirect() {
 	}
 }
 add_action( 'login_form_register', 'um_form_register_redirect', 10 );
+
+/**
+ * Validate invitation code fields on registration.
+ *
+ * @param array $submitted_data $_POST submission data.
+ */
+function um_invitation_code_validation( $submitted_data ) {
+	if ( empty( $submitted_data ) ) {
+		return;
+	}
+
+	foreach ( $submitted_data as $key => $value ) {
+		if ( 'invitation_code' !== UM()->fields()->get_field_type( $key ) ) {
+			continue;
+		}
+
+		$code = is_string( $value ) ? trim( wp_unslash( $value ) ) : '';
+		if ( '' === $code ) {
+			// Empty values are handled by the common required-field validation.
+			continue;
+		}
+
+		if ( ! UM()->invitation_codes()->validate_code( $code ) ) {
+			UM()->form()->add_error( $key, __( 'This invitation code is invalid, has already been used, or has expired.', 'ultimate-member' ) );
+		}
+	}
+}
+add_action( 'um_submit_form_errors_hook__registration', 'um_invitation_code_validation', 20 );
+
+/**
+ * Consume invitation code after successful registration.
+ *
+ * @param int   $user_id   User ID.
+ * @param array $args      Form data.
+ * @param array $form_data UM form data.
+ */
+function um_invitation_code_consume( $user_id, $args, $form_data ) {
+	if ( empty( $form_data['mode'] ) || 'register' !== $form_data['mode'] ) {
+		return;
+	}
+
+	$submitted = ( isset( $args['submitted'] ) && is_array( $args['submitted'] ) ) ? $args['submitted'] : array();
+
+	foreach ( $submitted as $key => $value ) {
+		if ( 'invitation_code' !== UM()->fields()->get_field_type( $key ) ) {
+			continue;
+		}
+
+		$code = is_string( $value ) ? trim( wp_unslash( $value ) ) : '';
+		if ( '' === $code ) {
+			continue;
+		}
+
+		UM()->invitation_codes()->consume_code( $code, $user_id );
+		break;
+	}
+}
+add_action( 'um_user_register', 'um_invitation_code_consume', 20, 3 );
