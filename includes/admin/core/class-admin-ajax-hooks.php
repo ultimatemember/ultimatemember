@@ -27,6 +27,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Ajax_Hooks' ) ) {
 			add_action( 'wp_ajax_um_member_directory_default_filter_settings', array( UM()->member_directory(), 'default_filter_settings' ) );
 
 			add_action( 'wp_ajax_um_same_page_update', array( UM()->admin_settings(), 'same_page_update_ajax' ) );
+
+			add_action( 'wp_ajax_um_invitation_codes_generate', array( UM()->invitation_codes(), 'ajax_generate_codes' ) );
 		}
 	}
 }

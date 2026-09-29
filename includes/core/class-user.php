@@ -1405,6 +1405,13 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				unset( $submitted[ $pw_field ] );
 			}
 
+			//remove all invitation code field values from submitted details
+			foreach ( $submitted as $k => $v ) {
+				if ( 'invitation_code' === UM()->fields()->get_field_type( $k ) ) {
+					unset( $submitted[ $k ] );
+				}
+			}
+
 			/**
 			 * Filters submitted data before save usermeta "submitted" on registration process.
 			 *
