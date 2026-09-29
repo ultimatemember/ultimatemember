@@ -203,17 +203,22 @@ class Upload_Security {
 				return $result;
 			}
 			// Only administrator-configured upload URLs; never follow redirects or send credentials.
-			$response = wp_remote_get(
-				trailingslashit( $url ) . $name,
-				array(
-					'timeout'             => 2,
-					'redirection'         => 0,
-					'cookies'             => array(),
-					'headers'             => array( 'Cache-Control' => 'no-cache, no-store' ),
-					'limit_response_size' => 4096,
-				)
+			$request_url  = trailingslashit( $url ) . $name;
+			$request_args = array(
+				'timeout'             => 2,
+				'sslverify'           => false,
+				'redirection'         => 0,
+				'cookies'             => array(),
+				'headers'             => array( 'Cache-Control' => 'no-cache, no-store' ),
+				'limit_response_size' => 4096,
 			);
-			$result   = self::classify_response( $response, $marker );
+			$response = wp_remote_get( $request_url, $request_args );
+			// Match the license request fallback; an empty 403/404 body is a valid response.
+			if ( is_wp_error( $response ) || empty( $response ) ) {
+				$request_args['sslverify'] = true;
+				$response                  = wp_remote_get( $request_url, $request_args );
+			}
+			$result = self::classify_response( $response, $marker );
 		} finally {
 			if ( is_resource( $handle ) ) {
 				fclose( $handle );
