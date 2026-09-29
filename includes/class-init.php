@@ -514,6 +514,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->gdpr();
 			$this->member_directory();
 			$this->blocks();
+			$this->divi();
 
 			// If multisite networks active
 			if ( is_multisite() ) {
@@ -640,6 +641,20 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->classes['external_integrations'] = new um\core\External_Integrations();
 			}
 			return $this->classes['external_integrations'];
+		}
+
+
+		/**
+		 * @since 2.15.0
+		 *
+		 * @return um\core\Divi()
+		 */
+		public function divi() {
+			if ( empty( $this->classes['um\core\divi'] ) ) {
+				$this->classes['um\core\divi'] = new um\core\Divi();
+			}
+
+			return $this->classes['um\core\divi'];
 		}
 
 
