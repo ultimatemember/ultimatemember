@@ -1,6 +1,6 @@
 ﻿== Changelog ==
 
-= 2.14.0 September 28, 2026 =
+= 2.14.0 September 29, 2026 =
 
 * Enhancements:
 
