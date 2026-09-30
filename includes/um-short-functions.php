@@ -659,7 +659,7 @@ function um_js_redirect( $url ) {
 		}
 
 		register_shutdown_function( function( $url ) {
-			echo '<script data-cfasync="false" type="text/javascript">window.location = "' . esc_js( $url ) . '"</script>';
+			echo '<script data-cfasync="false">window.location = "' . esc_js( $url ) . '"</script>';
 		}, $url );
 
 		if ( 1 < ob_get_level() ) {
@@ -667,7 +667,7 @@ function um_js_redirect( $url ) {
 				ob_end_clean();
 			}
 		} ?>
-		<script data-cfasync='false' type="text/javascript">
+		<script data-cfasync='false'>
 			window.location = '<?php echo esc_js( $url ); ?>';
 		</script>
 		<?php exit;

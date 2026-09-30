@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 	<div class="um-form">
-		<form method="post" action="" autocomplete="off">
+		<form method="post" autocomplete="off">
 			<?php
 			/** This action is documented in includes/core/um-actions-profile.php */
 			do_action( 'um_before_form', $args, $form_id );
