@@ -168,8 +168,13 @@ UM.frontend = {
 				}
 			});
 		},
-		set: function( $bar, value ) {
+		set: function( $bar, value, animate = false ) {
 			$bar.data('value', value).attr('title', value + '%');
+			if ( animate ) {
+				$bar.find('.um-progress-bar-inner').animate({ width: value + '%' }).attr('title', value + '%');
+			} else {
+				$bar.find('.um-progress-bar-inner').css('width', value + '%').attr('title', value + '%');
+			}
 			$bar.find('.um-progress-bar-inner').css('width', value + '%').attr('title', value + '%');
 			$bar.siblings('.um-progress-bar-label').text(value + '%');
 		}
