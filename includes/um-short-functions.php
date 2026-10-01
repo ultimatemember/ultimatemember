@@ -910,12 +910,26 @@ function um_user_submited_display( $k, $title, $data = array(), $style = true ) 
 		$file     = basename( $v );
 		$filedata = get_user_meta( um_user( 'ID' ), $k . '_metadata', true );
 		if ( UM()->is_new_ui() ) {
-			$baseurl = UM()->common()->filesystem()->get_user_uploads_url( um_user( 'ID' ) );
+//			$filename = $file;
+//			if ( ! empty( $filedata['filename'] ) ) {
+//				$v = '<a class="um-preview-upload" target="_blank" href="' . esc_url( $baseurl . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
+//			} else {
+//				$v = $baseurl . '/' . $file;
+//			}
+
+			if ( in_array( $k, array( 'cover_photo', 'profile_photo' ), true ) ) {
+				$f_id = 'profile';
+			} else {
+				$f_id = $data['form_id'];
+			}
+			$uri = UM()->fields()->get_download_link( $f_id, $k, um_user( 'ID' ), $file );
+
+			// $baseurl = UM()->common()->filesystem()->get_user_uploads_url( um_user( 'ID' ) );
 
 			if ( ! empty( $filedata['filename'] ) ) {
-				$v = '<a class="um-preview-upload" target="_blank" href="' . esc_url( $baseurl . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
+				$v = '<a class="um-preview-upload" target="_blank" href="' . esc_url( $uri ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
 			} else {
-				$v = $baseurl . '/' . $file;
+				$v = esc_url( $uri );
 			}
 		} else {
 			$baseurl = UM()->uploader()->get_upload_base_url();
@@ -1922,10 +1936,10 @@ function um_get_cover_uri( $image, $attrs ) {
 		$ratio  = str_replace( ':1', '', UM()->options()->get( 'profile_cover_ratio' ) );
 		$height = round( $attrs / $ratio );
 
-		$timestamp = time();
+		// $timestamp = time();
 
 		$user_dir = UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) );
-		$user_url = UM()->common()->filesystem()->get_user_uploads_url( um_user( 'ID' ) );
+		// $user_url = UM()->common()->filesystem()->get_user_uploads_url( um_user( 'ID' ) );
 
 		$files_map = array(
 			"cover_photo-{$attrs}{$ext}",
@@ -1935,7 +1949,8 @@ function um_get_cover_uri( $image, $attrs ) {
 
 		foreach ( $files_map as $filename ) {
 			if ( file_exists( $user_dir . DIRECTORY_SEPARATOR . $filename ) ) {
-				$uri = $user_url . '/' . $filename . '?' . $timestamp;
+				$uri = UM()->fields()->get_download_link( 'profile', 'cover_photo', um_user( 'ID' ), $filename );
+				// $uri = $user_url . '/' . $filename . '?' . $timestamp;
 				break;
 			}
 		}
@@ -2010,10 +2025,11 @@ function um_get_avatar_uri( $image, $attrs ) {
 	$ext = '.' . pathinfo( $image, PATHINFO_EXTENSION );
 	if ( UM()->is_new_ui() ) {
 		$user_dir = UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) );
-		$user_url = UM()->common()->filesystem()->get_user_uploads_url( um_user( 'ID' ) );
+		// $user_url = UM()->common()->filesystem()->get_user_uploads_url( um_user( 'ID' ) );
 
 		if ( 'original' === $attrs && file_exists( $user_dir . DIRECTORY_SEPARATOR . "profile_photo{$ext}" ) ) {
-			$uri = $user_url . "/profile_photo{$ext}";
+			$uri = UM()->fields()->get_download_link( 'profile', 'profile_photo', um_user( 'ID' ), "profile_photo{$ext}" );
+			// $uri = $user_url . "/profile_photo{$ext}";
 		} else {
 			$files_map = array(
 				"profile_photo-{$attrs}x{$attrs}{$ext}",
@@ -2035,7 +2051,8 @@ function um_get_avatar_uri( $image, $attrs ) {
 
 			foreach ( $files_map as $filename ) {
 				if ( file_exists( $user_dir . DIRECTORY_SEPARATOR . $filename ) ) {
-					$uri = $user_url . '/' . $filename;
+					$uri = UM()->fields()->get_download_link( 'profile', 'profile_photo', um_user( 'ID' ), $filename );
+					// $uri = $user_url . '/' . $filename;
 					break;
 				}
 			}

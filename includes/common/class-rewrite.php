@@ -254,13 +254,15 @@ class Rewrite {
 		}
 
 		um_fetch_user( $user_id );
-		$field_data = get_post_meta( $form_id, '_um_custom_fields', true );
-		if ( empty( $field_data[ $field_key ] ) ) {
-			return;
-		}
+		if ( 'cover_photo' !== $field_key && 'profile_photo' !== $field_key ) {
+			$field_data = get_post_meta( $form_id, '_um_custom_fields', true );
+			if ( empty( $field_data[ $field_key ] ) ) {
+				return;
+			}
 
-		if ( ! um_can_view_field( $field_data[ $field_key ] ) ) {
-			return;
+			if ( ! um_can_view_field( $field_data[ $field_key ] ) ) {
+				return;
+			}
 		}
 
 		$field_value = UM()->fields()->field_value( $field_key );

@@ -229,7 +229,14 @@ class Users {
 
 			foreach ( $locate as $avatar_basename ) {
 				if ( file_exists( UM()->common()->filesystem()->get_user_uploads_dir( $user->ID ) . DIRECTORY_SEPARATOR . $avatar_basename ) ) {
-					$url = UM()->common()->filesystem()->get_user_uploads_url( $user->ID ) . '/' . $avatar_basename;
+					if ( array_key_exists( 'um-cache', $args ) && true === $args['um-cache'] ) {
+						add_filter( 'um_filesystem_url_has_timestamp', array( $this, 'remove_cover_photo_timestamp' ) );
+					}
+					$url = UM()->fields()->get_download_link( 'profile', 'profile_photo', $user->ID, $avatar_basename );
+					if ( array_key_exists( 'um-cache', $args ) && true === $args['um-cache'] ) {
+						remove_filter( 'um_filesystem_url_has_timestamp', array( $this, 'remove_cover_photo_timestamp' ) );
+					}
+					// $url = UM()->common()->filesystem()->get_user_uploads_url( $user->ID ) . '/' . $avatar_basename;
 					break;
 				}
 			}
@@ -257,9 +264,9 @@ class Users {
 				}
 			}
 		} else {
-			if ( array_key_exists( 'um-cache', $args ) && false === $args['um-cache'] ) {
-				$url = add_query_arg( array( 't' => time() ), $url );
-			}
+//			if ( array_key_exists( 'um-cache', $args ) && false === $args['um-cache'] ) {
+//				$url = add_query_arg( array( 't' => time() ), $url );
+//			}
 
 			$args['url']          = set_url_scheme( $url );
 			$args['found_avatar'] = true;
@@ -1410,7 +1417,7 @@ class Users {
 
 				if ( ! empty( $cover_photo ) ) {
 					$user_dir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
-					$user_url = UM()->common()->filesystem()->get_user_uploads_url( $user_id );
+					// $user_url = UM()->common()->filesystem()->get_user_uploads_url( $user_id );
 
 					$ext = '.' . pathinfo( $cover_photo, PATHINFO_EXTENSION );
 
@@ -1434,19 +1441,25 @@ class Users {
 
 					foreach ( $files_map as $filename ) {
 						if ( file_exists( $user_dir . DIRECTORY_SEPARATOR . $filename ) ) {
-							$url = $user_url . '/' . $filename;
+							if ( array_key_exists( 'cache', $args ) && true === $args['cache'] ) {
+								add_filter( 'um_filesystem_url_has_timestamp', array( $this, 'remove_cover_photo_timestamp' ) );
+							}
+							$url = UM()->fields()->get_download_link( 'profile', 'cover_photo', $user_id, $filename );
+							if ( array_key_exists( 'cache', $args ) && true === $args['cache'] ) {
+								remove_filter( 'um_filesystem_url_has_timestamp', array( $this, 'remove_cover_photo_timestamp' ) );
+							}
 							break;
 						}
 					}
 				}
 
-				if ( ! empty( $url ) && array_key_exists( 'cache', $args ) && false === $args['cache'] ) {
-					$url = add_query_arg( array( 't' => time() ), $url );
-				}
-
-				if ( ! empty( $url ) ) {
-					$url = set_url_scheme( $url );
-				}
+//				if ( ! empty( $url ) && array_key_exists( 'cache', $args ) && false === $args['cache'] ) {
+//					$url = add_query_arg( array( 't' => time() ), $url );
+//				}
+//
+//				if ( ! empty( $url ) ) {
+//					$url = set_url_scheme( $url );
+//				}
 			} else {
 				$url = $external_cover_photo_url;
 			}
@@ -1477,6 +1490,15 @@ class Users {
 		 * ?>
 		 */
 		return apply_filters( 'um_user_cover_photo_url', $url, $user_id, $args );
+	}
+
+	/**
+	 * Avoid adding timestamp if cached URL is needed.
+	 *
+	 * @return false
+	 */
+	public function remove_cover_photo_timestamp() {
+		return false;
 	}
 
 	/**
