@@ -263,6 +263,10 @@ class Rewrite {
 			if ( ! um_can_view_field( $field_data[ $field_key ] ) ) {
 				return;
 			}
+
+			$download_type = $field_data[ $field_key ]['type'];
+		} else {
+			$download_type = 'image';
 		}
 
 		$field_value = UM()->fields()->field_value( $field_key );
@@ -270,7 +274,6 @@ class Rewrite {
 			return;
 		}
 
-		$download_type = $field_data[ $field_key ]['type'];
 		if ( 'file' === $download_type ) {
 			$this->file_download( $user_id, $field_key, $field_value );
 		} else {
