@@ -120,8 +120,7 @@ function um_upgrade_update_options300() {
 
 	um_maybe_unset_time_limit();
 
-	// delete temporarily option for fields upgrade
-	update_option( 'um_last_version_upgrade', '2.12.0' );
+	update_option( 'um_last_version_upgrade', '3.0.0' );
 
 	wp_send_json_success( array( 'message' => __( 'Database has been updated successfully', 'ultimate-member' ) ) );
 }
