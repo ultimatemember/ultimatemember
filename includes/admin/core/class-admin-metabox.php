@@ -1580,8 +1580,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_icon':
-					UM()->setup()->set_icons_options();
-					$um_icons_list = get_option( 'um_icons_list' );
+					$um_icons_list = UM()->setup()->get_icons_list();
 
 					$first_activation_date = get_option( 'um_first_activation_date', false );
 
