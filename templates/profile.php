@@ -94,6 +94,8 @@ $description_key = UM()->profile()->get_show_bio_key( $args );
 		 * @param {string} $classes User Profile navigation bar classes.
 		 *
 		 * @since 2.0
+		 * @since 2.14.0 Added $user_id
+		 *
 		 * @hook  um_profile_navbar_classes
 		 *
 		 * @return {string} User Profile navigation bar classes.
