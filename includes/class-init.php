@@ -24,23 +24,23 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Notifications Notifications() Reviewed branch: master
 	 * @method UM_Online Online() Reviewed branch: master
 	 * @method UM_Private_Content Private_Content() Reviewed branch: master
-	 * @method UM_Profile_Completeness Profile_Completeness() Not reviewed branch: feature/new_ui
+	 * @method UM_Profile_Completeness Profile_Completeness() Reviewed branch: master
 	 * @method UM_Profile_Tabs Profile_Tabs() Reviewed branch: master
 	 * @method UM_ReCAPTCHA ReCAPTCHA() Reviewed branch: master
 	 * @method UM_Reviews Reviews() Reviewed branch: master
-	 * @method UM_Activity Activity() Under dev branch: dev/new-ui
+	 * @method UM_Activity Activity() Reviewed Old UI branch: dev/new-ui
 	 * @method UM_Social_Login_API Social_Login_API()
 	 * @method UM_Stripe_API Stripe_API()
 	 * @method UM_Terms_Conditions Terms_Conditions() Reviewed branch: master
 	 * @method UM_Unsplash Unsplash() Reviewed branch: master
 	 * @method UM_User_Bookmarks User_Bookmarks() Reviewed branch: master
-	 * @method UM_User_Locations User_Locations() Under dev branch: dev/new-ui (left only member directory map in new UI)
+	 * @method UM_User_Locations User_Locations() Under testing branch: dev/new-ui
 	 * @method UM_User_Notes User_Notes() Reviewed branch: master
 	 * @method UM_User_Photos User_Photos() Reviewed branch: master
 	 * @method UM_User_Tags User_Tags() Reviewed branch: master
 	 * @method UM_Verified_Users Verified_Users() Reviewed branch: master
 	 * @method UM_WooCommerce WooCommerce() Reviewed branch: master
-	 * @method UM_Zapier Zapier() Reviewed branch: dev/new_ui
+	 * @method UM_Zapier Zapier() Reviewed branch: main
 	 *
 	 * @method UM_Frontend_Posting Frontend_Posting()
 	 * @method UM_Google_Authenticator Google_Authenticator()
