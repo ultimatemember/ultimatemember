@@ -10,7 +10,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 *
 	 * @class UM
 	 * @version 3.0
-	 *
+	 * @todo remove comments about branch names before the release.
 	 * @method UM_bbPress bbPress() Reviewed branch: master
 	 * @method UM_Followers Followers() Reviewed branch: master
 	 * @method UM_ForumWP ForumWP() Reviewed branch: master
@@ -28,7 +28,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Profile_Tabs Profile_Tabs() Reviewed branch: master
 	 * @method UM_ReCAPTCHA ReCAPTCHA() Reviewed branch: master
 	 * @method UM_Reviews Reviews() Reviewed branch: master
-	 * @method UM_Activity Activity() Reviewed Old UI branch: dev/new-ui
+	 * @method UM_Activity Activity() Reviewed Old UI branch: master
 	 * @method UM_Social_Login_API Social_Login_API()
 	 * @method UM_Stripe_API Stripe_API()
 	 * @method UM_Terms_Conditions Terms_Conditions() Reviewed branch: master
