@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {string} Maybe changed language locale.
  *
  * @since 1.3.x
- * @depecated 2.8.5 Used WordPress native `load_plugin_textdomain()`. And can be replaced via WordPress native hook 'plugin_locale'.
+ * @deprecated 2.8.5 Used WordPress native `load_plugin_textdomain()`. And can be replaced via WordPress native hook 'plugin_locale'.
  * @hook um_language_locale
  *
  * @example <caption>Change UM language locale.</caption>
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {string} Language file path.
  *
  * @since 1.3.x
- * @depecated 2.8.5 Used WordPress native `load_plugin_textdomain()`. And can be replaced via WordPress native hook 'load_textdomain_mofile'.
+ * @deprecated 2.8.5 Used WordPress native `load_plugin_textdomain()`. And can be replaced via WordPress native hook 'load_textdomain_mofile'.
  * @hook um_language_file
  *
  * @example <caption>Change UM language file path.</caption>
@@ -52,7 +52,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param {int} $user_id User ID.
  *
  * @since 1.3.x
- * @depecated 2.8.7 use action hook `um_after_user_status_is_changed` instead.
+ * @deprecated 2.8.7 use action hook `um_after_user_status_is_changed` instead.
  * @hook um_after_user_status_is_changed_hook
  */
 
@@ -60,7 +60,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Fires just before User status is changed.
  *
  * @since 1.3.x
- * @depecated 2.8.7 use action hook `um_before_user_status_is_set` instead.
+ * @deprecated 2.8.7 use action hook `um_before_user_status_is_set` instead.
  * @hook um_when_status_is_set
  *
  * @param {int} $user_id User ID. Since 2.0
@@ -70,7 +70,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Fires for handle admin user_action scripts.
  *
  * @since 1.3.x
- * @depecated 2.8.7 WordPress native `handle_bulk_actions-users` hook is used. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+ * @deprecated 2.8.7 WordPress native `handle_bulk_actions-users` hook is used. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
  * @hook um_admin_user_action_hook
  *
  * @param {string} $bulk_action Bulk action key
@@ -81,7 +81,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Where $bulk_action is a bulk action key
  *
  * @since 1.3.x
- * @depecated 2.8.7 WordPress native `handle_bulk_actions-users` hook is used. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+ * @deprecated 2.8.7 WordPress native `handle_bulk_actions-users` hook is used. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
  * @hook um_admin_user_action_{$bulk_action}_hook
  */
 
@@ -90,7 +90,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Where $action is a bulk action key
  *
  * @since 1.3.x
- * @depecated 2.8.7 WordPress native `handle_bulk_actions-users` hook is used. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+ * @deprecated 2.8.7 WordPress native `handle_bulk_actions-users` hook is used. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
  * @hook um_admin_custom_hook_{$action}
  *
  * @param {int} $user_id User ID.
@@ -106,7 +106,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {array} List table filter views.
  *
  * @since 1.3.x
- * @depecated 2.8.7 Fully deprecated because there is used dropdown with statuses instead of list table views.
+ * @deprecated 2.8.7 Fully deprecated because there is used dropdown with statuses instead of list table views.
  * @hook um_admin_views_users
  */
 
@@ -118,7 +118,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {string} Maybe changed plugin's textdomain.
  *
  * @since 1.3.x
- * @depecated 2.9.2 Fully deprecated because minimum required WP version is 5.5, but we cannot use `load_plugin_textdomain()` function since 4.6.0 if the plugin is situated in wp.org plugins directory.
+ * @deprecated 2.9.2 Fully deprecated because minimum required WP version is 5.5, but we cannot use `load_plugin_textdomain()` function since 4.6.0 if the plugin is situated in wp.org plugins directory.
  * @hook um_language_textdomain
  */
 
@@ -126,7 +126,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Fires before UM REST API output.
  *
  * @since 1.3.x
- * @depecated 2.12.0
+ * @deprecated 2.12.0
  * @hook um_api_output_before
  *
  * @param {array}  $data     API data.
@@ -138,7 +138,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Fires for displaying UM REST API output with other $format.
  *
  * @since 1.3.x
- * @depecated 2.12.0
+ * @deprecated 2.12.0
  * @hook um_api_output_{$format}
  *
  * @param {array}  $data     API data.
@@ -149,7 +149,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Fires after UM REST API output.
  *
  * @since 1.3.x
- * @depecated 2.12.0
+ * @deprecated 2.12.0
  * @hook um_api_output_after
  *
  * @param {array}  $data     API data.
@@ -166,7 +166,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {mixed} User data value.
  *
  * @since 2.0
- * @depecated 2.12.0
+ * @deprecated 2.12.0
  * @hook um_rest_userdata
  *
  * @example <caption>Force change the output data for Rest API userdata call.</caption>
@@ -187,7 +187,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {array} REST API response.
  *
  * @since 2.0
- * @depecated 2.12.0
+ * @deprecated 2.12.0
  * @hook um_rest_get_auser
  *
  * @example <caption>Force change the output data for Rest API user authentication call.</caption>
@@ -206,7 +206,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {string} REST API output format.
  *
  * @since 1.3.x
- * @depecated 2.12.0
+ * @deprecated 2.12.0
  * @hook um_api_output_format
  *
  * @example <caption>Changing the REST API output format.</caption>
@@ -227,7 +227,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {bool} REST API log is allowed.
  *
  * @since 1.3.x
- * @depecated 2.12.0
+ * @deprecated 2.12.0
  * @hook um_api_log_requests
  */
 
@@ -241,7 +241,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {array} REST API query data.
  *
  * @since 1.3.x
- * @depecated 2.12.0
+ * @deprecated 2.12.0
  * @hook um_rest_query_mode
  */
 
@@ -255,7 +255,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {array} Output data.
  *
  * @since 1.3.x
- * @depecated 2.12.0
+ * @deprecated 2.12.0
  * @hook um_api_output_data
  */
 
@@ -267,7 +267,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {array} Output data.
  *
  * @since 1.3.x
- * @depecated 2.12.0
+ * @deprecated 2.12.0
  * @hook um_rest_api_get_stats
  */
 
@@ -279,7 +279,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {array} Allowed query modes.
  *
  * @since 1.3.x
- * @depecated 2.12.0
+ * @deprecated 2.12.0
  * @hook um_api_valid_query_modes
  */
 
@@ -291,7 +291,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {array} UM REST API output format.
  *
  * @since 1.3.x
- * @depecated 2.12.0
+ * @deprecated 2.12.0
  * @hook um_api_output_format
  */
 
@@ -301,7 +301,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param {array} $args User Profile data.
  *
  * @since 1.3.x
- * @depecated 3.0.0 Please use 'um_after_profile_header_name' hook instead.
+ * @deprecated 3.0.0 Please use 'um_after_profile_header_name' hook instead.
  * @hook  um_after_profile_header_name_args
  */
 
@@ -313,7 +313,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {array} Allowed image types.
  *
  * @since 1.3.x
- * @depecated 3.0.0 Please use 'um_allowed_default_image_types' hook instead.
+ * @deprecated 3.0.0 Please use 'um_allowed_default_image_types' hook instead.
  * @hook  um_allowed_image_types
  */
 
@@ -325,7 +325,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {array} Allowed file types.
  *
  * @since 1.3.x
- * @depecated 3.0.0 Please use 'um_allowed_default_file_types' hook instead.
+ * @deprecated 3.0.0 Please use 'um_allowed_default_file_types' hook instead.
  * @hook  um_allowed_file_types
  */
 
@@ -337,7 +337,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {string} Cover URL.
  *
  * @since 1.3.67
- * @depecated 3.0.0 Please use 'um_default_cover_url' hook instead.
+ * @deprecated 3.0.0 Please use 'um_default_cover_url' hook instead.
  * @hook  um_get_default_cover_uri_filter
  */
 
@@ -349,7 +349,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {string} Cover photo size.
  *
  * @since 2.0.0
- * @depecated 3.0.0 Please use 'um_cover_photo_size' hook instead with checking `wp_is_mobile()` inside the callback.
+ * @deprecated 3.0.0 Please use 'um_cover_photo_size' hook instead with checking `wp_is_mobile()` inside the callback.
  * @hook  um_mobile_cover_photo
  */
 
@@ -363,7 +363,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {bool} Current privacy case.
  *
  * @since 1.3.x
- * @depecated 3.0.0 Please use 'um_can_view_private_user_profile' hook instead.
+ * @deprecated 3.0.0 Please use 'um_can_view_private_user_profile' hook instead.
  *
  * @hook um_is_private_filter_hook
  */
@@ -376,7 +376,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return {array} Predefined pages.
  *
  * @since 1.3.x
- * @depecated 3.0.0 Please use 'um_predefined_pages' hook instead.
+ * @deprecated 3.0.0 Please use 'um_predefined_pages' hook instead.
  * @hook um_core_pages
  */
 
