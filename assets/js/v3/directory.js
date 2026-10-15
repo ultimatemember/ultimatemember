@@ -663,21 +663,30 @@ function um_build_template( directoryObj, data ) {
 
 jQuery(document.body).ready( function() {
 
-	jQuery(document.body).on('click', '.um-user-action', function(e) {
+	jQuery(document.body).off('click.umUserAction', '.um-user-action').on('click.umUserAction', '.um-user-action', function(e) {
 		e.preventDefault();
-		if ( jQuery(this).data('confirm-onclick') ) {
-			// Using wp.hooks here for workaround and integrate um-dropdown links and js.confirm
-			if ( ! confirm( jQuery(this).data('confirm-onclick') ) ) {
-				wp.hooks.addFilter( 'um_dropdown_link_result', 'ultimate-member', function( result, attrClass, obj ) {
-					if ( ! obj.data('confirm-onclick') ) {
-						return result;
-					}
-					return false;
-				});
+		let $link = jQuery(this);
+		let message = $link.data('confirm-onclick');
+		if ( message ) {
+			// Block dropdown navigation until the asynchronous confirmation is accepted.
+			wp.hooks.addFilter( 'um_dropdown_link_result', 'ultimate-member', function( result, attrClass, obj ) {
+				if ( ! obj.data('confirm-onclick') ) {
+					return result;
+				}
 				return false;
-			} else {
-				wp.hooks.removeFilter( 'um_dropdown_link_result', 'ultimate-member' );
-			}
+			});
+			jQuery.um_confirm({
+				object: this,
+				title: wp.i18n.__( 'Confirmation', 'ultimate-member' ),
+				message: jQuery('<div>').text(message).html(),
+				yes_label: wp.i18n.__( 'Yes', 'ultimate-member' ),
+				no_label: wp.i18n.__( 'No', 'ultimate-member' ),
+				onYes: function() {
+					wp.hooks.removeFilter( 'um_dropdown_link_result', 'ultimate-member' );
+					window.location.href = $link.attr('href');
+				}
+			});
+			return false;
 		} else {
 			wp.hooks.removeFilter( 'um_dropdown_link_result', 'ultimate-member' );
 		}

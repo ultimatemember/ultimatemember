@@ -559,279 +559,314 @@ UM.frontend = {
 			});
 
 			// Default remove file from uploader queue button.
-			jQuery(document.body).on('click', '.um-uploader-file-remove', function() {
-				if ( ! confirm( wp.i18n.__( 'Are you sure that you want to delete this file?', 'ultimate-member' ) ) ) {
-					return false;
-				}
+			jQuery(document.body).on('click', '.um-uploader-file-remove', function(e) {
+				e.preventDefault();
+				jQuery.um_confirm({
+					object: this,
+					title: wp.i18n.__( 'Confirmation', 'ultimate-member' ),
+					message: jQuery('<div>').text(wp.i18n.__( 'Are you sure that you want to delete this file?', 'ultimate-member' )).html(),
+					yes_label: wp.i18n.__( 'Yes', 'ultimate-member' ),
+					no_label: wp.i18n.__( 'No', 'ultimate-member' ),
+					onYes: function() {
+					let $uploader = jQuery(this).parents('.um-uploader');
+					let $fileRow  = jQuery(this).parents('.um-uploader-file');
 
-				let $uploader = jQuery(this).parents('.um-uploader');
-				let $fileRow  = jQuery(this).parents('.um-uploader-file');
+					let $fileList = $uploader.find( '.um-uploader-filelist' );
 
-				let $fileList = $uploader.find( '.um-uploader-filelist' );
+					let removeRow = function () {
+						let fileID = $fileRow.attr('id');
+						let uploaderObj = UM.frontend.uploaders[ $uploader.data('plupload') ];
 
-				let removeRow = function () {
-					let fileID = $fileRow.attr('id');
-					let uploaderObj = UM.frontend.uploaders[ $uploader.data('plupload') ];
+						wp.hooks.doAction( 'um_uploader_file_row_removed', $fileRow, fileID, uploaderObj );
 
-					wp.hooks.doAction( 'um_uploader_file_row_removed', $fileRow, fileID, uploaderObj );
+						let filter = uploaderObj.getOption( 'filters' ).um_files_limit;
 
-					let filter = uploaderObj.getOption( 'filters' ).um_files_limit;
+						uploaderObj.removeFile( fileID );
+						$fileRow.remove();
 
-					uploaderObj.removeFile( fileID );
-					$fileRow.remove();
-
-					if ( $fileList.length ) {
-						if ( ! $fileList.find('.um-uploader-file').length ) {
+						if ( $fileList.length ) {
+							if ( ! $fileList.find('.um-uploader-file').length ) {
+								$uploader.removeClass('um-upload-completed');
+								$fileList.umHide();
+							}
+						} else {
 							$uploader.removeClass('um-upload-completed');
-							$fileList.umHide();
 						}
+
+						if ( filter && uploaderObj.files.length < filter ) {
+							let button = uploaderObj.getOption( 'browse_button' )[0];
+							button.removeAttribute('disabled');
+
+							let dropZone = uploaderObj.getOption( 'drop_element' )[0];
+							if ( dropZone ) {
+								dropZone.classList.remove('um-dropzone-disabled');
+								let uploadLink = dropZone.querySelector( '.um-upload-link' );
+								if ( uploadLink ) {
+									uploadLink.classList.remove('um-link-disabled');
+								}
+							}
+						}
+
+						wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
+					}
+
+					let fileID = $fileRow.attr('id');
+					if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
+						let fileName = $fileRow.data('filename');
+						let tempHash = $fileRow.data('temp_hash');
+						let nonce = $fileRow.data('nonce');
+
+						// then file can be removed from server.
+						wp.ajax.send(
+							'um_delete_temp_file',
+							{
+								data: {
+									name: fileName,
+									hash: tempHash,
+									nonce: nonce
+								},
+								success: function () {
+									removeRow();
+								},
+								error: function (data) {
+									alert(data);
+									console.log(data);
+								}
+							}
+						);
 					} else {
-						$uploader.removeClass('um-upload-completed');
+						removeRow();
 					}
-
-					if ( filter && uploaderObj.files.length < filter ) {
-						let button = uploaderObj.getOption( 'browse_button' )[0];
-						button.removeAttribute('disabled');
-
-						let dropZone = uploaderObj.getOption( 'drop_element' )[0];
-						if ( dropZone ) {
-							dropZone.classList.remove('um-dropzone-disabled');
-							let uploadLink = dropZone.querySelector( '.um-upload-link' );
-							if ( uploadLink ) {
-								uploadLink.classList.remove('um-link-disabled');
-							}
-						}
-					}
-
-					wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
-				}
-
-				let fileID = $fileRow.attr('id');
-				if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
-					let fileName = $fileRow.data('filename');
-					let tempHash = $fileRow.data('temp_hash');
-					let nonce = $fileRow.data('nonce');
-
-					// then file can be removed from server.
-					wp.ajax.send(
-						'um_delete_temp_file',
-						{
-							data: {
-								name: fileName,
-								hash: tempHash,
-								nonce: nonce
-							},
-							success: function () {
-								removeRow();
-							},
-							error: function (data) {
-								alert(data);
-								console.log(data);
-							}
-						}
-					);
-				} else {
-					removeRow();
-				}
+				}.bind(this)
+				});
 			});
 
 			// Image/File type fields controls.
-			jQuery(document.body).on('click', '.um-field-image-change', function() {
-				if ( ! confirm( wp.i18n.__( 'Are you sure that you want to change this image?', 'ultimate-member' ) ) ) {
-					return false;
-				}
+			jQuery(document.body).on('click', '.um-field-image-change', function(e) {
+				e.preventDefault();
+				jQuery.um_confirm({
+					object: this,
+					title: wp.i18n.__( 'Confirmation', 'ultimate-member' ),
+					message: jQuery('<div>').text(wp.i18n.__( 'Are you sure that you want to change this image?', 'ultimate-member' )).html(),
+					yes_label: wp.i18n.__( 'Yes', 'ultimate-member' ),
+					no_label: wp.i18n.__( 'No', 'ultimate-member' ),
+					onYes: function() {
+					let $wrapper = jQuery(this).parents('.um-field-uploader-wrapper');
+					let $uploader = $wrapper.find('.um-uploader');
 
-				let $wrapper = jQuery(this).parents('.um-field-uploader-wrapper');
-				let $uploader = $wrapper.find('.um-uploader');
-
-				$uploader.find('.um-uploader-button').trigger( 'click' );
+					$uploader.find('.um-uploader-button').trigger( 'click' );
+				}.bind(this)
+				});
 			});
 
-			jQuery(document.body).on('click', '.um-field-image-remove', function() {
+			jQuery(document.body).on('click', '.um-field-image-remove', function(e) {
+				e.preventDefault();
 				let confirmText = wp.i18n.__( 'Are you sure that you want to delete this image?', 'ultimate-member' );
 				confirmText = wp.hooks.applyFilters( 'um-field-image-remove-confirm-text', confirmText, jQuery(this) );
-				if ( confirmText && ! confirm( confirmText ) ) {
-					return false;
-				}
+				const onConfirmed = function() {
+					let $controls = jQuery(this).parents('.um-field-image-controls');
+					let $wrapper = jQuery(this).parents('.um-field-uploader-wrapper');
+					let $uploader = $wrapper.find('.um-uploader');
+					let $fileRow  = $uploader.find('.um-uploader-file');
+					let $dropZone  = $uploader.find( '.um-uploader-dropzone' );
+					let $fileList  = $uploader.find( '.um-uploader-filelist' );
 
-				let $controls = jQuery(this).parents('.um-field-image-controls');
-				let $wrapper = jQuery(this).parents('.um-field-uploader-wrapper');
-				let $uploader = $wrapper.find('.um-uploader');
-				let $fileRow  = $uploader.find('.um-uploader-file');
-				let $dropZone  = $uploader.find( '.um-uploader-dropzone' );
-				let $fileList  = $uploader.find( '.um-uploader-filelist' );
+					let removeRow = function () {
+						$uploader.find('.um-uploaded-value-hidden').prop('disabled', false);
+						$uploader.find('.um-uploaded-value-hash-hidden').prop('disabled', false);
+						$uploader.find('.um-uploaded-value-temp-hash-hidden').prop('disabled', false);
 
-				let removeRow = function () {
-					$uploader.find('.um-uploaded-value-hidden').prop('disabled', false);
-					$uploader.find('.um-uploaded-value-hash-hidden').prop('disabled', false);
-					$uploader.find('.um-uploaded-value-temp-hash-hidden').prop('disabled', false);
+						let fileID = $fileRow.attr('id');
+						if ( ! fileID ) {
+							$fileRow.remove();
+							$dropZone.umShow();
+							$controls.umHide();
+							$fileList.html('').umHide();
+							$uploader.removeClass('um-upload-completed');
 
-					let fileID = $fileRow.attr('id');
-					if ( ! fileID ) {
+							wp.hooks.doAction( 'um_uploader_empty_file_row_removed', $uploader );
+							return;
+						}
+
+						let uploaderObj = UM.frontend.uploaders[ $uploader.data('plupload') ];
+
+						wp.hooks.doAction( 'um_uploader_file_row_removed', $fileRow, fileID, uploaderObj );
+
+						let filter = uploaderObj.getOption( 'filters' ).um_files_limit;
+
+						uploaderObj.removeFile( fileID );
 						$fileRow.remove();
 						$dropZone.umShow();
 						$controls.umHide();
 						$fileList.html('').umHide();
 						$uploader.removeClass('um-upload-completed');
 
-						wp.hooks.doAction( 'um_uploader_empty_file_row_removed', $uploader );
-						return;
-					}
+						if ( filter && uploaderObj.files.length < filter ) {
+							let button = uploaderObj.getOption( 'browse_button' )[0];
+							button.removeAttribute('disabled');
 
-					let uploaderObj = UM.frontend.uploaders[ $uploader.data('plupload') ];
-
-					wp.hooks.doAction( 'um_uploader_file_row_removed', $fileRow, fileID, uploaderObj );
-
-					let filter = uploaderObj.getOption( 'filters' ).um_files_limit;
-
-					uploaderObj.removeFile( fileID );
-					$fileRow.remove();
-					$dropZone.umShow();
-					$controls.umHide();
-					$fileList.html('').umHide();
-					$uploader.removeClass('um-upload-completed');
-
-					if ( filter && uploaderObj.files.length < filter ) {
-						let button = uploaderObj.getOption( 'browse_button' )[0];
-						button.removeAttribute('disabled');
-
-						let dropZone = uploaderObj.getOption( 'drop_element' )[0];
-						if ( dropZone ) {
-							dropZone.classList.remove('um-dropzone-disabled');
-							let uploadLink = dropZone.querySelector( '.um-upload-link' );
-							if ( uploadLink ) {
-								uploadLink.classList.remove('um-link-disabled');
+							let dropZone = uploaderObj.getOption( 'drop_element' )[0];
+							if ( dropZone ) {
+								dropZone.classList.remove('um-dropzone-disabled');
+								let uploadLink = dropZone.querySelector( '.um-upload-link' );
+								if ( uploadLink ) {
+									uploadLink.classList.remove('um-link-disabled');
+								}
 							}
 						}
+
+						wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
 					}
-
-					wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
-				}
-
-				let fileID = $fileRow.attr('id');
-				if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
-					let fileName = $fileRow.data('filename');
-					let tempHash = $fileRow.data('temp_hash');
-					let nonce = $fileRow.data('nonce');
-
-					// then file can be removed from server.
-					wp.ajax.send(
-						'um_delete_temp_file',
-						{
-							data: {
-								name: fileName,
-								hash: tempHash,
-								nonce: nonce
-							},
-							success: function () {
-								removeRow();
-							},
-							error: function (data) {
-								alert(data);
-								console.log(data);
-							}
-						}
-					);
-				} else {
-					removeRow();
-				}
-			});
-
-			jQuery(document.body).on('click', '.um-field-file-change', function() {
-				if ( ! confirm( wp.i18n.__( 'Are you sure that you want to change this file?', 'ultimate-member' ) ) ) {
-					return false;
-				}
-
-				let $wrapper = jQuery(this).parents('.um-field-uploader-wrapper');
-				let $uploader = $wrapper.find('.um-uploader');
-
-				$uploader.find('.um-uploader-button').trigger( 'click' );
-			});
-
-			jQuery(document.body).on('click', '.um-field-file-remove', function() {
-				if ( ! confirm( wp.i18n.__( 'Are you sure that you want to delete this file?', 'ultimate-member' ) ) ) {
-					return false;
-				}
-
-				let $controls = jQuery(this).parents('.um-field-file-controls');
-				let $wrapper = jQuery(this).parents('.um-field-uploader-wrapper');
-				let $uploader = $wrapper.find('.um-uploader');
-				let $fileRow  = $uploader.find('.um-uploader-file');
-				let $dropZone  = $uploader.find( '.um-uploader-dropzone' );
-				let $fileList  = $uploader.find( '.um-uploader-filelist' );
-
-				let removeRow = function () {
-					$uploader.find('.um-uploaded-value-hidden').prop('disabled', false);
-					$uploader.find('.um-uploaded-value-hash-hidden').prop('disabled', false);
-					$uploader.find('.um-uploaded-value-temp-hash-hidden').prop('disabled', false);
 
 					let fileID = $fileRow.attr('id');
-					if ( ! fileID ) {
+					if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
+						let fileName = $fileRow.data('filename');
+						let tempHash = $fileRow.data('temp_hash');
+						let nonce = $fileRow.data('nonce');
+
+						// then file can be removed from server.
+						wp.ajax.send(
+							'um_delete_temp_file',
+							{
+								data: {
+									name: fileName,
+									hash: tempHash,
+									nonce: nonce
+								},
+								success: function () {
+									removeRow();
+								},
+								error: function (data) {
+									alert(data);
+									console.log(data);
+								}
+							}
+						);
+					} else {
+						removeRow();
+					}
+				}.bind(this);
+				if ( ! confirmText ) {
+					onConfirmed();
+				} else {
+					jQuery.um_confirm({
+						object: this,
+						title: wp.i18n.__( 'Confirmation', 'ultimate-member' ),
+						message: jQuery('<div>').text(confirmText).html(),
+						yes_label: wp.i18n.__( 'Yes', 'ultimate-member' ),
+						no_label: wp.i18n.__( 'No', 'ultimate-member' ),
+						onYes: onConfirmed
+					});
+				}
+			});
+
+			jQuery(document.body).on('click', '.um-field-file-change', function(e) {
+				e.preventDefault();
+				jQuery.um_confirm({
+					object: this,
+					title: wp.i18n.__( 'Confirmation', 'ultimate-member' ),
+					message: jQuery('<div>').text(wp.i18n.__( 'Are you sure that you want to change this file?', 'ultimate-member' )).html(),
+					yes_label: wp.i18n.__( 'Yes', 'ultimate-member' ),
+					no_label: wp.i18n.__( 'No', 'ultimate-member' ),
+					onYes: function() {
+					let $wrapper = jQuery(this).parents('.um-field-uploader-wrapper');
+					let $uploader = $wrapper.find('.um-uploader');
+
+					$uploader.find('.um-uploader-button').trigger( 'click' );
+				}.bind(this)
+				});
+			});
+
+			jQuery(document.body).on('click', '.um-field-file-remove', function(e) {
+				e.preventDefault();
+				jQuery.um_confirm({
+					object: this,
+					title: wp.i18n.__( 'Confirmation', 'ultimate-member' ),
+					message: jQuery('<div>').text(wp.i18n.__( 'Are you sure that you want to delete this file?', 'ultimate-member' )).html(),
+					yes_label: wp.i18n.__( 'Yes', 'ultimate-member' ),
+					no_label: wp.i18n.__( 'No', 'ultimate-member' ),
+					onYes: function() {
+					let $controls = jQuery(this).parents('.um-field-file-controls');
+					let $wrapper = jQuery(this).parents('.um-field-uploader-wrapper');
+					let $uploader = $wrapper.find('.um-uploader');
+					let $fileRow  = $uploader.find('.um-uploader-file');
+					let $dropZone  = $uploader.find( '.um-uploader-dropzone' );
+					let $fileList  = $uploader.find( '.um-uploader-filelist' );
+
+					let removeRow = function () {
+						$uploader.find('.um-uploaded-value-hidden').prop('disabled', false);
+						$uploader.find('.um-uploaded-value-hash-hidden').prop('disabled', false);
+						$uploader.find('.um-uploaded-value-temp-hash-hidden').prop('disabled', false);
+
+						let fileID = $fileRow.attr('id');
+						if ( ! fileID ) {
+							$fileRow.remove();
+							$dropZone.umShow();
+							$controls.umHide();
+							$fileList.html('').umHide();
+							$uploader.removeClass('um-upload-completed');
+							return;
+						}
+
+						let uploaderObj = UM.frontend.uploaders[ $uploader.data('plupload') ];
+
+						wp.hooks.doAction( 'um_uploader_file_row_removed', $fileRow, fileID, uploaderObj );
+
+						let filter = uploaderObj.getOption( 'filters' ).um_files_limit;
+
+						uploaderObj.removeFile( fileID );
 						$fileRow.remove();
 						$dropZone.umShow();
 						$controls.umHide();
 						$fileList.html('').umHide();
 						$uploader.removeClass('um-upload-completed');
-						return;
-					}
 
-					let uploaderObj = UM.frontend.uploaders[ $uploader.data('plupload') ];
+						if ( filter && uploaderObj.files.length < filter ) {
+							let button = uploaderObj.getOption( 'browse_button' )[0];
+							button.removeAttribute('disabled');
 
-					wp.hooks.doAction( 'um_uploader_file_row_removed', $fileRow, fileID, uploaderObj );
-
-					let filter = uploaderObj.getOption( 'filters' ).um_files_limit;
-
-					uploaderObj.removeFile( fileID );
-					$fileRow.remove();
-					$dropZone.umShow();
-					$controls.umHide();
-					$fileList.html('').umHide();
-					$uploader.removeClass('um-upload-completed');
-
-					if ( filter && uploaderObj.files.length < filter ) {
-						let button = uploaderObj.getOption( 'browse_button' )[0];
-						button.removeAttribute('disabled');
-
-						let dropZone = uploaderObj.getOption( 'drop_element' )[0];
-						if ( dropZone ) {
-							dropZone.classList.remove('um-dropzone-disabled');
-							let uploadLink = dropZone.querySelector( '.um-upload-link' );
-							if ( uploadLink ) {
-								uploadLink.classList.remove('um-link-disabled');
+							let dropZone = uploaderObj.getOption( 'drop_element' )[0];
+							if ( dropZone ) {
+								dropZone.classList.remove('um-dropzone-disabled');
+								let uploadLink = dropZone.querySelector( '.um-upload-link' );
+								if ( uploadLink ) {
+									uploadLink.classList.remove('um-link-disabled');
+								}
 							}
 						}
+
+						wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
 					}
 
-					wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
-				}
+					let fileID = $fileRow.attr('id');
+					if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
+						let fileName = $fileRow.data('filename');
+						let tempHash = $fileRow.data('temp_hash');
+						let nonce = $fileRow.data('nonce');
 
-				let fileID = $fileRow.attr('id');
-				if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
-					let fileName = $fileRow.data('filename');
-					let tempHash = $fileRow.data('temp_hash');
-					let nonce = $fileRow.data('nonce');
-
-					// then file can be removed from server.
-					wp.ajax.send(
-						'um_delete_temp_file',
-						{
-							data: {
-								name: fileName,
-								hash: tempHash,
-								nonce: nonce
-							},
-							success: function () {
-								removeRow();
-							},
-							error: function (data) {
-								alert(data);
-								console.log(data);
+						// then file can be removed from server.
+						wp.ajax.send(
+							'um_delete_temp_file',
+							{
+								data: {
+									name: fileName,
+									hash: tempHash,
+									nonce: nonce
+								},
+								success: function () {
+									removeRow();
+								},
+								error: function (data) {
+									alert(data);
+									console.log(data);
+								}
 							}
-						}
-					);
-				} else {
-					removeRow();
-				}
+						);
+					} else {
+						removeRow();
+					}
+				}.bind(this)
+				});
 			});
 		}
 	},
