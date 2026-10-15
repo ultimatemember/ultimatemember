@@ -76,8 +76,8 @@
         },
         show : function() {
             $( '#um_confirm_block').data( 'obj', this ).show();
-            var width = $('.um_confirm').width();
-            var height = $('.um_confirm').height();
+            var width = $('.um_confirm').outerWidth();
+            var height = $('.um_confirm').outerHeight();
             $('.um_confirm').css('margin', '-' + height/2 + 'px 0 0 -' + width/2 + 'px' );
         },
         close : function() {
