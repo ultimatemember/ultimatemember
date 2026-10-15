@@ -52,6 +52,8 @@
                 '</div>' +
                 '<div id="um_confirm_block_back"></div>' );
 
+                obj.toggleClass( 'um-old-ui', '1' === um_confirm_variables.is_old_ui );
+
                 $( document ).on( 'click', '#um_confirm_button_yes', function() {
                     var obj = $( '#um_confirm_block').data( 'obj' );
                     methods.yes.apply( obj );
