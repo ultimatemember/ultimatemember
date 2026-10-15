@@ -292,36 +292,41 @@ jQuery(document).ready(function() {
 	jQuery(document.body).on('click', '.um-modal-field-image-decline', function (e) {
 		e.preventDefault();
 
-		if ( ! confirm( wp.i18n.__( 'Are you sure that you want to cancel crop of this image and remove it?', 'ultimate-member' ) ) ) {
-			return false;
-		}
+		jQuery.um_confirm({
+			object: this,
+			title: wp.i18n.__( 'Confirmation', 'ultimate-member' ),
+			message: jQuery('<div>').text(wp.i18n.__( 'Are you sure that you want to cancel crop of this image and remove it?', 'ultimate-member' )).html(),
+			yes_label: wp.i18n.__( 'Yes', 'ultimate-member' ),
+			no_label: wp.i18n.__( 'No', 'ultimate-member' ),
+			onYes: function() {
+			let $button = jQuery(this);
+			let $loader = $button.siblings('.um-ajax-spinner-svg');
+			let $buttons = $button.parents('.um-modal-buttons-wrapper').find('.um-button');
 
-		let $button = jQuery(this);
-		let $loader = $button.siblings('.um-ajax-spinner-svg');
-		let $buttons = $button.parents('.um-modal-buttons-wrapper').find('.um-button');
+			let fieldID = $button.data('form_field');
 
-		let fieldID = $button.data('form_field');
-
-		$buttons.prop('disabled',true);
-		$loader.show();
-		if ( UM.frontend.cropper.obj ) {
-			// If Cropper object exists then destroy before re-init.
-			UM.frontend.cropper.destroy();
-		}
-		UM.modal.close();
-
-		wp.hooks.doAction( 'um_after_field_image_crop_cancelled', fieldID );
-
-		let changeTextCb = function( confirmText, obj ) {
-			if ( obj.hasClass('um-field-image-remove') ) {
-				confirmText = '';
+			$buttons.prop('disabled',true);
+			$loader.show();
+			if ( UM.frontend.cropper.obj ) {
+				// If Cropper object exists then destroy before re-init.
+				UM.frontend.cropper.destroy();
 			}
-			return confirmText;
-		}
-		// Avoid double confirmation message
-		wp.hooks.addFilter( 'um-field-image-remove-confirm-text', 'ultimate-member', changeTextCb );
-		jQuery('#' + fieldID).find( '.um-field-image-remove' ).trigger('click');
-		wp.hooks.removeFilter('um-field-image-remove-confirm-text', 'ultimate-member');
+			UM.modal.close();
+
+			wp.hooks.doAction( 'um_after_field_image_crop_cancelled', fieldID );
+
+			let changeTextCb = function( confirmText, obj ) {
+				if ( obj.hasClass('um-field-image-remove') ) {
+					confirmText = '';
+				}
+				return confirmText;
+			}
+			// Avoid double confirmation message
+			wp.hooks.addFilter( 'um-field-image-remove-confirm-text', 'ultimate-member', changeTextCb );
+			jQuery('#' + fieldID).find( '.um-field-image-remove' ).trigger('click');
+			wp.hooks.removeFilter('um-field-image-remove-confirm-text', 'ultimate-member');
+		}.bind(this)
+		});
 	});
 
 	jQuery( document.body ).on( 'click', '.um-apply-field-image-crop', function(e){

@@ -597,11 +597,24 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 
 			$onclick_alert = '';
 			if ( UM()->options()->get( 'allow_url_redirect_confirm' ) && wp_validate_redirect( $value ) !== $value ) {
-				$onclick_alert = sprintf(
-					' onclick="' . esc_attr( 'return confirm( "%s" );' ) . '"',
-					// translators: %s: link.
-					esc_js( sprintf( __( 'This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: \'%s\'', 'ultimate-member' ), $value ) )
-				);
+				// translators: %s: link.
+				$confirm_message = sprintf( __( 'This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: \'%s\'', 'ultimate-member' ), $value );
+				if ( UM()->is_new_ui() ) {
+					$onclick = 'jQuery.um_confirm({object:this,' .
+						'title:' . wp_json_encode( __( 'Confirmation', 'ultimate-member' ) ) . ',' .
+						'message:jQuery("<div>").text(' . wp_json_encode( $confirm_message ) . ').html(),' .
+						'yes_label:' . wp_json_encode( __( 'Yes', 'ultimate-member' ) ) . ',' .
+						'no_label:' . wp_json_encode( __( 'No', 'ultimate-member' ) ) . ',' .
+						'onYes:function(){var target=this.getAttribute("target");' .
+						'if(target&&target!=="_self"){window.open(this.href,target,target==="_blank"?"noopener":"");}' .
+						'else{window.location.href=this.href;}}});return false;';
+					$onclick_alert = ' onclick="' . esc_attr( $onclick ) . '"';
+				} else {
+					$onclick_alert = sprintf(
+						' onclick="' . esc_attr( 'return confirm( "%s" );' ) . '"',
+						esc_js( $confirm_message )
+					);
+				}
 			}
 
 			$data['url_target'] = ( isset( $data['url_target'] ) ) ? $data['url_target'] : '_blank';
