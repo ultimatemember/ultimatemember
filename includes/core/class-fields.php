@@ -5084,5 +5084,39 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			return $html_atts;
 		}
+
+		/**
+		 * File download link generate
+		 * @todo remove when new UI is live. Legacy function
+		 *
+		 * @param int $form_id
+		 * @param string $field_key
+		 * @param int $user_id
+		 *
+		 * @return string
+		 */
+		public function get_download_link( $form_id, $field_key, $user_id ) {
+			$field_key = rawurlencode( $field_key );
+			$url       = get_home_url( get_current_blog_id() );
+			$nonce     = wp_create_nonce( $user_id . $form_id . $field_key . 'um-download-nonce' );
+
+			if ( UM()->is_permalinks ) {
+				$url .= "/um-download/{$form_id}/{$field_key}/{$user_id}/{$nonce}";
+			} else {
+				$url = add_query_arg(
+					array(
+						'um_action' => 'download',
+						'um_form'   => $form_id,
+						'um_field'  => $field_key,
+						'um_user'   => $user_id,
+						'um_verify' => $nonce,
+					),
+					$url
+				);
+			}
+
+			// add time to query args for sites with the cache
+			return add_query_arg( array( 't' => time() ), $url );
+		}
 	}
 }
