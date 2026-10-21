@@ -1,5 +1,12 @@
 ﻿== Changelog ==
 
+= 2.14.1 October 22, 2026 =
+
+* Bugfixes:
+
+  - Fixed: CVE-2026-107625 security issue. Added confirmation prompt for external links and improve localization support in frontend scripts. (Reported by Wordfence).
+  - Fixed: Reading the icons' list via `UM()->setup()->get_icons_list()`. This function provides a static in-memory fallback if the DB option is missing or unreadable.
+
 = 2.14.0 September 29, 2026 =
 
 * Enhancements:
