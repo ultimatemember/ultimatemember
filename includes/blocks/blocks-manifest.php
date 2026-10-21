@@ -2,7 +2,7 @@
 // This file is generated. Do not modify it manually.
 return array(
 	'um-account' => array(
-		'apiVersion' => 2,
+		'apiVersion' => 3,
 		'name' => 'um-block/um-account',
 		'title' => 'Account',
 		'description' => 'Displaying the account page of the current user',
@@ -17,7 +17,7 @@ return array(
 		'textdomain' => 'ultimate-member'
 	),
 	'um-forms' => array(
-		'apiVersion' => 2,
+		'apiVersion' => 3,
 		'name' => 'um-block/um-forms',
 		'title' => 'Form',
 		'description' => 'Choose display form',
@@ -32,7 +32,7 @@ return array(
 		'textdomain' => 'ultimate-member'
 	),
 	'um-member-directories' => array(
-		'apiVersion' => 2,
+		'apiVersion' => 3,
 		'name' => 'um-block/um-member-directories',
 		'title' => 'Member Directory',
 		'description' => 'Choose display directory',
@@ -47,7 +47,7 @@ return array(
 		'textdomain' => 'ultimate-member'
 	),
 	'um-password-reset' => array(
-		'apiVersion' => 2,
+		'apiVersion' => 3,
 		'name' => 'um-block/um-password-reset',
 		'title' => 'Password Reset',
 		'description' => 'Displaying the password reset form',

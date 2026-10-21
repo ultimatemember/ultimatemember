@@ -1,5 +1,5 @@
 import { useSelect } from '@wordpress/data';
-import { PanelBody, SelectControl, Spinner } from '@wordpress/components';
+import { Disabled, PanelBody, SelectControl, Spinner } from '@wordpress/components';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import ServerSideRender from '@wordpress/server-side-render';
 import { registerBlockType } from "@wordpress/blocks";
@@ -281,7 +281,9 @@ registerBlockType('um-block/um-member-directories', {
 
 		return (
 			<div {...blockProps} ref={previewRef}>
-				<ServerSideRender block="um-block/um-member-directories" attributes={attributes} />
+				<Disabled>
+					<ServerSideRender block="um-block/um-member-directories" attributes={attributes} />
+				</Disabled>
 				<InspectorControls>
 					<PanelBody title={wp.i18n.__('Select Directories', 'ultimate-member')}>
 						<SelectControl
