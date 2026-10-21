@@ -514,17 +514,13 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 			$value = str_replace( 'https://https://', 'https://', $value );
 			$value = str_replace( 'http://https://', 'https://', $value );
 
-			$onclick_alert = '';
+			$classes = array( 'um-link' );
 			if ( UM()->options()->get( 'allow_url_redirect_confirm' ) && wp_validate_redirect( $value ) !== $value ) {
-				$onclick_alert = sprintf(
-					' onclick="' . esc_attr( 'return confirm( "%s" );' ) . '"',
-					// translators: %s: link.
-					esc_js( sprintf( __( 'This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: \'%s\'', 'ultimate-member' ), $value ) )
-				);
+				$classes[] = 'um-link-redirect-confirm';
 			}
 
 			$data['url_target'] = ( isset( $data['url_target'] ) ) ? $data['url_target'] : '_blank';
-			$value              = '<a href="' . esc_url( $value ) . '" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . $onclick_alert . '>' . esc_html( $alt ) . '</a>';
+			$value              = '<a class="' . esc_attr( implode( ' ', $classes ) ) . '" href="' . esc_url( $value ) . '" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . '>' . esc_html( $alt ) . '</a>';
 		}
 	}
 
