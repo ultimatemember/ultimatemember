@@ -328,47 +328,88 @@ KEY meta_value_indx (um_value(191))
 		}
 
 		/**
+		 * Build the Font Awesome icons list and store it in the `um_icons_list` option when it's missing or outdated.
 		 *
+		 * @return array The icons list. Always an array, even if the option couldn't be stored.
 		 */
 		public function set_icons_options() {
 			$fa_version    = get_option( 'um_fa_version' );
 			$um_icons_list = get_option( 'um_icons_list' );
 
-			if ( empty( $um_icons_list ) || UM()->admin()->enqueue()::$fa_version !== $fa_version ) {
+			if ( empty( $um_icons_list ) || ! is_array( $um_icons_list ) || UM()->admin()->enqueue()::$fa_version !== $fa_version ) {
 				update_option( 'um_fa_version', UM()->admin()->enqueue()::$fa_version, false );
 
-				$common_icons = array();
+				$um_icons_list = $this->build_icons_list();
 
-				$icons = file_get_contents( UM_PATH . 'assets/libs/fontawesome/metadata/icons.json' );
-				$icons = json_decode( $icons );
+				update_option( 'um_icons_list', $um_icons_list, false );
+			}
 
-				foreach ( $icons as $key => $data ) {
-					if ( ! isset( $data->styles ) ) {
-						continue;
-					}
+			return $um_icons_list;
+		}
 
-					foreach ( $data->styles as $style ) {
-						$style_class = '';
-						if ( 'solid' === $style ) {
-							$style_class = 'fas fa-';
-						} elseif ( 'regular' === $style ) {
-							$style_class = 'far fa-';
-						} elseif ( 'brands' === $style ) {
-							$style_class = 'fab fa-';
-						}
+		/**
+		 * Get the Font Awesome icons list.
+		 *
+		 * Falls back to the list built in memory when the `um_icons_list` option can't be stored or read back
+		 * (e.g. `option_value` column too small, DB write error, broken object cache).
+		 *
+		 * @return array
+		 */
+		public function get_icons_list() {
+			static $um_icons_list = null;
 
-						$label  = count( $data->styles ) > 1 ? $data->label . ' (' . $style . ')' : $data->label;
-						$search = array_unique( array_merge( $data->search->terms, array( $key, strtolower( $data->label ) ) ) );
+			if ( null === $um_icons_list ) {
+				$um_icons_list = $this->set_icons_options();
+				if ( ! is_array( $um_icons_list ) ) {
+					$um_icons_list = array();
+				}
+			}
 
-						$common_icons[ $style_class . $key ] = array(
-							'label'  => $label,
-							'search' => $search,
-						);
-					}
+			return $um_icons_list;
+		}
+
+		/**
+		 * Build the icons list from the Font Awesome metadata.
+		 *
+		 * @version 2.14.1
+		 *
+		 * @return array
+		 */
+		private function build_icons_list() {
+			$common_icons = array();
+
+			$icons = file_get_contents( UM_PATH . 'assets/libs/fontawesome/metadata/icons.json' );
+			$icons = false !== $icons ? json_decode( $icons ) : null;
+			if ( ! is_object( $icons ) ) {
+				return $common_icons;
+			}
+
+			foreach ( $icons as $key => $data ) {
+				if ( ! isset( $data->styles ) ) {
+					continue;
 				}
 
-				update_option( 'um_icons_list', $common_icons, false );
+				foreach ( $data->styles as $style ) {
+					$style_class = '';
+					if ( 'solid' === $style ) {
+						$style_class = 'fas fa-';
+					} elseif ( 'regular' === $style ) {
+						$style_class = 'far fa-';
+					} elseif ( 'brands' === $style ) {
+						$style_class = 'fab fa-';
+					}
+
+					$label  = count( $data->styles ) > 1 ? $data->label . ' (' . $style . ')' : $data->label;
+					$search = array_unique( array_merge( $data->search->terms, array( $key, strtolower( $data->label ) ) ) );
+
+					$common_icons[ $style_class . $key ] = array(
+						'label'  => $label,
+						'search' => $search,
+					);
+				}
 			}
+
+			return $common_icons;
 		}
 	}
 }
