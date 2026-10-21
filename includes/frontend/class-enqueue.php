@@ -443,6 +443,20 @@ final class Enqueue extends \um\common\Enqueue {
 		}
 	}
 
+	/**
+	 * Include the configured New UI palette in the editor canvas and its iframe.
+	 */
+	public function block_content_style_variables() {
+		if ( ! is_admin() || ! UM()->is_new_ui() || ! wp_style_is( 'um_new_design', 'enqueued' ) ) {
+			return;
+		}
+
+		$styles = $this->get_inline_style_variables();
+		if ( '' !== $styles ) {
+			wp_add_inline_style( 'um_new_design', $styles );
+		}
+	}
+
 	private function get_inline_style_variables() {
 		$styles = apply_filters(
 			'um_inline_styles_variables',

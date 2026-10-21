@@ -1,3 +1,18 @@
+/** Resolve templates in the editor canvas document. */
+function um_members_template( id, directory ) {
+	var ownerDocument = directory[0].ownerDocument;
+	if ( ownerDocument === document ) {
+		return wp.template( id );
+	}
+	var template = ownerDocument.getElementById( 'tmpl-' + id ) || document.getElementById( 'tmpl-' + id );
+	return _.template( template.innerHTML, {
+		evaluate: /<#([\s\S]+?)#>/g,
+		interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
+		escape: /\{\{([^\}]+?)\}\}(?!\})/g,
+		variable: 'data'
+	} );
+}
+
 var um_members_directory_busy = [];
 
 var um_member_directories = [];
@@ -334,7 +349,7 @@ function um_ajax_get_members( directory, args ) {
 
 			um_build_template( directory, answer );
 
-			var pagination_template = wp.template( 'um-members-pagination' );
+			var pagination_template = um_members_template( 'um-members-pagination', directory );
 			directory.find('.um-members-pagination-box').html( pagination_template( answer ) );
 
 			directory.data( 'total_pages', answer.pagination.total_pages );
@@ -366,13 +381,13 @@ function um_ajax_get_members( directory, args ) {
 
 function um_build_template( directory, data ) {
 	var layout = directory.data('view_type');
-	var template = wp.template( 'um-member-' + layout + '-' + um_members_get_hash( directory ) );
+	var template = um_members_template( 'um-member-' + layout + '-' + um_members_get_hash( directory ), directory );
 
-	if( jQuery('.um-' + um_members_get_hash( directory )).length ) {
+	if ( directory.length ) {
 		directory.find('.um-members-grid, .um-members-list').remove();
 		directory.find('.um-members-wrapper').prepend(template(data.users));
 
-		var header_template = wp.template('um-members-header');
+		var header_template = um_members_template( 'um-members-header', directory );
 		directory.find('.um-members-intro').remove();
 
 		var generate_header = wp.hooks.applyFilters('um_member_directory_generate_header', false, directory);
@@ -575,7 +590,7 @@ function um_change_tag( directory ) {
 
 	var filtered_line = directory.find('.um-filtered-line');
 	if ( filtered_line.length ) {
-		var filters_template = wp.template( 'um-members-filtered-line' );
+		var filters_template = um_members_template( 'um-members-filtered-line', directory );
 		filtered_line.prepend( filters_template( {'filters': filters_data} ) );
 
 		if ( directory.find( '.um-members-filter-remove' ).length === 0 ) {

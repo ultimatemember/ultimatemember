@@ -83,9 +83,9 @@ UM.frontend.directories = {
 	},
 };
 
-UM.frontend.directory = function( hash ) {
+UM.frontend.directory = function( hash, wrapper ) {
 	this.hash = hash;
-	this.wrapper = jQuery('.um-directory[data-hash="' + hash + '"]');
+	this.wrapper = wrapper || jQuery('.um-directory[data-hash="' + hash + '"]');
 	this.defaultOrder = this.wrapper.data('default-order');
 	this.defaultLayout = this.wrapper.data('default-layout');
 };
@@ -640,7 +640,7 @@ function um_time_convert( time, range ) {
 function um_build_template( directoryObj, data ) {
 	let layout = directoryObj.getLayout();
 
-	if ( jQuery('.um-' + directoryObj.hash ).length ) {
+	if ( directoryObj.wrapper.length ) {
 		directoryObj.wrapper.find('.um-members-wrapper').html('').prepend(data[ 'content_' + layout ]);
 
 		if ( '' !== data.counter ) {

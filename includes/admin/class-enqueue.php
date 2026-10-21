@@ -66,6 +66,19 @@ final class Enqueue extends \um\common\Enqueue {
 
 		add_filter( 'block_categories_all', array( &$this, 'blocks_category' ) );
 		add_action( 'enqueue_block_editor_assets', array( &$this, 'block_editor' ), 11 );
+		add_action( 'enqueue_block_assets', array( $this, 'block_content_assets' ), 11 );
+	}
+
+	/**
+	 * Include preview assets in the editor canvas, including its iframe.
+	 */
+	public function block_content_assets() {
+		if ( ! is_admin() || ! UM()->options()->get( 'enable_blocks' ) || apply_filters( 'um_disable_blocks_script', false ) ) {
+			return;
+		}
+
+		$this->common_libs();
+		$this->block_editor();
 	}
 
 	/**
@@ -256,6 +269,8 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_add_inline_style( 'um_new_design', $custom_css );
 
 			wp_enqueue_style( 'um_new_design' );
+			// Frontend enqueue hooks are not initialized on wp-admin requests.
+			UM()->frontend()->enqueue()->block_content_style_variables();
 			wp_enqueue_style( 'um_directory' );
 			wp_enqueue_style( 'um_profile' );
 			wp_enqueue_style( 'um_account' );
