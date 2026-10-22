@@ -1,5 +1,5 @@
 {
-  "apiVersion": 2,
+  "apiVersion": 3,
   "name": "um-block/um-password-reset",
   "title": "Password Reset",
   "description": "Displaying the password reset form",

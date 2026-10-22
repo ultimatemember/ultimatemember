@@ -1,5 +1,5 @@
 import { useSelect } from '@wordpress/data';
-import { PanelBody, Placeholder, SelectControl } from '@wordpress/components';
+import { Disabled, PanelBody, Placeholder, SelectControl } from '@wordpress/components';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import ServerSideRender from '@wordpress/server-side-render';
 import { registerBlockType } from '@wordpress/blocks';
@@ -44,7 +44,9 @@ registerBlockType('um-block/um-forms', {
 						)}
 					/>
 				) : (
-					<ServerSideRender block="um-block/um-forms" attributes={attributes} />
+					<Disabled>
+						<ServerSideRender block="um-block/um-forms" attributes={attributes} />
+					</Disabled>
 				)}
 				<InspectorControls>
 					<PanelBody title={wp.i18n.__('Select Forms', 'ultimate-member')}>

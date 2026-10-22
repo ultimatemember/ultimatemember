@@ -1,6 +1,7 @@
 import { registerBlockType } from '@wordpress/blocks';
 import ServerSideRender from '@wordpress/server-side-render';
 import { useBlockProps } from '@wordpress/block-editor';
+import { Disabled } from '@wordpress/components';
 
 registerBlockType('um-block/um-password-reset', {
 	edit: function () {
@@ -8,7 +9,9 @@ registerBlockType('um-block/um-password-reset', {
 
 		return (
 			<div {...blockProps}>
-				<ServerSideRender block="um-block/um-password-reset" />
+				<Disabled>
+					<ServerSideRender block="um-block/um-password-reset" />
+				</Disabled>
 			</div>
 		);
 	},

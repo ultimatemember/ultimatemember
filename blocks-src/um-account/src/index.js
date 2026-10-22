@@ -1,7 +1,7 @@
 import { registerBlockType } from '@wordpress/blocks';
 import ServerSideRender from '@wordpress/server-side-render';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
-import { PanelBody, SelectControl } from "@wordpress/components";
+import { Disabled, PanelBody, SelectControl } from "@wordpress/components";
 import { useMemo, useCallback } from '@wordpress/element';
 
 registerBlockType('um-block/um-account', {
@@ -31,7 +31,9 @@ registerBlockType('um-block/um-account', {
 
 		return (
 			<div {...blockProps}>
-				<ServerSideRender block="um-block/um-account" attributes={attributes} />
+				<Disabled>
+					<ServerSideRender block="um-block/um-account" attributes={attributes} />
+				</Disabled>
 				<InspectorControls>
 					<PanelBody title={wp.i18n.__('Account Tab', 'ultimate-member')}>
 						<SelectControl
