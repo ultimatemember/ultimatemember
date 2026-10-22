@@ -161,8 +161,8 @@ const createPreviewMasonry = (element) => {
 
 registerBlockType('um-block/um-member-directories', {
 	edit: function (props) {
-		const blockProps = useBlockProps();
 		const previewRef = useRef(null);
+		const blockProps = useBlockProps({ ref: previewRef });
 		const { attributes, setAttributes } = props;
 		const { member_id } = attributes;
 
@@ -272,7 +272,7 @@ registerBlockType('um-block/um-member-directories', {
 
 		if (!posts) {
 			return (
-				<p>
+				<p {...blockProps}>
 					<Spinner />
 					{wp.i18n.__('Loading...', 'ultimate-member')}
 				</p>
@@ -280,7 +280,7 @@ registerBlockType('um-block/um-member-directories', {
 		}
 
 		return (
-			<div {...blockProps} ref={previewRef}>
+			<div {...blockProps}>
 				<Disabled>
 					<ServerSideRender block="um-block/um-member-directories" attributes={attributes} />
 				</Disabled>
