@@ -1,5 +1,11 @@
 ﻿== Changelog ==
 
+= 2.14.2 October 28, 2026 =
+
+* Bugfixes:
+
+  - Fixed: Account submission. Typo in variable naming.
+
 = 2.14.1 October 22, 2026 =
 
 * Bugfixes:
