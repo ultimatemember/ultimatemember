@@ -171,6 +171,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Bugfixes**
 
+* Fixed: CVE-2026-116621 security issue. Used different escapers (`esc_html()` or `wp_kses()` with `user_input` allowed HTML tags) based on the enabled HTML field option.
 * Fixed: Account submission. Typo in variable naming.
 
 = 2.14.1 2026-10-22 =
