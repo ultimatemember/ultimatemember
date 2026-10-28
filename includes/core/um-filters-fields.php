@@ -595,30 +595,13 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 			$value = str_replace( 'https://https://', 'https://', $value );
 			$value = str_replace( 'http://https://', 'https://', $value );
 
-			$onclick_alert = '';
+			$classes = array( 'um-link' );
 			if ( UM()->options()->get( 'allow_url_redirect_confirm' ) && wp_validate_redirect( $value ) !== $value ) {
-				// translators: %s: link.
-				$confirm_message = sprintf( __( 'This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: \'%s\'', 'ultimate-member' ), $value );
-				if ( UM()->is_new_ui() ) {
-					$onclick = 'jQuery.um_confirm({object:this,' .
-						'title:' . wp_json_encode( __( 'Confirmation', 'ultimate-member' ) ) . ',' .
-						'message:jQuery("<div>").text(' . wp_json_encode( $confirm_message ) . ').html(),' .
-						'yes_label:' . wp_json_encode( __( 'Yes', 'ultimate-member' ) ) . ',' .
-						'no_label:' . wp_json_encode( __( 'No', 'ultimate-member' ) ) . ',' .
-						'onYes:function(){var target=this.getAttribute("target");' .
-						'if(target&&target!=="_self"){window.open(this.href,target,target==="_blank"?"noopener":"");}' .
-						'else{window.location.href=this.href;}}});return false;';
-					$onclick_alert = ' onclick="' . esc_attr( $onclick ) . '"';
-				} else {
-					$onclick_alert = sprintf(
-						' onclick="' . esc_attr( 'return confirm( "%s" );' ) . '"',
-						esc_js( $confirm_message )
-					);
-				}
+				$classes[] = 'um-link-redirect-confirm';
 			}
 
-			$data['url_target'] = ( isset( $data['url_target'] ) ) ? $data['url_target'] : '_blank';
-			$value              = '<a href="' . esc_url( $value ) . '" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . $onclick_alert . '>' . esc_html( $alt ) . '</a>';
+			$data['url_target'] = isset( $data['url_target'] ) ? $data['url_target'] : '_blank';
+			$value              = '<a class="' . esc_attr( implode( ' ', $classes ) ) . '" href="' . esc_url( $value ) . '" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . '>' . esc_html( $alt ) . '</a>';
 		}
 	}
 

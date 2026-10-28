@@ -1508,6 +1508,30 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 		$(this).parents('.um-alert').umHide();
 	});
+
+	$(document.body).on('click', '.um-link-redirect-confirm', function(e) {
+		e.preventDefault();
+
+		let message = wp.i18n.__( 'This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: ', 'ultimate-member' ) + $(this).attr('href');
+
+		jQuery.um_confirm({
+			object: this,
+			title: wp.i18n.__( 'Confirmation', 'ultimate-member' ),
+			message: jQuery('<div>').text( message ).html(),
+			yes_label: wp.i18n.__( 'Yes', 'ultimate-member' ),
+			no_label: wp.i18n.__( 'No', 'ultimate-member' ),
+			onYes: function() {
+				let target = this.getAttribute( "target" );
+				if ( target && target !== "_self" ) {
+					window.open( this.href, target, target === "_blank" ? "noopener" : "" );
+				}else{
+					window.location.href = this.href;
+				}
+			}
+		});
+
+		return false;
+	});
 });
 
 jQuery( window ).on( 'load', function() {
