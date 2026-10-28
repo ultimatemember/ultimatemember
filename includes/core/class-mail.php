@@ -210,7 +210,13 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			 */
 			do_action( 'um_before_email_template_part', $slug, $located, $args );
 
-			include $located;
+			// Template saved in database is used only instead of the default plugin template.
+			$db_template = UM()->options()->get( $this->get_template_option_key( $slug ) );
+			if ( '' !== $db_template && $this->is_plugin_template( $located, $slug ) ) {
+				echo wp_kses( $db_template, 'post', array_merge( wp_allowed_protocols(), array( 'data' ) ) );
+			} else {
+				include $located;
+			}
 
 			/**
 			 * Fires after email template loading.
@@ -498,6 +504,34 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		}
 
 		/**
+		 * Option key for email template saved in database when theme folder is not writable.
+		 *
+		 * @since 2.14.2
+		 *
+		 * @param string $template_name Email template slug.
+		 *
+		 * @return string
+		 */
+		public function get_template_option_key( $template_name ) {
+			// Use filtered filename so each WPML language has own template.
+			return 'email_template_' . $this->get_template_filename( $template_name );
+		}
+
+		/**
+		 * Check if located email template is the default template from plugin.
+		 *
+		 * @since 2.14.2
+		 *
+		 * @param string $located       Email template path.
+		 * @param string $template_name Email template slug.
+		 *
+		 * @return bool
+		 */
+		public function is_plugin_template( $located, $template_name ) {
+			return wp_normalize_path( $located ) === wp_normalize_path( $this->get_template_file( 'plugin', $template_name ) );
+		}
+
+		/**
 		 * Locate a template and return the path for inclusion.
 		 *
 		 * @access public
@@ -591,7 +625,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 			$template_dir = wp_normalize_path( str_replace( $template_filename, '', $theme_template_path ) );
 			$result       = wp_mkdir_p( $template_dir );
-			if ( ! $result ) {
+			if ( ! $result || ! wp_is_writable( $template_dir ) ) {
 				return false;
 			}
 
