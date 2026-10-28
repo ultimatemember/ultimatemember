@@ -139,5 +139,11 @@ jQuery(document).ready(function ($) {
 		window.history.replaceState({}, '', url);
 	});
 
+	$(document.body).on('click', '.um-link-redirect-confirm', function(e) {
+		if ( ! confirm( wp.i18n.__( 'This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: ', 'ultimate-member' ) + $(this).attr('href') ) ) {
+			e.preventDefault();
+		}
+	});
+
 	UM.frontend.dropdown.init();
 });

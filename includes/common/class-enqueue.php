@@ -293,6 +293,9 @@ class Enqueue {
 		wp_register_style( 'um_tipsy', $libs_url . 'tipsy/tipsy' . $suffix . '.css', array(), '1.0.0a' );
 
 		wp_register_script( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.js', array( 'jquery' ), '1.0', true );
+		wp_localize_script( 'um_confirm', 'um_confirm_variables', array(
+			'is_old_ui' => (int) ! UM()->is_new_ui(),
+		) );
 		wp_register_style( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.css', array(), '1.0' );
 
 		wp_register_script( 'um_notice', $libs_url . 'um-notice/um-notice' . $suffix . '.js', array( 'jquery' ), '1.0', true );

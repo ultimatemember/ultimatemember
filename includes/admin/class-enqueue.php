@@ -260,6 +260,30 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_enqueue_style( 'um_profile' );
 			wp_enqueue_style( 'um_account' );
 		} else {
+			wp_register_script( 'um_frontend_common', $js_url . 'common-frontend' . $suffix . '.js', array( 'um_common', 'um_crop' ), UM_VERSION, true );
+			wp_set_script_translations( 'um_frontend_common', 'ultimate-member' );
+
+			$um_common_variables = array();
+			/**
+			 * Filters data array for localize frontend common scripts.
+			 *
+			 * @since 2.8.0
+			 * @hook um_frontend_common_js_variables
+			 *
+			 * @param {array} $variables Data to localize.
+			 *
+			 * @return {array} Data to localize.
+			 *
+			 * @example <caption>Add `my_custom_variable` to common frontend scripts to be callable via `um_frontend_common_variables.my_custom_variable` in JS.</caption>
+			 * function um_custom_frontend_common_js_variables( $variables ) {
+			 *     $variables['{my_custom_variable}'] = '{my_custom_variable_value}';
+			 *     return $variables;
+			 * }
+			 * add_filter( 'um_frontend_common_js_variables', 'um_custom_frontend_common_js_variables' );
+			 */
+			$um_common_variables = apply_filters( 'um_frontend_common_js_variables', $um_common_variables );
+			wp_localize_script( 'um_frontend_common', 'um_frontend_common_variables', $um_common_variables );
+
 			wp_register_script( 'um_scripts', $js_url . 'um-scripts' . $suffix . '.js', array( 'jquery', 'wp-util', 'um_conditional', 'um_common', self::$select2_handle ), UM_VERSION, true );
 
 			$max_upload_size = wp_max_upload_size();

@@ -1,0 +1,128 @@
+@import "../../css/selectors"
+@import "../../css/mixins"
+@import "../../css/box"
+@import "../../css/colors"
+@import "../../css/typography"
+
+#um_confirm_block
+  display: none
+
+#um_confirm_block_back
+  background-color: rgba( 0,0,0, 0.2)
+  width: 100%
+  height: 100%
+  position: fixed
+  left: 0
+  top: 0
+  z-index: 2147483646
+
+#um_confirm_block:not(.um-old-ui)
+  .um_confirm
+    border: 1px solid $gray-200
+    border-radius: $radius-2xl
+    box-shadow: $shadow-xs
+    box-sizing: border-box
+    padding: $spacing-xl
+    position: fixed
+    background: $um-white
+    max-width: 400px
+    min-width: 300px
+    left: 50%
+    top: 50%
+    z-index: 2147483647
+
+  #um_confirm_title
+    color: $gray-900
+    text-align: center
+    margin-bottom: $spacing-md
+    +typography( text, lg, semibold )
+
+  #um_confirm_message
+    color: $gray-600
+    +typography( text, sm, regular )
+    margin-bottom: $spacing-xl
+
+  #um_confirm_buttons
+    .um_confirm_button
+      text-align: center
+      cursor: pointer
+      border-radius: $radius-md
+      margin: 0
+      outline: none
+      padding: 10px $spacing-xl
+      +typography( text, sm, semibold )
+    #um_confirm_button_yes
+      background-color: $button-primary-bg
+      border: 1px solid $button-primary-bg
+      color: $button-primary-color
+      margin-bottom: $spacing-lg
+      &:hover
+        background-color: $button-primary-bg-hover
+        border: 1px solid $button-primary-bg-hover
+        color: $button-primary-color
+      &:focus
+        background-color: $button-primary-bg
+        border: 1px solid $button-primary-bg
+        box-shadow: $ring-brand-shadow-xs
+    #um_confirm_button_no
+      box-shadow: $shadow-xs
+      background-color: $button-bg
+      color: $button-color
+      border: 1px solid $button-border-color
+      &:hover
+        color: $button-color-hover
+        background-color: $button-bg-hover
+      &:focus
+        background-color: $button-bg
+        color: $button-color
+        box-shadow: $ring-gray-shadow-xs
+        outline: none
+
+  @media (max-width: 420px)
+    .um_confirm
+      max-width: 300px
+
+#um_confirm_block.um-old-ui
+  .um_confirm
+    position: fixed
+    color: #fff
+    width: 400px
+    background-color: rgb(0, 0, 0)
+    left: 50%
+    top: 50%
+    z-index: 2147483647
+
+    #um_confirm_title
+      background-color: rgba(0, 0, 0, 0.4)
+      border-bottom: 1px solid #5c5c5c
+      color: #ccc
+      font-weight: bold
+      height: 15px
+      padding: 10px
+      text-align: center
+      width: calc(100% - 20px)
+
+    #um_confirm_message
+      width: calc(100% - 40px)
+      text-align: center
+      padding: 20px
+
+    #um_confirm_buttons
+      height: 40px
+      width: 100%
+
+    .um_confirm_button
+      border-top: 1px solid #5c5c5c
+      color: #aaa
+      font-size: 15px
+      font-weight: bold
+      float: left
+      line-height: 40px
+      text-align: center
+      width: 50%
+      cursor: pointer
+
+      &:hover
+        background-color: rgba(0, 0, 0, 0.6)
+        border-top: 1px solid #fff
+        color: #fff

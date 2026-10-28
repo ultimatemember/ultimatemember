@@ -52,6 +52,8 @@
                 '</div>' +
                 '<div id="um_confirm_block_back"></div>' );
 
+                obj.toggleClass( 'um-old-ui', '1' === um_confirm_variables.is_old_ui );
+
                 $( document ).on( 'click', '#um_confirm_button_yes', function() {
                     var obj = $( '#um_confirm_block').data( 'obj' );
                     methods.yes.apply( obj );
@@ -76,8 +78,8 @@
         },
         show : function() {
             $( '#um_confirm_block').data( 'obj', this ).show();
-            var width = $('.um_confirm').width();
-            var height = $('.um_confirm').height();
+            var width = $('.um_confirm').outerWidth();
+            var height = $('.um_confirm').outerHeight();
             $('.um_confirm').css('margin', '-' + height/2 + 'px 0 0 -' + width/2 + 'px' );
         },
         close : function() {
