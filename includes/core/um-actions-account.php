@@ -158,19 +158,22 @@ function um_submit_account_errors_hook( $args ) {
 
 			if ( isset( $args['user_email'] ) ) {
 				if ( strlen( trim( $args['user_email'] ) ) === 0 ) {
-					UM()->form()->add_error( 'user_email', __( 'You must provide your email', 'ultimate-member' ) );
+					$message = UM()->validation()->get_email_error_message( __( 'You must provide your email', 'ultimate-member' ), 'email_required', 'user_email', $args, 'account' );
+					UM()->form()->add_error( 'user_email', $message );
 				}
 
 				if ( ! is_email( $args['user_email'] ) ) {
-					UM()->form()->add_error( 'user_email', __( 'Please provide a valid email', 'ultimate-member' ) );
+					$message = UM()->validation()->get_email_error_message( __( 'Please provide a valid email', 'ultimate-member' ), 'email_invalid', 'user_email', $args, 'account' );
+					UM()->form()->add_error( 'user_email', $message );
 				}
 
 				if ( email_exists( $args['user_email'] ) && email_exists( $args['user_email'] ) !== get_current_user_id() ) {
-					UM()->form()->add_error( 'user_email', __( 'Please provide a valid email', 'ultimate-member' ) );
+					$message = UM()->validation()->get_email_error_message( __( 'This email address is already in use', 'ultimate-member' ), 'email_exists', 'user_email', $args, 'account' );
+					UM()->form()->add_error( 'user_email', $message );
 				}
 
 				// Primary emails must also be unique among other users' secondary emails.
-				$args = array(
+				$users_query_args = array(
 					'fields'     => 'ID',
 					'number'     => 1,
 					'exclude'    => array( get_current_user_id() ),
@@ -182,19 +185,18 @@ function um_submit_account_errors_hook( $args ) {
 					),
 				);
 
-				if ( get_users( $args ) ) {
-					UM()->form()->add_error( 'user_email', __( 'Please provide a valid email', 'ultimate-member' ) );
+				if ( get_users( $users_query_args ) ) {
+					$message = UM()->validation()->get_email_error_message( __( 'This email address is already used as a secondary email', 'ultimate-member' ), 'email_matches_secondary', 'user_email', $args, 'account' );
+					UM()->form()->add_error( 'user_email', $message );
 				}
 			}
 
 			// check account password
 			if ( UM()->account()->current_password_is_required( 'general' ) ) {
-				if ( strlen( $args['single_user_password'] ) === 0 ) {
+				if ( ! isset( $args['single_user_password'] ) || '' === (string) $args['single_user_password'] ) {
 					UM()->form()->add_error( 'single_user_password', __( 'You must enter your password', 'ultimate-member' ) );
-				} else {
-					if ( ! wp_check_password( $args['single_user_password'], $current_user->data->user_pass, $current_user->data->ID ) ) {
-						UM()->form()->add_error( 'single_user_password', __( 'This is not your password', 'ultimate-member' ) );
-					}
+				} elseif ( ! wp_check_password( $args['single_user_password'], $current_user->data->user_pass, $current_user->data->ID ) ) {
+					UM()->form()->add_error( 'single_user_password', __( 'This is not your password', 'ultimate-member' ) );
 				}
 			}
 			break;

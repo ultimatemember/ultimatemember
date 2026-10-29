@@ -12,6 +12,20 @@
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "composer/installers": true,
       "oomphinc/composer-installers-extender": true
+    },
+    "audit": {
+      "ignore": [
+        "PKSA-w9tt-7782-78jx",
+        "PKSA-pwh8-d4fr-nywn"
+      ]
+    },
+    "policy": {
+      "advisories": {
+        "ignore-id": [
+          "PKSA-w9tt-7782-78jx",
+          "PKSA-pwh8-d4fr-nywn"
+        ]
+      }
     }
   },
   "require": {

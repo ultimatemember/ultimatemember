@@ -79,6 +79,8 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_register_style( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.css', array(), '1.6.1' );
 
 		wp_register_script( 'um_frontend_common', $js_url . 'common-frontend' . $suffix . '.js', array( 'um_common', 'um_crop' ), UM_VERSION, true );
+		wp_set_script_translations( 'um_frontend_common', 'ultimate-member' );
+
 		$um_common_variables = array();
 		/**
 		 * Filters data array for localize frontend common scripts.

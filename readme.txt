@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.14.0
+Stable tag: 2.14.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -167,12 +167,27 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.14.0 2026-09-28 =
+= 2.14.2 2026-10-29 =
+
+**Bugfixes**
+
+* Fixed: CVE-2026-116621 security issue. Used different escapers (`esc_html()` or `wp_kses()` with `user_input` allowed HTML tags) based on the enabled HTML field option.
+* Fixed: Account submission. Typo in variable naming.
+
+= 2.14.1 2026-10-22 =
+
+**Bugfixes**
+
+* Fixed: CVE-2026-107625 security issue. Added confirmation prompt for external links and improve localization support in frontend scripts. (Reported by Wordfence).
+* Fixed: Reading the icons' list via `UM()->setup()->get_icons_list()`. This function provides a static in-memory fallback if the DB option is missing or unreadable.
+
+= 2.14.0 2026-09-29 =
 
 **Enhancements**
 
 * Added: `$form_id` parameter to the action hooks `um_before_form`, `um_before_{$mode}_fields`, `um_main_{$mode}_fields`, `um_after_form_fields`, `um_after_{$mode}_fields` and `um_after_form`.
 * Added: Action hook `um_before_render_dynamic_modal_content` for 3rd-party integration when the admin popup is opened.
+* Added: Filter hooks `um_email_validation_real_error_codes` and `um_email_validation_error_message` for 3rd-party integration to change or make visible the real error message for email fields validation.
 * Added: Threads field support in the UM Forms and Social Icons meta-row.
 
 **Bugfixes**
@@ -264,65 +279,71 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 == Upgrade Notice ==
 
+= 2.14.2 =
+This version fixes a security-related bug. Upgrade immediately.
+
+= 2.14.1 =
+This version fixes a security-related bug. Upgrade immediately.
+
 = 2.14.0 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.13.1 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.13.0 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.12.1 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.12.0 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.11.3 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.11.2 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.11.1 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.10.4 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.10.2 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.10.1 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.10.0 =
-Increased the minimum PHP and WordPress requirements. The plugin now requires at least PHP 7.0 and WordPress 6.2. This version fixes a security related bug. Upgrade immediately.
+Increased the minimum PHP and WordPress requirements. The plugin now requires at least PHP 7.0 and WordPress 6.2. This version fixes a security-related bug. Upgrade immediately.
 
 = 2.9.2 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.9.0 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.8.7 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.8.5 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.8.4 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.8.3 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.6.7 =
 This version fixes a privilege escalation vulnerability used through UM Forms. Known in the wild that vulnerability allowed strangers to create administrator-level WordPress users. Please update immediately and check all administrator-level users on your website.
 
 = 2.6.5 =
-This version fixes a security related bug. Upgrade immediately. Version <= 2.6.4 has a privilege escalation vulnerability with administrator-level users.
+This version fixes a security-related bug. Upgrade immediately. Version <= 2.6.4 has a privilege escalation vulnerability with administrator-level users.
 
 = 2.6.4 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security-related bug. Upgrade immediately.
