@@ -29,9 +29,7 @@ class Forms {
 		$page           = ! empty( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 		$per_page       = 50;
 
-		UM()->setup()->set_icons_options();
-
-		$um_icons_list = get_option( 'um_icons_list' );
+		$um_icons_list = UM()->setup()->get_icons_list();
 		if ( ! empty( $search_request ) ) {
 			$um_icons_list = array_filter(
 				$um_icons_list,
