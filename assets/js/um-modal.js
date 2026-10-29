@@ -22,13 +22,21 @@ jQuery(document).ready(function() {
 
 		um_remove_modal();
 
-		jQuery('.um-single-file-preview[data-key='+key+']').fadeIn().html( preview );
+		let $fieldWrapperPreview = jQuery('.um-single-file-preview[data-key='+key+']');
 
-		var file = jQuery('.um-field[data-key='+key+']').find('.um-single-fileinfo a').data('file');
+		$fieldWrapperPreview.fadeIn().html( preview );
 
-		jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( jQuery(this).attr('data-change') );
+		let infoWrapper = jQuery('.um-field[data-key='+key+']').find('.um-single-fileinfo a');
 
-		jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('input[type="hidden"]').val( file );
+		let file = infoWrapper.data('file');
+		let tempHash = infoWrapper.data('temp_hash');
+
+		let $fieldWrapper = $fieldWrapperPreview.parents('.um-field');
+
+		$fieldWrapper.find('.um-btn-auto-width').html( jQuery(this).attr('data-change') );
+
+		$fieldWrapper.find('input[type="hidden"].um-uploaded-value').val( file ); // set new filename uploaded for this field.
+		$fieldWrapper.find('input[type="hidden"].um-uploaded-value-temp-hash').val( tempHash ); // set temp hash based on the new filename uploaded for this field. Required to validate upload.
 
 	});
 

@@ -365,8 +365,9 @@ function initImageUpload_UM( trigger ) {
 					var cache_ts = new Date();
 
 					img_id.removeAttr("loading");
-					img_id.attr("src", d.url + "?"+cache_ts.getTime() );
+					img_id.attr("src", d.url );
 					img_id.data("file", d.file );
+					img_id.data("temp_hash", d.temp_hash );
 
 					img_id.on( 'load', function() {
 
@@ -464,7 +465,7 @@ function initFileUpload_UM( trigger ) {
 
 			} else {
 
-				jQuery.each(  response.data , function(key, value) {
+				jQuery.each( response.data , function(key, value) {
 
 					trigger.parents('.um-modal-body').find('.um-modal-btn.um-finish-upload.disabled').removeClass('disabled');
 					trigger.parents('.um-modal-body').find('.ajax-upload-dragdrop,.upload-statusbar').hide(0);
@@ -481,6 +482,10 @@ function initFileUpload_UM( trigger ) {
 					} else if ( key == 'filename' ) {
 
 						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('data-file', value );
+
+					}else if ( key == 'temp_hash' ) {
+
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('data-temp_hash', value );
 
 					}else if( key == 'original_name' ){
 
