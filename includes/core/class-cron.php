@@ -17,7 +17,6 @@ if ( ! class_exists( 'um\core\Cron' ) ) {
 		 * Cron constructor.
 		 */
 		public function __construct() {
-			add_filter( 'cron_schedules', array( $this, 'add_schedules' ) );
 			add_action( 'wp', array( $this, 'schedule_events' ) );
 		}
 
@@ -44,20 +43,14 @@ if ( ! class_exists( 'um\core\Cron' ) ) {
 		/**
 		 * Adds once weekly to the existing schedules.
 		 *
+		 * @deprecated 2.14.2 WordPress core has 'weekly' schedule since 5.4.
+		 *
 		 * @param array $schedules
 		 *
 		 * @return array
 		 */
 		public function add_schedules( $schedules = array() ) {
-			if ( $this->cron_disabled() ) {
-				return $schedules;
-			}
-
-			$schedules['weekly'] = array(
-				'interval' => 604800,
-				'display'  => __( 'Once Weekly', 'ultimate-member' ),
-			);
-
+			_deprecated_function( __METHOD__, '2.14.2' );
 			return $schedules;
 		}
 
