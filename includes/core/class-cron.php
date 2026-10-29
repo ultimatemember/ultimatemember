@@ -43,14 +43,14 @@ if ( ! class_exists( 'um\core\Cron' ) ) {
 		/**
 		 * Adds once weekly to the existing schedules.
 		 *
-		 * @deprecated 2.14.2 WordPress core has 'weekly' schedule since 5.4.
+		 * @deprecated 2.14.3 WordPress core has 'weekly' schedule since 5.4.
 		 *
 		 * @param array $schedules
 		 *
 		 * @return array
 		 */
 		public function add_schedules( $schedules = array() ) {
-			_deprecated_function( __METHOD__, '2.14.2' );
+			_deprecated_function( __METHOD__, '2.14.3' );
 			return $schedules;
 		}
 
