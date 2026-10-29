@@ -211,8 +211,15 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			do_action( 'um_before_email_template_part', $slug, $located, $args );
 
 			// Template saved in database is used only instead of the default plugin template.
-			$db_template = UM()->options()->get( $this->get_template_option_key( $slug ) );
-			if ( '' !== $db_template && $this->is_plugin_template( $located, $slug ) ) {
+			$db_template = '';
+			if ( $this->is_plugin_template( $located, $slug ) ) {
+				$db_template = UM()->options()->get( $this->get_template_option_key( $slug ) );
+				if ( '' === $db_template ) {
+					// Same as theme files, language without own template uses default language template.
+					$db_template = UM()->options()->get( 'email_template_' . $slug );
+				}
+			}
+			if ( '' !== $db_template ) {
 				echo wp_kses( $db_template, 'post', array_merge( wp_allowed_protocols(), array( 'data' ) ) );
 			} else {
 				include $located;
