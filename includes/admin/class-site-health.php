@@ -67,6 +67,10 @@ class Site_Health {
 	 * @return array The modified array of site status tests.
 	 */
 	public function register_site_status_tests( $tests ) {
+		$tests['direct']['um_upload_security'] = array(
+			'label' => __( 'Ultimate Member upload access', 'ultimate-member' ),
+			'test'  => array( $this, 'upload_security_test' ),
+		);
 		// Searching for custom templates and outdated versions.
 		$custom_templates = UM()->common()->theme()->get_custom_templates_list();
 		if ( ! empty( $custom_templates ) ) {
@@ -138,6 +142,87 @@ class Site_Health {
 			);
 		}
 
+		return $result;
+	}
+
+	/**
+	 * Present cached HTTP evidence without blocking Site Health on loopback requests.
+	 *
+	 * @return array
+	 */
+	public function upload_security_test() {
+		global $is_apache;
+
+		$checker   = UM()->common()->upload_security();
+		$actions   = array();
+		$actions[] = '<a href="' . esc_url( $checker->recheck_url() ) . '">' . esc_html__( 'Check upload protection again', 'ultimate-member' ) . '</a>';
+		$actions[] = '<a href="' . esc_url( admin_url( 'admin.php?page=um_options&tab=access&section=other#um-upload-protection' ) ) . '">' . esc_html__( 'View upload protection setup instructions', 'ultimate-member' ) . '</a>';
+		if ( $is_apache && $checker->can_write_htaccess() ) {
+			$actions[] = '<a href="' . esc_url( $checker->set_htaccess_url() ) . '">' . esc_html__( 'Set `deny from all` .htaccess rule for Ultimate Member uploads', 'ultimate-member' ) . '</a>';
+		}
+
+		$check    = $checker->get_result();
+		$result   = array(
+			'label'       => __( 'Ultimate Member upload protection could not be verified', 'ultimate-member' ),
+			'status'      => 'recommended',
+			'badge'       => array(
+				'label' => UM_PLUGIN_NAME,
+				'color' => self::BADGE_COLOR,
+			),
+			'description' => '',
+			'actions'     => '<p>' . implode( '<br />', $actions ) . '</p>',
+			'test'        => 'um_upload_security',
+		);
+		$messages = array(
+			'pending'             => __( 'The upload access check has not run yet. It runs in the background, or you can start it using the link below.', 'ultimate-member' ),
+			'directory_missing'   => __( 'The Ultimate Member upload directory does not exist yet. Run the check after uploads have been created.', 'ultimate-member' ),
+			'write_failed'        => __( 'A temporary test file could not be created. Check the upload directory permissions.', 'ultimate-member' ),
+			'request_failed'      => __( 'An HTTP request failed. Check loopback connectivity, DNS and TLS before trying again.', 'ultimate-member' ),
+			'unexpected_response' => __( 'The server returned an unexpected response or redirect. This does not confirm that uploads are protected.', 'ultimate-member' ),
+			'control_failed'      => __( 'The public control file could not be verified. A firewall, CDN or upload URL configuration may be affecting the check.', 'ultimate-member' ),
+			'cleanup_failed'      => __( 'A temporary test file could not be removed. Check the upload directory permissions.', 'ultimate-member' ),
+			'check_failed'        => __( 'The upload access check could not complete. Please try again.', 'ultimate-member' ),
+		);
+
+		$reason = 'pending' === $check['state'] ? 'pending' : $check['reason'];
+		$text   = isset( $messages[ $reason ] ) ? $messages[ $reason ] : $messages['check_failed'];
+		if ( 'exposed' === $check['state'] ) {
+			$result['label']          = __( 'Ultimate Member uploads are accessible directly', 'ultimate-member' );
+			$result['status']         = 'critical';
+			$result['badge']['color'] = 'red';
+			$text                     = __( 'An anonymous request retrieved a temporary test file from the Ultimate Member upload directory. Files served this way bypass the Ultimate Member download permission checks. Ask your hosting provider to restrict direct access to private uploads while preserving authorized downloads.', 'ultimate-member' );
+
+		} elseif ( 'blocked' === $check['state'] ) {
+			$result['label']  = __( 'Direct access to the tested Ultimate Member files is blocked', 'ultimate-member' );
+			$result['status'] = 'good';
+			$text             = __( 'The public control file was reachable, and the tested upload URLs returned HTTP 403 or 404 without the test content.', 'ultimate-member' );
+		}
+
+		$result['description']  = '<p>' . esc_html( $text ) . '</p>';
+		$result['description'] .= '<p>' . esc_html__( 'This check samples TXT, JPG and PDF URLs in the upload root and one existing user directory. It does not certify every file, CDN route or authorized download. Avatars and cover photos may share this directory; do not block the whole directory without checking their delivery.', 'ultimate-member' ) . '</p>';
+		if ( $check['checked_at'] ) {
+			$result['description'] .= '<p>' . esc_html(
+				sprintf(
+					/* translators: %s: local date and time of the last check. */
+					__( 'Last checked: %s', 'ultimate-member' ),
+					wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $check['checked_at'] )
+				)
+			) . '</p>';
+			if ( $is_apache ) {
+				$result['description'] .= '<p>' . esc_html(
+					$check['htaccess_rule']
+						? __( 'An Apache deny directive was found in the upload root .htaccess file. Its presence alone does not prove that the server applies it.', 'ultimate-member' )
+						: __( 'No recognized Apache deny directive was found in the upload root .htaccess file. But access may still be restricted in the server configuration.', 'ultimate-member' )
+				) . '</p>';
+			}
+			if ( $check['checked_at'] < time() - DAY_IN_SECONDS ) {
+				$result['description'] .= '<p>' . esc_html__( 'This result is more than a day old. Run the check again to confirm the current configuration.', 'ultimate-member' ) . '</p>';
+				if ( 'good' === $result['status'] ) {
+					$result['status'] = 'recommended';
+					$result['label']  = __( 'Ultimate Member upload protection needs a fresh check', 'ultimate-member' );
+				}
+			}
+		}
 		return $result;
 	}
 
