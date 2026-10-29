@@ -349,7 +349,14 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			$message = apply_filters( 'um_email_send_message_content', $message, $slug, $args );
 
 			// Convert tags in email template.
-			return um_convert_tags( $message, $args );
+			$message = um_convert_tags( $message, $args );
+
+			if ( ! UM()->options()->get( 'email_html' ) ) {
+				// Placeholders are escaped for HTML. Decode entities in plain text email, so links like `&#038;` work.
+				$message = html_entity_decode( $message, ENT_QUOTES, 'UTF-8' );
+			}
+
+			return $message;
 		}
 
 		/**
