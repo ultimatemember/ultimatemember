@@ -3813,15 +3813,29 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				UM()->mail()->copy_email_template( $template );
 			}
 
-			if ( file_exists( $theme_template_path ) ) {
-				$fp     = fopen( $theme_template_path, 'w' );
-				$result = fputs( $fp, $content );
-				fclose( $fp );
+			if ( file_exists( $theme_template_path ) && wp_is_writable( $theme_template_path ) ) {
+				$fp = fopen( $theme_template_path, 'w' );
+				if ( false !== $fp ) {
+					$result = fputs( $fp, $content );
+					fclose( $fp );
+				}
 			}
 
-			if ( isset( $result ) && $result !== false ) {
-				unset( $settings['um_email_template'] );
-				unset( $settings[ $template ] );
+			unset( $settings['um_email_template'], $settings[ $template ] );
+
+			$db_key = UM()->mail()->get_template_option_key( $template );
+			if ( isset( $result ) && false !== $result ) {
+				// Template file in theme is used now, so database copy is not needed.
+				if ( '' !== UM()->options()->get( $db_key ) ) {
+					UM()->options()->remove( $db_key );
+				}
+			} elseif ( UM()->mail()->is_plugin_template( UM()->mail()->locate_template( $template ), $template ) ) {
+				// Theme folder is not writable. Keep template in database so changes are not lost.
+				UM()->options()->update( $db_key, $content );
+				set_transient( 'um_email_template_save_failed', 'database', MINUTE_IN_SECONDS );
+			} else {
+				// Read-only template file in theme is used for emails, so database copy would be ignored.
+				set_transient( 'um_email_template_save_failed', 'theme', MINUTE_IN_SECONDS );
 			}
 
 			return $settings;
