@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Member 2.14.1\n"
+"Project-Id-Version: Ultimate Member 2.14.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ultimate-member\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-21T21:43:19+00:00\n"
+"POT-Creation-Date: 2026-10-29T10:14:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -69,7 +69,7 @@ msgstr ""
 #: includes/core/class-builtin.php:1401
 #: includes/core/class-builtin.php:1416
 #: includes/core/class-builtin.php:1419
-#: includes/core/um-actions-account.php:369
+#: includes/core/um-actions-account.php:367
 msgid "No"
 msgstr ""
 
@@ -190,10 +190,10 @@ msgstr ""
 #: includes/core/class-builtin.php:822
 #: includes/core/class-builtin.php:1425
 #: includes/core/class-builtin.php:1428
-#: includes/core/um-actions-account.php:730
-#: includes/core/um-actions-account.php:734
-#: includes/core/um-actions-account.php:820
-#: includes/core/um-actions-account.php:824
+#: includes/core/um-actions-account.php:728
+#: includes/core/um-actions-account.php:732
+#: includes/core/um-actions-account.php:818
+#: includes/core/um-actions-account.php:822
 msgid "Password"
 msgstr ""
 
@@ -425,7 +425,7 @@ msgstr ""
 #: includes/core/class-builtin.php:1418
 #: includes/core/class-user.php:535
 #: includes/core/class-user.php:536
-#: includes/core/um-actions-account.php:364
+#: includes/core/um-actions-account.php:362
 msgid "Yes"
 msgstr ""
 
@@ -10256,8 +10256,8 @@ msgid "Random"
 msgstr ""
 
 #: includes/core/class-member-directory.php:614
-#: includes/core/um-filters-fields.php:998
-#: includes/core/um-filters-fields.php:1015
+#: includes/core/um-filters-fields.php:996
+#: includes/core/um-filters-fields.php:1013
 msgid "Age"
 msgstr ""
 
@@ -10504,7 +10504,7 @@ msgstr ""
 #: includes/core/um-actions-account.php:38
 #: includes/core/um-actions-account.php:78
 #: includes/core/um-actions-account.php:82
-#: includes/core/um-actions-account.php:200
+#: includes/core/um-actions-account.php:199
 msgid "This is not your password"
 msgstr ""
 
@@ -10552,100 +10552,100 @@ msgstr ""
 msgid "This email address is already used as a secondary email"
 msgstr ""
 
-#: includes/core/um-actions-account.php:602
+#: includes/core/um-actions-account.php:600
 msgid "Select what email notifications you want to receive"
 msgstr ""
 
-#: includes/core/um-actions-account.php:669
+#: includes/core/um-actions-account.php:667
 msgid "Download your data"
 msgstr ""
 
-#: includes/core/um-actions-account.php:671
+#: includes/core/um-actions-account.php:669
 msgid "You can request a file with the information that we believe is most relevant and useful to you."
 msgstr ""
 
-#: includes/core/um-actions-account.php:696
+#: includes/core/um-actions-account.php:694
 msgid "You could download your previous data:"
 msgstr ""
 
-#: includes/core/um-actions-account.php:697
+#: includes/core/um-actions-account.php:695
 msgid "Download Personal Data"
 msgstr ""
 
-#: includes/core/um-actions-account.php:698
+#: includes/core/um-actions-account.php:696
 msgid "You could send a new request for an export of personal your data."
 msgstr ""
 
-#: includes/core/um-actions-account.php:718
-#: includes/core/um-actions-account.php:896
+#: includes/core/um-actions-account.php:716
+#: includes/core/um-actions-account.php:894
 msgid "A confirmation email has been sent to your email. Click the link within the email to confirm your export request."
 msgstr ""
 
-#: includes/core/um-actions-account.php:720
+#: includes/core/um-actions-account.php:718
 msgid "The administrator has not yet approved downloading the data. Please expect an email with a link to your data."
 msgstr ""
 
-#: includes/core/um-actions-account.php:725
+#: includes/core/um-actions-account.php:723
 msgid "Enter your current password to confirm a new export of your personal data."
 msgstr ""
 
-#: includes/core/um-actions-account.php:737
-#: includes/core/um-actions-account.php:827
+#: includes/core/um-actions-account.php:735
+#: includes/core/um-actions-account.php:825
 msgid "You must enter a password"
 msgstr ""
 
-#: includes/core/um-actions-account.php:745
+#: includes/core/um-actions-account.php:743
 msgid "To export of your personal data, click the button below."
 msgstr ""
 
-#: includes/core/um-actions-account.php:752
+#: includes/core/um-actions-account.php:750
 msgid "Request data"
 msgstr ""
 
-#: includes/core/um-actions-account.php:761
+#: includes/core/um-actions-account.php:759
 msgid "Erase of your data"
 msgstr ""
 
-#: includes/core/um-actions-account.php:763
+#: includes/core/um-actions-account.php:761
 msgid "You can request erasing of the data that we have about you."
 msgstr ""
 
-#: includes/core/um-actions-account.php:787
+#: includes/core/um-actions-account.php:785
 msgid "Your personal data has been deleted."
 msgstr ""
 
-#: includes/core/um-actions-account.php:788
+#: includes/core/um-actions-account.php:786
 msgid "You could send a new request for deleting your personal data."
 msgstr ""
 
-#: includes/core/um-actions-account.php:808
-#: includes/core/um-actions-account.php:898
+#: includes/core/um-actions-account.php:806
+#: includes/core/um-actions-account.php:896
 msgid "A confirmation email has been sent to your email. Click the link within the email to confirm your deletion request."
 msgstr ""
 
-#: includes/core/um-actions-account.php:810
+#: includes/core/um-actions-account.php:808
 msgid "The administrator has not yet approved deleting your data. Please expect an email with a link to your data."
 msgstr ""
 
-#: includes/core/um-actions-account.php:815
+#: includes/core/um-actions-account.php:813
 msgid "Enter your current password to confirm the erasure of your personal data."
 msgstr ""
 
-#: includes/core/um-actions-account.php:835
+#: includes/core/um-actions-account.php:833
 msgid "Require erasure of your personal data, click on the button below."
 msgstr ""
 
-#: includes/core/um-actions-account.php:842
+#: includes/core/um-actions-account.php:840
 msgid "Request data erase"
 msgstr ""
 
-#: includes/core/um-actions-account.php:854
-#: includes/core/um-actions-account.php:888
+#: includes/core/um-actions-account.php:852
+#: includes/core/um-actions-account.php:886
 msgid "Wrong request."
 msgstr ""
 
-#: includes/core/um-actions-account.php:868
-#: includes/core/um-actions-account.php:875
+#: includes/core/um-actions-account.php:866
+#: includes/core/um-actions-account.php:873
 msgid "The password you entered is incorrect."
 msgstr ""
 
