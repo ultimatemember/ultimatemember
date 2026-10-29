@@ -23,6 +23,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			$this->actions();
 
 			$this->cpt()->hooks();
+			$this->guest();
 			$this->screen();
 			$this->secure()->hooks();
 			$this->site_health();

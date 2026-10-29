@@ -205,5 +205,13 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 				)
 			);
 		}
+
+		/**
+		 * @return bool
+		 * @throws RandomException
+		 */
+		public function verify_guest_token( $token ) {
+			return $this->get_guest_token() === $token;
+		}
 	}
 }

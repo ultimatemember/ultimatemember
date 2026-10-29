@@ -903,6 +903,17 @@ class Filesystem {
 		return $user_dir;
 	}
 
+	/**
+	 * Retrieves the temporary URL for a user's uploads directory.
+	 *
+	 * @since 2.15.0
+	 *
+	 * @param int|null $user_id The user ID. If null, the current logged-in user's ID is used.
+	 *                          If no user is logged in, the guest token is used.
+	 *
+	 * @return string The temporary URL for the user's uploads directory. Returns an empty
+	 *                string if user does not exist or guest token is unavailable.
+	 */
 	public function get_user_temp_url( $user_id = null ) {
 		if ( ! $user_id ) {
 			if ( is_user_logged_in() ) {
