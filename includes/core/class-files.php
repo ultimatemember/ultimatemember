@@ -401,59 +401,59 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * Remove file by AJAX.
 		 * @todo remove after old UI uploaders patch.
 		 */
-		public function ajax_remove_file() {
-			if ( empty( $_POST['key'] ) ) {
-				wp_send_json_error( __( 'Wrong field key', 'ultimate-member' ) );
-			}
-			$key = sanitize_text_field( $_POST['key'] );
-
-			if ( empty( $_POST['mode'] ) ) {
-				wp_send_json_error( __( 'Wrong mode', 'ultimate-member' ) );
-			}
-			$mode = sanitize_key( $_POST['mode'] );
-
-			check_ajax_referer( "um-remove-file-$key-$mode" );
-
-			if ( UM()->is_rate_limited( 'remove_file' ) ) {
-				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
-			}
-
-			if ( empty( $_POST['src'] ) ) {
-				wp_send_json_error( __( 'Wrong path', 'ultimate-member' ) );
-			}
-
-			$src = esc_url_raw( $_POST['src'] );
-			if ( strstr( $src, '?' ) ) {
-				$splitted = explode( '?', $src );
-				$src      = $splitted[0];
-			}
-
-			if ( 'register' === $mode || empty( $_POST['user_id'] ) ) {
-				$is_temp = um_is_temp_upload( $src );
-				if ( ! $is_temp ) {
-					wp_send_json_success();
-				}
-			} else {
-				$user_id = absint( $_POST['user_id'] );
-
-				if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-					wp_send_json_error( __( 'You have no permission to edit this user', 'ultimate-member' ) );
-				}
-
-				$is_temp = um_is_temp_upload( $src );
-				if ( ! $is_temp ) {
-					if ( ! empty( $_POST['filename'] ) && file_exists( UM()->uploader()->get_upload_user_base_dir( $user_id ) . DIRECTORY_SEPARATOR . sanitize_file_name( $_POST['filename'] ) ) ) {
-						wp_send_json_success();
-					}
-				}
-			}
-
-			if ( $this->delete_file( $src ) ) {
-				wp_send_json_success();
-			} else {
-				wp_send_json_error( __( 'You have no permission to delete this file', 'ultimate-member' ) );
-			}
-		}
+//		public function ajax_remove_file() {
+//			if ( empty( $_POST['key'] ) ) {
+//				wp_send_json_error( __( 'Wrong field key', 'ultimate-member' ) );
+//			}
+//			$key = sanitize_text_field( $_POST['key'] );
+//
+//			if ( empty( $_POST['mode'] ) ) {
+//				wp_send_json_error( __( 'Wrong mode', 'ultimate-member' ) );
+//			}
+//			$mode = sanitize_key( $_POST['mode'] );
+//
+//			check_ajax_referer( "um-remove-file-$key-$mode" );
+//
+//			if ( UM()->is_rate_limited( 'remove_file' ) ) {
+//				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
+//			}
+//
+//			if ( empty( $_POST['src'] ) ) {
+//				wp_send_json_error( __( 'Wrong path', 'ultimate-member' ) );
+//			}
+//
+//			$src = esc_url_raw( $_POST['src'] );
+//			if ( strstr( $src, '?' ) ) {
+//				$splitted = explode( '?', $src );
+//				$src      = $splitted[0];
+//			}
+//
+//			if ( 'register' === $mode || empty( $_POST['user_id'] ) ) {
+//				$is_temp = um_is_temp_upload( $src );
+//				if ( ! $is_temp ) {
+//					wp_send_json_success();
+//				}
+//			} else {
+//				$user_id = absint( $_POST['user_id'] );
+//
+//				if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+//					wp_send_json_error( __( 'You have no permission to edit this user', 'ultimate-member' ) );
+//				}
+//
+//				$is_temp = um_is_temp_upload( $src );
+//				if ( ! $is_temp ) {
+//					if ( ! empty( $_POST['filename'] ) && file_exists( UM()->uploader()->get_upload_user_base_dir( $user_id ) . DIRECTORY_SEPARATOR . sanitize_file_name( $_POST['filename'] ) ) ) {
+//						wp_send_json_success();
+//					}
+//				}
+//			}
+//
+//			if ( $this->delete_file( $src ) ) {
+//				wp_send_json_success();
+//			} else {
+//				wp_send_json_error( __( 'You have no permission to delete this file', 'ultimate-member' ) );
+//			}
+//		}
 
 		/**
 		 * Common upload file handler. Default result file in temp directory with unique name.
@@ -482,7 +482,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		/**
 		 * Resize image AJAX handler
 		 */
-		public function ajax_resize_image() {
+		/*public function ajax_resize_image() {
 			if ( ! isset( $_REQUEST['key'], $_REQUEST['set_mode'] ) ) {
 				wp_send_json_error( esc_js( __( 'Invalid parameters', 'ultimate-member' ) ) );
 			}
@@ -616,6 +616,188 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			delete_option( "um_cache_userdata_{$user_id}" );
 
 			wp_send_json_success( $output );
+		}*/
+
+		/**
+		 * Resize image AJAX handler
+		 */
+		public function crop_image() {
+			if ( empty( $_REQUEST['field_id'] ) ) {
+				wp_send_json_error( __( 'Invalid field ID', 'ultimate-member' ) );
+			}
+
+			$field_id = ! empty( $_REQUEST['field_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['field_id'] ) ) : '';
+
+			check_ajax_referer( 'um_field_image_crop_apply' . $field_id );
+
+			if ( ! isset( $_REQUEST['src'], $_REQUEST['temp_hash'], $_REQUEST['coord'] ) ) {
+				wp_send_json_error( __( 'Invalid parameters', 'ultimate-member' ) );
+			}
+
+			$coord   = sanitize_text_field( $_REQUEST['coord'] );
+			$coord_n = substr_count( $coord, ',' );
+			if ( 3 !== $coord_n ) {
+				wp_send_json_error( __( 'Invalid coordinates', 'ultimate-member' ) );
+			}
+
+			$user_id = empty( $_REQUEST['user_id'] ) ? null : absint( $_REQUEST['user_id'] );
+			if ( $user_id && is_user_logged_in() && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+				wp_send_json_error( __( 'You have no permission to edit this user', 'ultimate-member' ) );
+			}
+
+			if ( $user_id && ! is_user_logged_in() ) {
+				wp_send_json_error( __( 'Please login to edit this user', 'ultimate-member' ) );
+			}
+
+			$form_id   = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : null;
+			$form_post = get_post( $form_id );
+			// Invalid post ID. Maybe post doesn't exist.
+			if ( empty( $form_post ) ) {
+				wp_send_json_error( __( 'Invalid form ID', 'ultimate-member' ) );
+			}
+
+			if ( 'um_form' !== $form_post->post_type ) {
+				wp_send_json_error( __( 'Invalid form post type', 'ultimate-member' ) );
+			}
+
+			$form_status = get_post_status( $form_id );
+			if ( 'publish' !== $form_status ) {
+				wp_send_json_error( __( 'Invalid form status', 'ultimate-member' ) );
+			}
+
+			$post_data = UM()->query()->post_data( $form_id );
+			if ( ! array_key_exists( 'mode', $post_data ) ) {
+				wp_send_json_error( __( 'Invalid form type', 'ultimate-member' ) );
+			}
+			$mode = $post_data['mode'];
+
+			UM()->fields()->set_id   = $form_id;
+			UM()->fields()->set_mode = $mode;
+
+			if ( ! is_user_logged_in() && 'profile' === $mode ) {
+				wp_send_json_error( __( 'You have no permission to edit user profile', 'ultimate-member' ) );
+			}
+
+			if ( null !== $user_id && 'register' === $mode ) {
+				wp_send_json_error( __( 'User has to be empty on registration', 'ultimate-member' ) );
+			}
+
+			// For profiles only.
+			if ( 'profile' === $mode && ! empty( $post_data['use_custom_settings'] ) && ! empty( $post_data['role'] ) ) {
+				// Option "Apply custom settings to this form". Option "Make this profile form role-specific".
+				// Show the first Profile Form with role selected, don't show profile forms below the page with other role-specific setting.
+				$current_user_roles = UM()->roles()->get_all_user_roles( $user_id );
+				if ( empty( $current_user_roles ) ) {
+					wp_send_json_error( __( 'You have no permission to edit this user through this form', 'ultimate-member' ) );
+				}
+
+				$post_data['role'] = maybe_unserialize( $post_data['role'] );
+
+				if ( is_array( $post_data['role'] ) ) {
+					if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {
+						wp_send_json_error( __( 'You have no permission to edit this user through this form', 'ultimate-member' ) );
+					}
+				} elseif ( ! in_array( $post_data['role'], $current_user_roles, true ) ) {
+					wp_send_json_error( __( 'You have no permission to edit this user through this form', 'ultimate-member' ) );
+				}
+			}
+
+			if ( ! array_key_exists( 'custom_fields', $post_data ) || empty( $post_data['custom_fields'] ) ) {
+				wp_send_json_error( __( 'Invalid form fields', 'ultimate-member' ) );
+			}
+
+			$custom_fields = maybe_unserialize( $post_data['custom_fields'] );
+			if ( ! is_array( $custom_fields ) || ! array_key_exists( $field_id, $custom_fields ) ) {
+				wp_send_json_error( __( 'Invalid field metakey', 'ultimate-member' ) );
+			}
+
+			if ( empty( $custom_fields[ $field_id ]['crop'] ) ) {
+				wp_send_json_error( __( 'This field doesn\'t support image crop', 'ultimate-member' ) );
+			}
+
+			if ( 'profile' === $mode ) {
+				if ( in_array( $field_id, array( 'cover_photo', 'profile_photo' ), true ) ) {
+					if ( 'profile_photo' === $field_id ) {
+						$disable_photo_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'disable_profile_photo_upload' ) : $post_data['disable_photo_upload'];
+						if ( $disable_photo_uploader ) {
+							wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
+						}
+					} else {
+						$cover_enabled_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'profile_cover_enabled' ) : $post_data['cover_enabled'];
+						if ( ! $cover_enabled_uploader ) {
+							wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
+						}
+					}
+				} elseif ( ! um_can_edit_field( $custom_fields[ $field_id ] ) ) {
+					wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
+				}
+			}
+
+			$temp_hash = sanitize_text_field( $_REQUEST['temp_hash'] );
+			$file_path = UM()->common()->filesystem()->get_file_by_hash( $temp_hash );
+			if ( false === $file_path ) {
+				// Possible hijacking.
+				wp_send_json_error( __( 'Possible hijacking', 'ultimate-member' ) );
+			}
+
+			$src = UM()->common()->filesystem()->get_temp_file_url(
+				array(
+					'file' => $file_path,
+					'hash' => $temp_hash,
+				)
+			);
+
+			if ( ! function_exists( 'wp_get_image_editor' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/media.php';
+			}
+
+			/**
+			 * Return an implementation that extends WP_Image_Editor
+			 * @see https://developer.wordpress.org/reference/classes/wp_image_editor/
+			 */
+			$image = wp_get_image_editor( $file_path );
+			if ( is_wp_error( $image ) ) {
+				// translators: %s: File path.
+				wp_send_json_error( sprintf( __( 'Unable to crop stream image file: %s', 'ultimate-member' ), $file_path ) );
+			}
+
+			// Crop
+			$crop = explode( ',', $coord );
+			$crop = array_map( 'intval', $crop );
+
+			list( $src_x, $src_y, $src_w, $src_h ) = $crop;
+			$image->crop( $src_x, $src_y, $src_w, $src_h );
+
+			$quality = (int) UM()->options()->get( 'image_compression' );
+			$max_w   = (int) UM()->options()->get( 'image_max_width' );
+
+			// Resize
+			$dimensions = $image->get_size();
+			if ( ! empty( $max_w ) && $dimensions['width'] > $max_w ) {
+				$image->resize( $max_w, null );
+			}
+
+			// Quality
+			if ( 100 !== $quality && $image->get_quality() > $quality ) {
+				$image->set_quality( $quality );
+			}
+
+			$image->save( $file_path );
+
+			//$preview = '<img src="' . esc_url( $src ) . '" alt="' . esc_attr__( 'Image Upload', 'ultimate-member' ) . '" style="width:100%" />';
+
+			$filename = wp_basename( $file_path );
+			$hash     = md5( $filename . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
+
+			wp_send_json_success(
+				array(
+					'filename'     => $filename,
+					'hash'         => $hash,
+					'temp_hash'    => $temp_hash,
+					'src'          => $src,
+					'delete_nonce' => wp_create_nonce( 'um_delete_temp_file' . $filename ),
+				)
+			);
 		}
 
 		/**
