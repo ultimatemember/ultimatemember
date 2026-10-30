@@ -166,6 +166,10 @@ jQuery(document).ready(function() {
 	jQuery(document.body).on('click', '.um-single-image-preview a.cancel', function(e) {
 		e.preventDefault();
 
+		if ( ! confirm( wp.i18n.__( 'Are you sure that you want to delete this image?', 'ultimate-member' ) ) ) {
+			return false;
+		}
+
 		let isModal = false;
 		if ( jQuery(this).parents('.um-modal-body').length > 0 ) {
 			isModal = true;
@@ -173,44 +177,77 @@ jQuery(document).ready(function() {
 
 		let nonce = jQuery(this).data('nonce');
 
-		let parent, mode, src, args;
-
 		if ( ! isModal ) {
-			parent = jQuery(this).parents('.um-field');
-			mode   = parent.data('mode');
-			src    = parent.find('.um-single-image-preview img').attr('src');
+			let parent = jQuery(this).parents('.um-field');
 
-			let filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
+			let fileName = parent.find('.um-single-image-preview img').data('file');
+			let tempHash = parent.find('.um-uploaded-value-temp-hash').val();
 
-			args = {
-				data: {
-					mode: mode,
-					filename: filename,
-					src: src,
-					key: parent.data('key'),
-					_wpnonce: nonce
-				},
-				success: function() {
-					parent.find('.um-single-image-preview img').replaceWith('<img src="" alt="" />');
-					parent.find('.um-single-image-preview').removeAttr('style').hide();
-					parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
-					parent.find('input[type="hidden"]').val( 'empty_file' );
-				}
-			};
+			if ( tempHash ) {
+				let args = {
+					data: {
+						name: fileName,
+						hash: tempHash,
+						_wpnonce: nonce
+					},
+					success: function() {
+						parent.find('.um-single-image-preview img').replaceWith('<img src="" alt="" />');
+						parent.find('.um-single-image-preview').removeAttr('style').hide();
+						parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
+						//parent.find('input[type="hidden"]').val( 'empty_file' );
+						parent.find('input[type=hidden].um-uploaded-value').val( '' );
+						parent.find('input[type=hidden].um-uploaded-value-hash').val( '' );
+						parent.find('input[type=hidden].um-uploaded-value-temp-hash').val( '' );
+					}
+				};
 
-			if ( mode !== 'register' ) {
-				args.data.user_id = jQuery(this).parents('form').find('#user_id').val();
+				wp.ajax.send( 'um_delete_temp_file', args );
+			} else {
+				parent.find('.um-single-image-preview img').replaceWith('<img src="" alt="" />');
+				parent.find('.um-single-image-preview').removeAttr('style').hide();
+				parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
+				// parent.find('input[type="hidden"]').val( 'empty_file' );
+				parent.find('input[type=hidden].um-uploaded-value').val( '' );
+				parent.find('input[type=hidden].um-uploaded-value-hash').val( '' );
+				parent.find('input[type=hidden].um-uploaded-value-temp-hash').val( '' );
 			}
-		} else {
-			parent = jQuery(this).parents('.um-modal-body');
-			mode   = parent.find('.um-single-image-upload').data('set_mode');
-			src    = parent.find('.um-single-image-preview img').attr('src');
 
-			args = {
+			// mode   = parent.data('mode');
+			// src    = parent.find('.um-single-image-preview img').attr('src');
+			//
+			// let filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
+			//
+			// args = {
+			// 	data: {
+			// 		mode: mode,
+			// 		filename: filename,
+			// 		src: src,
+			// 		key: parent.data('key'),
+			// 		_wpnonce: nonce
+			// 	},
+			// 	success: function() {
+			// 		parent.find('.um-single-image-preview img').replaceWith('<img src="" alt="" />');
+			// 		parent.find('.um-single-image-preview').removeAttr('style').hide();
+			// 		parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
+			// 		parent.find('input[type="hidden"]').val( 'empty_file' );
+			// 	}
+			// };
+			//
+			// if ( mode !== 'register' ) {
+			// 	args.data.user_id = jQuery(this).parents('form').find('#user_id').val();
+			// }
+			//
+			// wp.ajax.send( 'um_remove_file', args );
+		} else {
+			let parent = jQuery(this).parents('.um-modal-body');
+
+			let fileName = parent.find('.um-single-image-preview img').data('file');
+			let tempHash = parent.find('.um-single-image-preview img').data('temp_hash');
+
+			let args = {
 				data: {
-					src: src,
-					mode: mode,
-					key: parent.find('.um-single-image-upload').data('key'),
+					name: fileName,
+					hash: tempHash,
 					_wpnonce: nonce
 				},
 				success: function() {
@@ -224,13 +261,40 @@ jQuery(document).ready(function() {
 					um_modal_responsive();
 				}
 			};
-		}
 
-		wp.ajax.send( 'um_remove_file', args );
+			wp.ajax.send( 'um_delete_temp_file', args );
+
+			// parent = jQuery(this).parents('.um-modal-body');
+			// mode   = parent.find('.um-single-image-upload').data('set_mode');
+			// src    = parent.find('.um-single-image-preview img').attr('src');
+			//
+			// args = {
+			// 	data: {
+			// 		src: src,
+			// 		mode: mode,
+			// 		key: parent.find('.um-single-image-upload').data('key'),
+			// 		_wpnonce: nonce
+			// 	},
+			// 	success: function() {
+			// 		wp.hooks.doAction( 'um_after_removing_preview' );
+			//
+			// 		parent.find('.um-single-image-preview img').replaceWith('<img src="" alt="" />'); // required replaceWith for flushing DOM before re-init Cropper.
+			// 		parent.find('.um-single-image-preview').removeAttr('style').hide();
+			// 		parent.find('.ajax-upload-dragdrop').show();
+			// 		parent.find('.um-modal-btn.um-finish-upload').addClass( 'disabled' );
+			//
+			// 		um_modal_responsive();
+			// 	}
+			// };
+		}
 	});
 
 	jQuery(document.body).on('click', '.um-single-file-preview a.cancel', function(e) {
 		e.preventDefault();
+
+		if ( ! confirm( wp.i18n.__( 'Are you sure that you want to delete this file?', 'ultimate-member' ) ) ) {
+			return false;
+		}
 
 		let isModal = false;
 		if ( jQuery(this).parents('.um-modal-body').length > 0 ) {
@@ -239,43 +303,46 @@ jQuery(document).ready(function() {
 
 		let nonce = jQuery(this).data('nonce');
 
-		let parent, mode, src, args;
-
 		if ( ! isModal ) {
-			parent = jQuery(this).parents('.um-field');
-			src    = parent.find('.um-single-fileinfo a').attr('href');
-			mode   = parent.data('mode');
+			let parent = jQuery(this).parents('.um-field');
 
-			let filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
+			let fileName = parent.find('.um-single-file-preview .um-single-fileinfo a').data('file');
+			let tempHash = parent.find('.um-uploaded-value-temp-hash').val();
 
-			args = {
-				data: {
-					mode: mode,
-					filename: filename,
-					src: src,
-					key: parent.data('key'),
-					_wpnonce: nonce
-				},
-				success: function() {
-					parent.find('.um-single-file-preview').hide();
-					parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
-					parent.find('input[type=hidden]').val( 'empty_file' );
-				}
-			};
+			if ( tempHash ) {
+				let args = {
+					data: {
+						name: fileName,
+						hash: tempHash,
+						_wpnonce: nonce
+					},
+					success: function() {
+						parent.find('.um-single-file-preview').hide();
+						parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
+						parent.find('input[type=hidden].um-uploaded-value').val( '' );
+						parent.find('input[type=hidden].um-uploaded-value-hash').val( '' );
+						parent.find('input[type=hidden].um-uploaded-value-temp-hash').val( '' );
+					}
+				};
 
-			if ( mode !== 'register' ) {
-				args.data.user_id = jQuery(this).parents('form' ).find( '#user_id' ).val();
+				wp.ajax.send( 'um_delete_temp_file', args );
+			} else {
+				parent.find('.um-single-file-preview').hide();
+				parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
+				parent.find('input[type=hidden].um-uploaded-value').val( '' );
+				parent.find('input[type=hidden].um-uploaded-value-hash').val( '' );
+				parent.find('input[type=hidden].um-uploaded-value-temp-hash').val( '' );
 			}
 		} else {
-			parent = jQuery(this).parents('.um-modal-body');
-			src    = parent.find('.um-single-fileinfo a').attr('href');
-			mode   = parent.find('.um-single-file-upload').data('set_mode');
+			let parent = jQuery(this).parents('.um-modal-body');
 
-			args = {
+			let fileName = parent.find('.um-single-file-preview .um-single-fileinfo a').data('file');
+			let tempHash = parent.find('.um-single-file-preview .um-single-fileinfo a').data('temp_hash');
+
+			let args = {
 				data: {
-					src: src,
-					mode: mode,
-					key: parent.find('.um-single-file-upload').data('key'),
+					name: fileName,
+					hash: tempHash,
 					_wpnonce: nonce
 				},
 				success: function() {
@@ -285,9 +352,176 @@ jQuery(document).ready(function() {
 					um_modal_responsive();
 				}
 			};
+
+			wp.ajax.send( 'um_delete_temp_file', args );
 		}
-		wp.ajax.send( 'um_remove_file', args );
 	});
+
+	// Default remove file from uploader queue button.
+	jQuery(document.body).on('click', '.um-uploader-file-remove', function() {
+		if ( ! confirm( wp.i18n.__( 'Are you sure that you want to delete this file?', 'ultimate-member' ) ) ) {
+			return false;
+		}
+
+		let $uploader = jQuery(this).parents('.um-uploader');
+		let $fileRow  = jQuery(this).parents('.um-uploader-file');
+
+		let $fileList = $uploader.find( '.um-uploader-filelist' );
+
+		let removeRow = function () {
+			let fileID = $fileRow.attr('id');
+			let uploaderObj = UM.frontend.uploaders[ $uploader.data('plupload') ];
+
+			wp.hooks.doAction( 'um_uploader_file_row_removed', $fileRow, fileID, uploaderObj );
+
+			let filter = uploaderObj.getOption( 'filters' ).um_files_limit;
+
+			uploaderObj.removeFile( fileID );
+			$fileRow.remove();
+
+			if ( $fileList.length ) {
+				if ( ! $fileList.find('.um-uploader-file').length ) {
+					$uploader.removeClass('um-upload-completed');
+					$fileList.umHide();
+				}
+			} else {
+				$uploader.removeClass('um-upload-completed');
+			}
+
+			if ( filter && uploaderObj.files.length < filter ) {
+				let button = uploaderObj.getOption( 'browse_button' )[0];
+				button.removeAttribute('disabled');
+
+				let dropZone = uploaderObj.getOption( 'drop_element' )[0];
+				if ( dropZone ) {
+					dropZone.classList.remove('um-dropzone-disabled');
+					let uploadLink = dropZone.querySelector( '.um-upload-link' );
+					if ( uploadLink ) {
+						uploadLink.classList.remove('um-link-disabled');
+					}
+				}
+			}
+
+			wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
+		}
+
+		let fileID = $fileRow.attr('id');
+		if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
+			let fileName = $fileRow.data('filename');
+			let tempHash = $fileRow.data('temp_hash');
+			let nonce = $fileRow.data('nonce');
+
+			// then file can be removed from server.
+			wp.ajax.send(
+				'um_delete_temp_file',
+				{
+					data: {
+						name: fileName,
+						hash: tempHash,
+						nonce: nonce
+					},
+					success: function () {
+						removeRow();
+					},
+					error: function (data) {
+						alert(data);
+						console.log(data);
+					}
+				}
+			);
+		} else {
+			removeRow();
+		}
+	}); // todo remove after rewritten of delete temp file
+	jQuery(document.body).on('click', '.um-field-image-remove', function() {
+		let confirmText = wp.i18n.__( 'Are you sure that you want to delete this image?', 'ultimate-member' );
+		confirmText = wp.hooks.applyFilters( 'um-field-image-remove-confirm-text', confirmText, jQuery(this) );
+		if ( confirmText && ! confirm( confirmText ) ) {
+			return false;
+		}
+
+		let $controls = jQuery(this).parents('.um-field-image-controls');
+		let $wrapper = jQuery(this).parents('.um-field-uploader-wrapper');
+		let $uploader = $wrapper.find('.um-uploader');
+		let $fileRow  = $uploader.find('.um-uploader-file');
+		let $dropZone  = $uploader.find( '.um-uploader-dropzone' );
+		let $fileList  = $uploader.find( '.um-uploader-filelist' );
+
+		let removeRow = function () {
+			$uploader.find('.um-uploaded-value-hidden').prop('disabled', false);
+			$uploader.find('.um-uploaded-value-hash-hidden').prop('disabled', false);
+			$uploader.find('.um-uploaded-value-temp-hash-hidden').prop('disabled', false);
+
+			let fileID = $fileRow.attr('id');
+			if ( ! fileID ) {
+				$fileRow.remove();
+				$dropZone.umShow();
+				$controls.umHide();
+				$fileList.html('').umHide();
+				$uploader.removeClass('um-upload-completed');
+
+				wp.hooks.doAction( 'um_uploader_empty_file_row_removed', $uploader );
+				return;
+			}
+
+			let uploaderObj = UM.frontend.uploaders[ $uploader.data('plupload') ];
+
+			wp.hooks.doAction( 'um_uploader_file_row_removed', $fileRow, fileID, uploaderObj );
+
+			let filter = uploaderObj.getOption( 'filters' ).um_files_limit;
+
+			uploaderObj.removeFile( fileID );
+			$fileRow.remove();
+			$dropZone.umShow();
+			$controls.umHide();
+			$fileList.html('').umHide();
+			$uploader.removeClass('um-upload-completed');
+
+			if ( filter && uploaderObj.files.length < filter ) {
+				let button = uploaderObj.getOption( 'browse_button' )[0];
+				button.removeAttribute('disabled');
+
+				let dropZone = uploaderObj.getOption( 'drop_element' )[0];
+				if ( dropZone ) {
+					dropZone.classList.remove('um-dropzone-disabled');
+					let uploadLink = dropZone.querySelector( '.um-upload-link' );
+					if ( uploadLink ) {
+						uploadLink.classList.remove('um-link-disabled');
+					}
+				}
+			}
+
+			wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
+		}
+
+		let fileID = $fileRow.attr('id');
+		if ( fileID && ! $fileRow.hasClass('um-upload-failed') ) {
+			let fileName = $fileRow.data('filename');
+			let tempHash = $fileRow.data('temp_hash');
+			let nonce = $fileRow.data('nonce');
+
+			// then file can be removed from server.
+			wp.ajax.send(
+				'um_delete_temp_file',
+				{
+					data: {
+						name: fileName,
+						hash: tempHash,
+						nonce: nonce
+					},
+					success: function () {
+						removeRow();
+					},
+					error: function (data) {
+						alert(data);
+						console.log(data);
+					}
+				}
+			);
+		} else {
+			removeRow();
+		}
+	}); // todo remove after rewritten of delete temp file
 
 	// @todo deprecate
 	jQuery(document).on('click', '.um-field-group-head:not(.disabled)', function() {

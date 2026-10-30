@@ -6,6 +6,15 @@ jQuery(document).ready(function() {
 	});
 
 	jQuery(document).on('click', '.um-modal-overlay, a[data-action="um_remove_modal"]', function(){
+		let $removeImage = jQuery(this).parents('.um-modal-body').find('.um-single-image-preview a.cancel');
+		if ( $removeImage.length ) {
+			$removeImage.trigger('click');
+		}
+		let $removeFile = jQuery(this).parents('.um-modal-body').find('.um-single-file-preview a.cancel');
+		if ( $removeFile.length ) {
+			$removeFile.trigger('click');
+		}
+
 		um_remove_modal();
 	});
 
@@ -37,11 +46,9 @@ jQuery(document).ready(function() {
 
 		$fieldWrapper.find('input[type="hidden"].um-uploaded-value').val( file ); // set new filename uploaded for this field.
 		$fieldWrapper.find('input[type="hidden"].um-uploaded-value-temp-hash').val( tempHash ); // set temp hash based on the new filename uploaded for this field. Required to validate upload.
-
 	});
 
 	jQuery(document).on('click', '.um-finish-upload.image:not(.disabled)', function(){
-
 		var elem = jQuery(this);
 		var key = jQuery(this).attr('data-key');
 		var img_c = jQuery(this).parents('.um-modal-body').find('.um-single-image-preview');

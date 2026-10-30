@@ -44,8 +44,11 @@ if ( ! class_exists( 'um\core\AJAX_Common' ) ) {
 			add_action( 'wp_ajax_nopriv_um_ajax_paginate_posts', array( UM()->user_posts(), 'load_posts' ) );
 			add_action( 'wp_ajax_nopriv_um_ajax_paginate_comments', array( UM()->user_posts(), 'load_comments' ) );
 
-			add_action( 'wp_ajax_um_remove_file', array( UM()->files(), 'ajax_remove_file' ) );
-			add_action( 'wp_ajax_nopriv_um_remove_file', array( UM()->files(), 'ajax_remove_file' ) );
+			//add_action( 'wp_ajax_um_remove_file', array( UM()->files(), 'ajax_remove_file' ) );
+			//add_action( 'wp_ajax_nopriv_um_remove_file', array( UM()->files(), 'ajax_remove_file' ) );
+
+			add_action( 'wp_ajax_um_delete_temp_file', array( UM()->files(), 'delete_temp_file' ) );
+			add_action( 'wp_ajax_nopriv_um_delete_temp_file', array( UM()->files(), 'delete_temp_file' ) );
 
 			add_action( 'wp_ajax_nopriv_um_fileupload', array( UM()->files(), 'ajax_file_upload' ) ); // Enabled files uploading on registration form.
 			add_action( 'wp_ajax_um_fileupload', array( UM()->files(), 'ajax_file_upload' ) );

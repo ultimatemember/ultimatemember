@@ -3007,7 +3007,21 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$field_name = $key . $form_suffix;
 
-					$output .= '<input type="hidden" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+					$name           = $field_name . '[filename]';
+					$hash_name      = $field_name . '[hash]';
+					$temp_hash_name = $field_name . '[temp_hash]';
+
+					$user_id = um_user( 'ID' );
+					$user_id = empty( $user_id ) ? null : absint( $user_id );
+					$form_id = $this->set_id;
+
+					$hash      = md5( $field_value . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
+					$temp_hash = ''; // it's not empty only during uploading the new file.
+
+					$output .= '<input type="hidden" name="' . esc_attr( $name ) . '" id="' . esc_attr( $field_name ) . '" class="um-uploaded-value" value="' . esc_attr( $field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+					$output .= '<input type="hidden" name="' . esc_attr( $hash_name ) . '" id="' . esc_attr( $field_name ) . '-hash" class="um-uploaded-value-hash" value="' . esc_attr( $hash ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+					$output .= '<input type="hidden" name="' . esc_attr( $temp_hash_name ) . '" id="' . esc_attr( $field_name ) . '-temp-hash" class="um-uploaded-value-temp-hash" value="' . esc_attr( $temp_hash ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+
 					if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
@@ -3124,7 +3138,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$user_id = um_user( 'ID' );
 					$user_id = empty( $user_id ) ? null : absint( $user_id );
-					$form_id = $args['data']['form_id'];
+					$form_id = $this->set_id;
 
 					$hash      = md5( $file_field_value . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
 					$temp_hash = ''; // it's not empty only during uploading the new file.
@@ -3168,7 +3182,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						if ( file_exists( $file_dir ) ) {
 							$output .= '<div class="um-single-file-preview show" data-key="' . esc_attr( $key ) . '">';
 							if ( empty( $disabled ) ) {
-								$output .= '<a href="#" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file-' . $key . '-' . $this->set_mode ) ) . '"><i class="um-icon-close"></i></a>';
+								$output .= '<a href="#" class="cancel"><i class="um-icon-close"></i></a>';
 							}
 
 							$fonticon_bg = UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] );
@@ -3232,7 +3246,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$set_mode = '';
 						}
 						$output .= '<div class="um-single-file-preview">
-										<a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file-' . $key . '-' . $this->set_mode ) ) . '"><i class="um-icon-close"></i></a>
+										<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>
 										<div class="um-single-fileinfo">
 											<a href="" target="_blank">
 												<span class="icon"><i></i></span>

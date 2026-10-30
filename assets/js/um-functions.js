@@ -358,26 +358,22 @@ function initImageUpload_UM( trigger ) {
 			} else {
 
 				jQuery.each( response.data, function( i, d ) {
-
 					var img_id = trigger.parents('.um-modal-body').find('.um-single-image-preview img');
 					var img_id_h = trigger.parents('.um-modal-body').find('.um-single-image-preview');
 
-					var cache_ts = new Date();
-
 					img_id.removeAttr("loading");
 					img_id.attr("src", d.url );
-					img_id.data("file", d.file );
-					img_id.data("temp_hash", d.temp_hash );
+					img_id.attr("data-file", d.file ).data("file", d.file );
+					img_id.attr("data-temp_hash", d.temp_hash ).data("temp_hash", d.temp_hash );
+
+					img_id_h.find('a.cancel').attr('data-nonce', d.delete_nonce ).data('nonce', d.delete_nonce);
 
 					img_id.on( 'load', function() {
-
 						trigger.parents('.um-modal-body').find('.um-modal-btn.um-finish-upload.disabled').removeClass('disabled');
 						trigger.parents('.um-modal-body').find('.ajax-upload-dragdrop,.upload-statusbar').hide(0);
 						img_id_h.show(0);
 						um_modal_responsive();
-
 					});
-
 				});
 
 			}
@@ -481,15 +477,19 @@ function initFileUpload_UM( trigger ) {
 
 					} else if ( key == 'filename' ) {
 
-						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('data-file', value );
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').data('file', value).attr('data-file', value );
 
 					}else if ( key == 'temp_hash' ) {
 
-						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('data-temp_hash', value );
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').data('temp_hash', value).attr('data-temp_hash', value );
+
+					}else if ( key == 'delete_nonce' ) {
+
+						trigger.parents('.um-modal-body').find('.um-single-file-preview a.cancel').data('nonce', value).attr('data-nonce', value );
 
 					}else if( key == 'original_name' ){
 
-						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('data-orignal-name', value );
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').data('original-name', value).attr('data-original-name', value );
 						trigger.parents('.um-modal-body').find('.um-single-fileinfo span.filename').html( value );
 
 					} else if ( key == 'url' ) {

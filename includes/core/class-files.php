@@ -398,7 +398,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		}
 
 		/**
-		 * Remove file by AJAX
+		 * Remove file by AJAX.
+		 * @todo remove after old UI uploaders patch.
 		 */
 		public function ajax_remove_file() {
 			if ( empty( $_POST['key'] ) ) {
@@ -452,6 +453,30 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			} else {
 				wp_send_json_error( __( 'You have no permission to delete this file', 'ultimate-member' ) );
 			}
+		}
+
+		/**
+		 * Common upload file handler. Default result file in temp directory with unique name.
+		 */
+		public function delete_temp_file() {
+			if ( empty( $_REQUEST['name'] ) || empty( $_REQUEST['hash'] ) ) {
+				wp_send_json_error( __( 'Unknown file.', 'ultimate-member' ) );
+			}
+
+			check_ajax_referer( 'um_delete_temp_file' . $_REQUEST['name'], 'nonce' );
+
+			$filename = sanitize_text_field( $_REQUEST['hash'] );
+
+			$file_path = UM()->common()->filesystem()->get_file_by_hash( $filename );
+			if ( false === $file_path ) {
+				wp_send_json_error( __( 'Unknown file.', 'ultimate-member' ) );
+			}
+
+			if ( ! wp_delete_file( $file_path ) ) {
+				wp_send_json_error( __( 'Cannot remove file from server.', 'ultimate-member' ) );
+			}
+
+			wp_send_json_success();
 		}
 
 		/**
@@ -785,7 +810,11 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					if ( isset( $uploaded['error'] ) ) {
 						$ret['error'] = $uploaded['error'];
 					} else {
-						$ret[] = $uploaded['handle_upload'];
+						$uploaded_image = $uploaded['handle_upload'];
+
+						$uploaded_image['delete_nonce'] = wp_create_nonce( 'um_delete_temp_file' . $uploaded_image['file'] );
+
+						$ret[] = $uploaded_image;
 					}
 				}
 			} else {
@@ -950,6 +979,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 						$ret['icon_bg']       = UM()->files()->get_fonticon_bg_by_ext( $uploaded_file['file_info']['ext'] );
 						$ret['filename']      = $uploaded_file['file_info']['basename'];
 						$ret['original_name'] = $uploaded_file['file_info']['original_name'];
+						$ret['delete_nonce']  = wp_create_nonce( 'um_delete_temp_file' . $ret['filename'] );
 					}
 				}
 			} else {
