@@ -56,6 +56,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		public function __construct() {
 			$this->setup_paths();
 
+			add_action( 'template_redirect', array( &$this, 'temp_files_routing' ), 1 );
 			add_action( 'template_redirect', array( &$this, 'download_routing' ), 1 );
 
 			$this->fonticon = array(
@@ -85,246 +86,403 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		/**
 		 * File download link generate
 		 *
-		 * @param int $form_id
-		 * @param string $field_key
-		 * @param int $user_id
+		 * @since 1.3.x
+		 * @since 2.15.0 Added $field_value attribute.
+		 *
+		 * @param int        $form_id
+		 * @param string     $field_key
+		 * @param int        $user_id
+		 * @param null|mixed $field_value @since 2.15.0
 		 *
 		 * @return string
 		 */
-		function get_download_link( $form_id, $field_key, $user_id ) {
-			$field_key = urlencode( $field_key );
-
-			$nonce = wp_create_nonce( "um-download-nonce-$user_id-$form_id" );
-			$url   = get_home_url( get_current_blog_id() );
-			if ( UM()->is_permalinks ) {
-				$url = $url . "/um-download/{$form_id}/{$field_key}/{$user_id}/{$nonce}";
-			} else {
-				$url = add_query_arg( array( 'um_action' => 'download', 'um_form' => $form_id, 'um_field' => $field_key, 'um_user' => $user_id, 'um_verify' => $nonce ), $url );
+		public function get_download_link( $form_id, $field_key, $user_id, $field_value = null ) {
+			// Don't remove this condition to avoid recursive
+			if ( is_null( $field_value ) ) {
+				$field_value = UM()->fields()->field_value( $field_key );
+				if ( empty( $field_value ) ) {
+					return '';
+				}
 			}
 
-			//add time to query args for sites with the cache
-			return add_query_arg( array( 't' => time() ), $url );
+			$file_path = wp_normalize_path( UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $field_value );
+			// Validate not exists file.
+			if ( ! file_exists( $file_path ) ) {
+				return '';
+			}
+
+			// Validate traversal file.
+			if ( validate_file( $file_path ) === 1 ) {
+				return '';
+			}
+
+			$filetype    = wp_check_filetype( $file_path );
+			$filetime    = filemtime( $file_path );
+			$field_value = $filetime . '.' . $filetype['ext'];
+
+			$key       = $field_key;
+			$field_key = rawurlencode( $field_key );
+			$nonce     = wp_create_nonce( "um-download-nonce-$user_id-$form_id-$key" );
+
+			$url = get_home_url( get_current_blog_id() );
+			if ( UM()->is_permalinks ) {
+				$url .= "/um-download/{$form_id}/{$field_key}/{$user_id}/{$nonce}/{$field_value}";
+			} else {
+				$url = add_query_arg(
+					array(
+						'um_action'   => 'download',
+						'um_form'     => $form_id,
+						'um_field'    => $field_key,
+						'um_user'     => $user_id,
+						'um_verify'   => $nonce, // todo change to `um_nonce` after all extensions are ready for old UI in their new UI branches
+						'um_filename' => $field_value,
+					),
+					$url
+				);
+			}
+			return UM()->common()->filesystem()::add_timestamp( $url );
 		}
 
-
 		/**
-		 * @return bool
+		 * Handle a secure link of the temp file.
+		 * @return void
+		 * @throws RandomException
 		 */
-		function download_routing() {
-			if ( 'download' !== get_query_var( 'um_action' ) ) {
-				return false;
+		public function temp_files_routing() {
+			global $wp_filesystem, $wp_query;
+
+			if ( 'temp-download' !== get_query_var( 'um_action' ) ) {
+				return;
 			}
 
-			$query_form = get_query_var( 'um_form' );
-			if ( empty( $query_form ) ) {
-				return false;
+			$filename = get_query_var( 'um_filename' );
+			if ( empty( $filename ) ) {
+				$url = UM()->permalinks()->get_current_url();
+				if ( UM()->common()->filesystem()::is_timestamp_addable() ) {
+					$url = remove_query_arg( 'timestamp', $url );
+				}
+				$filename = wp_basename( $url );
+			}
+
+			if ( is_user_logged_in() ) {
+				$user_id = get_current_user_id();
+			} else {
+				$user_id = UM()->common()->guest()->get_guest_token();
+			}
+
+			$queried_user = get_query_var( 'um_user' );
+			if ( empty( $queried_user ) || (string) $queried_user !== (string) $user_id ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			$query_verify = get_query_var( 'um_nonce' );
+			if ( empty( $query_verify ) || ! wp_verify_nonce( $query_verify, "um-temp-download-nonce-$user_id-$filename" ) ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			$file_path = UM()->common()->filesystem()->get_file_by_hash( $filename );
+			if ( false === $file_path ) {
+				$wp_query->set_404();
+				return;
+			}
+
+			if ( ! is_user_logged_in() ) {
+				// Check for excessive downloads (e.g., max 5 downloads per 5 minutes)
+				$break_due_downloads_limit = UM()->common()->guest()::check_excessive_downloads();
+				if ( $break_due_downloads_limit ) {
+					return;
+				}
+
+				UM()->common()->guest()::set_download_attempts();
+			}
+
+			UM()->common()->filesystem()::maybe_init_wp_filesystem();
+
+			$pathinfo     = pathinfo( $file_path );
+			$size         = filesize( $file_path );
+			$originalname = $pathinfo['basename'];
+			$filetype     = wp_check_filetype( $file_path, wp_get_mime_types() );
+			$type         = $filetype['type'] ? $filetype['type'] : 'application/octet-stream';
+
+			header( 'Content-Description: File Transfer' );
+			header( 'Content-Type: ' . $type );
+			header( 'Content-Disposition: inline; filename="' . esc_attr( $originalname ) . '"' );
+			header( 'Content-Transfer-Encoding: binary' );
+			header( 'Expires: 0' );
+			header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+			header( 'Pragma: public' );
+			header( 'Content-Length: ' . $size );
+
+			$levels = ob_get_level();
+			for ( $i = 0; $i < $levels; $i++ ) {
+				@ob_end_clean();
+			}
+
+			$content = $wp_filesystem->get_contents( $file_path );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- temp file content.
+			echo $content;
+			exit;
+		}
+
+		/**
+		 * Download uploaded by the user files routing handler.
+		 *
+		 * @return void
+		 */
+		public function download_routing() {
+			global $wp_query;
+
+			if ( 'download' !== get_query_var( 'um_action' ) ) {
+				return;
 			}
 
 			$form_id = get_query_var( 'um_form' );
-			$query_field = get_query_var( 'um_field' );
-			if ( empty( $query_field ) ) {
-				return false;
+			if ( empty( $form_id ) ) {
+				$wp_query->set_404();
+				return;
 			}
-			$field_key = urldecode( get_query_var( 'um_field' ) );
-			$query_user = get_query_var( 'um_user' );
-			if ( empty( $query_user ) ) {
-				return false;
+			$form_id = absint( $form_id );
+
+			$field = get_query_var( 'um_field' );
+			if ( empty( $field ) ) {
+				$wp_query->set_404();
+				return;
 			}
+			$field     = urldecode( $field );
+			$field_key = sanitize_text_field( $field );
 
 			$user_id = get_query_var( 'um_user' );
-			$user = get_userdata( $user_id );
-
-			if ( empty( $user ) || is_wp_error( $user ) ) {
-				return false;
+			if ( empty( $user_id ) ) {
+				$wp_query->set_404();
+				return;
 			}
+			$user_id = absint( $user_id );
+
 			$query_verify = get_query_var( 'um_verify' );
 			if ( empty( $query_verify ) ||
-			    ! wp_verify_nonce( $query_verify, "um-download-nonce-$user_id-$form_id" ) ) {
-				return false;
+				! wp_verify_nonce( $query_verify, "um-download-nonce-$user_id-$form_id-$field" ) ) {
+				$wp_query->set_404();
+				return;
 			}
 
-			um_fetch_user( $user_id );
+			if ( ! UM()->common()->users()->can_view_user_profile( $user_id ) ) {
+				$wp_query->set_404();
+				return;
+			}
+
 			$field_data = get_post_meta( $form_id, '_um_custom_fields', true );
 			if ( empty( $field_data[ $field_key ] ) ) {
-				um_reset_user();
-				return false;
+				$wp_query->set_404();
+				return;
 			}
 
 			if ( ! um_can_view_field( $field_data[ $field_key ] ) ) {
-				um_reset_user();
-				return false;
+				$wp_query->set_404();
+				return;
 			}
 
+			um_fetch_user( $user_id );
 			$field_value = UM()->fields()->field_value( $field_key );
 			if ( empty( $field_value ) ) {
 				um_reset_user();
-				return false;
+				$wp_query->set_404();
+				return;
 			}
 
 			$download_type = $field_data[ $field_key ]['type'];
-			if ( $download_type === 'file' ) {
+			if ( 'file' === $download_type ) {
 				$this->file_download( $user_id, $field_key, $field_value );
-			} else {
+			} elseif ( 'image' === $download_type ) {
 				$this->image_download( $user_id, $field_key, $field_value );
 			}
 
-			return false;
+			um_reset_user();
+			$wp_query->set_404();
 		}
-
 
 		/**
 		 * @param $user_id
 		 * @param $field_key
 		 * @param $field_value
 		 */
-		function image_download( $user_id, $field_key, $field_value ) {
-			$file_path = UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . $field_value;
-			if ( ! file_exists( $file_path ) ) {
-				if ( is_multisite() ) {
-					//multisite fix for old customers
-					$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file_path );
-				}
-			}
+		private function image_download( $user_id, $field_key, $field_value ) {
+			global $wp_filesystem, $wp_query;
 
-			//validate traversal file
+			UM()->common()->filesystem()::maybe_init_wp_filesystem();
+
+			$file_path = wp_normalize_path( UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $field_value );
+
+			// Validate traversal file
 			if ( validate_file( $file_path ) === 1 ) {
 				um_reset_user();
+				$wp_query->set_404();
 				return;
 			}
 
-			$file_info = get_user_meta( $user_id, $field_key . "_metadata", true );
+			$file_info = get_user_meta( $user_id, $field_key . '_metadata', true );
 
-			$pathinfo = pathinfo( $file_path );
-			$size = filesize( $file_path );
+			$pathinfo     = pathinfo( $file_path );
+			$size         = filesize( $file_path );
 			$originalname = ! empty( $file_info['original_name'] ) ? $file_info['original_name'] : $pathinfo['basename'];
-			$type = ! empty( $file_info['type'] ) ? $file_info['type'] : $pathinfo['extension'];
+			$type         = wp_get_image_mime( $file_path );
+			if ( ! $type ) {
+				$type = 'application/octet-stream';
+			}
 
-			header('Content-Description: File Transfer');
-			header('Content-Type: ' . $type );
-			header('Content-Disposition: inline; filename="' . $originalname . '"');
-			header('Content-Transfer-Encoding: binary');
-			header('Expires: 0');
-			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-			header('Pragma: public');
-			header('Content-Length: ' . $size);
+			header( 'Content-Description: File Transfer' );
+			header( 'Content-Type: ' . $type );
+			header( 'Content-Disposition: inline; filename="' . $originalname . '"' );
+			header( 'Content-Transfer-Encoding: binary' );
+			header( 'Expires: 0' );
+			header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
+			header( 'Pragma: public' );
+			header( 'Content-Length: ' . $size );
 
 			$levels = ob_get_level();
 			for ( $i = 0; $i < $levels; $i++ ) {
 				@ob_end_clean();
 			}
 
-			readfile( $file_path );
+			$content = $wp_filesystem->get_contents( $file_path );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- temp file content.
+			echo $content;
 			exit;
 		}
-
 
 		/**
 		 * @param $user_id
 		 * @param $field_key
 		 * @param $field_value
 		 */
-		function file_download( $user_id, $field_key, $field_value ) {
-			$file_path = UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . $field_value;
-			if ( ! file_exists( $file_path ) ) {
-				if ( is_multisite() ) {
-					//multisite fix for old customers
-					$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file_path );
-				}
-			}
+		private function file_download( $user_id, $field_key, $field_value ) {
+			global $wp_filesystem, $wp_query;
 
-			//validate traversal file
+			UM()->common()->filesystem()::maybe_init_wp_filesystem();
+
+			$file_path = wp_normalize_path( UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $field_value );
+			// Validate traversal file
 			if ( validate_file( $file_path ) === 1 ) {
 				um_reset_user();
+				$wp_query->set_404();
 				return;
 			}
 
-			$file_info = get_user_meta( $user_id, $field_key . "_metadata", true );
+			$file_info = get_user_meta( $user_id, $field_key . '_metadata', true );
 
-			$pathinfo = pathinfo( $file_path );
-			$size = filesize( $file_path );
+			$pathinfo     = pathinfo( $file_path );
+			$size         = filesize( $file_path );
 			$originalname = ! empty( $file_info['original_name'] ) ? $file_info['original_name'] : $pathinfo['basename'];
-			$type = ! empty( $file_info['type'] ) ? $file_info['type'] : $pathinfo['extension'];
+			$filetype     = wp_check_filetype( $file_path, wp_get_mime_types() );
+			$type         = $filetype['type'] ? $filetype['type'] : 'application/octet-stream';
 
-			header('Content-Description: File Transfer');
-			header('Content-Type: ' . $type );
-			header('Content-Disposition: attachment; filename="' . $originalname . '"');
-			header('Content-Transfer-Encoding: binary');
-			header('Expires: 0');
-			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-			header('Pragma: public');
-			header('Content-Length: ' . $size);
+			header( 'Content-Description: File Transfer' );
+			header( 'Content-Type: ' . $type );
+			header( 'Content-Disposition: attachment; filename="' . $originalname . '"' );
+			header( 'Content-Transfer-Encoding: binary' );
+			header( 'Expires: 0' );
+			header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
+			header( 'Pragma: public' );
+			header( 'Content-Length: ' . $size );
 
 			$levels = ob_get_level();
 			for ( $i = 0; $i < $levels; $i++ ) {
 				@ob_end_clean();
 			}
 
-			readfile( $file_path );
+			$content = $wp_filesystem->get_contents( $file_path );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- temp file content.
+			echo $content;
 			exit;
 		}
 
 		/**
-		 * Remove file by AJAX
+		 * Remove file by AJAX.
+		 * @todo remove after old UI uploaders patch.
 		 */
-		public function ajax_remove_file() {
-			if ( empty( $_POST['key'] ) ) {
-				wp_send_json_error( __( 'Wrong field key', 'ultimate-member' ) );
+//		public function ajax_remove_file() {
+//			if ( empty( $_POST['key'] ) ) {
+//				wp_send_json_error( __( 'Wrong field key', 'ultimate-member' ) );
+//			}
+//			$key = sanitize_text_field( $_POST['key'] );
+//
+//			if ( empty( $_POST['mode'] ) ) {
+//				wp_send_json_error( __( 'Wrong mode', 'ultimate-member' ) );
+//			}
+//			$mode = sanitize_key( $_POST['mode'] );
+//
+//			check_ajax_referer( "um-remove-file-$key-$mode" );
+//
+//			if ( UM()->is_rate_limited( 'remove_file' ) ) {
+//				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
+//			}
+//
+//			if ( empty( $_POST['src'] ) ) {
+//				wp_send_json_error( __( 'Wrong path', 'ultimate-member' ) );
+//			}
+//
+//			$src = esc_url_raw( $_POST['src'] );
+//			if ( strstr( $src, '?' ) ) {
+//				$splitted = explode( '?', $src );
+//				$src      = $splitted[0];
+//			}
+//
+//			if ( 'register' === $mode || empty( $_POST['user_id'] ) ) {
+//				$is_temp = um_is_temp_upload( $src );
+//				if ( ! $is_temp ) {
+//					wp_send_json_success();
+//				}
+//			} else {
+//				$user_id = absint( $_POST['user_id'] );
+//
+//				if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+//					wp_send_json_error( __( 'You have no permission to edit this user', 'ultimate-member' ) );
+//				}
+//
+//				$is_temp = um_is_temp_upload( $src );
+//				if ( ! $is_temp ) {
+//					if ( ! empty( $_POST['filename'] ) && file_exists( UM()->uploader()->get_upload_user_base_dir( $user_id ) . DIRECTORY_SEPARATOR . sanitize_file_name( $_POST['filename'] ) ) ) {
+//						wp_send_json_success();
+//					}
+//				}
+//			}
+//
+//			if ( $this->delete_file( $src ) ) {
+//				wp_send_json_success();
+//			} else {
+//				wp_send_json_error( __( 'You have no permission to delete this file', 'ultimate-member' ) );
+//			}
+//		}
+
+		/**
+		 * Common upload file handler. Default result file in temp directory with unique name.
+		 */
+		public function delete_temp_file() {
+			if ( empty( $_REQUEST['name'] ) || empty( $_REQUEST['hash'] ) ) {
+				wp_send_json_error( __( 'Unknown file.', 'ultimate-member' ) );
 			}
-			$key = sanitize_text_field( $_POST['key'] );
 
-			check_ajax_referer( 'um-remove-file' . $key );
+			check_ajax_referer( 'um_delete_temp_file' . $_REQUEST['name'], 'nonce' );
 
-			if ( UM()->is_rate_limited( 'remove_file' ) ) {
-				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
+			$filename = sanitize_text_field( $_REQUEST['hash'] );
+
+			$file_path = UM()->common()->filesystem()->get_file_by_hash( $filename );
+			if ( false === $file_path ) {
+				wp_send_json_error( __( 'Unknown file.', 'ultimate-member' ) );
 			}
 
-			if ( empty( $_POST['src'] ) ) {
-				wp_send_json_error( __( 'Wrong path', 'ultimate-member' ) );
+			if ( ! wp_delete_file( $file_path ) ) {
+				wp_send_json_error( __( 'Cannot remove file from server.', 'ultimate-member' ) );
 			}
 
-			if ( empty( $_POST['mode'] ) ) {
-				wp_send_json_error( __( 'Wrong mode', 'ultimate-member' ) );
-			}
-
-			$src = esc_url_raw( $_POST['src'] );
-			if ( strstr( $src, '?' ) ) {
-				$splitted = explode( '?', $src );
-				$src = $splitted[0];
-			}
-
-			$mode = sanitize_key( $_POST['mode'] );
-
-			if ( $mode == 'register' || empty( $_POST['user_id'] ) ) {
-				$is_temp = um_is_temp_upload( $src );
-				if ( ! $is_temp ) {
-					wp_send_json_success();
-				}
-			} else {
-				$user_id = absint( $_POST['user_id'] );
-
-				if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-					wp_send_json_error( __( 'You have no permission to edit this user', 'ultimate-member' ) );
-				}
-
-				$is_temp = um_is_temp_upload( $src );
-				if ( ! $is_temp ) {
-					if ( ! empty( $_POST['filename'] ) && file_exists( UM()->uploader()->get_upload_user_base_dir( $user_id ) . DIRECTORY_SEPARATOR . sanitize_file_name( $_POST['filename'] ) ) ) {
-						wp_send_json_success();
-					}
-				}
-			}
-
-			if ( $this->delete_file( $src ) ) {
-				wp_send_json_success();
-			} else {
-				wp_send_json_error( __( 'You have no permission to delete this file', 'ultimate-member' ) );
-			}
+			wp_send_json_success();
 		}
 
 		/**
 		 * Resize image AJAX handler
 		 */
-		public function ajax_resize_image() {
+		/*public function ajax_resize_image() {
 			if ( ! isset( $_REQUEST['key'], $_REQUEST['set_mode'] ) ) {
 				wp_send_json_error( esc_js( __( 'Invalid parameters', 'ultimate-member' ) ) );
 			}
@@ -458,6 +616,188 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			delete_option( "um_cache_userdata_{$user_id}" );
 
 			wp_send_json_success( $output );
+		}*/
+
+		/**
+		 * Resize image AJAX handler
+		 */
+		public function crop_image() {
+			if ( empty( $_REQUEST['field_id'] ) ) {
+				wp_send_json_error( __( 'Invalid field ID', 'ultimate-member' ) );
+			}
+
+			$field_id = ! empty( $_REQUEST['field_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['field_id'] ) ) : '';
+
+			check_ajax_referer( 'um_field_image_crop_apply' . $field_id );
+
+			if ( ! isset( $_REQUEST['src'], $_REQUEST['temp_hash'], $_REQUEST['coord'] ) ) {
+				wp_send_json_error( __( 'Invalid parameters', 'ultimate-member' ) );
+			}
+
+			$coord   = sanitize_text_field( $_REQUEST['coord'] );
+			$coord_n = substr_count( $coord, ',' );
+			if ( 3 !== $coord_n ) {
+				wp_send_json_error( __( 'Invalid coordinates', 'ultimate-member' ) );
+			}
+
+			$user_id = empty( $_REQUEST['user_id'] ) ? null : absint( $_REQUEST['user_id'] );
+			if ( $user_id && is_user_logged_in() && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+				wp_send_json_error( __( 'You have no permission to edit this user', 'ultimate-member' ) );
+			}
+
+			if ( $user_id && ! is_user_logged_in() ) {
+				wp_send_json_error( __( 'Please login to edit this user', 'ultimate-member' ) );
+			}
+
+			$form_id   = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : null;
+			$form_post = get_post( $form_id );
+			// Invalid post ID. Maybe post doesn't exist.
+			if ( empty( $form_post ) ) {
+				wp_send_json_error( __( 'Invalid form ID', 'ultimate-member' ) );
+			}
+
+			if ( 'um_form' !== $form_post->post_type ) {
+				wp_send_json_error( __( 'Invalid form post type', 'ultimate-member' ) );
+			}
+
+			$form_status = get_post_status( $form_id );
+			if ( 'publish' !== $form_status ) {
+				wp_send_json_error( __( 'Invalid form status', 'ultimate-member' ) );
+			}
+
+			$post_data = UM()->query()->post_data( $form_id );
+			if ( ! array_key_exists( 'mode', $post_data ) ) {
+				wp_send_json_error( __( 'Invalid form type', 'ultimate-member' ) );
+			}
+			$mode = $post_data['mode'];
+
+			UM()->fields()->set_id   = $form_id;
+			UM()->fields()->set_mode = $mode;
+
+			if ( ! is_user_logged_in() && 'profile' === $mode ) {
+				wp_send_json_error( __( 'You have no permission to edit user profile', 'ultimate-member' ) );
+			}
+
+			if ( null !== $user_id && 'register' === $mode ) {
+				wp_send_json_error( __( 'User has to be empty on registration', 'ultimate-member' ) );
+			}
+
+			// For profiles only.
+			if ( 'profile' === $mode && ! empty( $post_data['use_custom_settings'] ) && ! empty( $post_data['role'] ) ) {
+				// Option "Apply custom settings to this form". Option "Make this profile form role-specific".
+				// Show the first Profile Form with role selected, don't show profile forms below the page with other role-specific setting.
+				$current_user_roles = UM()->roles()->get_all_user_roles( $user_id );
+				if ( empty( $current_user_roles ) ) {
+					wp_send_json_error( __( 'You have no permission to edit this user through this form', 'ultimate-member' ) );
+				}
+
+				$post_data['role'] = maybe_unserialize( $post_data['role'] );
+
+				if ( is_array( $post_data['role'] ) ) {
+					if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {
+						wp_send_json_error( __( 'You have no permission to edit this user through this form', 'ultimate-member' ) );
+					}
+				} elseif ( ! in_array( $post_data['role'], $current_user_roles, true ) ) {
+					wp_send_json_error( __( 'You have no permission to edit this user through this form', 'ultimate-member' ) );
+				}
+			}
+
+			if ( ! array_key_exists( 'custom_fields', $post_data ) || empty( $post_data['custom_fields'] ) ) {
+				wp_send_json_error( __( 'Invalid form fields', 'ultimate-member' ) );
+			}
+
+			$custom_fields = maybe_unserialize( $post_data['custom_fields'] );
+			if ( ! is_array( $custom_fields ) || ! array_key_exists( $field_id, $custom_fields ) ) {
+				wp_send_json_error( __( 'Invalid field metakey', 'ultimate-member' ) );
+			}
+
+			if ( empty( $custom_fields[ $field_id ]['crop'] ) ) {
+				wp_send_json_error( __( 'This field doesn\'t support image crop', 'ultimate-member' ) );
+			}
+
+			if ( 'profile' === $mode ) {
+				if ( in_array( $field_id, array( 'cover_photo', 'profile_photo' ), true ) ) {
+					if ( 'profile_photo' === $field_id ) {
+						$disable_photo_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'disable_profile_photo_upload' ) : $post_data['disable_photo_upload'];
+						if ( $disable_photo_uploader ) {
+							wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
+						}
+					} else {
+						$cover_enabled_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'profile_cover_enabled' ) : $post_data['cover_enabled'];
+						if ( ! $cover_enabled_uploader ) {
+							wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
+						}
+					}
+				} elseif ( ! um_can_edit_field( $custom_fields[ $field_id ] ) ) {
+					wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
+				}
+			}
+
+			$temp_hash = sanitize_text_field( $_REQUEST['temp_hash'] );
+			$file_path = UM()->common()->filesystem()->get_file_by_hash( $temp_hash );
+			if ( false === $file_path ) {
+				// Possible hijacking.
+				wp_send_json_error( __( 'Possible hijacking', 'ultimate-member' ) );
+			}
+
+			$src = UM()->common()->filesystem()->get_temp_file_url(
+				array(
+					'file' => $file_path,
+					'hash' => $temp_hash,
+				)
+			);
+
+			if ( ! function_exists( 'wp_get_image_editor' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/media.php';
+			}
+
+			/**
+			 * Return an implementation that extends WP_Image_Editor
+			 * @see https://developer.wordpress.org/reference/classes/wp_image_editor/
+			 */
+			$image = wp_get_image_editor( $file_path );
+			if ( is_wp_error( $image ) ) {
+				// translators: %s: File path.
+				wp_send_json_error( sprintf( __( 'Unable to crop stream image file: %s', 'ultimate-member' ), $file_path ) );
+			}
+
+			// Crop
+			$crop = explode( ',', $coord );
+			$crop = array_map( 'intval', $crop );
+
+			list( $src_x, $src_y, $src_w, $src_h ) = $crop;
+			$image->crop( $src_x, $src_y, $src_w, $src_h );
+
+			$quality = (int) UM()->options()->get( 'image_compression' );
+			$max_w   = (int) UM()->options()->get( 'image_max_width' );
+
+			// Resize
+			$dimensions = $image->get_size();
+			if ( ! empty( $max_w ) && $dimensions['width'] > $max_w ) {
+				$image->resize( $max_w, null );
+			}
+
+			// Quality
+			if ( 100 !== $quality && $image->get_quality() > $quality ) {
+				$image->set_quality( $quality );
+			}
+
+			$image->save( $file_path );
+
+			//$preview = '<img src="' . esc_url( $src ) . '" alt="' . esc_attr__( 'Image Upload', 'ultimate-member' ) . '" style="width:100%" />';
+
+			$filename = wp_basename( $file_path );
+			$hash     = md5( $filename . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
+
+			wp_send_json_success(
+				array(
+					'filename'     => $filename,
+					'hash'         => $hash,
+					'temp_hash'    => $temp_hash,
+					'src'          => $src,
+					'delete_nonce' => wp_create_nonce( 'um_delete_temp_file' . $filename ),
+				)
+			);
 		}
 
 		/**
@@ -480,6 +820,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			$id      = sanitize_text_field( $_POST['key'] );
 			$user_id = empty( $_POST['user_id'] ) ? null : absint( $_POST['user_id'] );
+			$mode    = sanitize_key( $_POST['set_mode'] );
 
 			/**
 			 * Filters the custom validation marker for 3rd-party uploader.
@@ -526,7 +867,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				if ( $um_image_upload_nonce ) {
 					$timestamp = absint( $_POST['timestamp'] );
 					$nonce     = sanitize_text_field( $_POST['_wpnonce'] );
-					if ( ! wp_verify_nonce( $nonce, "um_upload_nonce-{$timestamp}" ) && is_user_logged_in() ) {
+					if ( ! wp_verify_nonce( $nonce, 'um_upload_nonce-' . $timestamp . '-' . $id . '-' . $user_id . '-' . $mode ) && is_user_logged_in() ) {
 						// This nonce is not valid.
 						$ret['error'] = esc_html__( 'Invalid nonce', 'ultimate-member' );
 						wp_send_json_error( $ret );
@@ -544,7 +885,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				}
 
 				$form_id = absint( $_POST['set_id'] );
-				$mode    = sanitize_key( $_POST['set_mode'] );
 
 				UM()->fields()->set_id   = $form_id;
 				UM()->fields()->set_mode = $mode;
@@ -652,7 +992,11 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					if ( isset( $uploaded['error'] ) ) {
 						$ret['error'] = $uploaded['error'];
 					} else {
-						$ret[] = $uploaded['handle_upload'];
+						$uploaded_image = $uploaded['handle_upload'];
+
+						$uploaded_image['delete_nonce'] = wp_create_nonce( 'um_delete_temp_file' . $uploaded_image['file'] );
+
+						$ret[] = $uploaded_image;
 					}
 				}
 			} else {
@@ -674,6 +1018,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			$ret['error'] = null;
 			$ret          = array();
+
+			$id      = sanitize_text_field( $_POST['key'] );
+			$mode    = sanitize_key( $_POST['set_mode'] );
+			$user_id = empty( $_POST['user_id'] ) ? null : absint( $_POST['user_id'] );
 
 			/**
 			 * Filters file upload checking nonce.
@@ -698,14 +1046,13 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				$nonce     = sanitize_text_field( $_POST['_wpnonce'] );
 				$timestamp = absint( $_POST['timestamp'] );
 
-				if ( ! wp_verify_nonce( $nonce, 'um_upload_nonce-' . $timestamp ) && is_user_logged_in() ) {
+				if ( ! wp_verify_nonce( $nonce, 'um_upload_nonce-' . $timestamp . '-' . $id . '-' . $user_id . '-' . $mode ) && is_user_logged_in() ) {
 					// This nonce is not valid.
 					$ret['error'] = esc_html__( 'Invalid nonce', 'ultimate-member' );
 					wp_send_json_error( $ret );
 				}
 			}
 
-			$user_id = empty( $_POST['user_id'] ) ? null : absint( $_POST['user_id'] );
 			if ( $user_id && is_user_logged_in() && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 				$ret['error'] = esc_html__( 'You have no permission to edit this user', 'ultimate-member' );
 				wp_send_json_error( $ret );
@@ -717,7 +1064,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 
 			$form_id = absint( $_POST['set_id'] );
-			$mode    = sanitize_key( $_POST['set_mode'] );
 
 			UM()->fields()->set_id   = $form_id;
 			UM()->fields()->set_mode = $mode;
@@ -809,11 +1155,13 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 						$ret['error'] = $uploaded['error'];
 					} else {
 						$uploaded_file        = $uploaded['handle_upload'];
-						$ret['url']           = $uploaded_file['file_info']['name'];
+						$ret['url']           = $uploaded_file['url'];
+						$ret['temp_hash']     = $uploaded_file['temp_hash'];
 						$ret['icon']          = UM()->files()->get_fonticon_by_ext( $uploaded_file['file_info']['ext'] );
 						$ret['icon_bg']       = UM()->files()->get_fonticon_bg_by_ext( $uploaded_file['file_info']['ext'] );
 						$ret['filename']      = $uploaded_file['file_info']['basename'];
 						$ret['original_name'] = $uploaded_file['file_info']['original_name'];
+						$ret['delete_nonce']  = wp_create_nonce( 'um_delete_temp_file' . $ret['filename'] );
 					}
 				}
 			} else {
