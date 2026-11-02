@@ -63,7 +63,6 @@ jQuery(document).ready(function() {
 
 		var d;
 		var form_id = 0;
-		// var mode = '';
 		var nonce = '';
 		if ( jQuery('div.um-field-image[data-key="' + key + '"]').length === 1 ) {
 			let $formWrapper = jQuery('div.um-field-image[data-key="' + key + '"]').closest('.um-form');

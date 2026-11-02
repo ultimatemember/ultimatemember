@@ -707,13 +707,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 
 			$custom_fields = maybe_unserialize( $post_data['custom_fields'] );
-			if ( ! is_array( $custom_fields ) || ! array_key_exists( $field_id, $custom_fields ) ) {
-				wp_send_json_error( __( 'Invalid field metakey', 'ultimate-member' ) );
-			}
-
-			if ( empty( $custom_fields[ $field_id ]['crop'] ) ) {
-				wp_send_json_error( __( 'This field doesn\'t support image crop', 'ultimate-member' ) );
-			}
 
 			if ( 'profile' === $mode ) {
 				if ( in_array( $field_id, array( 'cover_photo', 'profile_photo' ), true ) ) {
@@ -728,8 +721,20 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 							wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
 						}
 					}
+				} elseif ( ! is_array( $custom_fields ) || ! array_key_exists( $field_id, $custom_fields ) ) {
+					wp_send_json_error( __( 'Invalid field metakey', 'ultimate-member' ) );
 				} elseif ( ! um_can_edit_field( $custom_fields[ $field_id ] ) ) {
 					wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
+				} elseif ( empty( $custom_fields[ $field_id ]['crop'] ) ) {
+					wp_send_json_error( __( 'This field doesn\'t support image crop', 'ultimate-member' ) );
+				}
+			} else {
+				if ( ! is_array( $custom_fields ) || ! array_key_exists( $field_id, $custom_fields ) ) {
+					wp_send_json_error( __( 'Invalid field metakey', 'ultimate-member' ) );
+				}
+
+				if ( empty( $custom_fields[ $field_id ]['crop'] ) ) {
+					wp_send_json_error( __( 'This field doesn\'t support image crop', 'ultimate-member' ) );
 				}
 			}
 

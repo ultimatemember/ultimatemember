@@ -306,7 +306,6 @@ function initImageUpload_UM( trigger ) {
 	}
 
 	var user_id = 0;
-
 	if( jQuery('#um_upload_single:visible').data('user_id') ){
         user_id = jQuery('#um_upload_single:visible').data('user_id');
     }
@@ -562,6 +561,8 @@ function um_new_modal( id, size, isPhoto, source ) {
 		$modal.addClass('no-photo').show().children().show();
 
 		um_modal_size( size );
+
+		wp.hooks.doAction( 'um_new_modal_before_uploaders_init' );
 
 		initImageUpload_UM( jQuery('.um-modal:visible .um-single-image-upload') );
 		initFileUpload_UM( jQuery('.um-modal:visible .um-single-file-upload') );
