@@ -176,7 +176,7 @@ function um_profile_content_main( $args ) {
 		?>
 		<div class="um-profile-note">
 			<span>
-				<i class="um-faicon-lock"></i>
+				<i class="um-faicon-lock" aria-hidden="true"></i>
 				<?php echo esc_html( $can_view ); ?>
 			</span>
 		</div>
@@ -858,8 +858,8 @@ function um_profile_header_cover_area( $args ) {
 
 			} elseif ( ! isset( UM()->user()->cannot_edit ) ) {
 				?>
-				<a href="javascript:void(0);" class="um-cover-add"><span class="um-cover-add-i"><i
-							class="um-icon-plus um-tip-n"
+				<a href="javascript:void(0);" class="um-cover-add" aria-label="<?php esc_attr_e( 'Upload a cover photo', 'ultimate-member' ); ?>"><span class="um-cover-add-i"><i
+							class="um-icon-plus um-tip-n" aria-hidden="true"
 							title="<?php esc_attr_e( 'Upload a cover photo', 'ultimate-member' ); ?>"></i></span></a>
 				<?php
 			}
@@ -869,7 +869,7 @@ function um_profile_header_cover_area( $args ) {
 			<span class="um-cover-overlay">
 				<span class="um-cover-overlay-s">
 					<ins>
-						<i class="um-faicon-picture-o"></i>
+						<i class="um-faicon-picture-o" aria-hidden="true"></i>
 						<span class="um-cover-overlay-t"><?php esc_html_e( 'Change your cover photo', 'ultimate-member' ); ?></span>
 					</ins>
 				</span>
@@ -934,7 +934,7 @@ function um_profile_header( $args ) {
 		$overlay = '<span class="um-profile-photo-overlay">
 			<span class="um-profile-photo-overlay-s">
 				<ins>
-					<i class="um-faicon-camera"></i>
+					<i class="um-faicon-camera" aria-hidden="true"></i>
 				</ins>
 			</span>
 		</span>';
@@ -1346,7 +1346,7 @@ function um_add_edit_icon( $args ) {
 	if ( true === UM()->fields()->editing ) {
 		?>
 		<div class="um-profile-edit um-profile-headericon">
-			<a href="javascript:void(0);" class="um-profile-edit-a um-profile-save"><i class="um-faicon-check"></i></a>
+			<a href="javascript:void(0);" class="um-profile-edit-a um-profile-save" aria-label="<?php esc_attr_e( 'Save profile', 'ultimate-member' ); ?>"><i class="um-faicon-check" aria-hidden="true"></i></a>
 		</div>
 		<?php
 		return;
@@ -1429,7 +1429,7 @@ function um_add_edit_icon( $args ) {
 	?>
 
 	<div class="um-profile-edit um-profile-headericon">
-		<a href="javascript:void(0);" class="um-profile-edit-a"><i class="um-faicon-cog"></i></a>
+		<a href="javascript:void(0);" class="um-profile-edit-a" aria-label="<?php esc_attr_e( 'Profile actions', 'ultimate-member' ); ?>"><i class="um-faicon-cog" aria-hidden="true"></i></a>
 		<?php UM()->profile()->new_ui( $args['header_menu'], 'div.um-profile-edit', 'click', $items ); ?>
 	</div>
 
@@ -1668,9 +1668,9 @@ function um_profile_menu( $args ) {
 			<div class="um-profile-nav-item um-profile-nav-<?php echo esc_attr( $id . ' ' . $profile_nav_class ); ?>">
 				<?php if ( UM()->options()->get( 'profile_menu_icons' ) ) { ?>
 					<a href="<?php echo esc_url( $nav_link ); ?>" class="uimob800-show uimob500-show uimob340-show um-tip-n"
-					   title="<?php echo esc_attr( $tab['name'] ); ?>" original-title="<?php echo esc_attr( $tab['name'] ); ?>" <?php echo esc_attr( $profile_nav_attrs ); ?>>
+					   aria-label="<?php echo esc_attr( $tab['name'] ); ?>" title="<?php echo esc_attr( $tab['name'] ); ?>" original-title="<?php echo esc_attr( $tab['name'] ); ?>" <?php echo esc_attr( $profile_nav_attrs ); ?>>
 
-						<i class="<?php echo esc_attr( $tab['icon'] ); ?>"></i>
+						<i class="<?php echo esc_attr( $tab['icon'] ); ?>" aria-hidden="true"></i>
 
 						<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
 							<span class="um-tab-notifier uimob800-show uimob500-show uimob340-show"><?php echo $tab['notifier']; ?></span>
@@ -1681,7 +1681,7 @@ function um_profile_menu( $args ) {
 					<a href="<?php echo esc_url( $nav_link ); ?>" class="uimob800-hide uimob500-hide uimob340-hide"
 					   title="<?php echo esc_attr( $tab['name'] ); ?>" <?php echo esc_attr( $profile_nav_attrs ); ?>>
 
-						<i class="<?php echo esc_attr( $tab['icon'] ); ?>"></i>
+						<i class="<?php echo esc_attr( $tab['icon'] ); ?>" aria-hidden="true"></i>
 
 						<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
 							<span class="um-tab-notifier"><?php echo $tab['notifier']; ?></span>
@@ -1691,9 +1691,9 @@ function um_profile_menu( $args ) {
 					</a>
 				<?php } else { ?>
 					<a href="<?php echo esc_url( $nav_link ); ?>" class="uimob800-show uimob500-show uimob340-show um-tip-n"
-					   title="<?php echo esc_attr( $tab['name'] ); ?>" original-title="<?php echo esc_attr( $tab['name'] ); ?>" <?php echo esc_attr( $profile_nav_attrs ); ?>>
+					   aria-label="<?php echo esc_attr( $tab['name'] ); ?>" title="<?php echo esc_attr( $tab['name'] ); ?>" original-title="<?php echo esc_attr( $tab['name'] ); ?>" <?php echo esc_attr( $profile_nav_attrs ); ?>>
 
-						<i class="<?php echo esc_attr( $tab['icon'] ); ?>"></i>
+						<i class="<?php echo esc_attr( $tab['icon'] ); ?>" aria-hidden="true"></i>
 
 						<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
 							<span class="um-tab-notifier uimob800-show uimob500-show uimob340-show"><?php echo $tab['notifier']; ?></span>

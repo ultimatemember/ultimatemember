@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div class="um-item">
 	<div class="um-item-link">
-		<i class="um-icon-ios-paper"></i>
+		<i class="um-icon-ios-paper" aria-hidden="true"></i>
 		<a href="<?php echo esc_url( get_permalink( $post ) ); ?>"><?php echo wp_kses( get_the_title( $post ), UM()->get_allowed_html( 'templates' ) ); ?></a>
 	</div>
 
