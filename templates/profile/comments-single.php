@@ -19,7 +19,7 @@ $link = apply_filters( 'um_user_profile_comment_url', get_permalink( $comment->c
 
 <div class="um-item">
 	<div class="um-item-link">
-		<i class="um-icon-chatboxes"></i>
+		<i class="um-icon-chatboxes" aria-hidden="true"></i>
 		<a href="<?php echo esc_url( get_comment_link( $comment->comment_ID ) ); ?>">
 			<?php echo get_comment_excerpt( $comment->comment_ID ); ?>
 		</a>

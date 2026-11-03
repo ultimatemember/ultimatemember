@@ -601,7 +601,8 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 			}
 
 			$data['url_target'] = isset( $data['url_target'] ) ? $data['url_target'] : '_blank';
-			$value              = '<a class="' . esc_attr( implode( ' ', $classes ) ) . '" href="' . esc_url( $value ) . '" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . '>' . esc_html( $alt ) . '</a>';
+			// The visible link text already provides its accessible name.
+			$value              = '<a class="' . esc_attr( implode( ' ', $classes ) ) . '" href="' . esc_url( $value ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . '>' . esc_html( $alt ) . '</a>';
 		}
 	}
 

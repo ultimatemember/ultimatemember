@@ -135,7 +135,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					<a href="<?php echo esc_url( um_filtered_social_link( $k, $match, $user_id ) ); ?>"
 					   style="background: <?php echo esc_attr( $arr['color'] ); ?>;" target="<?php echo esc_attr( $arr['url_target'] ); ?>" class="um-tip-n"
-					   title="<?php echo esc_attr( $arr['title'] ); ?>"><i class="<?php echo esc_attr( $arr['icon'] ); ?>"></i></a>
+					   title="<?php echo esc_attr( $arr['title'] ); ?>" aria-label="<?php echo esc_attr( $arr['title'] ); ?>"><i class="<?php echo esc_attr( $arr['icon'] ); ?>" aria-hidden="true"></i></a>
 
 					<?php
 				}
@@ -743,7 +743,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$output .= '<div class="um-field-label">';
 
 			if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'off' !== $this->field_icons && ( 'label' === $this->field_icons || true === $this->viewing ) ) {
-				$output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></div>';
+				$output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-hidden="true"></i></div>';
 			}
 
 			$output .= '<label' . $for_attr . '>' . esc_html__( $label, 'ultimate-member' );
