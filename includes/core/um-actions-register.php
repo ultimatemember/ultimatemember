@@ -58,8 +58,8 @@ function um_after_insert_user( $user_id, $args, $form_data = null ) {
 		UM()->user()->set_registration_details( $args['submitted'], $args, $form_data );
 	}
 
-	// Create user uploads directory.
-	UM()->uploader()->get_upload_user_base_dir( $user_id, true );
+	// Creates user uploads directory inside this function.
+	UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
 
 	/**
 	 * Fires after insert user to DB and there you can set any extra details.
