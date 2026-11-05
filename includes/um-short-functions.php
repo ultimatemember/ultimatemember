@@ -724,7 +724,7 @@ function um_user_submitted_registration_formatted( $style = false ) {
 	}
 
 	// User registered date.
-	$output .= um_user_submited_display( 'user_registered', __( 'User registered date', 'ultimate-member' ) );
+	$output .= um_user_submited_display( 'user_registered', __( 'User registered date', 'ultimate-member' ), $submitted_data );
 	// Registration form.
 	$output .= um_user_submited_display( 'form_id', __( 'Form', 'ultimate-member' ), $submitted_data );
 
@@ -824,7 +824,7 @@ function um_user_submitted_registration_formatted( $style = false ) {
 								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
 								if ( $col1_fields ) {
 									foreach ( $col1_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submited_display( $key, $data['title'], $submitted_data );
 									}
 								}
 							} elseif ( $cols_num == 2 ) {
@@ -832,14 +832,14 @@ function um_user_submitted_registration_formatted( $style = false ) {
 								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
 								if ( $col1_fields ) {
 									foreach ( $col1_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submited_display( $key, $data['title'], $submitted_data );
 									}
 								}
 
 								$col2_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 2 );
 								if ( $col2_fields ) {
 									foreach ( $col2_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submited_display( $key, $data['title'], $submitted_data );
 									}
 								}
 							} else {
@@ -847,21 +847,21 @@ function um_user_submitted_registration_formatted( $style = false ) {
 								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
 								if ( $col1_fields ) {
 									foreach ( $col1_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submited_display( $key, $data['title'], $submitted_data );
 									}
 								}
 
 								$col2_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 2 );
 								if ( $col2_fields ) {
 									foreach ( $col2_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submited_display( $key, $data['title'], $submitted_data );
 									}
 								}
 
 								$col3_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 3 );
 								if ( $col3_fields ) {
 									foreach ( $col3_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submited_display( $key, $data['title'], $submitted_data );
 									}
 								}
 							}
@@ -921,22 +921,21 @@ function um_user_submited_display( $k, $title, $data = array(), $style = true ) 
 	}
 
 	if ( in_array( $type, array( 'image', 'file' ), true ) ) {
-		$file = basename( $v );
-
-		$filedata = get_user_meta( um_user( 'ID' ), $k . '_metadata', true );
-
-		$baseurl = UM()->uploader()->get_upload_base_url();
-		if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $file ) ) {
-			if ( is_multisite() ) {
-				//multisite fix for old customers
-				$baseurl = str_replace( '/sites/' . get_current_blog_id() . '/', '/', $baseurl );
+		if ( is_array( $v ) && array_key_exists( 'filename', $v ) ) {
+			if ( empty( $v['temp_hash'] ) && empty( $v['filename'] ) ) {
+				$v = '';
+			} else {
+				$v = $v['filename'];
 			}
 		}
 
+		$filedata = get_user_meta( um_user( 'ID' ), $k . '_metadata', true );
+		$uri      = UM()->files()->get_download_link( $data['form_id'], $k, um_user( 'ID' ), sanitize_file_name( $v ) );
+
 		if ( ! empty( $filedata['original_name'] ) ) {
-			$v = '<a class="um-preview-upload" target="_blank" href="' . esc_url( $baseurl . um_user( 'ID' ) . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
+			$v = '<a class="um-preview-upload" target="_blank" href="' . esc_url( $uri ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
 		} else {
-			$v = $baseurl . um_user( 'ID' ) . '/' . $file;
+			$v = $uri;
 		}
 	}
 

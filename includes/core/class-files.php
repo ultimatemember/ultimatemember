@@ -105,6 +105,18 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				}
 			}
 
+			if ( is_array( $field_value ) && array_key_exists( 'filename', $field_value ) ) {
+				if ( empty( $field_value['filename'] ) ) {
+					$field_value = '';
+				} else {
+					$field_value = $field_value['filename'];
+				}
+			}
+
+			if ( empty( $field_value ) ) {
+				return '';
+			}
+
 			$file_path = wp_normalize_path( UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $field_value );
 			// Validate not exists file.
 			if ( ! file_exists( $file_path ) ) {

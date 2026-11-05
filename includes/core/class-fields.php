@@ -3015,8 +3015,18 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$user_id = empty( $user_id ) ? null : absint( $user_id );
 					$form_id = $this->set_id;
 
+					// Workaround when triggered invalid form submission, and we need to pass 3 attributes per 1 file.
+					$edit_value_row = $field_value;
+					if ( is_array( $field_value ) && array_key_exists( 'filename', $field_value ) ) {
+						if ( empty( $field_value['temp_hash'] ) && empty( $field_value['filename'] ) ) {
+							$field_value = '';
+						} else {
+							$field_value = $field_value['filename'];
+						}
+					}
+
 					$hash      = md5( $field_value . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
-					$temp_hash = ''; // it's not empty only during uploading the new file.
+					$temp_hash = ! empty( $edit_value_row['temp_hash'] ) ? sanitize_text_field( $edit_value_row['temp_hash'] ) : ''; // it's not empty only during uploading the new file.
 
 					$output .= '<input type="hidden" name="' . esc_attr( $name ) . '" id="' . esc_attr( $field_name ) . '" class="um-uploaded-value" value="' . esc_attr( $field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
 					$output .= '<input type="hidden" name="' . esc_attr( $hash_name ) . '" id="' . esc_attr( $field_name ) . '-hash" class="um-uploaded-value-hash" value="' . esc_attr( $hash ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
@@ -3028,14 +3038,39 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$modal_label = array_key_exists( 'label', $data ) ? $data['label'] : __( 'Upload Photo', 'ultimate-member' );
 					$output     .= '<div class="um-field-area" style="text-align: center;">';
 
-					if ( ! empty( $field_value ) && 'empty_file' !== $field_value ) {
-						if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) ) {
-							if ( ( isset( $this->set_mode ) && 'register' === $this->set_mode ) || file_exists( UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $field_value ) ) {
-								$img_value = UM()->uploader()->get_core_temp_url() . '/' . $this->field_value( $key, $default, $data );
+					$removed = false;
+					if ( is_array( $edit_value_row ) ) {
+						if ( ! empty( $edit_value_row['temp_hash'] ) ) {
+							$temp_hash_value = sanitize_key( $edit_value_row['temp_hash'] );
+							$filepath        = UM()->common()->filesystem()->get_file_by_hash( $temp_hash_value );
+							if ( false === $filepath ) {
+								$removed = true;
 							} else {
-								$img_value = UM()->files()->get_download_link( $this->set_id, $key, um_user( 'ID' ), $this->field_value( $key, $default, $data ) );
+								$uri = UM()->common()->filesystem()->get_temp_file_url(
+									array(
+										'file' => $filepath,
+										'hash' => $temp_hash_value,
+									)
+								);
 							}
-							$img = '<img class="fusion-lazyload-ignore" src="' . esc_attr( $img_value ) . '" alt="" />';
+						} elseif ( ! empty( $edit_value_row['filename'] ) ) {
+							$filename_value = sanitize_file_name( $edit_value_row['filename'] );
+							$removed        = ! file_exists( wp_normalize_path( UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $filename_value ) );
+
+							$uri = UM()->files()->get_download_link( $form_id, $key, um_user( 'ID' ), $filename_value );
+						} else {
+							$removed = true; // fallback and workaround. the field just empty.
+						}
+					} elseif ( ! empty( $edit_value_row ) ) {
+						$filename_value = sanitize_file_name( $edit_value_row );
+						$removed        = ! file_exists( wp_normalize_path( UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $filename_value ) );
+
+						$uri = UM()->files()->get_download_link( $form_id, $key, um_user( 'ID' ), $filename_value );
+					}
+
+					if ( ! empty( $field_value ) && ! $removed ) {
+						if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) ) {
+							$img = '<img class="fusion-lazyload-ignore" src="' . esc_attr( $uri ) . '" alt="" />';
 						} else {
 							$img = '';
 						}
@@ -3132,6 +3167,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$field_name       = $key . $form_suffix;
 					$file_field_value = $this->field_value( $key, $default, $data );
 
+					// Workaround when triggered invalid form submission, and we need to pass 3 attributes per 1 file.
+					if ( is_array( $file_field_value ) && array_key_exists( 'filename', $file_field_value ) ) {
+						if ( empty( $file_field_value['temp_hash'] ) && empty( $file_field_value['filename'] ) ) {
+							$file_field_value = '';
+						} else {
+							$file_field_value = $file_field_value['filename'];
+						}
+					}
+
 					$name           = $field_name . '[filename]';
 					$hash_name      = $field_name . '[hash]';
 					$temp_hash_name = $field_name . '[temp_hash]';
@@ -3141,7 +3185,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$form_id = $this->set_id;
 
 					$hash      = md5( $file_field_value . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
-					$temp_hash = ''; // it's not empty only during uploading the new file.
+					$temp_hash = ! empty( $edit_value_row['temp_hash'] ) ? sanitize_text_field( $edit_value_row['temp_hash'] ) : ''; // it's not empty only during uploading the new file.
 
 					$output .= '<input type="hidden" name="' . esc_attr( $name ) . '" id="' . esc_attr( $field_name ) . '" class="um-uploaded-value" value="' . esc_attr( $file_field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
 					$output .= '<input type="hidden" name="' . esc_attr( $hash_name ) . '" id="' . esc_attr( $field_name ) . '-hash" class="um-uploaded-value-hash" value="' . esc_attr( $hash ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';

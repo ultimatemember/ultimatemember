@@ -732,54 +732,116 @@ add_action( 'um_main_register_fields', 'um_add_register_fields', 100 );
  * @param $args
  * @param $form_data
  */
+/**
+ * Saving files to register a new user, if there are fields with files.
+ *
+ * @param $user_id
+ * @param $args
+ * @param $form_data
+ */
 function um_registration_save_files( $user_id, $args, $form_data ) {
+	global $wp_filesystem;
+
 	if ( empty( $args['submitted'] ) ) {
 		// It's only frontend case.
 		return;
 	}
 
-	$files = array();
+	UM()->common()->filesystem()::maybe_init_wp_filesystem();
+
+	$user_basedir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
 
 	$fields = maybe_unserialize( $form_data['custom_fields'] );
 	if ( ! empty( $fields ) && is_array( $fields ) ) {
-		foreach ( $fields as $key => $array ) {
-			if ( isset( $args['submitted'][ $key ] ) ) {
-				if ( isset( $array['type'] ) && in_array( $array['type'], array( 'image', 'file' ), true ) &&
-					( um_is_temp_file( $args['submitted'][ $key ] ) || 'empty_file' === $args['submitted'][ $key ] )
-				) {
-					$files[ $key ] = $args['submitted'][ $key ];
+		$user_meta_submitted     = get_user_meta( $user_id, 'submitted', true );
+		$user_meta_submitted_old = $user_meta_submitted; // Is used to compare.
+
+		if ( ! function_exists( 'wp_get_image_editor' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/media.php';
+		}
+
+		foreach ( $fields as $key => $field_data ) {
+			if ( ! array_key_exists( 'type', $field_data ) || ! in_array( $field_data['type'], array( 'image', 'file' ), true ) ) {
+				continue;
+			}
+
+			if ( empty( $args['submitted'][ $key ]['temp_hash'] ) ) {
+				continue;
+			}
+
+			$filepath = UM()->common()->filesystem()->get_file_by_hash( $args['submitted'][ $key ]['temp_hash'] );
+			if ( empty( $filepath ) ) {
+				continue;
+			}
+
+			if ( 'profile_photo' === $key ) {
+				$file_type = wp_check_filetype( $filepath );
+				$filename  = 'profile_photo.' . $file_type['ext'];
+			} elseif ( 'cover_photo' === $key ) {
+				$file_type = wp_check_filetype( $filepath );
+				$filename  = 'cover_photo.' . $file_type['ext'];
+			} else {
+				$filename = sanitize_file_name( $args['submitted'][ $key ]['filename'] );
+				if ( file_exists( $user_basedir . DIRECTORY_SEPARATOR . $filename ) ) {
+					$filename = wp_unique_filename( $user_basedir . DIRECTORY_SEPARATOR, $filename );
 				}
 			}
-		}
-	}
 
-	/**
-	 * Filters files submitted by the UM registration or profile form.
-	 *
-	 * @param {array} $files   Submitted files.
-	 * @param {int}   $user_id User ID.
-	 *
-	 * @return {array} Submitted files.
-	 *
-	 * @since 1.3.x
-	 * @hook um_user_pre_updating_files_array
-	 *
-	 * @example <caption>Extends submitted files.</caption>
-	 * function my_user_pre_updating_files( $files, $user_id ) {
-	 *     $files[] = 'some file';
-	 *     return $files;
-	 * }
-	 * add_filter( 'um_user_pre_updating_files_array', 'my_user_pre_updating_files', 10, 2 );
-	 */
-	$files = apply_filters( 'um_user_pre_updating_files_array', $files, $user_id );
-	if ( ! empty( $files ) && is_array( $files ) ) {
-		UM()->uploader()->replace_upload_dir = true;
-		UM()->uploader()->move_temporary_files( $user_id, $files );
-		UM()->uploader()->replace_upload_dir = false;
+			$new_filepath  = wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR . $filename );
+			$moving_result = $wp_filesystem->move( $filepath, $new_filepath );
+			if ( ! $moving_result ) {
+				continue;
+			}
+
+			if ( 'profile_photo' === $key ) {
+				$image = wp_get_image_editor( $new_filepath ); // Return an implementation that extends WP_Image_Editor
+				if ( ! is_wp_error( $image ) ) {
+					// Creates new file's thumbnails.
+					$sizes_array = array();
+					$all_sizes   = UM()->config()->get( 'avatar_thumbnail_sizes' );
+					foreach ( $all_sizes as $size ) {
+						$sizes_array[] = array( 'width' => $size );
+					}
+					$image->multi_resize( $sizes_array );
+				}
+			} elseif ( 'cover_photo' === $key ) {
+				$image = wp_get_image_editor( $new_filepath ); // Return an implementation that extends WP_Image_Editor
+				if ( ! is_wp_error( $image ) ) {
+					// Creates new file's thumbnails.
+					$sizes_array = array();
+					$all_sizes   = UM()->options()->get( 'cover_thumb_sizes' );
+					foreach ( $all_sizes as $size ) {
+						$sizes_array[] = array( 'width' => $size );
+					}
+					$image->multi_resize( $sizes_array );
+				}
+			}
+
+			$user_meta_submitted[ $key ] = $filename;
+
+			update_user_meta( $user_id, $key, $filename );
+
+			if ( 'file' === $field_data['type'] ) {
+				$file_type = wp_check_filetype( $new_filepath );
+				$size      = filesize( $new_filepath );
+
+				$file_metadata = array(
+					'ext'         => $file_type['ext'],
+					'type'        => $file_type['type'],
+					'size'        => $size,
+					'size_format' => size_format( $size ),
+				);
+				$file_metadata = apply_filters( 'um_file_metadata', $file_metadata, $new_filepath, $key, $args['submitted'] );
+				update_user_meta( $user_id, $key . '_metadata', $file_metadata );
+			}
+		}
+
+		if ( $user_meta_submitted_old !== $user_meta_submitted ) {
+			update_user_meta( $user_id, 'submitted', $user_meta_submitted );
+		}
 	}
 }
 add_action( 'um_registration_set_extra_data', 'um_registration_save_files', 10, 3 );
-
 
 /**
  * Update user Full Name

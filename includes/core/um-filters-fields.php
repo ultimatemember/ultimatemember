@@ -351,36 +351,22 @@ function um_profile_field_filter_hook__file( $value, $data ) {
 	}
 	$file_type = wp_check_filetype( $value );
 	$uri       = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ), $value );
-
-	$removed = false;
-	if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
-		if ( is_multisite() ) {
-			//multisite fix for old customers
-			$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value );
-			if ( ! file_exists( $file_path ) ) {
-				$removed = true;
-			}
-		} else {
-			$removed = true;
-		}
+	if ( ! $uri ) {
+		return '';
 	}
 
-	if ( $removed ) {
-		$value = __( 'This file has been removed.', 'ultimate-member' );
-	} else {
-		$file_info = um_user( $data['metakey'] . "_metadata" );
-		if ( ! empty( $file_info['original_name'] ) ) {
-			$value = $file_info['original_name'];
-		}
-		$value = '<div class="um-single-file-preview show">
-                        <div class="um-single-fileinfo">
-                            <a href="' . esc_url( $uri )  . '" target="_blank">
-                                <span class="icon" style="background:'. UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] ) . '"><i class="'. UM()->files()->get_fonticon_by_ext( $file_type['ext'] ) .'"></i></span>
-                                <span class="filename">' . esc_attr( $value ) . '</span>
-                            </a>
-                        </div>
-                    </div>';
+	$file_info = um_user( $data['metakey'] . "_metadata" );
+	if ( ! empty( $file_info['original_name'] ) ) {
+		$value = $file_info['original_name'];
 	}
+	$value = '<div class="um-single-file-preview show">
+                    <div class="um-single-fileinfo">
+                        <a href="' . esc_url( $uri )  . '" target="_blank">
+                            <span class="icon" style="background:'. UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] ) . '"><i class="'. UM()->files()->get_fonticon_by_ext( $file_type['ext'] ) .'"></i></span>
+                            <span class="filename">' . esc_attr( $value ) . '</span>
+                        </a>
+                    </div>
+                </div>';
 
 	return $value;
 }
