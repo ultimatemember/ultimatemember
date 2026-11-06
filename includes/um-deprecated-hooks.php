@@ -316,3 +316,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param {array} $request Request.
  */
+
+/**
+ * Filters files submitted by the UM registration or profile form.
+ *
+ * @param {array} $files   Submitted files.
+ * @param {int}   $user_id User ID.
+ *
+ * @return {array} Submitted files.
+ *
+ * @since 1.3.x
+ * @depecated 2.15.0
+ * @hook um_user_pre_updating_files_array
+ */
