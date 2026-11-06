@@ -30,12 +30,16 @@ if ( ! class_exists( 'um\core\Login' ) ) {
 		/**
 		 * Adds a nonce field for a form to ensure request integrity.
 		 *
-		 * @param array $args    An array of arguments for the form.
-		 * @param int   $form_id The unique identifier of the form.
+		 * @param array    $args    An array of arguments for the form.
+		 * @param int|null $form_id The unique identifier of the form.
 		 *
 		 * @return void
 		 */
-		public function add_nonce( $args, $form_id ) {
+		public function add_nonce( $args, $form_id = null ) {
+			// Outdated custom templates may call the hook without $form_id.
+			if ( null === $form_id && isset( $args['form_id'] ) ) {
+				$form_id = $args['form_id'];
+			}
 			wp_nonce_field( 'um_login_form' . $form_id );
 		}
 

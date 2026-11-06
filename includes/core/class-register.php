@@ -24,12 +24,16 @@ if ( ! class_exists( 'um\core\Register' ) ) {
 		/**
 		 * Adds a nonce field to ensure the security of the registration form.
 		 *
-		 * @param array $args    Arguments passed to the function, unused in this implementation.
-		 * @param int   $form_id The ID of the form for which the nonce field is generated.
+		 * @param array    $args    Arguments passed to the function.
+		 * @param int|null $form_id The ID of the form for which the nonce field is generated.
 		 *
 		 * @return void
 		 */
-		public function add_nonce( $args, $form_id ) {
+		public function add_nonce( $args, $form_id = null ) {
+			// Outdated custom templates may call the hook without $form_id.
+			if ( null === $form_id && isset( $args['form_id'] ) ) {
+				$form_id = $args['form_id'];
+			}
 			wp_nonce_field( 'um_register_form' . $form_id );
 		}
 
