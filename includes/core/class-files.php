@@ -1012,8 +1012,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 						$uploaded_image = $uploaded['handle_upload'];
 
 						$uploaded_image['delete_nonce'] = wp_create_nonce( 'um_delete_temp_file' . $uploaded_image['file'] );
-
-						$ret[] = $uploaded_image;
+						$uploaded_image['hash']         = md5( $uploaded_image['file'] . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
+						$ret[]                          = $uploaded_image;
 					}
 				}
 			} else {
@@ -1173,6 +1173,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					} else {
 						$uploaded_file        = $uploaded['handle_upload'];
 						$ret['url']           = $uploaded_file['url'];
+						$ret['hash']          = md5( $uploaded_file['file_info']['basename'] . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
 						$ret['temp_hash']     = $uploaded_file['temp_hash'];
 						$ret['icon']          = UM()->files()->get_fonticon_by_ext( $uploaded_file['file_info']['ext'] );
 						$ret['icon_bg']       = UM()->files()->get_fonticon_bg_by_ext( $uploaded_file['file_info']['ext'] );

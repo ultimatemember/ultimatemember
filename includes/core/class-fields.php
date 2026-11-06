@@ -3168,6 +3168,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$file_field_value = $this->field_value( $key, $default, $data );
 
 					// Workaround when triggered invalid form submission, and we need to pass 3 attributes per 1 file.
+					$edit_value_row = $file_field_value;
 					if ( is_array( $file_field_value ) && array_key_exists( 'filename', $file_field_value ) ) {
 						if ( empty( $file_field_value['temp_hash'] ) && empty( $file_field_value['filename'] ) ) {
 							$file_field_value = '';
@@ -3196,50 +3197,54 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$modal_label = array_key_exists( 'label', $data ) ? $data['label'] : __( 'Upload File', 'ultimate-member' );
 					$output     .= '<div class="um-field-area" style="text-align: center;">';
 
-					if ( ! empty( $file_field_value ) && 'empty_file' !== $file_field_value ) {
-						$file_type = wp_check_filetype( $file_field_value );
-
-						if ( um_is_temp_file( $file_field_value ) ) {
-							$file_info = get_transient( "um_{$file_field_value}" );
-						} else {
-							$file_info = um_user( $data['metakey'] . '_metadata' );
-						}
-
-						$file_field_name = $file_field_value;
-						if ( ! empty( $file_info['original_name'] ) ) {
-							$file_field_name = $file_info['original_name'];
-						}
-
-						if ( ( isset( $this->set_mode ) && 'register' === $this->set_mode ) || file_exists( UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $file_field_value ) ) {
-							$file_url = UM()->uploader()->get_core_temp_url() . DIRECTORY_SEPARATOR . $file_field_value;
-							$file_dir = UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $file_field_value;
-						} else {
-							$file_url = UM()->files()->get_download_link( $this->set_id, $key, um_user( 'ID' ), $file_field_value );
-							$file_dir = UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $file_field_value;
-						}
-
-						// Multisite fix for old customers.
-						if ( ! file_exists( $file_dir ) && is_multisite() ) {
-							$file_dir = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file_dir );
-						}
-
-						if ( file_exists( $file_dir ) ) {
-							$output .= '<div class="um-single-file-preview show" data-key="' . esc_attr( $key ) . '">';
-							if ( empty( $disabled ) ) {
-								$output .= '<a href="#" class="cancel"><i class="um-icon-close"></i></a>';
+					$filename_value = '';
+					$removed        = false;
+					if ( is_array( $edit_value_row ) ) {
+						if ( ! empty( $edit_value_row['temp_hash'] ) ) {
+							$filename_value  = sanitize_file_name( $edit_value_row['filename'] );
+							$temp_hash_value = sanitize_key( $edit_value_row['temp_hash'] );
+							$filepath        = UM()->common()->filesystem()->get_file_by_hash( $temp_hash_value );
+							if ( false === $filepath ) {
+								$removed = true;
+							} else {
+								$uri = UM()->common()->filesystem()->get_temp_file_url(
+									array(
+										'file' => $filepath,
+										'hash' => $temp_hash_value,
+									)
+								);
 							}
+						} elseif ( ! empty( $edit_value_row['filename'] ) ) {
+							$filename_value = sanitize_file_name( $edit_value_row['filename'] );
+							$removed        = ! file_exists( wp_normalize_path( UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $filename_value ) );
 
-							$fonticon_bg = UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] );
-							$fonticon    = UM()->files()->get_fonticon_by_ext( $file_type['ext'] );
-
-							$output .= '<div class="um-single-fileinfo">';
-							$output .= '<a href="' . esc_url( $file_url ) . '" target="_blank">';
-							$output .= '<span class="icon" style="background:' . esc_attr( $fonticon_bg ) . '"><i class="' . esc_attr( $fonticon ) . '"></i></span>';
-							$output .= '<span class="filename">' . esc_html( $file_field_name ) . '</span>';
-							$output .= '</a></div></div>';
+							$uri = UM()->files()->get_download_link( $form_id, $key, um_user( 'ID' ), $filename_value );
 						} else {
-							$output .= '<div class="um-single-file-preview show" data-key="' . esc_attr( $key ) . '">' . esc_html__( 'This file has been removed.', 'ultimate-member' ) . '</div>';
+							$removed = true; // fallback and workaround. the field just empty.
 						}
+					} elseif ( ! empty( $edit_value_row ) ) {
+						$filename_value = sanitize_file_name( $edit_value_row );
+						$removed        = ! file_exists( wp_normalize_path( UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $filename_value ) );
+
+						$uri = UM()->files()->get_download_link( $form_id, $key, um_user( 'ID' ), $filename_value );
+					}
+
+					if ( ! empty( $file_field_value ) && ! $removed ) {
+						$file_type = wp_check_filetype( $filename_value );
+
+						$output .= '<div class="um-single-file-preview show" data-key="' . esc_attr( $key ) . '">';
+						if ( empty( $disabled ) ) {
+							$output .= '<a href="#" class="cancel"><i class="um-icon-close"></i></a>';
+						}
+
+						$fonticon_bg = UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] );
+						$fonticon    = UM()->files()->get_fonticon_by_ext( $file_type['ext'] );
+
+						$output .= '<div class="um-single-fileinfo">';
+						$output .= '<a href="' . esc_url( $uri ) . '" target="_blank">';
+						$output .= '<span class="icon" style="background:' . esc_attr( $fonticon_bg ) . '"><i class="' . esc_attr( $fonticon ) . '"></i></span>';
+						$output .= '<span class="filename">' . esc_html( $file_field_value ) . '</span>';
+						$output .= '</a></div></div>';
 
 						if ( empty( $disabled ) ) {
 							$output .= '<a href="#" data-modal="um_upload_single" data-modal-size="' . esc_attr( $data['modal_size'] ) . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . esc_html__( 'Change file', 'ultimate-member' ) . '</a>';

@@ -579,15 +579,15 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				$response['error'] = $movefile['error'];
 			} else {
 				$file_basename   = wp_basename( $movefile['file'] );
-				$hash            = md5( $file_basename . '_um_uploader_security_salt' );
+				$temp_hash       = md5( $file_basename . '_um_uploader_security_salt' );
 				$movefile['url'] = UM()->common()->filesystem()->get_temp_file_url(
 					array(
 						'file' => $file_basename,
-						'hash' => $hash,
+						'hash' => $temp_hash,
 					)
 				);
 
-				$movefile['temp_hash'] = $hash;
+				$movefile['temp_hash'] = $temp_hash;
 
 				$file_type = wp_check_filetype( $movefile['file'] );
 

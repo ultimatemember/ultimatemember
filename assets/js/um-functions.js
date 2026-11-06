@@ -363,6 +363,7 @@ function initImageUpload_UM( trigger ) {
 					img_id.removeAttr("loading");
 					img_id.attr("src", d.url );
 					img_id.attr("data-file", d.file ).data("file", d.file );
+					img_id.attr("data-hash", d.hash ).data("hash", d.hash );
 					img_id.attr("data-temp_hash", d.temp_hash ).data("temp_hash", d.temp_hash );
 
 					img_id_h.find('a.cancel').attr('data-nonce', d.delete_nonce ).data('nonce', d.delete_nonce);
@@ -477,6 +478,10 @@ function initFileUpload_UM( trigger ) {
 					} else if ( key == 'filename' ) {
 
 						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').data('file', value).attr('data-file', value );
+
+					}else if ( key == 'hash' ) {
+
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').data('hash', value).attr('data-hash', value );
 
 					}else if ( key == 'temp_hash' ) {
 

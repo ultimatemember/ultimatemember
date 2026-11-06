@@ -38,6 +38,7 @@ jQuery(document).ready(function() {
 		let infoWrapper = jQuery('.um-field[data-key='+key+']').find('.um-single-fileinfo a');
 
 		let file = infoWrapper.data('file');
+		let hash = infoWrapper.data('hash');
 		let tempHash = infoWrapper.data('temp_hash');
 
 		let $fieldWrapper = $fieldWrapperPreview.parents('.um-field');
@@ -45,6 +46,7 @@ jQuery(document).ready(function() {
 		$fieldWrapper.find('.um-btn-auto-width').html( jQuery(this).attr('data-change') );
 
 		$fieldWrapper.find('input[type="hidden"].um-uploaded-value').val( file ); // set new filename uploaded for this field.
+		$fieldWrapper.find('input[type="hidden"].um-uploaded-value-hash').val( hash ); // set hash based on the new filename uploaded for this field. Required to validate upload.
 		$fieldWrapper.find('input[type="hidden"].um-uploaded-value-temp-hash').val( tempHash ); // set temp hash based on the new filename uploaded for this field. Required to validate upload.
 	});
 
@@ -53,6 +55,7 @@ jQuery(document).ready(function() {
 		var key = jQuery(this).attr('data-key');
 		var img_c = jQuery(this).parents('.um-modal-body').find('.um-single-image-preview');
 		var src = img_c.find('img').attr('src');
+		var hash = img_c.find('img').data('hash');
 		var tempHash = img_c.find('img').data('temp_hash');
 
 		var file = img_c.find('img').data('file');
@@ -238,7 +241,7 @@ jQuery(document).ready(function() {
 			jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( elem.attr('data-change') );
 
 			jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden].um-uploaded-value').val( file );
-			jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden].um-uploaded-value-hash').val( tempHash );
+			jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden].um-uploaded-value-hash').val( hash );
 			jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden].um-uploaded-value-temp-hash').val( tempHash );
 		}
 	});
