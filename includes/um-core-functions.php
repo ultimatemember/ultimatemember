@@ -52,7 +52,10 @@ function um_get_predefined_page_id( $slug ) {
 	}
 
 	$option_key = UM()->options()->get_predefined_page_option_key( $slug );
-	return apply_filters( 'um_get_predefined_page_id', UM()->options()->get( $option_key ), $slug );
+	$page_id    = UM()->options()->get( $option_key );
+	$page_id    = ! empty( $page_id ) ? absint( $page_id ) : false;
+
+	return apply_filters( 'um_get_predefined_page_id', $page_id, $slug );
 }
 
 /**
@@ -84,7 +87,12 @@ function um_is_predefined_page( $slug, $post = null ) {
 		return false;
 	}
 
-	return um_get_predefined_page_id( $slug ) === $post->ID;
+	$predefined_page_id = um_get_predefined_page_id( $slug );
+	if ( empty( $predefined_page_id ) ) {
+		return false;
+	}
+
+	return (int) $predefined_page_id === (int) $post->ID;
 }
 
 /**
