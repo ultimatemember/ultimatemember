@@ -110,8 +110,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			add_filter( 'wp_handle_upload_prefilter', array( $this, 'validate_upload' ) );
 
 			add_filter( 'um_upload_image_result', array( $this, 'rotate_uploaded_image' ), 10, 1 );
-			add_filter( 'um_upload_image_process__profile_photo', array( $this, 'profile_photo' ), 10, 7 );
-			add_filter( 'um_upload_image_process__cover_photo', array( $this, 'cover_photo' ), 10, 7 );
+			// add_filter( 'um_upload_image_process__profile_photo', array( $this, 'profile_photo' ), 10, 7 );
+//			add_filter( 'um_upload_image_process__cover_photo', array( $this, 'cover_photo' ), 10, 7 );
 			add_action( 'um_upload_stream_image_process', array( $this, 'stream_photo' ), 10, 7 );
 
 			add_action( 'init', array( $this, 'init' ) );
@@ -1282,7 +1282,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			$new_files = array();
 			$old_files = array();
 
-			$user_basedir = UM()->uploader()->get_upload_user_base_dir( $user_id, true );
+			$user_basedir = $this->get_upload_user_base_dir( $user_id, true );
 
 			foreach ( $files as $key => $filename ) {
 
@@ -1313,7 +1313,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				}
 
 				//move temporary file from temp directory to the correct user directory
-				$temp_file_path = UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $filename;
+				$temp_file_path = $this->get_core_temp_dir() . DIRECTORY_SEPARATOR . $filename;
 				if ( file_exists( $temp_file_path ) ) {
 					$extra_hash = hash( 'crc32b', time() );
 
@@ -1396,7 +1396,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				}
 			}
 
-			$files = glob( UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . '*' );
+			$files = glob( $this->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . '*' );
 			if ( ! empty( $files ) ) {
 				foreach ( $files as $file ) {
 					$str = basename( $file );

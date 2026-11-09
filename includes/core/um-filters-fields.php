@@ -351,7 +351,7 @@ function um_profile_field_filter_hook__file( $value, $data ) {
 	}
 	$file_type = wp_check_filetype( $value );
 	$uri       = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ), $value );
-	if ( ! $uri ) {
+	if ( empty( $uri ) ) {
 		return '';
 	}
 
@@ -359,14 +359,15 @@ function um_profile_field_filter_hook__file( $value, $data ) {
 	if ( ! empty( $file_info['original_name'] ) ) {
 		$value = $file_info['original_name'];
 	}
+
 	$value = '<div class="um-single-file-preview show">
-                    <div class="um-single-fileinfo">
-                        <a href="' . esc_url( $uri )  . '" target="_blank">
-                            <span class="icon" style="background:'. UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] ) . '"><i class="'. UM()->files()->get_fonticon_by_ext( $file_type['ext'] ) .'"></i></span>
-                            <span class="filename">' . esc_attr( $value ) . '</span>
-                        </a>
-                    </div>
-                </div>';
+        <div class="um-single-fileinfo">
+            <a href="' . esc_url( $uri )  . '" target="_blank">
+                <span class="icon" style="background:'. UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] ) . '"><i class="'. UM()->files()->get_fonticon_by_ext( $file_type['ext'] ) .'"></i></span>
+                <span class="filename">' . esc_attr( $value ) . '</span>
+            </a>
+        </div>
+    </div>';
 
 	return $value;
 }
@@ -388,30 +389,11 @@ function um_profile_field_filter_hook__image( $value, $data ) {
 	$uri   = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ), $value );
 	$title = ( isset( $data['title'] ) ) ? $data['title'] : __( 'Untitled photo', 'ultimate-member' );
 
-	$removed = false;
-	if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
-		if ( is_multisite() ) {
-			//multisite fix for old customers
-			$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value );
-			if ( ! file_exists( $file_path ) ) {
-				$removed = true;
-			}
-		} else {
-			$removed = true;
-		}
+	if ( empty( $uri ) ) {
+		return '';
 	}
 
-	// if value is an image tag
-	if( preg_match( '/\<img.*src=\"([^"]+).*/', $value, $matches ) ) {
-		$uri   = $matches[1];
-		$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="' . esc_attr( $uri ) . '"><img src="' . esc_attr( $uri ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" class="" /></a></div>';
-	} else if ( ! $removed ) {
-		$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="' . esc_attr( $uri ) . '"><img src="' . esc_attr( $uri ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" class="" /></a></div>';
-	} else {
-		$value = '';
-	}
-
-	return $value;
+	return '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="' . esc_attr( $uri ) . '"><img src="' . esc_attr( $uri ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" class="" /></a></div>';
 }
 add_filter( 'um_profile_field_filter_hook__image', 'um_profile_field_filter_hook__image', 99, 2 );
 

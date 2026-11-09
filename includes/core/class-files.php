@@ -255,7 +255,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				$wp_query->set_404();
 				return;
 			}
-			$form_id = absint( $form_id );
 
 			$field = get_query_var( 'um_field' );
 			if ( empty( $field ) ) {
@@ -284,15 +283,22 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				return;
 			}
 
-			$field_data = get_post_meta( $form_id, '_um_custom_fields', true );
-			if ( empty( $field_data[ $field_key ] ) ) {
-				$wp_query->set_404();
-				return;
-			}
+			if ( 'cover_photo' !== $field_key && 'profile_photo' !== $field_key ) {
+				$form_id    = absint( $form_id );
+				$field_data = get_post_meta( $form_id, '_um_custom_fields', true );
+				if ( empty( $field_data[ $field_key ] ) ) {
+					$wp_query->set_404();
+					return;
+				}
 
-			if ( ! um_can_view_field( $field_data[ $field_key ] ) ) {
-				$wp_query->set_404();
-				return;
+				if ( ! um_can_view_field( $field_data[ $field_key ] ) ) {
+					$wp_query->set_404();
+					return;
+				}
+
+				$download_type = $field_data[ $field_key ]['type'];
+			} else {
+				$download_type = 'image';
 			}
 
 			um_fetch_user( $user_id );
@@ -303,7 +309,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				return;
 			}
 
-			$download_type = $field_data[ $field_key ]['type'];
 			if ( 'file' === $download_type ) {
 				$this->file_download( $user_id, $field_key, $field_value );
 			} elseif ( 'image' === $download_type ) {
@@ -634,9 +639,13 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * Resize image AJAX handler
 		 */
 		public function crop_image() {
+			global $wp_filesystem;
+
 			if ( empty( $_REQUEST['field_id'] ) ) {
 				wp_send_json_error( __( 'Invalid field ID', 'ultimate-member' ) );
 			}
+
+			$context = ! empty( $_REQUEST['context'] ) ? sanitize_key( wp_unslash( $_REQUEST['context'] ) ) : 'core';
 
 			$field_id = ! empty( $_REQUEST['field_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['field_id'] ) ) : '';
 
@@ -801,20 +810,64 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			$image->save( $file_path );
 
-			//$preview = '<img src="' . esc_url( $src ) . '" alt="' . esc_attr__( 'Image Upload', 'ultimate-member' ) . '" style="width:100%" />';
+			if ( 'core' === $context && in_array( $field_id, array( 'cover_photo', 'profile_photo' ), true ) ) {
+				$user_basedir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
 
-			$filename = wp_basename( $file_path );
-			$hash     = md5( $filename . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
+				$file_type = wp_check_filetype( $file_path );
+				$filename  = $field_id . '.' . $file_type['ext'];
 
-			wp_send_json_success(
-				array(
-					'filename'     => $filename,
-					'hash'         => $hash,
-					'temp_hash'    => $temp_hash,
-					'src'          => $src,
-					'delete_nonce' => wp_create_nonce( 'um_delete_temp_file' . $filename ),
-				)
-			);
+				$new_filepath  = wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR . $filename );
+				$moving_result = $wp_filesystem->move( $file_path, $new_filepath, true );
+				if ( ! $moving_result ) {
+					// translators: %s is a field key.
+					wp_send_json_error( sprintf( __( 'Unable to move `%s` file.', 'ultimate-member' ), $field_id ) );
+				}
+
+				$image = wp_get_image_editor( $new_filepath ); // Return an implementation that extends WP_Image_Editor
+				if ( ! is_wp_error( $image ) ) {
+					// Creates new file's thumbnails.
+					$sizes_array = array();
+					if ( 'profile_photo' === $field_id ) {
+						$all_sizes = UM()->options()->get( 'photo_thumb_sizes' );
+						delete_user_meta( $user_id, 'synced_profile_photo' );
+					} else {
+						$all_sizes = UM()->options()->get( 'cover_thumb_sizes' );
+					}
+					foreach ( $all_sizes as $size ) {
+						$sizes_array[] = array( 'width' => $size );
+					}
+					$image->multi_resize( $sizes_array );
+				}
+
+				update_user_meta( $user_id, $field_id, $filename );
+
+				UM()->user()->remove_cache( $user_id );
+
+				$hash = md5( $filename . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
+
+				wp_send_json_success(
+					array(
+						'filename'     => $filename,
+						'hash'         => $hash,
+						'temp_hash'    => $temp_hash,
+						'src'          => $this->get_download_link( $form_id, $field_id, $user_id, $filename ),
+						'delete_nonce' => wp_create_nonce( 'um_delete_temp_file' . $filename ),
+					)
+				);
+			} else {
+				$filename = wp_basename( $file_path );
+				$hash     = md5( $filename . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
+
+				wp_send_json_success(
+					array(
+						'filename'     => $filename,
+						'hash'         => $hash,
+						'temp_hash'    => $temp_hash,
+						'src'          => $src,
+						'delete_nonce' => wp_create_nonce( 'um_delete_temp_file' . $filename ),
+					)
+				);
+			}
 		}
 
 		/**

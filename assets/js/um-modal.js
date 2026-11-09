@@ -84,6 +84,8 @@ jQuery(document).ready(function() {
 			if ( coord ) {
 				jQuery(this).html( jQuery(this).attr('data-processing') ).addClass('disabled');
 
+				let context = wp.hooks.applyFilters( 'um_crop_image_context', 'core', key, elem );
+
 				wp.ajax.send(
 					'um_crop_image',
 					{
@@ -94,6 +96,7 @@ jQuery(document).ready(function() {
 							user_id : user_id,
 							field_id: key,
 							form_id: form_id,
+							context: context,
 							_wpnonce: nonce
 						},
 						success: function( response ) {

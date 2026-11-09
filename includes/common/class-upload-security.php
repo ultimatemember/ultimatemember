@@ -43,10 +43,14 @@ class Upload_Security {
 		return $settings;
 	}
 
-	/** Check the actual target file, or its parent when creating it. */
+	/**
+	 * Check the actual target file, or its parent when creating it.
+	 *
+	 * @return bool
+	 */
 	public function can_write_htaccess() {
-		$directory = UM()->uploader()->get_upload_base_dir();
-		$path      = trailingslashit( $directory ) . '.htaccess';
+		$directory = UM()->common()->filesystem()->get_basedir();
+		$path      = wp_normalize_path( trailingslashit( $directory ) . '.htaccess' );
 		return ! is_link( $path ) && ( file_exists( $path ) ? is_file( $path ) && wp_is_writable( $path ) : is_dir( $directory ) && wp_is_writable( $directory ) );
 	}
 
@@ -56,7 +60,7 @@ class Upload_Security {
 		$html  = esc_html__( 'Private uploads should be available only through Ultimate Member download links, where access permissions are checked. Blocking direct URLs helps prevent visitors from bypassing those checks.', 'ultimate-member' );
 		$html .= '<br><br><strong>' . esc_html__( 'Before applying protection', 'ultimate-member' ) . '</strong><br><br>' . esc_html__( 'This directory can also contain avatars, cover photos and upload previews. Older uploaders use direct URLs for these images. A directory-wide block will stop them from loading. Confirm that your uploaders and public images use compatible download handlers before applying these rules.', 'ultimate-member' );
 		if ( $is_apache ) {
-			$path  = wp_normalize_path( trailingslashit( UM()->uploader()->get_upload_base_dir() ) . '.htaccess' );
+			$path  = wp_normalize_path( trailingslashit( UM()->common()->filesystem()->get_basedir() ) . '.htaccess' );
 			$html .= '<h4>' . esc_html__( 'Apache / LiteSpeed', 'ultimate-member' ) . '</h4>';
 			$html .= '<br>' . esc_html__( 'Add the following rule to the .htaccess file at this exact path. Existing rules should be preserved. Your hosting provider must allow .htaccess access restrictions for the rule to take effect.', 'ultimate-member' ) . '<br><br><i>' . esc_html( $path ) . '</i><br><pre><code>deny from all</code></pre>';
 			if ( $this->can_write_htaccess() && current_user_can( 'manage_options' ) ) {
@@ -66,7 +70,7 @@ class Upload_Security {
 			}
 		}
 		if ( $is_nginx ) {
-			$url   = UM()->uploader()->get_upload_base_url();
+			$url   = UM()->common()->filesystem()->get_baseurl();
 			$path  = wp_parse_url( $url, PHP_URL_PATH );
 			$html .= '<h4>' . esc_html__( 'nginx', 'ultimate-member' ) . '</h4><br>' . esc_html__( 'nginx does not read .htaccess files. Ask your hosting provider to add this restriction inside the server block that serves your upload URL. The configuration file location depends on your hosting setup. If your control panel offers custom nginx directives, use that facility with your provider\'s guidance; placing a file in the WordPress folder alone has no effect.', 'ultimate-member' ) . '<br><br><i>' . esc_html( $url ) . '</i>';
 			if ( is_string( $path ) && '' !== $path && '/' !== $path ) {
@@ -156,7 +160,7 @@ class Upload_Security {
 
 		check_admin_referer( 'set_htaccess_rule' );
 
-		$upload_dir = UM()->uploader()->get_upload_base_dir();
+		$upload_dir = UM()->common()->filesystem()->get_basedir();
 		if ( ! $this->can_write_htaccess() ) {
 			wp_die( esc_html__( 'Upload directory is not writable.', 'ultimate-member' ), '', array( 'response' => 403 ) );
 		}
@@ -291,8 +295,8 @@ class Upload_Security {
 			'htaccess_rule' => false,
 		);
 		try {
-			$base = UM()->uploader()->get_upload_base_dir();
-			$url  = UM()->uploader()->get_upload_base_url();
+			$base = UM()->common()->filesystem()->get_basedir();
+			$url  = UM()->common()->filesystem()->get_baseurl();
 			if ( is_dir( $base ) ) {
 				global $is_apache;
 				// .htaccess is only honored by Apache (and LiteSpeed, which WordPress also reports as Apache); skip the read on nginx/IIS.

@@ -798,7 +798,7 @@ function um_registration_save_files( $user_id, $args, $form_data ) {
 				if ( ! is_wp_error( $image ) ) {
 					// Creates new file's thumbnails.
 					$sizes_array = array();
-					$all_sizes   = UM()->config()->get( 'avatar_thumbnail_sizes' );
+					$all_sizes   = UM()->options()->get( 'photo_thumb_sizes' );
 					foreach ( $all_sizes as $size ) {
 						$sizes_array[] = array( 'width' => $size );
 					}

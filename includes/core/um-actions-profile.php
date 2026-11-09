@@ -419,7 +419,7 @@ function um_user_edit_profile( $args, $form_data ) {
 									if ( ! is_wp_error( $image ) ) {
 										// Creates new file's thumbnails.
 										$sizes_array = array();
-										$all_sizes   = UM()->config()->get( 'avatar_thumbnail_sizes' );
+										$all_sizes   = UM()->options()->get( 'photo_thumb_sizes' );
 										foreach ( $all_sizes as $size ) {
 											$sizes_array[] = array( 'width' => $size );
 										}
@@ -1225,7 +1225,7 @@ function um_profile_header( $args ) {
 
 			<a href="<?php echo esc_url( $user_profile_url ); ?>" class="um-profile-photo-img" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
 				<?php if ( ! $default_size || $default_size == 'original' ) {
-					$profile_photo = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/" . um_profile( 'profile_photo' );
+					$profile_photo = um_get_avatar_uri( um_profile( 'profile_photo' ) );
 
 					$data = um_get_user_avatar_data( um_user( 'ID' ) );
 					echo $overlay . sprintf( '<img src="%s" class="%s" alt="%s" data-default="%s" onerror="%s" />',
