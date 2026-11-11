@@ -9,7 +9,8 @@
   "config": {
     "allow-plugins": {
       "symfony/flex": true,
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "oomphinc/composer-installers-extender": true
     },
     "audit": {
       "ignore": [
