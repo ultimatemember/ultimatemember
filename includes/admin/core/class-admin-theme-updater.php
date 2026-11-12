@@ -103,7 +103,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 			if ( $src && $dest ) {
 				self::recurse_copy( $src, $dest );
 				error_log( "UM Log. Theme '" . $theme->get( 'Name' ) . "' templates restored." );
-				UM()->files()->remove_dir( $src );
+				UM()->common()->filesystem()::remove_dir( $src );
 			} else {
 				error_log( 'UM Error. Can not restore theme templates.' );
 			}

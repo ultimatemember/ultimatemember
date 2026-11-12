@@ -642,8 +642,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			// remove uploads
-			UM()->files()->remove_dir( UM()->files()->upload_temp );
-			UM()->files()->remove_dir( UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) ) );
+			UM()->common()->filesystem()::remove_dir( UM()->common()->filesystem()->get_tempdir() );
+			UM()->common()->filesystem()::remove_dir( UM()->common()->filesystem()->get_user_uploads_dir( um_user( 'ID' ) ) );
 
 			delete_transient( 'um_count_users_pending_dot' );
 		}
