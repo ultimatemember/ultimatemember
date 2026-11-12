@@ -155,10 +155,10 @@ class Site_Health {
 
 		$checker   = UM()->common()->upload_security();
 		$actions   = array();
-		$actions[] = '<a href="' . esc_url( $checker->recheck_url() ) . '">' . esc_html__( 'Check upload protection again', 'ultimate-member' ) . '</a>';
-		$actions[] = '<a href="' . esc_url( admin_url( 'admin.php?page=um_options&tab=access&section=other#um-upload-protection' ) ) . '">' . esc_html__( 'View upload protection setup instructions', 'ultimate-member' ) . '</a>';
+		$actions[] = '<a href="' . esc_url( $checker->recheck_url() ) . '"><span class="dashicons dashicons-external"></span>' . esc_html__( 'Check upload protection again', 'ultimate-member' ) . '</a>';
+		$actions[] = '<a href="' . esc_url( admin_url( 'admin.php?page=um_options&tab=access&section=other#um-upload-protection' ) ) . '"><span class="dashicons dashicons-external"></span>' . esc_html__( 'View upload protection setup instructions', 'ultimate-member' ) . '</a>';
 		if ( $is_apache && $checker->can_write_htaccess() ) {
-			$actions[] = '<a href="' . esc_url( $checker->set_htaccess_url() ) . '">' . esc_html__( 'Set `deny from all` .htaccess rule for Ultimate Member uploads', 'ultimate-member' ) . '</a>';
+			$actions[] = '<a href="' . esc_url( $checker->set_htaccess_url() ) . '"><span class="dashicons dashicons-external"></span>' . esc_html__( 'Set `deny from all` .htaccess rule for Ultimate Member uploads', 'ultimate-member' ) . '</a>';
 		}
 
 		$check    = $checker->get_result();
