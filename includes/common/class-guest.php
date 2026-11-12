@@ -27,6 +27,13 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 		private static $expiration = DAY_IN_SECONDS;
 
 		/**
+		 * Guard flag to ensure cookie regeneration only happens once per request cycle.
+		 *
+		 * @var bool
+		 */
+		private static $regenerated = false;
+
+		/**
 		 * Guest constructor.
 		 */
 		public function __construct() {
@@ -94,19 +101,23 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 				)
 			);
 
-			if ( ! $guest_data ) {
-				// Possible hijacking attempt.
-				return null;
-			}
-
 			// Extra Security: Verify IP and User-Agent
 			wp_fix_server_vars();
 
 			$ip_address = isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0'; // Capture IP
 			$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : 'undefined'; // Capture browser details
 
-			if ( $guest_data->ip_address !== $ip_address || $guest_data->user_agent !== $user_agent ) {
-				// Possible hijacking attempt.
+			$is_invalid = ! $guest_data || $guest_data->ip_address !== $ip_address || $guest_data->user_agent !== $user_agent;
+
+			if ( $is_invalid ) {
+				// If we haven't already attempted recovery in this request, reset cookie and issue a fresh token.
+				if ( ! self::$regenerated ) {
+					self::$regenerated = true;
+					$this->flush_cookies();
+					return self::generate_token();
+				}
+
+				// Prevent infinite loops or continuous regeneration in the same request, because possible hijacking attempt.
 				return null;
 			}
 
