@@ -329,3 +329,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @depecated 2.15.0
  * @hook um_user_pre_updating_files_array
  */
+
+/**
+ * Filters cache time for the User Avatar URL.
+ *
+ * @param {int} $timestamp Submitted files.
+ * @param {int} $user_id   User ID.
+ *
+ * @return {array} Submitted files.
+ *
+ * @since 2.0
+ * @depecated 2.15.0
+ * @hook um_filter_avatar_cache_time
+ */

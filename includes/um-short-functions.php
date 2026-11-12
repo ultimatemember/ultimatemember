@@ -2063,9 +2063,8 @@ function um_get_avatar_url( $get_avatar ) {
 	return isset( $matches[1] ) ? $matches[1] : '';
 }
 
-
 /**
- * get avatar uri
+ * Get avatar uri
  *
  * @param $image
  * @param string|array $attrs
@@ -2116,32 +2115,6 @@ function um_get_avatar_uri( $image, $attrs ) {
 				break;
 			}
 		}
-	}
-
-	/**
-	 * UM hook
-	 *
-	 * @type filter
-	 * @title um_filter_avatar_cache_time
-	 * @description Change Profile field value if it's empty
-	 * @input_vars
-	 * [{"var":"$timestamp","type":"timestamp","desc":"Avatar cache time"},
-	 * {"var":"$user_id","type":"int","desc":"User ID"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_filter( 'um_filter_avatar_cache_time', 'function_name', 10, 2 );
-	 * @example
-	 * <?php
-	 * add_filter( 'um_filter_avatar_cache_time', 'my_avatar_cache_time', 10, 2 );
-	 * function my_avatar_cache_time( $timestamp, $user_id ) {
-	 *     // your code here
-	 *     return $timestamp;
-	 * }
-	 * ?>
-	 */
-	$cache_time = apply_filters( 'um_filter_avatar_cache_time', time(), um_user( 'ID' ) );
-	if ( ! empty( $cache_time ) ) {
-		$uri .= "?{$cache_time}";
 	}
 
 	return $uri;
