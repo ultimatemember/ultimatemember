@@ -736,6 +736,11 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
 			}
 
+			$temp_dir = UM()->common()->filesystem()->get_user_temp_dir();
+			if ( empty( $temp_dir ) ) {
+				wp_send_json_error( __( 'Something went wrong with temp directory. Please try again.', 'ultimate-member' ) );
+			}
+
 			$ret['error'] = null;
 			$ret          = array();
 
@@ -940,6 +945,11 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		public function ajax_file_upload() {
 			if ( UM()->is_rate_limited( 'upload_file' ) ) {
 				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
+			}
+
+			$temp_dir = UM()->common()->filesystem()->get_user_temp_dir();
+			if ( empty( $temp_dir ) ) {
+				wp_send_json_error( __( 'Something went wrong with temp directory. Please try again.', 'ultimate-member' ) );
 			}
 
 			$ret['error'] = null;
