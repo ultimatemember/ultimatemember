@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <script type="text/javascript">
 	jQuery( document ).ready( function() {
-	0	um_add_upgrade_log( '<?php echo esc_js( __( 'Flushing rewrite rules...', 'ultimate-member' ) ); ?>' );
+		um_add_upgrade_log( '<?php echo esc_js( __( 'Flushing rewrite rules...', 'ultimate-member' ) ); ?>' );
 
 		jQuery.ajax({
 			url: wp.ajax.settings.url,
