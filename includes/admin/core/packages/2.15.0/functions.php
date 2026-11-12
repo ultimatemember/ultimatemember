@@ -8,7 +8,7 @@ function um_upgrade_flush_rewrite_rules2150() {
 
 	um_maybe_unset_time_limit();
 
-	flush_rewrite_rules( false );
+	UM()->rewrite()->reset_rules();
 
 	update_option( 'um_last_version_upgrade', '2.15.0' );
 
