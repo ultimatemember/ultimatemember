@@ -342,3 +342,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @depecated 2.15.0
  * @hook um_filter_avatar_cache_time
  */
+
+/**
+ * Fires after moving temporary files.
+ *
+ * @param {int}   $user_id   User ID.
+ * @param {array} $new_files Submitted files.
+ * @param {array} $old_files Moved files.
+ *
+ * @since 2.0.22
+ * @depecated 2.15.0
+ * @hook um_after_move_temporary_files
+ */

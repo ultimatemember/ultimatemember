@@ -1,15 +1,13 @@
 <?php
 namespace um\core;
 
-
-// Exit if accessed directly
 use Exception;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Uploader' ) ) {
-
 
 	/**
 	 * Class Uploader
@@ -99,35 +97,28 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		/**
 		 * Uploader constructor.
 		 */
-		function __construct() {
-			$this->core_upload_dir = DIRECTORY_SEPARATOR . 'ultimatemember' . DIRECTORY_SEPARATOR;
-			$this->core_upload_url = '/ultimatemember/';
+		public function __construct() {
+			$this->core_upload_dir   = DIRECTORY_SEPARATOR . 'ultimatemember' . DIRECTORY_SEPARATOR;
+			$this->core_upload_url   = '/ultimatemember/';
 			$this->upload_image_type = 'stream_photo';
-			$this->wp_upload_dir = wp_upload_dir();
-			$this->temp_upload_dir = 'temp';
+			$this->wp_upload_dir     = wp_upload_dir();
+			$this->temp_upload_dir   = 'temp';
 
 			add_filter( 'upload_dir', array( $this, 'set_upload_directory' ) );
 			add_filter( 'wp_handle_upload_prefilter', array( $this, 'validate_upload' ) );
 
 			add_filter( 'um_upload_image_result', array( $this, 'rotate_uploaded_image' ), 10, 1 );
-			// add_filter( 'um_upload_image_process__profile_photo', array( $this, 'profile_photo' ), 10, 7 );
-//			add_filter( 'um_upload_image_process__cover_photo', array( $this, 'cover_photo' ), 10, 7 );
 			add_action( 'um_upload_stream_image_process', array( $this, 'stream_photo' ), 10, 7 );
 
 			add_action( 'init', array( $this, 'init' ) );
-
-			//remove user old files
-			add_action( 'um_after_move_temporary_files', array( $this, 'remove_unused_uploads' ), 10, 3 );
 		}
-
 
 		/**
 		 * Init
 		 */
-		function init() {
+		public function init() {
 			$this->user_id = get_current_user_id();
 		}
-
 
 		/**
 		 * Get core temporary directory path
@@ -264,22 +255,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @return array
 		 */
 		public function set_upload_directory( $args ) {
-//			$this->upload_baseurl = $args['baseurl'] . $this->core_upload_url;
-//			$this->upload_basedir = $args['basedir'] . $this->core_upload_dir;
-//
-//			if ( 'image' === $this->upload_type && is_user_logged_in() ) {
-//				if ( 'stream_photo' === $this->upload_image_type ) {
-//					$this->upload_user_baseurl = UM()->common()->filesystem()->get_tempurl();
-//					$this->upload_user_basedir = UM()->common()->filesystem()->get_tempdir();
-//				} else {
-//					$this->upload_user_baseurl = $this->upload_baseurl . $this->user_id;
-//					$this->upload_user_basedir = $this->upload_basedir . $this->user_id;
-//				}
-//			} else {
-//				$this->upload_user_baseurl = UM()->common()->filesystem()->get_tempurl();
-//				$this->upload_user_basedir = UM()->common()->filesystem()->get_tempdir();
-//			}
-
 			if ( ! $this->replace_upload_dir ) {
 				return $args;
 			}
@@ -351,9 +326,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			}
 
 			$upload_overrides = array(
-				'test_form'                => false,
-				'mimes'                    => apply_filters( 'um_uploader_allowed_image_mimes', $allowed_image_mimes ),
-				//'unique_filename_callback' => array( $this, 'unique_filename' ),
+				'test_form' => false,
+				'mimes'     => apply_filters( 'um_uploader_allowed_image_mimes', $allowed_image_mimes ),
 			);
 
 			$upload_overrides = apply_filters( "um_image_upload_handler_overrides__{$field_key}", $upload_overrides );
@@ -562,9 +536,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			}
 
 			$upload_overrides = array(
-				'test_form'                => false,
-				'mimes'                    => apply_filters( 'um_uploader_allowed_file_mimes', $allowed_file_mimes ),
-				//'unique_filename_callback' => array( $this, 'unique_filename' ),
+				'test_form' => false,
+				'mimes'     => apply_filters( 'um_uploader_allowed_file_mimes', $allowed_file_mimes ),
 			);
 
 			$upload_overrides = apply_filters( "um_file_upload_handler_overrides__{$field_key}", $upload_overrides );
@@ -926,229 +899,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			return $error;
 		}
 
-
-
-		/**
-		 * Make unique filename
-		 *
-		 * @param  string $dir
-		 * @param  string $filename
-		 * @param  string $ext
-		 * @return string $filename
-		 *
-		 * @since  2.0.22
-		 */
-		public function unique_filename( $dir, $filename, $ext ) {
-
-			if ( empty( $ext ) ) {
-				$image_type = wp_check_filetype( $filename );
-				$ext = strtolower( trim( $image_type['ext'], ' \/.' ) );
-			} else {
-				$ext = strtolower( trim( $ext, ' \/.' ) );
-			}
-
-			if ( 'image' == $this->upload_type ) {
-
-				switch ( $this->upload_image_type ) {
-
-					case 'stream_photo':
-						$hashed = hash('ripemd160', time() . mt_rand( 10, 1000 ) );
-						$filename = "stream_photo_{$hashed}.{$ext}";
-						break;
-
-					case 'profile_photo':
-					case 'cover_photo':
-						$filename = "{$this->upload_image_type}_temp.{$ext}";
-						break;
-
-				}
-
-			} elseif ( 'file' == $this->upload_type ) {
-				$hashed = hash('ripemd160', time() . mt_rand( 10, 1000 ) );
-				$filename = "file_{$hashed}.{$ext}";
-			}
-
-			$this->delete_existing_file( $filename, $ext, $dir );
-
-			return $filename;
-		}
-
-
-		/**
-		 * Delete file
-		 * @param  string $filename
-		 * @param  string $ext
-		 * @param  string $dir
-		 *
-		 * @since 2.0.22
-		 */
-		public function delete_existing_file( $filename, $ext = '', $dir = '' ) {
-			if ( file_exists( $this->upload_user_basedir . DIRECTORY_SEPARATOR . $filename  ) && ! empty( $filename ) ) {
-				unlink( $this->upload_user_basedir . DIRECTORY_SEPARATOR . $filename );
-			}
-		}
-
-
-		/**
-		 * Profile photo image process
-		 *
-		 * @param  array  $response
-		 * @param  string $image_path
-		 * @param  string $src
-		 * @param  string $key
-		 * @param  int    $user_id
-		 * @param  string $coord
-		 * @param  array  $crop
-		 *
-		 * @since 2.0.22
-		 *
-		 * @return array
-		 */
-		public function profile_photo( $response, $image_path, $src, $key, $user_id, $coord, $crop ) {
-			$sizes   = UM()->options()->get( 'photo_thumb_sizes' );
-			$quality = UM()->options()->get( 'image_compression' );
-
-			$image = wp_get_image_editor( $image_path ); // Return an implementation that extends WP_Image_Editor
-
-			$temp_image_path = $image_path;
-
-			// Refresh image_path to make temporary image permanently after upload
-			$photo_ext  = pathinfo( $image_path, PATHINFO_EXTENSION );
-			$image_path = pathinfo( $image_path, PATHINFO_DIRNAME ) . DIRECTORY_SEPARATOR . $key . '.' . $photo_ext;
-
-			if ( ! is_wp_error( $image ) ) {
-				$src_x = $crop[0];
-				$src_y = $crop[1];
-				$src_w = $crop[2];
-				$src_h = $crop[3];
-
-				$image->crop( $src_x, $src_y, $src_w, $src_h );
-
-				$max_w = UM()->options()->get( 'image_max_width' );
-				if ( $src_w > $max_w ) {
-					$image->resize( $max_w, $src_h );
-				}
-
-				$save_result = $image->save( $image_path );
-
-				if ( is_wp_error( $save_result ) ) {
-					// translators: %s is the file src.
-					wp_send_json_error( sprintf( __( 'Unable to crop image file: %s', 'ultimate-member' ), $src ) );
-				}
-
-				$image->set_quality( $quality );
-
-				$sizes_array = array();
-				foreach ( $sizes as $size ) {
-					$sizes_array[] = array( 'width' => $size );
-				}
-
-				$image->multi_resize( $sizes_array );
-
-				delete_user_meta( $user_id, 'synced_profile_photo' );
-
-				unlink( $temp_image_path );
-
-				$basename = $key . '_temp.' . $photo_ext;
-				$src      = str_replace( '/' . $basename, '/' . $save_result['file'], $src );
-
-				$response['image']['source_url']  = $src;
-				$response['image']['source_path'] = $save_result['path'];
-				$response['image']['filename']    = $save_result['file'];
-
-				update_user_meta( $this->user_id, $key, $save_result['file'] );
-				delete_user_meta( $this->user_id, "{$key}_metadata_temp" );
-			} else {
-				// translators: %s is the file src.
-				wp_send_json_error( sprintf( __( 'Unable to crop image file: %s', 'ultimate-member' ), $src ) );
-			}
-
-			return $response;
-		}
-
-		/**
-		 * Cover photo image process
-		 *
-		 * @param  string $src
-		 * @param  int    $user_id
-		 * @param  string $coord
-		 * @param  array  $crop
-		 * @param  array  $response
-		 *
-		 * @since 2.0.22
-		 *
-		 * @return array
-		 */
-		public function cover_photo( $response, $image_path, $src, $key, $user_id, $coord, $crop ) {
-			$sizes   = UM()->options()->get( 'cover_thumb_sizes' );
-			$quality = UM()->options()->get( 'image_compression' );
-
-			$image = wp_get_image_editor( $image_path ); // Return an implementation that extends WP_Image_Editor
-
-			$temp_image_path = $image_path;
-
-			// Refresh image_path to make temporary image permanently after upload
-			$photo_ext  = pathinfo( $image_path, PATHINFO_EXTENSION );
-			$image_path = pathinfo( $image_path, PATHINFO_DIRNAME ) . DIRECTORY_SEPARATOR . $key . '.' . $photo_ext;
-
-			if ( ! is_wp_error( $image ) ) {
-				$src_x = $crop[0];
-				$src_y = $crop[1];
-				$src_w = $crop[2];
-				$src_h = $crop[3];
-
-				$image->crop( $src_x, $src_y, $src_w, $src_h );
-
-				$max_w = UM()->options()->get( 'image_max_width' );
-				if ( $src_w > $max_w ) {
-					$image->resize( $max_w, $src_h );
-				}
-
-				$save_result = $image->save( $image_path );
-
-				if ( is_wp_error( $save_result ) ) {
-					// translators: %s is the file src.
-					wp_send_json_error( sprintf( __( 'Unable to crop image file: %s', 'ultimate-member' ), $src ) );
-				}
-
-				$image->set_quality( $quality );
-
-				$sizes_array = array();
-
-				foreach ( $sizes as $size ) {
-					$sizes_array[] = array( 'width' => $size );
-				}
-
-				$resize = $image->multi_resize( $sizes_array );
-
-				// change filenames of resized images
-				foreach ( $resize as $row ) {
-					$new_filename = str_replace( "x{$row['height']}", '', $row['file'] );
-					$old_filename = $row['file'];
-
-					rename( dirname( $image_path ) . DIRECTORY_SEPARATOR . $old_filename, dirname( $image_path ) . DIRECTORY_SEPARATOR . $new_filename );
-				}
-
-				unlink( $temp_image_path );
-
-				$basename = $key . '_temp.' . $photo_ext;
-				$src      = str_replace( '/' . $basename, '/' . $save_result['file'], $src );
-
-				$response['image']['source_url']  = $src;
-				$response['image']['source_path'] = $save_result['path'];
-				$response['image']['filename']    = $save_result['file'];
-
-				update_user_meta( $this->user_id, $key, $save_result['file'] );
-				delete_user_meta( $this->user_id, "{$key}_metadata_temp" );
-			} else {
-				// translators: %s is the file src.
-				wp_send_json_error( sprintf( __( 'Unable to crop image file: %s', 'ultimate-member' ), $src ) );
-			}
-
-			return $response;
-		}
-
-
 		/**
 		 * Stream photo image process
 		 *
@@ -1245,7 +995,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			return $response;
 		}
 
-
 		/**
 		 * Fix image orientation
 		 *
@@ -1267,6 +1016,69 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			return $movefile;
 		}
 
+		/**
+		 * Make unique filename
+		 *
+		 * @param  string $dir
+		 * @param  string $filename
+		 * @param  string $ext
+		 * @return string $filename
+		 *
+		 * @since  2.0.22
+		 * @deprecacted 2.15.0 Using WordPress native function wp_unique_filename()
+		 */
+		public function unique_filename( $dir, $filename, $ext ) {
+			_deprecated_function( __METHOD__, '2.15.0', 'wp_unique_filename()' );
+
+			if ( empty( $ext ) ) {
+				$image_type = wp_check_filetype( $filename );
+				$ext = strtolower( trim( $image_type['ext'], ' \/.' ) );
+			} else {
+				$ext = strtolower( trim( $ext, ' \/.' ) );
+			}
+
+			if ( 'image' == $this->upload_type ) {
+
+				switch ( $this->upload_image_type ) {
+
+					case 'stream_photo':
+						$hashed = hash('ripemd160', time() . mt_rand( 10, 1000 ) );
+						$filename = "stream_photo_{$hashed}.{$ext}";
+						break;
+
+					case 'profile_photo':
+					case 'cover_photo':
+						$filename = "{$this->upload_image_type}_temp.{$ext}";
+						break;
+
+				}
+
+			} elseif ( 'file' == $this->upload_type ) {
+				$hashed = hash('ripemd160', time() . mt_rand( 10, 1000 ) );
+				$filename = "file_{$hashed}.{$ext}";
+			}
+
+			$this->delete_existing_file( $filename, $ext, $dir );
+
+			return $filename;
+		}
+
+		/**
+		 * Delete file
+		 * @param  string $filename
+		 * @param  string $ext
+		 * @param  string $dir
+		 *
+		 * @since 2.0.22
+		 * @deprecacted 2.15.0 Was used only in $this->unique_filename() so deprecated together.
+		 */
+		public function delete_existing_file( $filename, $ext = '', $dir = '' ) {
+			_deprecated_function( __METHOD__, '2.15.0' );
+
+			if ( file_exists( $this->upload_user_basedir . DIRECTORY_SEPARATOR . $filename ) && ! empty( $filename ) ) {
+				unlink( $this->upload_user_basedir . DIRECTORY_SEPARATOR . $filename );
+			}
+		}
 
 		/**
 		 * Move temporary files
@@ -1274,11 +1086,15 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * run when uploaded files are from custom fields
 		 * move them to the users' folder after form submitted
 		 *
-		 * @param $user_id
-		 * @param $files
-		 * @param bool $move_only
+		 * @deprecacted 2.15.0 Using WordPress native $wp_filesystem->move() instead.
+		 *
+		 * @param int   $user_id
+		 * @param array $files
+		 * @param bool  $move_only
 		 */
-		function move_temporary_files( $user_id, $files, $move_only = false ) {
+		public function move_temporary_files( $user_id, $files, $move_only = false ) {
+			_deprecated_function( __METHOD__, '2.15.0', '$wp_filesystem->move()' );
+
 			$new_files = array();
 			$old_files = array();
 
@@ -1357,24 +1173,24 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 						}
 					}
 				}
-
 			}
 
 			/**
-			 * @hooked UM()->uploader()->remove_unused_uploads() - 10
+			 * @hooked UM()->uploader()->remove_unused_uploads() - 10 until 2.15.0
 			 */
 			do_action( 'um_after_move_temporary_files', $user_id, $new_files, $old_files );
 		}
 
-
 		/**
-		 * Clean user temp uploads
+		 * Clean user unused uploaded files
 		 *
-		 * @param int $user_id
+		 * @deprecacted 2.15.0 Was hooked on `um_after_move_temporary_files` in $this->move_temporary_files() so deprecated together.
+		 * @todo Maybe needed in the future for the new structure, but it's not clear for 2.15.0.
+		 * @param int   $user_id
 		 * @param array $new_files
-		 * @param array $old_files
 		 */
-		function remove_unused_uploads( $user_id, $new_files, $old_files = array() ) {
+		public function remove_unused_uploads( $user_id, $new_files ) {
+			_deprecated_function( __METHOD__, '2.15.0' );
 
 			if ( ! file_exists( $this->get_upload_user_base_dir( $user_id ) ) ) {
 				return;
@@ -1430,6 +1246,169 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				}
 			}
 		}
-	}
 
+		/**
+		 * Profile photo image process
+		 *
+		 * @param  array  $response
+		 * @param  string $image_path
+		 * @param  string $src
+		 * @param  string $key
+		 * @param  int    $user_id
+		 * @param  string $coord
+		 * @param  array  $crop
+		 *
+		 * @since 2.0.22
+		 * @deprecacted 2.15.0 Using the same handlers as a regular Ultimate Member image upload. Was hooked on `um_upload_image_process__profile_photo`
+		 *
+		 * @return array
+		 */
+		public function profile_photo( $response, $image_path, $src, $key, $user_id, $coord, $crop ) {
+			_deprecated_function( __METHOD__, '2.15.0' );
+
+			$sizes   = UM()->options()->get( 'photo_thumb_sizes' );
+			$quality = UM()->options()->get( 'image_compression' );
+
+			$image = wp_get_image_editor( $image_path ); // Return an implementation that extends WP_Image_Editor
+
+			$temp_image_path = $image_path;
+
+			// Refresh image_path to make temporary image permanently after upload
+			$photo_ext  = pathinfo( $image_path, PATHINFO_EXTENSION );
+			$image_path = pathinfo( $image_path, PATHINFO_DIRNAME ) . DIRECTORY_SEPARATOR . $key . '.' . $photo_ext;
+
+			if ( ! is_wp_error( $image ) ) {
+				$src_x = $crop[0];
+				$src_y = $crop[1];
+				$src_w = $crop[2];
+				$src_h = $crop[3];
+
+				$image->crop( $src_x, $src_y, $src_w, $src_h );
+
+				$max_w = UM()->options()->get( 'image_max_width' );
+				if ( $src_w > $max_w ) {
+					$image->resize( $max_w, $src_h );
+				}
+
+				$save_result = $image->save( $image_path );
+
+				if ( is_wp_error( $save_result ) ) {
+					// translators: %s is the file src.
+					wp_send_json_error( sprintf( __( 'Unable to crop image file: %s', 'ultimate-member' ), $src ) );
+				}
+
+				$image->set_quality( $quality );
+
+				$sizes_array = array();
+				foreach ( $sizes as $size ) {
+					$sizes_array[] = array( 'width' => $size );
+				}
+
+				$image->multi_resize( $sizes_array );
+
+				delete_user_meta( $user_id, 'synced_profile_photo' );
+
+				unlink( $temp_image_path );
+
+				$basename = $key . '_temp.' . $photo_ext;
+				$src      = str_replace( '/' . $basename, '/' . $save_result['file'], $src );
+
+				$response['image']['source_url']  = $src;
+				$response['image']['source_path'] = $save_result['path'];
+				$response['image']['filename']    = $save_result['file'];
+
+				update_user_meta( $this->user_id, $key, $save_result['file'] );
+				delete_user_meta( $this->user_id, "{$key}_metadata_temp" );
+			} else {
+				// translators: %s is the file src.
+				wp_send_json_error( sprintf( __( 'Unable to crop image file: %s', 'ultimate-member' ), $src ) );
+			}
+
+			return $response;
+		}
+
+		/**
+		 * Cover photo image process
+		 *
+		 * @param  string $src
+		 * @param  int    $user_id
+		 * @param  string $coord
+		 * @param  array  $crop
+		 * @param  array  $response
+		 *
+		 * @since 2.0.22
+		 * @deprecacted 2.15.0 Using the same handlers as a regular Ultimate Member image upload. Was hooked on `um_upload_image_process__cover_photo`
+		 * @return array
+		 */
+		public function cover_photo( $response, $image_path, $src, $key, $user_id, $coord, $crop ) {
+			_deprecated_function( __METHOD__, '2.15.0' );
+
+			$sizes   = UM()->options()->get( 'cover_thumb_sizes' );
+			$quality = UM()->options()->get( 'image_compression' );
+
+			$image = wp_get_image_editor( $image_path ); // Return an implementation that extends WP_Image_Editor
+
+			$temp_image_path = $image_path;
+
+			// Refresh image_path to make temporary image permanently after upload
+			$photo_ext  = pathinfo( $image_path, PATHINFO_EXTENSION );
+			$image_path = pathinfo( $image_path, PATHINFO_DIRNAME ) . DIRECTORY_SEPARATOR . $key . '.' . $photo_ext;
+
+			if ( ! is_wp_error( $image ) ) {
+				$src_x = $crop[0];
+				$src_y = $crop[1];
+				$src_w = $crop[2];
+				$src_h = $crop[3];
+
+				$image->crop( $src_x, $src_y, $src_w, $src_h );
+
+				$max_w = UM()->options()->get( 'image_max_width' );
+				if ( $src_w > $max_w ) {
+					$image->resize( $max_w, $src_h );
+				}
+
+				$save_result = $image->save( $image_path );
+
+				if ( is_wp_error( $save_result ) ) {
+					// translators: %s is the file src.
+					wp_send_json_error( sprintf( __( 'Unable to crop image file: %s', 'ultimate-member' ), $src ) );
+				}
+
+				$image->set_quality( $quality );
+
+				$sizes_array = array();
+
+				foreach ( $sizes as $size ) {
+					$sizes_array[] = array( 'width' => $size );
+				}
+
+				$resize = $image->multi_resize( $sizes_array );
+
+				// change filenames of resized images
+				foreach ( $resize as $row ) {
+					$new_filename = str_replace( "x{$row['height']}", '', $row['file'] );
+					$old_filename = $row['file'];
+
+					rename( dirname( $image_path ) . DIRECTORY_SEPARATOR . $old_filename, dirname( $image_path ) . DIRECTORY_SEPARATOR . $new_filename );
+				}
+
+				unlink( $temp_image_path );
+
+				$basename = $key . '_temp.' . $photo_ext;
+				$src      = str_replace( '/' . $basename, '/' . $save_result['file'], $src );
+
+				$response['image']['source_url']  = $src;
+				$response['image']['source_path'] = $save_result['path'];
+				$response['image']['filename']    = $save_result['file'];
+
+				update_user_meta( $this->user_id, $key, $save_result['file'] );
+				delete_user_meta( $this->user_id, "{$key}_metadata_temp" );
+			} else {
+				// translators: %s is the file src.
+				wp_send_json_error( sprintf( __( 'Unable to crop image file: %s', 'ultimate-member' ), $src ) );
+			}
+
+			return $response;
+		}
+	}
 }
