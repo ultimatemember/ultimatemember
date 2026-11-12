@@ -222,18 +222,17 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			header( 'Content-Type: ' . $type );
 			header( 'Content-Disposition: inline; filename="' . esc_attr( $originalname ) . '"' );
 			header( 'Content-Transfer-Encoding: binary' );
-			header( 'Expires: 0' );
-			header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
 			header( 'Pragma: public' );
 			header( 'Content-Length: ' . $size );
+			self::cache_control_headers( 'temp' );
 
 			$levels = ob_get_level();
 			for ( $i = 0; $i < $levels; $i++ ) {
-				@ob_end_clean();
+				@ob_end_clean(); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- flush all buffers
 			}
 
 			$content = $wp_filesystem->get_contents( $file_path );
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- temp file content.
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- temp file content.
 			echo $content;
 			exit;
 		}
@@ -352,18 +351,17 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			header( 'Content-Type: ' . $type );
 			header( 'Content-Disposition: inline; filename="' . $originalname . '"' );
 			header( 'Content-Transfer-Encoding: binary' );
-			header( 'Expires: 0' );
-			header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
 			header( 'Pragma: public' );
 			header( 'Content-Length: ' . $size );
+			self::cache_control_headers( 'image' );
 
 			$levels = ob_get_level();
 			for ( $i = 0; $i < $levels; $i++ ) {
-				@ob_end_clean();
+				@ob_end_clean(); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- flush all buffers
 			}
 
 			$content = $wp_filesystem->get_contents( $file_path );
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- temp file content.
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- image file content.
 			echo $content;
 			exit;
 		}
@@ -398,79 +396,76 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			header( 'Content-Type: ' . $type );
 			header( 'Content-Disposition: attachment; filename="' . $originalname . '"' );
 			header( 'Content-Transfer-Encoding: binary' );
-			header( 'Expires: 0' );
-			header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
 			header( 'Pragma: public' );
 			header( 'Content-Length: ' . $size );
+			self::cache_control_headers( 'file' );
 
 			$levels = ob_get_level();
 			for ( $i = 0; $i < $levels; $i++ ) {
-				@ob_end_clean();
+				@ob_end_clean(); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- flush all buffers
 			}
 
 			$content = $wp_filesystem->get_contents( $file_path );
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- temp file content.
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- file content.
 			echo $content;
 			exit;
 		}
 
 		/**
-		 * Remove file by AJAX.
-		 * @todo remove after old UI uploaders patch.
+		 * Send cache control headers for the given filesystem context.
+		 *
+		 * @param string $context Context used to determine cache behavior.
+		 *
+		 * @return void
 		 */
-//		public function ajax_remove_file() {
-//			if ( empty( $_POST['key'] ) ) {
-//				wp_send_json_error( __( 'Wrong field key', 'ultimate-member' ) );
-//			}
-//			$key = sanitize_text_field( $_POST['key'] );
-//
-//			if ( empty( $_POST['mode'] ) ) {
-//				wp_send_json_error( __( 'Wrong mode', 'ultimate-member' ) );
-//			}
-//			$mode = sanitize_key( $_POST['mode'] );
-//
-//			check_ajax_referer( "um-remove-file-$key-$mode" );
-//
-//			if ( UM()->is_rate_limited( 'remove_file' ) ) {
-//				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
-//			}
-//
-//			if ( empty( $_POST['src'] ) ) {
-//				wp_send_json_error( __( 'Wrong path', 'ultimate-member' ) );
-//			}
-//
-//			$src = esc_url_raw( $_POST['src'] );
-//			if ( strstr( $src, '?' ) ) {
-//				$splitted = explode( '?', $src );
-//				$src      = $splitted[0];
-//			}
-//
-//			if ( 'register' === $mode || empty( $_POST['user_id'] ) ) {
-//				$is_temp = um_is_temp_upload( $src );
-//				if ( ! $is_temp ) {
-//					wp_send_json_success();
-//				}
-//			} else {
-//				$user_id = absint( $_POST['user_id'] );
-//
-//				if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-//					wp_send_json_error( __( 'You have no permission to edit this user', 'ultimate-member' ) );
-//				}
-//
-//				$is_temp = um_is_temp_upload( $src );
-//				if ( ! $is_temp ) {
-//					if ( ! empty( $_POST['filename'] ) && file_exists( UM()->uploader()->get_upload_user_base_dir( $user_id ) . DIRECTORY_SEPARATOR . sanitize_file_name( $_POST['filename'] ) ) ) {
-//						wp_send_json_success();
-//					}
-//				}
-//			}
-//
-//			if ( $this->delete_file( $src ) ) {
-//				wp_send_json_success();
-//			} else {
-//				wp_send_json_error( __( 'You have no permission to delete this file', 'ultimate-member' ) );
-//			}
-//		}
+		private static function cache_control_headers( $context ) {
+			$no_cache_control = 'temp' === $context;
+			/**
+			 * Filters Ultimate Member cache control headers during the file and images download.
+			 *
+			 * @param {bool}   $no_cache No cache marker.
+			 * @param {string} $context  Download context. `temp`, `image` or `file`.
+			 *
+			 * @return {bool} No cache marker.
+			 *
+			 * @since 2.15.0
+			 * @hook um_filesystem_no_cache
+			 *
+			 * @example <caption>Change the Ultimate Member cache control headers for iamge download.</caption>
+			 * function my_um_filesystem_no_cache( $no_cache, $context ) {
+			 *      $no_cache = 'image' === $context ? true : $no_cache;
+			 *      return $no_cache;
+			 * }
+			 * add_filter( 'um_filesystem_no_cache', 'my_um_filesystem_no_cache', 10, 2 );
+			 */
+			$no_cache_control = apply_filters( 'um_filesystem_no_cache', $no_cache_control, $context );
+			if ( $no_cache_control ) {
+				header( 'Expires: 0' );
+				header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0' );
+			} else {
+				/**
+				 * Filters Ultimate Member cache period during the file and images download.
+				 *
+				 * @param {int}    $period  Cache period.
+				 * @param {string} $context Download context. `temp`, `image` or `file`.
+				 *
+				 * @return {int} Cache period.
+				 *
+				 * @since 2.15.0
+				 * @hook um_filesystem_caching_period
+				 *
+				 * @example <caption>Change the Ultimate Member cache period during the image download.</caption>
+				 * function my_um_filesystem_caching_period( $period, $context ) {
+				 *      $period = 'image' === $context ? HOUR_IN_SECONDS : $period;
+				 *      return $period;
+				 * }
+				 * add_filter( 'um_filesystem_caching_period', 'my_um_filesystem_caching_period', 10, 2 );
+				 */
+				$caching_period = apply_filters( 'um_filesystem_caching_period', DAY_IN_SECONDS, $context );
+				header( "Cache-Control: max-age={$caching_period}, must-revalidate, private" );
+				header( 'Expires: ' . gmdate( 'D, d M Y H:i:s \G\M\T', time() + $caching_period ) );
+			}
+		}
 
 		/**
 		 * Common upload file handler. Default result file in temp directory with unique name.
@@ -495,145 +490,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			wp_send_json_success();
 		}
-
-		/**
-		 * Resize image AJAX handler
-		 */
-		/*public function ajax_resize_image() {
-			if ( ! isset( $_REQUEST['key'], $_REQUEST['set_mode'] ) ) {
-				wp_send_json_error( esc_js( __( 'Invalid parameters', 'ultimate-member' ) ) );
-			}
-			$key  = sanitize_text_field( $_REQUEST['key'] );
-			$mode = isset( $_POST['set_mode'] ) ? sanitize_text_field( $_POST['set_mode'] ) : null;
-
-			check_ajax_referer( 'um-resize-image' . $mode . $key );
-
-			if ( UM()->is_rate_limited( 'resize_image' ) ) {
-				wp_send_json_error( __( 'Too many requests', 'ultimate-member' ) );
-			}
-
-			if ( ! isset( $_REQUEST['src'], $_REQUEST['coord'] ) ) {
-				wp_send_json_error( esc_js( __( 'Invalid parameters', 'ultimate-member' ) ) );
-			}
-
-			$coord_n = substr_count( $_REQUEST['coord'], ',' );
-			if ( 3 !== $coord_n ) {
-				wp_send_json_error( esc_js( __( 'Invalid coordinates', 'ultimate-member' ) ) );
-			}
-
-			$user_id = empty( $_REQUEST['user_id'] ) ? null : absint( $_REQUEST['user_id'] );
-			if ( $user_id && is_user_logged_in() && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-				wp_send_json_error( esc_js( __( 'You have no permission to edit this user', 'ultimate-member' ) ) );
-			}
-
-			if ( $user_id && ! is_user_logged_in() ) {
-				wp_send_json_error( esc_js( __( 'Please login to edit this user', 'ultimate-member' ) ) );
-			}
-
-			$form_id = isset( $_POST['set_id'] ) ? absint( $_POST['set_id'] ) : null;
-
-			UM()->fields()->set_id   = $form_id;
-			UM()->fields()->set_mode = $mode;
-
-			if ( ! is_user_logged_in() && 'profile' === $mode ) {
-				wp_send_json_error( esc_js( __( 'You have no permission to edit user profile', 'ultimate-member' ) ) );
-			}
-
-			if ( null !== $user_id && 'register' === $mode ) {
-				wp_send_json_error( esc_js( __( 'User has to be empty on registration', 'ultimate-member' ) ) );
-			}
-
-			$form_post = get_post( $form_id );
-			// Invalid post ID. Maybe post doesn't exist.
-			if ( empty( $form_post ) ) {
-				wp_send_json_error( esc_js( __( 'Invalid form ID', 'ultimate-member' ) ) );
-			}
-
-			if ( 'um_form' !== $form_post->post_type ) {
-				wp_send_json_error( esc_js( __( 'Invalid form post type', 'ultimate-member' ) ) );
-			}
-
-			$form_status = get_post_status( $form_id );
-			if ( 'publish' !== $form_status ) {
-				wp_send_json_error( esc_js( __( 'Invalid form status', 'ultimate-member' ) ) );
-			}
-
-			$post_data = UM()->query()->post_data( $form_id );
-			if ( ! array_key_exists( 'mode', $post_data ) || $mode !== $post_data['mode'] ) {
-				wp_send_json_error( esc_js( __( 'Invalid form type', 'ultimate-member' ) ) );
-			}
-
-			// For profiles only.
-			if ( 'profile' === $mode && ! empty( $post_data['use_custom_settings'] ) && ! empty( $post_data['role'] ) ) {
-				// Option "Apply custom settings to this form". Option "Make this profile form role-specific".
-				// Show the first Profile Form with role selected, don't show profile forms below the page with other role-specific setting.
-				$current_user_roles = UM()->roles()->get_all_user_roles( $user_id );
-				if ( empty( $current_user_roles ) ) {
-					wp_send_json_error( esc_js( __( 'You have no permission to edit this user through this form', 'ultimate-member' ) ) );
-				}
-
-				$post_data['role'] = maybe_unserialize( $post_data['role'] );
-
-				if ( is_array( $post_data['role'] ) ) {
-					if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {
-						wp_send_json_error( esc_js( __( 'You have no permission to edit this user through this form', 'ultimate-member' ) ) );
-					}
-				} elseif ( ! in_array( $post_data['role'], $current_user_roles, true ) ) {
-					wp_send_json_error( esc_js( __( 'You have no permission to edit this user through this form', 'ultimate-member' ) ) );
-				}
-			}
-
-			if ( ! array_key_exists( 'custom_fields', $post_data ) || empty( $post_data['custom_fields'] ) ) {
-				wp_send_json_error( esc_js( __( 'Invalid form fields', 'ultimate-member' ) ) );
-			}
-
-			$custom_fields = maybe_unserialize( $post_data['custom_fields'] );
-			if ( ! is_array( $custom_fields ) || ! array_key_exists( $key, $custom_fields ) ) {
-				if ( ! ( 'profile' === $mode && in_array( $key, array( 'cover_photo', 'profile_photo' ), true ) ) ) {
-					wp_send_json_error( esc_js( __( 'Invalid field metakey', 'ultimate-member' ) ) );
-				}
-			}
-
-			if ( empty( $custom_fields[ $key ]['crop'] ) && ! in_array( $key, array( 'cover_photo', 'profile_photo' ), true ) ) {
-				wp_send_json_error( esc_js( __( 'This field doesn\'t support image crop', 'ultimate-member' ) ) );
-			}
-
-			if ( 'profile' === $mode ) {
-				if ( in_array( $key, array( 'cover_photo', 'profile_photo' ), true ) ) {
-					if ( 'profile_photo' === $key ) {
-						$disable_photo_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'disable_profile_photo_upload' ) : $post_data['disable_photo_upload'];
-						if ( $disable_photo_uploader ) {
-							wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
-						}
-					} else {
-						$cover_enabled_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'profile_cover_enabled' ) : $post_data['cover_enabled'];
-						if ( ! $cover_enabled_uploader ) {
-							wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
-						}
-					}
-				} elseif ( ! um_can_edit_field( $custom_fields[ $key ] ) ) {
-					wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
-				}
-			}
-
-			$src        = esc_url_raw( $_REQUEST['src'] );
-			$image_path = um_is_file_owner( $src, $user_id, true );
-			if ( ! $image_path ) {
-				wp_send_json_error( esc_js( __( 'Invalid file ownership', 'ultimate-member' ) ) );
-			}
-
-			$coord = sanitize_text_field( $_REQUEST['coord'] );
-
-			UM()->uploader()->replace_upload_dir = true;
-
-			$output = UM()->uploader()->resize_image( $image_path, $src, $key, $user_id, $coord );
-
-			UM()->uploader()->replace_upload_dir = false;
-
-			delete_option( "um_cache_userdata_{$user_id}" );
-
-			wp_send_json_success( $output );
-		}*/
 
 		/**
 		 * Resize image AJAX handler

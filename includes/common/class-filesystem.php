@@ -1027,15 +1027,11 @@ class Filesystem {
 		 * @since 2.15.0
 		 * @hook um_filesystem_url_has_timestamp
 		 *
-		 * @example <caption>Avoid timestamp in URLs</caption>
+		 * @example <caption>Adds timestamp in URLs</caption>
 		 * ```php
-		 *  add_filter( 'um_filesystem_url_has_timestamp', '__return_false' );
-		 *  function my_custom_upload_handlers( $handlers ) {
-		 *      $handlers[] = 'my-handler';
-		 *      return $handlers;
-		 *  }
+		 *  add_filter( 'um_filesystem_url_has_timestamp', '__return_true' );
 		 *  ```
 		 */
-		return apply_filters( 'um_filesystem_url_has_timestamp', true );
+		return apply_filters( 'um_filesystem_url_has_timestamp', false );
 	}
 }
