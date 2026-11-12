@@ -938,8 +938,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 			$levels = ob_get_level();
 			for ( $i = 0; $i < $levels; $i++ ) {
-				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-				@ob_end_clean();
+				@ob_end_clean(); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- flush all buffers
 			}
 
 			nocache_headers();
