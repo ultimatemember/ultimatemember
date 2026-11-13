@@ -926,8 +926,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 						$uploaded_image = $uploaded['handle_upload'];
 
 						$uploaded_image['delete_nonce'] = wp_create_nonce( 'um_delete_temp_file' . $uploaded_image['file'] );
-						$uploaded_image['hash']         = md5( $uploaded_image['file'] . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
-						$ret[]                          = $uploaded_image;
+						if ( is_null( $custom_validation ) ) {
+							$uploaded_image['hash'] = md5( $uploaded_image['file'] . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
+						}
+						$ret[] = $uploaded_image;
 					}
 				}
 			} else {
