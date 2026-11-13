@@ -1628,30 +1628,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			return false;
 		}
 
-
-		/**
-		 * This function will delete file upload from server
-		 *
-		 * @param string $src
-		 *
-		 * @return bool
-		 */
-		function delete_file( $src ) {
-			if ( strstr( $src, '?' ) ) {
-				$splitted = explode( '?', $src );
-				$src = $splitted[0];
-			}
-
-			$is_temp = um_is_temp_upload( $src );
-			if ( $is_temp ) {
-				unlink( $is_temp );
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-
 		/**
 		 * Delete a main user photo
 		 *
@@ -1880,6 +1856,32 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		public function format_bytes( $size, $precision = 1 ) {
 			_deprecated_function( __METHOD__, '2.8.7', '\um\common\Filesystem::format_bytes()' );
 			return \um\common\Filesystem::format_bytes( $size, $precision );
+		}
+
+		/**
+		 * This function will delete file upload from server
+		 *
+		 * @deprecated 2.15.0
+		 *
+		 * @param string $src
+		 *
+		 * @return bool
+		 */
+		public function delete_file( $src ) {
+			_deprecated_function( __METHOD__, '2.15.0', 'wp_delete_file()' );
+
+			if ( strstr( $src, '?' ) ) {
+				$splitted = explode( '?', $src );
+				$src = $splitted[0];
+			}
+
+			$is_temp = um_is_temp_upload( $src );
+			if ( $is_temp ) {
+				unlink( $is_temp );
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 }

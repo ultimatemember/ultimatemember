@@ -491,9 +491,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			$response['handle_upload'] = $movefile;
 
-			// Remove old files from 'temp' directory
-			UM()->files()->remove_old_files( UM()->files()->upload_temp );
-
 			return $response;
 		}
 
@@ -667,9 +664,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			}
 
 			$response['handle_upload'] = $movefile;
-
-			// Remove old files from 'temp' directory
-			UM()->files()->remove_old_files( UM()->files()->upload_temp );
 
 			return $response;
 		}

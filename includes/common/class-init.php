@@ -42,12 +42,16 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\actions\emails'] = new actions\Emails();
 			}
 
-			if ( empty( UM()->classes['um\common\actions\users'] ) ) {
-				UM()->classes['um\common\actions\users'] = new actions\Users();
+			if ( empty( UM()->classes['um\common\actions\files'] ) ) {
+				UM()->classes['um\common\actions\files'] = new actions\Files();
 			}
 
 			if ( empty( UM()->classes['um\common\actions\guests'] ) ) {
 				UM()->classes['um\common\actions\guests'] = new actions\Guests();
+			}
+
+			if ( empty( UM()->classes['um\common\actions\users'] ) ) {
+				UM()->classes['um\common\actions\users'] = new actions\Users();
 			}
 			// Other classes init here as soon as possible.
 		}

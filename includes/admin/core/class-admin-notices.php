@@ -343,7 +343,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 * To store plugin languages
 		 */
 		function create_languages_folder() {
-			$path = UM()->files()->upload_basedir;
+			$path = UM()->common()->filesystem()->get_basedir();
 			$path = str_replace( '/uploads/ultimatemember', '', $path );
 			$path = $path . '/languages/plugins/';
 			$path = str_replace( '//', '/', $path );

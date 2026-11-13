@@ -242,9 +242,9 @@ if ( ! empty( $delete_options ) ) {
 	);
 
 	//mailchimp
-	$mailchimp_log = UM()->files()->upload_basedir . 'mailchimp.log';
+	$mailchimp_log = UM()->common()->filesystem()->get_basedir() . DIRECTORY_SEPARATOR . 'mailchimp.log';
 	if ( file_exists( $mailchimp_log ) ) {
-		unlink( $mailchimp_log );
+		wp_delete_file( $mailchimp_log );
 	}
 
 	$um_options = $wpdb->get_results(
