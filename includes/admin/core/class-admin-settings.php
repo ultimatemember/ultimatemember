@@ -2942,6 +2942,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$filtered_settings[ $key ] = $value;
 
 				foreach ( $fields as $field ) {
+					if ( empty( $field ) || ! is_array( $field ) ) {
+						continue;
+					}
+
 					if ( $field['id'] === $key && array_key_exists( 'type', $field ) && 'multi_text' === $field['type'] ) {
 						$filtered_settings[ $key ] = array_filter( $value );
 					}
