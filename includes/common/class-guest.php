@@ -54,7 +54,7 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 			if ( is_user_logged_in() ) {
 				if ( isset( $_COOKIE[ self::$key ] ) ) {
 					// flush cookies after login
-					UM()::setcookie( self::$key, false );
+					$this->flush_cookies();
 				}
 			} elseif ( ! isset( $_COOKIE[ self::$key ] ) ) {
 				self::generate_token();
@@ -190,7 +190,7 @@ if ( ! class_exists( 'um\common\Guest' ) ) {
 		 * @return void
 		 */
 		public function flush_cookies() {
-			UM()::setcookie( self::$key, false );
+			UM()::setcookie( self::$key, false, 0, '/' );
 		}
 
 		private static function insert_token( $guest_token ) {
