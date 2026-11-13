@@ -8,7 +8,7 @@ function um_upgrade_tempfolder2024() {
 
 	um_maybe_unset_time_limit();
 
-	UM()->files()->remove_dir( UM()->files()->upload_temp );
+	UM()->common()->filesystem()::remove_dir( UM()->common()->filesystem()->get_tempdir() );
 
 	update_option( 'um_last_version_upgrade', '2.0.24' );
 

@@ -688,7 +688,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 			$levels = ob_get_level();
 			for ( $i = 0; $i < $levels; $i++ ) {
-				@ob_end_clean();
+				@ob_end_clean(); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- flush all buffers
 			}
 
 			nocache_headers();

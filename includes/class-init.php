@@ -514,6 +514,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->gdpr();
 			$this->member_directory();
 			$this->blocks();
+			$this->uploader();
 
 			// If multisite networks active
 			if ( is_multisite() ) {

@@ -690,3 +690,118 @@ function um_user_submitted_registration( $style = false ) {
 
 	return $output;
 }
+
+/**
+ * Check user's file ownership
+ *
+ * @param string $url
+ * @param int|null $user_id
+ * @param string|bool $image_path
+ *
+ * @return bool
+ * @deprecated 2.15.0
+ *
+ */
+function um_is_file_owner( $url, $user_id = null, $image_path = false ) {
+
+	if ( strpos( $url, UM()->uploader()->get_upload_base_url() . $user_id . '/' ) !== false && is_user_logged_in() ) {
+		$user_basedir = UM()->uploader()->get_upload_user_base_dir( $user_id );
+	} else {
+		$user_basedir = UM()->uploader()->get_upload_user_base_dir( 'temp' );
+	}
+
+	$filename = wp_basename( parse_url( $url, PHP_URL_PATH ) );
+
+	$file = $user_basedir . DIRECTORY_SEPARATOR . $filename;
+	if ( file_exists( $file ) ) {
+		if ( $image_path ) {
+			return $file;
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Check if file is temporary
+ *
+ * @deprecated 2.15.0
+ *
+ * @param  string $filename
+ * @return bool
+ */
+function um_is_temp_file( $filename ) {
+	$user_basedir = UM()->uploader()->get_upload_user_base_dir( 'temp' );
+
+	$file = $user_basedir . '/' . $filename;
+
+	if ( file_exists( $file ) ) {
+		return true;
+	}
+	return false;
+}
+
+/**
+ * Check that temp upload is valid
+ *
+ * @deprecated 2.15.0
+ *
+ * @param string $url
+ *
+ * @return bool|string
+ */
+function um_is_temp_upload( $url ) {
+	if ( is_string( $url ) ) {
+		$url = trim( $url );
+	}
+
+	if ( filter_var( $url, FILTER_VALIDATE_URL ) === false ) {
+		$url = realpath( $url );
+	}
+
+	if ( ! $url ) {
+		return false;
+	}
+
+	$url = explode( '/ultimatemember/temp/', $url );
+	if ( isset( $url[1] ) ) {
+
+		if ( strstr( $url[1], '../' ) || strstr( $url[1], '%' ) ) {
+			return false;
+		}
+
+		$src = UM()->files()->upload_temp . $url[1];
+		if ( ! file_exists( $src ) ) {
+			return false;
+		}
+
+		return $src;
+	}
+
+	return false;
+}
+
+/**
+ * Check that temp image is valid
+ *
+ * @deprecated 2.15.0
+ *
+ * @param $url
+ *
+ * @return bool|string
+ */
+function um_is_temp_image( $url ) {
+	$url = explode( '/ultimatemember/temp/', $url );
+	if (isset( $url[1] )) {
+		$src = UM()->files()->upload_temp . $url[1];
+		if (!file_exists( $src ))
+			return false;
+		list( $width, $height, $type, $attr ) = @getimagesize( $src );
+		if (isset( $width ) && isset( $height ))
+			return $src;
+	}
+
+	return false;
+}

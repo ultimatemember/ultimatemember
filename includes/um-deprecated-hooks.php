@@ -316,3 +316,41 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param {array} $request Request.
  */
+
+/**
+ * Filters files submitted by the UM registration or profile form.
+ *
+ * @param {array} $files   Submitted files.
+ * @param {int}   $user_id User ID.
+ *
+ * @return {array} Submitted files.
+ *
+ * @since 1.3.x
+ * @depecated 2.15.0
+ * @hook um_user_pre_updating_files_array
+ */
+
+/**
+ * Filters cache time for the User Avatar URL.
+ *
+ * @param {int} $timestamp Submitted files.
+ * @param {int} $user_id   User ID.
+ *
+ * @return {array} Submitted files.
+ *
+ * @since 2.0
+ * @depecated 2.15.0
+ * @hook um_filter_avatar_cache_time
+ */
+
+/**
+ * Fires after moving temporary files.
+ *
+ * @param {int}   $user_id   User ID.
+ * @param {array} $new_files Submitted files.
+ * @param {array} $old_files Moved files.
+ *
+ * @since 2.0.22
+ * @depecated 2.15.0
+ * @hook um_after_move_temporary_files
+ */

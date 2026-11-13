@@ -724,7 +724,7 @@ function um_user_submitted_registration_formatted( $style = false ) {
 	}
 
 	// User registered date.
-	$output .= um_user_submited_display( 'user_registered', __( 'User registered date', 'ultimate-member' ) );
+	$output .= um_user_submited_display( 'user_registered', __( 'User registered date', 'ultimate-member' ), $submitted_data );
 	// Registration form.
 	$output .= um_user_submited_display( 'form_id', __( 'Form', 'ultimate-member' ), $submitted_data );
 
@@ -824,7 +824,7 @@ function um_user_submitted_registration_formatted( $style = false ) {
 								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
 								if ( $col1_fields ) {
 									foreach ( $col1_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submited_display( $key, $data['title'], $submitted_data );
 									}
 								}
 							} elseif ( $cols_num == 2 ) {
@@ -832,14 +832,14 @@ function um_user_submitted_registration_formatted( $style = false ) {
 								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
 								if ( $col1_fields ) {
 									foreach ( $col1_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submited_display( $key, $data['title'], $submitted_data );
 									}
 								}
 
 								$col2_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 2 );
 								if ( $col2_fields ) {
 									foreach ( $col2_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submited_display( $key, $data['title'], $submitted_data );
 									}
 								}
 							} else {
@@ -847,21 +847,21 @@ function um_user_submitted_registration_formatted( $style = false ) {
 								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
 								if ( $col1_fields ) {
 									foreach ( $col1_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submited_display( $key, $data['title'], $submitted_data );
 									}
 								}
 
 								$col2_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 2 );
 								if ( $col2_fields ) {
 									foreach ( $col2_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submited_display( $key, $data['title'], $submitted_data );
 									}
 								}
 
 								$col3_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 3 );
 								if ( $col3_fields ) {
 									foreach ( $col3_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submited_display( $key, $data['title'], $submitted_data );
 									}
 								}
 							}
@@ -921,22 +921,21 @@ function um_user_submited_display( $k, $title, $data = array(), $style = true ) 
 	}
 
 	if ( in_array( $type, array( 'image', 'file' ), true ) ) {
-		$file = basename( $v );
-
-		$filedata = get_user_meta( um_user( 'ID' ), $k . '_metadata', true );
-
-		$baseurl = UM()->uploader()->get_upload_base_url();
-		if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $file ) ) {
-			if ( is_multisite() ) {
-				//multisite fix for old customers
-				$baseurl = str_replace( '/sites/' . get_current_blog_id() . '/', '/', $baseurl );
+		if ( is_array( $v ) && array_key_exists( 'filename', $v ) ) {
+			if ( empty( $v['temp_hash'] ) && empty( $v['filename'] ) ) {
+				$v = '';
+			} else {
+				$v = $v['filename'];
 			}
 		}
 
+		$filedata = get_user_meta( um_user( 'ID' ), $k . '_metadata', true );
+		$uri      = UM()->files()->get_download_link( $data['form_id'], $k, um_user( 'ID' ), sanitize_file_name( $v ) );
+
 		if ( ! empty( $filedata['original_name'] ) ) {
-			$v = '<a class="um-preview-upload" target="_blank" href="' . esc_url( $baseurl . um_user( 'ID' ) . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
+			$v = '<a class="um-preview-upload" target="_blank" href="' . esc_url( $uri ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
 		} else {
-			$v = $baseurl . um_user( 'ID' ) . '/' . $file;
+			$v = $uri;
 		}
 	}
 
@@ -1123,114 +1122,6 @@ function um_profile_id() {
 	}
 
 	return 0;
-}
-
-
-/**
- * Check that temp upload is valid
- *
- * @param string $url
- *
- * @return bool|string
- */
-function um_is_temp_upload( $url ) {
-	if ( is_string( $url ) ) {
-		$url = trim( $url );
-	}
-
-	if ( filter_var( $url, FILTER_VALIDATE_URL ) === false ) {
-		$url = realpath( $url );
-	}
-
-	if ( ! $url ) {
-		return false;
-	}
-
-	$url = explode( '/ultimatemember/temp/', $url );
-	if ( isset( $url[1] ) ) {
-
-		if ( strstr( $url[1], '../' ) || strstr( $url[1], '%' ) ) {
-			return false;
-		}
-
-		$src = UM()->files()->upload_temp . $url[1];
-		if ( ! file_exists( $src ) ) {
-			return false;
-		}
-
-		return $src;
-	}
-
-	return false;
-}
-
-
-/**
- * Check that temp image is valid
- *
- * @param $url
- *
- * @return bool|string
- */
-function um_is_temp_image( $url ) {
-	$url = explode( '/ultimatemember/temp/', $url );
-	if (isset( $url[1] )) {
-		$src = UM()->files()->upload_temp . $url[1];
-		if (!file_exists( $src ))
-			return false;
-		list( $width, $height, $type, $attr ) = @getimagesize( $src );
-		if (isset( $width ) && isset( $height ))
-			return $src;
-	}
-
-	return false;
-}
-
-
-/**
- * Check user's file ownership
- * @param string $url
- * @param int|null $user_id
- * @param string|bool $image_path
- * @return bool
- */
-function um_is_file_owner( $url, $user_id = null, $image_path = false ) {
-
-	if ( strpos( $url, UM()->uploader()->get_upload_base_url() . $user_id . '/' ) !== false && is_user_logged_in() ) {
-		$user_basedir = UM()->uploader()->get_upload_user_base_dir( $user_id );
-	} else {
-		$user_basedir = UM()->uploader()->get_upload_user_base_dir( 'temp' );
-	}
-
-	$filename = wp_basename( parse_url( $url, PHP_URL_PATH ) );
-
-	$file = $user_basedir . DIRECTORY_SEPARATOR . $filename;
-	if ( file_exists( $file ) ) {
-		if ( $image_path ) {
-			return $file;
-		}
-
-		return true;
-	}
-
-	return false;
-}
-
-
-/**
- * Check if file is temporary
- * @param  string $filename
- * @return bool
- */
-function um_is_temp_file( $filename ) {
-	$user_basedir = UM()->uploader()->get_upload_user_base_dir( 'temp' );
-
-	$file = $user_basedir . '/' . $filename;
-
-	if ( file_exists( $file ) ) {
-		return true;
-	}
-	return false;
 }
 
 /**
@@ -2045,45 +1936,52 @@ function um_closest_num( $array, $number ) {
  * @return bool|string
  */
 function um_get_cover_uri( $image, $attrs ) {
-	$uri        = false;
-	$uri_common = false;
-	$ext        = '.' . pathinfo( $image, PATHINFO_EXTENSION );
+	$uri  = false;
+	$find = false;
+	$ext  = '.' . pathinfo( $image, PATHINFO_EXTENSION );
 
 	$ratio  = str_replace( ':1', '', UM()->options()->get( 'profile_cover_ratio' ) );
 	$height = round( $attrs / $ratio );
 
-	$timestamp = time();
+	$user_id       = um_user( 'ID' );
+	$basedir       = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
+	$filenames_map = array(
+		'original' => "cover_photo{$ext}",
+		'crop'     => array(
+			"cover_photo-{$attrs}{$ext}",
+			"cover_photo-{$attrs}x{$height}{$ext}",
+		),
+	);
 
-	if ( is_multisite() ) {
-		//multisite fix for old customers
-		$multisite_fix_dir = UM()->uploader()->get_upload_base_dir();
-		$multisite_fix_url = UM()->uploader()->get_upload_base_url();
-		$multisite_fix_dir = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $multisite_fix_dir );
-		$multisite_fix_url = str_replace( '/sites/' . get_current_blog_id() . '/', '/', $multisite_fix_url );
+	if ( 'original' === $attrs && file_exists( wp_normalize_path( $basedir . DIRECTORY_SEPARATOR . $filenames_map[ $attrs ] ) ) ) {
+		$uri = UM()->files()->get_download_link( 'profile', 'cover_photo', $user_id, $filenames_map[ $attrs ] );
+	} else {
+		foreach ( $filenames_map['crop'] as $filename ) {
+			if ( file_exists( wp_normalize_path( $basedir . DIRECTORY_SEPARATOR . $filename ) ) ) {
+				$uri = UM()->files()->get_download_link( 'profile', 'cover_photo', $user_id, $filename );
+				break;
+			}
+		}
+	}
 
-		if ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo{$ext}" ) ) {
-			$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/cover_photo{$ext}?" . $timestamp;
+	if ( empty( $uri ) ) {
+		$sizes = UM()->options()->get( 'cover_thumb_sizes' );
+		if ( is_array( $sizes ) ) {
+			$find = um_closest_num( $sizes, $attrs );
 		}
 
-		if ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}{$ext}" ) ) {
-			$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/cover_photo-{$attrs}{$ext}?" . $timestamp;
-		}elseif ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}x{$height}{$ext}" ) ) {
-			$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/cover_photo-{$attrs}x{$height}{$ext}?". $timestamp;
+		$find_filenames_map = array(
+			"cover_photo-{$find}{$ext}",
+			"cover_photo-{$find}x{$height}{$ext}",
+			"cover_photo{$ext}",
+		);
+
+		foreach ( $find_filenames_map as $filename ) {
+			if ( file_exists( wp_normalize_path( $basedir . DIRECTORY_SEPARATOR . $filename ) ) ) {
+				$uri = UM()->files()->get_download_link( 'profile', 'cover_photo', $user_id, $filename );
+				break;
+			}
 		}
-	}
-
-	if ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo{$ext}" ) ) {
-		$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/cover_photo{$ext}?" . $timestamp;
-	}
-
-	if ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}{$ext}" ) ) {
-		$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/cover_photo-{$attrs}{$ext}?" . $timestamp;
-	}elseif ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}x{$height}{$ext}" ) ) {
-		$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/cover_photo-{$attrs}x{$height}{$ext}?". $timestamp;
-	}
-
-	if ( ! empty( $uri_common ) && empty( $uri ) ) {
-		$uri = $uri_common;
 	}
 
 	return $uri;
@@ -2104,9 +2002,8 @@ function um_get_avatar_url( $get_avatar ) {
 	return isset( $matches[1] ) ? $matches[1] : '';
 }
 
-
 /**
- * get avatar uri
+ * Get avatar uri
  *
  * @param $image
  * @param string|array $attrs
@@ -2114,89 +2011,49 @@ function um_get_avatar_url( $get_avatar ) {
  * @return bool|string
  */
 function um_get_avatar_uri( $image, $attrs ) {
-	$uri = false;
-	$uri_common = false;
+	$uri  = false;
 	$find = false;
-	$ext = '.' . pathinfo( $image, PATHINFO_EXTENSION );
+	$ext  = '.' . pathinfo( $image, PATHINFO_EXTENSION );
 
-	if ( is_multisite() ) {
-		//multisite fix for old customers
-		$multisite_fix_dir = UM()->uploader()->get_upload_base_dir();
-		$multisite_fix_url = UM()->uploader()->get_upload_base_url();
-		$multisite_fix_dir = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $multisite_fix_dir );
-		$multisite_fix_url = str_replace( '/sites/' . get_current_blog_id() . '/', '/', $multisite_fix_url );
+	$user_id       = um_user( 'ID' );
+	$basedir       = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
+	$filenames_map = array(
+		'original' => "profile_photo{$ext}",
+		'crop'     => array(
+			"profile_photo-{$attrs}x{$attrs}{$ext}",
+			"profile_photo-{$attrs}{$ext}",
+		),
+	);
 
-		if ( $attrs == 'original' && file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo{$ext}" ) ) {
-			$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/profile_photo{$ext}";
-		} elseif ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo-{$attrs}x{$attrs}{$ext}" ) ) {
-			$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/profile_photo-{$attrs}x{$attrs}{$ext}";
-		} elseif ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo-{$attrs}{$ext}" ) ) {
-			$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/profile_photo-{$attrs}{$ext}";
-		} else {
-			$sizes = UM()->options()->get( 'photo_thumb_sizes' );
-			if ( is_array( $sizes ) ) {
-				$find = um_closest_num( $sizes, $attrs );
-			}
-
-			if ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo-{$find}x{$find}{$ext}" ) ) {
-				$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/profile_photo-{$find}x{$find}{$ext}";
-			} elseif ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo-{$find}{$ext}" ) ) {
-				$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/profile_photo-{$find}{$ext}";
-			} elseif ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo{$ext}" ) ) {
-				$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/profile_photo{$ext}";
+	if ( 'original' === $attrs && file_exists( wp_normalize_path( $basedir . DIRECTORY_SEPARATOR . $filenames_map[ $attrs ] ) ) ) {
+		$uri = UM()->files()->get_download_link( 'profile', 'profile_photo', $user_id, $filenames_map[ $attrs ] );
+	} else {
+		foreach ( $filenames_map['crop'] as $filename ) {
+			if ( file_exists( wp_normalize_path( $basedir . DIRECTORY_SEPARATOR . $filename ) ) ) {
+				$uri = UM()->files()->get_download_link( 'profile', 'profile_photo', $user_id, $filename );
+				break;
 			}
 		}
 	}
 
-	if ( $attrs == 'original' && file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo{$ext}" ) ) {
-		$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/profile_photo{$ext}";
-	} elseif ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo-{$attrs}x{$attrs}{$ext}" ) ) {
-		$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/profile_photo-{$attrs}x{$attrs}{$ext}";
-	} elseif ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo-{$attrs}{$ext}" ) ) {
-		$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/profile_photo-{$attrs}{$ext}";
-	} else {
+	if ( empty( $uri ) ) {
 		$sizes = UM()->options()->get( 'photo_thumb_sizes' );
 		if ( is_array( $sizes ) ) {
 			$find = um_closest_num( $sizes, $attrs );
 		}
 
-		if ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo-{$find}x{$find}{$ext}" ) ) {
-			$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/profile_photo-{$find}x{$find}{$ext}";
-		} elseif ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo-{$find}{$ext}" ) ) {
-			$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/profile_photo-{$find}{$ext}";
-		} elseif ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo{$ext}" ) ) {
-			$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/profile_photo{$ext}";
+		$find_filenames_map = array(
+			"profile_photo-{$find}x{$find}{$ext}",
+			"profile_photo-{$find}{$ext}",
+			"profile_photo{$ext}",
+		);
+
+		foreach ( $find_filenames_map as $filename ) {
+			if ( file_exists( wp_normalize_path( $basedir . DIRECTORY_SEPARATOR . $filename ) ) ) {
+				$uri = UM()->files()->get_download_link( 'profile', 'profile_photo', $user_id, $filename );
+				break;
+			}
 		}
-	}
-
-	if ( ! empty( $uri_common ) && empty( $uri ) ) {
-		$uri = $uri_common;
-	}
-
-	/**
-	 * UM hook
-	 *
-	 * @type filter
-	 * @title um_filter_avatar_cache_time
-	 * @description Change Profile field value if it's empty
-	 * @input_vars
-	 * [{"var":"$timestamp","type":"timestamp","desc":"Avatar cache time"},
-	 * {"var":"$user_id","type":"int","desc":"User ID"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_filter( 'um_filter_avatar_cache_time', 'function_name', 10, 2 );
-	 * @example
-	 * <?php
-	 * add_filter( 'um_filter_avatar_cache_time', 'my_avatar_cache_time', 10, 2 );
-	 * function my_avatar_cache_time( $timestamp, $user_id ) {
-	 *     // your code here
-	 *     return $timestamp;
-	 * }
-	 * ?>
-	 */
-	$cache_time = apply_filters( 'um_filter_avatar_cache_time', time(), um_user( 'ID' ) );
-	if ( ! empty( $cache_time ) ) {
-		$uri .= "?{$cache_time}";
 	}
 
 	return $uri;

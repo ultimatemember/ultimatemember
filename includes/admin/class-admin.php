@@ -1855,7 +1855,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * Purge temp uploads dir.
 		 */
 		public function purge_temp() {
-			UM()->files()->remove_dir( UM()->files()->upload_temp );
+			UM()->common()->filesystem()::remove_dir( UM()->common()->filesystem()->get_tempdir() );
 
 			$url = add_query_arg(
 				array(
