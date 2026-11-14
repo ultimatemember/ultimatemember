@@ -1,6 +1,8 @@
 <?php
 namespace um\common\actions;
 
+use WP_Filesystem_Base;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -60,10 +62,14 @@ if ( ! class_exists( 'um\common\actions\Files' ) ) {
 		/**
 		 * Remove old files.
 		 *
+		 * @global WP_Filesystem_Base $wp_filesystem WordPress Filesystem.
+		 *
 		 * @param string     $dir       Path to directoty.
 		 * @param int|string $timestamp Unix timestamp or PHP relative time. All older files will be removed.
 		 */
 		private function remove_old_files( $dir, $timestamp = null ) {
+			global $wp_filesystem;
+
 			$removed_files = array();
 
 			if ( empty( $timestamp ) ) {
@@ -82,6 +88,12 @@ if ( ! class_exists( 'um\common\actions\Files' ) ) {
 
 					if ( is_dir( $file ) ) {
 						$this->remove_old_files( $file, $timestamp );
+
+						// remove empty folder.
+						$dirfiles = $wp_filesystem->dirlist( $file );
+						if ( empty( $dirfiles ) ) {
+							$wp_filesystem->rmdir( $file );
+						}
 					} elseif ( is_file( $file ) ) {
 						$fileatime = fileatime( $file );
 						if ( $fileatime && $fileatime < (int) $timestamp ) {
