@@ -2010,7 +2010,7 @@ function um_get_avatar_url( $get_avatar ) {
  *
  * @return bool|string
  */
-function um_get_avatar_uri( $image, $attrs ) {
+function um_get_avatar_uri( $image, $attrs = 'original' ) {
 	$uri  = false;
 	$find = false;
 	$ext  = '.' . pathinfo( $image, PATHINFO_EXTENSION );
