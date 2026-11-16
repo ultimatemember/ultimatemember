@@ -457,33 +457,10 @@ function um_user_edit_profile( $args, $form_data ) {
 								}
 							}
 						}
-					} elseif ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ]['filename'] !== $userinfo[ $key ] ) {
-						// File was deleted on frontend
-						// delete old file if it's exists
+					} elseif ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) && isset( $userinfo[ $key ] ) && $args['submitted'][ $key ]['filename'] !== $userinfo[ $key ] ) {
+						// Header photos are removed by their dedicated AJAX actions.
 						if ( file_exists( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] ) ) {
 							wp_delete_file( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] );
-
-							if ( 'profile_photo' === $key ) {
-								// Flush user directory from original profile photo thumbnails.
-								$files = scandir( wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR ) );
-								if ( ! empty( $files ) ) {
-									foreach ( $files as $file ) {
-										if ( preg_match( '/^profile_photo-(.*?)/', $file ) ) {
-											wp_delete_file( wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR . $file ) );
-										}
-									}
-								}
-							} elseif ( 'cover_photo' === $key ) {
-								// Flush user directory from original cover photo thumbnails.
-								$files = scandir( $user_basedir . DIRECTORY_SEPARATOR );
-								if ( ! empty( $files ) ) {
-									foreach ( $files as $file ) {
-										if ( preg_match( '/^cover_photo-(.*?)/', $file ) ) {
-											wp_delete_file( wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR . $file ) );
-										}
-									}
-								}
-							}
 						}
 
 						$to_update[ $key ] = '';

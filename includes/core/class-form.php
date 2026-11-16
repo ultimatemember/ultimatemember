@@ -422,6 +422,19 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				$arr_restricted_fields = array();
 				if ( 'profile' === $this->form_data['mode'] ) {
 					$arr_restricted_fields = UM()->fields()->get_restricted_fields_for_edit();
+
+					// Header uploads are rendered separately from the fields configured in the form builder.
+					$use_custom_settings = ! empty( $this->form_data['use_custom_settings'] );
+					$cover_enabled       = $use_custom_settings ? ! empty( $this->form_data['cover_enabled'] ) : UM()->options()->get( 'profile_cover_enabled' );
+					$photo_disabled      = $use_custom_settings ? ! empty( $this->form_data['disable_photo_upload'] ) : UM()->options()->get( 'disable_profile_photo_upload' );
+
+					if ( $cover_enabled && ! empty( ( $_POST[ 'cover_photo-' . $this->form_id ] ?? $_POST['cover_photo'] ?? array() )['temp_hash'] ) ) {
+						$custom_fields += UM()->builtin()->get_specific_fields( 'cover_photo' );
+					}
+					if ( ! $photo_disabled && ! empty( ( $_POST[ 'profile_photo-' . $this->form_id ] ?? $_POST['profile_photo'] ?? array() )['temp_hash'] ) ) {
+						$custom_fields += UM()->builtin()->get_specific_fields( 'profile_photo' );
+					}
+					$this->form_data['custom_fields'] = maybe_serialize( $custom_fields );
 				}
 
 				$password_fields = array(
