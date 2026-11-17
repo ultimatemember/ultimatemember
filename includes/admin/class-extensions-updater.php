@@ -41,7 +41,16 @@ class Extensions_Updater {
 		add_action( 'um_' . $this->updater_data['slug'] . '_package_complete', array( $this, 'package_complete' ) );
 	}
 
-	public function package_start( $version, $file_path, $delay, $per_page ) {
+	/**
+	 * Run the update script.
+	 *
+	 * @param string $version   Update version.
+	 * @param string $file_path Path to the update script.
+	 * @param int    $delay     Time delay before the start of the next update iteration.
+	 * @param int    $per_page  Number of records updated per iteration.
+	 * @param int    $last_id   Identifier of the last updated record.
+	 */
+	public function package_start( $version, $file_path, $delay, $per_page, $last_id = 0 ) {
 		$hooks = array(
 			'start'    => 'um_' . $this->updater_data['slug'] . '_package_start',
 			'complete' => 'um_' . $this->updater_data['slug'] . '_package_complete',
