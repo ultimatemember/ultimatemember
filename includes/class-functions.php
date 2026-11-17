@@ -782,6 +782,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 						),
 						'noscript'   => array(),
 						'del'        => array(),
+						'small'      => array(),
 						'blockquote' => array(
 							'cite' => true,
 						),
