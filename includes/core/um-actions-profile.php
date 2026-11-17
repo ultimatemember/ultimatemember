@@ -879,7 +879,7 @@ function um_profile_dynamic_meta_desc() {
 				}
 				$image = um_get_cover_uri( um_profile( 'cover_photo' ), $image_size );
 			} else {
-				$image = um_get_cover_uri( um_profile( 'cover_photo' ), null );
+				$image = um_get_cover_uri( um_profile( 'cover_photo' ) );
 			}
 		} elseif ( is_numeric( $image_size ) ) {
 			$sizes = UM()->options()->get( 'photo_thumb_sizes' );
@@ -1224,7 +1224,7 @@ function um_profile_header( $args ) {
 		<div class="um-profile-photo" data-user_id="<?php echo esc_attr( um_profile_id() ); ?>" <?php echo wp_kses( UM()->fields()->aria_valid_attributes( UM()->fields()->is_error( 'profile_photo' ), 'profile_photo' ), UM()->get_allowed_html( 'templates' ) ); ?>>
 
 			<a href="<?php echo esc_url( $user_profile_url ); ?>" class="um-profile-photo-img" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
-				<?php if ( ! $default_size || $default_size == 'original' ) {
+				<?php if ( ! $default_size || 'original' === $default_size ) {
 					$profile_photo = um_get_avatar_uri( um_profile( 'profile_photo' ) );
 
 					$data = um_get_user_avatar_data( um_user( 'ID' ) );

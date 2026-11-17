@@ -1930,12 +1930,12 @@ function um_closest_num( $array, $number ) {
 /**
  * get cover uri
  *
- * @param $image
- * @param $attrs
+ * @param string       $image
+ * @param string|array $attrs
  *
  * @return bool|string
  */
-function um_get_cover_uri( $image, $attrs ) {
+function um_get_cover_uri( $image, $attrs = 'original' ) {
 	$uri  = false;
 	$find = false;
 	$ext  = '.' . pathinfo( $image, PATHINFO_EXTENSION );
@@ -1953,7 +1953,7 @@ function um_get_cover_uri( $image, $attrs ) {
 		),
 	);
 
-	if ( 'original' === $attrs && file_exists( wp_normalize_path( $basedir . DIRECTORY_SEPARATOR . $filenames_map[ $attrs ] ) ) ) {
+	if ( 'original' === $attrs && array_key_exists( $attrs, $filenames_map ) && file_exists( wp_normalize_path( $basedir . DIRECTORY_SEPARATOR . $filenames_map[ $attrs ] ) ) ) {
 		$uri = UM()->files()->get_download_link( 'profile', 'cover_photo', $user_id, $filenames_map[ $attrs ] );
 	} else {
 		foreach ( $filenames_map['crop'] as $filename ) {
@@ -1987,8 +1987,6 @@ function um_get_cover_uri( $image, $attrs ) {
 	return $uri;
 }
 
-
-
 /**
  * get avatar URL instead of image
  *
@@ -2005,7 +2003,7 @@ function um_get_avatar_url( $get_avatar ) {
 /**
  * Get avatar uri
  *
- * @param $image
+ * @param string       $image
  * @param string|array $attrs
  *
  * @return bool|string
@@ -2025,7 +2023,7 @@ function um_get_avatar_uri( $image, $attrs = 'original' ) {
 		),
 	);
 
-	if ( 'original' === $attrs && file_exists( wp_normalize_path( $basedir . DIRECTORY_SEPARATOR . $filenames_map[ $attrs ] ) ) ) {
+	if ( 'original' === $attrs && array_key_exists( $attrs, $filenames_map ) && file_exists( wp_normalize_path( $basedir . DIRECTORY_SEPARATOR . $filenames_map[ $attrs ] ) ) ) {
 		$uri = UM()->files()->get_download_link( 'profile', 'profile_photo', $user_id, $filenames_map[ $attrs ] );
 	} else {
 		foreach ( $filenames_map['crop'] as $filename ) {
@@ -2100,8 +2098,8 @@ function um_get_user_avatar_data( $user_id = '', $size = '96' ) {
 	);
 
 	if ( $profile_photo = um_profile( 'profile_photo' ) ) {
-		$data['url'] = um_get_avatar_uri( $profile_photo, $size );
-		$data['type'] = 'upload';
+		$data['url']    = um_get_avatar_uri( $profile_photo, $size );
+		$data['type']   = 'upload';
 		$data['class'] .= ' um-avatar-uploaded';
 	} elseif ( $synced_profile_photo = um_user( 'synced_profile_photo' ) ) {
 		$data['url'] = $synced_profile_photo;
