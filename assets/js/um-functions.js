@@ -250,8 +250,8 @@ function um_responsive(){
 			jQuery('.um-account-side li a.current').trigger('click');
 		}
 
-		// set iframe height and width.
-		const $iframes = jQuery(this).find('.um-field-value iframe[height][width]');
+		// set iframe height and width. Skip percent sizes, they are already fluid.
+		const $iframes = jQuery(this).find('.um-field-value iframe[height][width]:not([width$="%"]):not([height$="%"])');
 		$iframes.each(function (i, item) {
 			let itemAttrHeight = parseInt(item.getAttribute('height'));
 			let itemAttrWidth  = parseInt(item.getAttribute('width'));
