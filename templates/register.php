@@ -23,7 +23,7 @@ if ( ! is_user_logged_in() ) {
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 	<div class="um-form" data-mode="<?php echo esc_attr( $mode ); ?>">
-		<form method="post" action="">
+		<form method="post">
 			<?php
 			/** This action is documented in includes/core/um-actions-profile.php */
 			do_action( 'um_before_form', $args, $form_id );

@@ -43,7 +43,7 @@ $description_key = UM()->profile()->get_show_bio_key( $args );
 
 		if ( um_is_on_edit_profile() ) {
 			?>
-			<form method="post" action="" data-description_key="<?php echo esc_attr( $description_key ); ?>">
+			<form method="post" data-description_key="<?php echo esc_attr( $description_key ); ?>">
 			<?php
 		}
 		/**
