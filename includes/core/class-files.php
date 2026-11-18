@@ -128,9 +128,11 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				return '';
 			}
 
-			$filetype    = wp_check_filetype( $file_path );
-			$filetime    = filemtime( $file_path );
-			$field_value = $filetime . '.' . $filetype['ext'];
+			if ( ! in_array( $field_key, array( 'profile_photo', 'cover_photo' ), true ) ) {
+				$filetype    = wp_check_filetype( $file_path );
+				$filetime    = filemtime( $file_path );
+				$field_value = $filetime . '.' . $filetype['ext'];
+			}
 
 			$key       = $field_key;
 			$field_key = rawurlencode( $field_key );
@@ -296,16 +298,26 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				}
 
 				$download_type = $field_data[ $field_key ]['type'];
+
+				um_fetch_user( $user_id );
+				$field_value = UM()->fields()->field_value( $field_key );
+				if ( empty( $field_value ) ) {
+					um_reset_user();
+					$wp_query->set_404();
+					return;
+				}
 			} else {
 				$download_type = 'image';
-			}
 
-			um_fetch_user( $user_id );
-			$field_value = UM()->fields()->field_value( $field_key );
-			if ( empty( $field_value ) ) {
-				um_reset_user();
-				$wp_query->set_404();
-				return;
+				// get the file name from the URL and query var. It provides the ability to get different cover/profile photos sizes.
+				$field_value = get_query_var( 'um_filename' );
+				if ( empty( $field_value ) ) {
+					$url = UM()->permalinks()->get_current_url();
+					if ( UM()->common()->filesystem()::is_timestamp_addable() ) {
+						$url = remove_query_arg( 'timestamp', $url );
+					}
+					$field_value = wp_basename( $url );
+				}
 			}
 
 			if ( 'file' === $download_type ) {
