@@ -58,7 +58,7 @@ class Users {
 			$actions['delete'] = array( 'label' => __( 'Delete this user', 'ultimate-member' ) );
 		}
 
-		if ( current_user_can( 'manage_options' ) && ! is_super_admin( $user_id ) ) {
+		if ( UM()->common()->users()->can_current_user_switch_to_user( $user_id ) ) {
 			$actions['switch_user'] = array( 'label' => __( 'Login as this user', 'ultimate-member' ) );
 		}
 

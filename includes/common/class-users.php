@@ -348,7 +348,43 @@ class Users {
 			return false;
 		}
 
+		// check the capability for single user.
+		if ( ! current_user_can( 'edit_user', $user_id ) ) {
+			return false;
+		}
+
 		return true;
+	}
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return bool
+	 */
+	public function can_current_user_switch_to_user( $user_id ) {
+		if ( ! self::user_exists( $user_id ) ) {
+			return false;
+		}
+
+		// Don't switch to super admins.
+		if ( is_multisite() && is_super_admin( $user_id ) ) {
+			return false;
+		}
+
+		// Prevent redundant or cyclic self-switching
+		if ( get_current_user_id() === $user_id ) {
+			return false;
+		}
+
+		// On multisite, ensure subsite administrators cannot switch to users outside their subsite
+		if ( is_multisite() && ! is_super_admin() ) {
+			if ( ! is_user_member_of_blog( $user_id, get_current_blog_id() ) ) {
+				return false;
+			}
+		}
+
+		// 'edit_user' contextually validates whether current user has rights over the target
+		return current_user_can( 'edit_user', $user_id );
 	}
 
 	/**
