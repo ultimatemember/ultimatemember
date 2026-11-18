@@ -45,8 +45,9 @@ add_action( 'um_post_registration_pending_hook', 'um_post_registration_pending_h
  * @param int|WP_Error $user_id
  * @param array        $args
  * @param null|array   $form_data It's null in case when posted from wp-admin > Add user
+ * @param null|bool    $is_admin  Equals `true` when posted from wp-admin > Add user. Otherwise, `false`.
  */
-function um_after_insert_user( $user_id, $args, $form_data = null ) {
+function um_after_insert_user( $user_id, $args, $form_data = null, $is_admin = false ) {
 	if ( empty( $user_id ) || is_wp_error( $user_id ) ) {
 		return;
 	}
@@ -69,11 +70,13 @@ function um_after_insert_user( $user_id, $args, $form_data = null ) {
 	 * 100 - `um_registration_set_profile_full_name()` Set user's full name.
 	 *
 	 * @since 2.0
+	 * @since 2.10.5 Added $is_admin
 	 * @hook um_registration_set_extra_data
 	 *
 	 * @param {int}   $user_id        User ID.
 	 * @param {array} $submitted_data $_POST Submission array.
 	 * @param {array} $form_data      UM form data. Since 2.6.7
+	 * @param {bool}  $is_admin       Is admin screen marker. Since 2.10.5
 	 *
 	 * @example <caption>Make any custom action after insert user to DB.</caption>
 	 * function my_registration_set_extra_data( $user_id, $submitted_data, $form_data ) {
@@ -81,7 +84,7 @@ function um_after_insert_user( $user_id, $args, $form_data = null ) {
 	 * }
 	 * add_action( 'um_registration_set_extra_data', 'my_registration_set_extra_data', 10, 3 );
 	 */
-	do_action( 'um_registration_set_extra_data', $user_id, $args, $form_data );
+	do_action( 'um_registration_set_extra_data', $user_id, $args, $form_data, $is_admin );
 	/**
 	 * Fires after complete UM user registration.
 	 * Note: Native redirects handlers at 100 priority, you can add some info before redirects.
@@ -91,11 +94,13 @@ function um_after_insert_user( $user_id, $args, $form_data = null ) {
 	 * 100 - `um_check_user_status()`              Redirect after registration based on user status.
 	 *
 	 * @since 2.0
+	 * @since 2.10.5 Added $is_admin
 	 * @hook um_registration_complete
 	 *
 	 * @param {int}   $user_id        User ID.
 	 * @param {array} $submitted_data $_POST Submission array.
 	 * @param {array} $form_data      UM form data. Since 2.6.7
+	 * @param {bool}  $is_admin       Is admin screen marker. Since 2.10.5
 	 *
 	 * @example <caption>Make any common action after complete UM user registration.</caption>
 	 * function my_registration_complete( $user_id, $submitted_data, $form_data ) {
@@ -103,17 +108,20 @@ function um_after_insert_user( $user_id, $args, $form_data = null ) {
 	 * }
 	 * add_action( 'um_registration_complete', 'my_registration_complete', 10, 3 );
 	 */
-	do_action( 'um_registration_complete', $user_id, $args, $form_data );
+	do_action( 'um_registration_complete', $user_id, $args, $form_data, $is_admin );
 }
-add_action( 'um_user_register', 'um_after_insert_user', 1, 3 );
+add_action( 'um_user_register', 'um_after_insert_user', 1, 4 );
 
 /**
- * Send notification about registration
+ * Send notification about registration.
  *
- * @param $user_id
+ * @param int        $user_id   User ID.
+ * @param array      $args      $_POST Submission array
+ * @param null|array $form_data UM form data
+ * @param bool       $is_admin  Is admin screen marker
  */
-function um_send_registration_notification( $user_id ) {
-	if ( is_admin() ) {
+function um_send_registration_notification( $user_id, $args, $form_data, $is_admin = false ) {
+	if ( ! empty( $is_admin ) ) {
 		// Don't send email notifications to administrators about new user registration, because the user was created from wp-admin.
 		return;
 	}
@@ -144,17 +152,18 @@ function um_send_registration_notification( $user_id ) {
 		}
 	}
 }
-add_action( 'um_registration_complete', 'um_send_registration_notification' );
+add_action( 'um_registration_complete', 'um_send_registration_notification', 10, 4 );
 
 /**
  * Check user status and redirect it after registration
  *
- * @param int        $user_id
- * @param array      $args
- * @param null|array $form_data
+ * @param int        $user_id   User ID.
+ * @param array      $args      $_POST Submission array
+ * @param null|array $form_data UM form data
+ * @param bool       $is_admin  Is admin screen marker
  */
-function um_check_user_status( $user_id, $args, $form_data = null ) {
-	if ( ( is_null( $form_data ) || is_admin() ) && UM()->options()->get( 'admin_ignore_user_status' ) ) {
+function um_check_user_status( $user_id, $args, $form_data = null, $is_admin = false ) {
+	if ( ( is_null( $form_data ) || ! empty( $is_admin ) ) && UM()->options()->get( 'admin_ignore_user_status' ) ) {
 		$registration_status = 'approved';
 	} else {
 		$registration_status = um_user( 'status' );
@@ -193,7 +202,7 @@ function um_check_user_status( $user_id, $args, $form_data = null ) {
 
 	delete_user_meta( $user_id, '_um_registration_in_progress' ); // Status is set. We can delete this marker.
 
-	if ( is_null( $form_data ) || is_admin() ) {
+	if ( is_null( $form_data ) || ! empty( $is_admin ) ) {
 		return;
 	}
 	// Code below is running only for registration from the frontend forms.
@@ -558,11 +567,14 @@ function um_submit_form_register( $args, $form_data ) {
 	 * 1 - `um_after_insert_user()` Make all Ultimate Member data set and actions after user registration|added via wp-admin.
 	 *
 	 * @since 2.0
+	 * @since 2.6.7  Added $form_data.
+	 * @since 2.10.5 Added $is_admin.
 	 * @hook  um_user_register
 	 *
 	 * @param {int}   $user_id   User ID.
 	 * @param {array} $args      Form data.
 	 * @param {array} $form_data UM form data. Since 2.6.7
+	 * @param {bool}  $is_admin  Is admin screen marker. Since 2.10.5
 	 *
 	 * @example <caption>Make any custom action after complete UM user registration.</caption>
 	 * function my_um_user_register( $user_id, $args, $form_data ) {
@@ -570,7 +582,7 @@ function um_submit_form_register( $args, $form_data ) {
 	 * }
 	 * add_action( 'um_user_register', 'my_um_user_register', 10, 3 );
 	 */
-	do_action( 'um_user_register', $user_id, $args, $form_data );
+	do_action( 'um_user_register', $user_id, $args, $form_data, false );
 }
 add_action( 'um_submit_form_register', 'um_submit_form_register', 10, 2 );
 
