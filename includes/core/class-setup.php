@@ -49,6 +49,22 @@ KEY meta_value_indx (um_value(191))
 
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 			dbDelta( $sql );
+
+			$sql = "CREATE TABLE {$wpdb->prefix}um_invitation_codes (
+id bigint(20) unsigned NOT NULL auto_increment,
+code varchar(64) NOT NULL default '',
+status varchar(20) NOT NULL default 'available',
+expiry datetime default NULL,
+created_at datetime default NULL,
+used_at datetime default NULL,
+used_by bigint(20) unsigned NOT NULL default '0',
+PRIMARY KEY  (id),
+UNIQUE KEY code (code),
+KEY status_indx (status),
+KEY expiry_indx (expiry)
+) $charset_collate;";
+
+			dbDelta( $sql );
 		}
 
 		/**

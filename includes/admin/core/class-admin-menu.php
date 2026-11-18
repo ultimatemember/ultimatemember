@@ -196,6 +196,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 
 			add_submenu_page( $this->slug, __( 'User Roles', 'ultimate-member' ), __( 'User Roles', 'ultimate-member' ), 'manage_options', 'um_roles', array( &$this, 'um_roles_pages' ) );
 
+			add_submenu_page( $this->slug, __( 'Invitation Codes', 'ultimate-member' ), __( 'Invitation Codes', 'ultimate-member' ), 'manage_options', 'um_invitation_codes', array( &$this, 'um_invitation_codes_pages' ) );
+
 			if ( UM()->options()->get( 'members_page' ) ) {
 				add_submenu_page( $this->slug, __( 'Member Directories', 'ultimate-member' ), __( 'Member Directories', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_directory', '' );
 			}
@@ -232,6 +234,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			} else {
 				um_js_redirect( add_query_arg( array( 'page' => 'um_roles' ), get_admin_url( 'admin.php' ) ) );
 			}
+		}
+
+
+		/**
+		 * Invitation codes page menu callback
+		 *
+		 * @since 2.15.0
+		 */
+		public function um_invitation_codes_pages() {
+			include_once UM_PATH . 'includes/admin/core/list-tables/invitation-codes-list-table.php';
 		}
 
 
