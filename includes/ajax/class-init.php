@@ -73,5 +73,22 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 			}
 			return UM()->classes['um\ajax\users'];
 		}
+
+		/**
+		 * @since 2.15.0
+		 *
+		 * @param string $html
+		 *
+		 * @return string
+		 */
+		public function esc_html_spaces( $html ) {
+			$html = preg_replace(
+				array( '/^\s+/im', '/\\r\\n/im', '/\\n/im', '/\\t+/im' ),
+				array( '', ' ', ' ', ' ' ),
+				$html
+			);
+
+			return $html;
+		}
 	}
 }

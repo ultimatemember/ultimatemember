@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.14.2
+Stable tag: 2.15.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 

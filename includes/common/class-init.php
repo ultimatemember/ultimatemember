@@ -23,10 +23,12 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			$this->actions();
 
 			$this->cpt()->hooks();
+			$this->guest();
 			$this->screen();
 			$this->secure()->hooks();
 			$this->site_health();
 			$this->theme()->hooks();
+			$this->upload_security()->hooks();
 			$this->users()->hooks();
 		}
 
@@ -38,6 +40,14 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		private function actions() {
 			if ( empty( UM()->classes['um\common\actions\emails'] ) ) {
 				UM()->classes['um\common\actions\emails'] = new actions\Emails();
+			}
+
+			if ( empty( UM()->classes['um\common\actions\files'] ) ) {
+				UM()->classes['um\common\actions\files'] = new actions\Files();
+			}
+
+			if ( empty( UM()->classes['um\common\actions\guests'] ) ) {
+				UM()->classes['um\common\actions\guests'] = new actions\Guests();
 			}
 
 			if ( empty( UM()->classes['um\common\actions\users'] ) ) {
@@ -80,6 +90,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\filesystem'] = new Filesystem();
 			}
 			return UM()->classes['um\common\filesystem'];
+		}
+
+		/**
+		 * @since 2.15.0
+		 *
+		 * @return Guest
+		 */
+		public function guest() {
+			if ( empty( UM()->classes['um\common\guest'] ) ) {
+				UM()->classes['um\common\guest'] = new Guest();
+			}
+			return UM()->classes['um\common\guest'];
 		}
 
 		/**
@@ -128,6 +150,16 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\theme'] = new Theme();
 			}
 			return UM()->classes['um\common\theme'];
+		}
+
+		/**
+		 * @return Upload_Security
+		 */
+		public function upload_security() {
+			if ( empty( UM()->classes['um\common\upload_security'] ) ) {
+				UM()->classes['um\common\upload_security'] = new Upload_Security();
+			}
+			return UM()->classes['um\common\upload_security'];
 		}
 
 		/**

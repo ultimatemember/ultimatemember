@@ -904,10 +904,19 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 												$form[ 'confirm_' . $k ] = trim( $form[ 'confirm_' . $k ] );
 											}
 											break;
-										case 'text':
-										case 'select':
 										case 'image':
 										case 'file':
+											if ( is_array( $form[ $k ] ) ) {
+												$form[ $k ]['filename']  = isset( $form[ $k ]['filename'] ) ? sanitize_file_name( $form[ $k ]['filename'] ) : '';
+												$form[ $k ]['hash']      = isset( $form[ $k ]['hash'] ) ? sanitize_key( $form[ $k ]['hash'] ) : '';
+												$form[ $k ]['temp_hash'] = isset( $form[ $k ]['temp_hash'] ) ? sanitize_key( $form[ $k ]['temp_hash'] ) : '';
+											} else {
+												$form[ $k ] = sanitize_text_field( strip_shortcodes( $form[ $k ] ) );
+											}
+											break;
+
+										case 'text':
+										case 'select':
 										case 'date':
 										case 'time':
 										case 'rating':

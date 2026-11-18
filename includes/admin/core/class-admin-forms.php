@@ -118,6 +118,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 				if ( 'info_text' === $data['type'] ) {
 					$arr_kses = array(
+						'div' => array(
+							'id'    => array(),
+							'class' => array(),
+							'style' => array(),
+						),
+						'p'    => array(),
+						'h4'   => array(),
+						'pre'  => array(),
+						'code' => array(),
 						'a' => array(
 							'href'    => array(),
 							'title'   => array(),

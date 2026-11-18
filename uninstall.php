@@ -32,9 +32,8 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-init.php';
 $delete_options = UM()->options()->get( 'uninstall_on_delete' );
 if ( ! empty( $delete_options ) ) {
 
-	//remove uploads
-	$upl_folder = UM()->files()->upload_basedir;
-	UM()->files()->remove_dir( $upl_folder );
+	// Remove all Ultimate Member uploads
+	UM()->common()->filesystem()::remove_dir( UM()->common()->filesystem()->get_basedir() );
 
 	//remove core settings
 	$settings_defaults = UM()->config()->settings_defaults;
@@ -243,9 +242,9 @@ if ( ! empty( $delete_options ) ) {
 	);
 
 	//mailchimp
-	$mailchimp_log = UM()->files()->upload_basedir . 'mailchimp.log';
+	$mailchimp_log = UM()->common()->filesystem()->get_basedir() . DIRECTORY_SEPARATOR . 'mailchimp.log';
 	if ( file_exists( $mailchimp_log ) ) {
-		unlink( $mailchimp_log );
+		wp_delete_file( $mailchimp_log );
 	}
 
 	$um_options = $wpdb->get_results(
