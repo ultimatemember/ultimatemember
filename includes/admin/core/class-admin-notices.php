@@ -548,6 +548,30 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					break;
 				case 'um_settings_updated':
 					$messages[0]['content'] = __( 'Settings have been saved successfully.', 'ultimate-member' );
+
+					$template_save_failed = get_transient( 'um_email_template_save_failed' );
+					if ( $template_save_failed ) {
+						delete_transient( 'um_email_template_save_failed' );
+						if ( 'database' === $template_save_failed ) {
+							$this->add_notice(
+								'um_email_template_save_failed',
+								array(
+									'class'   => 'notice-warning',
+									'message' => '<p>' . esc_html__( 'The email template could not be saved to your theme folder because it is not writable. It was saved in the database instead.', 'ultimate-member' ) . '</p>',
+								),
+								50
+							);
+						} else {
+							$this->add_notice(
+								'um_email_template_save_failed',
+								array(
+									'class'   => 'error',
+									'message' => '<p>' . esc_html__( 'The email template was not saved because the template file in your theme folder is not writable. Please check the file permissions and save it again.', 'ultimate-member' ) . '</p>',
+								),
+								50
+							);
+						}
+					}
 					break;
 				case 'um_users_updated':
 					$messages[0]['content'] = __( 'Users have been updated.', 'ultimate-member' );
