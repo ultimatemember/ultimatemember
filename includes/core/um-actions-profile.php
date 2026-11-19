@@ -1495,7 +1495,9 @@ function um_pre_profile_shortcode( $args ) {
 
 			um_fetch_user( um_get_requested_user() );
 		} else {
-			if ( ! is_user_logged_in() ) {
+			// Redirect only while viewing a page. Plugins that render page content in other requests,
+			// such as Rank Math's llms.txt, must not have their response replaced by a redirect.
+			if ( ! is_user_logged_in() && is_singular() ) {
 				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
 			}
 
