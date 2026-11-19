@@ -292,14 +292,23 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					return;
 				}
 
-				if ( ! um_can_view_field( $field_data[ $field_key ] ) ) {
+				// Fetch the user data before checking permissions
+				um_fetch_user( $user_id );
+
+				// Set the requested user for proper permission checks inside the `um_can_view_field()` function.
+				$previous_requested_user = UM()->user()->target_id;
+				um_set_requested_user( $user_id );
+				$can_view_field = um_can_view_field( $field_data[ $field_key ] );
+				um_set_requested_user( $previous_requested_user ); // reset the requested user after permission check.
+
+				if ( ! $can_view_field ) {
+					um_reset_user();
 					$wp_query->set_404();
 					return;
 				}
 
 				$download_type = $field_data[ $field_key ]['type'];
 
-				um_fetch_user( $user_id );
 				$field_value = UM()->fields()->field_value( $field_key );
 				if ( empty( $field_value ) ) {
 					um_reset_user();
