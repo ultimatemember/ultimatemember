@@ -25,7 +25,8 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			add_shortcode( 'ultimatemember_password', array( &$this, 'ultimatemember_password' ) );
 
 			add_action( 'template_redirect', array( &$this, 'set_password_mode' ), 10001 );
-			add_action( 'template_redirect', array( &$this, 'form_init' ), 10002 );
+			add_action( 'template_redirect', array( &$this, 'handle_reset_password_form' ), 10002 );
+			add_action( 'template_redirect', array( &$this, 'handle_change_password_form' ), 10002 );
 
 			add_action( 'um_reset_password_errors_hook', array( &$this, 'um_reset_password_errors_hook' ) );
 			add_action( 'um_reset_password_process_hook', array( &$this, 'um_reset_password_process_hook' ) );
@@ -213,16 +214,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		}
 
 		/**
-		 * Check if a legitimate password reset request is in action
-		 *
-		 * @return bool
-		 */
-		public function is_reset_request() {
-			// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
-			return ! empty( $_POST['_um_password_reset'] );
-		}
-
-		/**
 		 * Check if a legitimate password change request is in action
 		 *
 		 * works both for the Account > Password form and the Reset Password shortcode form
@@ -306,61 +297,89 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		}
 
 		/**
-		 * Password page form
+		 * Reset Password form
 		 */
-		public function form_init() {
-			if ( $this->is_reset_request() ) {
-				$form_data = array(
-					'mode' => 'password',
-				);
+		public function handle_reset_password_form() {
+			if ( empty( $_POST['_um_password_reset'] ) ) {
+				return;
+			}
 
-				UM()->form()->post_form = wp_unslash( $_POST );
-
-				if ( empty( UM()->form()->post_form['mode'] ) ) {
-					UM()->form()->post_form['mode'] = 'password';
-				}
-
+			if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'um_password_reset_form' ) ) {
 				/**
-				 * Fires for handle validate errors on the reset password form submit.
+				 * Filters URL for redirect if reset password form nonce isn't verified.
+				 *
+				 * @param {string} $error_url URL for redirect if reset password form nonce isn't verified.
+				 *
+				 * @return {string} URL for redirect.
+				 *
+				 * @since 2.15.0
+				 * @hook um_reset_password_invalid_nonce_redirect_url
+				 *
+				 * @example <caption>Change URL for redirect if reset password form nonce isn't verified.</caption>
+				 * function my_um_reset_password_invalid_nonce_redirect_url( $error_url ) {
+				 *     return '{your_custom_url}';
+				 * }
+				 * add_filter( 'um_reset_password_invalid_nonce_redirect_url', 'my_um_reset_password_invalid_nonce_redirect_url' );
+				 */
+				$url = apply_filters( 'um_reset_password_invalid_nonce_redirect_url', add_query_arg( array( 'err' => 'invalid_nonce' ) ) );
+				um_safe_redirect( $url );
+			}
+
+			$form_data = array(
+				'mode' => 'password',
+			);
+
+			UM()->form()->post_form = wp_unslash( $_POST );
+
+			if ( empty( UM()->form()->post_form['mode'] ) ) {
+				UM()->form()->post_form['mode'] = 'password';
+			}
+
+			/**
+			 * Fires for handle validate errors on the reset password form submit.
+			 *
+			 * @since 1.3.x
+			 * @since 2.6.8 Added $form_data attribute.
+			 *
+			 * @hook um_reset_password_errors_hook
+			 *
+			 * @param {array} $submission_data Form submitted data.
+			 * @param {array} $form_data       Form data. Since 2.6.8
+			 *
+			 * @example <caption>Make any custom validation on password reset form.</caption>
+			 * function my_reset_password_errors( $submission_data, $form_data ) {
+			 *     // your code here
+			 * }
+			 * add_action( 'um_reset_password_errors_hook', 'my_reset_password_errors', 10, 2 );
+			 */
+			do_action( 'um_reset_password_errors_hook', UM()->form()->post_form, $form_data );
+
+			if ( ! isset( UM()->form()->errors ) ) {
+				/**
+				 * Fires for handle the reset password form when submitted data is valid.
 				 *
 				 * @since 1.3.x
 				 * @since 2.6.8 Added $form_data attribute.
 				 *
-				 * @hook um_reset_password_errors_hook
+				 * @hook um_reset_password_process_hook
 				 *
 				 * @param {array} $submission_data Form submitted data.
 				 * @param {array} $form_data       Form data. Since 2.6.8
 				 *
-				 * @example <caption>Make any custom validation on password reset form.</caption>
-				 * function my_reset_password_errors( $submission_data, $form_data ) {
+				 * @example <caption>Make any custom action when password reset form is submitted.</caption>
+				 * function my_reset_password_process( $submission_data, $form_data ) {
 				 *     // your code here
 				 * }
-				 * add_action( 'um_reset_password_errors_hook', 'my_reset_password_errors', 10, 2 );
+				 * add_action( 'um_reset_password_process_hook', 'my_reset_password_process', 10, 2 );
 				 */
-				do_action( 'um_reset_password_errors_hook', UM()->form()->post_form, $form_data );
-
-				if ( ! isset( UM()->form()->errors ) ) {
-					/**
-					 * Fires for handle the reset password form when submitted data is valid.
-					 *
-					 * @since 1.3.x
-					 * @since 2.6.8 Added $form_data attribute.
-					 *
-					 * @hook um_reset_password_process_hook
-					 *
-					 * @param {array} $submission_data Form submitted data.
-					 * @param {array} $form_data       Form data. Since 2.6.8
-					 *
-					 * @example <caption>Make any custom action when password reset form is submitted.</caption>
-					 * function my_reset_password_process( $submission_data, $form_data ) {
-					 *     // your code here
-					 * }
-					 * add_action( 'um_reset_password_process_hook', 'my_reset_password_process', 10, 2 );
-					 */
-					do_action( 'um_reset_password_process_hook', UM()->form()->post_form, $form_data );
-				}
+				do_action( 'um_reset_password_process_hook', UM()->form()->post_form, $form_data );
 			}
+		}
 
+		/**
+		 * Password change form
+		 */
+		public function handle_change_password_form() {
 			if ( $this->is_change_request() ) {
 
 				$formdata = wp_unslash( $_POST );
@@ -464,7 +483,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				}
 			}
 		}
-
 
 		/**
 		 * Process a new request
@@ -736,6 +754,19 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		public function add_replace_placeholder( $replace_placeholders ) {
 			_deprecated_function( __METHOD__, '2.10.5' );
 			return $replace_placeholders;
+		}
+
+		/**
+		 * Check if a legitimate password reset request is in action
+		 *
+		 * @deprecated 2.15.0
+		 *
+		 * @return bool
+		 */
+		public function is_reset_request() {
+			_deprecated_function( __METHOD__, '2.15.0' );
+			// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+			return ! empty( $_POST['_um_password_reset'] );
 		}
 	}
 }
