@@ -397,7 +397,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					wp_send_json_error( esc_js( __( 'You have no permission to edit this user through this form', 'ultimate-member' ) ) );
 				}
 
-				$post_data['role'] = maybe_unserialize( $post_data['role'] );
+				$post_data['role'] = um_maybe_unserialize( $post_data['role'] );
 
 				if ( is_array( $post_data['role'] ) ) {
 					if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {
@@ -412,7 +412,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				wp_send_json_error( esc_js( __( 'Invalid form fields', 'ultimate-member' ) ) );
 			}
 
-			$custom_fields = maybe_unserialize( $post_data['custom_fields'] );
+			$custom_fields = um_maybe_unserialize( $post_data['custom_fields'] );
 			if ( ! is_array( $custom_fields ) || ! array_key_exists( $key, $custom_fields ) ) {
 				if ( ! ( 'profile' === $mode && in_array( $key, array( 'cover_photo', 'profile_photo' ), true ) ) ) {
 					wp_send_json_error( esc_js( __( 'Invalid field metakey', 'ultimate-member' ) ) );
@@ -593,7 +593,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 						wp_send_json_error( $ret );
 					}
 
-					$post_data['role'] = maybe_unserialize( $post_data['role'] );
+					$post_data['role'] = um_maybe_unserialize( $post_data['role'] );
 
 					if ( is_array( $post_data['role'] ) ) {
 						if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {
@@ -611,7 +611,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					wp_send_json_error( $ret );
 				}
 
-				$custom_fields = maybe_unserialize( $post_data['custom_fields'] );
+				$custom_fields = um_maybe_unserialize( $post_data['custom_fields'] );
 				if ( ! is_array( $custom_fields ) || ! array_key_exists( $id, $custom_fields ) ) {
 					if ( ! ( 'profile' === $mode && in_array( $id, array( 'cover_photo', 'profile_photo' ), true ) ) ) {
 						$ret['error'] = esc_html__( 'Invalid field metakey', 'ultimate-member' );
@@ -766,7 +766,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					wp_send_json_error( $ret );
 				}
 
-				$post_data['role'] = maybe_unserialize( $post_data['role'] );
+				$post_data['role'] = um_maybe_unserialize( $post_data['role'] );
 
 				if ( is_array( $post_data['role'] ) ) {
 					if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {
@@ -786,7 +786,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				wp_send_json_error( $ret );
 			}
 
-			$custom_fields = maybe_unserialize( $post_data['custom_fields'] );
+			$custom_fields = um_maybe_unserialize( $post_data['custom_fields'] );
 			if ( ! is_array( $custom_fields ) || ! array_key_exists( $id, $custom_fields ) ) {
 				$ret['error'] = esc_html__( 'Invalid field metakey', 'ultimate-member' );
 				wp_send_json_error( $ret );

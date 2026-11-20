@@ -412,7 +412,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					return;
 				}
 
-				$custom_fields = maybe_unserialize( $this->form_data['custom_fields'] );
+				$custom_fields = um_maybe_unserialize( $this->form_data['custom_fields'] );
 				if ( ! is_array( $custom_fields ) || empty( $custom_fields ) ) {
 					return;
 				}
@@ -810,7 +810,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				$form['form_id'] = absint( $form['form_id'] );
 
 				if ( isset( $this->form_data['custom_fields'] ) ) {
-					$custom_fields = maybe_unserialize( $this->form_data['custom_fields'] );
+					$custom_fields = um_maybe_unserialize( $this->form_data['custom_fields'] );
 
 					if ( is_array( $custom_fields ) ) {
 						foreach ( $custom_fields as $k => $field ) {
@@ -953,7 +953,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					$field_exists = false;
 					// Check the case when user_description is also added to the User Profile form, and it's editable and not empty.
 					if ( ! empty( $this->form_data['custom_fields'] ) ) {
-						$custom_fields = maybe_unserialize( $this->form_data['custom_fields'] );
+						$custom_fields = um_maybe_unserialize( $this->form_data['custom_fields'] );
 						if ( array_key_exists( $description_key, $custom_fields ) ) {
 							$field_exists = true;
 							if ( ! empty( $custom_fields[ $description_key ]['html'] ) && $bio_html ) {
@@ -1080,7 +1080,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 * @return bool|array roles
 		 */
 		public function custom_field_roles( $custom_fields ) {
-			$fields = maybe_unserialize( $custom_fields );
+			$fields = um_maybe_unserialize( $custom_fields );
 			if ( ! is_array( $fields ) ) {
 				return false;
 			}

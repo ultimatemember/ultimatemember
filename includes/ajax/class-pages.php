@@ -170,7 +170,7 @@ class Pages {
 			$directory_data = UM()->query()->post_data( $directory_id );
 
 			if ( isset( $directory_data['roles_can_search'] ) ) {
-				$directory_data['roles_can_search'] = maybe_unserialize( $directory_data['roles_can_search'] );
+				$directory_data['roles_can_search'] = um_maybe_unserialize( $directory_data['roles_can_search'] );
 			}
 
 			$show_search = empty( $directory_data['roles_can_search'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $directory_data['roles_can_search'], true ) );
