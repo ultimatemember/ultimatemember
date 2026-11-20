@@ -67,15 +67,24 @@ jQuery(document).ready(function() {
 		var d;
 		var form_id = 0;
 		var nonce = '';
-		if ( jQuery('div.um-field-image[data-key="' + key + '"]').length === 1 ) {
-			let $formWrapper = jQuery('div.um-field-image[data-key="' + key + '"]').closest('.um-form');
+		const $modal = elem.closest('#um_upload_single');
+		const fieldSelector = 'div.um-field-image[data-key="' + key + '"]';
+		const $field = $modal.data('umUploadField') || jQuery(fieldSelector);
+		const $editForm = $field.closest('.um-profile.um-editing form');
+		const savePhotoOnProfileSubmit = $editForm.length > 0 && ( key === 'cover_photo' || key === 'profile_photo' );
+
+		if ( $field.length === 1 && $field.is(fieldSelector) ) {
+			let $formWrapper = $field.closest('.um-form');
 			form_id = $formWrapper.data('form_id') || $formWrapper.find('input[name="form_id"]').val(); // 'input[name="form_id"]' is a backward compatibility.
 			// mode = $formWrapper.data('mode');
-			nonce = jQuery('div.um-field-image[data-key="' + key + '"]').data('resize-nonce');
+			nonce = $field.data('resize-nonce');
 		} else {
 			console.warn( wp.i18n.__( 'UM Warning: No field associated with image uploader.', 'ultimate-member' ) );
 			return;
 		}
+
+		const $submitFields = savePhotoOnProfileSubmit ? $editForm.find(fieldSelector) : $field;
+		const $fieldPreview = $field.find('.um-single-image-preview[data-key]');
 
 		if ( jQuery('.cropper-hidden').length > 0 && UM.frontend.cropper.obj ) {
 			var data = UM.frontend.cropper.obj.getData();
@@ -97,6 +106,7 @@ jQuery(document).ready(function() {
 							field_id: key,
 							form_id: form_id,
 							context: context,
+							save_photo_on_profile_submit: savePhotoOnProfileSubmit ? 1 : 0,
 							_wpnonce: nonce
 						},
 						success: function( response ) {
@@ -140,21 +150,19 @@ jQuery(document).ready(function() {
 									um_responsive();
 								}
 
-								jQuery('.um-single-image-preview[data-key='+key+']').fadeIn().find('img').attr('src', response.src).attr('data-file', response.filename).data('file', response.filename);
+								$fieldPreview.fadeIn().find('img').attr('src', response.src).attr('data-file', response.filename).data('file', response.filename);
 
 								um_remove_modal();
 
 								jQuery('img.cropper-invisible').remove();
 
-								jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( elem.attr('data-change') );
+								$submitFields.find('.um-btn-auto-width').html( elem.attr('data-change') );
 
-								//jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type="hidden"]').val( response.filename );
+								$submitFields.find('input[type=hidden].um-uploaded-value').val( response.filename );
+								$submitFields.find('input[type=hidden].um-uploaded-value-hash').val( response.hash );
+								$submitFields.find('input[type=hidden].um-uploaded-value-temp-hash').val( response.temp_hash );
 
-								jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden].um-uploaded-value').val( response.filename );
-								jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden].um-uploaded-value-hash').val( response.hash );
-								jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden].um-uploaded-value-temp-hash').val( response.temp_hash );
-
-								jQuery('.um-single-image-preview[data-key='+key+']').find('a.cancel').attr('data-nonce', response.delete_nonce ).data('nonce', response.delete_nonce);
+								$fieldPreview.find('a.cancel').attr('data-nonce', response.delete_nonce ).data('nonce', response.delete_nonce);
 							}
 						},
 						error: function (data) {
@@ -237,15 +245,15 @@ jQuery(document).ready(function() {
 		} else {
 			d = new Date();
 
-			jQuery('.um-single-image-preview[data-key='+key+']').fadeIn().find('img').attr('src', src);
+			$fieldPreview.fadeIn().find('img').attr('src', src);
 
 			um_remove_modal();
 
-			jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( elem.attr('data-change') );
+			$submitFields.find('.um-btn-auto-width').html( elem.attr('data-change') );
 
-			jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden].um-uploaded-value').val( file );
-			jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden].um-uploaded-value-hash').val( hash );
-			jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden].um-uploaded-value-temp-hash').val( tempHash );
+			$submitFields.find('input[type=hidden].um-uploaded-value').val( file );
+			$submitFields.find('input[type=hidden].um-uploaded-value-hash').val( hash );
+			$submitFields.find('input[type=hidden].um-uploaded-value-temp-hash').val( tempHash );
 		}
 	});
 
@@ -261,7 +269,8 @@ jQuery(document).ready(function() {
 
 		if ( jQuery(this).data('modal-copy') ) {
 
-			jQuery('#' + modal_id).html( jQuery(this).parents('.um-field').find('.um-modal-hidden-content').html() );
+			const $field = jQuery(this).closest('.um-field');
+			jQuery('#' + modal_id).data('umUploadField', $field).html( $field.find('.um-modal-hidden-content').html() );
 
 			if ( jQuery(this).parents('.um-profile-photo').attr('data-user_id') ) {
 				jQuery('#' + modal_id).attr('data-user_id', jQuery(this).parents('.um-profile-photo').attr('data-user_id') );

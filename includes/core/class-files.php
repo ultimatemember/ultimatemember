@@ -687,7 +687,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			$image->save( $file_path );
 
-			if ( 'core' === $context && in_array( $field_id, array( 'cover_photo', 'profile_photo' ), true ) ) {
+			if ( 'core' === $context && empty( $_POST['save_photo_on_profile_submit'] ) && in_array( $field_id, array( 'cover_photo', 'profile_photo' ), true ) ) {
 				$user_basedir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
 
 				$file_type = wp_check_filetype( $file_path );
