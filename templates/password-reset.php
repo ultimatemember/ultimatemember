@@ -6,7 +6,7 @@
  *
  * Call: function ultimatemember_password()
  *
- * @version 2.10.5
+ * @version 2.15.0
  *
  * @var string $mode
  * @var int    $form_id
@@ -40,7 +40,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php } else { ?>
 
 				<input type="hidden" name="_um_password_reset" id="_um_password_reset" value="1" />
-
+				<?php wp_nonce_field( 'um_password_reset_form' ); ?>
 				<?php
 				/**
 				 * UM hook
