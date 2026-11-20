@@ -25,7 +25,7 @@ if ( ! empty( $postmeta ) ) {
 $postmeta = $wpdb->get_results( "SELECT * FROM {$wpdb->postmeta} WHERE meta_key='_um_search_fields'", ARRAY_A );
 if ( ! empty( $postmeta ) ) {
 	foreach ( $postmeta as $row ) {
-		$meta_value = maybe_unserialize( $row['meta_value'] );
+		$meta_value = um_maybe_unserialize( $row['meta_value'] );
 
 		if ( is_array( $meta_value ) ) {
 			$update = false;

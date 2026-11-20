@@ -346,7 +346,7 @@ function um_field_conditions_are_met( $data ) {
 
 				switch ( $op ) {
 					case 'equals to':
-						$field = maybe_unserialize( $field );
+						$field = um_maybe_unserialize( $field );
 
 						if ( is_array( $field ) ) {
 							$state = in_array( $val, $field ) ? 'show' : 'hide';
@@ -356,7 +356,7 @@ function um_field_conditions_are_met( $data ) {
 
 						break;
 					case 'not equals':
-						$field = maybe_unserialize( $field );
+						$field = um_maybe_unserialize( $field );
 
 						if ( is_array( $field ) ) {
 							$state = ! in_array( $val, $field ) ? 'show' : 'hide';
@@ -409,7 +409,7 @@ function um_field_conditions_are_met( $data ) {
 
 				switch ( $op ) {
 					case 'equals to':
-						$field = maybe_unserialize( $field );
+						$field = um_maybe_unserialize( $field );
 
 						if ( is_array( $field ) ) {
 							$state = in_array( $val, $field ) ? 'hide' : 'show';
@@ -419,7 +419,7 @@ function um_field_conditions_are_met( $data ) {
 
 						break;
 					case 'not equals':
-						$field = maybe_unserialize( $field );
+						$field = um_maybe_unserialize( $field );
 
 						if ( is_array( $field ) ) {
 							$state = ! in_array( $val, $field ) ? 'hide' : 'show';
@@ -477,7 +477,7 @@ function um_field_conditions_are_met( $data ) {
 
 				switch ( $op ) {
 					case 'equals to':
-						$field = maybe_unserialize( $field );
+						$field = um_maybe_unserialize( $field );
 
 						if ( is_array( $field ) ) {
 							$state = in_array( $val, $field ) ? 'show' : 'not_show';
@@ -487,7 +487,7 @@ function um_field_conditions_are_met( $data ) {
 
 						break;
 					case 'not equals':
-						$field = maybe_unserialize( $field );
+						$field = um_maybe_unserialize( $field );
 
 						if ( is_array( $field ) ) {
 							$state = ! in_array( $val, $field ) ? 'show' : 'not_show';
@@ -541,7 +541,7 @@ function um_field_conditions_are_met( $data ) {
 
 				switch ( $op ) {
 					case 'equals to':
-						$field = maybe_unserialize( $field );
+						$field = um_maybe_unserialize( $field );
 
 						if ( is_array( $field ) ) {
 							$state = in_array( $val, $field ) ? 'hide' : 'not_hide';
@@ -551,7 +551,7 @@ function um_field_conditions_are_met( $data ) {
 
 						break;
 					case 'not equals':
-						$field = maybe_unserialize( $field );
+						$field = um_maybe_unserialize( $field );
 
 						if ( is_array( $field ) ) {
 							$state = ! in_array( $val, $field ) ? 'hide' : 'not_hide';
@@ -759,7 +759,7 @@ function um_user_submitted_registration_formatted( $style = false ) {
 
 		if ( isset( $submitted_data['form_id'] ) ) {
 			$fields = UM()->query()->get_attr( 'custom_fields', $submitted_data['form_id'] );
-			$fields = maybe_unserialize( $fields );
+			$fields = um_maybe_unserialize( $fields );
 		}
 
 		if ( ! empty( $fields ) ) {

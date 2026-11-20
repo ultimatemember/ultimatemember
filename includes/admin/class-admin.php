@@ -1898,7 +1898,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$n_fields = get_post_custom( $post_id );
 			foreach ( $n_fields as $key => $value ) {
 				if ( '_um_custom_fields' === $key ) {
-					$the_value = maybe_unserialize( $value[0] );
+					$the_value = um_maybe_unserialize( $value[0] );
 				} else {
 					$the_value = $value[0];
 				}
