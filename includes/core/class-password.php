@@ -311,14 +311,16 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				'mode' => 'password',
 			);
 
-			UM()->form()->post_form = wp_parse_args(
-				wp_unslash( $_POST ),
-				array(
-					UM()->honeypot => '',
-					'username_b'   => '',
-					'mode'         => 'password',
-				)
+			$post_form = wp_unslash( $_POST );
+
+			$defaults  = array(
+				UM()->honeypot => '',
+				'username_b'   => '',
+				'mode'         => 'password',
 			);
+			$post_form = array_intersect_key( $post_form, $defaults ); // keep only necessary fields in the $_POST.
+
+			UM()->form()->post_form = wp_parse_args( $post_form, $defaults );
 
 			/**
 			 * Fires for handle validate errors on the reset password form submit.
@@ -462,6 +464,17 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 			$formdata = wp_unslash( $_POST );
 
+			$defaults = array(
+				UM()->honeypot          => '',
+				'user_password'         => '',
+				'confirm_user_password' => '',
+				'login'                 => '',
+				'rp_key'                => '',
+				'mode'                  => 'password',
+				'form_id'               => 'um_password_id',
+			);
+			$formdata = array_intersect_key( $formdata, $defaults ); // keep only necessary fields in the $_POST.
+
 			// Don't un-slash passwords in manner of WordPress native password field.
 			$fields_map = array(
 				'user_password',
@@ -469,18 +482,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			);
 			$formdata   = UM()->form()::ignore_formdata_unslash( $formdata, $fields_map );
 
-			UM()->form()->post_form = wp_parse_args(
-				$formdata,
-				array(
-					UM()->honeypot          => '',
-					'user_password'         => '',
-					'confirm_user_password' => '',
-					'login'                 => '',
-					'rp_key'                => '',
-					'mode'                  => 'password',
-					'form_id'               => 'um_password_id',
-				)
-			);
+			UM()->form()->post_form = wp_parse_args( $formdata, $defaults );
 
 			/**
 			 * UM hook
