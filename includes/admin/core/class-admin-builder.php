@@ -1081,6 +1081,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					// $arg1 means `form_id` variable in this case.
 					UM()->user()->preview = true;
 
+					// Set the form preview.
+					UM()->form()->preview = true;
+
 					$mode = UM()->query()->get_attr( 'mode', $arg1 );
 					if ( empty( $mode ) ) {
 						$mode = $form_mode;
