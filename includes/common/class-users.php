@@ -328,6 +328,10 @@ class Users {
 	 */
 	public function can_current_user_edit_user( $user_id ) {
 		$current_user_id = get_current_user_id();
+		if ( ! $current_user_id ) {
+			return false;
+		}
+
 		if ( $current_user_id === $user_id ) {
 			return true;
 		}
@@ -350,6 +354,44 @@ class Users {
 
 		// check the capability for single user.
 		if ( ! current_user_can( 'edit_user', $user_id ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return bool
+	 */
+	public function can_current_user_delete_user( $user_id ) {
+		$current_user_id = get_current_user_id();
+		if ( ! $current_user_id ) {
+			return false;
+		}
+
+		if ( $current_user_id === $user_id ) {
+			return true;
+		}
+
+		if ( ! self::user_exists( $user_id ) ) {
+			return false;
+		}
+
+		$rolename = UM()->roles()->get_priority_user_role( $current_user_id );
+		$role     = get_role( $rolename );
+
+		if ( null === $role ) {
+			return false;
+		}
+
+		if ( ! current_user_can( 'delete_users' ) && ! $role->has_cap( 'delete_users' ) ) {
+			return false;
+		}
+
+		// check the capability for single user.
+		if ( ! current_user_can( 'delete_user', $user_id ) ) {
 			return false;
 		}
 

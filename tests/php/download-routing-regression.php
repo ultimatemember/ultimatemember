@@ -32,6 +32,7 @@ class TestRoles {
 }
 class TestUsers {
 	public function can_view_user_profile( $id ) { return $GLOBALS['profile_allowed']; }
+	public function can_current_user_edit_user( $id ) { return 3 === get_current_user_id() && 10 === $id; }
 }
 class TestCommon {
 	public function users() { return new TestUsers(); }

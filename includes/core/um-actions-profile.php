@@ -211,7 +211,7 @@ function um_user_edit_profile( $args, $form_data ) {
 		$user_id = $args['_user_id'];
 	}
 
-	if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+	if ( UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
 		UM()->user()->set( $user_id );
 	} else {
 		wp_die( esc_html__( 'You are not allowed to edit this user.', 'ultimate-member' ) );
@@ -1588,7 +1588,7 @@ function um_pre_profile_shortcode( $args ) {
 
 	if ( true === UM()->fields()->editing ) {
 		if ( um_get_requested_user() ) {
-			if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
+			if ( ! UM()->common()->users()->can_current_user_edit_user( um_get_requested_user() ) ) {
 				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
 			}
 			um_fetch_user( um_get_requested_user() );
@@ -1601,7 +1601,7 @@ function um_pre_profile_shortcode( $args ) {
 				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
 			}
 
-			if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
+			if ( ! UM()->common()->users()->can_current_user_edit_user( um_get_requested_user() ) ) {
 				UM()->user()->cannot_edit = 1;
 			}
 
@@ -1646,12 +1646,12 @@ function um_add_edit_icon( $args ) {
 
 	if ( ! um_is_myprofile() ) {
 
-		if ( ! UM()->roles()->um_current_user_can( 'edit', um_profile_id() ) && ! UM()->roles()->um_current_user_can( 'delete', um_profile_id() ) ) {
+		if ( ! UM()->common()->users()->can_current_user_edit_user( um_profile_id() ) && ! UM()->common()->users()->can_current_user_delete_user( um_profile_id() ) ) {
 			return;
 		}
 
 		$items = UM()->user()->get_admin_actions();
-		if ( UM()->roles()->um_current_user_can( 'edit', um_profile_id() ) ) {
+		if ( UM()->common()->users()->can_current_user_edit_user( um_profile_id() ) ) {
 			$items['editprofile'] = '<a href="' . esc_url( um_edit_profile_url( um_profile_id(), $current_page_id ) ) . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>';
 		}
 

@@ -1481,7 +1481,7 @@ function um_can_view_field( $data ) {
 		$current_user_roles = array();
 		if ( is_user_logged_in() ) {
 
-			$can_edit = UM()->roles()->um_current_user_can( 'edit', um_user( 'ID' ) );
+			$can_edit = UM()->common()->users()->can_current_user_edit_user( um_user( 'ID' ) );
 
 			$previous_user = um_user( 'ID' );
 			um_fetch_user( get_current_user_id() );

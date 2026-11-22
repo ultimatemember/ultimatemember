@@ -169,7 +169,7 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 						$this->set_action_error_and_redirect( 'expired' );
 					}
 
-					if ( ! UM()->roles()->um_current_user_can( 'delete', $user_id ) ) {
+					if ( ! UM()->common()->users()->can_current_user_delete_user( $user_id ) ) {
 						$this->set_action_error_and_redirect( 'delete_user' );
 					}
 

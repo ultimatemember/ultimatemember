@@ -54,7 +54,7 @@ class Users {
 			}
 		}
 
-		if ( UM()->roles()->um_current_user_can( 'delete', $user_id ) ) {
+		if ( UM()->common()->users()->can_current_user_delete_user( $user_id ) ) {
 			$actions['delete'] = array( 'label' => __( 'Delete this user', 'ultimate-member' ) );
 		}
 

@@ -61,7 +61,7 @@ if ( ! class_exists( 'um\frontend\User_Profile' ) ) {
 
 			UM()->fields()->editing = true;
 
-			if ( ! um_is_myprofile() && ! UM()->roles()->um_current_user_can( 'edit', um_profile_id() ) ) {
+			if ( ! um_is_myprofile() && ! UM()->common()->users()->can_current_user_edit_user( um_profile_id() ) ) {
 				um_safe_redirect( UM()->permalinks()->get_current_url( true ) );
 				exit;
 			}

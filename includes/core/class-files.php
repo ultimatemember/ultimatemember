@@ -539,7 +539,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 
 			$user_id = empty( $_REQUEST['user_id'] ) ? null : absint( $_REQUEST['user_id'] );
-			if ( $user_id && is_user_logged_in() && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+			if ( $user_id && is_user_logged_in() && ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
 				wp_send_json_error( __( 'You have no permission to edit this user', 'ultimate-member' ) );
 			}
 
@@ -826,7 +826,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					}
 				}
 
-				if ( $user_id && is_user_logged_in() && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+				if ( $user_id && is_user_logged_in() && ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
 					$ret['error'] = esc_html__( 'You have no permission to edit this user', 'ultimate-member' );
 					wp_send_json_error( $ret );
 				}
@@ -1012,7 +1012,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				}
 			}
 
-			if ( $user_id && is_user_logged_in() && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+			if ( $user_id && is_user_logged_in() && ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
 				$ret['error'] = esc_html__( 'You have no permission to edit this user', 'ultimate-member' );
 				wp_send_json_error( $ret );
 			}
