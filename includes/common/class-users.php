@@ -338,27 +338,16 @@ class Users {
 		}
 
 		if ( $current_user_id === $user_id ) {
-			return UM()->roles()->um_current_user_can( 'edit', $user_id );
+			return (bool) UM()->roles()->um_current_user_can( 'edit', $user_id );
 		}
 
-		$rolename = UM()->roles()->get_priority_user_role( $current_user_id );
-		$role     = get_role( $rolename );
-
-		if ( null === $role ) {
-			return false;
+		// Native capability; plural check is not narrowed by UM `map_caps_by_role()`.
+		if ( current_user_can( 'edit_users' ) ) {
+			return true;
 		}
 
-		// Make Ultimate Member bulk actions only when the current user has 'edit_users' capability.
-		if ( ! current_user_can( 'edit_users' ) && ! $role->has_cap( 'edit_users' ) ) {
-			return false;
-		}
-
-		// check the capability for single user.
-		if ( ! current_user_can( 'edit_user', $user_id ) ) {
-			return false;
-		}
-
-		return true;
+		// Allow 3rd-party map_meta_cap/user_has_cap grants for a single user.
+		return current_user_can( 'edit_user', $user_id );
 	}
 
 	/**
@@ -378,26 +367,16 @@ class Users {
 		}
 
 		if ( $current_user_id === $user_id ) {
-			return UM()->roles()->um_current_user_can( 'delete', $user_id );
+			return (bool) UM()->roles()->um_current_user_can( 'delete', $user_id );
 		}
 
-		$rolename = UM()->roles()->get_priority_user_role( $current_user_id );
-		$role     = get_role( $rolename );
-
-		if ( null === $role ) {
-			return false;
+		// Native capability; plural check is not narrowed by UM `map_caps_by_role()`.
+		if ( current_user_can( 'delete_users' ) ) {
+			return true;
 		}
 
-		if ( ! current_user_can( 'delete_users' ) && ! $role->has_cap( 'delete_users' ) ) {
-			return false;
-		}
-
-		// check the capability for single user.
-		if ( ! current_user_can( 'delete_user', $user_id ) ) {
-			return false;
-		}
-
-		return true;
+		// Allow 3rd-party map_meta_cap/user_has_cap grants for a single user.
+		return current_user_can( 'delete_user', $user_id );
 	}
 
 	/**
