@@ -404,6 +404,8 @@ class Users {
 	 * @return bool
 	 */
 	public function can_current_user_switch_to_user( $user_id ) {
+		$user_id = absint( $user_id );
+
 		if ( ! self::user_exists( $user_id ) ) {
 			return false;
 		}
