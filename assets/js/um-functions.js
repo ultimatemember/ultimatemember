@@ -541,7 +541,9 @@ function um_new_modal( id, size, isPhoto, source ) {
 	jQuery('body').append( $tpl );
 
 	if ( isPhoto ) {
-		var photo_ = jQuery('<img src="' + source + '" />'),
+
+
+		var photo_ = jQuery('<img>').attr('src', source),
 			photo_maxw = jQuery(window).width() - 60,
 			photo_maxh = jQuery(window).height() - jQuery(window).height() * 0.25;
 

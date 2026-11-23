@@ -171,6 +171,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Bugfixes**
 
+* Fixed: Contributor+ stored XSS via the photo modal (Reported by Dmitrii Ignatyev and WPScan team). Updated frontend scripts to prevent XSS.
+* Fixed: Contributor+ stored XSS via the file|image upload modal (Reported by Dmitrii Ignatyev and WPScan team). Updated frontend scripts to prevent XSS.
+* Fixed: Unauthenticated disclosure of comments on restricted posts via the REST API (Reported by vuxvinh and WPScan team). Checking the post's restriction settings during the REST API request.
 * Fixed: An unauthenticated visitor can delete another visitor's pending registration upload (Reported by Nguyen Duc Hoa and WPScan team). Using brand-new routing for temp-uploaded files and guest token system.
 * Fixed: Unauthenticated claiming of another visitor's staged registration upload (Reported by Sangho Lee and WPScan team). Using brand-new routing for temp-uploaded files and guest token system.
 * Fixed: An unauthenticated visitor can read a file another user has staged on a form but not yet submitted (Reported by Can Quang hieu and WPScan team). Using brand-new routing for temp-uploaded files and guest token system.
@@ -178,6 +181,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Subsite administrator can log in as any other network user on multisite installations (WPScan team). Added function `UM()->common()->users()->can_current_user_switch_to_user()` with checking that the user for switching is the current blog's user and the current logged-in user can ability to edit it.
 * Fixed: Subsite administrator can edit (or change status) any other network user from the whole network on multisite installations (Reported by Muni Nitish Kumar Yaddala and WPScan team). Added WordPress native capability 'edit_user' condition to check if the current user can edit the user.
 * Fixed: Subsite administrator can delete any other network user from the whole network on multisite installations (WPScan team). Added WordPress native capability 'delete_user' condition to check if the current user can delete the user.
+
+**Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
 
 = 2.14.2 2026-10-29 =
 
