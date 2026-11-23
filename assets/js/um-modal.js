@@ -81,7 +81,7 @@ jQuery(document).ready(function() {
 			var coord = Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height);
 
 			if ( coord ) {
-				jQuery(this).html( jQuery(this).attr('data-processing') ).addClass('disabled');
+				jQuery(this).text( jQuery(this).attr('data-processing') ).addClass('disabled');
 
 				let context = wp.hooks.applyFilters( 'um_crop_image_context', 'core', key, elem );
 

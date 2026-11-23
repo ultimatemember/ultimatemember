@@ -193,7 +193,7 @@ jQuery(document).ready(function() {
 					success: function() {
 						parent.find('.um-single-image-preview img').replaceWith('<img src="" alt="" />');
 						parent.find('.um-single-image-preview').removeAttr('style').hide();
-						parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
+						parent.find('.um-btn-auto-width').text( parent.data('upload-label') );
 						//parent.find('input[type="hidden"]').val( 'empty_file' );
 						parent.find('input[type=hidden].um-uploaded-value').val( '' );
 						parent.find('input[type=hidden].um-uploaded-value-hash').val( '' );
@@ -205,39 +205,12 @@ jQuery(document).ready(function() {
 			} else {
 				parent.find('.um-single-image-preview img').replaceWith('<img src="" alt="" />');
 				parent.find('.um-single-image-preview').removeAttr('style').hide();
-				parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
+				parent.find('.um-btn-auto-width').text( parent.data('upload-label') );
 				// parent.find('input[type="hidden"]').val( 'empty_file' );
 				parent.find('input[type=hidden].um-uploaded-value').val( '' );
 				parent.find('input[type=hidden].um-uploaded-value-hash').val( '' );
 				parent.find('input[type=hidden].um-uploaded-value-temp-hash').val( '' );
 			}
-
-			// mode   = parent.data('mode');
-			// src    = parent.find('.um-single-image-preview img').attr('src');
-			//
-			// let filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
-			//
-			// args = {
-			// 	data: {
-			// 		mode: mode,
-			// 		filename: filename,
-			// 		src: src,
-			// 		key: parent.data('key'),
-			// 		_wpnonce: nonce
-			// 	},
-			// 	success: function() {
-			// 		parent.find('.um-single-image-preview img').replaceWith('<img src="" alt="" />');
-			// 		parent.find('.um-single-image-preview').removeAttr('style').hide();
-			// 		parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
-			// 		parent.find('input[type="hidden"]').val( 'empty_file' );
-			// 	}
-			// };
-			//
-			// if ( mode !== 'register' ) {
-			// 	args.data.user_id = jQuery(this).parents('form').find('#user_id').val();
-			// }
-			//
-			// wp.ajax.send( 'um_remove_file', args );
 		} else {
 			let parent = jQuery(this).parents('.um-modal-body');
 
@@ -318,7 +291,7 @@ jQuery(document).ready(function() {
 					},
 					success: function() {
 						parent.find('.um-single-file-preview').hide();
-						parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
+						parent.find('.um-btn-auto-width').text( parent.data('upload-label') );
 						parent.find('input[type=hidden].um-uploaded-value').val( '' );
 						parent.find('input[type=hidden].um-uploaded-value-hash').val( '' );
 						parent.find('input[type=hidden].um-uploaded-value-temp-hash').val( '' );
@@ -328,7 +301,7 @@ jQuery(document).ready(function() {
 				wp.ajax.send( 'um_delete_temp_file', args );
 			} else {
 				parent.find('.um-single-file-preview').hide();
-				parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
+				parent.find('.um-btn-auto-width').text( parent.data('upload-label') );
 				parent.find('input[type=hidden].um-uploaded-value').val( '' );
 				parent.find('input[type=hidden].um-uploaded-value-hash').val( '' );
 				parent.find('input[type=hidden].um-uploaded-value-temp-hash').val( '' );
@@ -927,4 +900,3 @@ jQuery( window ).on( 'load', function() {
 		$honeypotField.val('');
 	}
 });
-
