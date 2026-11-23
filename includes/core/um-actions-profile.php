@@ -1057,7 +1057,7 @@ function um_profile_header_cover_area( $args ) {
 			$items = apply_filters( 'um_cover_area_content_dropdown_items', $items, um_profile_id() );
 
 			UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
-		} elseif ( ! $user_cover && ! isset( UM()->user()->cannot_edit ) ) {
+		} elseif ( ! $user_cover && UM()->common()->users()->can_current_user_edit_user( um_profile_id() ) ) {
 			$items = array(
 				'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . esc_html__( 'Upload a cover photo', 'ultimate-member' ) . '</a>',
 				'<a href="javascript:void(0);" class="um-dropdown-hide">' . esc_html__( 'Cancel', 'ultimate-member' ) . '</a>',
@@ -1115,7 +1115,7 @@ function um_profile_header_cover_area( $args ) {
 
 				echo '<img src="' . esc_url( $default_cover['url'] ) . '" alt="" />';
 
-			} elseif ( ! isset( UM()->user()->cannot_edit ) ) {
+			} elseif ( UM()->common()->users()->can_current_user_edit_user( um_profile_id() ) ) {
 				?>
 				<a href="javascript:void(0);" class="um-cover-add"><span class="um-cover-add-i"><i
 					class="um-icon-plus um-tip-n"
@@ -1240,7 +1240,7 @@ function um_profile_header( $args ) {
 				} ?>
 			</a>
 
-			<?php if ( empty( $disable_photo_uploader ) && empty( UM()->user()->cannot_edit ) ) {
+			<?php if ( empty( $disable_photo_uploader ) && UM()->common()->users()->can_current_user_edit_user( um_profile_id() ) ) {
 
 				UM()->fields()->add_hidden_field( 'profile_photo' );
 
@@ -1682,16 +1682,18 @@ function um_add_edit_icon( $args ) {
 		$items['cancel'] = '<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>';
 
 	} else {
-		$items = array(
-			'editprofile' => '<a href="' . esc_url( um_edit_profile_url( um_profile_id(), $current_page_id ) ) . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>',
-			'myaccount'   => '<a href="' . esc_url( um_get_core_page( 'account' ) ) . '" class="real_url">' . __( 'My Account', 'ultimate-member' ) . '</a>',
-			'logout'      => '<a href="' . esc_url( um_get_core_page( 'logout' ) ) . '" class="real_url">' . __( 'Logout', 'ultimate-member' ) . '</a>',
-			'cancel'      => '<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
-		);
-
-		if ( ! empty( UM()->user()->cannot_edit ) ) {
-			unset( $items['editprofile'] );
+		$items = array();
+		if ( UM()->common()->users()->can_current_user_edit_user( um_profile_id() ) ) {
+			$items['editprofile'] = '<a href="' . esc_url( um_edit_profile_url( um_profile_id(), $current_page_id ) ) . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>';
 		}
+		$items = array_merge(
+			$items,
+			array(
+				'myaccount' => '<a href="' . esc_url( um_get_core_page( 'account' ) ) . '" class="real_url">' . __( 'My Account', 'ultimate-member' ) . '</a>',
+				'logout'    => '<a href="' . esc_url( um_get_core_page( 'logout' ) ) . '" class="real_url">' . __( 'Logout', 'ultimate-member' ) . '</a>',
+				'cancel'    => '<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
+			)
+		);
 
 		/**
 		* UM hook

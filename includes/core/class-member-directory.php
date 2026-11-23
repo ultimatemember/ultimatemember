@@ -2664,6 +2664,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				return $actions;
 			}
 
+			$user_id = absint( $user_id );
+
 			if ( get_current_user_id() !== $user_id ) {
 				if ( UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
 					$actions['um-editprofile'] = array(
@@ -2693,7 +2695,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				$actions = apply_filters( 'um_member_directory_users_card_actions', $actions, $user_id );
 			} else {
-				if ( empty( UM()->user()->cannot_edit ) ) {
+				if ( UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
 					$actions['um-editprofile'] = array(
 						'title' => esc_html__( 'Edit Profile', 'ultimate-member' ),
 						'url'   => um_edit_profile_url(),

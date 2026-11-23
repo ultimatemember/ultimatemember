@@ -332,12 +332,13 @@ class Users {
 			return false;
 		}
 
-		if ( $current_user_id === $user_id ) {
-			return true;
-		}
-
+		$user_id = absint( $user_id );
 		if ( ! self::user_exists( $user_id ) ) {
 			return false;
+		}
+
+		if ( $current_user_id === $user_id ) {
+			return UM()->roles()->um_current_user_can( 'edit', $user_id );
 		}
 
 		$rolename = UM()->roles()->get_priority_user_role( $current_user_id );
@@ -371,12 +372,13 @@ class Users {
 			return false;
 		}
 
-		if ( $current_user_id === $user_id ) {
-			return true;
-		}
-
+		$user_id = absint( $user_id );
 		if ( ! self::user_exists( $user_id ) ) {
 			return false;
+		}
+
+		if ( $current_user_id === $user_id ) {
+			return UM()->roles()->um_current_user_can( 'delete', $user_id );
 		}
 
 		$rolename = UM()->roles()->get_priority_user_role( $current_user_id );
