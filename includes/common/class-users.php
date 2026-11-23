@@ -78,12 +78,12 @@ class Users {
 		}
 
 		if ( 'edit_users' === $caps[0] && 'edit_user' === $args[0] ) {
-			if ( isset( $args[2] ) && ! UM()->roles()->um_current_user_can( 'edit', $args[2] ) ) {
-				$allcaps[ $caps[0] ] = false;
+			if ( isset( $args[2] ) ) {
+				$allcaps[ $caps[0] ] = (bool) UM()->roles()->um_current_user_can( 'edit', $args[2] );
 			}
 		} elseif ( 'delete_users' === $caps[0] && 'delete_user' === $args[0] ) {
-			if ( isset( $args[2] ) && ! UM()->roles()->um_current_user_can( 'delete', $args[2] ) ) {
-				$allcaps[ $caps[0] ] = false;
+			if ( isset( $args[2] ) ) {
+				$allcaps[ $caps[0] ] = (bool) UM()->roles()->um_current_user_can( 'delete', $args[2] );
 			}
 		} elseif ( 'list_users' === $caps[0] ) {
 			if ( 'list_users' === $args[0] && ! um_user( 'can_view_all' ) ) {

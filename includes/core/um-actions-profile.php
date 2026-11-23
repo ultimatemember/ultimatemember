@@ -1645,7 +1645,6 @@ function um_add_edit_icon( $args ) {
 	$current_page_id = get_the_ID(); // Get the current page ID to make a proper Edit User Profile link.
 
 	if ( ! um_is_myprofile() ) {
-
 		if ( ! UM()->common()->users()->can_current_user_edit_user( um_profile_id() ) && ! UM()->common()->users()->can_current_user_delete_user( um_profile_id() ) ) {
 			return;
 		}
