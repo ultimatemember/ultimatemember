@@ -1,0 +1,13 @@
+{
+	"name": "ultimatemember/ultimatemember-tests",
+	"description": "PHPUnit toolchain for Ultimate Member integration tests. Installed inside the wp-env container so it always matches the container's PHP version.",
+	"type": "project",
+	"license": "GPL-3.0-or-later",
+	"require-dev": {
+		"phpunit/phpunit": "^9.6",
+		"yoast/phpunit-polyfills": "^4.0"
+	},
+	"config": {
+		"sort-packages": true
+	}
+}

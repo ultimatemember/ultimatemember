@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
+	bootstrap="tests/phpunit/bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	beStrictAboutTestsThatDoNotTestAnything="true"
+	beStrictAboutOutputDuringTests="true"
+>
+	<testsuites>
+		<testsuite name="ultimate-member">
+			<directory suffix="Test.php">tests/phpunit/tests</directory>
+		</testsuite>
+	</testsuites>
+	<groups>
+		<exclude>
+			<!-- Tests that document confirmed, not yet fixed bugs. Run them with the "known-bug" group (see CLAUDE.md). -->
+			<group>known-bug</group>
+		</exclude>
+	</groups>
+</phpunit>
