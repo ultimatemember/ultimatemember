@@ -292,7 +292,7 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 				}
 			}
 
-			$request = ( $request ) ? maybe_unserialize( $request ) : false;
+			$request = ( $request ) ? um_maybe_unserialize( $request ) : false;
 
 			if ( $request ) {
 				foreach ( $exts as $slug => $data ) {
@@ -313,7 +313,7 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 						}
 
 						if ( isset( $request->$slug->get_version_check->sections ) ) {
-							$request->$slug->get_version_check->sections = maybe_unserialize( $request->$slug->get_version_check->sections );
+							$request->$slug->get_version_check->sections = um_maybe_unserialize( $request->$slug->get_version_check->sections );
 							$request->$slug->get_version_check->sections = (array) $request->$slug->get_version_check->sections;
 						} else {
 							$request->$slug->get_version_check = new WP_Error(
@@ -328,11 +328,11 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 						}
 
 						if ( isset( $request->$slug->get_version_check->banners ) ) {
-							$request->$slug->get_version_check->banners = maybe_unserialize( $request->$slug->get_version_check->banners );
+							$request->$slug->get_version_check->banners = um_maybe_unserialize( $request->$slug->get_version_check->banners );
 						}
 
 						if ( isset( $request->$slug->get_version_check->icons ) ) {
-							$request->$slug->get_version_check->icons = maybe_unserialize( $request->$slug->get_version_check->icons );
+							$request->$slug->get_version_check->icons = um_maybe_unserialize( $request->$slug->get_version_check->icons );
 						}
 
 						if ( ! empty( $request->$slug->get_version_check->sections ) ) {
@@ -450,18 +450,18 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 			}
 
 			if ( $request && isset( $request->sections ) ) {
-				$request->sections = maybe_unserialize( $request->sections );
+				$request->sections = um_maybe_unserialize( $request->sections );
 				$request->sections = (array) $request->sections;
 			} else {
 				$request = false;
 			}
 
 			if ( $request && isset( $request->banners ) ) {
-				$request->banners = maybe_unserialize( $request->banners );
+				$request->banners = um_maybe_unserialize( $request->banners );
 			}
 
 			if ( $request && isset( $request->icons ) ) {
-				$request->icons = maybe_unserialize( $request->icons );
+				$request->icons = um_maybe_unserialize( $request->icons );
 			}
 
 			if ( ! empty( $request->sections ) ) {

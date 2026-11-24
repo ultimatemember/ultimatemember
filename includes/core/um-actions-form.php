@@ -82,7 +82,7 @@ function um_submit_form_errors_hook__blockedwords( $submitted_data, $form_data )
 		return;
 	}
 
-	$fields = maybe_unserialize( $form_data['custom_fields'] );
+	$fields = um_maybe_unserialize( $form_data['custom_fields'] );
 	if ( empty( $fields ) || ! is_array( $fields ) ) {
 		return;
 	}
@@ -394,7 +394,7 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 	$form_id = $form_data['form_id'];
 	$mode    = $form_data['mode'];
 
-	$fields = maybe_unserialize( $form_data['custom_fields'] );
+	$fields = um_maybe_unserialize( $form_data['custom_fields'] );
 	if ( empty( $fields ) || ! is_array( $fields ) ) {
 		return;
 	}
@@ -710,7 +710,7 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 			}
 			$field_exists = false;
 			if ( ! empty( $form_data['custom_fields'] ) ) {
-				$custom_fields = maybe_unserialize( $form_data['custom_fields'] );
+				$custom_fields = um_maybe_unserialize( $form_data['custom_fields'] );
 				if ( array_key_exists( $description_key, $custom_fields ) ) {
 					$field_exists = true;
 					if ( ! empty( $array['max_chars'] ) ) {
@@ -1098,7 +1098,7 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 			if ( ! empty( $submitted_data[ $description_key ] ) ) {
 				$field_exists = false;
 				if ( ! empty( $form_data['custom_fields'] ) ) {
-					$custom_fields = maybe_unserialize( $form_data['custom_fields'] );
+					$custom_fields = um_maybe_unserialize( $form_data['custom_fields'] );
 					if ( array_key_exists( $description_key, $custom_fields ) ) {
 						$field_exists = true;
 					}
