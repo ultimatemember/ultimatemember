@@ -51,6 +51,13 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		public $processing = null;
 
 		/**
+		 * Set to `true` on the form preview screen through wp-admin > Ultimate Member > Forms
+		 *
+		 * @var bool
+		 */
+		public $preview = false;
+
+		/**
 		 * @var array
 		 */
 		public $all_fields = array();
