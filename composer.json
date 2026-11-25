@@ -57,8 +57,7 @@
       "@php -r \"@mkdir('includes/lib/wp-config-transformer/src', 0755, true); if (is_file('vendor/wp-cli/wp-config-transformer/src/WPConfigTransformer.php')) { copy('vendor/wp-cli/wp-config-transformer/src/WPConfigTransformer.php', 'includes/lib/wp-config-transformer/src/WPConfigTransformer.php'); }\""
     ],
     "copy-libs": [
-      "@php -r \"function rcopy($src, $dst) { if (!is_dir($dst)) @mkdir($dst, 0755, true); $dir = opendir($src); while (false !== ($file = readdir($dir))) { if ($file != '.' && $file != '..') { if (is_dir($src . '/' . $file)) { rcopy($src . '/' . $file, $dst . '/' . $file); } else { copy($src . '/' . $file, $dst . '/' . $file); } } } closedir($dir); } if (is_dir('vendor/woocommerce/action-scheduler')) { rcopy('vendor/woocommerce/action-scheduler', 'includes/lib/action-scheduler'); }\"",
-      "@php -r \"@mkdir('includes/lib/wp-config-transformer/src', 0755, true); if (is_file('vendor/wp-cli/wp-config-transformer/src/WPConfigTransformer.php')) { copy('vendor/wp-cli/wp-config-transformer/src/WPConfigTransformer.php', 'includes/lib/wp-config-transformer/src/WPConfigTransformer.php'); }\""
+      "@php scripts/copy-libs.php"
     ],
     "post-install-cmd": [
       "@copy-libs"
