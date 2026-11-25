@@ -14,13 +14,59 @@
 abstract class UM_UnitTestCase extends WP_UnitTestCase {
 
 	/**
+	 * UM core page IDs as they were before the test (`UM()->config()->permalinks`).
+	 *
+	 * @var array
+	 */
+	private $um_core_pages_backup = array();
+
+	/**
 	 * Reset in-memory state that survives the DB rollback between tests.
 	 */
 	public function set_up() {
 		parent::set_up();
 
+		$this->um_core_pages_backup = (array) UM()->config()->permalinks;
+
+		$this->reset_request_state();
 		wp_set_current_user( 0 );
 		$this->reload_roles();
+	}
+
+	/**
+	 * Restore in-memory state changed by the test.
+	 */
+	public function tear_down() {
+		UM()->config()->permalinks = $this->um_core_pages_backup;
+		$this->reset_request_state();
+
+		parent::tear_down();
+	}
+
+	/**
+	 * Clear the request superglobals and the UM form/field state that lives in singletons.
+	 */
+	protected function reset_request_state() {
+		$_GET     = array();
+		$_POST    = array();
+		$_REQUEST = array();
+		$_COOKIE  = array();
+
+		UM()->form()->errors      = null;
+		UM()->form()->post_form   = null;
+		UM()->form()->form_suffix = null;
+		UM()->form()->preview     = false;
+		UM()->user()->preview     = false;
+		UM()->fields()->set_mode  = null;
+		UM()->fields()->editing   = false;
+		UM()->fields()->viewing   = false;
+
+		// Set by set_password_mode() after a valid reset key; switches the shortcode to the Change Password form.
+		$change_password = new ReflectionProperty( UM()->password(), 'change_password' );
+		if ( PHP_VERSION_ID < 80100 ) {
+			$change_password->setAccessible( true );
+		}
+		$change_password->setValue( UM()->password(), false );
 	}
 
 	/**
@@ -108,5 +154,95 @@ abstract class UM_UnitTestCase extends WP_UnitTestCase {
 		wp_roles()->for_site();
 		UM()->user()->remove_cache_all_users();
 		um_reset_user_clean();
+	}
+
+	/**
+	 * Create a page and register it as a UM core page (e.g. `password-reset`, `login`, `account`).
+	 * The page map is restored in tear_down().
+	 *
+	 * @param string $slug UM core page key.
+	 *
+	 * @return int Page ID.
+	 */
+	protected function create_core_page( $slug ) {
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+				'post_name'   => $slug,
+				'post_title'  => ucwords( str_replace( '-', ' ', $slug ) ),
+			)
+		);
+
+		UM()->config()->permalinks[ $slug ] = $page_id;
+
+		return $page_id;
+	}
+
+	/**
+	 * Run code that is expected to redirect and return the redirect location.
+	 *
+	 * UM handlers call `exit` after `wp_safe_redirect()`. A `wp_redirect` filter throws before the
+	 * header is sent, so the test keeps running. While the code runs, the CLI-only warning
+	 * "Cannot modify header information" from PHP's `setcookie()` / `header()` is ignored.
+	 * `UM()->password()->setcookie()` closes all output buffers; they are re-opened here so
+	 * PHPUnit's own output buffer stays balanced.
+	 *
+	 * @param callable $callback Code under test.
+	 *
+	 * @return string Redirect location (after `wp_safe_redirect()` validation).
+	 */
+	protected function capture_redirect( callable $callback ) {
+		$ob_level = ob_get_level();
+		$catcher  = static function ( $location ) {
+			throw new UM_Test_Redirect_Exception( $location );
+		};
+
+		$previous_handler = null;
+		$previous_handler = set_error_handler(
+			static function ( $errno, $errstr, $errfile = '', $errline = 0 ) use ( &$previous_handler ) {
+				if ( E_WARNING === $errno && 0 === strpos( $errstr, 'Cannot modify header information' ) ) {
+					return true;
+				}
+				return $previous_handler ? call_user_func( $previous_handler, $errno, $errstr, $errfile, $errline ) : false;
+			}
+		);
+
+		add_filter( 'wp_redirect', $catcher, PHP_INT_MAX );
+		try {
+			$callback();
+		} catch ( UM_Test_Redirect_Exception $e ) {
+			return $e->location;
+		} finally {
+			remove_filter( 'wp_redirect', $catcher, PHP_INT_MAX );
+			restore_error_handler();
+			while ( ob_get_level() < $ob_level ) {
+				ob_start();
+			}
+		}
+
+		$this->fail( 'A redirect was expected, but the code returned normally.' );
+		return '';
+	}
+}
+
+/**
+ * Thrown from the `wp_redirect` filter by UM_UnitTestCase::capture_redirect().
+ */
+class UM_Test_Redirect_Exception extends Exception {
+
+	/**
+	 * Redirect location.
+	 *
+	 * @var string
+	 */
+	public $location;
+
+	/**
+	 * @param string $location Redirect location.
+	 */
+	public function __construct( $location ) {
+		parent::__construct( 'Redirect to ' . $location );
+		$this->location = $location;
 	}
 }

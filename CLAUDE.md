@@ -32,7 +32,9 @@ npm run test:env:stop                       # stop containers (test:env:destroy 
 - `tests/phpunit/bootstrap.php` – loads WP test suite, loads the plugin, runs UM setup (default settings
   and role meta) once per run.
 - `tests/phpunit/includes/class-um-unittestcase.php` – base class `UM_UnitTestCase`: `create_um_role()`,
-  `update_role_meta()`, `create_user_with_roles()`, `act_as()`, `reload_roles()`.
+  `update_role_meta()`, `create_user_with_roles()`, `act_as()`, `reload_roles()`, `create_core_page()`,
+  `capture_redirect()` (returns the URL of a `wp_safe_redirect()` + `exit` without exiting). `set_up()`
+  clears `$_GET`/`$_POST`/`$_REQUEST`/`$_COOKIE` and UM form state (errors, `post_form`, preview flags).
 - `tests/phpunit/tests/<area>/<Name>Test.php` – tests; class names `UM_<Area>_<Name>Test`.
 
 ### Rules
