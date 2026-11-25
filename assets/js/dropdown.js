@@ -1,6 +1,38 @@
 (function ($) {
 
 	/**
+	 * Resolve a selector taken from markup (data-element / data-parent) without
+	 * HTML parsing. $( string ) creates elements for "<..." strings, so these
+	 * values must never be passed to $() directly.
+	 *
+	 * @param   {*}      selector
+	 * @returns {object} jQuery collection (empty when invalid).
+	 */
+	function um_dropdown_query(selector) {
+		if ( typeof selector !== 'string' || '' === selector || -1 !== selector.indexOf('<') ) {
+			return $();
+		}
+		try {
+			return $(document).find(selector);
+		} catch (e) {
+			return $();
+		}
+	}
+
+	/**
+	 * Find menus by exact data-element value without building a selector from it.
+	 *
+	 * @param   {object} $set
+	 * @param   {string} value
+	 * @returns {object}
+	 */
+	function um_dropdown_filter_by_element($set, value) {
+		return $set.filter( function () {
+			return $(this).attr('data-element') === value;
+		} );
+	}
+
+	/**
 	 * The constructor of the dropdown object
 	 * @param   {object}  element  The menu element.
 	 * @returns {object}           The dropdown menu object.
@@ -18,15 +50,14 @@
 				/* add dropdown into the <body> */
 				self.$menu = self.$element.find('.um-new-dropdown');
 				if ( !self.$menu.length ) {
-					self.$menu = $('div.um-new-dropdown[data-element="' + self.data.element + '"]').first();
+					self.$menu = um_dropdown_filter_by_element( $('div.um-new-dropdown'), self.data.element ).first();
 				}
 
 				self.$dropdown = self.$menu.clone();
 				self.$dropdown.on('click', 'li a', self.itemHandler).attr('data-cloned', '1'); /* add the handler for menu items */
 				$(window).on('resize', self.updatePosition); /* update the position on window resize */
 
-				var parent = '' !== self.data.parent ? self.data.parent : document.body;
-				$(parent).append(self.$dropdown);
+				self.getParent().append(self.$dropdown);
 
 				/* trigger event */
 				self.$element.trigger('um_new_dropdown_render', {
@@ -64,15 +95,21 @@
 				return self;
 			},
 
+			getParent: function () {
+				var $parent = um_dropdown_query( self.data.parent ).first();
+				return $parent.length ? $parent : $(document.body);
+			},
+
 			calculatePosition: function () {
 				var rect = self.$element.get(0).getBoundingClientRect(),
 					height = self.$dropdown.innerHeight() || 150,
 					width = self.data.width || 150,
 					place = '';
 
-				var offset;
-				if ( '' !== self.data.parent ) {
-					var parentPos = $( self.data.parent ).offset();
+				var offset,
+					$parent = um_dropdown_query( self.data.parent ).first();
+				if ( $parent.length ) {
+					var parentPos = $parent.offset();
 					var childPos = self.$element.offset();
 
 					offset = {
@@ -83,8 +120,8 @@
 					offset = self.$element.offset();
 				}
 
-				var base_width = '' !== self.data.parent ? $( self.data.parent )[0].offsetWidth : window.innerWidth;
-				var base_height = '' !== self.data.parent ? $( self.data.parent )[0].offsetHeight : window.innerHeight;
+				var base_width = $parent.length ? $parent[0].offsetWidth : window.innerWidth;
+				var base_height = $parent.length ? $parent[0].offsetHeight : window.innerHeight;
 
 				var css = {
 					position: 'absolute',
@@ -165,28 +202,42 @@
 		// hidden dropdown menu block generated via PHP. Is used for cloning when 'action' on the 'link'
 		self.$menu = $(element);
 
-		// 'link' data
-		self.data = self.$menu.data();
+		// 'link' data. Read selector-like values as raw strings: .data() may JSON-decode them into objects/arrays.
+		self.normalizeData = function () {
+			self.data = self.$menu.data();
+			self.data.element = self.$menu.attr('data-element') || '';
+			self.data.parent  = self.$menu.attr('data-parent') || '';
+			self.data.trigger = self.$menu.attr('data-trigger') || '';
+			return self.data;
+		};
+		self.normalizeData();
 
 		// base 'link' which we use for 'action' and show a clone of the hidden dropdown
-		self.$element = self.$menu.closest(self.data.element);
+		self.$element = $();
+		if ( '' !== self.data.element && -1 === self.data.element.indexOf('<') ) {
+			try {
+				self.$element = self.$menu.closest(self.data.element);
+			} catch (e) {
+				self.$element = $();
+			}
+		}
 		if ( ! self.$element.length ) {
-			self.$element = $( self.data.element ).first();
+			self.$element = um_dropdown_query( self.data.element ).first();
 		}
 
-		self.$dropdown = $(document.body).children('div[data-element="' + self.data.element + '"]');
+		self.$dropdown = um_dropdown_filter_by_element( $(document.body).children('div'), self.data.element );
 
 		if ( typeof self.data.initted === 'undefined' ) {
 			// single init based on 'initted' data and add 'action' handler for the 'link'
 			self.$menu.data('initted', true);
-			self.data = self.$menu.data();
+			self.normalizeData();
 
 			// screenTriggers is used to not duplicate the triggers for more than 1 element on the page
 			if ( typeof um_dropdownMenu.screenTriggers === 'undefined' ) {
 				um_dropdownMenu.screenTriggers = {};
 			}
 
-			if ( um_dropdownMenu.screenTriggers[ self.data.element ] !== self.data.trigger ) {
+			if ( '' !== self.data.element && -1 === self.data.element.indexOf('<') && '' !== self.data.trigger && um_dropdownMenu.screenTriggers[ self.data.element ] !== self.data.trigger ) {
 				um_dropdownMenu.screenTriggers[ self.data.element ] = self.data.trigger;
 				$(document.body).on( self.data.trigger, self.data.element, self.triggerHandler );
 			}
