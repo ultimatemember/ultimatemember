@@ -839,7 +839,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			$permissions = apply_filters( 'um_user_permissions_filter', $permissions, $user_id );
 
 			if ( isset( $permissions[ $permission ] ) && is_serialized( $permissions[ $permission ] ) ) {
-				return maybe_unserialize( $permissions[ $permission ] );
+				return um_maybe_unserialize( $permissions[ $permission ] );
 			}
 
 			if ( isset( $permissions[ $permission ] ) && is_array( $permissions[ $permission ] ) ) {

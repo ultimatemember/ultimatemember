@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Member 2.14.2\n"
+"Project-Id-Version: Ultimate Member 2.14.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ultimate-member\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-11T19:37:53+00:00\n"
+"POT-Creation-Date: 2026-11-25T12:05:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ultimate-member\n"
@@ -69,7 +69,7 @@ msgstr ""
 #: includes/core/class-builtin.php:1401
 #: includes/core/class-builtin.php:1416
 #: includes/core/class-builtin.php:1419
-#: includes/core/um-actions-account.php:367
+#: includes/core/um-actions-account.php:373
 msgid "No"
 msgstr ""
 
@@ -190,10 +190,10 @@ msgstr ""
 #: includes/core/class-builtin.php:822
 #: includes/core/class-builtin.php:1425
 #: includes/core/class-builtin.php:1428
-#: includes/core/um-actions-account.php:728
-#: includes/core/um-actions-account.php:732
-#: includes/core/um-actions-account.php:818
-#: includes/core/um-actions-account.php:822
+#: includes/core/um-actions-account.php:734
+#: includes/core/um-actions-account.php:738
+#: includes/core/um-actions-account.php:824
+#: includes/core/um-actions-account.php:828
 msgid "Password"
 msgstr ""
 
@@ -425,7 +425,7 @@ msgstr ""
 #: includes/core/class-builtin.php:1418
 #: includes/core/class-user.php:535
 #: includes/core/class-user.php:536
-#: includes/core/um-actions-account.php:362
+#: includes/core/um-actions-account.php:368
 msgid "Yes"
 msgstr ""
 
@@ -2341,21 +2341,20 @@ msgstr ""
 msgid "This field type is not setup correctly."
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:1196
+#: includes/admin/core/class-admin-builder.php:1199
 #: includes/core/class-builtin.php:211
-#: includes/core/class-form.php:118
-#: includes/core/class-form.php:126
+#: includes/core/class-form.php:125
 #: includes/core/class-form.php:133
-#: includes/core/class-form.php:215
-#: includes/core/class-form.php:591
-#: includes/core/class-form.php:599
-#: includes/core/class-form.php:614
-#: includes/core/class-password.php:497
+#: includes/core/class-form.php:140
+#: includes/core/class-form.php:222
+#: includes/core/class-form.php:598
+#: includes/core/class-form.php:606
+#: includes/core/class-form.php:621
 #: includes/core/um-actions-profile.php:572
 msgid "This is not possible for security reasons."
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:1213
+#: includes/admin/core/class-admin-builder.php:1216
 msgid "This is not possible for security reasons. Don't use internal PHP functions."
 msgstr ""
 
@@ -4754,7 +4753,7 @@ msgid "Appearance"
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:1654
-#: includes/core/class-form.php:1022
+#: includes/core/class-form.php:1029
 msgid "Profile"
 msgstr ""
 
@@ -7013,7 +7012,7 @@ msgstr ""
 #: includes/class-config.php:260
 #: includes/class-config.php:951
 #: includes/class-config.php:1012
-#: includes/core/class-form.php:1019
+#: includes/core/class-form.php:1026
 msgid "Login"
 msgstr ""
 
@@ -7022,7 +7021,7 @@ msgstr ""
 #: includes/class-config.php:264
 #: includes/class-config.php:954
 #: includes/class-config.php:1016
-#: includes/core/class-form.php:1025
+#: includes/core/class-form.php:1032
 msgid "Register"
 msgstr ""
 
@@ -9991,7 +9990,7 @@ msgstr ""
 #: includes/core/class-files.php:337
 #: includes/core/class-files.php:470
 #: includes/core/class-files.php:672
-#: includes/core/class-form.php:90
+#: includes/core/class-form.php:97
 #: includes/core/class-member-directory-meta.php:610
 #: includes/core/class-member-directory.php:3068
 #: includes/core/class-user-posts.php:127
@@ -10129,18 +10128,18 @@ msgstr ""
 msgid "Original size"
 msgstr ""
 
-#: includes/core/class-form.php:82
+#: includes/core/class-form.php:89
 msgid "Invalid parent option."
 msgstr ""
 
-#: includes/core/class-form.php:100
-#: includes/core/class-form.php:109
+#: includes/core/class-form.php:107
+#: includes/core/class-form.php:116
 msgid "Wrong callback."
 msgstr ""
 
-#: includes/core/class-form.php:573
-#: includes/core/class-password.php:411
-#: includes/core/class-password.php:491
+#: includes/core/class-form.php:580
+#: includes/core/class-password.php:373
+#: includes/core/class-password.php:541
 msgid "Hello, spam bot!"
 msgstr ""
 
@@ -10306,61 +10305,59 @@ msgstr ""
 msgid "My Account"
 msgstr ""
 
-#: includes/core/class-password.php:422
+#: includes/core/class-password.php:378
 msgid "Please provide your username or email"
 msgstr ""
 
-#: includes/core/class-password.php:440
+#: includes/core/class-password.php:396
 msgid "You have reached the limit for requesting password change for this user already. Contact support if you cannot open the email"
 msgstr ""
 
-#: includes/core/class-password.php:508
-msgid "Unable to change password because of password change limit. Please try again later."
+#: includes/core/class-password.php:553
+#: includes/core/um-actions-account.php:59
+msgid "Password is required"
 msgstr ""
 
-#: includes/core/class-password.php:514
-msgid "You must enter a new password"
+#: includes/core/class-password.php:558
+#: includes/core/um-actions-account.php:64
+msgid "Password confirmation is required"
 msgstr ""
 
-#: includes/core/class-password.php:528
+#: includes/core/class-password.php:564
 #: includes/core/um-actions-account.php:70
 #: includes/core/um-actions-register.php:342
 msgid "Passwords may not contain the character \"\\\"."
 msgstr ""
 
+#: includes/core/class-password.php:569
+#: includes/core/um-actions-form.php:658
+msgid "Your passwords do not match"
+msgstr ""
+
 #. translators: %s: min length.
-#: includes/core/class-password.php:553
-#: includes/core/um-actions-account.php:107
+#: includes/core/class-password.php:593
+#: includes/core/um-actions-account.php:115
 #, php-format
 msgid "Your password must contain at least %d characters"
 msgstr ""
 
 #. translators: %s: max length.
-#: includes/core/class-password.php:558
-#: includes/core/um-actions-account.php:111
+#: includes/core/class-password.php:599
+#: includes/core/um-actions-account.php:119
 #, php-format
 msgid "Your password must contain less than %d characters"
 msgstr ""
 
-#: includes/core/class-password.php:562
-#: includes/core/um-actions-account.php:115
+#: includes/core/class-password.php:604
+#: includes/core/um-actions-account.php:123
 #: includes/core/um-actions-form.php:637
 msgid "Your password cannot contain the part of your username"
 msgstr ""
 
-#: includes/core/class-password.php:566
-#: includes/core/um-actions-account.php:119
+#: includes/core/class-password.php:609
+#: includes/core/um-actions-account.php:127
 #: includes/core/um-actions-form.php:641
 msgid "Your password cannot contain the part of your email address"
-msgstr ""
-
-#: includes/core/class-password.php:576
-msgid "You must confirm your new password"
-msgstr ""
-
-#: includes/core/class-password.php:580
-#: includes/core/um-actions-form.php:658
-msgid "Your passwords do not match"
 msgstr ""
 
 #: includes/core/class-profile.php:62
@@ -10497,48 +10494,44 @@ msgid "Are you hacking? Please try again!"
 msgstr ""
 
 #: includes/core/um-actions-account.php:35
-#: includes/core/um-actions-account.php:197
+#: includes/core/um-actions-account.php:204
 msgid "You must enter your password"
 msgstr ""
 
 #: includes/core/um-actions-account.php:38
-#: includes/core/um-actions-account.php:78
-#: includes/core/um-actions-account.php:82
-#: includes/core/um-actions-account.php:199
+#: includes/core/um-actions-account.php:81
+#: includes/core/um-actions-account.php:86
+#: includes/core/um-actions-account.php:206
 msgid "This is not your password"
 msgstr ""
 
-#: includes/core/um-actions-account.php:59
-msgid "Password is required"
-msgstr ""
-
-#: includes/core/um-actions-account.php:64
-msgid "Password confirmation is required"
-msgstr ""
-
-#: includes/core/um-actions-account.php:89
+#: includes/core/um-actions-account.php:75
 msgid "Your new password does not match"
 msgstr ""
 
-#: includes/core/um-actions-account.php:152
+#: includes/core/um-actions-account.php:98
+msgid "Unable to change password because of password change limit. Please try again later."
+msgstr ""
+
+#: includes/core/um-actions-account.php:159
 msgid "You must provide your first name"
 msgstr ""
 
-#: includes/core/um-actions-account.php:156
+#: includes/core/um-actions-account.php:163
 msgid "You must provide your last name"
 msgstr ""
 
-#: includes/core/um-actions-account.php:161
+#: includes/core/um-actions-account.php:168
 #: includes/core/um-actions-form.php:934
 #: includes/core/um-actions-form.php:974
 msgid "You must provide your email"
 msgstr ""
 
-#: includes/core/um-actions-account.php:166
+#: includes/core/um-actions-account.php:173
 msgid "Please provide a valid email"
 msgstr ""
 
-#: includes/core/um-actions-account.php:171
+#: includes/core/um-actions-account.php:178
 #: includes/core/um-actions-form.php:915
 #: includes/core/um-actions-form.php:937
 #: includes/core/um-actions-form.php:940
@@ -10546,106 +10539,106 @@ msgstr ""
 msgid "This email address is already in use"
 msgstr ""
 
-#: includes/core/um-actions-account.php:189
+#: includes/core/um-actions-account.php:196
 #: includes/core/um-actions-form.php:966
 #: includes/core/um-actions-form.php:1021
 msgid "This email address is already used as a secondary email"
 msgstr ""
 
-#: includes/core/um-actions-account.php:600
+#: includes/core/um-actions-account.php:606
 msgid "Select what email notifications you want to receive"
 msgstr ""
 
-#: includes/core/um-actions-account.php:667
+#: includes/core/um-actions-account.php:673
 msgid "Download your data"
 msgstr ""
 
-#: includes/core/um-actions-account.php:669
+#: includes/core/um-actions-account.php:675
 msgid "You can request a file with the information that we believe is most relevant and useful to you."
 msgstr ""
 
-#: includes/core/um-actions-account.php:694
+#: includes/core/um-actions-account.php:700
 msgid "You could download your previous data:"
 msgstr ""
 
-#: includes/core/um-actions-account.php:695
+#: includes/core/um-actions-account.php:701
 msgid "Download Personal Data"
 msgstr ""
 
-#: includes/core/um-actions-account.php:696
+#: includes/core/um-actions-account.php:702
 msgid "You could send a new request for an export of personal your data."
 msgstr ""
 
-#: includes/core/um-actions-account.php:716
-#: includes/core/um-actions-account.php:894
+#: includes/core/um-actions-account.php:722
+#: includes/core/um-actions-account.php:900
 msgid "A confirmation email has been sent to your email. Click the link within the email to confirm your export request."
 msgstr ""
 
-#: includes/core/um-actions-account.php:718
+#: includes/core/um-actions-account.php:724
 msgid "The administrator has not yet approved downloading the data. Please expect an email with a link to your data."
 msgstr ""
 
-#: includes/core/um-actions-account.php:723
+#: includes/core/um-actions-account.php:729
 msgid "Enter your current password to confirm a new export of your personal data."
 msgstr ""
 
-#: includes/core/um-actions-account.php:735
-#: includes/core/um-actions-account.php:825
+#: includes/core/um-actions-account.php:741
+#: includes/core/um-actions-account.php:831
 msgid "You must enter a password"
 msgstr ""
 
-#: includes/core/um-actions-account.php:743
+#: includes/core/um-actions-account.php:749
 msgid "To export of your personal data, click the button below."
 msgstr ""
 
-#: includes/core/um-actions-account.php:750
+#: includes/core/um-actions-account.php:756
 msgid "Request data"
 msgstr ""
 
-#: includes/core/um-actions-account.php:759
+#: includes/core/um-actions-account.php:765
 msgid "Erase of your data"
 msgstr ""
 
-#: includes/core/um-actions-account.php:761
+#: includes/core/um-actions-account.php:767
 msgid "You can request erasing of the data that we have about you."
 msgstr ""
 
-#: includes/core/um-actions-account.php:785
+#: includes/core/um-actions-account.php:791
 msgid "Your personal data has been deleted."
 msgstr ""
 
-#: includes/core/um-actions-account.php:786
+#: includes/core/um-actions-account.php:792
 msgid "You could send a new request for deleting your personal data."
 msgstr ""
 
-#: includes/core/um-actions-account.php:806
-#: includes/core/um-actions-account.php:896
+#: includes/core/um-actions-account.php:812
+#: includes/core/um-actions-account.php:902
 msgid "A confirmation email has been sent to your email. Click the link within the email to confirm your deletion request."
 msgstr ""
 
-#: includes/core/um-actions-account.php:808
+#: includes/core/um-actions-account.php:814
 msgid "The administrator has not yet approved deleting your data. Please expect an email with a link to your data."
 msgstr ""
 
-#: includes/core/um-actions-account.php:813
+#: includes/core/um-actions-account.php:819
 msgid "Enter your current password to confirm the erasure of your personal data."
 msgstr ""
 
-#: includes/core/um-actions-account.php:833
+#: includes/core/um-actions-account.php:839
 msgid "Require erasure of your personal data, click on the button below."
 msgstr ""
 
-#: includes/core/um-actions-account.php:840
+#: includes/core/um-actions-account.php:846
 msgid "Request data erase"
 msgstr ""
 
-#: includes/core/um-actions-account.php:852
-#: includes/core/um-actions-account.php:886
+#: includes/core/um-actions-account.php:858
+#: includes/core/um-actions-account.php:892
 msgid "Wrong request."
 msgstr ""
 
-#: includes/core/um-actions-account.php:866
-#: includes/core/um-actions-account.php:873
+#: includes/core/um-actions-account.php:872
+#: includes/core/um-actions-account.php:879
 msgid "The password you entered is incorrect."
 msgstr ""
 
@@ -11008,6 +11001,10 @@ msgstr ""
 msgid "This user account status is %s"
 msgstr ""
 
+#: includes/core/um-actions-save-profile.php:94
+msgid "Unable to update your profile name. Please try again later."
+msgstr ""
+
 #: includes/core/um-actions-user.php:14
 msgid "Your account"
 msgstr ""
@@ -11210,11 +11207,11 @@ msgstr ""
 msgid "Close view photo modal"
 msgstr ""
 
-#: templates/password-change.php:62
+#: templates/password-change.php:63
 msgid "Set password"
 msgstr ""
 
-#: templates/password-change.php:64
+#: templates/password-change.php:65
 msgid "Change password"
 msgstr ""
 

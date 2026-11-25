@@ -843,7 +843,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$mode = $args['mode'];
 
 			// Not display on admin preview.
-			if ( empty( $_POST['act_id'] ) || 'um_admin_preview_form' !== sanitize_key( $_POST['act_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			if ( false === UM()->form()->preview ) {
 				/**
 				 * Filters the ability to show registration form for the logged-in users.
 				 * Set it to true for displaying registration form for the logged-in users.
@@ -860,7 +860,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				 * add_filter( 'um_registration_for_loggedin_users', '__return_true' );
 				 */
 				$enable_loggedin_registration = apply_filters( 'um_registration_for_loggedin_users', false, $args );
-
+				// todo create UM capability (or use WordPress native) to create other users and check it there after `is_user_logged_in()`.
 				if ( ! $enable_loggedin_registration && 'register' === $mode && is_user_logged_in() ) {
 					ob_get_clean();
 					return __( 'You are already registered.', 'ultimate-member' );
@@ -1425,7 +1425,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$directory_data = UM()->query()->post_data( $directory_id );
 
 				if ( isset( $directory_data['roles_can_search'] ) ) {
-					$directory_data['roles_can_search'] = maybe_unserialize( $directory_data['roles_can_search'] );
+					$directory_data['roles_can_search'] = um_maybe_unserialize( $directory_data['roles_can_search'] );
 				}
 
 				$show_search = empty( $directory_data['roles_can_search'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $directory_data['roles_can_search'], true ) );

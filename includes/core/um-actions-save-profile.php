@@ -82,14 +82,17 @@ function um_update_profile_full_name( $user_id, $changes ) {
 	}
 
 	if ( isset( $update_name ) ) {
+		$arr_user = array(
+			'ID'           => $user_id,
+			'display_name' => $update_name,
+		);
+		$result   = wp_update_user( $arr_user );
 
-		$arr_user = array( 'ID' => $user_id, 'display_name' => $update_name );
-		$return = wp_update_user( $arr_user );
-
-		if ( is_wp_error( $return ) ) {
-			wp_die(  '<pre>' . var_export( array( 'message' => $return->get_error_message(), 'dump' => $arr_user, 'changes' => $changes ), true ) . '</pre>'  );
+		if ( is_wp_error( $result ) ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'Ultimate Member profile update failed: ' . $result->get_error_code() );
+			wp_die( esc_html__( 'Unable to update your profile name. Please try again later.', 'ultimate-member' ), '', array( 'response' => 500 ) );
 		}
-
 	}
 
 	if ( isset( $changes['first_name'] ) || isset( $changes['last_name'] ) ) {
