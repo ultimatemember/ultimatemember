@@ -740,7 +740,7 @@ function um_registration_save_files( $user_id, $args, $form_data ) {
 
 	$files = array();
 
-	$fields = maybe_unserialize( $form_data['custom_fields'] );
+	$fields = um_maybe_unserialize( $form_data['custom_fields'] );
 	if ( ! empty( $fields ) && is_array( $fields ) ) {
 		foreach ( $fields as $key => $array ) {
 			if ( isset( $args['submitted'][ $key ] ) ) {

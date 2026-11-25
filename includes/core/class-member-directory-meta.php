@@ -634,7 +634,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			$wpdb->query( 'SET SQL_BIG_SELECTS=1' );
 
 			if ( ! empty( $directory_data['show_these_users'] ) ) {
-				$show_these_users = maybe_unserialize( $directory_data['show_these_users'] );
+				$show_these_users = um_maybe_unserialize( $directory_data['show_these_users'] );
 
 				if ( is_array( $show_these_users ) && ! empty( $show_these_users ) ) {
 					$users_array = array();
@@ -651,7 +651,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			}
 
 			if ( ! empty( $directory_data['exclude_these_users'] ) ) {
-				$exclude_these_users = maybe_unserialize( $directory_data['exclude_these_users'] );
+				$exclude_these_users = um_maybe_unserialize( $directory_data['exclude_these_users'] );
 
 				if ( is_array( $exclude_these_users ) && ! empty( $exclude_these_users ) ) {
 					$users_array = array();
@@ -707,14 +707,14 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					$this->roles_in_query = true;
 				}
 
-				$this->roles = array_merge( $this->roles, maybe_unserialize( $view_roles ) );
+				$this->roles = array_merge( $this->roles, um_maybe_unserialize( $view_roles ) );
 			}
 
 			if ( ! empty( $directory_data['roles'] ) ) {
 				if ( ! empty( $this->roles ) ) {
-					$this->roles = array_intersect( $this->roles, maybe_unserialize( $directory_data['roles'] ) );
+					$this->roles = array_intersect( $this->roles, um_maybe_unserialize( $directory_data['roles'] ) );
 				} else {
-					$this->roles = array_merge( $this->roles, maybe_unserialize( $directory_data['roles'] ) );
+					$this->roles = array_merge( $this->roles, um_maybe_unserialize( $directory_data['roles'] ) );
 				}
 
 				$this->roles_in_query = true;
@@ -800,7 +800,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			// Filters
 			$filter_query = array();
 			if ( ! empty( $directory_data['search_fields'] ) ) {
-				$search_filters = maybe_unserialize( $directory_data['search_fields'] );
+				$search_filters = um_maybe_unserialize( $directory_data['search_fields'] );
 				if ( ! empty( $search_filters ) && is_array( $search_filters ) ) {
 					$filter_query = array_intersect_key( $_POST, array_flip( $search_filters ) );
 				}
@@ -838,7 +838,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			//if ( empty( $this->custom_filters_in_query ) ) {
 			$default_filters = array();
 			if ( ! empty( $directory_data['search_filters'] ) ) {
-				$default_filters = maybe_unserialize( $directory_data['search_filters'] );
+				$default_filters = um_maybe_unserialize( $directory_data['search_filters'] );
 			}
 
 			if ( ! empty( $default_filters ) ) {
@@ -858,7 +858,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			$custom_sort = array();
 			if ( ! empty( $directory_data['sorting_fields'] ) ) {
-				$sorting_fields = maybe_unserialize( $directory_data['sorting_fields'] );
+				$sorting_fields = um_maybe_unserialize( $directory_data['sorting_fields'] );
 				foreach ( $sorting_fields as $field ) {
 					if ( is_array( $field ) ) {
 						$field_keys    = array_keys( $field );
@@ -898,7 +898,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				if ( ! empty( $directory_data['sorting_fields'] ) ) {
 					// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 					$sorting        = sanitize_text_field( $_POST['sorting'] );
-					$sorting_fields = maybe_unserialize( $directory_data['sorting_fields'] );
+					$sorting_fields = um_maybe_unserialize( $directory_data['sorting_fields'] );
 
 					foreach ( $sorting_fields as $field ) {
 						if ( isset( $field[ $sorting ] ) ) {

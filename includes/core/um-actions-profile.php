@@ -234,7 +234,7 @@ function um_user_edit_profile( $args, $form_data ) {
 	 */
 	do_action( 'um_user_before_updating_profile', $userinfo );
 
-	$fields = maybe_unserialize( $form_data['custom_fields'] );
+	$fields = um_maybe_unserialize( $form_data['custom_fields'] );
 	$fields = apply_filters( 'um_user_edit_profile_fields', $fields, $args, $form_data );
 
 	// loop through fields

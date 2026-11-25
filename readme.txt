@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.14.2
+Stable tag: 2.14.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -167,6 +167,34 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.14.3 2026-11-25 =
+
+**Enhancements**
+
+* Added: Filter hooks `um_reset_password_invalid_nonce_redirect_url` and `um_change_password_invalid_nonce_redirect_url` for changing the redirect URL when the Password Reset or Change Password form nonce isn't verified.
+* Added: `UM()->form()->preview` property for checking the form preview context in wp-admin > Ultimate Member > Forms.
+
+**Bugfixes**
+
+* Fixed: Security issue related to Stored Cross-Site Scripting via the Rating field. Escaped the rating field value in the `data-score` attribute. (Reported by Dthangws via Patchstack).
+* Fixed: Security issue related to PHP Object Injection. Replaced WordPress native `maybe_unserialize()` with `um_maybe_unserialize()` across the codebase. (Reported by Ganjikunta Venkata Shashank via Patchstack).
+* Fixed: Security issue related to Cross-Site Request Forgery in the Password Reset and Change Password forms. Added nonce verification and limited the submitted POST data to the expected fields only.
+* Fixed: Sensitive data exposure when the profile name update fails. Removed the debug output from `wp_die()`, the error is logged now and a user-friendly message is displayed instead.
+* Fixed: Form preview detection for the logged-in users' registration form in wp-admin. Replaced the POST-based `act_id` check with `UM()->form()->preview`.
+* Fixed: Account > Change Password tab validation. Password confirmation errors are displayed under the proper field, and the password change request limit is checked in the Account form handler.
+* Fixed: Password reset key validation. Separated it from the form handling into the `UM()->password()->set_password_mode()` method.
+
+**Templates Requiring Update**
+
+* password-change.php
+* password-reset.php
+
+**Deprecated**
+
+* Deprecated: `UM()->password()->is_reset_request()` and `UM()->password()->is_change_request()` methods. The forms are handled by the new `UM()->password()->handle_reset_password_form()` and `UM()->password()->handle_change_password_form()` methods.
+* Removed: `UM()->password()->form_init()` method. Use `UM()->password()->set_password_mode()` instead.
+* Changed: The `um_change_password_errors_hook` validation callback is used only for the Password Reset shortcode form now. The Account > Change Password tab is validated in `um_submit_account_errors_hook`.
+
 = 2.14.2 2026-11-02 =
 
 **Bugfixes**
@@ -278,6 +306,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.14.3 =
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.14.2 =
 This version fixes a security-related bug. Upgrade immediately.

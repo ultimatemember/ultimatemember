@@ -142,7 +142,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$sortby_custom_keys2 = $wpdb->get_col( "SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_key='_um_sorting_fields'" );
 				if ( ! empty( $sortby_custom_keys2 ) ) {
 					foreach ( $sortby_custom_keys2 as $custom_val ) {
-						$custom_val = maybe_unserialize( $custom_val );
+						$custom_val = um_maybe_unserialize( $custom_val );
 
 						foreach ( $custom_val as $sort_value ) {
 							if ( is_array( $sort_value ) ) {
@@ -3238,7 +3238,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				}
 				// phpcs:enable WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Need to debug license requests sometimes.
 
-				$request = ( $request ) ? maybe_unserialize( $request ) : false;
+				$request = ( $request ) ? um_maybe_unserialize( $request ) : false;
 
 				if ( in_array( $edd_action, array( 'activate_license', 'check_license' ), true ) ) {
 					update_option( "{$key}_edd_answer", $request );
