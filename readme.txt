@@ -176,8 +176,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Bugfixes**
 
-* Fixed: Security issue related to Stored Cross-Site Scripting via the Rating field. Escaped the rating field value in the `data-score` attribute. (Reported via Patchstack).
-* Fixed: Security issue related to PHP Object Injection. Replaced WordPress native `maybe_unserialize()` with `um_maybe_unserialize()` across the codebase. (Reported via Patchstack).
+* Fixed: Security issue related to Stored Cross-Site Scripting via the Rating field. Escaped the rating field value in the `data-score` attribute. (Reported by Dthangws via Patchstack).
+* Fixed: Security issue related to PHP Object Injection. Replaced WordPress native `maybe_unserialize()` with `um_maybe_unserialize()` across the codebase. (Reported by Ganjikunta Venkata Shashank via Patchstack).
 * Fixed: Security issue related to Cross-Site Request Forgery in the Password Reset and Change Password forms. Added nonce verification and limited the submitted POST data to the expected fields only.
 * Fixed: Sensitive data exposure when the profile name update fails. Removed the debug output from `wp_die()`, the error is logged now and a user-friendly message is displayed instead.
 * Fixed: Form preview detection for the logged-in users' registration form in wp-admin. Replaced the POST-based `act_id` check with `UM()->form()->preview`.
