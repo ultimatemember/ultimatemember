@@ -6,7 +6,7 @@
  *
  * Call: function ultimatemember_password()
  *
- * @version 2.15.0
+ * @version 2.14.3
  *
  * @var string $rp_mode 'pw_set' or 'pw_change' for display it differently.
  * @var string $rp_key  Reset password key.

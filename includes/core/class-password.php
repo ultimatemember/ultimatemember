@@ -294,7 +294,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				 *
 				 * @return {string} URL for redirect.
 				 *
-				 * @since 2.15.0
+				 * @since 2.14.3
 				 * @hook um_reset_password_invalid_nonce_redirect_url
 				 *
 				 * @example <caption>Change URL for redirect if reset password form nonce isn't verified.</caption>
@@ -449,7 +449,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				 *
 				 * @return {string} URL for redirect.
 				 *
-				 * @since 2.15.0
+				 * @since 2.14.3
 				 * @hook um_change_password_invalid_nonce_redirect_url
 				 *
 				 * @example <caption>Change URL for redirect if change password form nonce isn't verified.</caption>
@@ -757,12 +757,12 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		/**
 		 * Check if a legitimate password reset request is in action
 		 *
-		 * @deprecated 2.15.0
+		 * @deprecated 2.14.3
 		 *
 		 * @return bool
 		 */
 		public function is_reset_request() {
-			_deprecated_function( __METHOD__, '2.15.0' );
+			_deprecated_function( __METHOD__, '2.14.3' );
 			// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 			return ! empty( $_POST['_um_password_reset'] );
 		}
@@ -772,12 +772,12 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 *
 		 * works both for the Account > Password form and the Reset Password shortcode form
 		 *
-		 * @deprecated 2.15.0
+		 * @deprecated 2.14.3
 		 *
 		 * @return bool
 		 */
 		public function is_change_request() {
-			_deprecated_function( __METHOD__, '2.15.0' );
+			_deprecated_function( __METHOD__, '2.14.3' );
 
 			// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 			if ( ! empty( $_POST['_um_account'] ) && isset( $_POST['_um_account_tab'] ) && 'password' === sanitize_key( $_POST['_um_account_tab'] ) ) {

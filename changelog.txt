@@ -1,5 +1,9 @@
 ﻿== Changelog ==
 
+= 2.14.3 November 25, 2026 =
+
+* Bugfixes:
+
 = 2.14.2 November 02, 2026 =
 
 * Bugfixes:
