@@ -380,36 +380,124 @@ class Users {
 	}
 
 	/**
-	 * @param int $user_id
+	 * Checks whether the current user is allowed to switch to (log in as) another user.
 	 *
-	 * @return bool
+	 * Switching gives the current user the target user's whole session, so this check is
+	 * stricter than "can edit the user". The rules run in this order:
+	 *
+	 * 1. The current user must have `manage_options` on the current site. `edit_user` is not
+	 *    used because plugins often grant it to non-admin roles (e.g. WooCommerce `shop_manager`),
+	 *    and on multisite core limits it to super admins.
+	 * 2. The target user must exist and must not be the current user.
+	 * 3. Super admins can never be switched to, so nobody can gain network-level access.
+	 * 4. On multisite, a non-super-admin can only switch to members of the current site.
+	 * 5. Administrators cannot be switched to. A target counts as an administrator if they have
+	 *    `manage_options` on the current site or, on multisite, on any other site they belong to.
+	 *    This stops one admin from taking over another admin's account and, on multisite, stops
+	 *    a subsite admin from reaching sites they don't administer through a shared member.
+	 *    Only super admins skip this rule, because they already control every site.
+	 *
+	 * @since 2.15.0
+	 *
+	 * @param int $user_id ID of the user the current user wants to switch to.
+	 *
+	 * @return bool True if switching is allowed, false otherwise.
 	 */
 	public function can_current_user_switch_to_user( $user_id ) {
+		// Rule 1: only site administrators can switch at all. Checked first because it is cheap and
+		// it rejects most users (including logged-out visitors) before any lookups about the target.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+
 		$user_id = absint( $user_id );
 
+		// Rule 2: the target must exist.
 		if ( ! self::user_exists( $user_id ) ) {
 			return false;
 		}
 
-		// Don't switch to super admins.
-		if ( is_multisite() && is_super_admin( $user_id ) ) {
-			return false;
-		}
-
-		// Prevent redundant or cyclic self-switching
+		// Rule 2: switching to yourself does nothing and could leave the "switched from" state broken.
 		if ( get_current_user_id() === $user_id ) {
 			return false;
 		}
 
-		// On multisite, ensure subsite administrators cannot switch to users outside their subsite
-		if ( is_multisite() && ! is_super_admin() ) {
+		// Super admins only exist on multisite. On a single site `is_super_admin()` just means
+		// "can delete_users", so these checks only apply on multisite.
+		if ( is_multisite() ) {
+			// Rule 3: super admins can never be switched to.
+			if ( is_super_admin( $user_id ) ) {
+				return false;
+			}
+
+			// Super admins already control the whole network, so they may switch to any
+			// remaining user, including subsite administrators. Rules 4 and 5 don't apply to them.
+			if ( is_super_admin() ) {
+				return true;
+			}
+
+			// Rule 4: subsite administrators can only switch to members of their own site.
 			if ( ! is_user_member_of_blog( $user_id, get_current_blog_id() ) ) {
 				return false;
 			}
 		}
 
-		// 'edit_user' contextually validates whether current user has rights over the target
-		return current_user_can( 'edit_user', $user_id );
+		// Rule 5: never switch to another administrator.
+		if ( $this->is_user_administrator_anywhere( $user_id ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Checks whether a user has administrator access (`manage_options`) on any site they belong to.
+	 *
+	 * On a single site this only checks the current site. On multisite it also checks every other
+	 * site the user is a member of, because admin rights on another site are just as sensitive
+	 * when switching accounts: if another admin's session can be taken over, so can every site
+	 * that admin manages.
+	 *
+	 * `switch_to_blog()` is used instead of `user_can_for_site()` because that function was
+	 * added in WordPress 6.7 and the plugin supports older versions.
+	 *
+	 * @since 2.15.0
+	 *
+	 * @param int $user_id User ID to check.
+	 *
+	 * @return bool True if the user can `manage_options` on at least one of their sites.
+	 */
+	private function is_user_administrator_anywhere( $user_id ) {
+		// Current site first: it covers single site installs and is the most common match on multisite.
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return true;
+		}
+
+		if ( ! is_multisite() ) {
+			return false;
+		}
+
+		$current_blog_id = get_current_blog_id();
+
+		foreach ( array_keys( get_blogs_of_user( $user_id ) ) as $blog_id ) {
+			$blog_id = (int) $blog_id;
+
+			// Already checked above.
+			if ( $current_blog_id === $blog_id ) {
+				continue;
+			}
+
+			// user_can() builds a fresh WP_User, so its roles are loaded for the site we switch to.
+			switch_to_blog( $blog_id );
+			$is_admin = user_can( $user_id, 'manage_options' );
+			restore_current_blog();
+
+			if ( $is_admin ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
