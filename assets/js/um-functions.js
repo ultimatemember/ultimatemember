@@ -12,6 +12,26 @@ if ( typeof (window.UM) !== 'object' ) {
 
 UM.dropdown = {
 	/**
+	 * Resolve a CSS selector to elements without ever parsing it as HTML.
+	 *
+	 * jQuery( string ) builds DOM nodes when the string starts with "<", so a
+	 * data-* attribute that reaches jQuery() directly is an XSS sink. Selectors
+	 * coming from markup must be resolved through .find(), which only matches.
+	 *
+	 * @param   {*}      selector
+	 * @returns {object} jQuery collection (empty when the selector is invalid).
+	 */
+	query: function (selector) {
+		if ( typeof selector !== 'string' || '' === selector || -1 !== selector.indexOf('<') ) {
+			return jQuery();
+		}
+		try {
+			return jQuery(document).find(selector);
+		} catch (e) {
+			return jQuery();
+		}
+	},
+	/**
 	 * Hide the menu
 	 * @param   {object}    menu
 	 * @returns {undefined}
@@ -49,7 +69,10 @@ UM.dropdown = {
 				position = $menu.attr('data-position'),
 				trigger = $menu.attr('data-trigger');
 
-		var $element = element && jQuery(element).length ? jQuery(element) : ($menu.siblings('a').length ? $menu.siblings('a').first() : $menu.parent());
+		var $element = UM.dropdown.query(element);
+		if ( ! $element.length ) {
+			$element = $menu.siblings('a').length ? $menu.siblings('a').first() : $menu.parent();
+		}
 		$element.addClass('um-trigger-menu-on-' + trigger);
 
 		var gap_right = 0,
