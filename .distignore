@@ -16,6 +16,7 @@
 /.gitattributes
 /.gitignore
 /.jshintrc
+/scripts
 /.wp-env.tests.json
 /phpunit.xml.dist
 /CLAUDE.md

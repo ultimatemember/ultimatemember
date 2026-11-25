@@ -41,6 +41,7 @@ jobs:
         git rm .editorconfig
         git rm .gitignore
         git rm .jshintrc
+        git rm -r scripts
         git rm .wp-env.tests.json
         git rm phpunit.xml.dist
         git rm CLAUDE.md

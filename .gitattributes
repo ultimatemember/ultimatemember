@@ -37,6 +37,7 @@
 /.gitattributes export-ignore
 /.gitignore export-ignore
 /.jshintrc export-ignore
+/scripts export-ignore
 /.wp-env.tests.json export-ignore
 /phpunit.xml.dist export-ignore
 /CLAUDE.md export-ignore
