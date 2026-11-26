@@ -235,3 +235,10 @@ wp-cli.phar
 
 #wp-hookdoc generated docs
 hookdocs
+
+# PHPUnit / wp-env test toolchain
+/tests/phpunit/vendor/
+/tests/phpunit/composer.lock
+/.phpunit.result.cache
+/.wp-env.override.json
+/.wp-env.tests.override.json

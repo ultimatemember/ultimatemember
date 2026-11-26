@@ -16,8 +16,10 @@
 /.gitattributes
 /.gitignore
 /.jshintrc
-/.travis.yml
 /scripts
+/.wp-env.tests.json
+/phpunit.xml.dist
+/CLAUDE.md
 /bower.json
 /composer.json
 /gulpfile.js

@@ -1,0 +1,66 @@
+name: PHPUnit
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phpunit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  phpunit:
+    name: PHP ${{ matrix.php }} / WP ${{ matrix.wp }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Lowest supported WordPress ("Requires at least") on the lowest PHP that runs PHPUnit 9.6.
+          - php: '7.4'
+            wp: '6.2'
+          # Latest WordPress on the newest PHP.
+          - php: '8.4'
+            wp: 'latest'
+
+    env:
+      WP_ENV_PHP_VERSION: ${{ matrix.php }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Pin WordPress version
+        if: matrix.wp != 'latest'
+        run: echo "WP_ENV_CORE=WordPress/WordPress#${{ matrix.wp }}" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+
+      # Runtime libraries (Action Scheduler etc.) are installed into includes/lib by Composer.
+      - name: Install plugin Composer dependencies
+        run: composer install --no-progress --no-dev --ignore-platform-req=ext-exif --ignore-platform-req=ext-gd --ignore-platform-req=ext-tidy
+
+      - name: Install wp-env
+        run: npm install -g @wordpress/env@^12.2.0
+
+      - name: Start test environment
+        run: npm run test:env:start
+
+      - name: Install PHPUnit inside the container
+        run: npm run test:php:install
+
+      - name: Run PHPUnit
+        run: npm run test:php
