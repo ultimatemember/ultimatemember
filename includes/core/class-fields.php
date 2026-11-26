@@ -1801,6 +1801,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$array['input'] = 'text';
 					break;
 
+				case 'invitation_code':
+					$array['input'] = 'text';
+					break;
+
 				case 'tel':
 					$array['input'] = 'tel';
 					break;
@@ -2461,9 +2465,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '</div>';
 					break;
-				/* Text and Tel */
+				/* Text, Tel and Invitation Code */
 				case 'text':
 				case 'tel':
+				case 'invitation_code':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
 					if ( isset( $data['label'] ) ) {

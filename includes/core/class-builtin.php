@@ -296,6 +296,22 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					)
 				),
 
+				'invitation_code' => array(
+					'name'     => __( 'Invitation Code', 'ultimate-member' ),
+					'col1'     => array( '_title', '_metakey', '_help' ),
+					'col2'     => array( '_label', '_icon', '_placeholder' ),
+					'col3'     => array( '_required' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+
 				'tel' => array(
 					'name' => __( 'Telephone', 'ultimate-member' ),
 					'col1' => array('_title','_metakey','_help','_default','_min_chars','_visibility'),
