@@ -41,8 +41,7 @@ function um_add_security_checks( $args ) {
 	}
 	?>
 	<p class="<?php echo esc_attr( UM()->honeypot ); ?>_name">
-		<label for="<?php echo esc_attr( UM()->honeypot . '_' . $args['form_id'] ); ?>"><?php esc_html_e( 'Only fill in if you are not human' ); ?></label>
-		<input type="hidden" name="<?php echo esc_attr( UM()->honeypot ); ?>" id="<?php echo esc_attr( UM()->honeypot . '_' . $args['form_id'] ); ?>" class="input" value="" size="25" autocomplete="off" />
+		<input type="hidden" name="<?php echo esc_attr( UM()->honeypot ); ?>" id="<?php echo esc_attr( UM()->honeypot . '_' . $args['form_id'] ); ?>" class="input" value="" autocomplete="off" />
 	</p>
 	<?php
 }

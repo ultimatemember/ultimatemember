@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div class="um-form">
 
-		<form method="post" action="">
+		<form method="post">
 			<input type="hidden" name="_um_password_change" id="_um_password_change" value="1" />
 			<?php wp_nonce_field( 'um_password_change' . $args['login'] ); ?>
 			<input type="hidden" name="login" value="<?php echo esc_attr( $args['login'] ); ?>" />

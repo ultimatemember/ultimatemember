@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div class="um-form">
 
-		<form method="post" action="">
+		<form method="post">
 
 			<?php
 			/**

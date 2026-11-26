@@ -228,7 +228,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				if ( ! empty( $this->tabs[ $args['tab'] ] ) ) { ?>
 					<div class="um um-custom-shortcode-tab">
 						<div class="um-form">
-							<form method="post" action="">
+							<form method="post">
 								<?php
 								/**
 								 * Fires for render account form hidden fields.
