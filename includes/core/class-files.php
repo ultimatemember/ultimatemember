@@ -271,6 +271,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				return;
 			}
 			$user_id = absint( $user_id );
+			if ( ! UM()->common()->users()::user_exists( $user_id ) ) {
+				$wp_query->set_404();
+				return;
+			}
 
 			$query_verify = get_query_var( 'um_verify' );
 			if ( empty( $query_verify ) ||
@@ -279,12 +283,12 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				return;
 			}
 
-			if ( ! UM()->common()->users()->can_view_user_profile( $user_id ) ) {
-				$wp_query->set_404();
-				return;
-			}
-
 			if ( 'cover_photo' !== $field_key && 'profile_photo' !== $field_key ) {
+				if ( ! UM()->common()->users()->can_view_user_profile( $user_id ) ) {
+					$wp_query->set_404();
+					return;
+				}
+
 				$form_id    = absint( $form_id );
 				$field_data = get_post_meta( $form_id, '_um_custom_fields', true );
 				if ( empty( $field_data[ $field_key ] ) ) {
@@ -316,6 +320,13 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					return;
 				}
 			} else {
+				// Cover and Profile photos can be visible even for the private users. We just need to check only the case that the current user can see the user with the defined role.
+				$can_view_user = UM()->common()->users()->can_view_user( $user_id );
+				if ( empty( $can_view_user ) ) {
+					$wp_query->set_404();
+					return;
+				}
+
 				$download_type = 'image';
 
 				// get the file name from the URL and query var. It provides the ability to get different cover/profile photos sizes.

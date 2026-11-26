@@ -1,6 +1,6 @@
 ﻿== Changelog ==
 
-= 2.15.0 November xx, 2026 =
+= 2.15.0 December xx, 2026 =
 
 * Bugfixes:
 
