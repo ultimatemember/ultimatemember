@@ -3,6 +3,19 @@ var um_field_conditions = {}; // filtered
 var um_field_default_values = {};
 
 /**
+ * Check if the value is numeric.
+ *
+ * Replacement for `jQuery.isNumeric()` which is deprecated since jQuery 3.3 and removed in jQuery 4.0.
+ *
+ * @param  {*} value
+ * @return {boolean}
+ */
+function um_is_numeric( value ) {
+	var type = typeof value;
+	return ( 'number' === type || 'string' === type ) && ! isNaN( value - parseFloat( value ) );
+}
+
+/**
  * Get field default value
  *
  * @param  {object} $dom
@@ -272,7 +285,7 @@ function um_apply_conditions( $dom, is_single_update ) {
 
 		if ( condition.operator === 'not equals' ) {
 			var field_value = ( Array.isArray( live_field_value ) && live_field_value.length === 1 ) ? live_field_value[0] : live_field_value;
-			if ( jQuery.isNumeric(condition.value) && parseInt(field_value) !== parseInt( condition.value ) && field_value && ! um_in_array( field_value, $owners_values[ condition.owner ] ) ) {
+			if ( um_is_numeric( condition.value ) && parseInt(field_value) !== parseInt( condition.value ) && field_value && ! um_in_array( field_value, $owners_values[ condition.owner ] ) ) {
 				$owners[ condition.owner ][ index ] = true;
 			} else if ( condition.value != field_value && ! um_in_array( field_value, $owners_values[ condition.owner ] ) ) {
 				$owners[ condition.owner ][ index ] = true;
@@ -283,7 +296,7 @@ function um_apply_conditions( $dom, is_single_update ) {
 
 		if ( condition.operator === 'greater than' ) {
 			var field_value = ( Array.isArray( live_field_value ) && live_field_value.length === 1 ) ? live_field_value[0] : live_field_value;
-			if ( jQuery.isNumeric( condition.value ) && parseInt( field_value ) > parseInt( condition.value ) ) {
+			if ( um_is_numeric( condition.value ) && parseInt( field_value ) > parseInt( condition.value ) ) {
 				$owners[ condition.owner ][ index ] = true;
 			} else {
 				$owners[ condition.owner ][ index ] = false;
@@ -292,7 +305,7 @@ function um_apply_conditions( $dom, is_single_update ) {
 
 		if ( condition.operator === 'less than' ) {
 			var field_value = ( Array.isArray( live_field_value ) && live_field_value.length === 1 ) ? live_field_value[0] : live_field_value;
-			if ( jQuery.isNumeric( condition.value ) && parseInt( field_value ) < parseInt( condition.value ) ) {
+			if ( um_is_numeric( condition.value ) && parseInt( field_value ) < parseInt( condition.value ) ) {
 				$owners[ condition.owner ][ index ] = true;
 			} else {
 				$owners[ condition.owner ][ index ] = false;
