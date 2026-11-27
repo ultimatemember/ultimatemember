@@ -19,55 +19,121 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 		public function __construct() {
 			add_action( 'init', array( &$this, 'block_editor_render' ), 11 );
 			add_filter( 'block_type_metadata_settings', array( &$this, 'block_type_metadata_settings' ), 9999, 2 );
+			add_filter( 'register_block_type_args', array( &$this, 'register_block_type_args' ), 9999, 2 );
+		}
+
+		/**
+		 * Is the block content restriction enabled in the settings.
+		 *
+		 * @since 2.14.4
+		 *
+		 * @return bool
+		 */
+		public function is_restriction_enabled() {
+			return ! empty( UM()->options()->get( 'restricted_blocks' ) );
+		}
+
+		/**
+		 * Attributes used for the block content restriction.
+		 *
+		 * They have to be registered in the block type on the server too. The block renderer
+		 * REST endpoint rejects unknown attributes as invalid parameters.
+		 *
+		 * @since 2.14.4
+		 *
+		 * @return array
+		 */
+		public function get_restriction_attributes() {
+			return array(
+				'um_is_restrict'     => array(
+					'type'    => 'boolean',
+					'default' => false,
+				),
+				'um_who_access'      => array(
+					'type'    => 'string',
+					'default' => '0',
+				),
+				'um_roles_access'    => array(
+					'type'    => 'array',
+					'default' => array(),
+					'items'   => array( 'type' => 'string' ),
+				),
+				'um_message_type'    => array(
+					'type'    => 'string',
+					'default' => '0',
+				),
+				'um_message_content' => array(
+					'type'    => 'string',
+					'default' => '',
+				),
+			);
+		}
+
+		/**
+		 * Add the restriction attributes that are not defined in the block type yet.
+		 *
+		 * @since 2.14.4
+		 *
+		 * @param array $attributes Block type attributes.
+		 *
+		 * @return array
+		 */
+		public function add_restriction_attributes( $attributes ) {
+			foreach ( $this->get_restriction_attributes() as $attribute_key => $attribute_data ) {
+				if ( empty( $attributes[ $attribute_key ] ) ) {
+					$attributes[ $attribute_key ] = $attribute_data;
+				}
+			}
+
+			return $attributes;
 		}
 
 		/**
 		 * Add attribute types if restricted blocks is active.
 		 *
 		 * @param array $settings Array of determined settings for registering a block type.
-		 * @param array $args     Metadata provided for registering a block type.
 		 *
 		 * @return array
 		 */
-		public function block_type_metadata_settings( $settings, $args ) {
-			$restricted_blocks = UM()->options()->get( 'restricted_blocks' );
-			if ( empty( $restricted_blocks ) ) {
+		public function block_type_metadata_settings( $settings ) {
+			if ( ! $this->is_restriction_enabled() ) {
 				return $settings;
 			}
 
-			if ( empty( $settings['attributes']['um_is_restrict'] ) ) {
-				$settings['attributes']['um_is_restrict'] = array(
-					'type'    => 'boolean',
-					'default' => false,
-				);
-			}
-			if ( empty( $settings['attributes']['um_who_access'] ) ) {
-				$settings['attributes']['um_who_access'] = array(
-					'type'    => 'string',
-					'default' => 0,
-				);
-			}
-			if ( empty( $settings['attributes']['um_roles_access'] ) ) {
-				$settings['attributes']['um_roles_access'] = array(
-					'type'    => 'array',
-					'default' => array(),
-					'items'   => array( 'type' => 'string' ),
-				);
-			}
-			if ( empty( $settings['attributes']['um_message_type'] ) ) {
-				$settings['attributes']['um_message_type'] = array(
-					'type'    => 'string',
-					'default' => 0,
-				);
-			}
-			if ( empty( $settings['attributes']['um_message_content'] ) ) {
-				$settings['attributes']['um_message_content'] = array(
-					'type'    => 'string',
-					'default' => '',
-				);
+			if ( empty( $settings['attributes'] ) || ! is_array( $settings['attributes'] ) ) {
+				$settings['attributes'] = array();
 			}
 
+			$settings['attributes'] = $this->add_restriction_attributes( $settings['attributes'] );
+
 			return $settings;
+		}
+
+		/**
+		 * Add attribute types for blocks registered with plain arguments.
+		 *
+		 * Blocks registered via `register_block_type()` with an arguments array are not
+		 * processed by `block_type_metadata_settings`. Their REST schema has to get the
+		 * attributes here, otherwise the block renderer endpoint rejects them.
+		 *
+		 * @since 2.14.4
+		 *
+		 * @param array $args Array of arguments for registering a block type.
+		 *
+		 * @return array
+		 */
+		public function register_block_type_args( $args ) {
+			if ( ! $this->is_restriction_enabled() ) {
+				return $args;
+			}
+
+			if ( ! isset( $args['attributes'] ) || ! is_array( $args['attributes'] ) ) {
+				$args['attributes'] = array();
+			}
+
+			$args['attributes'] = $this->add_restriction_attributes( $args['attributes'] );
+
+			return $args;
 		}
 
 		/**
