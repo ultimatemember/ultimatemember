@@ -17,6 +17,7 @@
 /.gitignore
 /.jshintrc
 /.travis.yml
+/scripts
 /bower.json
 /composer.json
 /gulpfile.js

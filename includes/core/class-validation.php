@@ -37,7 +37,7 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		}
 
 		public function validate_fields_values( $changes, $args, $form_data ) {
-			$fields = maybe_unserialize( $form_data['custom_fields'] );
+			$fields = um_maybe_unserialize( $form_data['custom_fields'] );
 
 			foreach ( $changes as $key => $value ) {
 				if ( ! isset( $fields[ $key ] ) ) {

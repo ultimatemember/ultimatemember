@@ -345,6 +345,9 @@ PRIMARY KEY  (id)
 		/**
 		 * Build the Font Awesome icons list and store it in the `um_icons_list` option when it's missing or outdated.
 		 *
+		 * @since 2.8.6
+		 * @since 2.14.1 uses `build_icons_list()` to operate with the fontawesome files.
+		 *
 		 * @return array The icons list. Always an array, even if the option couldn't be stored.
 		 */
 		public function set_icons_options() {
@@ -368,6 +371,8 @@ PRIMARY KEY  (id)
 		 * Falls back to the list built in memory when the `um_icons_list` option can't be stored or read back
 		 * (e.g. `option_value` column too small, DB write error, broken object cache).
 		 *
+		 * @since 2.14.1
+		 *
 		 * @return array
 		 */
 		public function get_icons_list() {
@@ -386,7 +391,7 @@ PRIMARY KEY  (id)
 		/**
 		 * Build the icons list from the Font Awesome metadata.
 		 *
-		 * @version 2.14.1
+		 * @since 2.14.1
 		 *
 		 * @return array
 		 */

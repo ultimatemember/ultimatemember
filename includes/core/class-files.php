@@ -278,7 +278,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			$query_verify = get_query_var( 'um_verify' );
 			if ( empty( $query_verify ) ||
-				! wp_verify_nonce( $query_verify, "um-download-nonce-$user_id-$form_id-$field" ) ) {
+			     ! wp_verify_nonce( $query_verify, "um-download-nonce-$user_id-$form_id-$field" ) ) {
 				$wp_query->set_404();
 				return;
 			}
@@ -600,7 +600,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					wp_send_json_error( __( 'You have no permission to edit this user through this form', 'ultimate-member' ) );
 				}
 
-				$post_data['role'] = maybe_unserialize( $post_data['role'] );
+				$post_data['role'] = um_maybe_unserialize( $post_data['role'] );
 
 				if ( is_array( $post_data['role'] ) ) {
 					if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {
@@ -615,7 +615,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				wp_send_json_error( __( 'Invalid form fields', 'ultimate-member' ) );
 			}
 
-			$custom_fields = maybe_unserialize( $post_data['custom_fields'] );
+			$custom_fields = um_maybe_unserialize( $post_data['custom_fields'] );
 
 			if ( 'profile' === $mode ) {
 				if ( in_array( $field_id, array( 'cover_photo', 'profile_photo' ), true ) ) {
@@ -896,7 +896,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 						wp_send_json_error( $ret );
 					}
 
-					$post_data['role'] = maybe_unserialize( $post_data['role'] );
+					$post_data['role'] = um_maybe_unserialize( $post_data['role'] );
 
 					if ( is_array( $post_data['role'] ) ) {
 						if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {
@@ -914,7 +914,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					wp_send_json_error( $ret );
 				}
 
-				$custom_fields = maybe_unserialize( $post_data['custom_fields'] );
+				$custom_fields = um_maybe_unserialize( $post_data['custom_fields'] );
 				if ( ! is_array( $custom_fields ) || ! array_key_exists( $id, $custom_fields ) ) {
 					if ( ! ( 'profile' === $mode && in_array( $id, array( 'cover_photo', 'profile_photo' ), true ) ) ) {
 						$ret['error'] = esc_html__( 'Invalid field metakey', 'ultimate-member' );
@@ -1082,7 +1082,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					wp_send_json_error( $ret );
 				}
 
-				$post_data['role'] = maybe_unserialize( $post_data['role'] );
+				$post_data['role'] = um_maybe_unserialize( $post_data['role'] );
 
 				if ( is_array( $post_data['role'] ) ) {
 					if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {
@@ -1102,7 +1102,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				wp_send_json_error( $ret );
 			}
 
-			$custom_fields = maybe_unserialize( $post_data['custom_fields'] );
+			$custom_fields = um_maybe_unserialize( $post_data['custom_fields'] );
 			if ( ! is_array( $custom_fields ) || ! array_key_exists( $id, $custom_fields ) ) {
 				$ret['error'] = esc_html__( 'Invalid field metakey', 'ultimate-member' );
 				wp_send_json_error( $ret );

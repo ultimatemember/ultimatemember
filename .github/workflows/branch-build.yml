@@ -30,6 +30,7 @@ jobs:
         git rm .gitignore
         git rm .jshintrc
         git rm .travis.yml
+        git rm -r scripts
         git rm bower.json
         git rm composer.json
         git rm gulpfile.js

@@ -112,7 +112,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			);
 
 			// If user cannot delete profile hide delete tab.
-			if ( um_user( 'can_delete_profile' ) || um_user( 'can_delete_everyone' ) ) {
+			if ( um_user( 'can_delete_profile' ) ) {
 				$tabs[99999]['delete'] = array(
 					'icon'         => 'um-faicon-trash-o',
 					'title'        => __( 'Delete Account', 'ultimate-member' ),

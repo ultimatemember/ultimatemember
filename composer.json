@@ -10,7 +10,6 @@
     "allow-plugins": {
       "symfony/flex": true,
       "dealerdirect/phpcodesniffer-composer-installer": true,
-      "composer/installers": true,
       "oomphinc/composer-installers-extender": true
     },
     "audit": {
@@ -38,8 +37,6 @@
     "ext-curl": "*",
     "ext-iconv": "*",
     "ext-tidy": "*",
-    "composer/installers": "^2.3",
-    "oomphinc/composer-installers-extender": "^2.0",
     "woocommerce/action-scheduler": "3.9.*",
     "wp-cli/wp-config-transformer": "^1.4"
   },
@@ -58,12 +55,15 @@
     ],
     "wp-config-transformer": [
       "@php -r \"@mkdir('includes/lib/wp-config-transformer/src', 0755, true); if (is_file('vendor/wp-cli/wp-config-transformer/src/WPConfigTransformer.php')) { copy('vendor/wp-cli/wp-config-transformer/src/WPConfigTransformer.php', 'includes/lib/wp-config-transformer/src/WPConfigTransformer.php'); }\""
+    ],
+    "copy-libs": [
+      "@php scripts/copy-libs.php"
+    ],
+    "post-install-cmd": [
+      "@copy-libs"
+    ],
+    "post-update-cmd": [
+      "@copy-libs"
     ]
-  },
-  "extra": {
-    "installer-types": ["library"],
-    "installer-paths": {
-      "includes/lib/{$name}/": ["woocommerce/action-scheduler", "wp-cli/wp-config-transformer"]
-    }
   }
 }

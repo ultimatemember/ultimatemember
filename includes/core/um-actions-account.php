@@ -61,7 +61,7 @@ function um_submit_account_errors_hook( $args ) {
 			}
 
 			if ( empty( $args['confirm_user_password'] ) ) {
-				UM()->form()->add_error( 'user_password', __( 'Password confirmation is required', 'ultimate-member' ) );
+				UM()->form()->add_error( 'confirm_user_password', __( 'Password confirmation is required', 'ultimate-member' ) );
 				return;
 			}
 
@@ -71,58 +71,65 @@ function um_submit_account_errors_hook( $args ) {
 				return;
 			}
 
-			if ( ! empty( $args['user_password'] ) && ! empty( $args['confirm_user_password'] ) ) {
+			if ( $args['user_password'] !== $args['confirm_user_password'] ) {
+				UM()->form()->add_error( 'confirm_user_password', __( 'Your new password does not match', 'ultimate-member' ) );
+				return;
+			}
 
-				if ( UM()->account()->current_password_is_required( 'password' ) ) {
-					if ( empty( $args['current_user_password'] ) ) {
-						UM()->form()->add_error( 'current_user_password', __( 'This is not your password', 'ultimate-member' ) );
-						return;
-					} else {
-						if ( ! wp_check_password( $args['current_user_password'], $current_user->data->user_pass, $current_user->data->ID ) ) {
-							UM()->form()->add_error( 'current_user_password', __( 'This is not your password', 'ultimate-member' ) );
-							return;
-						}
-					}
-				}
-
-				if ( $args['user_password'] && $args['user_password'] !== $args['confirm_user_password'] ) {
-					UM()->form()->add_error( 'user_password', __( 'Your new password does not match', 'ultimate-member' ) );
+			if ( UM()->account()->current_password_is_required( 'password' ) ) {
+				if ( empty( $args['current_user_password'] ) ) {
+					UM()->form()->add_error( 'current_user_password', __( 'This is not your password', 'ultimate-member' ) );
 					return;
 				}
 
-				if ( UM()->options()->get( 'require_strongpass' ) ) {
-					$min_length = UM()->options()->get( 'password_min_chars' );
-					$min_length = ! empty( $min_length ) ? $min_length : 8;
-					$max_length = UM()->options()->get( 'password_max_chars' );
-					$max_length = ! empty( $max_length ) ? $max_length : 30;
+				if ( ! wp_check_password( $args['current_user_password'], $current_user->data->user_pass, $current_user->data->ID ) ) {
+					UM()->form()->add_error( 'current_user_password', __( 'This is not your password', 'ultimate-member' ) );
+					return;
+				}
+			}
 
-					if ( is_user_logged_in() ) {
-						um_fetch_user( get_current_user_id() );
-					}
+			if ( UM()->options()->get( 'change_password_request_limit' ) ) {
+				$transient_id       = '_um_change_password_rate_limit__' . $user_id;
+				$last_request       = get_transient( $transient_id );
+				$request_limit_time = apply_filters( 'um_change_password_attempt_limit_interval', 30 * MINUTE_IN_SECONDS );
+				if ( ! $last_request ) {
+					set_transient( $transient_id, time(), $request_limit_time );
+				} else {
+					UM()->form()->add_error( 'user_password', __( 'Unable to change password because of password change limit. Please try again later.', 'ultimate-member' ) );
+					return;
+				}
+			}
 
-					$user_login = um_user( 'user_login' );
-					$user_email = um_user( 'user_email' );
+			if ( UM()->options()->get( 'require_strongpass' ) ) {
+				$min_length = UM()->options()->get( 'password_min_chars' );
+				$min_length = ! empty( $min_length ) ? $min_length : 8;
+				$max_length = UM()->options()->get( 'password_max_chars' );
+				$max_length = ! empty( $max_length ) ? $max_length : 30;
 
-					if ( mb_strlen( wp_unslash( $args['user_password'] ) ) < $min_length ) {
-						UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
-					}
+				um_fetch_user( get_current_user_id() );
 
-					if ( mb_strlen( wp_unslash( $args['user_password'] ) ) > $max_length ) {
-						UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain less than %d characters', 'ultimate-member' ), $max_length ) );
-					}
+				$user_login = um_user( 'user_login' );
+				$user_email = um_user( 'user_email' );
 
-					if ( strpos( strtolower( $user_login ), strtolower( $args['user_password'] )  ) > -1 ) {
-						UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your username', 'ultimate-member' ) );
-					}
+				if ( mb_strlen( wp_unslash( $args['user_password'] ) ) < $min_length ) {
+					UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
+				}
 
-					if ( strpos( strtolower( $user_email ), strtolower( $args['user_password'] )  ) > -1 ) {
-						UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your email address', 'ultimate-member' ) );
-					}
+				if ( mb_strlen( wp_unslash( $args['user_password'] ) ) > $max_length ) {
+					UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain less than %d characters', 'ultimate-member' ), $max_length ) );
+				}
 
-					$strong_pass_result = UM()->validation()->strong_pass( $args['user_password'] );
-					if ( true !== $strong_pass_result ) {
-						UM()->form()->add_error( 'user_password', $strong_pass_result );
-					}
+				if ( strpos( strtolower( $user_login ), strtolower( $args['user_password'] ) ) > -1 ) {
+					UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your username', 'ultimate-member' ) );
+				}
+
+				if ( strpos( strtolower( $user_email ), strtolower( $args['user_password'] ) ) > -1 ) {
+					UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your email address', 'ultimate-member' ) );
+				}
+
+				$strong_pass_result = UM()->validation()->strong_pass( $args['user_password'] );
+				if ( true !== $strong_pass_result ) {
+					UM()->form()->add_error( 'user_password', $strong_pass_result );
 				}
 			}
 			break;
@@ -227,7 +234,6 @@ function um_submit_account_errors_hook( $args ) {
 }
 add_action( 'um_submit_account_errors_hook', 'um_submit_account_errors_hook' );
 
-
 /**
  * Submit account page changes
  *
@@ -240,7 +246,7 @@ function um_submit_account_details( $args ) {
 
 	$user_id = get_current_user_id(); // Account can be submitted only for the current user.
 
-	//change password account's tab
+	// Change password account's tab
 	if ( 'password' === $current_tab && $args['user_password'] && $args['confirm_user_password'] ) {
 		$changes['user_pass'] = trim( $args['user_password'] );
 		$args['user_id']      = $user_id;
@@ -249,7 +255,7 @@ function um_submit_account_details( $args ) {
 
 		add_filter( 'send_password_change_email', '__return_false' );
 
-		//clear all sessions with old passwords
+		// Clear all sessions with old passwords
 		$user = WP_Session_Tokens::get_instance( $user_id );
 		$user->destroy_all();
 

@@ -2954,7 +2954,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-field-area">';
 
-					$output .= '<div class="um-rating um-raty" id="' . esc_attr( $key ) . '" data-key="' . esc_attr( $key ) . '" data-number="' . esc_attr( $data['number'] ) . '" data-score="' . $this->field_value( $key, $default, $data ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $key ) . '></div>';
+					$output .= '<div class="um-rating um-raty" id="' . esc_attr( $key ) . '" data-key="' . esc_attr( $key ) . '" data-number="' . esc_attr( $data['number'] ) . '" data-score="' . esc_attr( $this->field_value( $key, $default, $data ) ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $key ) . '></div>';
 					$output .= '</div>';
 
 					if ( $this->is_error( $key ) ) {

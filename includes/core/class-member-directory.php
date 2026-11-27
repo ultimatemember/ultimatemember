@@ -749,7 +749,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			if ( false === $default_value ) {
 				$default_filters = array();
 				if ( ! empty( $directory_data['search_filters'] ) ) {
-					$default_filters = maybe_unserialize( $directory_data['search_filters'] );
+					$default_filters = um_maybe_unserialize( $directory_data['search_filters'] );
 				}
 
 				if ( ! empty( $default_filters[ $filter ] ) && 'select' !== $this->filter_types[ $filter ] ) {
@@ -1395,7 +1395,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 
 			$roles = um_user( 'can_view_roles' );
-			$roles = maybe_unserialize( $roles );
+			$roles = um_maybe_unserialize( $roles );
 
 			if ( UM()->roles()->um_user_can( 'can_view_all' ) && empty( $roles ) ) {
 				return;
@@ -1457,9 +1457,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				//since WP4.4 use 'role__in' argument
 				if ( ! empty( $this->query_args['role__in'] ) ) {
 					$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
-					$this->query_args['role__in'] = array_intersect( $this->query_args['role__in'], maybe_unserialize( $directory_data['roles'] ) );
+					$this->query_args['role__in'] = array_intersect( $this->query_args['role__in'], um_maybe_unserialize( $directory_data['roles'] ) );
 				} else {
-					$this->query_args['role__in'] = maybe_unserialize( $directory_data['roles'] );
+					$this->query_args['role__in'] = um_maybe_unserialize( $directory_data['roles'] );
 				}
 			}
 		}
@@ -1504,7 +1504,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 */
 		function show_only_these_users( $directory_data ) {
 			if ( ! empty( $directory_data['show_these_users'] ) ) {
-				$show_these_users = maybe_unserialize( $directory_data['show_these_users'] );
+				$show_these_users = um_maybe_unserialize( $directory_data['show_these_users'] );
 
 				if ( is_array( $show_these_users ) && ! empty( $show_these_users ) ) {
 
@@ -1532,7 +1532,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 */
 		function exclude_these_users( $directory_data ) {
 			if ( ! empty( $directory_data['exclude_these_users'] ) ) {
-				$exclude_these_users = maybe_unserialize( $directory_data['exclude_these_users'] );
+				$exclude_these_users = um_maybe_unserialize( $directory_data['exclude_these_users'] );
 
 				if ( is_array( $exclude_these_users ) && ! empty( $exclude_these_users ) ) {
 
@@ -1583,7 +1583,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$custom_sort = array();
 			if ( ! empty( $directory_data['sorting_fields'] ) ) {
-				$sorting_fields = maybe_unserialize( $directory_data['sorting_fields'] );
+				$sorting_fields = um_maybe_unserialize( $directory_data['sorting_fields'] );
 				foreach ( $sorting_fields as $field ) {
 					if ( is_array( $field ) ) {
 						$field_keys    = array_keys( $field );
@@ -1731,7 +1731,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				if ( ! empty( $directory_data['sorting_fields'] ) ) {
 					// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 					$sorting        = sanitize_text_field( $_POST['sorting'] );
-					$sorting_fields = maybe_unserialize( $directory_data['sorting_fields'] );
+					$sorting_fields = um_maybe_unserialize( $directory_data['sorting_fields'] );
 
 					if ( ! empty( $sorting_fields ) && is_array( $sorting_fields ) ) {
 						foreach ( $sorting_fields as $field ) {
@@ -1931,7 +1931,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			//filters
 			$filter_query = array();
 			if ( ! empty( $directory_data['search_fields'] ) ) {
-				$search_filters = maybe_unserialize( $directory_data['search_fields'] );
+				$search_filters = um_maybe_unserialize( $directory_data['search_fields'] );
 
 				if ( ! empty( $search_filters ) && is_array( $search_filters ) ) {
 					$filter_query = array_intersect_key( $_POST, array_flip( $search_filters ) );
@@ -2281,7 +2281,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		public function default_filters( $directory_data ) {
 			$default_filters = array();
 			if ( ! empty( $directory_data['search_filters'] ) ) {
-				$default_filters = maybe_unserialize( $directory_data['search_filters'] );
+				$default_filters = um_maybe_unserialize( $directory_data['search_filters'] );
 			}
 
 			$gmt_offset = get_post_meta( $directory_data['form_id'], '_um_search_filters_gmt', true );
@@ -2734,6 +2734,35 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$actions  = array();
 			$can_edit = UM()->common()->users()->can_current_user_edit_user( $user_id );
 
+			// A profile the current user can't view (e.g. Profile Privacy "Only me") is listed only with the name,
+			// photos and the profile link. Its profile fields (tagline, extra information, social links) are hidden.
+			if ( ! UM()->common()->users()->can_view_user_profile( $user_id ) ) {
+				$data_array = array(
+					'card_anchor'          => esc_html( $this->get_user_hash( $user_id ) ),
+					'role'                 => 'undefined', // make the role hidden here.
+					'account_status'       => 'undefined', // make the status hidden here.
+					'account_status_name'  => esc_html__( 'Undefined', 'ultimate-member' ), // make the status hidden here.
+					'cover_photo'          => wp_kses( um_user( 'cover_photo', $this->cover_size ), UM()->get_allowed_html( 'templates' ) ),
+					'display_name'         => esc_html( um_user( 'display_name' ) ),
+					'profile_url'          => esc_url( um_user_profile_url() ),
+					'can_edit'             => (bool) $can_edit,
+					'edit_profile_url'     => $can_edit ? esc_url( um_edit_profile_url() ) : '',
+					'avatar'               => wp_kses( get_avatar( $user_id, $this->avatar_size ), UM()->get_allowed_html( 'templates' ) ),
+					'display_name_html'    => wp_kses( um_user( 'display_name', 'html' ), UM()->get_allowed_html( 'templates' ) ),
+					'dropdown_actions'     => $dropdown_actions,
+					// Kept empty for the card templates; the hooks show profile data of extensions.
+					'hook_just_after_name' => '',
+					'hook_after_user_name' => '',
+				);
+
+				// Extensions can still add their own data to the card.
+				$data_array = apply_filters( 'um_ajax_get_members_data', $data_array, $user_id, $directory_data );
+
+				um_reset_user_clean();
+
+				return $data_array;
+			}
+
 			// Replace hook 'um_members_just_after_name'
 			ob_start();
 			do_action( 'um_members_just_after_name', $user_id, $directory_data );
@@ -2788,7 +2817,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 
 			if ( ! empty( $directory_data['show_tagline'] ) && ! empty( $directory_data['tagline_fields'] ) ) {
-				$directory_data['tagline_fields'] = maybe_unserialize( $directory_data['tagline_fields'] );
+				$directory_data['tagline_fields'] = um_maybe_unserialize( $directory_data['tagline_fields'] );
 
 				if ( is_array( $directory_data['tagline_fields'] ) ) {
 					foreach ( $directory_data['tagline_fields'] as $key ) {
@@ -2838,7 +2867,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			if ( ! empty( $directory_data['show_userinfo'] ) ) {
 				if ( ! empty( $directory_data['reveal_fields'] ) ) {
 
-					$directory_data['reveal_fields'] = maybe_unserialize( $directory_data['reveal_fields'] );
+					$directory_data['reveal_fields'] = um_maybe_unserialize( $directory_data['reveal_fields'] );
 
 					if ( is_array( $directory_data['reveal_fields'] ) ) {
 						foreach ( $directory_data['reveal_fields'] as $key ) {

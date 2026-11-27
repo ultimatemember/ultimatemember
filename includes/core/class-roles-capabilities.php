@@ -22,6 +22,9 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			add_action( 'wp_roles_init', array( &$this, 'um_roles_init' ), 99999 );
 			add_action( 'update_option', array( &$this, 'um_on_roles_update' ), 10, 3 );
 			add_action( 'set_user_role', array( &$this, 'remove_user_cache' ), 10, 1 );
+			// WP_User::add_role() / remove_role() don't fire `set_user_role` (e.g. multi-role plugins, memberships).
+			add_action( 'add_user_role', array( &$this, 'remove_user_cache' ), 10, 1 );
+			add_action( 'remove_user_role', array( &$this, 'remove_user_cache' ), 10, 1 );
 		}
 
 
@@ -839,7 +842,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			$permissions = apply_filters( 'um_user_permissions_filter', $permissions, $user_id );
 
 			if ( isset( $permissions[ $permission ] ) && is_serialized( $permissions[ $permission ] ) ) {
-				return maybe_unserialize( $permissions[ $permission ] );
+				return um_maybe_unserialize( $permissions[ $permission ] );
 			}
 
 			if ( isset( $permissions[ $permission ] ) && is_array( $permissions[ $permission ] ) ) {

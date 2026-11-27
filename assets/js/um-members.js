@@ -58,7 +58,7 @@ function um_set_url_from_data( directory, key, value ) {
 			value[ i ] = encodeURIComponent( value[ i ] );
 		});
 		value = value.join( '||' );
-	} else if ( ! jQuery.isNumeric( value ) ) {
+	} else if ( ! ( ( 'number' === typeof value || 'string' === typeof value ) && ! isNaN( value - parseFloat( value ) ) ) ) { // Replacement for `jQuery.isNumeric()` removed in jQuery 4.0.
 		value = value.split( '||' );
 		jQuery.each( value, function( i ) {
 			value[ i ] = encodeURIComponent( value[ i ] );

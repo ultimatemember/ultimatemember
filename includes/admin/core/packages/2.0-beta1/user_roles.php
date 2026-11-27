@@ -75,7 +75,7 @@ if ( ! empty( $um_roles ) ) {
 				if ( '_um_can_edit_roles' === $metadata['meta_key'] || '_um_can_delete_roles' === $metadata['meta_key'] ||
 					'_um_can_view_roles' === $metadata['meta_key'] || '_um_can_follow_roles' === $metadata['meta_key'] ||
 					'_um_can_friend_roles' === $metadata['meta_key'] || '_um_can_review_roles' === $metadata['meta_key'] ) {
-					$metadata['meta_value'] = maybe_unserialize( $metadata['meta_value'] );
+					$metadata['meta_value'] = um_maybe_unserialize( $metadata['meta_value'] );
 				}
 
 				$role_metadata[ $metadata['meta_key'] ] = $metadata['meta_value'];

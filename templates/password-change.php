@@ -6,7 +6,7 @@
  *
  * Call: function ultimatemember_password()
  *
- * @version 2.8.3
+ * @version 2.14.3
  *
  * @var string $rp_mode 'pw_set' or 'pw_change' for display it differently.
  * @var string $rp_key  Reset password key.
@@ -23,6 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<form method="post" action="">
 			<input type="hidden" name="_um_password_change" id="_um_password_change" value="1" />
+			<?php wp_nonce_field( 'um_password_change' . $args['login'] ); ?>
 			<input type="hidden" name="login" value="<?php echo esc_attr( $args['login'] ); ?>" />
 			<input type="hidden" name="rp_key" value="<?php echo esc_attr( $rp_key ); ?>" />
 

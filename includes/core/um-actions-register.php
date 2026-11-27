@@ -751,7 +751,7 @@ function um_registration_save_files( $user_id, $args, $form_data ) {
 
 	$user_basedir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
 
-	$fields = maybe_unserialize( $form_data['custom_fields'] );
+	$fields = um_maybe_unserialize( $form_data['custom_fields'] );
 	if ( ! empty( $fields ) && is_array( $fields ) ) {
 		$user_meta_submitted     = get_user_meta( $user_id, 'submitted', true );
 		$user_meta_submitted_old = $user_meta_submitted; // Is used to compare.
