@@ -2732,6 +2732,35 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$actions  = array();
 			$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id );
 
+			// A profile the current user can't view (e.g. Profile Privacy "Only me") is listed only with the name,
+			// photos and the profile link. Its profile fields (tagline, extra information, social links) are hidden.
+			if ( ! UM()->common()->users()->can_view_user_profile( $user_id ) ) {
+				$data_array = array(
+					'card_anchor'          => esc_html( $this->get_user_hash( $user_id ) ),
+					'role'                 => 'undefined', // make the role hidden here.
+					'account_status'       => 'undefined', // make the status hidden here.
+					'account_status_name'  => esc_html__( 'Undefined', 'ultimate-member' ), // make the status hidden here.
+					'cover_photo'          => wp_kses( um_user( 'cover_photo', $this->cover_size ), UM()->get_allowed_html( 'templates' ) ),
+					'display_name'         => esc_html( um_user( 'display_name' ) ),
+					'profile_url'          => esc_url( um_user_profile_url() ),
+					'can_edit'             => (bool) $can_edit,
+					'edit_profile_url'     => $can_edit ? esc_url( um_edit_profile_url() ) : '',
+					'avatar'               => wp_kses( get_avatar( $user_id, $this->avatar_size ), UM()->get_allowed_html( 'templates' ) ),
+					'display_name_html'    => wp_kses( um_user( 'display_name', 'html' ), UM()->get_allowed_html( 'templates' ) ),
+					'dropdown_actions'     => $dropdown_actions,
+					// Kept empty for the card templates; the hooks show profile data of extensions.
+					'hook_just_after_name' => '',
+					'hook_after_user_name' => '',
+				);
+
+				// Extensions can still add their own data to the card.
+				$data_array = apply_filters( 'um_ajax_get_members_data', $data_array, $user_id, $directory_data );
+
+				um_reset_user_clean();
+
+				return $data_array;
+			}
+
 			// Replace hook 'um_members_just_after_name'
 			ob_start();
 			do_action( 'um_members_just_after_name', $user_id, $directory_data );
