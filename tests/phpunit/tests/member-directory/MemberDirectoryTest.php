@@ -346,6 +346,80 @@ class UM_MemberDirectory_MemberDirectoryTest extends UM_UnitTestCase {
 	}
 
 	/**
+	 * Directory showing profile fields in the cards (tagline and "reveal" section).
+	 *
+	 * @return string Directory hash.
+	 */
+	private function create_directory_with_card_fields() {
+		return $this->create_directory(
+			array(
+				'_um_show_tagline'   => 1,
+				'_um_tagline_fields' => array( 'country' ),
+				'_um_show_userinfo'  => 1,
+				'_um_reveal_fields'  => array( 'description' ),
+			)
+		);
+	}
+
+	/**
+	 * @param string $login   Member login.
+	 * @param string $privacy `profile_privacy` value, empty for the default.
+	 *
+	 * @return array Card of the member.
+	 */
+	private function card_with_profile_fields( $login, $privacy ) {
+		update_user_meta( $this->users[ $login ], 'country', 'Ukraine' );
+		update_user_meta( $this->users[ $login ], 'description', 'Private biography' );
+		if ( $privacy ) {
+			update_user_meta( $this->users[ $login ], 'profile_privacy', $privacy );
+		}
+
+		$response = $this->get_members( $this->create_directory_with_card_fields(), array( 'search' => $login ) );
+		$this->assertSame( array( $login ), $this->listed( $response ), 'Precondition: only the member is found.' );
+
+		return $response['data']['users'][0];
+	}
+
+	/**
+	 * Cards show the profile fields configured in the directory (control case for private profiles).
+	 */
+	public function test_card_shows_configured_profile_fields() {
+		$card = $this->card_with_profile_fields( 'alan', '' );
+
+		$this->assertSame( 'Ukraine', $card['country'] );
+		$this->assertStringContainsString( 'Private biography', $card['description'] );
+	}
+
+	/**
+	 * Profile Privacy "Only me" closes the profile page, but the member stays in directories with the
+	 * display name, profile photo and cover photo. Only "Hide my profile from directory" removes a
+	 * member from directories.
+	 */
+	public function test_private_profile_is_listed_with_name_and_photos() {
+		$card = $this->card_with_profile_fields( 'alan', 'Only me' );
+
+		$this->assertSame( 'Alan Turing', $card['display_name'] );
+		$this->assertStringContainsString( '<img', $card['avatar'] );
+		$this->assertArrayHasKey( 'cover_photo', $card );
+		$this->assertTrue( UM()->user()->is_private_profile( $this->users['alan'] ) );
+	}
+
+	/**
+	 * A private ("Only me") profile shows only the name and photos in directories; other profile data
+	 * is hidden. build_user_card_data() doesn't check the profile privacy, so the tagline and the
+	 * "reveal" fields (here the country and the biography) are shown to everyone.
+	 *
+	 * @group security
+	 * @group known-bug
+	 */
+	public function test_private_profile_card_hides_profile_fields() {
+		$card = $this->card_with_profile_fields( 'alan', 'Only me' );
+
+		$this->assertArrayNotHasKey( 'country', $card );
+		$this->assertArrayNotHasKey( 'description', $card );
+	}
+
+	/**
 	 * Guests are limited to 10 requests per minute per IP when the rate limit is enabled.
 	 *
 	 * @group security
