@@ -33,8 +33,13 @@ npm run test:env:stop                       # stop containers (test:env:destroy 
   and role meta) once per run.
 - `tests/phpunit/includes/class-um-unittestcase.php` – base class `UM_UnitTestCase`: `create_um_role()`,
   `update_role_meta()`, `create_user_with_roles()`, `act_as()`, `reload_roles()`, `create_core_page()`,
-  `capture_redirect()` (returns the URL of a `wp_safe_redirect()` + `exit` without exiting). `set_up()`
-  clears `$_GET`/`$_POST`/`$_REQUEST`/`$_COOKIE` and UM form state (errors, `post_form`, preview flags).
+  `capture_redirect()` (returns the URL of a `wp_safe_redirect()` + `exit` without exiting),
+  `create_um_form()` (Login/Register/Profile form from the default core form fields; bootstrap doesn't
+  install the core forms), `submit_um_form()` (POST through `UM()->form()->form_init()` with the
+  `-{form_id}` field suffix), `call_ajax()` (runs an AJAX handler, returns the decoded JSON or -1).
+  `set_up()` re-reads UM settings (so `UM()->options()->update()` doesn't leak into the next test) and
+  clears `$_GET`/`$_POST`/`$_REQUEST`/`$_COOKIE`, `$_um_profile_id` and UM form state (errors, `post_form`,
+  preview flags).
 - `tests/phpunit/tests/<area>/<Name>Test.php` – tests; class names `UM_<Area>_<Name>Test`.
 
 ### Rules
