@@ -1262,6 +1262,48 @@ function um_user_last_login( $user_id ) {
 }
 
 /**
+ * Get the URL of the Logout page with the logout nonce. Visiting the Logout page without a valid nonce
+ * asks the user to confirm the logout.
+ *
+ * @since 2.14.4
+ *
+ * @param string $redirect_to Optional. URL to redirect to after logout.
+ *
+ * @return string Logout URL, empty if there is no Logout page.
+ */
+function um_get_logout_url( $redirect_to = '' ) {
+	$url = um_get_core_page( 'logout' );
+	if ( empty( $url ) ) {
+		return '';
+	}
+
+	$args = array();
+	if ( ! empty( $redirect_to ) ) {
+		$args['redirect_to'] = rawurlencode( $redirect_to );
+	}
+	$args['_wpnonce'] = wp_create_nonce( 'log-out' );
+
+	/**
+	 * Filters the Logout page URL with the logout nonce.
+	 *
+	 * @param {string} $url         Logout URL.
+	 * @param {string} $redirect_to URL to redirect to after logout.
+	 *
+	 * @return {string} Logout URL.
+	 *
+	 * @since 2.14.4
+	 * @hook um_logout_url
+	 *
+	 * @example <caption>Always redirect to the homepage after logout.</caption>
+	 * function my_logout_url( $url, $redirect_to ) {
+	 *     return add_query_arg( 'redirect_to', rawurlencode( home_url() ), $url );
+	 * }
+	 * add_filter( 'um_logout_url', 'my_logout_url', 10, 2 );
+	 */
+	return apply_filters( 'um_logout_url', add_query_arg( $args, $url ), $redirect_to );
+}
+
+/**
  * Get core page url
  *
  * @param $slug
