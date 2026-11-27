@@ -28,6 +28,10 @@ abstract class UM_UnitTestCase extends WP_UnitTestCase {
 
 		$this->um_core_pages_backup = (array) UM()->config()->permalinks;
 
+		// `UM()->options()->update()` changes the in-memory copy too, which the DB rollback doesn't
+		// restore. Re-read the settings so every test starts from the baseline written by bootstrap.
+		UM()->classes['options'] = new um\core\Options();
+
 		$this->reset_request_state();
 		wp_set_current_user( 0 );
 		$this->reload_roles();
@@ -39,6 +43,7 @@ abstract class UM_UnitTestCase extends WP_UnitTestCase {
 	public function tear_down() {
 		UM()->config()->permalinks = $this->um_core_pages_backup;
 		$this->reset_request_state();
+		unset( $GLOBALS['post'] ); // Tests may set the current page, e.g. for um_is_predefined_page().
 
 		parent::tear_down();
 	}
@@ -51,6 +56,10 @@ abstract class UM_UnitTestCase extends WP_UnitTestCase {
 		$_POST    = array();
 		$_REQUEST = array();
 		$_COOKIE  = array();
+		unset( $_SERVER['REQUEST_METHOD'] ); // Set by submit_um_form().
+
+		// Profile ID of the rendered form; UM()->fields()->edit_field() prefers it over um_user( 'ID' ).
+		$GLOBALS['_um_profile_id'] = null;
 
 		UM()->form()->errors      = null;
 		UM()->form()->post_form   = null;
@@ -157,8 +166,8 @@ abstract class UM_UnitTestCase extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Create a page and register it as a UM core page (e.g. `password-reset`, `login`, `account`).
-	 * The page map is restored in tear_down().
+	 * Create a page and register it as a UM core page (e.g. `password-reset`, `login`, `account`):
+	 * in `UM()->config()->permalinks` (restored in tear_down()) and in the predefined page setting.
 	 *
 	 * @param string $slug UM core page key.
 	 *
@@ -175,8 +184,114 @@ abstract class UM_UnitTestCase extends WP_UnitTestCase {
 		);
 
 		UM()->config()->permalinks[ $slug ] = $page_id;
+		// Predefined page setting used by um_is_predefined_page(); reset in set_up() of the next test.
+		UM()->options()->update( UM()->options()->get_predefined_page_option_key( $slug ), $page_id );
 
 		return $page_id;
+	}
+
+	/**
+	 * Create a published UM form the way wp-admin > Ultimate Member > Forms does. The setup in
+	 * bootstrap runs without a logged-in admin, so the default core forms are not installed;
+	 * tests create their own forms from `UM()->config()->core_form_meta`.
+	 *
+	 * @param string $mode          `login`, `register` or `profile`.
+	 * @param array  $meta          Form meta to add or replace, e.g. `_um_register_role`.
+	 * @param array  $custom_fields Custom fields to add to (or replace in) the default fields of the mode.
+	 *
+	 * @return int Form ID.
+	 */
+	protected function create_um_form( $mode, array $meta = array(), array $custom_fields = array() ) {
+		$defaults = UM()->config()->core_form_meta[ $mode ];
+		unset( $defaults['_um_core'] ); // Not a core form: the core form IDs live in the `um_core_forms` option.
+
+		$defaults['_um_custom_fields'] = array_merge( $defaults['_um_custom_fields'], $custom_fields );
+
+		$form_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'um_form',
+				'post_status' => 'publish',
+				'post_title'  => ucfirst( $mode ) . ' form',
+			)
+		);
+
+		foreach ( array_merge( $defaults, $meta ) as $meta_key => $meta_value ) {
+			update_post_meta( $form_id, $meta_key, $meta_value );
+		}
+
+		return $form_id;
+	}
+
+	/**
+	 * Submit a UM Login, Registration or Profile form through `UM()->form()->form_init()`, the
+	 * same way a front-end POST request does. Field names get the `-{form_id}` suffix the
+	 * rendered form uses, and the data is slashed like WordPress request data.
+	 *
+	 * Use together with capture_redirect() when the submission is expected to redirect.
+	 *
+	 * @param int   $form_id Form ID.
+	 * @param array $fields  Field values by field key (without the form suffix).
+	 * @param array $extra   Raw POST keys added as is, e.g. `_wpnonce`, `redirect_to`, `profile_nonce`.
+	 */
+	protected function submit_um_form( $form_id, array $fields, array $extra = array() ) {
+		$post = array(
+			'form_id'      => (string) $form_id,
+			UM()->honeypot => '',
+		);
+		foreach ( $fields as $key => $value ) {
+			$post[ $key . '-' . $form_id ] = $value;
+		}
+		$post = array_merge( $post, $extra );
+
+		$_SERVER['REQUEST_METHOD'] = 'POST';
+		$_POST                     = wp_slash( $post );
+		$_REQUEST                  = $_POST;
+
+		UM()->form()->form_init();
+	}
+
+	/**
+	 * Run a UM AJAX handler and return its decoded JSON response.
+	 *
+	 * `wp_send_json_*()` ends with `wp_die()` during AJAX requests; the AJAX die handler throws
+	 * here, so the test keeps running.
+	 *
+	 * @param callable $callback AJAX handler.
+	 *
+	 * @return array|int Decoded JSON response, or -1 when `check_ajax_referer()` failed.
+	 */
+	protected function call_ajax( callable $callback ) {
+		$die_handler = static function () {
+			return static function ( $message ) {
+				throw new WPAjaxDieContinueException( is_scalar( $message ) ? (string) $message : '' );
+			};
+		};
+
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', $die_handler, PHP_INT_MAX );
+
+		$ob_level = ob_get_level();
+		ob_start();
+		$message = '';
+		try {
+			$callback();
+		} catch ( WPAjaxDieContinueException $e ) {
+			$message = $e->getMessage();
+		} finally {
+			$output = '';
+			while ( ob_get_level() > $ob_level ) {
+				$output = ob_get_clean() . $output;
+			}
+			remove_filter( 'wp_doing_ajax', '__return_true' );
+			remove_filter( 'wp_die_ajax_handler', $die_handler, PHP_INT_MAX );
+		}
+
+		if ( '' === $output && '-1' === $message ) {
+			return -1;
+		}
+
+		$this->assertJson( $output, 'The AJAX handler did not send JSON.' );
+		return json_decode( $output, true );
 	}
 
 	/**
