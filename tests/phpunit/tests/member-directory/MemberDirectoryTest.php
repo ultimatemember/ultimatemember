@@ -371,6 +371,8 @@ class UM_MemberDirectory_MemberDirectoryTest extends UM_UnitTestCase {
 		update_user_meta( $this->users[ $login ], 'country', 'Ukraine' );
 		update_user_meta( $this->users[ $login ], 'description', 'Private biography' );
 		if ( $privacy ) {
+			// Profile Privacy is available only to roles that can make their profile private.
+			$this->update_role_meta( 'subscriber', array( '_um_can_make_private_profile' => 1 ) );
 			update_user_meta( $this->users[ $login ], 'profile_privacy', $privacy );
 		}
 
@@ -408,6 +410,8 @@ class UM_MemberDirectory_MemberDirectoryTest extends UM_UnitTestCase {
 	 * A private ("Only me") profile shows only the name and photos in directories; other profile data
 	 * is hidden. build_user_card_data() doesn't check the profile privacy, so the tagline and the
 	 * "reveal" fields (here the country and the biography) are shown to everyone.
+	 * Fixed on the design/scheme branch (3.0): both the old and the New UI card builders return only
+	 * the name, photos and profile link when UM()->common()->users()->can_view_user_profile() is false.
 	 *
 	 * @group security
 	 * @group known-bug
