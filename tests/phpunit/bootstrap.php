@@ -44,5 +44,12 @@ require $um_tests_wp_dir . '/includes/bootstrap.php';
 UM()->setup()->run_setup();
 // Options are read once in the constructor; reload them after setup wrote the defaults.
 UM()->classes['options'] = new um\core\Options();
+// Built-in fields were built on `init`, before the defaults existed (e.g. `hide_in_members` depends on
+// the `account_hide_in_directory` setting). Build them again with the default settings.
+UM()->builtin()->set_core_fields();
+UM()->builtin()->set_predefined_fields();
+UM()->builtin()->set_custom_fields();
+UM()->builtin()->set_blacklist_fields();
 
 require_once __DIR__ . '/includes/class-um-unittestcase.php';
+require_once __DIR__ . '/includes/class-um-test-dummy-users.php';
