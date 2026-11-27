@@ -61,6 +61,9 @@ abstract class UM_UnitTestCase extends WP_UnitTestCase {
 		// Profile ID of the rendered form; UM()->fields()->edit_field() prefers it over um_user( 'ID' ).
 		$GLOBALS['_um_profile_id'] = null;
 
+		// Set when any user is deleted; it switches off the member directory data sync (see UM_User_MemberDirectoryDataTest).
+		UM()->user()->deleted_user_id = null;
+
 		UM()->form()->errors      = null;
 		UM()->form()->post_form   = null;
 		UM()->form()->form_suffix = null;
@@ -162,6 +165,13 @@ abstract class UM_UnitTestCase extends WP_UnitTestCase {
 	protected function reload_roles() {
 		wp_roles()->for_site();
 		UM()->user()->remove_cache_all_users();
+		// remove_cache_all_users() deletes the `um_cache_userdata_*` options with a direct SQL query, so
+		// the object cache still returns them (see UM_User_ProfileCacheTest). Drop the cached options.
+		if ( function_exists( 'wp_cache_supports' ) && wp_cache_supports( 'flush_group' ) ) {
+			wp_cache_flush_group( 'options' );
+		} else {
+			wp_cache_flush();
+		}
 		um_reset_user_clean();
 	}
 
@@ -245,9 +255,91 @@ abstract class UM_UnitTestCase extends WP_UnitTestCase {
 
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		$_POST                     = wp_slash( $post );
-		$_REQUEST                  = $_POST;
+		$_REQUEST                  = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Simulated request.
 
 		UM()->form()->form_init();
+	}
+
+	/**
+	 * Create a published member directory with the settings of the core "Members" directory, stored
+	 * the way wp-admin saves them: empty list settings (`_um_roles` etc.) are not stored (see
+	 * UM\Admin\Core\Admin_Metabox::save_metabox_directory()). Visible to everyone by default.
+	 *
+	 * @param array $meta Directory settings to add or replace, e.g. `_um_roles`, `_um_privacy`.
+	 *
+	 * @return string Directory hash, the public ID used by the AJAX request.
+	 */
+	protected function create_member_directory( array $meta = array() ) {
+		$defaults = UM()->config()->core_directory_meta['members'];
+		unset( $defaults['_um_core'] );
+
+		$directory_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'um_directory',
+				'post_status' => 'publish',
+				'post_title'  => 'Members',
+			)
+		);
+		foreach ( array_merge( $defaults, array( '_um_privacy' => 0 ), $meta ) as $key => $value ) {
+			if ( array() === $value ) {
+				continue;
+			}
+			update_post_meta( $directory_id, $key, $value );
+		}
+
+		return UM()->member_directory()->set_directory_hash( $directory_id );
+	}
+
+	/**
+	 * Request members of a directory like the directory's JavaScript does (`um_get_members`).
+	 *
+	 * @param string $hash   Directory hash.
+	 * @param array  $params Request parameters to add or replace (`page`, `search`, `sorting`, filters…).
+	 *
+	 * @return array|int Decoded JSON response, -1 on a failed nonce check.
+	 */
+	protected function get_directory_members( $hash, array $params = array() ) {
+		$_POST    = array_merge(
+			array(
+				'directory_id' => $hash,
+				'page'         => 1,
+				'_wpnonce'     => wp_create_nonce( 'um-directory-' . $hash ),
+			),
+			$params
+		);
+		$_REQUEST = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Simulated request.
+
+		return $this->call_ajax(
+			static function () {
+				UM()->member_directory()->ajax_get_members();
+			}
+		);
+	}
+
+	/**
+	 * IDs of the users listed in a member directory response, in the listed order.
+	 *
+	 * Cards don't contain user IDs; they are matched by the card anchor (user hash).
+	 *
+	 * @param array $response   Response of get_directory_members().
+	 * @param int[] $candidates User IDs the cards may belong to.
+	 *
+	 * @return int[] User IDs; 0 for a card that matches none of the candidates.
+	 */
+	protected function directory_user_ids( array $response, array $candidates ) {
+		$this->assertTrue( $response['success'], 'Unexpected error: ' . wp_json_encode( $response ) );
+
+		$by_hash = array();
+		foreach ( $candidates as $user_id ) {
+			$by_hash[ UM()->member_directory()->get_user_hash( $user_id ) ] = (int) $user_id;
+		}
+
+		$ids = array();
+		foreach ( $response['data']['users'] as $card ) {
+			$ids[] = isset( $by_hash[ $card['card_anchor'] ] ) ? $by_hash[ $card['card_anchor'] ] : 0;
+		}
+
+		return $ids;
 	}
 
 	/**
@@ -263,7 +355,7 @@ abstract class UM_UnitTestCase extends WP_UnitTestCase {
 	protected function call_ajax( callable $callback ) {
 		$die_handler = static function () {
 			return static function ( $message ) {
-				throw new WPAjaxDieContinueException( is_scalar( $message ) ? (string) $message : '' );
+				throw new WPAjaxDieContinueException( is_scalar( $message ) ? (string) $message : '' ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Not output.
 			};
 		};
 
@@ -292,6 +384,16 @@ abstract class UM_UnitTestCase extends WP_UnitTestCase {
 
 		$this->assertJson( $output, 'The AJAX handler did not send JSON.' );
 		return json_decode( $output, true );
+	}
+
+	/**
+	 * Make a post the current page of the request (global `$post`), e.g. for um_is_core_page().
+	 * Reset in tear_down().
+	 *
+	 * @param int $post_id Post ID.
+	 */
+	protected function set_current_page( $post_id ) {
+		$GLOBALS['post'] = get_post( $post_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Test request state.
 	}
 
 	/**
@@ -361,3 +463,9 @@ class UM_Test_Redirect_Exception extends Exception {
 		$this->location = $location;
 	}
 }
+
+/**
+ * Thrown from a test hook to stop a handler before its final redirect / `exit`
+ * (e.g. `um_after_user_account_updated` before um_js_redirect()).
+ */
+class UM_Test_Stop_Exception extends Exception {}

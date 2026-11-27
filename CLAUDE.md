@@ -36,10 +36,19 @@ npm run test:env:stop                       # stop containers (test:env:destroy 
   `capture_redirect()` (returns the URL of a `wp_safe_redirect()` + `exit` without exiting),
   `create_um_form()` (Login/Register/Profile form from the default core form fields; bootstrap doesn't
   install the core forms), `submit_um_form()` (POST through `UM()->form()->form_init()` with the
-  `-{form_id}` field suffix), `call_ajax()` (runs an AJAX handler, returns the decoded JSON or -1).
+  `-{form_id}` field suffix), `call_ajax()` (runs an AJAX handler, returns the decoded JSON or -1),
+  `create_member_directory()`, `get_directory_members()`, `directory_user_ids()` (member directory AJAX),
+  `set_current_page()` (global `$post`, e.g. for `um_is_core_page()`). `UM_Test_Stop_Exception` stops a
+  handler before its final `exit` when thrown from a test hook.
   `set_up()` re-reads UM settings (so `UM()->options()->update()` doesn't leak into the next test) and
-  clears `$_GET`/`$_POST`/`$_REQUEST`/`$_COOKIE`, `$_um_profile_id` and UM form state (errors, `post_form`,
-  preview flags).
+  clears `$_GET`/`$_POST`/`$_REQUEST`/`$_COOKIE`, `$_um_profile_id`, `UM()->user()->deleted_user_id` and UM
+  form state (errors, `post_form`, preview flags). `reload_roles()` also drops the object cache of the
+  `um_cache_userdata_*` options.
+- `tests/phpunit/includes/class-um-test-dummy-users.php` – `UM_Test_Dummy_Users`: deterministic dummy users
+  (roles, statuses, countries, photos, hidden profiles, registration and last login dates). Create them once
+  per class in `wpSetUpBeforeClass()` and compute expected results from `definitions()`.
+- `UM()->access()` caches per request in static variables (by post ID and by post type): use new posts and
+  one visitor per post in a test, and a post type of its own when checking the query exclusion.
 - `tests/phpunit/tests/<area>/<Name>Test.php` – tests; class names `UM_<Area>_<Name>Test`.
 
 ### Rules

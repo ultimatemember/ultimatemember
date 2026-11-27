@@ -28,7 +28,7 @@ class UM_MemberDirectory_MemberDirectoryTest extends UM_UnitTestCase {
 
 		$this->create_um_role( 'student' );
 
-		$members = array(
+		$members    = array(
 			'ada'     => array( 'Ada', 'Lovelace', 'subscriber', 'approved' ),
 			'alan'    => array( 'Alan', 'Turing', 'subscriber', 'approved' ),
 			'grace'   => array( 'Grace', 'Hopper', 'um_student', 'approved' ),
@@ -40,7 +40,7 @@ class UM_MemberDirectory_MemberDirectoryTest extends UM_UnitTestCase {
 		$registered = strtotime( '2026-01-01 10:00:00' );
 		foreach ( $members as $login => $member ) {
 			list( $first, $last, $role, $status ) = $member;
-			$registered += DAY_IN_SECONDS; // Distinct dates: the default sorting is "newest first".
+			$registered                          += DAY_IN_SECONDS; // Distinct dates: the default sorting is "newest first".
 
 			$user_id = self::factory()->user->create(
 				array(
@@ -59,58 +59,22 @@ class UM_MemberDirectory_MemberDirectoryTest extends UM_UnitTestCase {
 	}
 
 	/**
-	 * Create a published member directory with the default settings of the core "Members" directory,
-	 * stored the way wp-admin saves them: empty list settings (`_um_roles` etc.) are not stored.
+	 * @param array $meta Directory settings.
 	 *
-	 * @param array $meta Directory settings to add or replace, e.g. `_um_roles`.
-	 *
-	 * @return string Directory hash, the public ID used by the AJAX request.
+	 * @return string Directory hash.
 	 */
 	private function create_directory( array $meta = array() ) {
-		$defaults = UM()->config()->core_directory_meta['members'];
-		unset( $defaults['_um_core'] );
-
-		$directory_id = self::factory()->post->create(
-			array(
-				'post_type'   => 'um_directory',
-				'post_status' => 'publish',
-				'post_title'  => 'Members',
-			)
-		);
-		foreach ( array_merge( $defaults, array( '_um_privacy' => 0 ), $meta ) as $key => $value ) {
-			if ( array() === $value ) {
-				continue; // See UM\Admin\Core\Admin_Metabox::save_metabox_directory().
-			}
-			update_post_meta( $directory_id, $key, $value );
-		}
-
-		return UM()->member_directory()->set_directory_hash( $directory_id );
+		return $this->create_member_directory( $meta );
 	}
 
 	/**
-	 * Request the members of a directory like the directory's JavaScript does.
-	 *
 	 * @param string $hash   Directory hash.
-	 * @param array  $params Request parameters to add or replace (`page`, `search`, `_wpnonce`…).
+	 * @param array  $params Request parameters.
 	 *
-	 * @return array|int Decoded JSON response, -1 on a failed nonce check.
+	 * @return array|int Response.
 	 */
 	private function get_members( $hash, array $params = array() ) {
-		$_POST = array_merge(
-			array(
-				'directory_id' => $hash,
-				'page'         => 1,
-				'_wpnonce'     => wp_create_nonce( 'um-directory-' . $hash ),
-			),
-			$params
-		);
-		$_REQUEST = $_POST;
-
-		return $this->call_ajax(
-			static function () {
-				UM()->member_directory()->ajax_get_members();
-			}
-		);
+		return $this->get_directory_members( $hash, $params );
 	}
 
 	/**
@@ -119,16 +83,10 @@ class UM_MemberDirectory_MemberDirectoryTest extends UM_UnitTestCase {
 	 * @return string[] Logins of the listed users.
 	 */
 	private function listed( array $response ) {
-		$this->assertTrue( $response['success'], 'Unexpected error: ' . wp_json_encode( $response ) );
-
-		$by_hash = array();
-		foreach ( $this->users as $login => $user_id ) {
-			$by_hash[ UM()->member_directory()->get_user_hash( $user_id ) ] = $login;
-		}
-
 		$logins = array();
-		foreach ( $response['data']['users'] as $card ) {
-			$logins[] = isset( $by_hash[ $card['card_anchor'] ] ) ? $by_hash[ $card['card_anchor'] ] : 'other:' . $card['display_name'];
+		foreach ( $this->directory_user_ids( $response, $this->users ) as $user_id ) {
+			$login    = array_search( $user_id, $this->users, true );
+			$logins[] = false === $login ? 'other' : $login;
 		}
 		sort( $logins );
 

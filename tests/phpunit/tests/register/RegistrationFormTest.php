@@ -148,9 +148,9 @@ class UM_Register_RegistrationFormTest extends UM_UnitTestCase {
 		$this->update_role_meta(
 			'subscriber',
 			array(
-				'_um_status'                    => $role_status,
-				"_um_{$role_status}_action"     => 'show_message',
-				"_um_{$role_status}_message"    => 'Thanks!',
+				'_um_status'                 => $role_status,
+				"_um_{$role_status}_action"  => 'show_message',
+				"_um_{$role_status}_message" => 'Thanks!',
 			)
 		);
 
@@ -181,8 +181,10 @@ class UM_Register_RegistrationFormTest extends UM_UnitTestCase {
 
 		$mailer     = tests_retrieve_phpmailer_instance();
 		$recipients = array();
-		for ( $i = 0; false !== $mailer->get_sent( $i ); $i++ ) {
+		$i          = 0;
+		while ( false !== $mailer->get_sent( $i ) ) {
 			$recipients[] = $mailer->get_recipient( 'to', $i )->address;
+			++$i;
 		}
 		$this->assertContains( 'newbie@example.org', $recipients, 'An activation email must be sent to the new user.' );
 		$this->assertNotEmpty( get_user_meta( get_user_by( 'login', 'newbie' )->ID, 'account_secret_hash', true ) );
@@ -193,17 +195,41 @@ class UM_Register_RegistrationFormTest extends UM_UnitTestCase {
 	 */
 	public function data_invalid_fields() {
 		return array(
-			'username missing'          => array( array( 'user_login' => '' ), 'user_login' ),
-			'username too short'        => array( array( 'user_login' => 'ab' ), 'user_login' ),
-			'username taken'            => array( array( 'user_login' => 'taken' ), 'user_login' ),
-			'email invalid'             => array( array( 'user_email' => 'not-an-email' ), 'user_email' ),
-			'email taken'               => array( array( 'user_email' => 'taken@example.org' ), 'user_email' ),
-			'password missing'          => array( array( 'user_password' => '', 'confirm_user_password' => '' ), 'user_password' ),
-			'password too short'        => array( array( 'user_password' => 'Sh0rt', 'confirm_user_password' => 'Sh0rt' ), 'user_password' ),
-			'password too weak'         => array( array( 'user_password' => 'alllowercase', 'confirm_user_password' => 'alllowercase' ), 'user_password' ),
-			'password with backslash'   => array( array( 'user_password' => 'Str0ng\\Passw0rd', 'confirm_user_password' => 'Str0ng\\Passw0rd' ), 'user_password' ),
-			'passwords do not match'    => array( array( 'confirm_user_password' => 'Other-Passw0rd' ), 'confirm_user_password' ),
-			'password confirm missing'  => array( array( 'confirm_user_password' => '' ), 'confirm_user_password' ),
+			'username missing'         => array( array( 'user_login' => '' ), 'user_login' ),
+			'username too short'       => array( array( 'user_login' => 'ab' ), 'user_login' ),
+			'username taken'           => array( array( 'user_login' => 'taken' ), 'user_login' ),
+			'email invalid'            => array( array( 'user_email' => 'not-an-email' ), 'user_email' ),
+			'email taken'              => array( array( 'user_email' => 'taken@example.org' ), 'user_email' ),
+			'password missing'         => array(
+				array(
+					'user_password'         => '',
+					'confirm_user_password' => '',
+				),
+				'user_password',
+			),
+			'password too short'       => array(
+				array(
+					'user_password'         => 'Sh0rt',
+					'confirm_user_password' => 'Sh0rt',
+				),
+				'user_password',
+			),
+			'password too weak'        => array(
+				array(
+					'user_password'         => 'alllowercase',
+					'confirm_user_password' => 'alllowercase',
+				),
+				'user_password',
+			),
+			'password with backslash'  => array(
+				array(
+					'user_password'         => 'Str0ng\\Passw0rd',
+					'confirm_user_password' => 'Str0ng\\Passw0rd',
+				),
+				'user_password',
+			),
+			'passwords do not match'   => array( array( 'confirm_user_password' => 'Other-Passw0rd' ), 'confirm_user_password' ),
+			'password confirm missing' => array( array( 'confirm_user_password' => '' ), 'confirm_user_password' ),
 		);
 	}
 

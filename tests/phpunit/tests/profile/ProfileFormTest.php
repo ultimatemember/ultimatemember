@@ -44,9 +44,33 @@ class UM_Profile_ProfileFormTest extends UM_UnitTestCase {
 			'profile',
 			array(),
 			array(
-				'first_name'     => array_merge( $text, array( 'metakey' => 'first_name', 'title' => 'First Name', 'label' => 'First Name', 'position' => '1' ) ),
-				'last_name'      => array_merge( $text, array( 'metakey' => 'last_name', 'title' => 'Last Name', 'label' => 'Last Name', 'position' => '2' ) ),
-				'favorite_color' => array_merge( $text, array( 'metakey' => 'favorite_color', 'title' => 'Favorite color', 'label' => 'Favorite color', 'position' => '3' ) ),
+				'first_name'     => array_merge(
+					$text,
+					array(
+						'metakey'  => 'first_name',
+						'title'    => 'First Name',
+						'label'    => 'First Name',
+						'position' => '1',
+					)
+				),
+				'last_name'      => array_merge(
+					$text,
+					array(
+						'metakey'  => 'last_name',
+						'title'    => 'Last Name',
+						'label'    => 'Last Name',
+						'position' => '2',
+					)
+				),
+				'favorite_color' => array_merge(
+					$text,
+					array(
+						'metakey'  => 'favorite_color',
+						'title'    => 'Favorite color',
+						'label'    => 'Favorite color',
+						'position' => '3',
+					)
+				),
 				'plan'           => array_merge(
 					$text,
 					array(
@@ -68,7 +92,15 @@ class UM_Profile_ProfileFormTest extends UM_UnitTestCase {
 						'position' => '5',
 					)
 				),
-				'user_email'     => array_merge( $text, array( 'metakey' => 'user_email', 'title' => 'Email', 'label' => 'Email', 'position' => '6' ) ),
+				'user_email'     => array_merge(
+					$text,
+					array(
+						'metakey'  => 'user_email',
+						'title'    => 'Email',
+						'label'    => 'Email',
+						'position' => '6',
+					)
+				),
 			)
 		);
 
@@ -135,7 +167,7 @@ class UM_Profile_ProfileFormTest extends UM_UnitTestCase {
 	public function test_owner_updates_own_profile() {
 		$this->act_as( $this->owner_id );
 		// The form is submitted on the User page.
-		$GLOBALS['post'] = get_post( UM()->config()->permalinks['user'] );
+		$this->set_current_page( UM()->config()->permalinks['user'] );
 
 		$location = $this->save_profile(
 			$this->owner_id,
