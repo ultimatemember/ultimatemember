@@ -2707,7 +2707,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				$actions['um-logout'] = array(
 					'title' => esc_html__( 'Logout', 'ultimate-member' ),
-					'url'   => um_get_core_page( 'logout' ),
+					'url'   => um_get_logout_url(),
 				);
 
 				$actions = apply_filters( 'um_member_directory_my_user_card_actions', $actions, $user_id );
