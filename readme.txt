@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 7.0
 Requires at least: 6.2
 Tested up to: 7.2
-Stable tag: 2.14.3
+Stable tag: 2.15.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -167,6 +167,24 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.15.0 2026-12-xx =
+
+**Bugfixes**
+
+* Fixed: Contributor+ stored XSS via the photo modal (Reported by Dmitrii Ignatyev and WPScan team). Updated frontend scripts to prevent XSS.
+* Fixed: Contributor+ stored XSS via the file|image upload modal (Reported by Dmitrii Ignatyev and WPScan team). Updated frontend scripts to prevent XSS.
+* Fixed: Unauthenticated disclosure of comments on restricted posts via the REST API (Reported by vuxvinh and WPScan team). Checking the post's restriction settings during the REST API request.
+* Fixed: An unauthenticated visitor can delete another visitor's pending registration upload (Reported by Nguyen Duc Hoa and WPScan team). Using brand-new routing for temp-uploaded files and guest token system.
+* Fixed: Unauthenticated claiming of another visitor's staged registration upload (Reported by Sangho Lee and WPScan team). Using brand-new routing for temp-uploaded files and guest token system.
+* Fixed: An unauthenticated visitor can read a file another user has staged on a form but not yet submitted (Reported by Can Quang hieu and WPScan team). Using brand-new routing for temp-uploaded files and guest token system.
+* Fixed: An authenticated user with no elevated capability can download another member's profile files that the administrator restricted to the profile owner (Reported by Sandiyo Christan and WPScan team). Using secure permalinks instead of the direct links to files.
+* Fixed: Subsite administrator can log in as any other network user on multisite installations (WPScan team). Added function `UM()->common()->users()->can_current_user_switch_to_user()` with checking that the current logged-in user has the `manage_options` capability and the user for switching is the current blog's user. Super administrators can't be switched to.
+* Fixed: Administrator can log in as another administrator. User switching to users with the `manage_options` capability on the current site (or on any other site of the network on multisite installations) is no longer allowed. Only super administrators can switch to subsite administrators on multisite installations.
+* Fixed: Subsite administrator can edit (or change status) any other network user from the whole network on multisite installations (Reported by Muni Nitish Kumar Yaddala and WPScan team). Added WordPress native capability 'edit_user' condition to check if the current user can edit the user.
+* Fixed: Subsite administrator can delete any other network user from the whole network on multisite installations (WPScan team). Added WordPress native capability 'delete_user' condition to check if the current user can delete the user.
+
+**Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
+
 = 2.14.3 2026-11-25 =
 
 **Enhancements**
@@ -248,64 +266,12 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
 
-= 2.13.1 2026-09-15 =
-
-**Enhancements**
-
-* Added: Fallback for `wp-cli/wp-config-transformer` library if the wp-config.php file isn't writable.
-* Added: Filter hook `um_members_directory_filter_text` 3rd parameter `$is_default` to check if it's admin filtering or frontend query.
-* Added: 'Administrative capabilities ban' option enabled by default after the first installation.
-* Optimized: Slow SQL query for batch empty account status check.
-* Optimized: Redundant SQL calls when editing the Profile page with callback dropdowns. Cached usermeta existence checks per user and key during a single load (Reported by @MissVeronica, author @faisalahammad).
-
-**Bugfixes**
-
-* Fixed: Security issue related to an unauthenticated visitor can store JavaScript that runs in an administrator's session, through their own profile name. (Reported by Karthik Ramakrishnan and WPScan team). Fixed `um_convert_tags()` function and applied the escapers throughout the placeholder replacement.
-* Fixed: Using LIKE compare for the text-type filters with custom usermeta table (Reported by @MissVeronica, author @faisalahammad).
-* Fixed: "Can user edit this field?" field setting displaying only for the User Profile form fields.
-* Fixed: Getting the pages list in the wp-admin UM > Settings > General > Pages section.
-* Fixed: Displaying the field-type time on the User Profile page.
-* Fixed: Using `illegal_user_logins` for the current admin user with the username specified in the illegal user logins list.
-
-**Deprecated**
-
-* Deprecated: Filter hook `um_members_directory_filter_text_meta_value` is fully deprecated, replacement isn't required for the text-type filter field.
-
-= 2.13.0 2026-08-24 =
-
-**Enhancements**
-
-* Added: Using `illegal_user_logins` filter to sanitize the `user_login` field value during registration or upgrade.
-* Added: Using `wp-cli/wp-config-transformer` library to set Ultimate Member > API keys settings constants in wp-config.php instead of storing them in DB.
-* Added: New user-capabilities functions `UM()->common()->users()->can_view_user()`, `UM()->common()->users()->get_privacy_setting()`, `UM()->common()->users()->is_user_profile_private()`, `UM()->common()->users()->get_restricted_privacy_notice()`, `UM()->common()->users()->can_view_private_user_profile()`, `UM()->common()->users()->can_view_user_profile()`. The future replacement for the `um_can_view_profile()` helper with different cases to check.
-* Updated: Version of the WordPress native excluded functions to avoid the using them in the callbacks.
-
-**Bugfixes**
-
-* Fixed: `WP_Filesystem()` initialization optimization. Init `WP_Filesystem()` only once when it's necessary.
-* Fixed: Redirect on non-main queries (breaks Spectra and block themes). Added conditional check for the main query (based on @faisalahammad suggestions).
-* Fixed: Registration form infinite loop - gdpr-register.php calls `the_content` recursively causing PHP fatal error. Excluded predefined UM pages and pages with [ultimatemember] shortcode from the list, render empty content for such pages if they are already selected to avoid PHP error (based on @faisalahammad suggestions).
-* Fixed: Causes site-wide `rest_cookie_invalid_nonce` on all authenticated REST requests. Refactored admin notice handling to enhance security and flexibility. Removed using localized `um_admin_scripts.nonce` globally on wp-admin. It's localized only on UM wp-admin pages. (based on @michaeldavisdcpersonal report and @faisalahammad suggestions).
-* Fixed: Security issue when an unauthenticated visitor can read the content of comments awaiting moderation. (Reported by Alessandro Greco (Aleff) and Giovambattista Ianni, University of Calabria (UNICAL)).
-* Fixed: Security issue related to an unauthenticated privilege escalation through the profile form role field. (Reported by Jakub Herman).
-* Fixed: Security issue, CVE ID: CVE-2026-18547. Used 'user_input' allowed a tag list to sanitize HTML-enabled textarea fields. Deprecated Pickadate.JS and Pickatime.JS libraries for User Forms fields.
-* Fixed: Member Directory type-button styles.
-* Fixed: Added fallback for the date and time fields to show date and time using the WordPress native format.
-
-**Templates Requiring Update**
-
-* gdpr-register.php
-* profile.php
-
-**Deprecated**
-
-* Deprecated: Pickadate.JS and Pickatime.JS libraries for User Forms fields. Used HTML native `<input type="date" />` and `<input type="time" />` instead.
-
-**Note: Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after the upgrade**
-
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.15.0 =
+This version fixes a security-related bug. Upgrade immediately.
 
 = 2.14.3 =
 This version fixes a security-related bug. Upgrade immediately.

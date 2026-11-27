@@ -200,8 +200,9 @@ add_action( 'um_profile_content_main', 'um_profile_content_main', 10, 2 );
  * @param array $form_data
  */
 function um_user_edit_profile( $args, $form_data ) {
+	global $wp_filesystem;
+
 	$to_update = null;
-	$files     = array();
 
 	$user_id = null;
 	if ( isset( $args['user_id'] ) ) {
@@ -210,13 +211,15 @@ function um_user_edit_profile( $args, $form_data ) {
 		$user_id = $args['_user_id'];
 	}
 
-	if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+	if ( UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
 		UM()->user()->set( $user_id );
 	} else {
 		wp_die( esc_html__( 'You are not allowed to edit this user.', 'ultimate-member' ) );
 	}
 
 	$userinfo = UM()->user()->profile;
+
+	$user_basedir = UM()->common()->filesystem()->get_user_uploads_dir( $user_id );
 
 	/**
 	 * Fires before collecting data to update on profile form submit.
@@ -362,12 +365,131 @@ function um_user_edit_profile( $args, $form_data ) {
 
 			if ( isset( $args['submitted'][ $key ] ) ) {
 				if ( in_array( $array['type'], array( 'image', 'file' ), true ) ) {
-					if ( um_is_temp_file( $args['submitted'][ $key ] ) || 'empty_file' === $args['submitted'][ $key ] ) {
-						$files[ $key ] = $args['submitted'][ $key ];
-					} elseif( um_is_file_owner( UM()->uploader()->get_upload_base_url() . $user_id . '/' . $args['submitted'][ $key ], $user_id ) ) {
+					if ( ! empty( $args['submitted'][ $key ]['temp_hash'] ) ) {
+						$filepath = UM()->common()->filesystem()->get_file_by_hash( $args['submitted'][ $key ]['temp_hash'] );
+						if ( ! empty( $filepath ) ) {
+							// Delete old file if it's exists.
+							if ( isset( $userinfo[ $key ] ) ) {
+								$old_file_path = wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] );
+								if ( file_exists( $old_file_path ) ) {
+									wp_delete_file( $old_file_path );
+								}
+							}
 
-					} else {
-						$files[ $key ] = 'empty_file';
+							if ( 'profile_photo' === $key ) {
+								// Flush user directory from original profile photo thumbnails.
+								$files = scandir( wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR ) );
+								if ( ! empty( $files ) ) {
+									foreach ( $files as $file ) {
+										if ( preg_match( '/^profile_photo-(.*?)/', $file ) ) {
+											wp_delete_file( wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR . $file ) );
+										}
+									}
+								}
+
+								$file_type = wp_check_filetype( $filepath );
+								$filename  = 'profile_photo.' . $file_type['ext'];
+							} elseif ( 'cover_photo' === $key ) {
+								// Flush user directory from original cover photo thumbnails.
+								$files = scandir( $user_basedir . DIRECTORY_SEPARATOR );
+								if ( ! empty( $files ) ) {
+									foreach ( $files as $file ) {
+										if ( preg_match( '/^cover_photo-(.*?)/', $file ) ) {
+											wp_delete_file( wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR . $file ) );
+										}
+									}
+								}
+
+								$file_type = wp_check_filetype( $filepath );
+								$filename  = 'cover_photo.' . $file_type['ext'];
+							} else {
+								$filename     = sanitize_file_name( $args['submitted'][ $key ]['filename'] );
+								$new_filepath = wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR . $filename );
+								if ( file_exists( $new_filepath ) ) {
+									$filename = wp_unique_filename( $user_basedir . DIRECTORY_SEPARATOR, $filename );
+								}
+							}
+
+							$new_filepath  = wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR . $filename );
+							$moving_result = $wp_filesystem->move( $filepath, $new_filepath, true );
+
+							if ( $moving_result ) {
+								if ( 'profile_photo' === $key ) {
+									$image = wp_get_image_editor( $new_filepath ); // Return an implementation that extends WP_Image_Editor
+									if ( ! is_wp_error( $image ) ) {
+										// Creates new file's thumbnails.
+										$sizes_array = array();
+										$all_sizes   = UM()->options()->get( 'photo_thumb_sizes' );
+										foreach ( $all_sizes as $size ) {
+											$sizes_array[] = array( 'width' => $size );
+										}
+										$image->multi_resize( $sizes_array );
+									}
+								} elseif ( 'cover_photo' === $key ) {
+									$image = wp_get_image_editor( $new_filepath ); // Return an implementation that extends WP_Image_Editor
+									if ( ! is_wp_error( $image ) ) {
+										// Creates new file's thumbnails.
+										$sizes_array = array();
+										$all_sizes   = UM()->options()->get( 'cover_thumb_sizes' );
+										foreach ( $all_sizes as $size ) {
+											$sizes_array[] = array( 'width' => $size );
+										}
+										$image->multi_resize( $sizes_array );
+									}
+								}
+
+								$to_update[ $key ] = $filename;
+
+								if ( 'file' === $array['type'] ) {
+									$file_type = wp_check_filetype( $new_filepath );
+									$size      = filesize( $new_filepath );
+
+									$file_metadata = array(
+										'ext'         => $file_type['ext'],
+										'type'        => $file_type['type'],
+										'size'        => $size,
+										'size_format' => size_format( $size ),
+									);
+
+									$file_metadata = apply_filters( 'um_file_metadata', $file_metadata, $new_filepath, $key, $args['submitted'] );
+
+									$to_update[ $key . '_metadata' ] = $file_metadata;
+								}
+							}
+						}
+					} elseif ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ]['filename'] !== $userinfo[ $key ] ) {
+						// File was deleted on frontend
+						// delete old file if it's exists
+						if ( file_exists( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] ) ) {
+							wp_delete_file( $user_basedir . DIRECTORY_SEPARATOR . $userinfo[ $key ] );
+
+							if ( 'profile_photo' === $key ) {
+								// Flush user directory from original profile photo thumbnails.
+								$files = scandir( wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR ) );
+								if ( ! empty( $files ) ) {
+									foreach ( $files as $file ) {
+										if ( preg_match( '/^profile_photo-(.*?)/', $file ) ) {
+											wp_delete_file( wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR . $file ) );
+										}
+									}
+								}
+							} elseif ( 'cover_photo' === $key ) {
+								// Flush user directory from original cover photo thumbnails.
+								$files = scandir( $user_basedir . DIRECTORY_SEPARATOR );
+								if ( ! empty( $files ) ) {
+									foreach ( $files as $file ) {
+										if ( preg_match( '/^cover_photo-(.*?)/', $file ) ) {
+											wp_delete_file( wp_normalize_path( $user_basedir . DIRECTORY_SEPARATOR . $file ) );
+										}
+									}
+								}
+							}
+						}
+
+						$to_update[ $key ] = '';
+						if ( 'file' === $array['type'] ) {
+							$to_update[ $key . '_metadata' ] = '';
+						}
 					}
 				} else {
 					if ( 'password' === $array['type'] ) {
@@ -510,14 +632,6 @@ function um_user_edit_profile( $args, $form_data ) {
 	}
 
 	/** This action is documented in ultimate-member/includes/core/um-actions-register.php */
-	$files = apply_filters( 'um_user_pre_updating_files_array', $files, $user_id );
-	if ( ! empty( $files ) && is_array( $files ) ) {
-		UM()->uploader()->replace_upload_dir = true;
-		UM()->uploader()->move_temporary_files( $user_id, $files );
-		UM()->uploader()->replace_upload_dir = false;
-	}
-
-	/** This action is documented in ultimate-member/includes/core/um-actions-register.php */
 	do_action( 'um_update_profile_full_name', $user_id, $to_update );
 
 	/**
@@ -574,8 +688,6 @@ function um_profile_validate_nonce( $submitted_data, $form_data ) {
 }
 add_action( 'um_submit_form_errors_hook__profile', 'um_profile_validate_nonce', 1, 2 );
 
-// @todo maybe remove that because double validate
-add_filter( 'um_user_pre_updating_files_array', array( UM()->validation(), 'validate_files' ) );
 // @todo maybe remove that because double validate
 add_filter( 'um_before_save_filter_submitted', array( UM()->validation(), 'validate_fields_values' ), 10, 3 );
 
@@ -767,7 +879,7 @@ function um_profile_dynamic_meta_desc() {
 				}
 				$image = um_get_cover_uri( um_profile( 'cover_photo' ), $image_size );
 			} else {
-				$image = um_get_cover_uri( um_profile( 'cover_photo' ), null );
+				$image = um_get_cover_uri( um_profile( 'cover_photo' ) );
 			}
 		} elseif ( is_numeric( $image_size ) ) {
 			$sizes = UM()->options()->get( 'photo_thumb_sizes' );
@@ -945,7 +1057,7 @@ function um_profile_header_cover_area( $args ) {
 			$items = apply_filters( 'um_cover_area_content_dropdown_items', $items, um_profile_id() );
 
 			UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
-		} elseif ( ! $user_cover && ! isset( UM()->user()->cannot_edit ) ) {
+		} elseif ( ! $user_cover && UM()->common()->users()->can_current_user_edit_user( um_profile_id() ) ) {
 			$items = array(
 				'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . esc_html__( 'Upload a cover photo', 'ultimate-member' ) . '</a>',
 				'<a href="javascript:void(0);" class="um-dropdown-hide">' . esc_html__( 'Cancel', 'ultimate-member' ) . '</a>',
@@ -1003,7 +1115,7 @@ function um_profile_header_cover_area( $args ) {
 
 				echo '<img src="' . esc_url( $default_cover['url'] ) . '" alt="" />';
 
-			} elseif ( ! isset( UM()->user()->cannot_edit ) ) {
+			} elseif ( UM()->common()->users()->can_current_user_edit_user( um_profile_id() ) ) {
 				?>
 				<a href="javascript:void(0);" class="um-cover-add"><span class="um-cover-add-i"><i
 					class="um-icon-plus um-tip-n"
@@ -1112,8 +1224,8 @@ function um_profile_header( $args ) {
 		<div class="um-profile-photo" data-user_id="<?php echo esc_attr( um_profile_id() ); ?>" <?php echo wp_kses( UM()->fields()->aria_valid_attributes( UM()->fields()->is_error( 'profile_photo' ), 'profile_photo' ), UM()->get_allowed_html( 'templates' ) ); ?>>
 
 			<a href="<?php echo esc_url( $user_profile_url ); ?>" class="um-profile-photo-img" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
-				<?php if ( ! $default_size || $default_size == 'original' ) {
-					$profile_photo = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/" . um_profile( 'profile_photo' );
+				<?php if ( ! $default_size || 'original' === $default_size ) {
+					$profile_photo = um_get_avatar_uri( um_profile( 'profile_photo' ) );
 
 					$data = um_get_user_avatar_data( um_user( 'ID' ) );
 					echo $overlay . sprintf( '<img src="%s" class="%s" alt="%s" data-default="%s" onerror="%s" />',
@@ -1128,7 +1240,7 @@ function um_profile_header( $args ) {
 				} ?>
 			</a>
 
-			<?php if ( empty( $disable_photo_uploader ) && empty( UM()->user()->cannot_edit ) ) {
+			<?php if ( empty( $disable_photo_uploader ) && UM()->common()->users()->can_current_user_edit_user( um_profile_id() ) ) {
 
 				UM()->fields()->add_hidden_field( 'profile_photo' );
 
@@ -1476,7 +1588,7 @@ function um_pre_profile_shortcode( $args ) {
 
 	if ( true === UM()->fields()->editing ) {
 		if ( um_get_requested_user() ) {
-			if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
+			if ( ! UM()->common()->users()->can_current_user_edit_user( um_get_requested_user() ) ) {
 				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
 			}
 			um_fetch_user( um_get_requested_user() );
@@ -1489,7 +1601,7 @@ function um_pre_profile_shortcode( $args ) {
 				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
 			}
 
-			if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
+			if ( ! UM()->common()->users()->can_current_user_edit_user( um_get_requested_user() ) ) {
 				UM()->user()->cannot_edit = 1;
 			}
 
@@ -1533,13 +1645,12 @@ function um_add_edit_icon( $args ) {
 	$current_page_id = get_the_ID(); // Get the current page ID to make a proper Edit User Profile link.
 
 	if ( ! um_is_myprofile() ) {
-
-		if ( ! UM()->roles()->um_current_user_can( 'edit', um_profile_id() ) && ! UM()->roles()->um_current_user_can( 'delete', um_profile_id() ) ) {
+		if ( ! UM()->common()->users()->can_current_user_edit_user( um_profile_id() ) && ! UM()->common()->users()->can_current_user_delete_user( um_profile_id() ) ) {
 			return;
 		}
 
 		$items = UM()->user()->get_admin_actions();
-		if ( UM()->roles()->um_current_user_can( 'edit', um_profile_id() ) ) {
+		if ( UM()->common()->users()->can_current_user_edit_user( um_profile_id() ) ) {
 			$items['editprofile'] = '<a href="' . esc_url( um_edit_profile_url( um_profile_id(), $current_page_id ) ) . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>';
 		}
 
@@ -1570,16 +1681,18 @@ function um_add_edit_icon( $args ) {
 		$items['cancel'] = '<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>';
 
 	} else {
-		$items = array(
-			'editprofile' => '<a href="' . esc_url( um_edit_profile_url( um_profile_id(), $current_page_id ) ) . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>',
-			'myaccount'   => '<a href="' . esc_url( um_get_core_page( 'account' ) ) . '" class="real_url">' . __( 'My Account', 'ultimate-member' ) . '</a>',
-			'logout'      => '<a href="' . esc_url( um_get_core_page( 'logout' ) ) . '" class="real_url">' . __( 'Logout', 'ultimate-member' ) . '</a>',
-			'cancel'      => '<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
-		);
-
-		if ( ! empty( UM()->user()->cannot_edit ) ) {
-			unset( $items['editprofile'] );
+		$items = array();
+		if ( UM()->common()->users()->can_current_user_edit_user( um_profile_id() ) ) {
+			$items['editprofile'] = '<a href="' . esc_url( um_edit_profile_url( um_profile_id(), $current_page_id ) ) . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>';
 		}
+		$items = array_merge(
+			$items,
+			array(
+				'myaccount' => '<a href="' . esc_url( um_get_core_page( 'account' ) ) . '" class="real_url">' . __( 'My Account', 'ultimate-member' ) . '</a>',
+				'logout'    => '<a href="' . esc_url( um_get_core_page( 'logout' ) ) . '" class="real_url">' . __( 'Logout', 'ultimate-member' ) . '</a>',
+				'cancel'    => '<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
+			)
+		);
 
 		/**
 		* UM hook

@@ -152,12 +152,12 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 					um_safe_redirect( UM()->permalinks()->get_current_url( true ) );
 					exit;
 				case 'switch_user':
-					if ( ! current_user_can( 'manage_options' ) ) {
-						return;
-					}
-
 					if ( ! wp_verify_nonce( $_REQUEST['nonce'], "switch_user{$user_id}" ) ) {
 						$this->set_action_error_and_redirect( 'expired' );
+					}
+
+					if ( ! UM()->common()->users()->can_current_user_switch_to_user( $user_id ) ) {
+						return;
 					}
 
 					UM()->user()->auto_login( $user_id );
@@ -169,7 +169,7 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 						$this->set_action_error_and_redirect( 'expired' );
 					}
 
-					if ( ! UM()->roles()->um_current_user_can( 'delete', $user_id ) ) {
+					if ( ! UM()->common()->users()->can_current_user_delete_user( $user_id ) ) {
 						$this->set_action_error_and_redirect( 'delete_user' );
 					}
 

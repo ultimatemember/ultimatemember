@@ -1112,18 +1112,20 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			$pagination_data = $this->calculate_pagination( $directory_data, $total_users );
 
-			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
-			// Ensure we have valid sizes array and handle case when only one size is defined
-			if ( ! is_array( $sizes ) || empty( $sizes ) ) {
-				$sizes = array( 300 ); // fallback to default
+			$cover_size  = UM()->options()->get( 'profile_coversize' );
+			$cover_sizes = UM()->options()->get( 'cover_thumb_sizes' );
+			if ( ! empty( $cover_sizes ) && ! in_array( $cover_size, $cover_sizes, true ) ) {
+				$cover_size = end( $cover_sizes );
 			}
 
-			// For mobile, use second size if available, otherwise use first size
-			$available_mobile = isset( $sizes[1] ) ? $sizes[1] : $sizes[0];
-			$this->cover_size = wp_is_mobile() ? $available_mobile : end( $sizes );
+			// For mobile, use second size if available, otherwise use first size.
+			$available_mobile = isset( $cover_sizes[1] ) ? $cover_sizes[1] : $cover_sizes[0];
+			$this->cover_size = wp_is_mobile() ? $available_mobile : $cover_size;
+			$this->cover_size = apply_filters( 'um_member_directory_cover_image_size', $this->cover_size, $directory_data );
 
 			$avatar_size       = UM()->options()->get( 'profile_photosize' );
 			$this->avatar_size = str_replace( 'px', '', $avatar_size );
+			$this->avatar_size = apply_filters( 'um_member_directory_avatar_image_size', $this->avatar_size, $directory_data );
 
 			$users = array();
 			foreach ( $user_ids as $user_id ) {

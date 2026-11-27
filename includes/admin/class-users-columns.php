@@ -413,6 +413,9 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 				case 'um_approve_membership':
 					$approved_count = 0;
 					foreach ( $users as $user_id ) {
+						if ( ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
+							continue;
+						}
 						$res = UM()->common()->users()->approve( $user_id );
 						if ( $res ) {
 							++$approved_count;
@@ -431,6 +434,10 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 				case 'um_reactivate':
 					$reactivated_count = 0;
 					foreach ( $users as $user_id ) {
+						if ( ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
+							continue;
+						}
+
 						$res = UM()->common()->users()->reactivate( $user_id );
 						if ( $res ) {
 							++$reactivated_count;
@@ -449,6 +456,10 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 				case 'um_reject_membership':
 					$rejected_count = 0;
 					foreach ( $users as $user_id ) {
+						if ( ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
+							continue;
+						}
+
 						$res = UM()->common()->users()->reject( $user_id );
 						if ( $res ) {
 							++$rejected_count;
@@ -467,6 +478,10 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 				case 'um_deactivate':
 					$deactivated_count = 0;
 					foreach ( $users as $user_id ) {
+						if ( ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
+							continue;
+						}
+
 						$res = UM()->common()->users()->deactivate( $user_id );
 						if ( $res ) {
 							++$deactivated_count;
@@ -485,6 +500,10 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 				case 'um_put_as_pending':
 					$pending_count = 0;
 					foreach ( $users as $user_id ) {
+						if ( ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
+							continue;
+						}
+
 						$res = UM()->common()->users()->set_as_pending( $user_id );
 						if ( $res ) {
 							++$pending_count;
@@ -503,6 +522,10 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 				case 'um_resend_activation':
 					$email_pending_count = 0;
 					foreach ( $users as $user_id ) {
+						if ( ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
+							continue;
+						}
+
 						$res = UM()->common()->users()->send_activation( $user_id, true );
 						if ( $res ) {
 							++$email_pending_count;

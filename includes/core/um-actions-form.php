@@ -408,7 +408,7 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 	$current_user_roles = array();
 	if ( is_user_logged_in() ) {
 		if ( array_key_exists( 'user_id', $submitted_data ) ) {
-			$can_edit = UM()->roles()->um_current_user_can( 'edit', $submitted_data['user_id'] );
+			$can_edit = UM()->common()->users()->can_current_user_edit_user( $submitted_data['user_id'] );
 		}
 
 		um_fetch_user( get_current_user_id() );
@@ -744,6 +744,48 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 			if ( ! empty( $description_value ) && ! empty( $max_chars ) && mb_strlen( str_replace( array( "\r\n", "\n", "\r\t", "\t" ), ' ', $description_value ) ) > $max_chars ) {
 				// translators: %s: max chars.
 				UM()->form()->add_error( $description_key, sprintf( __( 'Your user description must contain less than %s characters', 'ultimate-member' ), $max_chars ) );
+			}
+		}
+
+		// Check file/image uploading
+		if ( isset( $array['type'] ) && in_array( $array['type'], array( 'file', 'image' ), true ) ) {
+			$user_id = empty( $submitted_data['user_id'] ) ? null : absint( $submitted_data['user_id'] );
+			if ( ! empty( $submitted_data[ $key ]['temp_hash'] ) ) {
+				// New file/image uploaded.
+				if ( empty( $submitted_data[ $key ]['filename'] ) || empty( $submitted_data[ $key ]['hash'] ) ) {
+					UM()->form()->add_error( $key, __( 'Invalid field value format', 'ultimate-member' ) );
+				} elseif ( md5( $submitted_data[ $key ]['filename'] . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY ) !== $submitted_data[ $key ]['hash'] ) {
+					// invalid salt for file/image uploading, it's for the security
+					UM()->form()->add_error( $key, __( 'Invalid field value. Cheatin&#8217; huh?', 'ultimate-member' ) );
+				} elseif ( ! UM()->common()->filesystem()->is_file_author( $submitted_data[ $key ]['temp_hash'] ) ) {
+					// invalid file author, it's for the security
+					UM()->form()->add_error( $key, __( 'Invalid value for current user. Cheatin&#8217; huh?', 'ultimate-member' ) );
+				}
+
+				$filepath = UM()->common()->filesystem()->get_file_by_hash( $submitted_data[ $key ]['temp_hash'] );
+
+				if ( ! empty( $array['max_size'] ) ) {
+					$size = filesize( $filepath );
+					if ( $size > absint( $array['max_size'] ) ) {
+						// file is too big
+						UM()->form()->add_error( $key, __( 'File is too big.', 'ultimate-member' ) );
+					}
+				}
+
+				if ( ! empty( $array['allowed_types'] ) ) {
+					$file_type = wp_check_filetype( $filepath );
+					if ( ! in_array( $file_type['ext'], $array['allowed_types'], true ) ) {
+						// invalid file extension
+						UM()->form()->add_error( $key, __( 'Invalid file extension.', 'ultimate-member' ) );
+					}
+				}
+
+				// Check for filename and hash compatibility below.
+			} elseif ( ! empty( $submitted_data[ $key ]['filename'] ) && empty( $submitted_data[ $key ]['hash'] ) ) {
+				UM()->form()->add_error( $key, __( 'Invalid field value format', 'ultimate-member' ) );
+			} elseif ( ! empty( $submitted_data[ $key ]['filename'] ) && md5( $submitted_data[ $key ]['filename'] . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY ) !== $submitted_data[ $key ]['hash'] ) {
+				// Invalid salt for file/image uploading, it's for the security but only for the not empty field.
+				UM()->form()->add_error( $key, __( 'Invalid field value. Cheatin&#8217; huh?', 'ultimate-member' ) );
 			}
 		}
 

@@ -1,9 +1,13 @@
 <?php
 namespace um\core;
 
+use WP_Comment;
 use WP_Comment_Query;
+use WP_Error;
 use WP_Post;
 use WP_Query;
+use WP_REST_Request;
+use WP_REST_Response;
 use WP_Term_Query;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -62,6 +66,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			// comments queries
 			add_action( 'pre_get_comments', array( &$this, 'exclude_posts_comments' ), 99 );
 			add_filter( 'wp_count_comments', array( &$this, 'custom_comments_count_handler' ), 99, 2 );
+			add_filter( 'rest_prepare_comment', array( &$this, 'filter_rest_prepare_comment' ), 99, 3 );
 			// comments RSS
 			add_filter( 'comment_feed_where', array( &$this, 'exclude_posts_comments_feed' ), 99, 2 );
 			// Disable comments if user has not permission to access current post
@@ -940,8 +945,34 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 			if ( ! empty( $exclude_posts ) ) {
 				$post__not_in = ! empty( $query->query_vars['post__not_in'] ) ? $query->query_vars['post__not_in'] : array();
+
 				$query->query_vars['post__not_in'] = array_merge( wp_parse_id_list( $post__not_in ), $exclude_posts );
 			}
+		}
+
+		/**
+		 * Prevent REST API access to comments on restricted posts.
+		 *
+		 * @param WP_REST_Response|WP_Error $response The response object or error.
+		 * @param WP_Comment                $comment  Comment object.
+		 * @param WP_REST_Request           $request  Request object.
+		 *
+		 * @return WP_REST_Response|WP_Error
+		 */
+		public function filter_rest_prepare_comment( $response, $comment, $request ) {
+			if ( current_user_can( 'administrator' ) ) {
+				return $response;
+			}
+
+			if ( $this->is_restricted( $comment->comment_post_ID ) ) {
+				return new WP_Error(
+					'rest_comment_invalid_id',
+					__( 'Invalid comment ID.', 'ultimate-member' ),
+					array( 'status' => 404 )
+				);
+			}
+
+			return $response;
 		}
 
 		/**

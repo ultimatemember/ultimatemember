@@ -2998,7 +2998,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					break;
 				/* Single Image Upload */
 				case 'image':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . ' data-mode="' . esc_attr( $this->set_mode ) . '" data-resize-nonce="' . esc_attr( wp_create_nonce( 'um-resize-image' . $this->set_mode . $key ) ) . '" data-upload-label="' . ( ! empty( $data['button_text'] ) ? esc_attr( $data['button_text'] ) : esc_attr__( 'Upload', 'ultimate-member' ) ) . '">';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . ' data-mode="' . esc_attr( $this->set_mode ) . '" data-resize-nonce="' . esc_attr( wp_create_nonce( 'um_field_image_crop_apply' . $key ) ) . '" data-upload-label="' . ( ! empty( $data['button_text'] ) ? esc_attr( $data['button_text'] ) : esc_attr__( 'Upload', 'ultimate-member' ) ) . '">';
 					if ( in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) ) {
 						$field_value = '';
 					} else {
@@ -3007,27 +3007,76 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$field_name = $key . $form_suffix;
 
-					$output .= '<input type="hidden" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+					$name           = $field_name . '[filename]';
+					$hash_name      = $field_name . '[hash]';
+					$temp_hash_name = $field_name . '[temp_hash]';
+
+					$user_id = um_user( 'ID' );
+					$user_id = empty( $user_id ) ? null : absint( $user_id );
+					$form_id = $this->set_id;
+
+					// Workaround when triggered invalid form submission, and we need to pass 3 attributes per 1 file.
+					$edit_value_row = $field_value;
+					if ( is_array( $field_value ) && array_key_exists( 'filename', $field_value ) ) {
+						if ( empty( $field_value['temp_hash'] ) && empty( $field_value['filename'] ) ) {
+							$field_value = '';
+						} else {
+							$field_value = $field_value['filename'];
+						}
+					}
+
+					$hash      = md5( $field_value . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
+					$temp_hash = ! empty( $edit_value_row['temp_hash'] ) ? sanitize_text_field( $edit_value_row['temp_hash'] ) : ''; // it's not empty only during uploading the new file.
+
+					$output .= '<input type="hidden" name="' . esc_attr( $name ) . '" id="' . esc_attr( $field_name ) . '" class="um-uploaded-value" value="' . esc_attr( $field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+					$output .= '<input type="hidden" name="' . esc_attr( $hash_name ) . '" id="' . esc_attr( $field_name ) . '-hash" class="um-uploaded-value-hash" value="' . esc_attr( $hash ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+					$output .= '<input type="hidden" name="' . esc_attr( $temp_hash_name ) . '" id="' . esc_attr( $field_name ) . '-temp-hash" class="um-uploaded-value-temp-hash" value="' . esc_attr( $temp_hash ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+
 					if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 					$modal_label = array_key_exists( 'label', $data ) ? $data['label'] : __( 'Upload Photo', 'ultimate-member' );
 					$output     .= '<div class="um-field-area" style="text-align: center;">';
 
-					if ( ! empty( $field_value ) && 'empty_file' !== $field_value ) {
-						if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) ) {
-							if ( ( isset( $this->set_mode ) && 'register' === $this->set_mode ) || file_exists( UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $field_value ) ) {
-								$img_value = UM()->uploader()->get_core_temp_url() . '/' . $this->field_value( $key, $default, $data );
+					$removed = false;
+					if ( is_array( $edit_value_row ) ) {
+						if ( ! empty( $edit_value_row['temp_hash'] ) ) {
+							$temp_hash_value = sanitize_key( $edit_value_row['temp_hash'] );
+							$filepath        = UM()->common()->filesystem()->get_file_by_hash( $temp_hash_value );
+							if ( false === $filepath ) {
+								$removed = true;
 							} else {
-								$img_value = UM()->files()->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
+								$uri = UM()->common()->filesystem()->get_temp_file_url(
+									array(
+										'file' => $filepath,
+										'hash' => $temp_hash_value,
+									)
+								);
 							}
-							$img = '<img class="fusion-lazyload-ignore" src="' . esc_attr( $img_value ) . '" alt="" />';
+						} elseif ( ! empty( $edit_value_row['filename'] ) ) {
+							$filename_value = sanitize_file_name( $edit_value_row['filename'] );
+							$removed        = ! file_exists( wp_normalize_path( UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $filename_value ) );
+
+							$uri = UM()->files()->get_download_link( $form_id, $key, um_user( 'ID' ), $filename_value );
+						} else {
+							$removed = true; // fallback and workaround. the field just empty.
+						}
+					} elseif ( ! empty( $edit_value_row ) ) {
+						$filename_value = sanitize_file_name( $edit_value_row );
+						$removed        = ! file_exists( wp_normalize_path( UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $filename_value ) );
+
+						$uri = UM()->files()->get_download_link( $form_id, $key, um_user( 'ID' ), $filename_value );
+					}
+
+					if ( ! empty( $field_value ) && ! $removed ) {
+						if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) ) {
+							$img = '<img class="fusion-lazyload-ignore" src="' . esc_attr( $uri ) . '" alt="" />';
 						} else {
 							$img = '';
 						}
 						$output .= '<div class="um-single-image-preview show ' . esc_attr( $data['crop_class'] ) . '" data-crop="' . esc_attr( $data['crop_data'] ) . '" data-key="' . esc_attr( $key ) . '">';
 						if ( empty( $disabled ) ) {
-							$output .= '<a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file' . $key ) ) . '"><i class="um-icon-close"></i></a>';
+							$output .= '<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>';
 						}
 						$output .= $img;
 						$output .= '</div>';
@@ -3037,7 +3086,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					} else {
 						$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '" data-crop="' . esc_attr( $data['crop_data'] ) . '" data-key="' . esc_attr( $key ) . '">';
 						if ( empty( $disabled ) ) {
-							$output .= '<a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file' . $key ) ) . '"><i class="um-icon-close"></i></a>';
+							$output .= '<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>';
 						}
 						$output .= '<img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div>';
 						if ( empty( $disabled ) ) {
@@ -3089,8 +3138,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$data_icon = ' data-icon="' . esc_attr( $data['icon'] ) . '"';
 						}
 
-						$nonce   = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
-						$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '"  data-crop="' . esc_attr( $data['crop_data'] ) . '" data-ratio="' . esc_attr( $data['ratio'] ) . '" data-min_width="' . esc_attr( $data['min_width'] ) . '" data-min_height="' . esc_attr( $data['min_height'] ) . '" data-coord=""><a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file' . $key ) ) . '"><i class="um-icon-close"></i></a><img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
+						$nonce   = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp . '-' . $key . '-' . $_um_profile_id . '-' . $set_mode );
+						$output .= '<div class="um-single-image-preview ' . esc_attr( $data['crop_class'] ) . '"  data-crop="' . esc_attr( $data['crop_data'] ) . '" data-ratio="' . esc_attr( $data['ratio'] ) . '" data-min_width="' . esc_attr( $data['min_width'] ) . '" data-min_height="' . esc_attr( $data['min_height'] ) . '" data-coord=""><a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a><img class="fusion-lazyload-ignore" src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
 						$output .= '<div class="um-single-image-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-nonce="' . esc_attr( $nonce ) . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" ' . $data_icon . ' data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $data['max_size'] ) . '" data-max_size_error="' . esc_attr( $data['max_size_error'] ) . '" data-min_size_error="' . esc_attr( $data['min_size_error'] ) . '" data-extension_error="' . esc_attr( $data['extension_error'] ) . '" data-allowed_types="' . esc_attr( $allowed_types ) . '" data-accept="' . esc_attr( $accept_types ) . '" data-upload_text="' . esc_attr( $data['upload_text'] ) . '" data-max_files_error="' . esc_attr( $data['max_files_error'] ) . '" data-upload_help_text="' . esc_attr( $data['upload_help_text'] ) . '">' . esc_html( $data['button_text'] ) . '</div>';
 						$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">
@@ -3118,57 +3167,84 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$field_name       = $key . $form_suffix;
 					$file_field_value = $this->field_value( $key, $default, $data );
 
-					$output .= '<input type="hidden" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $file_field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+					// Workaround when triggered invalid form submission, and we need to pass 3 attributes per 1 file.
+					$edit_value_row = $file_field_value;
+					if ( is_array( $file_field_value ) && array_key_exists( 'filename', $file_field_value ) ) {
+						if ( empty( $file_field_value['temp_hash'] ) && empty( $file_field_value['filename'] ) ) {
+							$file_field_value = '';
+						} else {
+							$file_field_value = $file_field_value['filename'];
+						}
+					}
+
+					$name           = $field_name . '[filename]';
+					$hash_name      = $field_name . '[hash]';
+					$temp_hash_name = $field_name . '[temp_hash]';
+
+					$user_id = um_user( 'ID' );
+					$user_id = empty( $user_id ) ? null : absint( $user_id );
+					$form_id = $this->set_id;
+
+					$hash      = md5( $file_field_value . $user_id . $form_id . '_um_uploader_security_salt' . NONCE_KEY );
+					$temp_hash = ! empty( $edit_value_row['temp_hash'] ) ? sanitize_text_field( $edit_value_row['temp_hash'] ) : ''; // it's not empty only during uploading the new file.
+
+					$output .= '<input type="hidden" name="' . esc_attr( $name ) . '" id="' . esc_attr( $field_name ) . '" class="um-uploaded-value" value="' . esc_attr( $file_field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+					$output .= '<input type="hidden" name="' . esc_attr( $hash_name ) . '" id="' . esc_attr( $field_name ) . '-hash" class="um-uploaded-value-hash" value="' . esc_attr( $hash ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+					$output .= '<input type="hidden" name="' . esc_attr( $temp_hash_name ) . '" id="' . esc_attr( $field_name ) . '-temp-hash" class="um-uploaded-value-temp-hash" value="' . esc_attr( $temp_hash ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
 					if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 					$modal_label = array_key_exists( 'label', $data ) ? $data['label'] : __( 'Upload File', 'ultimate-member' );
 					$output     .= '<div class="um-field-area" style="text-align: center;">';
 
-					if ( ! empty( $file_field_value ) && 'empty_file' !== $file_field_value ) {
-						$file_type = wp_check_filetype( $file_field_value );
-
-						if ( um_is_temp_file( $file_field_value ) ) {
-							$file_info = get_transient( "um_{$file_field_value}" );
-						} else {
-							$file_info = um_user( $data['metakey'] . '_metadata' );
-						}
-
-						$file_field_name = $file_field_value;
-						if ( ! empty( $file_info['original_name'] ) ) {
-							$file_field_name = $file_info['original_name'];
-						}
-
-						if ( ( isset( $this->set_mode ) && 'register' === $this->set_mode ) || file_exists( UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $file_field_value ) ) {
-							$file_url = UM()->uploader()->get_core_temp_url() . DIRECTORY_SEPARATOR . $file_field_value;
-							$file_dir = UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $file_field_value;
-						} else {
-							$file_url = UM()->files()->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
-							$file_dir = UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $file_field_value;
-						}
-
-						// Multisite fix for old customers.
-						if ( ! file_exists( $file_dir ) && is_multisite() ) {
-							$file_dir = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file_dir );
-						}
-
-						if ( file_exists( $file_dir ) ) {
-							$output .= '<div class="um-single-file-preview show" data-key="' . esc_attr( $key ) . '">';
-							if ( empty( $disabled ) ) {
-								$output .= '<a href="#" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file' . $key ) ) . '"><i class="um-icon-close"></i></a>';
+					$filename_value = '';
+					$removed        = false;
+					if ( is_array( $edit_value_row ) ) {
+						if ( ! empty( $edit_value_row['temp_hash'] ) ) {
+							$filename_value  = sanitize_file_name( $edit_value_row['filename'] );
+							$temp_hash_value = sanitize_key( $edit_value_row['temp_hash'] );
+							$filepath        = UM()->common()->filesystem()->get_file_by_hash( $temp_hash_value );
+							if ( false === $filepath ) {
+								$removed = true;
+							} else {
+								$uri = UM()->common()->filesystem()->get_temp_file_url(
+									array(
+										'file' => $filepath,
+										'hash' => $temp_hash_value,
+									)
+								);
 							}
+						} elseif ( ! empty( $edit_value_row['filename'] ) ) {
+							$filename_value = sanitize_file_name( $edit_value_row['filename'] );
+							$removed        = ! file_exists( wp_normalize_path( UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $filename_value ) );
 
-							$fonticon_bg = UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] );
-							$fonticon    = UM()->files()->get_fonticon_by_ext( $file_type['ext'] );
-
-							$output .= '<div class="um-single-fileinfo">';
-							$output .= '<a href="' . esc_url( $file_url ) . '" target="_blank">';
-							$output .= '<span class="icon" style="background:' . esc_attr( $fonticon_bg ) . '"><i class="' . esc_attr( $fonticon ) . '"></i></span>';
-							$output .= '<span class="filename">' . esc_html( $file_field_name ) . '</span>';
-							$output .= '</a></div></div>';
+							$uri = UM()->files()->get_download_link( $form_id, $key, um_user( 'ID' ), $filename_value );
 						} else {
-							$output .= '<div class="um-single-file-preview show" data-key="' . esc_attr( $key ) . '">' . esc_html__( 'This file has been removed.', 'ultimate-member' ) . '</div>';
+							$removed = true; // fallback and workaround. the field just empty.
 						}
+					} elseif ( ! empty( $edit_value_row ) ) {
+						$filename_value = sanitize_file_name( $edit_value_row );
+						$removed        = ! file_exists( wp_normalize_path( UM()->common()->filesystem()->get_user_uploads_dir( $user_id ) . DIRECTORY_SEPARATOR . $filename_value ) );
+
+						$uri = UM()->files()->get_download_link( $form_id, $key, um_user( 'ID' ), $filename_value );
+					}
+
+					if ( ! empty( $file_field_value ) && ! $removed ) {
+						$file_type = wp_check_filetype( $filename_value );
+
+						$output .= '<div class="um-single-file-preview show" data-key="' . esc_attr( $key ) . '">';
+						if ( empty( $disabled ) ) {
+							$output .= '<a href="#" class="cancel"><i class="um-icon-close"></i></a>';
+						}
+
+						$fonticon_bg = UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] );
+						$fonticon    = UM()->files()->get_fonticon_by_ext( $file_type['ext'] );
+
+						$output .= '<div class="um-single-fileinfo">';
+						$output .= '<a href="' . esc_url( $uri ) . '" target="_blank">';
+						$output .= '<span class="icon" style="background:' . esc_attr( $fonticon_bg ) . '"><i class="' . esc_attr( $fonticon ) . '"></i></span>';
+						$output .= '<span class="filename">' . esc_html( $file_field_value ) . '</span>';
+						$output .= '</a></div></div>';
 
 						if ( empty( $disabled ) ) {
 							$output .= '<a href="#" data-modal="um_upload_single" data-modal-size="' . esc_attr( $data['modal_size'] ) . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . esc_html__( 'Change file', 'ultimate-member' ) . '</a>';
@@ -3219,7 +3295,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$set_mode = '';
 						}
 						$output .= '<div class="um-single-file-preview">
-										<a href="javascript:void(0);" class="cancel" data-nonce="' . esc_attr( wp_create_nonce( 'um-remove-file' . $key ) ) . '"><i class="um-icon-close"></i></a>
+										<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>
 										<div class="um-single-fileinfo">
 											<a href="" target="_blank">
 												<span class="icon"><i></i></span>
@@ -3233,7 +3309,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$data_icon = ' data-icon="' . esc_attr( $data['icon'] ) . '"';
 						}
 
-						$nonce   = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
+						$nonce   = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp . '-' . $key . '-' . $_um_profile_id . '-' . $set_mode );
 						$output .= '<div class="um-single-file-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" data-nonce="' . esc_attr( $nonce ) . '" ' . $data_icon . ' data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $data['max_size'] ) . '" data-max_size_error="' . esc_attr( $data['max_size_error'] ) . '" data-min_size_error="' . esc_attr( $data['min_size_error'] ) . '" data-extension_error="' . esc_attr( $data['extension_error'] ) . '" data-allowed_types="' . esc_attr( $allowed_types ) . '" data-accept="' . esc_attr( $accept_types ) . '" data-upload_text="' . esc_attr( $data['upload_text'] ) . '" data-max_files_error="' . esc_attr( $data['max_files_error'] ) . '" data-upload_help_text="' . esc_attr( $data['upload_help_text'] ) . '">' . esc_html( $data['button_text'] ) . '</div>';
 						$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">

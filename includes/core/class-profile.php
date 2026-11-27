@@ -65,7 +65,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 
 			check_ajax_referer( 'um-reset-profile-photo' . $user_id );
 
-			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+			if ( ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
 				die( esc_html__( 'You can not edit this user', 'ultimate-member' ) );
 			}
 
@@ -83,7 +83,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 
 			check_ajax_referer( 'um-reset-cover-photo' . $user_id );
 
-			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+			if ( ! UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
 				die( esc_html__( 'You can not edit this user', 'ultimate-member' ) );
 			}
 
