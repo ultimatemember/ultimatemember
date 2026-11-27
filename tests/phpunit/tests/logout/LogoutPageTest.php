@@ -28,13 +28,17 @@ class UM_Logout_LogoutPageTest extends UM_UnitTestCase {
 	}
 
 	/**
-	 * Visit the Logout page.
+	 * Visit the Logout page with a valid logout nonce, as UM logout links do.
+	 *
+	 * The nonce is ignored before 2.14.4 and required since (see UM_Logout_LogoutNonceTest),
+	 * so these tests cover both versions.
 	 *
 	 * @param array $request Request parameters (`redirect_to`).
 	 *
 	 * @return string Redirect location.
 	 */
 	private function visit_logout( array $request = array() ) {
+		$request  = array_merge( array( '_wpnonce' => wp_create_nonce( 'log-out' ) ), $request );
 		$_REQUEST = $request;
 		$_GET     = $request;
 
