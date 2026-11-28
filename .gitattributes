@@ -27,6 +27,7 @@
 /assets/sass export-ignore
 /assets/libs/fontawesome/scss export-ignore
 /blocks-src export-ignore
+/src export-ignore
 /docs export-ignore
 /node_modules export-ignore
 /tests export-ignore
@@ -41,6 +42,7 @@
 /scripts export-ignore
 /bower.json export-ignore
 /gulpfile.js export-ignore
+/webpack.assets.config.js export-ignore
 /hookdoc-conf.json export-ignore
 /manifest.json export-ignore
 /package-lock.json export-ignore

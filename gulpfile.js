@@ -163,6 +163,9 @@ const rename      = require( 'gulp-rename' );
 // }
 
 function defaultTask( done ) {
+	// wp-admin assets (src/admin/) and own libraries (src/libs/um-confirm, src/libs/um-notice)
+	// are built by @wordpress/scripts: `npm run build:assets`, see webpack.assets.config.js.
+
 	// sass.compiler = require( 'node-sass' );
 
 	src(['assets/js/*.js','!assets/js/*.min.js']) // path to your files
@@ -170,30 +173,12 @@ function defaultTask( done ) {
 		.pipe( rename({ suffix: '.min' }) )
 		.pipe( dest( 'assets/js/' ) );
 
-	src(['assets/js/admin/*.js','!assets/js/admin/*.min.js']) // path to your files
-		.pipe( uglify() )
-		.pipe( rename({ suffix: '.min' }) )
-		.pipe( dest( 'assets/js/admin/' ) );
-	src(['assets/css/admin/*.css', '!assets/css/admin/*.min.css',])
-		.pipe( cleanCSS() )
-		.pipe( rename( { suffix: '.min' } ) )
-		.pipe( dest( 'assets/css/admin/' ) );
 
 	src(['assets/css/*.css', '!assets/css/*.min.css',])
 		.pipe( cleanCSS() )
 		.pipe( rename( { suffix: '.min' } ) )
 		.pipe( dest( 'assets/css/' ) );
 
-	// full CSS files
-	src(['assets/css/admin/*.sass'])
-		.pipe( sass().on( 'error', sass.logError ) )
-		.pipe( dest( 'assets/css/admin/' ) );
-	// min CSS files
-	src(['assets/css/admin/*.sass'])
-		.pipe( sass().on( 'error', sass.logError ) )
-		.pipe( cleanCSS() )
-		.pipe( rename( { suffix: '.min' } ) )
-		.pipe( dest( 'assets/css/admin/' ) );
 
 	// full CSS files
 	src(['assets/css/*.sass'])
@@ -269,31 +254,7 @@ function defaultTask( done ) {
 		.pipe( rename({ suffix: '.min' }) )
 		.pipe( dest( 'assets/libs/tipsy/' ) );
 
-	// UM Confirm lib
-	src(['assets/libs/um-confirm/*.css', '!assets/libs/um-confirm/*.min.css',])
-		.pipe( cleanCSS() )
-		.pipe( rename( { suffix: '.min' } ) )
-		.pipe( dest( 'assets/libs/um-confirm/' ) );
-	src(['assets/libs/um-confirm/*.js', '!assets/libs/um-confirm/*.min.js',])
-		.pipe( uglify() )
-		.pipe( rename({ suffix: '.min' }) )
-		.pipe( dest( 'assets/libs/um-confirm/' ) );
 
-	// UM Notice lib
-	// full CSS files
-	src(['assets/libs/um-notice/*.sass'])
-		.pipe( sass().on( 'error', sass.logError ) )
-		.pipe( dest( 'assets/libs/um-notice/' ) );
-	// min CSS files
-	src(['assets/libs/um-notice/*.sass'])
-		.pipe( sass().on( 'error', sass.logError ) )
-		.pipe( cleanCSS() )
-		.pipe( rename( { suffix: '.min' } ) )
-		.pipe( dest( 'assets/libs/um-notice/' ) );
-	src(['assets/libs/um-notice/*.js', '!assets/libs/um-notice/*.min.js',])
-		.pipe( uglify() )
-		.pipe( rename({ suffix: '.min' }) )
-		.pipe( dest( 'assets/libs/um-notice/' ) );
 
 	// Pickadate lib
 	src(['assets/libs/pickadate/*.css', '!assets/libs/pickadate/*.min.css',])
