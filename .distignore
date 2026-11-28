@@ -5,6 +5,7 @@
 /assets/sass
 /assets/libs/fontawesome/scss
 /blocks-src
+/src
 /docs
 /node_modules
 /tests
@@ -21,6 +22,7 @@
 /bower.json
 /composer.json
 /gulpfile.js
+/webpack.assets.config.js
 /hookdoc-conf.json
 /manifest.json
 /package.json

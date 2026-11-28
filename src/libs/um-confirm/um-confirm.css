@@ -1,0 +1,65 @@
+#um_confirm_block {
+    display: none;
+}
+
+#um_confirm_block_back {
+    background-color: rgba( 0,0,0, 0.2);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 2147483646;
+}
+
+.um_confirm {
+    position: fixed;
+    color: #fff;
+    width: 400px;
+    background-color: rgb( 0,0,0);
+    left: 50%;
+    top: 50%;
+    z-index: 2147483647;
+    /*display: none;*/
+}
+
+.um_confirm #um_confirm_title {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid #5c5c5c;
+    color: #cccccc;
+    font-weight: bold;
+    height: 15px;
+    padding: 10px;
+    text-align: center;
+    width: calc(100% - 20px);
+}
+
+.um_confirm #um_confirm_message {
+    width: calc(100% - 40px);
+    text-align: center;
+    padding: 20px;
+}
+
+.um_confirm #um_confirm_buttons {
+    height: 40px;
+    width: 100%;
+}
+
+.um_confirm .um_confirm_button {
+    /*font-family: verdana, arial;*/
+    border-top: 1px solid #5c5c5c;
+    color: #aaa;
+    font-size: 15px;
+    font-weight: bold;
+    float: left;
+    line-height: 40px;
+    text-align: center;
+    width: 50%;
+    cursor: pointer;
+}
+
+.um_confirm .um_confirm_button:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-top: 1px solid #fff;
+    color: #fff;
+}

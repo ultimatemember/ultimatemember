@@ -46,6 +46,8 @@ jobs:
         git rm bower.json
         git rm composer.json
         git rm gulpfile.js
+        git rm webpack.assets.config.js
+        git rm -r src
         git rm manifest.json
         git rm phpcs.xml
         git rm phpdoc.dist.xml

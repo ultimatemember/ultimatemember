@@ -23,6 +23,8 @@
   "scripts": {
     "build:docs": "rm -rf docs/hooks/ && jsdoc -c hookdoc-conf.json",
     "build": "npm-run-all build:*",
+    "build:assets": "wp-scripts build --config webpack.assets.config.js",
+    "start:assets": "wp-scripts start --config webpack.assets.config.js",
     "build-blocks": "wp-scripts build --webpack-src-dir=blocks-src --output-path=includes/blocks",
     "build-manifest": "wp-scripts build-blocks-manifest --input=includes/blocks --output=includes/blocks/blocks-manifest.php",
     "build:all-blocks": "npm-run-all build-blocks build-manifest"
@@ -46,7 +48,8 @@
     "@wordpress/components": "^28.10.0",
     "@wordpress/i18n": "^5.10.0",
     "@wordpress/scripts": "^30.3.0",
-    "@wordpress/server-side-render": "^5.10.0"
+    "@wordpress/server-side-render": "^5.10.0",
+    "webpack-remove-empty-scripts": "^1.1.1"
   },
   "dependencies": {
     "react": "^18.2.0",
