@@ -27,9 +27,15 @@ class Screen {
 		$is_um_screen = false;
 		if ( ! empty( $current_screen ) && isset( $current_screen->id ) ) {
 			$screen_id = $current_screen->id;
+			/*
+			 * `um_` must be a prefix of the screen ID part, not any substring. Otherwise third-party
+			 * screens like `edit-album_category`, `forum_settings` or `premium_addons` match too and
+			 * get all UM admin assets.
+			 * Matches: `um_form`, `edit-um_form`, `edit-um_directory`, `ultimate-member_page_um_options`.
+			 */
 			if ( 'nav-menus' === $screen_id ||
 				strstr( $screen_id, 'ultimatemember' ) ||
-				strstr( $screen_id, 'um_' ) ||
+				preg_match( '/(^|-|_page_)um_/', $screen_id ) ||
 				strstr( $screen_id, 'user' ) ||
 				strstr( $screen_id, 'profile' ) ) {
 				$is_um_screen = true;
